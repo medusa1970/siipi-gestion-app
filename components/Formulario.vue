@@ -1,5 +1,5 @@
 <template>
-  <q-form class="w-80 flex flex-col gap-2">
+  <q-form class="w-80 flex flex-col gap-2" @submit="submit">
     <h1 class="font-bold text-2xl">{{ title }}</h1>
     <slot name="inputs"></slot>
     <span v-if="login">
@@ -31,7 +31,8 @@ defineProps({
   title: String,
   titleBtn: String,
   login: Boolean,
-  register: Boolean
+  register: Boolean,
+  submit: Function
 });
 </script>
 <style scoped></style>

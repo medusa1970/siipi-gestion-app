@@ -1,22 +1,20 @@
 <template>
   <div class="cont-center">
     <NuxtImg v-if="!test" class="w-80" src="/img/logo.png" />
-    <Formulario v-if="!test" title-btn="Iniciar sesion" login>
+    <Formulario v-if="!test" title-btn="Iniciar sesion" login :submit="login">
       <template #inputs>
         <q-input
           v-model="loginPersona.usuario"
           type="text"
           label="Corre electronico"
           outlined=""
-          dense
-        />
+          dense />
         <q-input
-          v-model="loginPersona.usuario"
+          v-model="loginPersona.contrasena"
           type="text"
           label="Contraseña"
           outlined=""
-          dense
-        />
+          dense />
       </template>
     </Formulario>
     <h1 v-if="test" class="font-bold text-xl text-center">
@@ -41,6 +39,8 @@ definePageMeta({
   layout: false
 });
 
+import { GqlConectar } from '#gql';
+import { LocalStorage } from 'quasar';
 import { ref } from 'vue';
 
 const test = ref(false);
@@ -48,4 +48,14 @@ const loginPersona = ref({
   usuario: '',
   contrasena: ''
 });
+
+const login = async () => {
+  try {
+    const { conectar } = await GqlConectar({ data: loginPersona.value });
+    LocalStorage.set('token', conectar.token);
+    console.log(conectar);
+  } catch (err) {
+    console.log(err);
+  }
+};
 </script>

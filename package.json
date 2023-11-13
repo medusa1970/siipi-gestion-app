@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.8",
+    "nuxt-graphql-client": "^0.2.31",
     "quasar": "^2.13.1"
   }
 }

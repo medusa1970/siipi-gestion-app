@@ -1,0 +1,8 @@
+query conectar($data: ConexionDto!) {
+  conectar(data: $data) {
+    token
+    persona {
+      nombre
+    }
+  }
+}

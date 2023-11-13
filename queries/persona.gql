@@ -1,0 +1,11 @@
+mutation crearUna($data: CrearPersonaDto!) {
+  crearUnaPersona(data: $data) {
+    _id
+    _creado
+    contrasena
+    nombre
+    telefono
+    correo
+    usuario
+  }
+}

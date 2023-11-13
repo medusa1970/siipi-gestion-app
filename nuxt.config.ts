@@ -6,9 +6,13 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-quasar-ui',
     '@nuxt/image',
-    'nuxt-graphql-client'
+    'nuxt-graphql-client',
+    '@pinia/nuxt'
   ],
   tailwindcss: {},
+  quasar: {
+    plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage']
+  },
   runtimeConfig: {
     public: {
       GQL_HOST: 'http://localhost:3000/graphql' // overwritten by process.env.GQL_HOST

@@ -9,3 +9,12 @@ mutation crearUna($data: CrearPersonaDto!) {
     usuario
   }
 }
+
+query buscarVarias($busqueda: BuscarPersonaDto!) {
+  buscarVariasPersonas(busqueda: $busqueda) {
+    _id
+    nombre
+    telefono
+    correo
+  }
+}

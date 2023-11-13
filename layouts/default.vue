@@ -1,48 +1,77 @@
 <template>
   <header class="shadow-lg">
     <div
-      class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem] bg-red-300">
-      <nav class="flex flex-grow basis-0 items-end gap-2">
+      class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem]"
+    >
+      <nav class="flex flex-grow basis-0 gap-2 border-2 items-center">
         <h1 class="font-bold text-lg">PUNTO ABASTO</h1>
         <q-select
           dense
-          filled
           v-model="model"
           :options="options"
-          option-value="id"
           option-label="desc"
-          option-disable="inactive"
           emit-value
-          map-options
-          style="min-width: 100px; max-width: 300px" />
+          style="min-width: 100px; max-width: 300px; font-weight: bold"
+          transition-show="jump-down"
+          class="mx-2"
+        />
       </nav>
-      <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
+      <nav
+        class="flex flex-grow justify-end basis-0 items-center gap-2 border-2"
+      >
         <q-btn dense flat round style="width: 55px; height: 55px"
           ><img
             style="border-radius: 100%; object-fit: cover"
             src="https://avatars.githubusercontent.com/u/739984?v=4"
-            alt="" />
+            alt=""
+          />
           <q-menu
             transition-show="rotate"
             transition-hide="rotate"
             anchor="bottom end"
-            self="top end">
+            self="top end"
+          >
             <q-list style="min-width: 100px">
               <q-item clickable>
-                <q-item-section> Perfil </q-item-section>
+                <q-item-section avatar>
+                  <q-avatar>
+                    <img
+                      src="https://avatars.githubusercontent.com/u/739984?v=4"
+                    />
+                  </q-avatar>
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label>Perfil</q-item-label>
+                  <q-item-label caption lines="1">will@gmail.com</q-item-label>
+                </q-item-section>
               </q-item>
               <q-separator />
-              <q-expansion-item group="somegroup" label="Negocios">
+              <q-expansion-item
+                group="somegroup"
+                label="Negocios"
+                icon="storefront"
+              >
+                <template v-slot:header>
+                  <q-item-section avatar>
+                    <q-icon name="storefront" color="blue" class="px-[10px]" />
+                  </q-item-section>
+
+                  <q-item-section> Negocios</q-item-section>
+                </template>
                 <q-list class="px-2">
-                  <q-item clickable>
-                    <q-item-section> Negocio 1 </q-item-section>
+                  <q-item clickable @click="sede">
+                    <q-item-section> Siipi</q-item-section>
                   </q-item>
-                  <q-item clickable>
+                  <q-item clickable @click="marca">
                     <q-item-section> Negocio 2 </q-item-section>
                   </q-item>
                 </q-list>
               </q-expansion-item>
-              <q-item clickable>
+              <q-item clickable @click="logout">
+                <q-item-section avatar class="px-[10px]">
+                  <q-icon name="logout" color="red" />
+                </q-item-section>
                 <q-item-section> Cerrar sesión </q-item-section>
               </q-item>
             </q-list>
@@ -63,8 +92,14 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import { LocalStorage } from 'quasar';
+import { useRouter } from 'vue-router';
 
-const model = ref(null);
+const router = useRouter();
+const model = ref({
+  id: 'goog',
+  desc: 'Administrador'
+});
 const options = [
   {
     id: 'goog',
@@ -75,4 +110,10 @@ const options = [
     desc: 'Cajero'
   }
 ];
+const logout = () => {
+  LocalStorage.remove('token');
+  router.push('/');
+};
+const sede = () => router.push('/sede');
+const marca = () => router.push('/marca');
 </script>

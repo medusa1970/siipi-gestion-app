@@ -19,8 +19,10 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.8",
     "nuxt-graphql-client": "^0.2.31",
+    "pinia": "^2.1.7",
     "quasar": "^2.13.1"
   }
 }

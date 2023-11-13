@@ -1,36 +1,56 @@
 <template>
   <div class="cont-center">
-    <NuxtImg v-if="!test" class="w-80" src="/img/logo.png" />
-    <Formulario v-if="!test" title-btn="Iniciar sesion" login :submit="login">
+    <NuxtImg
+      v-if="useAuth.user.nombre === ''"
+      class="w-80"
+      src="/img/logo.png"
+    />
+    <Formulario
+      v-if="useAuth.user.nombre === ''"
+      title-btn="Iniciar sesion"
+      login
+      :submit="login"
+    >
       <template #inputs>
         <q-input
           v-model="loginPersona.usuario"
           type="text"
           label="Corre electronico"
           outlined=""
-          dense />
+          dense
+        />
         <q-input
           v-model="loginPersona.contrasena"
           type="text"
           label="Contraseña"
           outlined=""
-          dense />
+          dense
+        />
       </template>
     </Formulario>
-    <h1 v-if="test" class="font-bold text-xl text-center">
-      Seleccionar negocios
-    </h1>
-    <div v-if="test" class="flex gap-3 mt-2">
-      <q-card class="w-52">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-bottom text-center font-bold">Negocio 1</div>
-        </q-img>
-      </q-card>
-      <q-card class="w-52">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-          <div class="absolute-bottom text-center font-bold">Negocio 2</div>
-        </q-img>
-      </q-card>
+    <!-- <h1
+      v-if="(useAuth.token !== null) & (useAuth.user.negocios === null)"
+      class="font-bold"
+    >
+      No tienes ningun negocio😲, contacta con tu supervisor!!!
+    </h1> -->
+    <div v-if="useAuth.user.nombre !== ''">
+      <h1 class="font-bold text-xl text-center">
+        Selecciona a que negocio ingresar
+      </h1>
+      <div class="flex gap-3 mt-2 cursor-pointer">
+        <q-card
+          class="w-52 hover:opacity-90"
+          v-for="negocio in useAuth.user.negocios"
+          @click="() => router.push(negocio.tipo.toLowerCase())"
+        >
+          <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+            <div class="absolute-bottom text-center font-bold">
+              {{ negocio.nombre }}
+            </div>
+          </q-img>
+        </q-card>
+      </div>
     </div>
   </div>
 </template>
@@ -38,24 +58,23 @@
 definePageMeta({
   layout: false
 });
-
-import { GqlConectar } from '#gql';
-import { LocalStorage } from 'quasar';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { authStore } from '@/stores/auth.store';
 
-const test = ref(false);
+const useAuth = authStore();
+const router = useRouter();
 const loginPersona = ref({
   usuario: '',
   contrasena: ''
 });
+console.log(useAuth.user);
+console.log(useAuth.token);
 
 const login = async () => {
-  try {
-    const { conectar } = await GqlConectar({ data: loginPersona.value });
-    LocalStorage.set('token', conectar.token);
-    console.log(conectar);
-  } catch (err) {
-    console.log(err);
-  }
+  await useAuth.login(loginPersona.value);
 };
+console.log(useAuth.user);
+console.log(useAuth.token);
+console.log(LocalStorage.getItem('token'));
 </script>

@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     'nuxt-quasar-ui',
     '@nuxt/image',
     'nuxt-graphql-client',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt'
   ],
   tailwindcss: {},
   quasar: {
@@ -17,5 +18,11 @@ export default defineNuxtConfig({
     public: {
       GQL_HOST: 'http://localhost:3000/graphql' // overwritten by process.env.GQL_HOST
     }
+  },
+  piniaPersistedstate: {
+    cookieOptions: {
+      sameSite: 'strict'
+    },
+    storage: 'localStorage'
   }
 });

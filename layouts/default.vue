@@ -3,8 +3,10 @@
     <div
       class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem]"
     >
-      <nav class="flex flex-grow basis-0 gap-2 border-2 items-center">
-        <h1 class="font-bold text-lg">PUNTO ABASTO</h1>
+      <nav class="flex flex-grow basis-0 gap-2 items-center">
+        <h1 class="font-bold text-lg uppercase">
+          {{ useAuth.negocioSelected }}
+        </h1>
         <q-select
           dense
           v-model="model"
@@ -16,9 +18,7 @@
           class="mx-2"
         />
       </nav>
-      <nav
-        class="flex flex-grow justify-end basis-0 items-center gap-2 border-2"
-      >
+      <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
         <q-btn dense flat round style="width: 55px; height: 55px"
           ><img
             style="border-radius: 100%; object-fit: cover"
@@ -60,12 +60,18 @@
                   <q-item-section> Negocios</q-item-section>
                 </template>
                 <q-list class="px-2">
-                  <q-item clickable @click="sede">
-                    <q-item-section> Siipi</q-item-section>
+                  <q-item
+                    clickable
+                    @click="sede"
+                    v-for="negocio in useAuth.user.negocios"
+                  >
+                    <q-item-section @click="prueba(negocio)">{{
+                      negocio.nombre
+                    }}</q-item-section>
                   </q-item>
-                  <q-item clickable @click="marca">
+                  <!-- <q-item clickable @click="marca">
                     <q-item-section> Negocio 2 </q-item-section>
-                  </q-item>
+                  </q-item> -->
                 </q-list>
               </q-expansion-item>
               <q-item clickable @click="logout">
@@ -94,7 +100,9 @@
 import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
+import { authStore } from '@/stores/auth.store';
 
+const useAuth = authStore();
 const router = useRouter();
 const model = ref({
   id: 'goog',
@@ -110,10 +118,15 @@ const options = [
     desc: 'Cajero'
   }
 ];
+
 const logout = () => {
   LocalStorage.remove('token');
+  useAuth.user.nombre = '';
   router.push('/');
 };
-const sede = () => router.push('/sede');
-const marca = () => router.push('/marca');
+
+const prueba = (negocio) => {
+  router.push(negocio.tipo.toLowerCase());
+  useAuth.negocioSelected = negocio.nombre;
+};
 </script>

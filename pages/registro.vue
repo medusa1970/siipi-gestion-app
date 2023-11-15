@@ -8,25 +8,32 @@
           type="text"
           label="Nombre"
           outlined=""
-          dense />
+          dense
+          :rules="[string]"
+        />
         <q-input
           v-model="persona.telefono"
           type="text"
           label="Telefono"
           outlined=""
-          dense />
+          dense
+          :rules="[phone]"
+        />
         <q-input
           v-model="persona.correo"
-          type="text"
+          type="email"
           label="Corre electronico"
           outlined=""
-          dense />
+          dense
+        />
         <q-input
           v-model="persona.contrasena"
           type="text"
           label="Contraseña"
           outlined=""
-          dense />
+          dense
+          :rules="[password]"
+        />
       </template>
     </Formulario>
   </div>
@@ -37,6 +44,7 @@ definePageMeta({
   layout: false
 });
 import { ref } from 'vue';
+import { password, phone, string } from '@/helpers/validate.form';
 
 const persona = ref({
   nombre: '',
@@ -48,6 +56,7 @@ const persona = ref({
 const register = async () => {
   try {
     const res = await GqlCrearUna({ data: persona.value });
+    console.log(res.crearUnaPersona);
   } catch (err) {
     console.log(err);
   }

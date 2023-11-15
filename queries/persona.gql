@@ -18,3 +18,15 @@ query buscarVarias($busqueda: BuscarPersonaDto!) {
     correo
   }
 }
+
+query buscarUna($busqueda: BuscarPersonaDto!) {
+  buscarUnaPersona(busqueda: $busqueda) {
+    _id
+    _creado
+    usuario
+    nombre
+    telefono
+    correo
+    usuario
+  }
+}

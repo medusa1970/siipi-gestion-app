@@ -10,18 +10,17 @@ import { LocalStorage } from 'quasar';
 export const authStore = defineStore('auth', {
   state: () => ({
     user: { nombre: '', negocios: [] as any[] },
-    token: LocalStorage.getItem('token')
+    token: LocalStorage.getItem('token'),
+    negocioSelected: ''
   }),
   actions: {
     async login(data: { usuario: string; contrasena: string }) {
       try {
         showLoading();
         const { conectar } = await GqlConectar({ data });
-
         if (!conectar?.token || !conectar?.persona?.nombre) {
           throw new Error('No se pudo conectar o el token es undefined');
         }
-        LocalStorage.set('token', conectar.token);
         NotifySucess(`Bienvenido al sistema ${conectar.persona.nombre}`);
         const { buscarEntidadesConUsuario: res } =
           // @ts-ignore
@@ -34,5 +33,6 @@ export const authStore = defineStore('auth', {
         ApiError(error);
       }
     }
-  }
+  },
+  persist: true
 });

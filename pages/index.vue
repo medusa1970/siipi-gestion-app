@@ -14,7 +14,7 @@
       <template #inputs>
         <q-input
           v-model="loginPersona.usuario"
-          type="text"
+          type="email"
           label="Corre electronico"
           outlined=""
           dense
@@ -25,15 +25,10 @@
           label="Contraseña"
           outlined=""
           dense
+          :rules="[password]"
         />
       </template>
     </Formulario>
-    <!-- <h1
-      v-if="(useAuth.token !== null) & (useAuth.user.negocios === null)"
-      class="font-bold"
-    >
-      No tienes ningun negocio😲, contacta con tu supervisor!!!
-    </h1> -->
     <div v-if="useAuth.user.nombre !== ''">
       <h1 class="font-bold text-xl text-center">
         Selecciona a que negocio ingresar
@@ -42,7 +37,7 @@
         <q-card
           class="w-52 hover:opacity-90"
           v-for="negocio in useAuth.user.negocios"
-          @click="() => router.push(negocio.tipo.toLowerCase())"
+          @click="prueba(negocio)"
         >
           <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
             <div class="absolute-bottom text-center font-bold">
@@ -61,6 +56,7 @@ definePageMeta({
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
+import { password } from '@/helpers/validate.form';
 
 const useAuth = authStore();
 const router = useRouter();
@@ -68,13 +64,14 @@ const loginPersona = ref({
   usuario: '',
   contrasena: ''
 });
-console.log(useAuth.user);
-console.log(useAuth.token);
-
 const login = async () => {
   await useAuth.login(loginPersona.value);
 };
-console.log(useAuth.user);
-console.log(useAuth.token);
-console.log(LocalStorage.getItem('token'));
+// const { buscarUnaPersona } = await GqlBuscarUna({ busqueda: {} });
+
+const prueba = (negocio) => {
+  useAuth.negocioSelected = negocio.nombre;
+  router.push(negocio.tipo.toLowerCase());
+};
+// console.log(LocalStorage.getItem('token'));
 </script>

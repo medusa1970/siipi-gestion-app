@@ -9,8 +9,8 @@ query conectar($data: ConexionDto!) {
 
 query buscarEntidadesConUsuario {
   buscarEntidadesConUsuario {
-    nombre
     _id
+    nombre
     tipo
   }
 }

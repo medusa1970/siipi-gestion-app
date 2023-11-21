@@ -12,9 +12,10 @@ const NotifyError = (message: string) =>
 
 /**API ERROR */
 const ApiError = (error: any) => {
-  console.log(error);
   hideLoading();
-  NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
+  error.gqlErrors[0].message
+    ? NotifyError(error.gqlErrors[0].message)
+    : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
 };
 
 export { showLoading, hideLoading, NotifySucess, NotifyError, ApiError };

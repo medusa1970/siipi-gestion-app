@@ -14,20 +14,38 @@ export const authStore = defineStore('auth', {
     negocioSelected: ''
   }),
   actions: {
-    async login(data: { usuario: string; contrasena: string }) {
+    async login(usuario: string, contrasena: string) {
       try {
         showLoading();
-        const { conectar } = await GqlConectar({ data });
-        if (!conectar?.token || !conectar?.persona?.nombre) {
+        const { conectar } = await GqlConectar({
+          data: { usuario, contrasena }
+        });
+        if (!conectar?.token || !conectar?.persona?.nombre)
           throw new Error('No se pudo conectar o el token es undefined');
-        }
         NotifySucess(`Bienvenido al sistema ${conectar.persona.nombre}`);
         const { buscarEntidadesConUsuario: res } =
           // @ts-ignore
           await GqlBuscarEntidadesConUsuario(useGqlToken(conectar.token));
+        console.log(res);
         if (!res) throw new Error('No se pudo obtener los negocios');
         this.user.nombre = conectar.persona.nombre;
         this.user.negocios = res;
+        hideLoading();
+      } catch (error) {
+        ApiError(error);
+      }
+    },
+
+    async register(data: {
+      nombre: string;
+      telefono: string;
+      correo: string;
+      contrasena: string;
+    }) {
+      try {
+        showLoading();
+        const { crearPersona: res } = await GqlCrearPersona({ data });
+        NotifySucess(`${res.nombre} se ha registrado correctamente`);
         hideLoading();
       } catch (error) {
         ApiError(error);

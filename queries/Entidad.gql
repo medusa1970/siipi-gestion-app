@@ -1,0 +1,48 @@
+# EMPLEADOS
+query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
+  buscarEntidad(busqueda: $busqueda) {
+    empleados {
+      personaId {
+        _id
+        nombre
+        telefono
+        correo
+      }
+      cargo
+    }
+    roles {
+      personaId
+      rol
+      vencimiento
+    }
+    permisos {
+      personaId
+      permiso
+      otorgado
+      vencimiento
+    }
+  }
+}
+
+# AGREGAR EMPLEADO ENTIDAD
+mutation agregarEmpleadoEntidad(
+  $busqueda: BuscarEntidadDto!
+  $data: AgregarEmpleadoDto!
+) {
+  agregarEmpleadoEntidad(busqueda: $busqueda, data: $data) {
+    empleados {
+      cargo
+    }
+  }
+}
+
+mutation borrarEmpleadoEntidad(
+  $busqueda: BuscarEntidadDto!
+  $personaId: String!
+) {
+  borrarEmpleadoEntidad(busqueda: $busqueda, personaId: $personaId) {
+    empleados {
+      cargo
+    }
+  }
+}

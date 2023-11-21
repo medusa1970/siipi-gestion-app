@@ -4,33 +4,33 @@
     <Formulario title-btn="Registrarse" register :submit="register">
       <template #inputs>
         <q-input
-          v-model="persona.nombre"
+          v-model="authPersona.nombre"
           type="text"
           label="Nombre"
-          outlined=""
+          outlined
           dense
           :rules="[string]"
         />
         <q-input
-          v-model="persona.telefono"
+          v-model="authPersona.telefono"
           type="text"
           label="Telefono"
-          outlined=""
+          outlined
           dense
           :rules="[phone]"
         />
         <q-input
-          v-model="persona.correo"
+          v-model="authPersona.correo"
           type="email"
           label="Corre electronico"
-          outlined=""
+          outlined
           dense
         />
         <q-input
-          v-model="persona.contrasena"
+          v-model="authPersona.contrasena"
           type="text"
           label="Contraseña"
-          outlined=""
+          outlined
           dense
           :rules="[password]"
         />
@@ -39,28 +39,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 });
-import { ref } from 'vue';
 import { password, phone, string } from '@/helpers/validate.form';
+import { useAuth } from '@/composables/auth/useAuth';
 
-const persona = ref({
-  nombre: '',
-  telefono: '',
-  correo: '',
-  contrasena: ''
-});
-
-const register = async () => {
-  try {
-    const res = await GqlCrearUna({ data: persona.value });
-    console.log(res.crearUnaPersona);
-  } catch (err) {
-    console.log(err);
-  }
-};
+const { authPersona, register } = useAuth();
 </script>
 
 <style lang="scss" scoped></style>

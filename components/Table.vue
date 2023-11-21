@@ -1,14 +1,12 @@
 <template>
   <q-table
-    class="my-sticky-header-table"
     flat
     bordered
     :rows="rows"
     :columns="columns"
     :filter="filter"
-    table-header-style="text-transform: uppercase;"
     :rows-per-page-options="[10, 20, 50, 100]"
-    table-class="q-mt-md"
+    :dense="dense"
   >
     <!-- HEADER -->
     <template v-slot:top-right>
@@ -19,7 +17,7 @@
         color="secondary"
         v-model="filter"
         style="
-          margin: 10px 0 10px 0px;
+          margin: 10px 0;
           border: 0.5px solid #757575;
           padding: 0 10px;
           width: 220px;
@@ -31,10 +29,11 @@
             name="close"
             @click.stop.prevent="filter = ''"
             class="cursor-pointer"
+            size="22px"
           />
         </template>
         <template v-slot:prepend>
-          <q-icon name="search" />
+          <q-icon name="search" size="22px" />
         </template>
       </q-input>
     </template>
@@ -48,8 +47,12 @@
       <slot name="body-cell-actions" :props="props"></slot>
     </template>
     <!-- IMAGES -->
-    <template v-slot:body-cell-image="{ value }">
+    <template v-slot:body-cell-foto="{ value }">
       <slot name="body-cell-image" :value="value"></slot>
+    </template>
+    <!-- BADGE -->
+    <template v-if="badge" v-slot:body="props">
+      <slot name="rows-badge" :props="props"></slot>
     </template>
   </q-table>
 </template>
@@ -66,6 +69,8 @@ defineProps({
   columns: {
     type: Array,
     required: true
-  }
+  },
+  dense: Boolean,
+  badge: Boolean
 });
 </script>

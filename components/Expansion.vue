@@ -3,7 +3,7 @@
     <q-expansion-item>
       <template v-slot:header>
         <q-item-section avatar v-if="icon">
-          <q-avatar :icon="icon" color="primary" text-color="white" />
+          <q-avatar :icon="icon" :color="color" text-color="white" />
         </q-item-section>
 
         <q-item-section class="font-semibold text-lg">
@@ -22,10 +22,7 @@
 
       <q-card>
         <q-card-section>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius
-          reprehenderit eos corrupti commodi magni quaerat ex numquam, dolorum
-          officiis modi facere maiores architecto suscipit iste eveniet
-          doloribus ullam aliquid.
+          <slot name="contenido"></slot>
         </q-card-section>
       </q-card>
     </q-expansion-item>
@@ -37,6 +34,7 @@ defineProps({
     type: String,
     required: true
   },
-  icon: String
+  icon: String,
+  color: String
 });
 </script>

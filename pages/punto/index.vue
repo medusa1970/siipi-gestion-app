@@ -1,10 +1,26 @@
 <template>
   <div class="grid grid-cols-2 gap-5 mt-2">
-    <Expansion class="col-span-1" title="Empleados" icon="group"></Expansion>
-    <Expansion class="col-span-1" title="Menu" icon="group"></Expansion>
-    <Expansion class="col-span-1" title="Stock" icon="group"></Expansion>
-    <Expansion class="col-span-1" title="Inventario" icon="group"></Expansion>
-    <Expansion class="col-span-1" title="Pedidos" icon="group"></Expansion>
-    <Expansion class="col-span-1" title="Caja" icon="group"></Expansion>
+    <div class="col-span-1" @click="() => push('punto/empleados')">
+      <Item title="Empleados" icon="group" />
+    </div>
+    <div class="col-span-1" @click="() => push('punto/menu')">
+      <Item title="Menu" icon="fact_check" color-icon="red" />
+    </div>
+    <div class="col-span-1" @click="() => push('punto/stock')">
+      <Item title="Stock" icon="warehouse" color-icon="blue" />
+    </div>
+    <div class="col-span-1" @click="() => push('punto/inventario')">
+      <Item title="Inventario" icon="visibility" color-icon="brown" />
+    </div>
+    <div class="col-span-1" @click="() => push('punto/pedidos')">
+      <Item title="Pedidos" icon="description" color-icon="teal" />
+    </div>
+    <div class="col-span-1" @click="() => push('punto/caja')">
+      <Item title="Caja" icon="point_of_sale" color-icon="green" />
+    </div>
   </div>
 </template>
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+const { push } = useRouter();
+</script>

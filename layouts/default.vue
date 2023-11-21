@@ -5,7 +5,7 @@
     >
       <nav class="flex flex-grow basis-0 gap-2 items-center">
         <h1 class="font-bold text-lg uppercase">
-          {{ useAuth.negocioSelected }}
+          {{ useAuth.negocioSelected ? useAuth.negocioSelected : 'Cliente' }}
         </h1>
         <q-select
           dense
@@ -43,7 +43,9 @@
 
                 <q-item-section>
                   <q-item-label>Perfil</q-item-label>
-                  <q-item-label caption lines="1">will@gmail.com</q-item-label>
+                  <q-item-label caption lines="1"
+                    >{{ useAuth.user.nombre }}@gmail.com</q-item-label
+                  >
                 </q-item-section>
               </q-item>
               <q-separator />
@@ -90,11 +92,7 @@
     <Container>
       <slot></slot>
     </Container>
-    <!-- TOASTIFY -->
-    <!-- <UNotifications /> -->
   </main>
-  <!-- <footer>footer</footer> -->
-  <!-- <UNotifications /> -->
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -122,11 +120,13 @@ const options = [
 const logout = () => {
   LocalStorage.remove('token');
   useAuth.user.nombre = '';
+  useAuth.user.negocios = [];
   router.push('/');
+  useAuth.negocioSelected = '';
 };
 
 const prueba = (negocio) => {
-  router.push(negocio.tipo.toLowerCase());
+  router.push(`/${negocio.tipo.toLowerCase()}`);
   useAuth.negocioSelected = negocio.nombre;
 };
 </script>

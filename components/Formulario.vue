@@ -3,7 +3,9 @@
     <h1 class="font-bold text-2xl">{{ title }}</h1>
     <slot name="inputs"></slot>
     <span v-if="login">
-      <a class="border-b-[1px] border-gray-500 text-gray-500" href="#"
+      <a
+        class="border-b-[1px] border-gray-500 text-gray-500"
+        href="/recuperarPassword"
         >Recuperar mi contraseña</a
       >
     </span>

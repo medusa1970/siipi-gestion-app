@@ -1,42 +1,38 @@
 <template>
   <div class="cont-center">
-    <NuxtImg
-      v-if="useAuth.user.nombre === ''"
-      class="w-80"
-      src="/img/logo.png"
-    />
+    <NuxtImg v-if="user.nombre === ''" class="w-80" src="/img/logo.png" />
     <Formulario
-      v-if="useAuth.user.nombre === ''"
+      v-if="user.nombre === ''"
       title-btn="Iniciar sesion"
       login
       :submit="login"
     >
       <template #inputs>
         <q-input
-          v-model="loginPersona.usuario"
-          type="email"
+          v-model="authPersona.usuario"
+          type="text"
           label="Corre electronico"
-          outlined=""
+          outlined
           dense
         />
         <q-input
-          v-model="loginPersona.contrasena"
+          v-model="authPersona.contrasena"
           type="text"
           label="Contraseña"
-          outlined=""
+          outlined
           dense
           :rules="[password]"
         />
       </template>
     </Formulario>
-    <div v-if="useAuth.user.nombre !== ''">
+    <div v-if="user.nombre !== ''">
       <h1 class="font-bold text-xl text-center">
         Selecciona a que negocio ingresar
       </h1>
       <div class="flex gap-3 mt-2 cursor-pointer">
         <q-card
           class="w-52 hover:opacity-90"
-          v-for="negocio in useAuth.user.negocios"
+          v-for="negocio in user.negocios"
           @click="prueba(negocio)"
         >
           <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
@@ -49,29 +45,11 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 });
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { authStore } from '@/stores/auth.store';
 import { password } from '@/helpers/validate.form';
-
-const useAuth = authStore();
-const router = useRouter();
-const loginPersona = ref({
-  usuario: '',
-  contrasena: ''
-});
-const login = async () => {
-  await useAuth.login(loginPersona.value);
-};
-// const { buscarUnaPersona } = await GqlBuscarUna({ busqueda: {} });
-
-const prueba = (negocio) => {
-  useAuth.negocioSelected = negocio.nombre;
-  router.push(negocio.tipo.toLowerCase());
-};
-// console.log(LocalStorage.getItem('token'));
+import { useAuth } from '@/composables/auth/useAuth';
+const { authPersona, login, prueba, user } = useAuth();
 </script>

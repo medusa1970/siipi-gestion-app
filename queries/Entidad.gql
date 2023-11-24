@@ -1,6 +1,6 @@
 # EMPLEADOS
 query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
-  buscarEntidad(busqueda: $busqueda) {
+  buscarEntidad(busqueda: $busqueda, options: { populateEmpleados: true }) {
     empleados {
       personaId {
         _id
@@ -24,25 +24,22 @@ query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
   }
 }
 
-# AGREGAR EMPLEADO ENTIDAD
 mutation agregarEmpleadoEntidad(
-  $busqueda: BuscarEntidadDto!
-  $data: AgregarEmpleadoDto!
+  $entidadId: String!
+  $personaId: String!
+  $datos: AgregarEmpleadoParcialDto!
 ) {
-  agregarEmpleadoEntidad(busqueda: $busqueda, data: $data) {
-    empleados {
-      cargo
+  agregarEmpleado(entidadId: $entidadId, personaId: $personaId, datos: $datos) {
+    personaId {
+      _id
+      nombre
+      correo
+      telefono
     }
+    cargo
   }
 }
 
-mutation borrarEmpleadoEntidad(
-  $busqueda: BuscarEntidadDto!
-  $personaId: String!
-) {
-  borrarEmpleadoEntidad(busqueda: $busqueda, personaId: $personaId) {
-    empleados {
-      cargo
-    }
-  }
+mutation borrarEmpleadoEntidad($entidadId: String!, $personaId: String!) {
+  borrarEmpleado(entidadId: $entidadId, personaId: $personaId)
 }

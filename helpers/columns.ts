@@ -106,11 +106,11 @@ export const columnsProductos = [
     sortable: true
   },
   {
-    name: 'marca',
+    name: 'presentacionBasica',
     required: true,
-    label: 'marca',
+    label: 'Unidad de medida',
     align: 'left',
-    field: (row: any) => row.marca,
+    field: (row: any) => row.presentacionBasica,
     sortable: true
   },
   {
@@ -122,11 +122,11 @@ export const columnsProductos = [
     sortable: true
   },
   {
-    name: 'inventario',
+    name: 'tags',
     required: true,
-    label: 'inventario',
+    label: 'tags',
     align: 'left',
-    field: (row: any) => row.inventario,
+    field: (row: any) => row.tags.map((t: any) => t),
     sortable: true
   },
   {

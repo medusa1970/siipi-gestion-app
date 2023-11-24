@@ -172,8 +172,9 @@ const agregarEmpleado = async () => {
   try {
     showLoading();
     await GqlAgregarEmpleadoEntidad({
-      busqueda: { nombre: useAuth.negocioSelected },
-      data: { personaId: personaSelect.value.id, cargo: cargo.value }
+      entidadId: useAuth.negocioIDSelected,
+      personaId: personaSelect.value.id,
+      datos: { cargo: cargo.value }
     });
     NotifySucess('Empleado agregado');
     getAllEntity();
@@ -196,7 +197,7 @@ const borrarEmpleado = async (row: { id: string; nombre: string }) => {
     persistent: true
   }).onOk(async () => {
     await GqlBorrarEmpleadoEntidad({
-      busqueda: { nombre: useAuth.negocioSelected },
+      entidadId: useAuth.negocioIDSelected,
       personaId: row.id
     });
     NotifySucess('Empleado eliminado');

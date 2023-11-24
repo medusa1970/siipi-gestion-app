@@ -1,5 +1,5 @@
-mutation crearPersona($data: CrearPersonaDto!) {
-  crearPersona(data: $data) {
+mutation crearPersona($datos: CrearPersonaDto!) {
+  crearPersona(datos: $datos) {
     _id
     _creado
     contrasena
@@ -27,6 +27,5 @@ query buscarPersona($busqueda: BuscarPersonaDto!) {
     nombre
     telefono
     correo
-    usuario
   }
 }

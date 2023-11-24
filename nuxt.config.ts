@@ -12,7 +12,8 @@ export default defineNuxtConfig({
   ],
   tailwindcss: {},
   quasar: {
-    plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage']
+    plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
+    extras: { fontIcons: ['bootstrap-icons'] }
   },
   runtimeConfig: {
     public: {

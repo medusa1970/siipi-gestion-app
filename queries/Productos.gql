@@ -1,0 +1,38 @@
+# PRODUCTOS
+query buscarProductos($busqueda: BuscarProductoDto!) {
+  buscarProductos(busqueda: $busqueda) {
+    _id
+    _creado
+    _archivado
+    nombre
+    descripcion
+    tags
+    presentacionBasica
+    presentaciones {
+      _id
+      _creado
+      _archivado
+      nombre
+      cantidad
+    }
+  }
+}
+
+mutation crearProducto($datos: CrearProductoDto!) {
+  crearProducto(datos: $datos) {
+    _id
+    _creado
+    _archivado
+    nombre
+    descripcion
+    tags
+    presentacionBasica
+    presentaciones {
+      _id
+      _creado
+      _archivado
+      nombre
+      cantidad
+    }
+  }
+}

@@ -1,7 +1,6 @@
 import {
   showLoading,
   hideLoading,
-  NotifyError,
   NotifySucess,
   ApiError
 } from '@/helpers/message.service';
@@ -11,14 +10,15 @@ export const authStore = defineStore('auth', {
   state: () => ({
     user: { nombre: '', negocios: [] as any[] },
     token: LocalStorage.getItem('token'),
-    negocioSelected: ''
+    negocioSelected: '',
+    negocioIDSelected: ''
   }),
   actions: {
     async login(usuario: string, contrasena: string) {
       try {
         showLoading();
         const { conectar } = await GqlConectar({
-          data: { usuario, contrasena }
+          datos: { usuario, contrasena }
         });
         if (!conectar?.token || !conectar?.persona?.nombre)
           throw new Error('No se pudo conectar o el token es undefined');
@@ -26,7 +26,7 @@ export const authStore = defineStore('auth', {
         const { buscarEntidadesConUsuario: res } =
           // @ts-ignore
           await GqlBuscarEntidadesConUsuario(useGqlToken(conectar.token));
-        console.log(res);
+        // console.log(res);
         if (!res) throw new Error('No se pudo obtener los negocios');
         this.user.nombre = conectar.persona.nombre;
         this.user.negocios = res;
@@ -36,7 +36,7 @@ export const authStore = defineStore('auth', {
       }
     },
 
-    async register(data: {
+    async register(datos: {
       nombre: string;
       telefono: string;
       correo: string;
@@ -44,7 +44,7 @@ export const authStore = defineStore('auth', {
     }) {
       try {
         showLoading();
-        const { crearPersona: res } = await GqlCrearPersona({ data });
+        const { crearPersona: res } = await GqlCrearPersona({ datos });
         NotifySucess(`${res.nombre} se ha registrado correctamente`);
         hideLoading();
       } catch (error) {

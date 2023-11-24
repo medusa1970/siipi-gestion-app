@@ -1,5 +1,5 @@
-query conectar($data: ConexionDto!) {
-  conectar(data: $data) {
+query conectar($datos: ConexionDto!) {
+  conectar(datos: $datos) {
     token
     persona {
       nombre

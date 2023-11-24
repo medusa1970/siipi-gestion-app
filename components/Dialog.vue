@@ -1,6 +1,6 @@
 <template>
   <q-dialog>
-    <q-card style="width: 380px">
+    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-xl font-semibold">{{ title }}</div>
         <q-space />
@@ -28,7 +28,8 @@
 defineProps({
   title: String,
   nameDialog: String,
-  handleSubmit: Function
+  handleSubmit: Function,
+  cardBig: Boolean
 });
 </script>
 

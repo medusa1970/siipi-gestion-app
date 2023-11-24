@@ -26,12 +26,13 @@ export const useAuth = () => {
       authPersona.value.usuario,
       authPersona.value.contrasena
     );
-    console.log(useAuth.user);
+    // console.log(useAuth.user);
     user.value.negocios.length === 0 && router.push('/cliente');
     clearAuthPersona();
   };
-  const prueba = (negocio: { tipo: string; nombre: string }) => {
+  const prueba = (negocio: { tipo: string; nombre: string; _id: string }) => {
     useAuth.negocioSelected = negocio.nombre;
+    useAuth.negocioIDSelected = negocio._id;
     router.push(negocio.tipo.toLowerCase());
   };
   const register = async () => {

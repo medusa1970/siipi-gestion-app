@@ -9,7 +9,7 @@ import { LocalStorage } from 'quasar';
 export const authStore = defineStore('auth', {
   state: () => ({
     user: { nombre: '', negocios: [] as any[] },
-    token: LocalStorage.getItem('token'),
+    token: '',
     negocioSelected: '',
     negocioIDSelected: ''
   }),
@@ -22,6 +22,7 @@ export const authStore = defineStore('auth', {
         });
         if (!conectar?.token || !conectar?.persona?.nombre)
           throw new Error('No se pudo conectar o el token es undefined');
+        this.token = conectar.token;
         NotifySucess(`Bienvenido al sistema ${conectar.persona.nombre}`);
         const { buscarEntidadesConUsuario: res } =
           // @ts-ignore

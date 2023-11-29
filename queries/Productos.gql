@@ -1,9 +1,8 @@
 # PRODUCTOS
 query buscarProductos($busqueda: BuscarProductoDto!) {
-  buscarProductos(busqueda: $busqueda) {
+  productoBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
     _id
     _creado
-    _archivado
     nombre
     descripcion
     tags
@@ -11,7 +10,6 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
     presentaciones {
       _id
       _creado
-      _archivado
       nombre
       cantidad
     }
@@ -19,10 +17,9 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
 }
 
 mutation crearProducto($datos: CrearProductoDto!) {
-  crearProducto(datos: $datos) {
+  productoCrear(datos: $datos) {
     _id
     _creado
-    _archivado
     nombre
     descripcion
     tags
@@ -30,9 +27,12 @@ mutation crearProducto($datos: CrearProductoDto!) {
     presentaciones {
       _id
       _creado
-      _archivado
       nombre
       cantidad
     }
   }
+}
+
+mutation borrarProducto($busqueda: BuscarProductoDto!) {
+  productoBorrar(busqueda: $busqueda)
 }

@@ -13,7 +13,8 @@ export default defineNuxtConfig({
   tailwindcss: {},
   quasar: {
     plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
-    extras: { fontIcons: ['bootstrap-icons'] }
+    extras: { fontIcons: ['bootstrap-icons'] },
+    lang: 'es'
   },
   runtimeConfig: {
     public: {
@@ -25,5 +26,10 @@ export default defineNuxtConfig({
       sameSite: 'strict'
     },
     storage: 'localStorage'
+  },
+  router: {
+    options: {
+      scrollBehaviorType: 'smooth'
+    }
   }
 });

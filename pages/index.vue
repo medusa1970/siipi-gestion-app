@@ -47,7 +47,8 @@
 </template>
 <script setup lang="ts">
 definePageMeta({
-  layout: false
+  layout: false,
+  middleware: ['auth']
 });
 import { password } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';

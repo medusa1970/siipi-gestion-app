@@ -7,6 +7,8 @@
     :filter="filter"
     :rows-per-page-options="[10, 20, 50, 100]"
     :dense="dense"
+    separator="cell"
+    class="border-none"
   >
     <!-- HEADER -->
     <template v-slot:top-right>

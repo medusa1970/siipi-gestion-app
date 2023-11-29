@@ -1,5 +1,5 @@
 mutation crearPersona($datos: CrearPersonaDto!) {
-  crearPersona(datos: $datos) {
+  personaCrear(datos: $datos) {
     _id
     _creado
     contrasena
@@ -11,7 +11,7 @@ mutation crearPersona($datos: CrearPersonaDto!) {
 }
 
 query buscarPersonas($busqueda: BuscarPersonaDto!) {
-  buscarPersonas(busqueda: $busqueda) {
+  personaBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
     _id
     nombre
     telefono
@@ -19,13 +19,13 @@ query buscarPersonas($busqueda: BuscarPersonaDto!) {
   }
 }
 
-query buscarPersona($busqueda: BuscarPersonaDto!) {
-  buscarPersona(busqueda: $busqueda) {
-    _id
-    _creado
-    usuario
-    nombre
-    telefono
-    correo
-  }
-}
+# query buscarPersona($busqueda: BuscarPersonaDto!) {
+#   buscarPersona(busqueda: $busqueda) {
+#     _id
+#     _creado
+#     usuario
+#     nombre
+#     telefono
+#     correo
+#   }
+# }

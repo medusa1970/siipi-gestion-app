@@ -23,4 +23,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 const { push } = useRouter();
+definePageMeta({
+  middleware: ['auth']
+});
 </script>

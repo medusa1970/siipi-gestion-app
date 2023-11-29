@@ -1,5 +1,5 @@
 <template>
-  <header class="shadow-lg">
+  <header class="shadow-lg bg-white">
     <div
       class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem]"
     >
@@ -7,16 +7,6 @@
         <h1 class="font-bold text-lg uppercase">
           {{ useAuth.negocioSelected ? useAuth.negocioSelected : 'Cliente' }}
         </h1>
-        <q-select
-          dense
-          v-model="model"
-          :options="options"
-          option-label="desc"
-          emit-value
-          style="min-width: 100px; max-width: 300px; font-weight: bold"
-          transition-show="jump-down"
-          class="mx-2"
-        />
       </nav>
       <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
         <q-btn dense flat round style="width: 55px; height: 55px"
@@ -102,20 +92,6 @@ import { authStore } from '@/stores/auth.store';
 
 const useAuth = authStore();
 const router = useRouter();
-const model = ref({
-  id: 'goog',
-  desc: 'Administrador'
-});
-const options = [
-  {
-    id: 'goog',
-    desc: 'Administrador'
-  },
-  {
-    id: 'fb',
-    desc: 'Cajero'
-  }
-];
 
 const logout = () => {
   LocalStorage.remove('token');

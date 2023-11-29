@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navigation label="Productos" icon="list_alt" />
-    <Table badge :rows="productos" :columns="columnsProductos">
+    <Table badge :rows="productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <q-btn
           icon-right="add"
@@ -9,7 +9,7 @@
           label="Agregar producto"
           no-caps
           style="padding: 7px 15px"
-          @click="() => (test = true)"
+          @click="agregarProducto()"
         />
       </template>
       <!-- BADGE -->
@@ -43,31 +43,22 @@
             </div>
           </q-td>
           <q-td key="actions" :props="props">
-            <q-btn color="red" icon="more_horiz" flat round>
-              <q-menu
-                transition-show="rotate"
-                transition-hide="rotate"
-                anchor="top start"
-                self="top right"
-              >
-                <q-list dense style="min-width: 100px">
-                  <q-item clickable v-close-popup class="test">
-                    <q-icon name="bi-box-seam-fill" size="20px" color="blue" />
-                    <q-item-section class="font-bold"
-                      >Agregar presentacion</q-item-section
-                    >
-                  </q-item>
-                  <q-item clickable v-close-popup class="test">
-                    <q-icon name="edit" size="20px" color="green" />
-                    <q-item-section class="font-bold">Editar</q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup class="test">
-                    <q-icon name="delete" size="20px" color="red" />
-                    <q-item-section class="font-bold">Eliminar</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
+            <q-btn
+              color="primary"
+              icon="edit"
+              round
+              dense
+              flat
+              @click="editProduct(props.row)"
+            />
+            <q-btn
+              color="red"
+              icon="delete"
+              round
+              dense
+              flat
+              @click="borrarProducto(props.row)"
+            />
           </q-td>
         </q-tr>
       </template>
@@ -188,10 +179,9 @@
             </td>
             <td>
               <q-input
-                v-model="presentacion.cantidad"
+                v-model.number="presentacion.cantidad"
                 filled
                 dense
-                emit-value
                 type="number"
                 onfocus="this.select()"
               />
@@ -212,6 +202,77 @@
       </table>
     </template>
   </Dialog>
+
+  <!-- MODAL EDITAR PRODUCTO -->
+  <Dialog
+    v-model="isEditProduct"
+    title="Editar producto"
+    :handle-submit="crearProducto"
+  >
+    <template #inputsDialog>
+      <q-input v-model="producto.nombre" type="text" label="Nombre" />
+      <q-input v-model="producto.descripcion" type="text" label="Descripcion" />
+      <q-select
+        v-model="producto.tags"
+        multiple
+        :options="tags"
+        use-chips
+        stack-label
+        label="Tags"
+      >
+        <template v-slot:selected-item="scope">
+          <q-chip
+            removable
+            dense
+            @remove="scope.removeAtIndex(scope.index)"
+            :tabindex="scope.tabindex"
+            color="green"
+            text-color="white"
+            class="p-3"
+            >{{ scope.opt }}</q-chip
+          >
+        </template>
+      </q-select>
+      <q-input
+        v-model="producto.presentacionBasica"
+        type="text"
+        label="presentacion básica"
+        ><template v-slot:prepend> <q-icon name="straighten" /> </template
+      ></q-input>
+
+      <span
+        style="
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <q-input
+          color="secondary"
+          label="Presentaciones"
+          v-model="combinedName"
+          readonly
+          style="flex: 1 0 auto"
+          ><template v-slot:prepend>
+            <q-icon name="bi-box-seam-fill" /> </template
+        ></q-input>
+        <q-btn
+          size="14px"
+          icon="add"
+          color="primary"
+          round
+          style="height: 14px"
+          @click="() => (isAddPresentation = true)"
+        ></q-btn>
+      </span>
+    </template>
+  </Dialog>
+  <Dialog v-model="isAddPrueba" title="Agregar presentacion">
+    <template #inputsDialog>
+      <q-input v-model="producto.nombre" type="text" label="presentacion" />
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -225,7 +286,13 @@ import {
   NotifySucess
 } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { productStore } from '@/stores/producto.store';
+import type { Presentacion } from '~/interfaces/product.interface';
 
+const useProduct = productStore();
+const router = useRouter();
+const $q = useQuasar();
 const test = ref(false);
 const isAddPresentation = ref(false);
 const productos = ref([]);
@@ -237,17 +304,19 @@ const producto = ref({
   presentaciones: [{ nombre: '', cantidad: 0 }]
 });
 const isProve = ref(false);
-const options = ['Diario', 'Semanal', 'Mensual'];
+const isEditProduct = ref(false);
+const isAddPrueba = ref(false);
+
 const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 
 const getAllProductos = async () => {
   try {
     showLoading();
-    const { buscarProductos } = await GqlBuscarProductos({
+    const { productoBuscar } = await GqlBuscarProductos({
       busqueda: {}
     });
     //@ts-ignore
-    productos.value = buscarProductos;
+    productos.value = productoBuscar;
     hideLoading();
   } catch (error) {
     ApiError(error);
@@ -255,21 +324,16 @@ const getAllProductos = async () => {
 };
 
 const crearProducto = async () => {
-  // producto.value.presentaciones = producto.value.presentaciones.map((p) => {
-  //   return {
-  //     nombre: p.nombre,
-  //     cantidad: parseInt(p.cantidad)
-  //   };
-  // });
   console.log(producto.value);
   try {
     showLoading();
-    const { crearProducto } = await GqlCrearProducto({
+    await GqlCrearProducto({
       datos: producto.value
     });
-    console.log(crearProducto);
+    getAllProductos();
     NotifySucess('Producto creado');
     hideLoading();
+    test.value = false;
   } catch (error) {
     ApiError(error);
   }
@@ -286,7 +350,6 @@ const removeItemTable = (index: number) => {
 };
 
 const savePresentations = () => {
-  console.log(producto.value.presentaciones);
   isAddPresentation.value = false;
 };
 
@@ -296,6 +359,48 @@ const combinedName = computed(() => {
   });
   return name.join(', ');
 });
+
+const borrarProducto = (row: { _id: string; nombre: string }) => {
+  $q.dialog({
+    title: `Eliminar ${row.nombre}`,
+    message: '¿Está seguro de eliminar este producto?',
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    await GqlBorrarProducto({ busqueda: { _id: row._id } });
+    NotifySucess('Producto eliminado correctamente');
+    getAllProductos();
+    // articles.value = articles.value.filter((user) => user._id !== row._id);
+  });
+};
+
+const editarProducto = (row: any) => {
+  isEditProduct.value = true;
+  console.log(row);
+  producto.value.nombre = row.nombre;
+  producto.value.descripcion = row.descripcion;
+  producto.value.tags = row.tags;
+  producto.value.presentacionBasica = row.presentacionBasica;
+  producto.value.presentaciones = row.presentaciones;
+};
+const editProduct = (row: any) => {
+  console.log(row);
+  useProduct.product = row;
+  useProduct.isEdit = true;
+  router.push('productos/detailProduct');
+};
+const agregarProducto = () => {
+  useProduct.isEdit = false;
+  useProduct.product = {
+    _id: '',
+    nombre: '',
+    descripcion: '',
+    tags: [],
+    presentacionBasica: '',
+    presentaciones: []
+  };
+  router.push('productos/detailProduct');
+};
 
 onMounted(() => {
   getAllProductos();
@@ -313,21 +418,6 @@ onMounted(() => {
   .cell-image {
     width: 70px;
     height: 70px;
-  }
-}
-.table {
-  width: 100%; /* La tabla ocupará el ancho completo del contenedor */
-  border-collapse: collapse; /* Combina los bordes de las celdas */
-  th,
-  td {
-    border: 1px solid #ccc; /* Añade bordes a las celdas */
-    padding: 8px; /* Espaciado interno para el contenido */
-    text-align: center; /* Centra el texto en las celdas */
-    height: 42px;
-  }
-
-  th {
-    background-color: #f2f2f2; /* Color de fondo para las celdas de encabezado */
   }
 }
 </style>

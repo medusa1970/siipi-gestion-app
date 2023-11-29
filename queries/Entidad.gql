@@ -1,45 +1,34 @@
 # EMPLEADOS
 query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
-  buscarEntidad(busqueda: $busqueda, options: { populateEmpleados: true }) {
+  entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+    _id
+    nombre
     empleados {
-      personaId {
-        _id
-        nombre
-        telefono
-        correo
-      }
-      cargo
-    }
-    roles {
-      personaId
-      rol
-      vencimiento
-    }
-    permisos {
-      personaId
-      permiso
-      otorgado
-      vencimiento
-    }
-  }
-}
-
-mutation agregarEmpleadoEntidad(
-  $entidadId: String!
-  $personaId: String!
-  $datos: AgregarEmpleadoParcialDto!
-) {
-  agregarEmpleado(entidadId: $entidadId, personaId: $personaId, datos: $datos) {
-    personaId {
       _id
-      nombre
-      correo
-      telefono
+      cargo
+      persona {
+        nombre
+      }
     }
-    cargo
   }
 }
 
-mutation borrarEmpleadoEntidad($entidadId: String!, $personaId: String!) {
-  borrarEmpleado(entidadId: $entidadId, personaId: $personaId)
-}
+# mutation agregarEmpleadoEntidad(
+#   $entidadId: String!
+#   $personaId: String!
+#   $datos: AgregarEmpleadoParcialDto!
+# ) {
+#   agregarEmpleado(entidadId: $entidadId, personaId: $personaId, datos: $datos) {
+#     personaId {
+#       _id
+#       nombre
+#       correo
+#       telefono
+#     }
+#     cargo
+#   }
+# }
+
+# mutation borrarEmpleadoEntidad($entidadId: String!, $personaId: String!) {
+#   borrarEmpleado(entidadId: $entidadId, personaId: $personaId)
+# }

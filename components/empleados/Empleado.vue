@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navigation label="Empleados" icon="group" />
-    <Table :rows="rows" :columns="columnsEmpleados">
+    <Table :rows="rows" :columns="columnsEmpleados" dense>
       <!-- IMAGES -->
       <template #body-cell-image="{ value }">
         <q-td>
@@ -75,7 +75,7 @@
       <div class="row items-center" style="width: 100%">
         <q-select
           color="primary"
-          v-model="personaSelect"
+          v-model="personaSelect.nombre"
           :options="personas"
           label="Seleccionar persona"
           option-label="nombre"

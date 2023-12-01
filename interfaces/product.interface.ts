@@ -1,4 +1,5 @@
 export interface Presentacion {
+  _id?: string;
   nombre: string;
   cantidad: number;
 }

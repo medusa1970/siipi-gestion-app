@@ -10,7 +10,7 @@
           label="Agregar oferta"
           no-caps
           style="padding: 7px 15px"
-          @click="() => (test = true)"
+          @click="() => $router.push('ofertas/detailOferta')"
         />
       </template>
       <!-- BADGE -->
@@ -265,13 +265,13 @@
           onfocus="this.select()"
         >
           <!-- <template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="oferta.ingredientes[0].nombre = ''"
-              class="cursor-pointer q-mr-md"
-            />
-          </template> -->
+              <q-icon
+                style="margin: 0"
+                name="close"
+                @click.stop.prevent="oferta.ingredientes[0].nombre = ''"
+                class="cursor-pointer q-mr-md"
+              />
+            </template> -->
           <template v-slot:prepend>
             <q-icon name="bi-cart-plus" />
           </template>
@@ -342,8 +342,10 @@
 import { Catalogos } from '@/mocks/data.json';
 import { columnsOfertas } from '@/helpers/columns';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 console.log(Catalogos[0].items);
 
+const router = useRouter();
 const test = ref(false);
 const oferta = ref({
   nombre: '',

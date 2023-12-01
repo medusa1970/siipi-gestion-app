@@ -12,6 +12,7 @@ const NotifyError = (message: string) =>
 
 /**API ERROR */
 const ApiError = (error: any) => {
+  console.log(error);
   hideLoading();
   error.gqlErrors[0].message
     ? NotifyError(error.gqlErrors[0].message)

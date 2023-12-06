@@ -108,6 +108,7 @@ const getAllProductos = async () => {
     });
     //@ts-ignore
     productos.value = productoBuscar;
+    console.log(productos.value);
     hideLoading();
   } catch (error) {
     ApiError(error);

@@ -2,6 +2,7 @@ query conectar($datos: ConexionDto!) {
   conectar(datos: $datos) {
     token
     persona {
+      _id
       nombre
     }
   }
@@ -13,4 +14,14 @@ query buscarEntidadesConUsuario {
     nombre
     tipo
   }
+}
+
+# mandar codigo OTP al correo electronico
+query pedirRDC($correo: String!) {
+  pedirReinicioDeContrasena(correo: $correo)
+}
+
+# cambiar contraseña (OTP, nueva contraseña)
+query actuarRDC($token: String!, $contrasena: String!) {
+  actuarReinicioDeContrasena(token: $token, contrasena: $contrasena)
 }

@@ -86,43 +86,15 @@
         round
         color="primary"
         size="md"
-        @click="dialog.isAddPresentation = true"
+        @click="openAddPresentation()"
       />
     </div>
     <DragDrop
       :lista="producto.presentaciones"
       item-key="nombre"
-      @edit="editar"
+      @edit="editPresentation"
       @delete="deletePresentation"
     />
-    <!-- <div class="flex gap-2 items-center">
-      <span
-        v-for="presentacion in producto.presentaciones"
-        class="bg-[#1976D2] rounded-full py-[2px] px-3 text-white capitalize"
-      >
-        <q-icon name="bi-cake" />
-        {{ presentacion.nombre }}
-        <q-btn
-          color="white"
-          icon="edit"
-          round
-          dense
-          text-color="primary"
-          size="sm"
-          class="mx-1"
-          @click="editPresentation(presentacion)"
-        />
-        <q-btn
-          color="white"
-          text-color="primary"
-          icon="close"
-          round
-          dense
-          size="sm"
-          @click="deletePresentation(presentacion)"
-        />
-      </span>
-    </div> -->
     <br />
     <q-btn
       color="secondary"
@@ -195,7 +167,7 @@ const presentacion = ref<Presentacion>({
   nombre: '',
   cantidad: 0
 });
-const vanilla = ref(true);
+const presentacionNombre = ref('');
 const dialog = ref({
   isAddPresentation: false,
   isEditPresentation: false,
@@ -206,20 +178,7 @@ const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 if (useProduct.product) {
   producto.value = useProduct.product;
 }
-// const savePresentation = () => {
-//   producto.value.presentaciones.push({
-//     nombre: presentacion.value.nombre,
-//     cantidad: presentacion.value.cantidad
-//   });
-//   dialog.value.isAddPresentation = false;
-// };
 
-// const editPresentation = (p: Presentacion) => {
-//   dialog.value.isAddPresentation = true;
-//   dialog.value.isEditPresentation = true;
-//   presentacion.value.nombre = p.nombre;
-//   presentacion.value.cantidad = p.cantidad;
-// };
 const agregarProducto = async () => {
   delete producto.value._id;
   try {
@@ -234,38 +193,47 @@ const agregarProducto = async () => {
     ApiError(error);
   }
 };
-
 const editProductBasicInfo = async () => {
   //@ts-ignore
   const { presentaciones, _creado, _id, ...productoData } = producto.value;
   try {
     showLoading();
-    await GqlModificarProducto({
+    const { productoModificar } = await GqlModificarProductos({
       busqueda: { _id: useProduct.product._id },
       datos: productoData
     });
+    producto.value = Object.assign(producto.value, productoModificar[0]);
     NotifySucess('información básica actualizada correctamente');
     hideLoading();
-    router.push('/sede/productos');
   } catch (error) {
     ApiError(error);
   }
 };
+const openAddPresentation = () => {
+  dialog.value.isAddPresentation = true;
+  presentacion.value = {
+    _id: '',
+    nombre: '',
+    cantidad: 0
+  };
+};
 
+// CRUD
 const addPresentation = async () => {
   if (useProduct.isEdit) {
-    const presentacionData = { ...presentacion.value, accion: 'agregar' };
-    delete presentacionData._id;
-    // console.log(presentacionData);
     try {
       showLoading();
-      const { productoModificarPresentacion: res } =
-        await GqlModificarPresentacion({
+      const { productoAgregarPresentacion: res } = await GqlAgregarPresentacion(
+        {
           busqueda: { _id: useProduct.product._id },
-          datos: presentacionData
-        });
+          datos: {
+            nombre: presentacion.value.nombre,
+            cantidad: presentacion.value.cantidad
+          }
+        }
+      );
       if (res) {
-        producto.value.presentaciones.push(presentacion.value);
+        producto.value.presentaciones.push(res);
       }
       NotifySucess('presentacion agregado correctamente');
       dialog.value.isAddPresentation = false;
@@ -281,43 +249,58 @@ const addPresentation = async () => {
     dialog.value.isAddPresentation = false;
   }
 };
-
 const editPresentation = (p: Presentacion) => {
   dialog.value.isAddPresentation = true;
   dialog.value.isEditPresentation = true;
   presentacion.value._id = p._id;
   presentacion.value.nombre = p.nombre;
   presentacion.value.cantidad = p.cantidad;
+  presentacionNombre.value = p.nombre;
 };
 const updatePresentation = async () => {
-  const presentacionData = { ...presentacion.value, accion: 'modificar' };
-  console.log(presentacionData);
-  try {
-    showLoading();
-    const { productoModificarPresentacion: res } =
-      await GqlModificarPresentacion({
-        busqueda: { _id: useProduct.product._id },
-        datos: presentacionData
-      });
-    if (res) {
-      const index = producto.value.presentaciones.findIndex(
-        (p) => p._id === presentacion.value._id
-      );
-      if (index !== -1)
-        producto.value.presentaciones[index] = presentacion.value;
+  if (useProduct.isEdit) {
+    try {
+      showLoading();
+      const { productoModificarPresentacion: res } =
+        await GqlModificarPresentacion({
+          busqueda: { _id: useProduct.product._id },
+          busquedaPresentacion: { nombre: presentacionNombre.value },
+          datos: presentacion.value
+        });
+      if (res) {
+        const index = producto.value.presentaciones.findIndex(
+          (p) => p._id === presentacion.value._id
+        );
+        if (index !== -1)
+          producto.value.presentaciones[index] = presentacion.value;
+      }
+      NotifySucess('Presentacion modificado correctamente');
+      hideLoading();
+      dialog.value.isAddPresentation = false;
+      dialog.value.isEditPresentation = false;
+    } catch (error) {
+      ApiError(error);
     }
-    NotifySucess('Presentacion modificado correctamente');
-    hideLoading();
-    dialog.value.isAddPresentation = false;
+    presentacion.value = {
+      _id: '',
+      nombre: '',
+      cantidad: 0
+    };
+  } else {
+    const index = producto.value.presentaciones.findIndex(
+      (p) => p.nombre === presentacionNombre.value
+    );
+    if (index !== -1) {
+      producto.value.presentaciones[index] = presentacion.value;
+    }
+    presentacion.value = {
+      _id: '',
+      nombre: '',
+      cantidad: 0
+    };
     dialog.value.isEditPresentation = false;
-  } catch (error) {
-    ApiError(error);
+    dialog.value.isAddPresentation = false;
   }
-  presentacion.value = {
-    _id: '',
-    nombre: '',
-    cantidad: 0
-  };
 };
 const deletePresentation = async (presentacion: Presentacion) => {
   if (useProduct.isEdit) {
@@ -328,11 +311,10 @@ const deletePresentation = async (presentacion: Presentacion) => {
       persistent: true
     }).onOk(async () => {
       showLoading();
-      const { productoModificarPresentacion: res } =
-        await GqlModificarPresentacion({
-          busqueda: { _id: useProduct.product._id },
-          datos: { accion: 'quitar', _id: presentacion._id }
-        });
+      const { productoBorrarPresentacion: res } = await GqlBorrarPresentacion({
+        busqueda: { _id: useProduct.product._id },
+        busquedaPresentacion: { nombre: presentacion.nombre }
+      });
       hideLoading();
       NotifySucess('Presentacion eliminado correctamente');
       if (res) {
@@ -352,8 +334,5 @@ const deletePresentation = async (presentacion: Presentacion) => {
       producto.value.presentaciones.splice(index, 1);
     }
   }
-};
-const editar = (element: any) => {
-  console.log(element);
 };
 </script>

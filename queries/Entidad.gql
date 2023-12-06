@@ -8,27 +8,52 @@ query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
       cargo
       persona {
         nombre
+        correo
+        telefono
       }
     }
   }
 }
 
-# mutation agregarEmpleadoEntidad(
-#   $entidadId: String!
-#   $personaId: String!
-#   $datos: AgregarEmpleadoParcialDto!
-# ) {
-#   agregarEmpleado(entidadId: $entidadId, personaId: $personaId, datos: $datos) {
-#     personaId {
-#       _id
-#       nombre
-#       correo
-#       telefono
-#     }
-#     cargo
-#   }
-# }
+# Error al poner nombre, solo con _id funciona
+mutation agregarEmpleadoEntidad(
+  $busqueda: BuscarEntidadDto!
+  $datos: AgregarEmpleadoDto!
+) {
+  entidadAgregarEmpleado(busqueda: $busqueda, datos: $datos) {
+    _id
+    cargo
+    persona {
+      _id
+      # nombre
+    }
+  }
+}
 
 # mutation borrarEmpleadoEntidad($entidadId: String!, $personaId: String!) {
 #   borrarEmpleado(entidadId: $entidadId, personaId: $personaId)
 # }
+
+# BUSCAR STOCKS DE UNA ENTIDAD
+query buscarStocks(
+  $entidadBusqueda: BuscarEntidadDto!
+  $opciones: EntidadOpcionesDto
+) {
+  entidadBuscarStocks(entidadBusqueda: $entidadBusqueda, opciones: $opciones) {
+    producto {
+      _id
+      nombre
+      presentacionBasica
+      presentaciones {
+        nombre
+        cantidad
+      }
+    }
+    lotes {
+      vencimiento
+      cantidad
+      bloque
+    }
+    fecha
+  }
+}

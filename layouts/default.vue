@@ -22,7 +22,7 @@
             self="top end"
           >
             <q-list style="min-width: 100px">
-              <q-item clickable>
+              <q-item clickable @click="$router.push('/profile')">
                 <q-item-section avatar>
                   <q-avatar>
                     <img
@@ -102,7 +102,9 @@ const logout = () => {
 };
 
 const prueba = (negocio) => {
+  console.log(negocio);
   router.push(`/${negocio.tipo.toLowerCase()}`);
   useAuth.negocioSelected = negocio.nombre;
+  useAuth.negocioIDSelected = negocio._id;
 };
 </script>

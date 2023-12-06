@@ -1,5 +1,5 @@
 export interface Presentacion {
-  _id?: string;
+  _id?: string | null | undefined;
   nombre: string;
   cantidad: number;
 }

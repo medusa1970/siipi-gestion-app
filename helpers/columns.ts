@@ -135,3 +135,44 @@ export const columnsProductos = [
     align: 'right'
   }
 ];
+
+export const stockProducts = [
+  {
+    name: 'foto',
+    label: 'Imagen',
+    align: 'left',
+    field: (row: any) => row.foto
+  },
+  {
+    name: 'producto',
+    required: true,
+    label: 'Producto',
+    align: 'left',
+    field: (row: any) => row.producto,
+    sortable: true
+  },
+  {
+    name: 'presentaciones',
+    required: true,
+    label: 'Presentaciones',
+    align: 'left',
+    field: (row: any) => row.presentaciones.map((p: any) => p.nombre),
+    sortable: true
+  },
+  {
+    name: 'lotes',
+    required: true,
+    label: 'Lotes',
+    align: 'left',
+    field: (row: any) => row.lote.nro,
+    sortable: true
+  },
+  {
+    name: 'cantidad',
+    required: true,
+    label: 'Cantidad Total',
+    align: 'left',
+    field: (row: any) => row.cantidad,
+    sortable: true
+  }
+];

@@ -8,7 +8,7 @@ import { LocalStorage } from 'quasar';
 
 export const authStore = defineStore('auth', {
   state: () => ({
-    user: { nombre: '', negocios: [] as any[] },
+    user: { _id: '', nombre: '', negocios: [] as any[] },
     token: '',
     negocioSelected: '',
     negocioIDSelected: ''
@@ -20,7 +20,11 @@ export const authStore = defineStore('auth', {
         const { conectar } = await GqlConectar({
           datos: { usuario, contrasena }
         });
-        if (!conectar?.token || !conectar?.persona?.nombre)
+        if (
+          !conectar?.token ||
+          !conectar?.persona?.nombre ||
+          !conectar?.persona?._id
+        )
           throw new Error('No se pudo conectar o el token es undefined');
         this.token = conectar.token;
         NotifySucess(`Bienvenido al sistema ${conectar.persona.nombre}`);
@@ -29,8 +33,10 @@ export const authStore = defineStore('auth', {
           await GqlBuscarEntidadesConUsuario(useGqlToken(conectar.token));
         // console.log(res);
         if (!res) throw new Error('No se pudo obtener los negocios');
+        this.user._id = conectar.persona._id;
         this.user.nombre = conectar.persona.nombre;
         this.user.negocios = res;
+        console.log(this.user.negocios);
         hideLoading();
       } catch (error) {
         ApiError(error);
@@ -45,7 +51,7 @@ export const authStore = defineStore('auth', {
     }) {
       try {
         showLoading();
-        const { crearPersona: res } = await GqlCrearPersona({ datos });
+        const { personaCrear: res } = await GqlCrearPersona({ datos });
         NotifySucess(`${res.nombre} se ha registrado correctamente`);
         hideLoading();
       } catch (error) {

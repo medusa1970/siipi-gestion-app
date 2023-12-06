@@ -135,19 +135,22 @@ const $q = useQuasar();
 
 const getAllEntity = async () => {
   showLoading();
-  const { buscarEntidad } = await GqlBuscarEntidadEmpleados({
+  const { entidadBuscar } = await GqlBuscarEntidadEmpleados({
     busqueda: { nombre: useAuth.negocioSelected }
   });
-  rows.value = buscarEntidad?.empleados?.map((empleado) => {
-    return {
-      id: empleado.personaId._id,
-      nombre: empleado.personaId.nombre,
-      correo: empleado.personaId.correo,
-      telefono: empleado.personaId.telefono,
-      cargo: empleado.cargo,
-      foto: 'https://mighty.tools/mockmind-api/content/popular/32.jpg'
-    };
+  rows.value = entidadBuscar?.flatMap((sede) => {
+    return sede.empleados?.map((empleado) => {
+      return {
+        id: empleado._id,
+        cargo: empleado.cargo,
+        nombre: empleado.persona.nombre,
+        correo: empleado.persona.correo,
+        telefono: empleado.persona.telefono,
+        foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg'
+      };
+    });
   });
+  console.log(rows.value);
   hideLoading();
 };
 
@@ -160,8 +163,8 @@ const openDialog = () => {
 };
 
 const getAllPeoples = async () => {
-  const { buscarPersonas } = await GqlBuscarPersonas({ busqueda: {} });
-  personas.value = buscarPersonas?.map((persona) => {
+  const { personaBuscar } = await GqlBuscarPersonas({ busqueda: {} });
+  personas.value = personaBuscar?.map((persona) => {
     return {
       id: persona._id,
       nombre: persona.nombre
@@ -172,9 +175,9 @@ const agregarEmpleado = async () => {
   try {
     showLoading();
     await GqlAgregarEmpleadoEntidad({
-      entidadId: useAuth.negocioIDSelected,
-      personaId: personaSelect.value.id,
-      datos: { cargo: cargo.value }
+      busqueda: { _id: useAuth.negocioIDSelected },
+      //@ts-ignore arreglar despues
+      datos: { persona: personaSelect.value.nombre.id, cargo: cargo.value }
     });
     NotifySucess('Empleado agregado');
     getAllEntity();

@@ -1,8 +1,7 @@
 <template>
   <header class="shadow-lg bg-white">
     <div
-      class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem]"
-    >
+      class="flex items-center justify-between h-[5rem] max-w-full xl:mx-36 lg:mx-20 md:mx-10 sm:mx-5 mx-2 px-[1rem]">
       <nav class="flex flex-grow basis-0 gap-2 items-center">
         <h1 class="font-bold text-lg uppercase">
           {{ useAuth.negocioSelected ? useAuth.negocioSelected : 'Cliente' }}
@@ -13,21 +12,18 @@
           ><img
             style="border-radius: 100%; object-fit: cover"
             src="https://avatars.githubusercontent.com/u/739984?v=4"
-            alt=""
-          />
+            alt="" />
           <q-menu
             transition-show="rotate"
             transition-hide="rotate"
             anchor="bottom end"
-            self="top end"
-          >
+            self="top end">
             <q-list style="min-width: 100px">
               <q-item clickable @click="$router.push('/profile')">
                 <q-item-section avatar>
                   <q-avatar>
                     <img
-                      src="https://avatars.githubusercontent.com/u/739984?v=4"
-                    />
+                      src="https://avatars.githubusercontent.com/u/739984?v=4" />
                   </q-avatar>
                 </q-item-section>
 
@@ -42,8 +38,7 @@
               <q-expansion-item
                 group="somegroup"
                 label="Negocios"
-                icon="storefront"
-              >
+                icon="storefront">
                 <template v-slot:header>
                   <q-item-section avatar>
                     <q-icon name="storefront" color="blue" class="px-[10px]" />
@@ -55,8 +50,7 @@
                   <q-item
                     clickable
                     @click="sede"
-                    v-for="negocio in useAuth.user.negocios"
-                  >
+                    v-for="negocio in useAuth.user.negocios">
                     <q-item-section @click="prueba(negocio)">{{
                       negocio.nombre
                     }}</q-item-section>
@@ -89,9 +83,11 @@ import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
+import { useQuasar } from 'quasar';
 
 const useAuth = authStore();
 const router = useRouter();
+const $q = useQuasar();
 
 const logout = () => {
   LocalStorage.remove('token');
@@ -101,10 +97,25 @@ const logout = () => {
   useAuth.negocioSelected = '';
 };
 
-const prueba = (negocio) => {
+const prueba = negocio => {
   console.log(negocio);
-  router.push(`/${negocio.tipo.toLowerCase()}`);
-  useAuth.negocioSelected = negocio.nombre;
-  useAuth.negocioIDSelected = negocio._id;
+  $q.dialog({
+    title: `<strong>Entrar a ${negocio.nombre}</strong>`,
+    message: '¿Está seguro de cambiar de negocio?',
+    cancel: true,
+    persistent: true,
+    html: true
+  }).onOk(async () => {
+    router.push(`/${negocio.tipo.toLowerCase()}`);
+    useAuth.negocioSelected = negocio.nombre;
+    useAuth.negocioIDSelected = negocio._id;
+    $q.notify({
+      type: 'positive',
+      position: 'center',
+      message: `Bienvenido a ${negocio.nombre}`,
+      progress: true,
+      timeout: 1000
+    });
+  });
 };
 </script>

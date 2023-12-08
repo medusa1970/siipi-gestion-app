@@ -90,6 +90,11 @@
               {{ props.row.cantidad }} Unidades
             </q-badge>
           </q-td>
+          <q-td key="actions" :props="props">
+            <q-btn outline icon="add" color="primary" dense>
+              <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
+            </q-btn>
+          </q-td>
         </q-tr>
       </template>
     </Table>
@@ -99,12 +104,7 @@
 <script setup lang="ts">
 import { stockProducts } from '@/helpers/columns';
 import { ref, onMounted } from 'vue';
-import {
-  showLoading,
-  hideLoading,
-  ApiError,
-  NotifySucess
-} from '@/helpers/message.service';
+import { showLoading, hideLoading, ApiError } from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -117,27 +117,14 @@ const getAllStock = async () => {
     showLoading();
     const { entidadBuscarStocks: res } = await GqlBuscarStocks({
       entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      opciones: { populate: true }
+      opciones: { populate: ['producto'] }
     });
-    console.log(res);
     //@ts-ignore
-    // productos.value = productoBuscar.map((producto: any) => {
-    //   return {
-    //     foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
-    //     producto: producto.nombre,
-    //     stock: 123,
-    //     lote: {
-    //       nro: 'AB123',
-    //       fecha: '12/12/2023'
-    //     }
-    //   };
-    // });
     stocks.value = res.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
         0
       );
-      console.log(cantidadTotal);
       return {
         foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
         producto: stock.producto.nombre,
@@ -146,7 +133,6 @@ const getAllStock = async () => {
         cantidad: cantidadTotal
       };
     });
-    console.log(stocks.value);
     hideLoading();
   } catch (error) {
     ApiError(error);

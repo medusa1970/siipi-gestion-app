@@ -20,6 +20,7 @@ export const authStore = defineStore('auth', {
         const { conectar } = await GqlConectar({
           datos: { usuario, contrasena }
         });
+        console.log(conectar);
         if (
           !conectar?.token ||
           !conectar?.persona?.nombre ||

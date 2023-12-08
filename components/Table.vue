@@ -7,11 +7,10 @@
     :filter="filter"
     :rows-per-page-options="[10, 20, 50, 100]"
     :dense="dense"
-    separator="cell"
     class="border-none"
   >
     <!-- HEADER -->
-    <template v-slot:top-right>
+    <template v-slot:top-right="props">
       <q-input
         borderless
         dense
@@ -38,6 +37,14 @@
           <q-icon name="search" size="22px" />
         </template>
       </q-input>
+      <q-btn
+        flat
+        round
+        dense
+        :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        @click="props.toggleFullscreen"
+        class="q-ml-md"
+      />
     </template>
 
     <!-- DROPDDOWN -->
@@ -76,3 +83,9 @@ defineProps({
   badge: Boolean
 });
 </script>
+<style>
+.q-table tbody tr:nth-child(odd) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+</style>

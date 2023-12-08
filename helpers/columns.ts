@@ -174,5 +174,10 @@ export const stockProducts = [
     align: 'left',
     field: (row: any) => row.cantidad,
     sortable: true
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right'
   }
 ];

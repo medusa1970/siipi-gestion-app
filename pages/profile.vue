@@ -3,7 +3,7 @@
     <q-form class="p-4 shadow-lg">
       <div class="flex">
         <div class="w-44 flex flex-col items-center gap-1">
-          <h1 class="font-bold text-lg">Jaime Vallejos</h1>
+          <h1 class="font-bold text-lg">{{ profile.nombre }}</h1>
           <q-img
             class="rounded-full w-[80%]"
             src="https://i.pinimg.com/564x/9f/9c/97/9f9c97b0c48c4a03270da070c7fe0bde.jpg"

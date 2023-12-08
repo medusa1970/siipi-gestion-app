@@ -26,8 +26,8 @@ export const useAuth = () => {
       authPersona.value.usuario,
       authPersona.value.contrasena
     );
-    // console.log(useAuth.user);
-    user.value.negocios.length === 0 && router.push('/cliente');
+    if (useAuth.token && user.value.negocios.length === 0)
+      router.push('/cliente');
     clearAuthPersona();
   };
   const prueba = (negocio: { tipo: string; nombre: string; _id: string }) => {

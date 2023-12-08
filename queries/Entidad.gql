@@ -1,6 +1,9 @@
 # EMPLEADOS
 query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
-  entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+  entidadBuscar(
+    busqueda: $busqueda
+    opciones: { populate: ["empleados"], limit: 0 }
+  ) {
     _id
     nombre
     empleados {
@@ -30,9 +33,16 @@ mutation agregarEmpleadoEntidad(
   }
 }
 
-# mutation borrarEmpleadoEntidad($entidadId: String!, $personaId: String!) {
-#   borrarEmpleado(entidadId: $entidadId, personaId: $personaId)
-# }
+mutation borrarEmpleadoEntidad(
+  $busqueda: BuscarEntidadDto!
+  $busquedaEmpleado: BuscarEmpleadoDto!
+) {
+  entidadBorrarEmpleado(
+    busqueda: $busqueda
+    busquedaEmpleado: $busquedaEmpleado
+    opciones: {}
+  )
+}
 
 # BUSCAR STOCKS DE UNA ENTIDAD
 query buscarStocks(

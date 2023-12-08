@@ -11,7 +11,7 @@ mutation crearPersona($datos: CrearPersonaDto!) {
 }
 
 query buscarPersonas($busqueda: BuscarPersonaDto!) {
-  personaBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+  personaBuscar(busqueda: $busqueda, opciones: { limit: 0 }) {
     _id
     nombre
     telefono
@@ -42,13 +42,3 @@ query buscarPersona(
     telefono
   }
 }
-# query buscarPersona($busqueda: BuscarPersonaDto!) {
-#   buscarPersona(busqueda: $busqueda) {
-#     _id
-#     _creado
-#     usuario
-#     nombre
-#     telefono
-#     correo
-#   }
-# }

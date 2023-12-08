@@ -200,12 +200,11 @@ const borrarEmpleado = async (row: { id: string; nombre: string }) => {
     persistent: true
   }).onOk(async () => {
     await GqlBorrarEmpleadoEntidad({
-      entidadId: useAuth.negocioIDSelected,
-      personaId: row.id
+      busqueda: { _id: useAuth.negocioIDSelected },
+      busquedaEmpleado: { _id: row.id }
     });
     NotifySucess('Empleado eliminado');
     getAllEntity();
-    // articles.value = articles.value.filter((user) => user._id !== row._id);
   });
 };
 

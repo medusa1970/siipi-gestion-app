@@ -25,7 +25,7 @@
         />
       </template>
     </Formulario>
-    <div v-if="user.nombre !== ''">
+    <div v-if="user.nombre !== '' && user.negocios.length !== 0">
       <h1 class="font-bold text-xl text-center">
         Selecciona a que negocio ingresar
       </h1>

@@ -116,7 +116,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Inventarios } from '@/mocks/data.json';
-console.log(Inventarios);
 
 const inventario = ref({
   presentacion: '',

@@ -1,6 +1,6 @@
 # PRODUCTOS
 query buscarProductos($busqueda: BuscarProductoDto!) {
-  productoBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+  productoBuscar(busqueda: $busqueda, opciones: { limit: 0 }) {
     _id
     _creado
     nombre

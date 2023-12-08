@@ -1,0 +1,118 @@
+# PRODUCTOS
+query buscarProductos($busqueda: BuscarProductoDto!) {
+  productoBuscar(busqueda: $busqueda, opciones: { limit: 0 }) {
+    _id
+    _creado
+    nombre
+    descripcion
+    tags
+    presentacionBasica
+    presentaciones {
+      _id
+      _creado
+      nombre
+      cantidad
+    }
+  }
+}
+
+mutation crearProducto($datos: CrearProductoDto!) {
+  productoCrear(datos: $datos) {
+    _id
+    _creado
+    nombre
+    descripcion
+    tags
+    presentacionBasica
+    presentaciones {
+      _id
+      _creado
+      nombre
+      cantidad
+    }
+  }
+}
+
+mutation borrarProducto($busqueda: BuscarProductoDto!) {
+  productoBorrar(busqueda: $busqueda)
+}
+
+# MODIFICAR INFORMACION BASICA
+# mutation modificarProducto(
+#   $busqueda: BuscarProductoDto!
+#   $datos: ModificarProductoDto!
+# ) {
+#   productoModificar(busqueda: $busqueda, datos: $datos)
+# }
+
+# MODIFICAR PRESENTACIONES
+# mutation modificarPresentacion(
+#   $busqueda: BuscarProductoDto!
+#   $datos: [ModificarPresentacionDto!]!
+# ) {
+#   productoModificarPresentacion(
+#     busqueda: $busqueda
+#     datos: $datos
+#     opciones: { limit: 1 }
+#   )
+# }
+mutation modificarProductos(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+) {
+  productoModificar(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: { limit: 0 }
+  ) {
+    _id
+    nombre
+    descripcion
+    tags
+    presentacionBasica
+  }
+}
+
+# PRESENTACION
+mutation agregarPresentacion(
+  $busqueda: BuscarProductoDto!
+  $datos: AgregarPresentacionDto!
+) {
+  productoAgregarPresentacion(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: {}
+  ) {
+    _id
+    nombre
+    cantidad
+  }
+}
+
+mutation modificarPresentacion(
+  $busqueda: BuscarProductoDto!
+  $busquedaPresentacion: BuscarPresentacionDto!
+  $datos: ModificarPresentacionDto!
+) {
+  productoModificarPresentacion(
+    busqueda: $busqueda
+    busquedaPresentacion: $busquedaPresentacion
+    datos: $datos
+    opciones: {}
+  ) {
+    _id
+    nombre
+    cantidad
+  }
+}
+
+mutation borrarPresentacion(
+  $busqueda: BuscarProductoDto!
+  $busquedaPresentacion: BuscarPresentacionDto!
+) {
+  productoBorrarPresentacion(
+    busqueda: $busqueda
+    busquedaPresentacion: $busquedaPresentacion
+    opciones: { limit: 0 }
+  )
+}

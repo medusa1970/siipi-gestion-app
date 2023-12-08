@@ -4,54 +4,49 @@
     <Formulario title-btn="Registrarse" register :submit="register">
       <template #inputs>
         <q-input
-          v-model="persona.nombre"
+          v-model="authPersona.nombre"
           type="text"
           label="Nombre"
-          outlined=""
-          dense />
+          outlined
+          dense
+          :rules="[string]"
+        />
         <q-input
-          v-model="persona.telefono"
+          v-model="authPersona.telefono"
           type="text"
           label="Telefono"
-          outlined=""
-          dense />
+          outlined
+          dense
+          :rules="[phone]"
+        />
         <q-input
-          v-model="persona.correo"
-          type="text"
+          v-model="authPersona.correo"
+          type="email"
           label="Corre electronico"
-          outlined=""
-          dense />
+          outlined
+          dense
+        />
         <q-input
-          v-model="persona.contrasena"
+          v-model="authPersona.contrasena"
           type="text"
           label="Contraseña"
-          outlined=""
-          dense />
+          outlined
+          dense
+          :rules="[password]"
+        />
       </template>
     </Formulario>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 });
-import { ref } from 'vue';
+import { password, phone, string } from '@/helpers/validate.form';
+import { useAuth } from '@/composables/auth/useAuth';
 
-const persona = ref({
-  nombre: '',
-  telefono: '',
-  correo: '',
-  contrasena: ''
-});
-
-const register = async () => {
-  try {
-    const res = await GqlCrearUna({ data: persona.value });
-  } catch (err) {
-    console.log(err);
-  }
-};
+const { authPersona, register } = useAuth();
 </script>
 
 <style lang="scss" scoped></style>

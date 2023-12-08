@@ -1,0 +1,314 @@
+{
+  "empleados": [
+    {
+      "nombre": "Juan Pérez",
+      "correo": "juan.perez@example.com",
+      "telefono": "555-1234",
+      "rol": "Administrador",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/33.jpg"
+    },
+    {
+      "nombre": "María Rodríguez",
+      "correo": "maria.rodriguez@example.com",
+      "telefono": "555-5678",
+      "rol": "Logística",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/31.jpg"
+    },
+    {
+      "nombre": "Carlos Gómez",
+      "correo": "carlos.gomez@example.com",
+      "telefono": "555-9012",
+      "rol": "Encargado",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/32.jpg"
+    },
+    {
+      "nombre": "Ana García",
+      "correo": "ana.garcia@example.com",
+      "telefono": "555-3456",
+      "rol": "Supervisor",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/30.jpg"
+    },
+    {
+      "nombre": "Luis Martínez",
+      "correo": "luis.martinez@example.com",
+      "telefono": "555-7890",
+      "rol": "Contador",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/28.jpg"
+    },
+    {
+      "nombre": "Laura Sánchez",
+      "correo": "laura.sanchez@example.com",
+      "telefono": "555-2345",
+      "rol": "Administrador",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/29.jpg"
+    },
+    {
+      "nombre": "Pedro López",
+      "correo": "pedro.lopez@example.com",
+      "telefono": "555-6789",
+      "rol": "Logística",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/27.jpg"
+    },
+    {
+      "nombre": "Elena Torres",
+      "correo": "elena.torres@example.com",
+      "telefono": "555-0123",
+      "rol": "Encargado",
+      "foto": "https://mighty.tools/mockmind-api/content/popular/26.jpg"
+    }
+  ],
+  "Productos": [
+    {
+      "nombre": "Pastel de choclo",
+      "marca": "Siipi",
+      "descripcion": "El mejor aunque un poco empalagoso",
+      "presentaciones": [
+        { "nombre": "pedazo", "q": 1 },
+        { "nombre": "pastel entero", "q": 8 }
+      ],
+      "tags": ["siipime", "pasteles", "choclo", "comida"],
+      "inventario": "diario"
+    },
+    {
+      "nombre": "Frutillas",
+      "descripcion": "frutillas para embutir",
+      "presentaciones": [
+        { "nombre": "gramos", "q": 1 },
+        { "nombre": "caja", "q": 200 },
+        { "nombre": "monton", "q": 5000 }
+      ],
+      "tags": ["frutas", "frutilla"],
+      "inventario": "diario"
+    },
+    {
+      "nombre": "Porcion de frutilla",
+      "descripcion": "Porcion de fruta para hacer jugo de frutilla",
+      "presentaciones": [
+        { "nombre": "porcion", "q": 1 },
+        { "nombre": "tira", "q": 20 }
+      ],
+      "grupo": ["porciones"],
+      "tags": ["frutas", "frutillas", "embutidos", "porciones"],
+      "inventario": "semanal"
+    },
+    {
+      "nombre": "Azucar",
+      "descripcion": "Para saborear los cafes",
+      "presentaciones": [
+        { "nombre": "gramos", "q": 1 },
+        { "nombre": "dosis_cafe", "q": 3 },
+        { "nombre": "kilogramos", "q": 1000 }
+      ],
+      "grupo": ["saborizante"],
+      "tags": ["saborizante", "cafe"],
+      "inventario": "semanal"
+    },
+    {
+      "nombre": "Stevia",
+      "descripcion": "Para saborear los cafes pero sin azucar",
+      "presentaciones": [
+        { "nombre": "gramos", "q": 1 },
+        { "nombre": "dosis_cafe", "q": 5 },
+        { "nombre": "kilogramos", "q": 1000 }
+      ],
+      "grupo": ["saborizante"],
+      "tags": ["saborizante", "cafe"],
+      "inventario": "semanal"
+    }
+  ],
+  "Catalogos": [
+    {
+      "nombre": "Siinple",
+      "items": [
+        {
+          "nombre": "Pastel de choclo",
+          "descripcion": "Combo cafe y empanada para el desayuno",
+          "productos": [{ "p": "Pastel de choclo", "q": 1 }],
+          "grupos": ["queques"],
+          "tags": [],
+          "precio": 5
+        },
+        {
+          "nombre": "Pastel de choclo entero",
+          "productos": [{ "p": "Pastel de choclo", "q": 8 }],
+          "grupos": ["queques interos"],
+          "tags": [],
+          "precio": 35
+        },
+        {
+          "nombre": "Pastel de choclo por mayor",
+          "productos": [{ "p": "Pastel de choclo", "q": 8 }],
+          "grupos": ["queques mayoristas"],
+          "tags": [],
+          "precio": 30,
+          "cantidad_minima": 5
+        },
+        {
+          "nombre": "Combo Cafe + Empanada",
+          "descripcion": "Combo cafe y empanada para el desayuno",
+          "productos": [
+            { "p": "Cafe Ganoderma", "q": 1 },
+            { "p": "categoria:empanada", "q": 2 }
+          ],
+          "condicion": {
+            "fechas": "2023-10-15 2023-12-31",
+            "horario": "08h00-11h00",
+            "dias": "lunes-viernes"
+          },
+          "precio": 10,
+          "grupos": ["desayunos"],
+          "tags": ["combo", "promocion", "desayuno"]
+        },
+        {
+          "nombre": "Jugo 1 fruta + 1 semilla",
+          "productos": [
+            { "p": "grupo:porciones", "q": 1 },
+            { "p": "grupo:semilla", "q": 1 },
+            { "p": "bombilla", "q": 1 }
+          ],
+          "grupos": ["jugos"],
+          "tags": ["jugos", "desayuno", "bebidas"],
+          "precio": 12
+        },
+        {
+          "nombre": "Cafe Ganoderma",
+          "descripcion": "Cafe Ganoderma ideal para la salud",
+          "productos": [
+            { "p": "Sachete de cafe Ganoderma", "q": 1, "u": "sachete" },
+            { "p": "grupo:saborizante", "q": 1, "u": "dosis_cafe" }
+          ],
+          "grupos": ["cafes"],
+          "tags": ["siipime", "cafes", "desayuno", "bebidas"],
+          "precio": 7
+        }
+      ]
+    }
+  ],
+  "Inventarios": [
+    {
+      "productName": "Product A",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 100,
+          "expiryDate": "2024-01-01"
+        },
+        {
+          "presentation": "Litro",
+          "quantity": 50,
+          "expiryDate": "2024-02-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product B",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 150,
+          "expiryDate": "2024-03-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product C",
+      "presentations": [
+        {
+          "presentation": "Litro",
+          "quantity": 60,
+          "expiryDate": "2024-04-01"
+        },
+        {
+          "presentation": "Unidad",
+          "quantity": 250,
+          "expiryDate": "2024-05-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product D",
+      "presentations": [
+        {
+          "presentation": "Unidad",
+          "quantity": 200,
+          "expiryDate": "2024-06-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product E",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 100,
+          "expiryDate": "2024-07-01"
+        },
+        {
+          "presentation": "Litro",
+          "quantity": 50,
+          "expiryDate": "2024-08-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product F",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 150,
+          "expiryDate": "2024-09-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product G",
+      "presentations": [
+        {
+          "presentation": "Litro",
+          "quantity": 60,
+          "expiryDate": "2024-10-01"
+        },
+        {
+          "presentation": "Unidad",
+          "quantity": 250,
+          "expiryDate": "2024-11-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product H",
+      "presentations": [
+        {
+          "presentation": "Unidad",
+          "quantity": 200,
+          "expiryDate": "2024-12-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product I",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 100,
+          "expiryDate": "2025-01-01"
+        },
+        {
+          "presentation": "Litro",
+          "quantity": 50,
+          "expiryDate": "2025-02-01"
+        }
+      ]
+    },
+    {
+      "productName": "Product J",
+      "presentations": [
+        {
+          "presentation": "Kilo",
+          "quantity": 150,
+          "expiryDate": "2025-03-01"
+        }
+      ]
+    }
+  ]
+}

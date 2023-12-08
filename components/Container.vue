@@ -7,8 +7,8 @@
           md:mx-10
           sm:mx-5
           mx-2
-          px-[1rem]
-          border-2 border-red-400">
+          p-[1rem]"
+  >
     <slot></slot>
   </div>
 </template>

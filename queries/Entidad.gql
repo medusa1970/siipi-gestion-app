@@ -128,3 +128,45 @@ mutation modificarCantidadLimite(
     cantidadLimite
   }
 }
+
+# INVENTARIO
+mutation hacerInventario(
+  $entidadBusqueda: BuscarEntidadDto!
+  $datos: AgregarInventarioDto!
+  $guardar: Boolean!
+) {
+  entidadHacerInventario(
+    entidadBusqueda: $entidadBusqueda
+    datos: $datos
+    guardar: $guardar
+    opciones: {}
+  ) {
+    producto {
+      _id
+    }
+    cantidadLimite
+    lotes {
+      vencimiento
+      cantidad
+      bloque
+    }
+    inventarios {
+      persona {
+        _id
+      }
+      lotes {
+        vencimiento
+        cantidad
+        bloque
+        presentacion
+        cantidadPresentacion
+      }
+      diferencias {
+        vencimiento
+        diferencia
+      }
+      reporte
+      fecha
+    }
+  }
+}

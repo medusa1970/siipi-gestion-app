@@ -3,6 +3,8 @@ import type { Product } from '~/interfaces/product.interface';
 interface ProductState {
   product: Product;
   isEdit: boolean;
+  ListInventario: Array<Object>;
+  ListInventarioPDF: Array<Object>;
 }
 
 export const productStore = defineStore('product', {
@@ -15,7 +17,9 @@ export const productStore = defineStore('product', {
       presentacionBasica: '',
       presentaciones: []
     },
-    isEdit: false
+    isEdit: false,
+    ListInventario: [],
+    ListInventarioPDF: []
   }),
   persist: true
 });

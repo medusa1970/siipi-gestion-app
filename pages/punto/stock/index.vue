@@ -8,7 +8,8 @@
           color="green"
           label="Descargar .PDF"
           outline
-          icon="bi-filetype-pdf" />
+          icon="bi-filetype-pdf"
+        />
         <div class="ml-3">
           <span class="flex gap-1"
             >0 con stock en
@@ -27,7 +28,8 @@
             <q-img
               :src="props.row.foto"
               spinner-color="black"
-              class="cell-image" />
+              class="cell-image"
+            />
           </q-td>
           <q-td key="producto" :props="props">
             {{ props.row.producto.nombre }}
@@ -39,7 +41,8 @@
               v-model="props.row.presentaciones"
               anchor="bottom end"
               self="bottom end"
-              class="flex flex-col gap-[2px] border-[1px]">
+              class="flex flex-col gap-[2px] border-[1px]"
+            >
               <h1 class="font-bold">Presentaciones:</h1>
               <div v-for="presentacion in props.row.presentaciones">
                 <q-badge color="red" class="capitalize">
@@ -56,7 +59,8 @@
               v-model="props.row.lotes"
               anchor="bottom end"
               self="bottom end"
-              class="flex flex-col gap-[3px]">
+              class="flex flex-col gap-[3px]"
+            >
               <h1 class="font-bold">Lotes:</h1>
               <div class="grid grid-cols-2 gap-3">
                 <div v-for="lote in props.row.lotes">
@@ -90,7 +94,8 @@
             <q-badge
               color="green"
               class="capitalize"
-              @click="showUpdate(props.row)">
+              @click="showUpdate(props.row)"
+            >
               {{ props.row.cantidadMinima }} Unidades
             </q-badge>
           </q-td>
@@ -100,7 +105,8 @@
               icon="add"
               color="primary"
               dense
-              @click="addInventary(props.row)">
+              @click="addInventary(props.row)"
+            >
               <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
             </q-btn>
           </q-td>
@@ -113,13 +119,15 @@
   <Dialog
     v-model="isShowCantidad"
     title="Actualizar cantidad minima"
-    :handle-submit="guardarCantidad">
+    :handle-submit="guardarCantidad"
+  >
     <template #inputsDialog>
       <q-input
         v-model.number="cantidadMinima"
         type="text"
         label="Cantidad Minima"
-        dense />
+        dense
+      />
     </template>
   </Dialog>
 </template>
@@ -131,13 +139,16 @@ import {
   showLoading,
   hideLoading,
   ApiError,
-  NotifySucess
+  NotifySucess,
+  NotifyError
 } from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
+import { productStore } from '@/stores/producto.store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const useAuth = authStore();
+const useProduct = productStore();
 const stocks = ref([]);
 const isShowCantidad = ref(false);
 const cantidadMinima = ref(0);
@@ -199,7 +210,16 @@ const guardarCantidad = async () => {
 };
 
 const addInventary = (row: any) => {
-  console.log(row);
+  const isInList = useProduct.ListInventario.some((item) => {
+    //@ts-ignore
+    return item.producto._id === row.producto._id;
+  });
+  if (!isInList) {
+    useProduct.ListInventario.push(row);
+    NotifySucess('Se añadio a la lista de inventario');
+  } else {
+    NotifyError('Ya se encuentra en la lista de  inventario');
+  }
 };
 onMounted(() => {
   getAllStock();

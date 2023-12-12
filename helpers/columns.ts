@@ -176,6 +176,14 @@ export const stockProducts = [
     sortable: true
   },
   {
+    name: 'cantidadMinima',
+    required: true,
+    label: 'Cantidad Minima',
+    align: 'left',
+    field: (row: any) => row.cantidadMinima,
+    sortable: true
+  },
+  {
     name: 'actions',
     label: 'Acciones',
     align: 'right'

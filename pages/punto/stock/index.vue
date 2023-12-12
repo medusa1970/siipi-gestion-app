@@ -8,8 +8,7 @@
           color="green"
           label="Descargar .PDF"
           outline
-          icon="bi-filetype-pdf"
-        />
+          icon="bi-filetype-pdf" />
         <div class="ml-3">
           <span class="flex gap-1"
             >0 con stock en
@@ -28,11 +27,10 @@
             <q-img
               :src="props.row.foto"
               spinner-color="black"
-              class="cell-image"
-            />
+              class="cell-image" />
           </q-td>
           <q-td key="producto" :props="props">
-            {{ props.row.producto }}
+            {{ props.row.producto.nombre }}
           </q-td>
           <q-td key="presentaciones" :props="props">
             {{ props.row.presentaciones[0].nombre }}
@@ -41,8 +39,7 @@
               v-model="props.row.presentaciones"
               anchor="bottom end"
               self="bottom end"
-              class="flex flex-col gap-[2px] border-[1px]"
-            >
+              class="flex flex-col gap-[2px] border-[1px]">
               <h1 class="font-bold">Presentaciones:</h1>
               <div v-for="presentacion in props.row.presentaciones">
                 <q-badge color="red" class="capitalize">
@@ -59,8 +56,7 @@
               v-model="props.row.lotes"
               anchor="bottom end"
               self="bottom end"
-              class="flex flex-col gap-[3px]"
-            >
+              class="flex flex-col gap-[3px]">
               <h1 class="font-bold">Lotes:</h1>
               <div class="grid grid-cols-2 gap-3">
                 <div v-for="lote in props.row.lotes">
@@ -90,8 +86,21 @@
               {{ props.row.cantidad }} Unidades
             </q-badge>
           </q-td>
+          <q-td key="cantidadMinima" :props="props">
+            <q-badge
+              color="green"
+              class="capitalize"
+              @click="showUpdate(props.row)">
+              {{ props.row.cantidadMinima }} Unidades
+            </q-badge>
+          </q-td>
           <q-td key="actions" :props="props">
-            <q-btn outline icon="add" color="primary" dense>
+            <q-btn
+              outline
+              icon="add"
+              color="primary"
+              dense
+              @click="addInventary(props.row)">
               <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
             </q-btn>
           </q-td>
@@ -99,40 +108,64 @@
       </template>
     </Table>
   </div>
+
+  <!-- DIALOG -->
+  <Dialog
+    v-model="isShowCantidad"
+    title="Actualizar cantidad minima"
+    :handle-submit="guardarCantidad">
+    <template #inputsDialog>
+      <q-input
+        v-model.number="cantidadMinima"
+        type="text"
+        label="Cantidad Minima"
+        dense />
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { stockProducts } from '@/helpers/columns';
 import { ref, onMounted } from 'vue';
-import { showLoading, hideLoading, ApiError } from '@/helpers/message.service';
+import {
+  showLoading,
+  hideLoading,
+  ApiError,
+  NotifySucess
+} from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const useAuth = authStore();
 const stocks = ref([]);
+const isShowCantidad = ref(false);
+const cantidadMinima = ref(0);
+const idProducto = ref('');
 
 const getAllStock = async () => {
   try {
     showLoading();
-    const { entidadBuscarStocks: res } = await GqlBuscarStocks({
-      entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      opciones: { populate: ['producto'] }
+    const { entidadBuscar: res } = await GqlBuscarStocks({
+      busqueda: { _id: useAuth.negocioIDSelected }
     });
+    // console.log(res[0]);
     //@ts-ignore
-    stocks.value = res.map((stock: any) => {
+    stocks.value = res[0].almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
         0
       );
       return {
         foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
-        producto: stock.producto.nombre,
+        producto: stock.producto,
         presentaciones: stock.producto.presentaciones,
         lotes: stock.lotes,
-        cantidad: cantidadTotal
+        cantidad: cantidadTotal,
+        cantidadMinima: stock.cantidadLimite
       };
     });
+    // console.log(stocks.value);
     hideLoading();
   } catch (error) {
     ApiError(error);
@@ -140,6 +173,33 @@ const getAllStock = async () => {
 };
 const formatDate = (date: any) => {
   return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
+};
+
+const showUpdate = (row: any) => {
+  isShowCantidad.value = true;
+  idProducto.value = row.producto._id;
+  cantidadMinima.value = row.cantidadMinima;
+};
+
+const guardarCantidad = async () => {
+  try {
+    showLoading();
+    await GqlModificarCantidadLimite({
+      entidadBusqueda: { _id: useAuth.negocioIDSelected },
+      productoBusqueda: { _id: idProducto.value },
+      datos: { cantidadLimite: cantidadMinima.value }
+    });
+    NotifySucess('Se actualizo correctamente');
+    isShowCantidad.value = false;
+    getAllStock();
+    hideLoading();
+  } catch (error) {
+    ApiError(error);
+  }
+};
+
+const addInventary = (row: any) => {
+  console.log(row);
 };
 onMounted(() => {
   getAllStock();

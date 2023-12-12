@@ -45,25 +45,86 @@ mutation borrarEmpleadoEntidad(
 }
 
 # BUSCAR STOCKS DE UNA ENTIDAD
-query buscarStocks(
-  $entidadBusqueda: BuscarEntidadDto!
-  $opciones: EntidadOpcionesDto
-) {
-  entidadBuscarStocks(entidadBusqueda: $entidadBusqueda, opciones: $opciones) {
-    producto {
-      _id
-      nombre
-      presentacionBasica
-      presentaciones {
+# query buscarStocks(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $opciones: EntidadOpcionesDto
+# ) {
+#   entidadBuscarStocks(entidadBusqueda: $entidadBusqueda, opciones: $opciones) {
+#     producto {
+#       _id
+#       nombre
+#       presentacionBasica
+#       presentaciones {
+#         nombre
+#         cantidad
+#       }
+#     }
+#     lotes {
+#       vencimiento
+#       cantidad
+#       bloque
+#     }
+#     fecha
+#   }
+# }
+
+# BUSCAR STOCKS DE UNA ENTIDAD
+query buscarStocks($busqueda: BuscarEntidadDto!) {
+  entidadBuscar(
+    busqueda: $busqueda
+    opciones: { limit: 0, populate: ["almacen"] }
+  ) {
+    almacen {
+      producto {
+        _id
         nombre
+        presentaciones {
+          nombre
+          cantidad
+        }
+      }
+      cantidadLimite
+      lotes {
+        vencimiento
         cantidad
+        bloque
+      }
+      inventarios {
+        fecha
+        lotes {
+          vencimiento
+          cantidad
+          bloque
+          presentacion
+          cantidadPresentacion
+        }
+        diferencias {
+          vencimiento
+          diferencia
+        }
       }
     }
-    lotes {
-      vencimiento
-      cantidad
-      bloque
+    problemas {
+      _id
     }
-    fecha
+  }
+}
+
+# modificar cantidadLimite
+mutation modificarCantidadLimite(
+  $entidadBusqueda: BuscarEntidadDto!
+  $productoBusqueda: BuscarProductoDto!
+  $datos: ModificarStockDto!
+) {
+  entidadModificarStock(
+    entidadBusqueda: $entidadBusqueda
+    productoBusqueda: $productoBusqueda
+    datos: $datos
+    opciones: {}
+  ) {
+    producto {
+      _id
+    }
+    cantidadLimite
   }
 }

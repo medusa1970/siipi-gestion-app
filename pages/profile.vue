@@ -1,4 +1,5 @@
 <template>
+  <Navigation label="Profile" icon="folder" />
   <div class="flex justify-center items-center h-[75vh]">
     <q-form class="p-4 shadow-lg">
       <div class="flex">

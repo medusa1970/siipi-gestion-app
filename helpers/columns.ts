@@ -148,7 +148,7 @@ export const stockProducts = [
     required: true,
     label: 'Producto',
     align: 'left',
-    field: (row: any) => row.producto,
+    field: (row: any) => row.producto.nombre,
     sortable: true
   },
   {

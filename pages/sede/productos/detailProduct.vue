@@ -23,6 +23,7 @@
           label="Nombre"
           outlined
           dense
+          :readonly="useProduct.isEdit"
         />
         <q-select
           v-model="producto.tags"
@@ -67,7 +68,7 @@
     <q-btn
       v-if="useProduct.isEdit"
       color="secondary"
-      label="Editar información"
+      label="Editar información básica"
       no-caps
       class="mb-3"
       @click="editProductBasicInfo()"
@@ -97,11 +98,12 @@
     />
     <br />
     <q-btn
+      v-if="useProduct.isEdit === false"
       color="secondary"
-      :label="
-        useProduct.isEdit === true ? 'Editar Presentacion' : 'Agregar Producto'
+      label="
+        Agregar Producto
       "
-      @click="useProduct.isEdit === true ? editPresentation : agregarProducto()"
+      @click="agregarProducto()"
       no-caps
     />
   </div>
@@ -194,14 +196,19 @@ const agregarProducto = async () => {
   }
 };
 const editProductBasicInfo = async () => {
+  console.log(producto.value);
   //@ts-ignore
-  const { presentaciones, _creado, _id, ...productoData } = producto.value;
+  const { presentaciones, _creado, _id, nombre, ...productoData } =
+    producto.value;
   try {
     showLoading();
+    console.log(useProduct.product._id);
+    console.log(productoData);
     const { productoModificar } = await GqlModificarProductos({
       busqueda: { _id: useProduct.product._id },
       datos: productoData
     });
+    console.log(productoModificar);
     producto.value = Object.assign(producto.value, productoModificar[0]);
     NotifySucess('información básica actualizada correctamente');
     hideLoading();

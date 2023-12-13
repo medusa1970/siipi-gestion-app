@@ -170,3 +170,58 @@ mutation hacerInventario(
     }
   }
 }
+
+# LISTA DE PROBLEMAS DE INVENTARIO
+mutation ListarProblemas(
+  $entidadBusqueda: BuscarEntidadDto!
+  $problemaBusqueda: BuscarProblemaDto!
+) {
+  entidadListarProblemas(
+    entidadBusqueda: $entidadBusqueda
+    problemaBusqueda: $problemaBusqueda
+    opciones: {}
+  ) {
+    _id
+    producto {
+      _id
+    }
+    diferencias {
+      vencimiento
+      diferencia
+    }
+    fechaAparicion
+    fechaResolucion
+    reporte
+    resuelto
+  }
+}
+
+# RESOLVER PROBLEMA
+mutation ResolverProblema(
+  $entidadBusqueda: BuscarEntidadDto!
+  $problemaBusqueda: BuscarProblemaDto!
+  $datos: ResolverProblemaDto!
+) {
+  entidadResolverProblema(
+    entidadBusqueda: $entidadBusqueda
+    problemaBusqueda: $problemaBusqueda
+    datos: $datos
+    opciones: {}
+  ) {
+    _id
+    inventario {
+      _id
+    }
+    producto {
+      _id
+    }
+    diferencias {
+      vencimiento
+      diferencia
+    }
+    fechaAparicion
+    fechaResolucion
+    reporte
+    resuelto
+  }
+}

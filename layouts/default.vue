@@ -105,7 +105,7 @@ const logout = () => {
 };
 
 const prueba = (negocio) => {
-  console.log(negocio);
+  // console.log(negocio);
   $q.dialog({
     title: `<strong>Entrar a ${negocio.nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',
@@ -116,6 +116,7 @@ const prueba = (negocio) => {
     router.push(`/${negocio.tipo.toLowerCase()}`);
     useAuth.negocioSelected = negocio.nombre;
     useAuth.negocioIDSelected = negocio._id;
+    useAuth.negocioTipoSelected = negocio.tipo.toLowerCase();
     $q.notify({
       type: 'positive',
       position: 'center',

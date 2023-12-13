@@ -1,7 +1,12 @@
 <template>
   <div>
     <Navigation label="Stock" icon="folder" />
-    <Table :rows="stocks" :columns="stockProducts" dense badge>
+    <Table
+      badge
+      :rows="isShowAlertProduct ? productosEnAlerta : stocks"
+      :columns="stockProducts"
+      dense
+    >
       <!-- DROPDOW -->
       <template #dropdown>
         <q-btn
@@ -12,8 +17,13 @@
         />
         <div class="ml-3">
           <span class="flex gap-1"
-            >0 con stock en
-            <p class="text-orange-500 cursor-pointer">Alerta</p>
+            >{{ productosEnAlerta.length }} con stock en
+            <p
+              class="text-orange-500 cursor-pointer"
+              @click="isShowAlertProduct = !isShowAlertProduct"
+            >
+              Alerta
+            </p>
           </span>
           <span class="flex gap-1"
             >0 con stock en
@@ -23,7 +33,13 @@
       </template>
       <!-- BADGE -->
       <template #rows-badge="{ props }">
-        <q-tr :props="props">
+        <q-tr
+          :props="props"
+          :style="
+            (props.row.cantidad === 0 && 'background-color: red !important') ||
+            props.row.alertStyle
+          "
+        >
           <q-td key="foto" :props="props" class="w-[83px]">
             <q-img
               :src="props.row.foto"
@@ -132,7 +148,7 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { stockProducts } from '@/helpers/columns';
 import { ref, onMounted } from 'vue';
 import {
@@ -153,6 +169,10 @@ const stocks = ref([]);
 const isShowCantidad = ref(false);
 const cantidadMinima = ref(0);
 const idProducto = ref('');
+const alerta = ref(0);
+const productosEnAlerta = ref([]);
+const isShowAlertProduct = ref(false);
+// const alertStyle = ref('');
 
 const getAllStock = async () => {
   try {
@@ -162,31 +182,66 @@ const getAllStock = async () => {
     });
     // console.log(res[0]);
     //@ts-ignore
-    stocks.value = res[0].almacen.map((stock: any) => {
+    stocks.value = res[0].almacen.map((stock) => {
       const cantidadTotal = stock.lotes.reduce(
-        (total: any, lote: any) => total + lote.cantidad,
+        (total, lote) => total + lote.cantidad,
         0
       );
+      const alertStyle =
+        cantidadTotal <= stock.cantidadLimite ? 'background-color: orange' : '';
+      if (cantidadTotal <= stock.cantidadLimite) {
+        alerta.value++;
+        // Verificar si el producto ya está en la lista de alerta
+        const productoExistente = productosEnAlerta.value.find(
+          (p) => p.producto._id === stock.producto._id
+        );
+
+        // Si no existe, agregarlo
+        if (!productoExistente) {
+          productosEnAlerta.value.push({
+            foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
+            producto: stock.producto,
+            presentaciones: stock.producto.presentaciones,
+            lotes: stock.lotes,
+            cantidad: cantidadTotal,
+            cantidadMinima: stock.cantidadLimite,
+            alertStyle: alertStyle
+          });
+        }
+      } else {
+        alerta.value--;
+        // Verificar si el producto está en la lista de alerta y quitarlo
+        const index = productosEnAlerta.value.findIndex(
+          (p) => p.producto._id === stock.producto._id
+        );
+
+        if (index !== -1) {
+          productosEnAlerta.value.splice(index, 1);
+        }
+      }
+
       return {
         foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
         producto: stock.producto,
         presentaciones: stock.producto.presentaciones,
         lotes: stock.lotes,
         cantidad: cantidadTotal,
-        cantidadMinima: stock.cantidadLimite
+        cantidadMinima: stock.cantidadLimite,
+        alertStyle: alertStyle
       };
     });
-    // console.log(stocks.value);
+    console.log(stocks.value);
+    // if()
     hideLoading();
   } catch (error) {
     ApiError(error);
   }
 };
-const formatDate = (date: any) => {
+const formatDate = (date) => {
   return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
 };
 
-const showUpdate = (row: any) => {
+const showUpdate = (row) => {
   isShowCantidad.value = true;
   idProducto.value = row.producto._id;
   cantidadMinima.value = row.cantidadMinima;
@@ -209,7 +264,7 @@ const guardarCantidad = async () => {
   }
 };
 
-const addInventary = (row: any) => {
+const addInventary = (row) => {
   const isInList = useProduct.ListInventario.some((item) => {
     //@ts-ignore
     return item.producto._id === row.producto._id;

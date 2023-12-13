@@ -12,6 +12,16 @@
     <div class="col-span-1" @click="() => push('punto/inventario')">
       <Item title="Inventario" icon="visibility" color-icon="brown" />
     </div>
+    <div
+      class="col-span-1"
+      @click="() => push('punto/inventario/listaProblemas')"
+    >
+      <Item
+        title="Solucion Inventario"
+        icon="bi-journal-text"
+        color-icon="orange"
+      />
+    </div>
     <div class="col-span-1" @click="() => push('punto/pedidos')">
       <Item title="Pedidos" icon="description" color-icon="teal" />
     </div>

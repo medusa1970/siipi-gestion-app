@@ -7,7 +7,8 @@
         type="email"
         label="Corre electronico"
         outlined
-        dense />
+        dense
+      />
       <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
     </q-form>
     <NuxtImg class="w-80" src="/img/logo.png" />
@@ -16,7 +17,8 @@
   <Dialog
     v-model="isOtp"
     title="Ingrese el codigo OTP"
-    :handle-submit="actualizarContraseña">
+    :handle-submit="actualizarContraseña"
+  >
     <template #inputsDialog>
       <div class="flex flex-col gap-3">
         <q-input
@@ -24,13 +26,15 @@
           type="text"
           label="Ingrese el codigo OTP"
           outlined
-          dense />
+          dense
+        />
         <q-input
           v-model="contrasena"
           type="email"
           label="Nueva contraseña"
           outlined
-          dense />
+          dense
+        />
       </div>
     </template>
   </Dialog>
@@ -53,7 +57,7 @@ const router = useRouter();
 const correo = ref('');
 const otp = ref('');
 const contrasena = ref('');
-const isOtp = ref(true);
+const isOtp = ref(false);
 
 const sendOTP = async () => {
   try {

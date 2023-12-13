@@ -31,8 +31,10 @@ export const useAuth = () => {
     clearAuthPersona();
   };
   const prueba = (negocio: { tipo: string; nombre: string; _id: string }) => {
+    console.log(negocio);
     useAuth.negocioSelected = negocio.nombre;
     useAuth.negocioIDSelected = negocio._id;
+    useAuth.negocioTipoSelected = negocio.tipo;
     router.push(negocio.tipo.toLowerCase());
   };
   const register = async () => {

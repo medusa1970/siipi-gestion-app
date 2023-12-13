@@ -11,7 +11,8 @@ export const authStore = defineStore('auth', {
     user: { _id: '', nombre: '', negocios: [] as any[] },
     token: '',
     negocioSelected: '',
-    negocioIDSelected: ''
+    negocioIDSelected: '',
+    negocioTipoSelected: ''
   }),
   actions: {
     async login(usuario: string, contrasena: string) {

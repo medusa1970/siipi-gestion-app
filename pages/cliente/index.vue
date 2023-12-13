@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>Cliente</h1>
+    <h1 class="text-center">
+      Bienvenido sos nuestro cliente, estamos en construccion y aca podras hacer
+      tus compras de nuestros productos 🤩.
+    </h1>
   </div>
 </template>
 

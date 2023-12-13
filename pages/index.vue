@@ -17,7 +17,7 @@
         />
         <q-input
           v-model="authPersona.contrasena"
-          type="text"
+          type="password"
           label="Contraseña"
           outlined
           dense

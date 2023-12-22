@@ -1,34 +1,70 @@
 # EMPLEADOS
-query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
-  entidadBuscar(
+# query buscarEntidadEmpleados($busqueda: BuscarEntidadDto!) {
+#   entidadBuscar(
+#     busqueda: $busqueda
+#     opciones: { populate: ["empleados"], limit: 0 }
+#   ) {
+#     _id
+#     nombre
+#     empleados {
+#       _id
+#       cargo
+#       persona {
+#         nombre
+#         correo
+#         telefono
+#       }
+#     }
+#   }
+# }
+query buscarEntidadEmpleados(
+  $busqueda: BuscarEntidadDto!
+  $busquedaEmpleado: BuscarEmpleadoDto!
+  $opciones: EntidadOpcionesDto
+) {
+  entidadBuscarEmpleado(
     busqueda: $busqueda
-    opciones: { populate: ["empleados"], limit: 0 }
+    busquedaEmpleado: $busquedaEmpleado
+    opciones: $opciones
   ) {
     _id
-    nombre
-    empleados {
+    persona {
       _id
-      cargo
-      persona {
-        nombre
-        correo
-        telefono
-      }
+      nombre
+      correo
+      telefono
     }
+    cargo
   }
 }
 
 # Error al poner nombre, solo con _id funciona
+# mutation agregarEmpleadoEntidad(
+#   $busqueda: BuscarEntidadDto!
+#   $datos: AgregarEmpleadoDto!
+# ) {
+#   entidadAgregarEmpleado(busqueda: $busqueda, datos: $datos) {
+#     _id
+#     cargo
+#     persona {
+#       _id
+#       # nombre
+#     }
+#   }
+# }
 mutation agregarEmpleadoEntidad(
   $busqueda: BuscarEntidadDto!
-  $datos: AgregarEmpleadoDto!
+  $datos: CrearEmpleadoDto!
 ) {
-  entidadAgregarEmpleado(busqueda: $busqueda, datos: $datos) {
+  entidadCrearEmpleado(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: { populate: true }
+  ) {
     _id
     cargo
     persona {
-      _id
-      # nombre
+      nombre
     }
   }
 }
@@ -44,36 +80,56 @@ mutation borrarEmpleadoEntidad(
   )
 }
 
+################ ALMACEN ################
 # BUSCAR STOCKS DE UNA ENTIDAD
-# query buscarStocks(
-#   $entidadBusqueda: BuscarEntidadDto!
-#   $opciones: EntidadOpcionesDto
-# ) {
-#   entidadBuscarStocks(entidadBusqueda: $entidadBusqueda, opciones: $opciones) {
-#     producto {
-#       _id
-#       nombre
-#       presentacionBasica
-#       presentaciones {
+# query buscarStocks($busqueda: BuscarEntidadDto!) {
+#   entidadBuscar(
+#     busqueda: $busqueda
+#     opciones: { limit: 0, populate: ["almacen"] }
+#   ) {
+#     almacen {
+#       producto {
+#         _id
 #         nombre
+#         presentaciones {
+#           nombre
+#           cantidad
+#         }
+#       }
+#       cantidadLimite
+#       lotes {
+#         vencimiento
 #         cantidad
+#         bloque
+#       }
+#       inventarios {
+#         fecha
+#         lotes {
+#           vencimiento
+#           cantidad
+#           bloque
+#           presentacion
+#           cantidadPresentacion
+#         }
+#         diferencias {
+#           vencimiento
+#           diferencia
+#         }
 #       }
 #     }
-#     lotes {
-#       vencimiento
-#       cantidad
-#       bloque
+#     problemas {
+#       _id
 #     }
-#     fecha
 #   }
 # }
 
-# BUSCAR STOCKS DE UNA ENTIDAD
-query buscarStocks($busqueda: BuscarEntidadDto!) {
-  entidadBuscar(
-    busqueda: $busqueda
-    opciones: { limit: 0, populate: ["almacen"] }
-  ) {
+query buscarStocks(
+  $busqueda: BuscarEntidadDto!
+  $opciones: EntidadOpcionesDto
+) {
+  entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+    _id
+    nombre
     almacen {
       producto {
         _id
@@ -89,28 +145,34 @@ query buscarStocks($busqueda: BuscarEntidadDto!) {
         cantidad
         bloque
       }
-      inventarios {
-        fecha
-        lotes {
-          vencimiento
-          cantidad
-          bloque
-          presentacion
-          cantidadPresentacion
-        }
-        diferencias {
-          vencimiento
-          diferencia
-        }
-      }
     }
     problemas {
       _id
+      producto {
+        nombre
+      }
     }
   }
 }
 
 # modificar cantidadLimite
+# mutation modificarCantidadLimite(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $productoBusqueda: BuscarProductoDto!
+#   $datos: ModificarStockDto!
+# ) {
+#   entidadModificarStock(
+#     entidadBusqueda: $entidadBusqueda
+#     productoBusqueda: $productoBusqueda
+#     datos: $datos
+#     opciones: {}
+#   ) {
+#     producto {
+#       _id
+#     }
+#     cantidadLimite
+#   }
+# }
 mutation modificarCantidadLimite(
   $entidadBusqueda: BuscarEntidadDto!
   $productoBusqueda: BuscarProductoDto!
@@ -120,7 +182,6 @@ mutation modificarCantidadLimite(
     entidadBusqueda: $entidadBusqueda
     productoBusqueda: $productoBusqueda
     datos: $datos
-    opciones: {}
   ) {
     producto {
       _id
@@ -130,60 +191,120 @@ mutation modificarCantidadLimite(
 }
 
 # INVENTARIO
+# mutation hacerInventario(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $datos: AgregarInventarioDto!
+#   $guardar: Boolean!
+# ) {
+#   entidadHacerInventario(
+#     entidadBusqueda: $entidadBusqueda
+#     datos: $datos
+#     guardar: $guardar
+#     opciones: { populate: true }
+#   ) {
+#     producto {
+#       _id
+#       nombre
+#     }
+#     cantidadLimite
+#     lotes {
+#       vencimiento
+#       cantidad
+#       bloque
+#     }
+#     inventarios {
+#       persona {
+#         _id
+#       }
+#       lotes {
+#         vencimiento
+#         cantidad
+#         bloque
+#         presentacion
+#         cantidadPresentacion
+#       }
+#       diferencias {
+#         vencimiento
+#         diferencia
+#       }
+#       reporte
+#       fecha
+#     }
+#   }
+# }
 mutation hacerInventario(
   $entidadBusqueda: BuscarEntidadDto!
-  $datos: AgregarInventarioDto!
+  $datos: CrearInventarioDto!
   $guardar: Boolean!
+  $opciones: EntidadOpcionesDto
 ) {
   entidadHacerInventario(
     entidadBusqueda: $entidadBusqueda
     datos: $datos
     guardar: $guardar
-    opciones: {}
+    opciones: { populate: true }
   ) {
+    fecha
     producto {
       _id
+      nombre
     }
-    cantidadLimite
+    reporte
+    diferencias {
+      vencimiento
+      diferencia
+    }
     lotes {
       vencimiento
       cantidad
       bloque
-    }
-    inventarios {
-      persona {
-        _id
-      }
-      lotes {
-        vencimiento
-        cantidad
-        bloque
-        presentacion
-        cantidadPresentacion
-      }
-      diferencias {
-        vencimiento
-        diferencia
-      }
-      reporte
-      fecha
+      presentacion
+      cantidadPresentacion
     }
   }
 }
 
 # LISTA DE PROBLEMAS DE INVENTARIO
+# mutation ListarProblemas(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $problemaBusqueda: BuscarProblemaDto!
+# ) {
+#   entidadListarProblemas(
+#     entidadBusqueda: $entidadBusqueda
+#     problemaBusqueda: $problemaBusqueda
+#     opciones: {}
+#   ) {
+#     _id
+#     producto {
+#       _id
+#     }
+#     diferencias {
+#       vencimiento
+#       diferencia
+#     }
+#     fechaAparicion
+#     fechaResolucion
+#     reporte
+#     resuelto
+#   }
+# }
 mutation ListarProblemas(
   $entidadBusqueda: BuscarEntidadDto!
   $problemaBusqueda: BuscarProblemaDto!
+  $opciones: EntidadOpcionesDto
 ) {
   entidadListarProblemas(
     entidadBusqueda: $entidadBusqueda
     problemaBusqueda: $problemaBusqueda
-    opciones: {}
+    opciones: { populate: true }
   ) {
     _id
+    inventario {
+      _id
+    }
     producto {
       _id
+      nombre
     }
     diferencias {
       vencimiento
@@ -206,7 +327,7 @@ mutation ResolverProblema(
     entidadBusqueda: $entidadBusqueda
     problemaBusqueda: $problemaBusqueda
     datos: $datos
-    opciones: {}
+    opciones: { populate: true }
   ) {
     _id
     inventario {
@@ -214,6 +335,7 @@ mutation ResolverProblema(
     }
     producto {
       _id
+      nombre
     }
     diferencias {
       vencimiento

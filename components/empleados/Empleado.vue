@@ -135,22 +135,22 @@ const $q = useQuasar();
 
 const getAllEntity = async () => {
   showLoading();
-  const { entidadBuscar } = await GqlBuscarEntidadEmpleados({
-    busqueda: { nombre: useAuth.negocioSelected }
+  const { entidadBuscarEmpleado } = await GqlBuscarEntidadEmpleados({
+    busqueda: { nombre: useAuth.negocioSelected },
+    busquedaEmpleado: {},
+    opciones: { populate: true }
   });
-  rows.value = entidadBuscar?.flatMap((sede) => {
-    return sede.empleados?.map((empleado) => {
-      return {
-        id: empleado._id,
-        cargo: empleado.cargo,
-        nombre: empleado.persona.nombre,
-        correo: empleado.persona.correo,
-        telefono: empleado.persona.telefono,
-        foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg'
-      };
-    });
+  // console.log(entidadBuscarEmpleado);
+  rows.value = entidadBuscarEmpleado.map((empleado: any) => {
+    return {
+      id: empleado._id,
+      cargo: empleado.cargo,
+      nombre: empleado.persona.nombre,
+      correo: empleado.persona.correo,
+      telefono: empleado.persona.telefono,
+      foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg'
+    };
   });
-  console.log(rows.value);
   hideLoading();
 };
 
@@ -172,6 +172,7 @@ const getAllPeoples = async () => {
   });
 };
 const agregarEmpleado = async () => {
+  // console.log(personaSelect.value);
   try {
     showLoading();
     await GqlAgregarEmpleadoEntidad({

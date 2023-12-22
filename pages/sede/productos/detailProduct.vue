@@ -230,15 +230,13 @@ const addPresentation = async () => {
   if (useProduct.isEdit) {
     try {
       showLoading();
-      const { productoAgregarPresentacion: res } = await GqlAgregarPresentacion(
-        {
-          busqueda: { _id: useProduct.product._id },
-          datos: {
-            nombre: presentacion.value.nombre,
-            cantidad: presentacion.value.cantidad
-          }
+      const { productocrearPresentacion: res } = await GqlAgregarPresentacion({
+        busqueda: { _id: useProduct.product._id },
+        datos: {
+          nombre: presentacion.value.nombre,
+          cantidad: presentacion.value.cantidad
         }
-      );
+      });
       if (res) {
         producto.value.presentaciones.push(res);
       }

@@ -12,6 +12,13 @@
           :rules="[string]"
         />
         <q-input
+          v-model="authPersona.apellido"
+          type="text"
+          label="apellido"
+          outlined
+          dense
+        />
+        <q-input
           v-model="authPersona.telefono"
           type="text"
           label="Telefono"

@@ -8,8 +8,8 @@ query conectar($datos: ConexionDto!) {
   }
 }
 
-query buscarEntidadesConUsuario {
-  buscarEntidadesConUsuario {
+query buscarEntidadesConUsuario($opciones: EntidadOpcionesDto) {
+  entidadesUsuarioConectado(opciones: $opciones) {
     _id
     nombre
     tipo

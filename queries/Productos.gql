@@ -74,15 +74,25 @@ mutation modificarProductos(
 }
 
 # PRESENTACION
+# mutation agregarPresentacion(
+#   $busqueda: BuscarProductoDto!
+#   $datos: AgregarPresentacionDto!
+# ) {
+#   productoAgregarPresentacion(
+#     busqueda: $busqueda
+#     datos: $datos
+#     opciones: {}
+#   ) {
+#     _id
+#     nombre
+#     cantidad
+#   }
+# }
 mutation agregarPresentacion(
   $busqueda: BuscarProductoDto!
-  $datos: AgregarPresentacionDto!
+  $datos: crearPresentacionDto!
 ) {
-  productoAgregarPresentacion(
-    busqueda: $busqueda
-    datos: $datos
-    opciones: {}
-  ) {
+  productocrearPresentacion(busqueda: $busqueda, datos: $datos, opciones: {}) {
     _id
     nombre
     cantidad

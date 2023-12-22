@@ -33,7 +33,7 @@
         <q-card
           class="w-52 hover:opacity-90"
           v-for="negocio in user.negocios"
-          @click="prueba(negocio)"
+          @click="elegirNegocio(negocio)"
         >
           <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
             <div class="absolute-bottom text-center font-bold">
@@ -52,5 +52,5 @@ definePageMeta({
 });
 import { password } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';
-const { authPersona, login, prueba, user } = useAuth();
+const { authPersona, login, elegirNegocio, user } = useAuth();
 </script>

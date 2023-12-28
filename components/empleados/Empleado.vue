@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navigation label="Empleados" icon="group" />
-    <Table :rows="rows" :columns="columnsEmpleados" dense>
+    <Table :rows="estado.rows" :columns="columnsEmpleados" dense>
       <!-- IMAGES -->
       <template #body-cell-image="{ value }">
         <q-td>
@@ -15,7 +15,7 @@
           label="Agregar empleadooo"
           no-caps
           style="padding: 7px 15px"
-          @click="openDialog"
+          @click="abrirModal"
         />
       </template>
       <!-- ACTIONS -->
@@ -37,7 +37,7 @@
                       class="px-[10px]"
                     />
                   </q-item-section>
-                  <q-item-section @click="openPermisos(props.row)"
+                  <q-item-section @click="abrirPermisos(props.row)"
                     >Ver permisos</q-item-section
                   >
                 </q-item>
@@ -67,7 +67,7 @@
 
   <!-- DIALOG -->
   <Dialog
-    v-model="test"
+    v-model="estado.test"
     title="Agregar empleado"
     :handle-submit="agregarEmpleado"
   >
@@ -75,8 +75,8 @@
       <div class="row items-center" style="width: 100%">
         <q-select
           color="primary"
-          v-model="personaSelect.nombre"
-          :options="personas"
+          v-model="estado.personaSelect.nombre"
+          :options="estado.personas"
           label="Seleccionar persona"
           option-label="nombre"
           style="width: 100%; flex: 1 0 auto"
@@ -90,7 +90,7 @@
             <q-icon
               style="margin: 0"
               name="close"
-              @click.stop.prevent="personaSelect.nombre = ''"
+              @click.stop.prevent="estado.personaSelect.nombre = ''"
               class="cursor-pointer q-mr-md"
             />
           </template>
@@ -106,115 +106,17 @@
           </template>
         </q-select>
       </div>
-      <q-input v-model="cargo" type="text" label="Cargo" />
+      <q-input v-model="estado.cargo" type="text" label="Cargo" />
     </template>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { authStore } from '@/stores/auth.store';
 import { columnsEmpleados } from '@/helpers/columns';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import {
-  showLoading,
-  hideLoading,
-  NotifySucess,
-  ApiError
-} from '@/helpers/message.service';
-import { useQuasar } from 'quasar';
+import { useEmpleado } from '@/composables/useEmpleado';
 
-const test = ref(false);
-const router = useRouter();
-const useAuth = authStore();
-const personaSelect = ref({ id: '', nombre: '' });
-const personas = ref<any>([]);
-const cargo = ref('');
-const rows = ref<any>([]);
-const $q = useQuasar();
-
-const getAllEntity = async () => {
-  showLoading();
-  const { entidadBuscarEmpleado } = await GqlBuscarEntidadEmpleados({
-    busqueda: { nombre: useAuth.negocioSelected },
-    busquedaEmpleado: {},
-    opciones: { populate: true }
-  });
-  // console.log(entidadBuscarEmpleado);
-  rows.value = entidadBuscarEmpleado.map((empleado: any) => {
-    return {
-      id: empleado._id,
-      cargo: empleado.cargo,
-      nombre: empleado.persona.nombre,
-      correo: empleado.persona.correo,
-      telefono: empleado.persona.telefono,
-      foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg'
-    };
-  });
-  hideLoading();
-};
-
-const openPermisos = (row: { id: string }) => {
-  router.push(`/sede/empleados/${row.id}`);
-};
-
-const openDialog = () => {
-  test.value = true;
-};
-
-const getAllPeoples = async () => {
-  const { personaBuscar } = await GqlBuscarPersonas({ busqueda: {} });
-  personas.value = personaBuscar?.map((persona) => {
-    return {
-      id: persona._id,
-      nombre: persona.nombre
-    };
-  });
-};
-const agregarEmpleado = async () => {
-  // console.log(personaSelect.value);
-  try {
-    showLoading();
-    await GqlAgregarEmpleadoEntidad({
-      busqueda: { _id: useAuth.negocioIDSelected },
-      //@ts-ignore arreglar despues
-      datos: { persona: personaSelect.value.nombre.id, cargo: cargo.value }
-    });
-    NotifySucess('Empleado agregado');
-    getAllEntity();
-    getAllPeoples();
-    personaSelect.value.nombre = '';
-    cargo.value = '';
-    test.value = false;
-    hideLoading();
-  } catch (err: any) {
-    ApiError(err);
-  }
-};
-
-/**DELETE ARTICLE */
-const borrarEmpleado = async (row: { id: string; nombre: string }) => {
-  $q.dialog({
-    title: `Eliminar ${row.nombre}`,
-    message: '¿Está seguro de eliminar este articulo?',
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    await GqlBorrarEmpleadoEntidad({
-      busqueda: { _id: useAuth.negocioIDSelected },
-      busquedaEmpleado: { _id: row.id }
-    });
-    NotifySucess('Empleado eliminado');
-    getAllEntity();
-  });
-};
-
-onMounted(() => {
-  getAllEntity();
-  getAllPeoples();
-});
-
-// defineProps({});
+const { estado, abrirModal, abrirPermisos, agregarEmpleado, borrarEmpleado } =
+  useEmpleado();
 </script>
 
 <style scoped>

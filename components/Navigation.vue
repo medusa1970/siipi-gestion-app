@@ -23,7 +23,7 @@ const useAuth = authStore();
 // const route = useRoute();
 // console.log(useAuth.negocioTipoSelected.toLowerCase());
 // const path = route.path.substring(0, route.path.lastIndexOf('/'));
-const path = `/${useAuth.negocioTipoSelected.toLowerCase()}`;
+const path = `/${useAuth.negocioElegido.tipo.toLowerCase()}`;
 // console.log(route.path);
 // console.log(path);
 </script>

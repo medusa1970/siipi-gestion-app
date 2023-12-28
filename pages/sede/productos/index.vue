@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navigation label="Productos" icon="list_alt" />
-    <Table badge :rows="productos" :columns="columnsProductos" dense>
+    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <q-btn
           icon-right="add"
@@ -9,7 +9,7 @@
           label="Agregar producto"
           no-caps
           style="padding: 7px 15px"
-          @click="agregarProducto()"
+          @click="modalAgregarProducto()"
         />
       </template>
       <!-- BADGE -->
@@ -49,7 +49,7 @@
               round
               dense
               flat
-              @click="editProduct(props.row)"
+              @click="navegarDetalleProducto(props.row)"
             />
             <q-btn
               color="red"
@@ -67,112 +67,16 @@
 </template>
 
 <script setup lang="ts">
-// import { Productos } from '@/mocks/data.json';
-import { columnsProductos } from '@/helpers/columns';
-import { ref, onMounted } from 'vue';
-import {
-  showLoading,
-  hideLoading,
-  ApiError,
-  NotifySucess
-} from '@/helpers/message.service';
-import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
-import { productStore } from '@/stores/producto.store';
-import type { Presentacion } from '~/interfaces/product.interface';
+import { useProducts } from '@/composables/sede/useProducts';
+import { columnsProductos } from '~/helpers/columns';
 
-const useProduct = productStore();
-const router = useRouter();
-const $q = useQuasar();
-const test = ref(false);
-const isAddPresentation = ref(false);
-const productos = ref([]);
-const producto = ref({
-  nombre: '',
-  descripcion: '',
-  tags: [],
-  presentacionBasica: '',
-  presentaciones: [{ nombre: '', cantidad: 0 }]
-});
-const isProve = ref(false);
-const isEditProduct = ref(false);
-const isAddPrueba = ref(false);
-
-const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
-
-const getAllProductos = async () => {
-  try {
-    showLoading();
-    const { productoBuscar } = await GqlBuscarProductos({
-      busqueda: {}
-    });
-    //@ts-ignore
-    productos.value = productoBuscar;
-    console.log(productos.value);
-    hideLoading();
-  } catch (error) {
-    ApiError(error);
-  }
-};
-
-// const crearProducto = async () => {
-//   console.log(producto.value);
-//   try {
-//     showLoading();
-//     await GqlCrearProducto({
-//       datos: producto.value
-//     });
-//     getAllProductos();
-//     NotifySucess('Producto creado');
-//     hideLoading();
-//     test.value = false;
-//   } catch (error) {
-//     ApiError(error);
-//   }
-// };
-
-// const combinedName = computed(() => {
-//   const name = producto.value.presentaciones.map((p) => {
-//     return p.nombre;
-//   });
-//   return name.join(', ');
-// });
-
-const borrarProducto = (row: { _id: string; nombre: string }) => {
-  $q.dialog({
-    title: `Eliminar ${row.nombre}`,
-    message: '¿Está seguro de eliminar este producto?',
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    await GqlBorrarProducto({ busqueda: { _id: row._id } });
-    NotifySucess('Producto eliminado correctamente');
-    getAllProductos();
-    // articles.value = articles.value.filter((user) => user._id !== row._id);
-  });
-};
-
-const editProduct = (row: any) => {
-  useProduct.product = row;
-  useProduct.isEdit = true;
-  router.push('productos/detailProduct');
-};
-const agregarProducto = () => {
-  useProduct.isEdit = false;
-  useProduct.product = {
-    _id: '',
-    nombre: '',
-    descripcion: '',
-    tags: [],
-    presentacionBasica: '',
-    presentaciones: []
-  };
-  router.push('productos/detailProduct');
-};
-
-onMounted(() => {
-  getAllProductos();
-});
+const {
+  estado,
+  tags,
+  navegarDetalleProducto,
+  modalAgregarProducto,
+  borrarProducto
+} = useProducts();
 </script>
 
 <style scoped>

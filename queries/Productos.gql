@@ -90,9 +90,9 @@ mutation modificarProductos(
 # }
 mutation agregarPresentacion(
   $busqueda: BuscarProductoDto!
-  $datos: crearPresentacionDto!
+  $datos: CrearPresentacionDto!
 ) {
-  productocrearPresentacion(busqueda: $busqueda, datos: $datos, opciones: {}) {
+  productoCrearPresentacion(busqueda: $busqueda, datos: $datos, opciones: {}) {
     _id
     nombre
     cantidad

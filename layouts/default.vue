@@ -5,7 +5,9 @@
     >
       <nav class="flex flex-grow basis-0 gap-2 items-center">
         <h1 class="font-bold text-lg uppercase">
-          {{ useAuth.negocioSelected ? useAuth.negocioSelected : 'Cliente' }}
+          {{
+            useAuth.negocioElegido ? useAuth.negocioElegido.nombre : 'Cliente'
+          }}
         </h1>
       </nav>
       <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
@@ -101,7 +103,7 @@ const logout = () => {
   useAuth.user.negocios = [];
   useAuth.token = '';
   router.push('/');
-  useAuth.negocioSelected = '';
+  useAuth.negocioElegido = '';
 };
 
 const prueba = (negocio) => {
@@ -114,9 +116,9 @@ const prueba = (negocio) => {
     html: true
   }).onOk(async () => {
     router.push(`/${negocio.tipo.toLowerCase()}`);
-    useAuth.negocioSelected = negocio.nombre;
-    useAuth.negocioIDSelected = negocio._id;
-    useAuth.negocioTipoSelected = negocio.tipo.toLowerCase();
+    useAuth.negocioElegido.nombre = negocio.nombre;
+    useAuth.negocioElegido._id = negocio._id;
+    useAuth.negocioElegido.tipo = negocio.tipo.toLowerCase();
     $q.notify({
       type: 'positive',
       position: 'center',

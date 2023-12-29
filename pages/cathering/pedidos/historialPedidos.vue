@@ -1,0 +1,28 @@
+<template>
+  <div>
+    <h1>Historial de pedidos</h1>
+    <q-input
+      filled
+      v-model="date"
+      mask="date"
+      :rules="['date']"
+      class="w-[300px]"
+    >
+      <template v-slot:append>
+        <q-icon name="event" class="cursor-pointer">
+          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+            <q-date v-model="date">
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Close" color="primary" flat />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+    </q-input>
+  </div>
+</template>
+<script setup>
+import { ref } from 'vue';
+const date = ref('');
+</script>

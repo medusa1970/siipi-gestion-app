@@ -1,3 +1,4 @@
+import { GqlCategoriaBuscar } from '#gql';
 import { postData } from '@/services/service.config';
 
 export const productoService = {
@@ -61,5 +62,13 @@ export const productoService = {
         busqueda: { _id: productoID },
         busquedaPresentacion: { nombre: preNombre }
       })
-    )
+    ),
+  productoCambiarCategoria: async (productoID: string, categoriaID: string) =>
+    postData(
+      GqlProductoCambiarCategoria({
+        busquedaProducto: { _id: productoID },
+        busquedaCategoria: { _id: categoriaID }
+      })
+    ),
+  buscarCategorias: async () => postData(GqlCategoriaBuscar({ busqueda: {} }))
 };

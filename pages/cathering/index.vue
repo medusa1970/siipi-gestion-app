@@ -22,6 +22,21 @@
     <div class="col-span-1" @click="() => push('cathering/pedidos')">
       <Item title="Pedidos" icon="description" color-icon="teal" />
     </div>
+    <div
+      class="col-span-1"
+      @click="() => push('cathering/pedidos/realizarPedido')"
+    >
+      <Item title="realizar pedido" icon="description" color-icon="teal" />
+    </div>
+    <div class="col-span-1" @click="() => push('cathering/pedidos/verPedido')">
+      <Item title="ver pedidos" icon="description" color-icon="red" />
+    </div>
+    <div
+      class="col-span-1"
+      @click="() => push('cathering/pedidos/historialPedidos')"
+    >
+      <Item title="historial de pedidos" icon="description" color-icon="blue" />
+    </div>
     <div class="col-span-1" @click="() => push('cathering/caja')">
       <Item title="Caja" icon="point_of_sale" color-icon="green" />
     </div>

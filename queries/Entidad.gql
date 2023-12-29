@@ -124,10 +124,7 @@ mutation borrarEmpleadoEntidad(
 #   }
 # }
 
-query buscarStocks(
-  $busqueda: BuscarEntidadDto!
-  $opciones: EntidadOpcionesDto
-) {
+query buscarStocks($busqueda: BuscarEntidadDto!) {
   entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
     _id
     nombre
@@ -183,9 +180,11 @@ mutation modificarCantidadLimite(
     entidadBusqueda: $entidadBusqueda
     productoBusqueda: $productoBusqueda
     datos: $datos
+    opciones: { populate: true }
   ) {
     producto {
       _id
+      nombre
     }
     cantidadLimite
   }
@@ -237,7 +236,6 @@ mutation hacerInventario(
   $entidadBusqueda: BuscarEntidadDto!
   $datos: CrearInventarioDto!
   $guardar: Boolean!
-  $opciones: EntidadOpcionesDto
 ) {
   entidadHacerInventario(
     entidadBusqueda: $entidadBusqueda

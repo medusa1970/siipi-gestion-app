@@ -1,5 +1,5 @@
 import { onMounted, reactive } from 'vue';
-import { NotifySucess } from '@/helpers/message.service';
+import { NotifySucess, NotifySucessCenter } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { productStore } from '@/stores/producto.store';
@@ -18,7 +18,8 @@ export const useProducts = () => {
       isProve: false,
       isEditProduct: false,
       isAddPrueba: false,
-      isAddPresentation: false
+      isAddPresentation: false,
+      isAddCategory: false
     },
     productos: [],
     producto: <Product>{
@@ -38,7 +39,10 @@ export const useProducts = () => {
       isAddPresentation: false,
       isEditPresentation: false,
       isTest: false
-    }
+    },
+    categorias: [],
+    inputCategoria: '',
+    productoIDselect: ''
   });
 
   const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
@@ -46,6 +50,8 @@ export const useProducts = () => {
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
+    const { categoriaBuscar } = await productoService.buscarCategorias();
+    estado.categorias = categoriaBuscar;
   };
 
   const borrarProducto = (row: { _id: string; nombre: string }) => {
@@ -216,6 +222,23 @@ export const useProducts = () => {
     }
   };
 
+  const cambiarCategoria = (row: any) => {
+    // console.log(row);
+    estado.productoIDselect = row._id;
+    estado.modal.isAddCategory = true;
+    estado.inputCategoria = row.categoria.nombre;
+  };
+
+  const guardarCategoria = async () => {
+    await productoService.productoCambiarCategoria(
+      estado.productoIDselect, //@ts-ignore
+      estado.inputCategoria._id
+    );
+    estado.modal.isAddCategory = false;
+    NotifySucessCenter('Categoria cambiada correctamente');
+    getAllProductos();
+  };
+
   onMounted(() => {
     getAllProductos();
   });
@@ -233,6 +256,8 @@ export const useProducts = () => {
     agregarPresentacion,
     modalEditarPresentacion,
     modificarPresentacion,
-    borrarPresentacion
+    borrarPresentacion,
+    cambiarCategoria,
+    guardarCategoria
   };
 };

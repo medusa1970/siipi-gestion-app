@@ -1,11 +1,18 @@
 # PRODUCTOS
 query buscarProductos($busqueda: BuscarProductoDto!) {
-  productoBuscar(busqueda: $busqueda, opciones: { limit: 0 }) {
+  productoBuscar(
+    busqueda: $busqueda
+    opciones: { limit: 0, buscarCategoria: true }
+  ) {
     _id
     _creado
     nombre
     descripcion
     tags
+    categoria {
+      _id
+      nombre
+    }
     presentacionBasica
     presentaciones {
       _id
@@ -125,4 +132,37 @@ mutation borrarPresentacion(
     busquedaPresentacion: $busquedaPresentacion
     opciones: { limit: 0 }
   )
+}
+
+# CATEGORIA
+query productoCambiarCategoria(
+  $busquedaProducto: BuscarProductoDto!
+  $busquedaCategoria: BuscarCategoriaDto!
+) {
+  productoCambiarCategoria(
+    busquedaProducto: $busquedaProducto
+    busquedaCategoria: $busquedaCategoria
+    opciones: { populate: true }
+  ) {
+    nombre
+    _id
+    pariente {
+      _id
+      nombre
+      pariente {
+        _id
+        nombre
+        pariente {
+          _id
+          nombre
+        }
+      }
+    }
+  }
+}
+query categoriaBuscar($busqueda: BuscarCategoriaDto!) {
+  categoriaBuscar(busqueda: $busqueda, opciones: {}) {
+    _id
+    nombre
+  }
 }

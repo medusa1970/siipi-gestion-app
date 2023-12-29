@@ -3,7 +3,11 @@
     <Navigation label="Stock" icon="folder" />
     <Table
       badge
-      :rows="isShowAlertProduct ? productosEnAlerta : stocks"
+      :rows="
+        estado.modal.isShowAlertProduct
+          ? estado.productosEnAlerta
+          : estado.stocks
+      "
       :columns="stockProducts"
       dense
     >
@@ -17,10 +21,13 @@
         />
         <div class="ml-3">
           <span class="flex gap-1"
-            >{{ productosEnAlerta.length }} con stock en
+            >{{ estado.productosEnAlerta.length }} con stock en
             <p
               class="text-orange-500 cursor-pointer"
-              @click="isShowAlertProduct = !isShowAlertProduct"
+              @click="
+                estado.modal.isShowAlertProduct =
+                  !estado.modal.isShowAlertProduct
+              "
             >
               Alerta
             </p>
@@ -68,7 +75,7 @@
             </q-popup-edit>
           </q-td>
           <q-td key="lotes" :props="props">
-            {{ formatDate(props.row.lotes[0].vencimiento) }}.
+            {{ formatearFecha(props.row.lotes[0].vencimiento) }}.
             <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}.
             <strong>Cantidad:</strong>{{ props.row.lotes[0].cantidad }} ...
             <q-popup-edit
@@ -110,7 +117,7 @@
             <q-badge
               color="green"
               class="capitalize"
-              @click="showUpdate(props.row)"
+              @click="modalEditarCantidad(props.row)"
             >
               {{ props.row.cantidadMinima }} Unidades
             </q-badge>
@@ -121,7 +128,7 @@
               icon="add"
               color="primary"
               dense
-              @click="addInventary(props.row)"
+              @click="agregarListaInventario(props.row)"
             >
               <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
             </q-btn>
@@ -133,13 +140,13 @@
 
   <!-- DIALOG -->
   <Dialog
-    v-model="isShowCantidad"
+    v-model="estado.modal.isShowCantidad"
     title="Actualizar cantidad minima"
     :handle-submit="guardarCantidad"
   >
     <template #inputsDialog>
       <q-input
-        v-model.number="cantidadMinima"
+        v-model.number="estado.producto.cantidadMinima"
         type="text"
         label="Cantidad Minima"
         dense
@@ -150,136 +157,17 @@
 
 <script setup>
 import { stockProducts } from '@/helpers/columns';
-import { ref, onMounted } from 'vue';
-import {
-  showLoading,
-  hideLoading,
-  ApiError,
-  NotifySucess,
-  NotifyError
-} from '@/helpers/message.service';
-import { authStore } from '@/stores/auth.store';
-import { productStore } from '@/stores/producto.store';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useStock } from '@/composables/punto/useStock';
 
-const useAuth = authStore();
-const useProduct = productStore();
-const stocks = ref([]);
-const isShowCantidad = ref(false);
-const cantidadMinima = ref(0);
-const idProducto = ref('');
-const alerta = ref(0);
-const productosEnAlerta = ref([]);
-const isShowAlertProduct = ref(false);
-// const alertStyle = ref('');
-
-const getAllStock = async () => {
-  try {
-    showLoading();
-    const { entidadBuscar: res } = await GqlBuscarStocks({
-      busqueda: { _id: useAuth.negocioIDSelected }
-    });
-    // console.log(res[0]);
-    //@ts-ignore
-    stocks.value = res[0].almacen.map((stock) => {
-      const cantidadTotal = stock.lotes.reduce(
-        (total, lote) => total + lote.cantidad,
-        0
-      );
-      const alertStyle =
-        cantidadTotal <= stock.cantidadLimite ? 'background-color: orange' : '';
-      if (cantidadTotal <= stock.cantidadLimite) {
-        alerta.value++;
-        // Verificar si el producto ya está en la lista de alerta
-        const productoExistente = productosEnAlerta.value.find(
-          (p) => p.producto._id === stock.producto._id
-        );
-
-        // Si no existe, agregarlo
-        if (!productoExistente) {
-          productosEnAlerta.value.push({
-            foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
-            producto: stock.producto,
-            presentaciones: stock.producto.presentaciones,
-            lotes: stock.lotes,
-            cantidad: cantidadTotal,
-            cantidadMinima: stock.cantidadLimite,
-            alertStyle: alertStyle
-          });
-        }
-      } else {
-        alerta.value--;
-        // Verificar si el producto está en la lista de alerta y quitarlo
-        const index = productosEnAlerta.value.findIndex(
-          (p) => p.producto._id === stock.producto._id
-        );
-
-        if (index !== -1) {
-          productosEnAlerta.value.splice(index, 1);
-        }
-      }
-
-      return {
-        foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
-        producto: stock.producto,
-        presentaciones: stock.producto.presentaciones,
-        lotes: stock.lotes,
-        cantidad: cantidadTotal,
-        cantidadMinima: stock.cantidadLimite,
-        alertStyle: alertStyle
-      };
-    });
-    console.log(stocks.value);
-    // if()
-    hideLoading();
-  } catch (error) {
-    ApiError(error);
-  }
-};
-const formatDate = (date) => {
-  return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
-};
-
-const showUpdate = (row) => {
-  isShowCantidad.value = true;
-  idProducto.value = row.producto._id;
-  cantidadMinima.value = row.cantidadMinima;
-};
-
-const guardarCantidad = async () => {
-  try {
-    showLoading();
-    await GqlModificarCantidadLimite({
-      entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      productoBusqueda: { _id: idProducto.value },
-      datos: { cantidadLimite: cantidadMinima.value }
-    });
-    NotifySucess('Se actualizo correctamente');
-    isShowCantidad.value = false;
-    getAllStock();
-    hideLoading();
-  } catch (error) {
-    ApiError(error);
-  }
-};
-
-const addInventary = (row) => {
-  const isInList = useProduct.ListInventario.some((item) => {
-    //@ts-ignore
-    return item.producto._id === row.producto._id;
-  });
-  if (!isInList) {
-    useProduct.ListInventario.push(row);
-    NotifySucess('Se añadio a la lista de inventario');
-  } else {
-    NotifyError('Ya se encuentra en la lista de  inventario');
-  }
-};
-onMounted(() => {
-  getAllStock();
-});
+const {
+  estado,
+  formatearFecha,
+  modalEditarCantidad,
+  guardarCantidad,
+  agregarListaInventario
+} = useStock();
 </script>
+
 <style scoped>
 .cell-image {
   width: 50px;

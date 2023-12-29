@@ -10,7 +10,8 @@
     </q-item-section>
 
     <q-item-section side>
-      <q-icon name="chevron_right " color="green" />
+      <!-- <q-icon name="chevron_right " color="green" /> -->
+      <slot name="actions" />
     </q-item-section>
   </q-item>
 </template>

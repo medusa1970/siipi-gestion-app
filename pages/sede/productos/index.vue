@@ -33,14 +33,23 @@
               </div>
             </div>
           </q-td>
-          <q-td key="tags" :props="props">
-            <div class="flex gap-1">
+          <q-td key="categoria" :props="props" class="flex gap-1">
+            {{ props.row.categoria && props.row.categoria.nombre }}
+            <p
+              class="text-blue-400 underline cursor-pointer"
+              @click="cambiarCategoria(props.row)"
+            >
+              Editar
+            </p>
+            <!-- {{ props.row.categoria }} -->
+            <!-- NOMBRE DE CATEGORIA -->
+            <!-- <div class="flex gap-1">
               <div v-for="(p, index) in props.row.tags" :key="index">
                 <q-badge color="green" class="capitalize">
                   {{ p }}
                 </q-badge>
               </div>
-            </div>
+            </div> -->
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
@@ -64,6 +73,46 @@
       </template>
     </Table>
   </div>
+  <!-- AGREGAR CATEGORIA -->
+  <Dialog
+    v-model="estado.modal.isAddCategory"
+    title="Categoria"
+    :handle-submit="guardarCategoria"
+  >
+    <template #inputsDialog>
+      <div class="row items-center" style="width: 100%">
+        <q-select
+          v-model="estado.inputCategoria"
+          :options="estado.categorias"
+          label="Seleccionar categoria"
+          option-label="nombre"
+          style="width: 100%; flex: 1 0 auto"
+          dense
+          onfocus="this.select()"
+          filled
+        >
+          <template v-slot:append>
+            <q-icon
+              style="margin: 0"
+              name="close"
+              @click.stop.prevent="estado.inputCategoria = ''"
+              class="cursor-pointer q-mr-md"
+            />
+          </template>
+          <template v-slot:prepend>
+            <q-icon name="group" />
+          </template>
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No hay resultados
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -75,7 +124,9 @@ const {
   tags,
   navegarDetalleProducto,
   modalAgregarProducto,
-  borrarProducto
+  borrarProducto,
+  cambiarCategoria,
+  guardarCategoria
 } = useProducts();
 </script>
 

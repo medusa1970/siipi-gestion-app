@@ -108,7 +108,7 @@ export const columnsProductos = [
   {
     name: 'presentacionBasica',
     required: true,
-    label: 'Unidad de medida',
+    label: 'U.M',
     align: 'left',
     field: (row: any) => row.presentacionBasica,
     sortable: true
@@ -122,11 +122,11 @@ export const columnsProductos = [
     sortable: true
   },
   {
-    name: 'tags',
+    name: 'categoria',
     required: true,
-    label: 'tags',
+    label: 'categoria',
     align: 'left',
-    field: (row: any) => row.tags.map((t: any) => t),
+    field: (row: any) => row.categoria.nombre,
     sortable: true
   },
   {

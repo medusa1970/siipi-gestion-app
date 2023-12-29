@@ -1,0 +1,6 @@
+----------------------------TAREAS-------------------------------------
+* Arreglar funcion en la parte de hacer/terminarInventario
+* Refactorizar solucionProblemasInventario
+
+** Iniciar con los pedidos
+** Crear los templates

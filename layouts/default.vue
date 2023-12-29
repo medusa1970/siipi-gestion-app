@@ -87,7 +87,6 @@
   </main>
 </template>
 <script setup>
-import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
@@ -107,7 +106,7 @@ const logout = () => {
 };
 
 const prueba = (negocio) => {
-  // console.log(negocio);
+  console.log(negocio);
   $q.dialog({
     title: `<strong>Entrar a ${negocio.nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',
@@ -116,9 +115,7 @@ const prueba = (negocio) => {
     html: true
   }).onOk(async () => {
     router.push(`/${negocio.tipo.toLowerCase()}`);
-    useAuth.negocioElegido.nombre = negocio.nombre;
-    useAuth.negocioElegido._id = negocio._id;
-    useAuth.negocioElegido.tipo = negocio.tipo.toLowerCase();
+    useAuth.negocioElegido = negocio; //solucion
     $q.notify({
       type: 'positive',
       position: 'center',
@@ -127,5 +124,6 @@ const prueba = (negocio) => {
       timeout: 1000
     });
   });
+  console.log(useAuth.user.negocios);
 };
 </script>

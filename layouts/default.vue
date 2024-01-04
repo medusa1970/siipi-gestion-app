@@ -106,7 +106,6 @@ const logout = () => {
 };
 
 const prueba = (negocio) => {
-  console.log(negocio);
   $q.dialog({
     title: `<strong>Entrar a ${negocio.nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',
@@ -124,6 +123,5 @@ const prueba = (negocio) => {
       timeout: 1000
     });
   });
-  console.log(useAuth.user.negocios);
 };
 </script>

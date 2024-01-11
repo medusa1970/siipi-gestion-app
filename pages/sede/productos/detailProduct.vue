@@ -142,7 +142,8 @@
     </template>
   </Dialog>
 </template>
-<script setup lang="ts">
+
+<script setup>
 import { useProducts } from '@/composables/sede/useProducts';
 import DragDrop from '@/components/DrogDrop.vue';
 
@@ -156,6 +157,6 @@ const {
   agregarPresentacion,
   modalEditarPresentacion,
   modificarPresentacion,
-  borrarPresentacion
+  borrarPresentacion,
 } = useProducts();
 </script>

@@ -58,6 +58,7 @@
                     clickable
                     @click="sede"
                     v-for="negocio in useAuth.user.negocios"
+                    :key="negocio.nombre"
                   >
                     <q-item-section @click="prueba(negocio)">{{
                       negocio.nombre
@@ -111,7 +112,7 @@ const prueba = (negocio) => {
     message: '¿Está seguro de cambiar de negocio?',
     cancel: true,
     persistent: true,
-    html: true
+    html: true,
   }).onOk(async () => {
     router.push(`/${negocio.tipo.toLowerCase()}`);
     useAuth.negocioElegido = negocio; //solucion
@@ -120,7 +121,7 @@ const prueba = (negocio) => {
       position: 'center',
       message: `Bienvenido a ${negocio.nombre}`,
       progress: true,
-      timeout: 1000
+      timeout: 1000,
     });
   });
 };

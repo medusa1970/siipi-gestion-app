@@ -5,70 +5,81 @@ export const productoService = {
   buscarProductos: async () =>
     postData(
       GqlBuscarProductos({
-        busqueda: {}
-      })
+        busqueda: {},
+      }),
     ),
   borrarProducto: async (productoID: string) =>
     postData(GqlBorrarProducto({ busqueda: { _id: productoID } })),
   agregarProducto: async (datos: any) =>
     postData(
       GqlCrearProducto({
-        datos
-      })
+        datos,
+      }),
     ),
   editarProducto: async (
     productoID: string | null | undefined,
-    producto: any
+    producto: any,
   ) =>
     postData(
       GqlModificarProductos({
         busqueda: { _id: productoID },
-        datos: producto
-      })
+        datos: producto,
+      }),
     ),
   /**PRESNETACION */
   agregarPresentacion: async (
     productoID: string | undefined,
     preNombre: string,
-    preCantidad: number
+    preCantidad: number,
   ) =>
     postData(
       GqlAgregarPresentacion({
         busqueda: { _id: productoID },
         datos: {
           nombre: preNombre,
-          cantidad: preCantidad
-        }
-      })
+          cantidad: preCantidad,
+        },
+      }),
     ),
   editarPresentacion: async (
     productoID: string | undefined,
     preNombre: string,
-    datos: any
+    datos: any,
   ) =>
     postData(
       GqlModificarPresentacion({
         busqueda: { _id: productoID },
         busquedaPresentacion: { nombre: preNombre },
-        datos
-      })
+        datos,
+      }),
     ),
   borrarPresentacion: async (
     productoID: string | undefined,
-    preNombre: string
+    preNombre: string,
   ) =>
     postData(
       GqlBorrarPresentacion({
         busqueda: { _id: productoID },
-        busquedaPresentacion: { nombre: preNombre }
-      })
+        busquedaPresentacion: { nombre: preNombre },
+      }),
     ),
   productoCambiarCategoria: async (productoID: string, categoriaID: string) =>
     postData(
       GqlProductoCambiarCategoria({
         busquedaProducto: { _id: productoID },
-        busquedaCategoria: { _id: categoriaID }
-      })
+        busquedaCategoria: { _id: categoriaID },
+      }),
     ),
-  buscarCategorias: async () => postData(GqlCategoriaBuscar({ busqueda: {} }))
+  buscarCategorias: async () => postData(GqlCategoriaBuscar({ busqueda: {} })),
+  obtenerTodasCategorias: async () =>
+    postData(
+      GqlCategoriaArbol({ busqueda: { _id: '600000000000000000000000' } }),
+    ),
+
+  crearCategoria: async (categoriaID: string, nombre: string) =>
+    postData(
+      GqlCrearCategoria({
+        datos: { nombre, pariente: categoriaID, productos: [] },
+      }),
+    ),
 };

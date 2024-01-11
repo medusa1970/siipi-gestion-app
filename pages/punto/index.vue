@@ -1,48 +1,42 @@
 <template>
   <div class="grid grid-cols-2 gap-5 mt-2">
-    <div class="col-span-1" @click="() => push('punto/empleados')">
+    <NuxtLink class="col-span-1" to="punto/empleados">
       <Item title="Empleados" icon="group" />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/menu')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/menu">
       <Item title="Menu" icon="fact_check" color-icon="red" />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/stock')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/stock">
       <Item title="Stock" icon="warehouse" color-icon="blue" />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/inventario')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/inventario">
       <Item title="Inventario" icon="visibility" color-icon="brown" />
-    </div>
-    <div
-      class="col-span-1"
-      @click="() => push('punto/inventario/listaProblemas')"
-    >
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/inventario/listaProblemas">
       <Item
         title="Solucion Inventario"
         icon="bi-journal-text"
         color-icon="orange"
       />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/pedidos/realizarPedido')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/pedidos/realizarPedido">
       <Item title="realizar pedido" icon="description" color-icon="teal" />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/pedidos/verPedido')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/pedidos/verPedido">
       <Item title="ver pedidos" icon="description" color-icon="red" />
-    </div>
-    <div
-      class="col-span-1"
-      @click="() => push('punto/pedidos/historialPedidos')"
-    >
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/pedidos/historialPedidos">
       <Item title="historial de pedidos" icon="description" color-icon="blue" />
-    </div>
-    <div class="col-span-1" @click="() => push('punto/caja')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="punto/caja">
       <Item title="Caja" icon="point_of_sale" color-icon="green" />
-    </div>
+    </NuxtLink>
   </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 const { push } = useRouter();
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
 });
 </script>

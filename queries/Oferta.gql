@@ -1,0 +1,110 @@
+query ofertaBuscar($busqueda: BuscarOfertaDto!) {
+  ofertaBuscar(busqueda: $busqueda, opciones: { populate: true }) {
+    _id
+    _creado
+    nombre
+    descripcion
+    precio
+    tags
+    grupos
+    ocultar
+    ingredientes {
+      ... on IngredienteProducto {
+        _id
+        _tipo
+        producto {
+          nombre
+        }
+        cantidad
+      }
+      ... on IngredienteEleccion {
+        _id
+        _tipo
+        nombre
+        cantidadMin
+        cantidadMax
+        costoAdicional
+        items {
+          producto {
+            _id
+          }
+          cantidad
+          costoAdicional
+        }
+      }
+    }
+    preparados {
+      producto {
+        _id
+      }
+      cantidad
+    }
+    condiciones {
+      ... on CondicionMontoMinimo {
+        _id
+        _tipo
+        montoMinimo
+      }
+      ... on CondicionPorFechas {
+        _id
+        _tipo
+        fechaInicio
+        fechaFin
+      }
+      ... on CondicionPorDias {
+        _id
+        _tipo
+        dias
+      }
+      ... on CondicionPorHorarios {
+        _id
+        _tipo
+        horarioInicio
+        horarioFin
+      }
+    }
+  }
+}
+
+mutation crearOferta($datos: CrearOfertaDto!) {
+  ofertaCrear(datos: $datos) {
+    _id
+    nombre
+    descripcion
+    precio
+    grupos
+  }
+}
+
+mutation crearIngredienteProducto(
+  $busqueda: BuscarOfertaDto!
+  $datos: CrearIngredienteProductoDto!
+) {
+  ofertaCrearIngredienteProducto(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: { populate: true }
+  ) {
+    ... on IngredienteProducto {
+      _id
+      _tipo
+      producto {
+        nombre
+      }
+      cantidad
+    }
+  }
+}
+
+# BUSCAR PRODUCTO CON SUS PRESENTACIONES PARA AGREGAR PRODUCTO FIJO A OFERTA
+query ofertaProductoBuscar($busqueda: BuscarProductoDto!) {
+  productoBuscar(busqueda: $busqueda, opciones: { limit: 0 }) {
+    _id
+    nombre
+    presentacionBasica
+    presentaciones {
+      cantidad
+      nombre
+    }
+  }
+}

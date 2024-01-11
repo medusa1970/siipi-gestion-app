@@ -1,5 +1,9 @@
 import { onMounted, reactive } from 'vue';
-import { NotifySucess, NotifySucessCenter } from '@/helpers/message.service';
+import {
+  ApiError,
+  NotifySucess,
+  NotifySucessCenter,
+} from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { productStore } from '@/stores/producto.store';
@@ -19,7 +23,9 @@ export const useProducts = () => {
       isEditProduct: false,
       isAddPrueba: false,
       isAddPresentation: false,
-      isAddCategory: false
+      isAddCategory: false,
+      isAddCategoryArbol: false,
+      isAddProducts: false,
     },
     productos: [],
     producto: <Product>{
@@ -27,31 +33,52 @@ export const useProducts = () => {
       descripcion: '',
       tags: [],
       presentacionBasica: '',
-      presentaciones: [{ nombre: '', cantidad: 0 }]
+      presentaciones: [{ nombre: '', cantidad: 0 }],
     },
     presentacion: <Presentacion>{
       _id: '',
       nombre: '',
-      cantidad: 0
+      cantidad: 0,
     },
     presentacionNombre: '',
     dialog: {
       isAddPresentation: false,
       isEditPresentation: false,
-      isTest: false
+      isTest: false,
     },
     categorias: [],
     inputCategoria: '',
-    productoIDselect: ''
+    productoIDselect: '',
+    categoriaArbol: null,
+    props: [],
+    categoriaNombre: '',
+    categoria: {
+      nombre: '',
+      pariente: '',
+    },
+    categoriaFija: {
+      categoria: '',
+      hijas: '',
+    },
+    isEditCantidad: false,
   });
 
   const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 
+  // sdasdas
+  //dasdasd
+  //dasdasd
+  //dasdasd
+  //dasdasd
+  //dasdasd
+  //dasdasd
+  //dasdasd
+  //dasdasd
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
-    const { categoriaBuscar } = await productoService.buscarCategorias();
-    estado.categorias = categoriaBuscar;
+    const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
+    estado.categorias = categoriaArbol;
   };
 
   const borrarProducto = (row: { _id: string; nombre: string }) => {
@@ -59,7 +86,7 @@ export const useProducts = () => {
       title: `Eliminar ${row.nombre}`,
       message: '¿Está seguro de eliminar este producto?',
       cancel: true,
-      persistent: true
+      persistent: true,
     }).onOk(async () => {
       await productoService.borrarProducto(row._id);
       NotifySucess('Producto eliminado correctamente');
@@ -82,7 +109,7 @@ export const useProducts = () => {
       descripcion: '',
       tags: [],
       presentacionBasica: '',
-      presentaciones: []
+      presentaciones: [],
     };
 
     router.push('productos/detailProduct');
@@ -105,7 +132,7 @@ export const useProducts = () => {
       estado.producto;
     const { productoModificar } = await productoService.editarProducto(
       useProduct.product._id,
-      productoData
+      productoData,
     );
     estado.producto = Object.assign(estado.producto, productoModificar[0]);
     NotifySucess('información básica actualizada correctamente');
@@ -115,7 +142,7 @@ export const useProducts = () => {
     estado.presentacion = {
       _id: '',
       nombre: '',
-      cantidad: 0
+      cantidad: 0,
     };
   };
 
@@ -126,7 +153,7 @@ export const useProducts = () => {
         await productoService.agregarPresentacion(
           useProduct.product._id,
           estado.presentacion.nombre,
-          estado.presentacion.cantidad
+          estado.presentacion.cantidad,
         );
       if (res) {
         estado.producto.presentaciones.push(res);
@@ -136,7 +163,7 @@ export const useProducts = () => {
     } else {
       estado.producto.presentaciones.push({
         nombre: estado.presentacion.nombre,
-        cantidad: estado.presentacion.cantidad
+        cantidad: estado.presentacion.cantidad,
       });
       estado.dialog.isAddPresentation = false;
     }
@@ -155,11 +182,11 @@ export const useProducts = () => {
         await productoService.editarPresentacion(
           useProduct.product._id,
           estado.presentacionNombre,
-          estado.presentacion
+          estado.presentacion,
         );
       if (res) {
         const index = estado.producto.presentaciones.findIndex(
-          (p) => p._id === estado.presentacion._id
+          (p) => p._id === estado.presentacion._id,
         );
         if (index !== -1)
           estado.producto.presentaciones[index] = estado.presentacion;
@@ -171,11 +198,11 @@ export const useProducts = () => {
       estado.presentacion = {
         _id: '',
         nombre: '',
-        cantidad: 0
+        cantidad: 0,
       };
     } else {
       const index = estado.producto.presentaciones.findIndex(
-        (p) => p.nombre === estado.presentacionNombre
+        (p) => p.nombre === estado.presentacionNombre,
       );
       if (index !== -1) {
         estado.producto.presentaciones[index] = estado.presentacion;
@@ -183,7 +210,7 @@ export const useProducts = () => {
       estado.presentacion = {
         _id: '',
         nombre: '',
-        cantidad: 0
+        cantidad: 0,
       };
       estado.dialog.isEditPresentation = false;
       estado.dialog.isAddPresentation = false;
@@ -195,17 +222,17 @@ export const useProducts = () => {
         title: `Eliminar ${presentacion.nombre}`,
         message: '¿Está seguro de eliminar esta presentacion?',
         cancel: true,
-        persistent: true
+        persistent: true,
       }).onOk(async () => {
         const { productoBorrarPresentacion: res } =
           await productoService.borrarPresentacion(
             useProduct.product._id,
-            presentacion.nombre
+            presentacion.nombre,
           );
         NotifySucess('Presentacion eliminado correctamente');
         if (res) {
           const index = estado.producto.presentaciones.findIndex(
-            (p) => p._id === presentacion._id
+            (p) => p._id === presentacion._id,
           );
           if (index !== -1) {
             estado.producto.presentaciones.splice(index, 1);
@@ -214,7 +241,7 @@ export const useProducts = () => {
       });
     } else {
       const index = estado.producto.presentaciones.findIndex(
-        (p) => p.nombre === presentacion.nombre
+        (p) => p.nombre === presentacion.nombre,
       );
       if (index !== -1) {
         estado.producto.presentaciones.splice(index, 1);
@@ -223,20 +250,53 @@ export const useProducts = () => {
   };
 
   const cambiarCategoria = (row: any) => {
-    // console.log(row);
     estado.productoIDselect = row._id;
     estado.modal.isAddCategory = true;
-    estado.inputCategoria = row.categoria.nombre;
+    // estado.inputCategoria = row.categoria.nombre;
   };
 
   const guardarCategoria = async () => {
     await productoService.productoCambiarCategoria(
       estado.productoIDselect, //@ts-ignore
-      estado.inputCategoria._id
+      estado.categoriaFija.hijas._id,
     );
+    estado.categoriaFija.hijas = '';
     estado.modal.isAddCategory = false;
     NotifySucessCenter('Categoria cambiada correctamente');
     getAllProductos();
+  };
+
+  const obtenerTodasCategorias = async () => {
+    const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
+    estado.categoriaArbol = [categoriaArbol];
+    console.log(estado.categoriaArbol);
+    const data = [
+      {
+        label: categoriaArbol.nombre,
+        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+        children: categoriaArbol.hijas.map((hija: any) => ({
+          icon: 'room_service',
+          label: hija.nombre,
+          children: hija.hijas.map((hija2: any) => ({
+            label: hija2.nombre,
+          })),
+        })),
+      },
+    ]; //@ts-ignore
+    estado.props = data;
+  };
+  const agregarCategoriaArbol = async () => {
+    await productoService.crearCategoria(
+      estado.categoria.pariente,
+      estado.categoria.nombre,
+    );
+    NotifySucessCenter('Categoria agregada correctamente');
+    estado.modal.isAddCategoryArbol = false;
+    obtenerTodasCategorias();
+  };
+  const modalAgregarCategoria = (data: { _id: string }) => {
+    estado.modal.isAddCategoryArbol = true;
+    estado.categoria.pariente = data._id;
   };
 
   onMounted(() => {
@@ -258,6 +318,9 @@ export const useProducts = () => {
     modificarPresentacion,
     borrarPresentacion,
     cambiarCategoria,
-    guardarCategoria
+    guardarCategoria,
+    obtenerTodasCategorias,
+    agregarCategoriaArbol,
+    modalAgregarCategoria,
   };
 };

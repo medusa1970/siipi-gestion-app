@@ -3,7 +3,7 @@ export const columnsEmpleados = [
     name: 'foto',
     label: 'Imagen',
     align: 'left',
-    field: (row: any) => row.foto
+    field: (row: any) => row.foto,
   },
   {
     name: 'nombre',
@@ -11,7 +11,7 @@ export const columnsEmpleados = [
     label: 'Nombre(s)',
     align: 'left',
     field: (row: any) => row.nombre,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'correo',
@@ -19,7 +19,7 @@ export const columnsEmpleados = [
     label: 'Correo',
     align: 'left',
     field: (row: any) => row.correo,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'telefono',
@@ -27,7 +27,7 @@ export const columnsEmpleados = [
     label: 'Telefono',
     align: 'left',
     field: (row: any) => row.telefono,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'rol',
@@ -35,13 +35,13 @@ export const columnsEmpleados = [
     label: 'Rol',
     align: 'left',
     field: (row: any) => row.cargo,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'actions',
     label: 'Acciones',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ];
 
 export const columnsOfertas = [
@@ -49,23 +49,23 @@ export const columnsOfertas = [
     name: 'nombre',
     label: 'Nombre',
     align: 'left',
-    field: (row: any) => row.nombre
+    field: (row: any) => row.nombre,
   },
   {
-    name: 'descripcion',
+    name: 'ingredientes',
     required: true,
-    label: 'descripcion',
+    label: 'Ingredientes',
     align: 'left',
-    field: (row: any) => row.descripcion,
-    sortable: true
+    field: (row: any) => row.ingredientes,
+    sortable: true,
   },
   {
-    name: 'productos',
+    name: 'preparados',
     required: true,
-    label: 'producto',
+    label: 'Preparados',
     align: 'left',
-    field: (row: any) => row.productos.map((p: any) => p.p),
-    sortable: true
+    field: (row: any) => row.preparados.map((p: any) => p),
+    sortable: true,
   },
   {
     name: 'grupos',
@@ -73,7 +73,7 @@ export const columnsOfertas = [
     label: 'grupos',
     align: 'left',
     field: (row: any) => row.grupos,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'precio',
@@ -81,13 +81,21 @@ export const columnsOfertas = [
     label: 'precio',
     align: 'left',
     field: (row: any) => row.precio,
-    sortable: true
+    sortable: true,
+  },
+  {
+    name: 'ocultar',
+    required: true,
+    label: 'Desabilitar',
+    align: 'left',
+    field: (row: any) => row.ocultar,
+    sortable: true,
   },
   {
     name: 'actions',
     label: 'Acciones',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ];
 
 export const columnsProductos = [
@@ -95,7 +103,7 @@ export const columnsProductos = [
     name: 'nombre',
     label: 'Nombre',
     align: 'left',
-    field: (row: any) => row.nombre
+    field: (row: any) => row.nombre,
   },
   {
     name: 'descripcion',
@@ -103,7 +111,7 @@ export const columnsProductos = [
     label: 'descripcion',
     align: 'left',
     field: (row: any) => row.descripcion,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'presentacionBasica',
@@ -111,7 +119,7 @@ export const columnsProductos = [
     label: 'U.M',
     align: 'left',
     field: (row: any) => row.presentacionBasica,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'presentaciones',
@@ -119,7 +127,7 @@ export const columnsProductos = [
     label: 'presentaciones',
     align: 'left',
     field: (row: any) => row.presentaciones.map((p: any) => p.nombre),
-    sortable: true
+    sortable: true,
   },
   {
     name: 'categoria',
@@ -127,13 +135,13 @@ export const columnsProductos = [
     label: 'categoria',
     align: 'left',
     field: (row: any) => row.categoria.nombre,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'actions',
     label: 'Acciones',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ];
 
 export const stockProducts = [
@@ -141,7 +149,7 @@ export const stockProducts = [
     name: 'foto',
     label: 'Imagen',
     align: 'left',
-    field: (row: any) => row.foto
+    field: (row: any) => row.foto,
   },
   {
     name: 'producto',
@@ -149,7 +157,7 @@ export const stockProducts = [
     label: 'Producto',
     align: 'left',
     field: (row: any) => row.producto.nombre,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'presentaciones',
@@ -157,7 +165,7 @@ export const stockProducts = [
     label: 'Presentaciones',
     align: 'left',
     field: (row: any) => row.presentaciones.map((p: any) => p.nombre),
-    sortable: true
+    sortable: true,
   },
   {
     name: 'lotes',
@@ -165,7 +173,7 @@ export const stockProducts = [
     label: 'Lotes',
     align: 'left',
     field: (row: any) => row.lote.nro,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'cantidad',
@@ -173,7 +181,7 @@ export const stockProducts = [
     label: 'Cantidad Total',
     align: 'left',
     field: (row: any) => row.cantidad,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'cantidadMinima',
@@ -181,11 +189,11 @@ export const stockProducts = [
     label: 'Cantidad Minima',
     align: 'left',
     field: (row: any) => row.cantidadMinima,
-    sortable: true
+    sortable: true,
   },
   {
     name: 'actions',
     label: 'Acciones',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ];

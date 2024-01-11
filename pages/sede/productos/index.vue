@@ -1,6 +1,14 @@
 <template>
   <div>
     <Navigation label="Productos" icon="list_alt" />
+    <q-btn
+      color="primary"
+      icon="check"
+      label="ver categorias"
+      outline
+      @click="$router.push('productos/categorias')"
+      style="margin-bottom: 20px"
+    />
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <q-btn
@@ -82,8 +90,8 @@
     <template #inputsDialog>
       <div class="row items-center" style="width: 100%">
         <q-select
-          v-model="estado.inputCategoria"
-          :options="estado.categorias"
+          v-model="estado.categoriaFija.categoria"
+          :options="estado.categorias.hijas"
           label="Seleccionar categoria"
           option-label="nombre"
           style="width: 100%; flex: 1 0 auto"
@@ -100,7 +108,26 @@
             />
           </template>
           <template v-slot:prepend>
-            <q-icon name="group" />
+            <q-icon name="category" />
+          </template>
+        </q-select>
+        <q-select
+          v-model="estado.categoriaFija.hijas"
+          :options="estado.categoriaFija.categoria.hijas"
+          label="Seleccionar categoria"
+          option-label="nombre"
+          style="width: 100%; flex: 1 0 auto; margin-top: 10px"
+          dense
+          onfocus="this.select()"
+          filled
+        >
+          <template v-slot:append>
+            <q-icon
+              style="margin: 0"
+              name="close"
+              @click.stop.prevent="estado.categoriaFija.hijas = ''"
+              class="cursor-pointer q-mr-md"
+            />
           </template>
           <template v-slot:no-option>
             <q-item>
@@ -115,7 +142,7 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
 
@@ -126,7 +153,7 @@ const {
   modalAgregarProducto,
   borrarProducto,
   cambiarCategoria,
-  guardarCategoria
+  guardarCategoria,
 } = useProducts();
 </script>
 
@@ -138,9 +165,9 @@ const {
   display: flex;
   justify-content: center;
   padding: 5px 0;
-  .cell-image {
-    width: 70px;
-    height: 70px;
-  }
+}
+.cell-image {
+  width: 70px;
+  height: 70px;
 }
 </style>

@@ -15,11 +15,11 @@ export const productStore = defineStore('product', {
       descripcion: '',
       tags: [],
       presentacionBasica: '',
-      presentaciones: []
+      presentaciones: [],
     },
     isEdit: false,
     ListInventario: [],
-    ListInventarioPDF: []
+    ListInventarioPDF: [],
   }),
-  persist: true
+  persist: true,
 });

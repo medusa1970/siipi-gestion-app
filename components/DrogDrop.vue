@@ -6,7 +6,7 @@
     handle=".handle"
     :item-key="itemKey"
   >
-    <template #item="{ element, index }">
+    <template #item="{ element }">
       <li class="flex items-center">
         <q-icon
           name="drag_indicator"
@@ -53,11 +53,11 @@ import draggable from 'vuedraggable';
 defineProps({
   lista: {
     type: Array,
-    required: true
+    required: true,
   },
   eliminar: Function,
   editar: Function,
-  itemKey: String
+  itemKey: String,
 });
 
 const emit = defineEmits(['delete', 'edit']);

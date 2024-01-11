@@ -44,25 +44,6 @@ mutation borrarProducto($busqueda: BuscarProductoDto!) {
   productoBorrar(busqueda: $busqueda)
 }
 
-# MODIFICAR INFORMACION BASICA
-# mutation modificarProducto(
-#   $busqueda: BuscarProductoDto!
-#   $datos: ModificarProductoDto!
-# ) {
-#   productoModificar(busqueda: $busqueda, datos: $datos)
-# }
-
-# MODIFICAR PRESENTACIONES
-# mutation modificarPresentacion(
-#   $busqueda: BuscarProductoDto!
-#   $datos: [ModificarPresentacionDto!]!
-# ) {
-#   productoModificarPresentacion(
-#     busqueda: $busqueda
-#     datos: $datos
-#     opciones: { limit: 1 }
-#   )
-# }
 mutation modificarProductos(
   $busqueda: BuscarProductoDto!
   $datos: ModificarProductoDto!
@@ -80,21 +61,6 @@ mutation modificarProductos(
   }
 }
 
-# PRESENTACION
-# mutation agregarPresentacion(
-#   $busqueda: BuscarProductoDto!
-#   $datos: AgregarPresentacionDto!
-# ) {
-#   productoAgregarPresentacion(
-#     busqueda: $busqueda
-#     datos: $datos
-#     opciones: {}
-#   ) {
-#     _id
-#     nombre
-#     cantidad
-#   }
-# }
 mutation agregarPresentacion(
   $busqueda: BuscarProductoDto!
   $datos: CrearPresentacionDto!

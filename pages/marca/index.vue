@@ -1,11 +1,11 @@
 <template>
   <div class="grid grid-cols-2 gap-5 mt-2">
-    <div class="col-span-1" @click="() => push('marca/empleados')">
+    <NuxtLink class="col-span-1" to="marca/empleados">
       <Item title="Empleados" icon="group" />
-    </div>
-    <div class="col-span-1" @click="() => push('marca/ofertas')">
+    </NuxtLink>
+    <NuxtLink class="col-span-1" to="marca/ofertas">
       <Item title="Ofertas" icon="list_alt" color-icon="orange" />
-    </div>
+    </NuxtLink>
   </div>
 </template>
 
@@ -13,6 +13,6 @@
 import { useRouter } from 'vue-router';
 const { push } = useRouter();
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 });
 </script>

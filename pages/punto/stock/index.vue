@@ -67,7 +67,10 @@
               class="flex flex-col gap-[2px] border-[1px]"
             >
               <h1 class="font-bold">Presentaciones:</h1>
-              <div v-for="presentacion in props.row.presentaciones">
+              <div
+                v-for="presentacion in props.row.presentaciones"
+                :key="presentacion.nombre"
+              >
                 <q-badge color="red" class="capitalize">
                   {{ presentacion.nombre }}: {{ presentacion.cantidad }}
                 </q-badge>
@@ -86,7 +89,7 @@
             >
               <h1 class="font-bold">Lotes:</h1>
               <div class="grid grid-cols-2 gap-3">
-                <div v-for="lote in props.row.lotes">
+                <div v-for="lote in props.row.lotes" :key="lote.nombre">
                   <span class="flex gap-2 leading-none">
                     <p>Vencimiento:</p>
                     <q-badge color="red" class="capitalize">
@@ -164,7 +167,7 @@ const {
   formatearFecha,
   modalEditarCantidad,
   guardarCantidad,
-  agregarListaInventario
+  agregarListaInventario,
 } = useStock();
 </script>
 

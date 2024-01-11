@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
   modules: [
     '@nuxtjs/tailwindcss',
@@ -8,28 +8,28 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-graphql-client',
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt'
+    '@pinia-plugin-persistedstate/nuxt',
   ],
   tailwindcss: {},
   quasar: {
     plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
     extras: { fontIcons: ['bootstrap-icons'] },
-    lang: 'es'
+    lang: 'es',
   },
   runtimeConfig: {
     public: {
-      GQL_HOST: 'http://localhost:3000/graphql' // overwritten by process.env.GQL_HOST
-    }
+      GQL_HOST: 'http://localhost:3000/graphql', // overwritten by process.env.GQL_HOST
+    },
   },
   piniaPersistedstate: {
     cookieOptions: {
-      sameSite: 'strict'
+      sameSite: 'strict',
     },
-    storage: 'localStorage'
+    storage: 'localStorage',
   },
   router: {
     options: {
-      scrollBehaviorType: 'smooth'
-    }
-  }
+      scrollBehaviorType: 'smooth',
+    },
+  },
 });

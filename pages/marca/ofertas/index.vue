@@ -125,7 +125,15 @@
               size="13px"
               @click="abrirEditarOferta(props.row)"
             />
-            <q-btn color="red" icon="delete" dense flat round size="13px" />
+            <q-btn
+              color="red"
+              icon="delete"
+              dense
+              flat
+              round
+              size="13px"
+              @click="borrarOferta(props.row)"
+            />
             <!-- <q-btn color="red" icon="more_horiz" flat round>
               <q-menu
                 transition-show="rotate"
@@ -156,8 +164,13 @@
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
 
-const { estado, storeOferta, abrirEditarOferta, abrirAgregarOferta } =
-  useOferta();
+const {
+  estado,
+  storeOferta,
+  abrirEditarOferta,
+  abrirAgregarOferta,
+  borrarOferta,
+} = useOferta();
 </script>
 <style scoped>
 /* Estilo base del checkbox */

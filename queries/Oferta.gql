@@ -88,6 +88,10 @@ mutation modificarOfertas(
     descripcion
   }
 }
+# BORRAR
+mutation borrarOfertas($busqueda: BuscarOfertaDto!) {
+  ofertaBorrar(busqueda: $busqueda, opciones: { limit: 0 })
+}
 
 mutation crearIngredienteProducto(
   $busqueda: BuscarOfertaDto!
@@ -182,6 +186,47 @@ mutation crearCatalogo($datos: CrearCatalogoDto!) {
     }
     ofertas {
       nombre
+    }
+  }
+}
+# MENU - CATALOGO
+query puntoLeerCatalogo(
+  $busqueda: BuscarEntidadDto!
+  $busquedaMenu: BuscarMenuDto!
+) {
+  entidadLeerMenu(
+    busqueda: $busqueda
+    busquedaMenu: $busquedaMenu
+    opciones: { populate: true }
+  ) {
+    _id
+    nombre
+    hijas {
+      _id
+      nombre
+      ofertas {
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        ofertas {
+          _id
+          nombre
+        }
+      }
+    }
+    ofertas {
+      _id
+      nombre
+      ingredientes {
+        ... on IngredienteProducto {
+          _id
+        }
+        ... on IngredienteEleccion {
+          cantidadMax
+        }
+      }
     }
   }
 }

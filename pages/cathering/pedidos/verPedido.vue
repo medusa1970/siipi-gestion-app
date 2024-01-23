@@ -20,7 +20,12 @@
           PUNTOS QUE REALIZARON SUS PEDIDOS
         </div>
         <div class="flex flex-col gap-2 justify-center items-center">
-          <Item :title="punto.nombre" v-for="punto in puntos" class="w-[500px]">
+          <Item
+            :title="punto.nombre"
+            v-for="punto in puntos"
+            class="w-[500px]"
+            :key="punto"
+          >
             <template v-slot:actions>
               <div class="flex gap-1">
                 <q-btn

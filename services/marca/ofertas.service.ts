@@ -5,6 +5,8 @@ export const ofertaService = {
   crearOferta: async (datos: any) => postData(GqlCrearOferta({ datos })),
   editarOferta: async (ofertaID: string, datos: any) =>
     postData(GqlModificarOfertas({ busqueda: { _id: ofertaID }, datos })),
+  borrarOferta: async (ofertaID: string) =>
+    postData(GqlBorrarOfertas({ busqueda: { _id: ofertaID } })),
   buscarProductos: async () =>
     postData(GqlOfertaProductoBuscar({ busqueda: {} })),
   crearIngredienteProducto: async (

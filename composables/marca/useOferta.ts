@@ -4,10 +4,12 @@ import { ofertaService } from '~/services/marca/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
 import { useRouter } from 'vue-router';
 import { da, es } from 'date-fns/locale';
+import { useQuasar } from 'quasar';
 
 export const useOferta = () => {
   const storeOferta = ofertaStore();
   const router = useRouter();
+  const $q = useQuasar();
 
   const estado = reactive({
     ofertas: [],
@@ -226,6 +228,19 @@ export const useOferta = () => {
     estado.modal.isAddIngredientProduct = true;
     storeOferta.isEdit = false;
   };
+  const borrarOferta = async (oferta: any) => {
+    console.log(oferta);
+    $q.dialog({
+      title: `Eliminar ${oferta.nombre}`,
+      message: '¿Está seguro de eliminar esta oferta?',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      await ofertaService.borrarOferta(oferta._id);
+      NotifySucessCenter('Oferta eliminado correctamente');
+      obtenerTodasofertas();
+    });
+  };
 
   //on mounted
   onMounted(() => {
@@ -250,5 +265,6 @@ export const useOferta = () => {
     editarIngrediente,
     editarIngredienteProducto,
     test,
+    borrarOferta,
   };
 };

@@ -16,7 +16,7 @@ const NotifyWarning = (message: string) =>
     icon: 'warning',
     position: 'center',
     progress: true,
-    timeout: 1500
+    timeout: 1500,
   });
 const NotifySucessCenter = (message: string) =>
   Notify.create({
@@ -25,7 +25,7 @@ const NotifySucessCenter = (message: string) =>
     icon: 'check',
     position: 'center',
     progress: true,
-    timeout: 1500
+    timeout: 1000,
   });
 
 /**API ERROR */
@@ -44,5 +44,5 @@ export {
   NotifyError,
   ApiError,
   NotifyWarning,
-  NotifySucessCenter
+  NotifySucessCenter,
 };

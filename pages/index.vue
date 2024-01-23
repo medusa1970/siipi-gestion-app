@@ -29,7 +29,7 @@
       <h1 class="font-bold text-xl text-center">
         Selecciona a que negocio ingresar
       </h1>
-      <div class="flex gap-3 mt-2 cursor-pointer">
+      <div class="flex gap-3 mt-2 cursor-pointer justify-center">
         <q-card
           v-for="negocio in user.negocios"
           :key="negocio.nombre"

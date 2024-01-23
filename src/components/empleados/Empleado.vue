@@ -21,7 +21,25 @@
       <!-- ACTIONS -->
       <template #body-cell-actions="{ props }">
         <q-td :props="props">
-          <q-btn color="red" icon="more_horiz" flat round>
+          <q-btn
+            color="primary"
+            icon="accessibility"
+            dense
+            flat
+            round
+            size="13px"
+            @click="abrirPermisos(props.row)"
+          />
+          <q-btn
+            color="red"
+            icon="delete"
+            dense
+            flat
+            round
+            size="13px"
+            @click="borrarEmpleado(props.row)"
+          />
+          <!-- <q-btn color="red" icon="more_horiz" flat round>
             <q-menu
               transition-show="rotate"
               transition-hide="rotate"
@@ -59,7 +77,7 @@
                 </q-item>
               </q-list>
             </q-menu>
-          </q-btn>
+          </q-btn> -->
         </q-td>
       </template>
     </Table>

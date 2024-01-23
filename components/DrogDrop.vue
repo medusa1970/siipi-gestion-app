@@ -17,7 +17,17 @@
         <div
           class="bg-[#1976D2] px-2 py-[1px] rounded-sm text-white flex items-center justify-center gap-1"
         >
-          <span class="mr-1">{{ element[itemKey] }}</span>
+          <span class="mr-1 flex flex-col writing-vertical leading-none">
+            <h1 :class="element._tipo && 'text-xs'">
+              {{ element[itemKey] }}
+            </h1>
+            <h1 class="font-bold" v-if="element._tipo === 'ELECCION'">
+              {{ element.nombre }}
+            </h1>
+            <h1 class="font-bold" v-if="element._tipo === 'PRODUCTO'">
+              {{ element.producto.nombre }}
+            </h1>
+          </span>
 
           <!-- <q-icon name="edit" round /> -->
           <!-- <template v-slot:body-actions="props">

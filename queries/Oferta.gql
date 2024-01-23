@@ -1,3 +1,5 @@
+# CRUD OFERTA
+#  BUSCAR
 query ofertaBuscar($busqueda: BuscarOfertaDto!) {
   ofertaBuscar(busqueda: $busqueda, opciones: { populate: true }) {
     _id
@@ -5,7 +7,6 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
     nombre
     descripcion
     precio
-    tags
     grupos
     ocultar
     ingredientes {
@@ -13,6 +14,7 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
         _id
         _tipo
         producto {
+          _id
           nombre
         }
         cantidad
@@ -65,7 +67,7 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
     }
   }
 }
-
+# CREAR
 mutation crearOferta($datos: CrearOfertaDto!) {
   ofertaCrear(datos: $datos) {
     _id
@@ -73,6 +75,17 @@ mutation crearOferta($datos: CrearOfertaDto!) {
     descripcion
     precio
     grupos
+  }
+}
+# EDITAR
+mutation modificarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+) {
+  ofertaModificar(busqueda: $busqueda, datos: $datos, opciones: { limit: 0 }) {
+    _id
+    nombre
+    descripcion
   }
 }
 
@@ -95,6 +108,25 @@ mutation crearIngredienteProducto(
     }
   }
 }
+mutation editarIngredienteProducto(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarIngredienteProductoDto!
+  $busquedaIngrediente: BuscarIngredienteDto!
+) {
+  ofertaModificarIngredienteProducto(
+    busqueda: $busqueda
+    datos: $datos
+    busquedaIngrediente: $busquedaIngrediente
+    opciones: { populate: true }
+  ) {
+    _id
+    _tipo
+    producto {
+      nombre
+    }
+    cantidad
+  }
+}
 
 # BUSCAR PRODUCTO CON SUS PRESENTACIONES PARA AGREGAR PRODUCTO FIJO A OFERTA
 query ofertaProductoBuscar($busqueda: BuscarProductoDto!) {
@@ -104,6 +136,51 @@ query ofertaProductoBuscar($busqueda: BuscarProductoDto!) {
     presentacionBasica
     presentaciones {
       cantidad
+      nombre
+    }
+  }
+}
+
+# CATALOGOS
+query buscarCatalogos($busqueda: BuscarCatalogoDto!) {
+  catalogoArbol(busqueda: $busqueda, opciones: { populate: true }) {
+    _id
+    nombre
+    ofertas {
+      nombre
+    }
+    hijas {
+      _id
+      nombre
+      ofertas {
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        ofertas {
+          nombre
+        }
+        hijas {
+          _id
+          nombre
+          ofertas {
+            nombre
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation crearCatalogo($datos: CrearCatalogoDto!) {
+  catalogoCrear(datos: $datos, opciones: { populate: true }) {
+    _id
+    nombre
+    pariente {
+      nombre
+    }
+    ofertas {
       nombre
     }
   }

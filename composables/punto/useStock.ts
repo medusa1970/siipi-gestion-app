@@ -26,24 +26,25 @@ export const useStock = () => {
     stocks: [],
     producto: {
       id: '',
-      cantidadMinima: 0
+      cantidadMinima: 0,
     },
     alerta: 0,
     productosEnAlerta: [] as ProductoEnAlerta[],
     modal: {
       isShowCantidad: false,
-      isShowAlertProduct: false
-    }
+      isShowAlertProduct: false,
+    },
+    productosVencidos: [] as any[],
   });
 
   const obtenerTodoStock = async () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
-      useAuth.negocioElegido._id
+      useAuth.negocioElegido._id,
     );
     estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
-        0
+        0,
       );
       const alertStyle =
         cantidadTotal <= stock.cantidadLimite ? 'background-color: orange' : '';
@@ -51,7 +52,7 @@ export const useStock = () => {
         estado.alerta++;
         // Verificar si el producto ya está en la lista de alerta
         const productoExistente = estado.productosEnAlerta.find(
-          (p: any) => p.producto._id === stock.producto._id
+          (p: any) => p.producto._id === stock.producto._id,
         );
 
         // Si no existe, agregarlo
@@ -63,14 +64,14 @@ export const useStock = () => {
             lotes: stock.lotes,
             cantidad: cantidadTotal,
             cantidadMinima: stock.cantidadLimite,
-            alertStyle: alertStyle
+            alertStyle: alertStyle,
           });
         }
       } else {
         estado.alerta--;
         // Verificar si el producto está en la lista de alerta y quitarlo
         const index = estado.productosEnAlerta.findIndex(
-          (p: any) => p.producto._id === stock.producto._id
+          (p: any) => p.producto._id === stock.producto._id,
         );
 
         if (index !== -1) {
@@ -85,7 +86,7 @@ export const useStock = () => {
         lotes: stock.lotes,
         cantidad: cantidadTotal,
         cantidadMinima: stock.cantidadLimite,
-        alertStyle: alertStyle
+        alertStyle: alertStyle,
       };
     });
   };
@@ -103,7 +104,7 @@ export const useStock = () => {
     await stockService.modificarCantidad(
       useAuth.negocioElegido._id,
       estado.producto.id,
-      estado.producto.cantidadMinima
+      estado.producto.cantidadMinima,
     );
     NotifySucess('Se actualizo correctamente');
     estado.modal.isShowCantidad = false;
@@ -111,10 +112,12 @@ export const useStock = () => {
   };
 
   const agregarListaInventario = (row: any) => {
+    // console.log(row);
     const isInList = useProduct.ListInventario.some((item) => {
       //@ts-ignore
-      return item.producto._id === row.producto._id;
+      return item.producto.id === row.producto.id;
     });
+    // console.log(isInList);
     if (!isInList) {
       useProduct.ListInventario.push(row);
       NotifySucess('Se añadio a la lista de inventario');
@@ -130,6 +133,6 @@ export const useStock = () => {
     formatearFecha,
     modalEditarCantidad,
     guardarCantidad,
-    agregarListaInventario
+    agregarListaInventario,
   };
 };

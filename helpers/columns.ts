@@ -172,7 +172,7 @@ export const stockProducts = [
     required: true,
     label: 'Lotes',
     align: 'left',
-    field: (row: any) => row.lote.nro,
+    field: (row: any) => row.lotes,
     sortable: true,
   },
   {

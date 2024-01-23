@@ -126,7 +126,7 @@
       <q-card-section>
         <h1 class="bg-gray-300 text-center my-2">{{ test.nombre }}</h1>
         <div
-          class="flex items-center gap-1"
+          class="flex items-center gap-1 mb-[6px]"
           v-for="producto in test.productos"
           :key="producto._id"
         >
@@ -145,7 +145,7 @@
 </template>
 <script setup>
 import { useProducts } from '@/composables/sede/useProducts';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const { estado, obtenerTodasCategorias } = useProducts();
 const test = ref(null);

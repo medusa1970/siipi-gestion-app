@@ -16,11 +16,11 @@
 #       }
 #     }
 #   }
-# }
+# }buscarEntidadEmpleados
 query buscarEntidadEmpleados(
   $busqueda: BuscarEntidadDto!
   $busquedaEmpleado: BuscarEmpleadoDto!
-  $opciones: EntidadOpcionesDto
+  $opciones: OpcionesDto
 ) {
   entidadBuscarEmpleado(
     busqueda: $busqueda
@@ -290,7 +290,7 @@ mutation hacerInventario(
 mutation ListarProblemas(
   $entidadBusqueda: BuscarEntidadDto!
   $problemaBusqueda: BuscarProblemaDto!
-  $opciones: EntidadOpcionesDto
+  $opciones: OpcionesDto
 ) {
   entidadListarProblemas(
     entidadBusqueda: $entidadBusqueda

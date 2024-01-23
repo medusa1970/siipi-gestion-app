@@ -31,10 +31,7 @@ mutation modificarPersona(
   }
 }
 
-query buscarPersona(
-  $busqueda: BuscarPersonaDto!
-  $opciones: PersonaOpcionesDto
-) {
+query buscarPersona($busqueda: BuscarPersonaDto!, $opciones: OpcionesDto) {
   personaBuscar(busqueda: $busqueda, opciones: $opciones) {
     _id
     nombre

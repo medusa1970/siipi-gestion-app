@@ -7,8 +7,7 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
     _id
     _creado
     nombre
-    descripcion
-    tags
+    comentario
     categoria {
       _id
       nombre
@@ -28,8 +27,7 @@ mutation crearProducto($datos: CrearProductoDto!) {
     _id
     _creado
     nombre
-    descripcion
-    tags
+    comentario
     presentacionBasica
     presentaciones {
       _id
@@ -55,12 +53,12 @@ mutation modificarProductos(
   ) {
     _id
     nombre
-    descripcion
-    tags
+    comentario
     presentacionBasica
   }
 }
 
+# PRESENTACIONES
 mutation agregarPresentacion(
   $busqueda: BuscarProductoDto!
   $datos: CrearPresentacionDto!

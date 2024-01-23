@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="shadow-md p-4">
+    <div class="border-[1px] p-4 border-slate-400">
       <h1 class="font-semibold text-base mb-3">Información basica:</h1>
       <div
         class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
@@ -63,24 +63,33 @@
           dense
         />
       </span>
-      <q-btn
+      <!-- <q-btn
         color="secondary"
         label="Crear oferta"
         no-caps
         v-if="estado.modal.isCreatedOferta === false"
         @click="crearOferta"
+      /> -->
+      <q-btn
+        color="secondary"
+        :label="
+          storeOferta.isEdit === false ? 'Crear oferta' : 'Editar información'
+        "
+        no-caps
+        @click="storeOferta.isEdit === false ? crearOferta() : editarOferta()"
       />
       <!-- <q-btn color="secondary" label="Editar información" no-caps class="mb-3" /> -->
     </div>
 
     <br />
-    <div v-if="estado.modal.isCreatedOferta === true">
-      <div class="shadow-md p-4">
+    <!-- <code>{{ storeOferta.oferta }}</code> -->
+    <div v-if="storeOferta.isEditIngrediente === true">
+      <div class="border-[1px] p-4 border-slate-400">
         <div class="flex gap-3 mb-3 items-center">
           <span class="leading-none">
             <h1 class="font-semibold text-base">Ingredientes</h1>
             <p style="font-size: 12px" class="text-gray-500">
-              Producto con diferente presentacion
+              Producto con diferente ingredientes
             </p>
           </span>
           <q-btn
@@ -92,10 +101,14 @@
             @click="abrirModalIngredientes"
           />
         </div>
-        <DragDrop :lista="ingredientes" item-key="producto" />
+        <DragDrop
+          :lista="estado.oferta.ingredientes"
+          item-key="_tipo"
+          @edit="editarIngrediente"
+        />
       </div>
       <br />
-      <div class="shadow-md p-4">
+      <div class="border-[1px] p-4 border-slate-400">
         <div class="flex gap-3 mb-3 items-center">
           <span class="leading-none">
             <h1 class="font-semibold text-base">Preparados</h1>
@@ -108,7 +121,7 @@
         <DragDrop :lista="condiciones" item-key="tipo" />
       </div>
       <br />
-      <div class="shadow-md p-4">
+      <!-- <div class="border-[1px] p-4 border-slate-400">
         <div class="flex gap-3 mb-3 items-center">
           <span class="leading-none">
             <h1 class="font-semibold text-base">Condiciones</h1>
@@ -119,11 +132,11 @@
           <q-btn icon="add" dense round color="primary" size="12px" />
         </div>
         <DragDrop :lista="condiciones" item-key="tipo" />
-      </div>
+      </div> -->
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- MODAL ELEGIR INGREDIENTE-->
   <q-dialog v-model="estado.modal.isAddIngredient" persistent>
     <q-card class="w-[370px]">
       <q-card-section class="row items-center q-pb-none">
@@ -133,12 +146,7 @@
       </q-card-section>
       <q-card-section>
         <div class="flex flex-col gap-2">
-          <q-btn
-            color="primary"
-            label="Productos Fijos"
-            dense
-            @click="estado.modal.isAddIngredientProduct = true"
-          />
+          <q-btn color="primary" label="Productos Fijos" dense @click="test" />
           <q-btn color="secondary" label="Productos Eleccion" dense />
           <q-btn color="orange" label="Productos en grupos" dense />
         </div>
@@ -149,8 +157,16 @@
   <!-- AGREGAR PRODUCTO FIJO -->
   <Dialog
     v-model="estado.modal.isAddIngredientProduct"
-    title="Agregar producto fijo"
-    :handle-submit="crearIngredienteProducto"
+    :title="
+      storeOferta.isEdit === false
+        ? 'Agregar producto fijo'
+        : 'Editar producto fijo'
+    "
+    :handle-submit="
+      storeOferta.isEdit === false
+        ? crearIngredienteProducto
+        : editarIngredienteProducto
+    "
   >
     <template #inputsDialog>
       <q-select
@@ -182,8 +198,43 @@
           </q-item>
         </template>
       </q-select>
+      <span class="grid grid-cols-3 gap-2 mt-2">
+        <q-btn
+          color="primary"
+          label="Imp. prest."
+          no-caps=""
+          @click="estado.modal.isImportPresentation = true"
+        />
+        <q-input
+          class="col-span-2"
+          v-model.number="estado.productoFijo.presentacion"
+          type="number"
+          label="Cantidad"
+          dense
+          filled
+          onfocus="this.select()"
+          ><template v-slot:append>
+            <q-icon
+              style="margin: 0"
+              name="close"
+              @click.stop.prevent="estado.productoFijo.presentacion = ''"
+              class="cursor-pointer q-mr-md"
+            /> </template
+        ></q-input>
+      </span>
+    </template>
+  </Dialog>
+
+  <!-- IMPORTAR PRESENTACION -->
+  <Dialog
+    v-model="estado.modal.isImportPresentation"
+    title="Importar presentacion"
+    :handle-submit="importarPresentacion"
+    close-manual
+  >
+    <template #inputsDialog>
       <q-select
-        v-model="estado.productoFijo.presentacion"
+        v-model="estado.productoFijo.import"
         :options="estado.productoFijo.producto.presentaciones"
         label="Seleccionar presentacion"
         option-label="nombre"
@@ -196,7 +247,7 @@
           <q-icon
             style="margin: 0"
             name="close"
-            @click.stop.prevent="estado.productoFijo.presentacion = ''"
+            @click.stop.prevent="estado.productoFijo.import = ''"
             class="cursor-pointer q-mr-md"
           />
         </template>
@@ -226,7 +277,18 @@ const {
   abrirModalIngredientes,
   obtenerTodosProductos,
   crearIngredienteProducto,
+  importarPresentacion,
+  storeOferta,
+  editarOferta,
+  editarIngrediente,
+  editarIngredienteProducto,
+  test,
 } = useOferta();
+
+//STORE
+if (storeOferta.oferta) {
+  estado.oferta = storeOferta.oferta;
+}
 
 const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 const ingredientes = ref([

@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_HOST: 'http://localhost:3000/graphql', // overwritten by process.env.GQL_HOST
+      GQL_HOST: process.env.GRAPH_URI,
     },
   },
   piniaPersistedstate: {
@@ -31,5 +31,8 @@ export default defineNuxtConfig({
     options: {
       scrollBehaviorType: 'smooth',
     },
+  },
+  devServer: {
+    port: Number(process.env.PORT),
   },
 });

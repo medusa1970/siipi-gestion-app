@@ -73,7 +73,7 @@ export const productoService = {
   buscarCategorias: async () => postData(GqlCategoriaBuscar({ busqueda: {} })),
   obtenerTodasCategorias: async () =>
     postData(
-      GqlCategoriaArbol({ busqueda: { _id: '600000000000000000000000' } }),
+      GqlCategoriaArbol({ busqueda: { _id: '65a447864b2d6ce337743531' } }),
     ),
 
   crearCategoria: async (categoriaID: string, nombre: string) =>

@@ -95,6 +95,7 @@ export const useProducts = () => {
   };
 
   const navegarDetalleProducto = (row: any) => {
+    console.log(row);
     useProduct.product = row;
     estado.producto = row;
     useProduct.isEdit = true;
@@ -169,6 +170,7 @@ export const useProducts = () => {
     }
   };
   const modalEditarPresentacion = (p: Presentacion) => {
+    console.log(p);
     estado.dialog.isAddPresentation = true;
     estado.dialog.isEditPresentation = true;
     estado.presentacion._id = p._id;
@@ -185,11 +187,13 @@ export const useProducts = () => {
           estado.presentacion,
         );
       if (res) {
+        console.log(estado.producto.presentaciones);
         const index = estado.producto.presentaciones.findIndex(
           (p) => p._id === estado.presentacion._id,
         );
         if (index !== -1)
           estado.producto.presentaciones[index] = estado.presentacion;
+        console.log(estado.producto.presentaciones);
       }
       NotifySucess('Presentacion modificado correctamente');
       estado.dialog.isAddPresentation = false;

@@ -2,7 +2,7 @@ import { NotifySucess } from '@/helpers/message.service';
 import type {
   Negocio,
   UserProps,
-  PersonaProps
+  PersonaProps,
 } from '~/interfaces/product.interface';
 import { authService } from '@/services/auth.service';
 
@@ -21,8 +21,8 @@ const estadoInicial: AuthStoreProps = {
   negocioElegido: {
     _id: '',
     nombre: '',
-    tipo: ''
-  }
+    tipo: '',
+  },
 };
 
 export const authStore = defineStore('auth', {
@@ -37,11 +37,16 @@ export const authStore = defineStore('auth', {
       const { entidadesUsuarioConectado } =
         await authService.buscarEntidadesDeUsuario(this.token);
       this.user.negocios = entidadesUsuarioConectado;
+      this.user.negocios.push({
+        _id: 'cliente',
+        nombre: 'Cliente',
+        tipo: 'CLIENTE',
+      });
     },
     async register(datos: PersonaProps) {
       const { personaCrear } = await authService.registrar(datos);
       NotifySucess(`${personaCrear.nombre} se ha registrado correctamente`);
-    }
+    },
   },
-  persist: true
+  persist: true,
 });

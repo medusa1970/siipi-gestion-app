@@ -15,7 +15,7 @@ export const useAuth = () => {
     apellido: '',
     contrasena: '',
     telefono: '',
-    correo: ''
+    correo: '',
   });
 
   const clearAuthPersona = () => {
@@ -32,10 +32,10 @@ export const useAuth = () => {
   const login = async () => {
     await useAuth.login(
       authPersona.value.usuario,
-      authPersona.value.contrasena
+      authPersona.value.contrasena,
     );
-    if (useAuth.token && user.value.negocios.length === 0)
-      router.push('/cliente');
+    // if (useAuth.token && user.value.negocios.length === 0)
+    //   router.push('/cliente');
     clearAuthPersona();
   };
   const elegirNegocio = (negocio: Negocio) => {
@@ -53,6 +53,6 @@ export const useAuth = () => {
     login,
     elegirNegocio,
     user,
-    register
+    register,
   };
 };

@@ -1,16 +1,8 @@
 <template>
   <div>
     <Navigation label="Stock" icon="folder" />
-    <Table
-      badge
-      :rows="
-        estado.modal.isShowAlertProduct
-          ? estado.productosEnAlerta
-          : estado.stocks
-      "
-      :columns="stockProducts"
-      dense
-    >
+    <!-- <code>{{ stock }}</code> -->
+    <Table badge :rows="stocks" :columns="stockProducts" dense>
       <!-- DROPDOW -->
       <template #dropdown>
         <q-btn
@@ -35,6 +27,10 @@
           <span class="flex gap-1"
             >0 con stock en
             <p class="text-red-500 cursor-pointer">Agotado</p>
+          </span>
+          <span class="flex gap-1"
+            >{{ estado.productosVencidos.length }} con stock en
+            <p class="text-blue-500 cursor-pointer">Vencidos</p>
           </span>
         </div>
       </template>
@@ -78,8 +74,9 @@
             </q-popup-edit>
           </q-td>
           <q-td key="lotes" :props="props">
-            {{ formatearFecha(props.row.lotes[0].vencimiento) }}.
-            <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}.
+            {{ props.row.lotes[0].fecha }}.
+            <!-- {{ formatearFecha(props.row.lotes[0].vencimiento) }}. -->
+            <!-- <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}. -->
             <strong>Cantidad:</strong>{{ props.row.lotes[0].cantidad }} ...
             <q-popup-edit
               v-model="props.row.lotes"
@@ -127,13 +124,26 @@
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
-              outline
+              flat
+              round
+              padding="1px"
               icon="add"
               color="primary"
               dense
+              size="13px"
               @click="agregarListaInventario(props.row)"
             >
               <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              icon="content_paste"
+              color="primary"
+              dense
+              size="10px"
+            >
+              <q-tooltip class="bg-blue-500">Mandar papelera</q-tooltip>
             </q-btn>
           </q-td>
         </q-tr>
@@ -161,6 +171,9 @@
 <script setup>
 import { stockProducts } from '@/helpers/columns';
 import { useStock } from '@/composables/punto/useStock';
+import stock from '@/mocks/stock.json';
+import { ref } from 'vue';
+// console.log(stock);
 
 const {
   estado,
@@ -169,6 +182,54 @@ const {
   guardarCantidad,
   agregarListaInventario,
 } = useStock();
+
+const stocks = ref([]);
+stocks.value = stock.map((s) => {
+  const cantidadTotal = s.lotes.reduce(
+    (total, lote) => parseInt(total) + parseInt(lote.cantidad),
+    0,
+  );
+
+  return {
+    foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
+    producto: s.producto,
+    presentaciones: s.presentaciones,
+    lotes: s.lotes,
+    cantidad: cantidadTotal,
+    cantidadMinima: s.cantidadMinima,
+  };
+});
+console.log(stocks.value);
+
+// ALERTA VENCIDOS
+estado.productosVencidos = stocks.value
+  .map((stock) => {
+    const lotesVencidos = stock.lotes.filter((lote) => {
+      const fechaActual = new Date();
+      const fechaVencimiento = new Date(
+        lote.fecha.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3'),
+      );
+
+      // Filtrar lotes vencidos
+      return (
+        fechaActual > fechaVencimiento ||
+        (fechaVencimiento - fechaActual) / (1000 * 60 * 60 * 24) <= 5
+      );
+    });
+    console.log(lotesVencidos);
+
+    // Retornar solo el stock con lotes vencidos
+    if (lotesVencidos.length > 0) {
+      return {
+        ...stock,
+        lotes: lotesVencidos, // Sobrescribir lotes con solo los lotes vencidos
+      };
+    }
+
+    return null; // No hay lotes vencidos para este stock
+  })
+  .filter(Boolean); // Filtrar los stocks que tienen lotes vencidos
+console.log(estado.productosVencidos);
 </script>
 
 <style scoped>

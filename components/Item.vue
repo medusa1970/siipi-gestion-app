@@ -5,8 +5,9 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label class="font-bold text-lg">{{ title }}</q-item-label>
-      <q-item-label caption>February 22nd, 2019</q-item-label>
+      <h1 class="font-bold uppercase">{{ title }}</h1>
+      <!-- <q-item-label class="font-bold uppercase">{{ title }}</q-item-label> -->
+      <!-- <q-item-label caption>February 22nd, 2019</q-item-label> -->
     </q-item-section>
 
     <q-item-section side>
@@ -20,16 +21,16 @@
 defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: String,
-    default: 'folder'
+    default: 'folder',
   },
   colorIcon: {
     type: String,
-    default: 'primary'
-  }
+    default: 'primary',
+  },
 });
 </script>
 

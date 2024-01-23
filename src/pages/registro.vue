@@ -1,6 +1,6 @@
 <template>
   <div class="cont-center">
-    <NuxtImg class="w-80" src="/img/logo.png" />
+    <img class="w-80 border-2" :src="Logo" alt="prueba" />
     <Formulario title-btn="Registrarse" register :submit="register">
       <template #inputs>
         <q-input
@@ -47,8 +47,9 @@
 </template>
 
 <script setup lang="ts">
+import Logo from '@/assets/img/logo.png';
 definePageMeta({
-  layout: false
+  layout: false,
 });
 import { password, phone, string } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';

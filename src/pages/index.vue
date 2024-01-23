@@ -1,6 +1,6 @@
 <template>
   <div class="cont-center">
-    <NuxtImg v-if="user.nombre === ''" class="w-80" src="/img/logo.png" />
+    <img v-if="user.nombre === ''" class="w-80" :src="Logo" />
     <Formulario
       v-if="user.nombre === ''"
       title-btn="Iniciar sesion"
@@ -56,6 +56,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import Logo from '@/assets/img/logo.png';
 definePageMeta({
   layout: false,
   middleware: ['auth'],

@@ -15,55 +15,32 @@
       </label>
       <span class="text-gray-500">Subir imagen</span>
     </div>
-    <span class="flex gap-8 items-center my-3">
-      <span class="flex flex-col gap-2 w-80">
-        <h1>{{ estado.producto.nombre }}</h1>
-        <q-input
-          v-model="estado.producto.nombre"
-          type="text"
-          label="Nombre"
-          outlined
-          dense
-          :readonly="useProduct.isEdit"
-        />
-        <q-select
-          v-model="estado.producto.tags"
-          multiple
-          outlined
-          dense
-          use-chips
-          stack-label
-          label="Tags"
-          :options="tags"
-        >
-          <template v-slot:selected-item="scope">
-            <q-chip
-              removable
-              dense
-              @remove="scope.removeAtIndex(scope.index)"
-              :tabindex="scope.tabindex"
-              color="green"
-              text-color="white"
-              class="p-3"
-              >{{ scope.opt }}</q-chip
-            >
-          </template>
-        </q-select>
-        <q-input
-          v-model="estado.producto.presentacionBasica"
-          type="text"
-          label="Presentacion básica"
-          outlined
-          dense
-        />
-      </span>
+    <span class="flex flex-col gap-2 my-3 w-[50vw]">
       <q-input
-        class="w-1/2"
-        v-model="estado.producto.descripcion"
-        type="textarea"
-        label="Descripcion"
+        v-model="estado.producto.nombre"
+        type="text"
+        label="Nombre"
         outlined
         dense
+        :readonly="useProduct.isEdit"
+        clearable
+      />
+
+      <q-input
+        v-model="estado.producto.presentacionBasica"
+        type="text"
+        label="Presentacion básica"
+        outlined
+        dense
+        clearable
+      />
+      <q-input
+        v-model="estado.producto.comentario"
+        type="textarea"
+        label="Comentario"
+        outlined
+        dense
+        clearable
       />
     </span>
     <q-btn

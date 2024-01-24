@@ -106,11 +106,11 @@ export const columnsProductos = [
     field: (row: any) => row.nombre,
   },
   {
-    name: 'descripcion',
+    name: 'comentario',
     required: true,
-    label: 'descripcion',
+    label: 'Comentario',
     align: 'left',
-    field: (row: any) => row.descripcion,
+    field: (row: any) => row.comentario,
     sortable: true,
   },
   {

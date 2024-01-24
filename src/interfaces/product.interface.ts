@@ -28,8 +28,7 @@ export interface PersonaProps {
 export interface Product {
   _id?: string;
   nombre: string;
-  descripcion: string;
-  tags: Array<string>;
+  comentario: string;
   presentacionBasica: string;
   presentaciones: Presentacion[];
 }

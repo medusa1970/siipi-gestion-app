@@ -26,8 +26,8 @@
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
-          <q-td key="descripcion" :props="props">
-            {{ props.row.descripcion }}
+          <q-td key="comentario" :props="props">
+            {{ props.row.comentario }}
           </q-td>
           <q-td key="presentacionBasica" :props="props">
             {{ props.row.presentacionBasica }}
@@ -143,18 +143,24 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
 
 const {
   estado,
   tags,
+  getAllProductos,
   navegarDetalleProducto,
   modalAgregarProducto,
   borrarProducto,
   cambiarCategoria,
   guardarCategoria,
 } = useProducts();
+
+onMounted(() => {
+  getAllProductos();
+});
 </script>
 
 <style scoped>

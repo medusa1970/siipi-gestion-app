@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_HOST: process.env.GRAPH_URI,
+      GQL_HOST: process.env.GRAPH_SERVER,
     },
   },
   piniaPersistedstate: {

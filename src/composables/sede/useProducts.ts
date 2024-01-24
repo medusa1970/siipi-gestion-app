@@ -30,8 +30,7 @@ export const useProducts = () => {
     productos: [],
     producto: <Product>{
       nombre: '',
-      descripcion: '',
-      tags: [],
+      comentario: '',
       presentacionBasica: '',
       presentaciones: [{ nombre: '', cantidad: 0 }],
     },
@@ -103,17 +102,15 @@ export const useProducts = () => {
     router.push('productos/detailProduct');
   };
   const modalAgregarProducto = () => {
+    router.push('productos/detailProduct');
     useProduct.isEdit = false;
     useProduct.product = {
       _id: '',
       nombre: '',
-      descripcion: '',
-      tags: [],
+      comentario: '',
       presentacionBasica: '',
       presentaciones: [],
     };
-
-    router.push('productos/detailProduct');
   };
   //STORE
   if (useProduct.product) {
@@ -123,6 +120,7 @@ export const useProducts = () => {
   // AGREGAR PRODUCTO
   const agregarProducto = async () => {
     delete estado.producto._id;
+    console.log(estado.producto);
     await productoService.agregarProducto(estado.producto);
     NotifySucess('Producto agregado correctamente');
     router.push('/sede/productos');
@@ -303,13 +301,10 @@ export const useProducts = () => {
     estado.categoria.pariente = data._id;
   };
 
-  onMounted(() => {
-    getAllProductos();
-  });
-
   return {
     estado,
     tags,
+    getAllProductos,
     borrarProducto,
     navegarDetalleProducto,
     modalAgregarProducto,

@@ -5,7 +5,7 @@ export const inventarioService = {
     negocioID: string | null | undefined,
     producto: any,
     lotes: any,
-    guardar: boolean
+    guardar: boolean,
   ) =>
     postData(
       GqlHacerInventario({
@@ -14,8 +14,15 @@ export const inventarioService = {
         datos: {
           producto: producto,
           lotes: lotes,
-          reporte: 'se hizo'
-        }
-      })
-    )
+          reporte: 'se hizo',
+        },
+      }),
+    ),
+  inventarioProductosMenu: async (entidadID: string | null | undefined) =>
+    postData(
+      GqlInventarioProductosMenu({
+        busqueda: { _id: entidadID },
+        busquedaMenu: {},
+      }),
+    ),
 };

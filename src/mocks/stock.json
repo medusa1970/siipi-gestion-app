@@ -1,7 +1,7 @@
 [
   {
     "foto": "url",
-    "producto": { "id": 1, "nombre": "vasos de plástico" },
+    "producto": { "id": "1", "nombre": "vasos de plástico" },
     "presentaciones": [
       {
         "cantidad": "100",
@@ -23,7 +23,7 @@
   },
   {
     "foto": "url",
-    "producto": { "id": 2, "nombre": "platos desechables" },
+    "producto": { "id": "2", "nombre": "platos desechables" },
     "presentaciones": [
       {
         "cantidad": "50",
@@ -49,7 +49,7 @@
   },
   {
     "foto": "url",
-    "producto": { "id": 3, "nombre": "servilletas de papel" },
+    "producto": { "id": "3", "nombre": "servilletas de papel" },
     "presentaciones": [
       {
         "cantidad": "200",
@@ -75,7 +75,7 @@
   },
   {
     "foto": "url",
-    "producto": { "id": 4, "nombre": "cucharas de plástico" },
+    "producto": { "id": "4", "nombre": "cucharas de plástico" },
     "presentaciones": [
       {
         "cantidad": "50",
@@ -101,7 +101,7 @@
   },
   {
     "foto": "url",
-    "producto": { "id": 5, "nombre": "tazas de papel" },
+    "producto": { "id": "5", "nombre": "tazas de papel" },
     "presentaciones": [
       {
         "cantidad": "50",
@@ -127,7 +127,7 @@
   },
   {
     "foto": "url",
-    "producto": { "id": 6, "nombre": "platos de papel" },
+    "producto": { "id": "6", "nombre": "platos de papel" },
     "presentaciones": [
       {
         "cantidad": "75",

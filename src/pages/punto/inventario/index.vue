@@ -1,6 +1,7 @@
 <template>
   <div>
     <Navigation label="Inventario" icon="folder" />
+    <!-- <q-btn color="primary" icon="check" label="OK" @click="test" /> -->
     <!-- <code>{{ estado.productoElegido }}</code> -->
     <div class="grid grid-cols-[auto,1fr,1fr]">
       <div class="w-[270px]">
@@ -10,13 +11,13 @@
             clickable
             dense
             v-for="(item, index) in useProduct.ListInventario"
-            :key="item.producto.id"
+            :key="item.id"
             class="flex items-center"
             @click="elegirProductoInventario(item)"
           >
             <span class="flex gap-2">
               <h1>{{ index >= 0 && index + 1 }}</h1>
-              <h1>{{ item.producto.nombre }}</h1>
+              <h1>{{ item.nombre }}</h1>
             </span>
           </q-item>
         </q-list>
@@ -36,9 +37,7 @@
           <h1 class="text-center font-semibold">
             Inventario
             <!-- {{ useProduct.ListInventario[estado.currentIndex].producto.nombre }} -->
-            {{
-              estado.productoElegido && estado.productoElegido.producto.nombre
-            }}
+            {{ estado.productoElegido && estado.productoElegido.nombre }}
           </h1>
           <!-- PROBANDOOOO -->
           <div v-for="(lote, index) in estado.inventario.lotes" :key="index">
@@ -178,7 +177,6 @@
 
 <script setup>
 import { useInventary } from '@/composables/punto/useInventary';
-
 const {
   estado,
   useProduct,

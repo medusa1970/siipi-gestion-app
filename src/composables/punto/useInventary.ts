@@ -3,7 +3,7 @@
  */
 import { ref, reactive, onMounted } from 'vue';
 import { Inventarios } from '@/mocks/data.json';
-import { productStore } from '@/stores/producto.store';
+import { productStore, type InventarioProps } from '@/stores/producto.store';
 import {
   NotifyError,
   NotifySucess,
@@ -39,6 +39,7 @@ export const useInventary = () => {
     showComment: false,
     productoElegido: '',
     countInventary: 0,
+    // ListInventario: [],
   });
   /**
    * FUNCIONES
@@ -46,22 +47,46 @@ export const useInventary = () => {
   const printInventory = () => {
     window.print();
   };
-  const existInventary = () => {
-    if (useProduct.ListInventario.length > 0) {
-      $q.notify({
-        type: 'positive',
-        position: 'center',
-        message: `Bienvenido, tienes inventario por hacer`,
-        progress: true,
-        timeout: 1500,
+  const existInventary = async () => {
+    // if (useProduct.ListInventario.length > 0) {
+    //   $q.notify({
+    //     type: 'positive',
+    //     position: 'center',
+    //     message: `Bienvenido, tienes inventario por hacer`,
+    //     progress: true,
+    //     timeout: 1500,
+    //   });
+    // }
+    const { entidadProductosMenu } =
+      await inventarioService.inventarioProductosMenu(
+        useAuth.negocioElegido._id,
+      );
+    // console.log(entidadProductosMenu);
+    //ARREGLAR NO ESTA FUNCIONANDO
+    if (entidadProductosMenu)
+      entidadProductosMenu.forEach((item: any) => {
+        if (
+          !useProduct.ListInventario.some(
+            (inventario) => inventario.id === item._id,
+          )
+        ) {
+          useProduct.ListInventario.push({ id: item._id, nombre: item.nombre });
+        }
       });
-    }
+    // console.log('first');
+    // entidadProductosMenu.forEach((item: any) =>
+    //   useProduct.ListInventario.push(item),
+    // );
+    // useProduct.ListInventario = [
+    //   ...useProduct.ListInventario,
+    //   ...entidadProductosMenu,
+    // ];
   };
   const terminarInventario = async () => {
-    useProduct.ListInventario = useProduct.ListInventario.filter(
-      //@ts-ignore
-      (item) => item.producto.id !== estado.productoElegido.producto.id,
-    );
+    // useProduct.ListInventario = useProduct.ListInventario.filter(
+    //   //@ts-ignore
+    //   (item) => item.producto.id !== estado.productoElegido.producto.id,
+    // );
     NotifySucess('Inventario guardado');
     estado.productoElegido = '';
     estado.countInventary++;
@@ -172,27 +197,28 @@ export const useInventary = () => {
       bloque: '',
     });
   };
+
+  const elegirProductoInventario = (producto: any) => {
+    estado.productoElegido = producto;
+  };
+
   onMounted(() => {
     existInventary();
     // Obtener la longitud de lotes del primer producto
-    const firstProductLotesLength = //@ts-ignore
-      useProduct.ListInventario[0]?.lotes?.length || 0;
 
-    // Inicializar table.value con la longitud correspondiente
-    estado.inventario.lotes = Array.from(
-      { length: firstProductLotesLength },
-      () => ({
-        vencimiento: '',
-        cantidad: '',
-        bloque: '',
-      }),
-    );
+    // const firstProductLotesLength = //@ts-ignore
+    //   useProduct.ListInventario[0]?.lotes?.length || 0;
+
+    // // Inicializar table.value con la longitud correspondiente
+    // estado.inventario.lotes = Array.from(
+    //   { length: firstProductLotesLength },
+    //   () => ({
+    //     vencimiento: '',
+    //     cantidad: '',
+    //     bloque: '',
+    //   }),
+    // );
   });
-
-  const elegirProductoInventario = (producto: any) => {
-    // console.log(producto);
-    estado.productoElegido = producto;
-  };
 
   return {
     estado,

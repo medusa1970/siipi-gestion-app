@@ -1,9 +1,13 @@
 import type { Product } from '~/interfaces/product.interface';
 
+export interface InventarioProps {
+  id: string;
+  nombre: string;
+}
 interface ProductState {
   product: Product;
   isEdit: boolean;
-  ListInventario: Array<Object>;
+  ListInventario: InventarioProps[];
   ListInventarioPDF: Array<Object>;
 }
 

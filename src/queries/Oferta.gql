@@ -163,6 +163,7 @@ query buscarCatalogos($busqueda: BuscarCatalogoDto!) {
         _id
         nombre
         ofertas {
+          _id
           nombre
         }
         hijas {
@@ -176,6 +177,30 @@ query buscarCatalogos($busqueda: BuscarCatalogoDto!) {
     }
   }
 }
+
+# query buscarCatalogoID($busqueda: BuscarCatalogoDto!) {
+#   catalogoArbol(busqueda: $busqueda, opciones: { populate: true }) {
+#     _id
+#     nombre
+#     ofertas {
+#       nombre
+#     }
+#     hijas {
+#       _id
+#       nombre
+#       ofertas {
+#         nombre
+#       }
+#       hijas {
+#         _id
+#         nombre
+#         ofertas {
+#           nombre
+#         }
+#       }
+#     }
+#   }
+# }
 
 mutation crearCatalogo($datos: CrearCatalogoDto!) {
   catalogoCrear(datos: $datos, opciones: { populate: true }) {

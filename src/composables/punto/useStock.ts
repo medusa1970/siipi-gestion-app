@@ -113,13 +113,17 @@ export const useStock = () => {
 
   const agregarListaInventario = (row: any) => {
     // console.log(row);
+    const data = {
+      id: row.producto.id,
+      nombre: row.producto.nombre,
+    };
     const isInList = useProduct.ListInventario.some((item) => {
       //@ts-ignore
-      return item.producto.id === row.producto.id;
+      return item.id === data.id;
     });
     // console.log(isInList);
     if (!isInList) {
-      useProduct.ListInventario.push(row);
+      useProduct.ListInventario.push(data);
       NotifySucess('Se añadio a la lista de inventario');
     } else {
       NotifyError('Ya se encuentra en la lista de  inventario');

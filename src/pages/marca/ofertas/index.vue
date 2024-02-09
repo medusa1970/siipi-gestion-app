@@ -161,6 +161,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'marca',
+});
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
 

@@ -61,6 +61,9 @@
   </div>
 </template>
 <script setup>
+definePageMeta({
+  layout: false,
+});
 import { ref, onMounted } from 'vue';
 import { authStore } from '@/stores/auth.store';
 import {
@@ -68,7 +71,7 @@ import {
   NotifyError,
   NotifySucess,
   hideLoading,
-  showLoading
+  showLoading,
 } from '@/helpers/message.service';
 
 const useAuth = authStore();
@@ -76,7 +79,7 @@ const profile = ref({
   _id: '',
   nombre: '',
   correo: '',
-  telefono: ''
+  telefono: '',
 });
 
 const modificarPersona = async () => {
@@ -85,7 +88,7 @@ const modificarPersona = async () => {
     showLoading();
     await GqlModificarPersona({
       busqueda: { _id: useAuth.user._id },
-      datos: profile.value
+      datos: profile.value,
     });
     NotifySucess('Persona modificada correctamente');
     hideLoading();
@@ -97,7 +100,7 @@ const getPersona = async () => {
   try {
     showLoading();
     const { personaBuscar } = await GqlBuscarPersona({
-      busqueda: { _id: useAuth.user._id }
+      busqueda: { _id: useAuth.user._id },
     });
     profile.value = personaBuscar[0];
     hideLoading();

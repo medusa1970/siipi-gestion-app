@@ -198,6 +198,9 @@
   </div>
 </template>
 <script setup lang="ts">
+definePageMeta({
+  layout: 'marca',
+});
 import { ref } from 'vue';
 const rol = ref<any>({});
 </script>

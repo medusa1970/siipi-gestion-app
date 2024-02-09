@@ -79,6 +79,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'punto',
+});
 import { useMenu } from '@/composables/punto/useMenu';
 import { onMounted, ref } from 'vue';
 import { ofertaService } from '~/services/marca/ofertas.service';

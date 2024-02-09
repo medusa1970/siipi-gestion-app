@@ -177,6 +177,9 @@
 
 <script setup>
 import { useInventary } from '@/composables/punto/useInventary';
+definePageMeta({
+  layout: 'punto',
+});
 const {
   estado,
   useProduct,
@@ -186,7 +189,7 @@ const {
   elegirProductoInventario,
 } = useInventary();
 </script>
-<style>
+<style lang="scss">
 @media print {
   body * {
     visibility: hidden;

@@ -267,6 +267,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'marca',
+});
 import { ref, onMounted } from 'vue';
 import DragDrop from '@/components/DrogDrop.vue';
 import { useOferta } from '@/composables/marca/useOferta';

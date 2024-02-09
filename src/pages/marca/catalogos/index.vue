@@ -42,6 +42,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'marca',
+});
 import { onMounted } from 'vue';
 import { useOferta } from '@/composables/marca/useOferta';
 const { obtenerTodoCatalagos, estado, redirectCatalogoArbol, crearCatalogo } =

@@ -156,6 +156,9 @@
 import { useProducts } from '@/composables/sede/useProducts';
 import { usePedido } from '@/composables/punto/usePedido';
 import { ref } from 'vue';
+definePageMeta({
+  layout: 'punto',
+});
 
 const { estado, obtenerCatalogosProductos } = usePedido();
 

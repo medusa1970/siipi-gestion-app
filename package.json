@@ -17,6 +17,7 @@
     "@types/date-fns": "^2.6.0",
     "nuxt": "^3.8.1",
     "nuxt-quasar-ui": "^2.0.6",
+    "sass": "^1.70.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-2">
     <h1 class="text-lg font-bold mb-1">
       {{ useProduct.isEdit === true ? 'Editar Producto' : 'Agregar Producto' }}
     </h1>
@@ -136,4 +136,8 @@ const {
   modificarPresentacion,
   borrarPresentacion,
 } = useProducts();
+
+definePageMeta({
+  layout: 'sede',
+});
 </script>

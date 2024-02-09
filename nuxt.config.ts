@@ -2,7 +2,16 @@
 export default defineNuxtConfig({
   srcDir: 'src',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css'],
+  // css: ['~/assets/css/main.css'],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/assets/css/main.scss" as *;`,
+        },
+      },
+    },
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     'nuxt-quasar-ui',

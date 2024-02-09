@@ -1,15 +1,11 @@
 <template>
-  <div class="grid grid-cols-2 gap-5 mt-2">
-    <NuxtLink class="col-span-1" href="sede/empleados">
-      <Item title="Empleados" icon="group" />
-    </NuxtLink>
-    <NuxtLink class="col-span-1" href="sede/productos">
-      <Item title="Productos" icon="list_alt" color-icon="green" />
-    </NuxtLink>
+  <div class="flex justify-center items-center h-[80vh]">
+    <h1 class="text-lg font-bold">DIOS TE BENDIGA</h1>
   </div>
 </template>
 <script setup>
 definePageMeta({
   middleware: 'auth',
+  layout: 'sede',
 });
 </script>

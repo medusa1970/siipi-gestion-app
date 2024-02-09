@@ -200,6 +200,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 const rol = ref<any>({});
+definePageMeta({
+  layout: 'sede',
+});
 </script>
 
 <style scoped>

@@ -103,6 +103,7 @@
           hide-selected
           fill-input
           onfocus="this.select()"
+          dense
         >
           <template v-slot:append>
             <q-icon
@@ -124,7 +125,7 @@
           </template>
         </q-select>
       </div>
-      <q-input v-model="estado.cargo" type="text" label="Cargo" />
+      <q-input v-model="estado.cargo" type="text" label="Cargo" dense />
     </template>
   </Dialog>
 </template>

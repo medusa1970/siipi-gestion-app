@@ -2,7 +2,11 @@
   <Navigation label="listaProblemas" icon="folder" />
   <h1 class="font-bold text-lg">Lista de problemas</h1>
   <div class="flex flex-wrap gap-5 my-3">
-    <div class="shadow-md w-56 p-4 flex" v-for="problema in listProblems">
+    <div
+      class="shadow-md w-56 p-4 flex"
+      v-for="problema in listProblems"
+      :key="problema._id"
+    >
       <h1 class="font-bold">{{ problema._id }}</h1>
       <p class="italic">{{ formatDate(problema.fechaAparicion) }}</p>
       <h1>Hay {{ problema.diferencias.length }} diferencias</h1>
@@ -29,11 +33,14 @@ import {
   showLoading,
   NotifySucess,
   NotifyError,
-  NotifyWarning
+  NotifyWarning,
 } from '~/helpers/message.service';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
+definePageMeta({
+  layout: 'punto',
+});
 
 const router = useRouter();
 const useAuth = authStore();
@@ -48,7 +55,7 @@ const getAllProblem = async () => {
     showLoading();
     const { entidadListarProblemas: res } = await GqlListarProblemas({
       entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      problemaBusqueda: { resuelto: false }
+      problemaBusqueda: { resuelto: false },
     });
     // console.log(res);
     listProblems.value = res;

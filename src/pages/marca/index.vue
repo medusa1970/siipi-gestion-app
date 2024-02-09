@@ -17,5 +17,6 @@ import { useRouter } from 'vue-router';
 const { push } = useRouter();
 definePageMeta({
   middleware: 'auth',
+  layout: 'marca',
 });
 </script>

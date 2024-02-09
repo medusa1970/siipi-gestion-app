@@ -75,6 +75,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'sede',
+});
 import { useProducts } from '@/composables/sede/useProducts';
 
 const {

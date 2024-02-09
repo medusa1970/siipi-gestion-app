@@ -173,6 +173,9 @@ import { stockProducts } from '@/helpers/columns';
 import { useStock } from '@/composables/punto/useStock';
 import stock from '@/mocks/stock.json';
 import { ref } from 'vue';
+definePageMeta({
+  layout: 'punto',
+});
 // console.log(stock);
 
 const {

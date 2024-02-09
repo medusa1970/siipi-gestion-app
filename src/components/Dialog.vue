@@ -1,25 +1,34 @@
 <template>
   <q-dialog persistent>
-    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-xl font-semibold">{{ title }}</div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-
-      <q-card-section>
-        <slot name="inputsDialog"></slot>
-      </q-card-section>
-      <q-card-section class="row justify-center">
+    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
+      <div class="flex justify-between">
+        <h1 class="text-lg font-bold">{{ title }}</h1>
         <q-btn
+          icon="close"
+          flat
+          round
+          dense
+          v-close-popup
+          class="border-2 border-red-500"
+        />
+      </div>
+      <!-- <q-space /> -->
+
+      <div class="my-1">
+        <slot name="inputsDialog"></slot>
+      </div>
+      <div class="flex row justify-center">
+        <q-btn
+          class="mt-2 mb-1"
           no-caps
-          style="font-size: 15px; margin-bottom: 10px"
+          style="font-size: 15px"
           label="Guardar"
           color="secondary"
           type="submit"
+          padding="4px 10px"
           @click="handleSubmit"
         ></q-btn>
-      </q-card-section>
+      </div>
     </q-card>
   </q-dialog>
 </template>

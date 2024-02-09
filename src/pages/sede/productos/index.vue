@@ -143,6 +143,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'sede',
+});
 import { onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';

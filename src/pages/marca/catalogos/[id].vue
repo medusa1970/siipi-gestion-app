@@ -79,6 +79,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'marca',
+});
 import { useOferta } from '@/composables/marca/useOferta';
 import Dialog from '@/components/Dialog.vue';
 

@@ -183,6 +183,7 @@ import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
+import RickRoll from '@/assets/mp3/rickroll.mp3';
 
 const useAuth = authStore();
 const router = useRouter();
@@ -201,7 +202,20 @@ const logout = () => {
   useAuth.negocioElegido = '';
 };
 
+// Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
+// const sonido = new Audio('ruta/del/archivo/sonido.mp3');
+const sonido = new Audio(RickRoll);
+
+// Función para reproducir el sonido
+const playSound = () => {
+  sonido.play();
+  setTimeout(() => {
+    sonido.pause();
+  }, 10000);
+};
+
 const prueba = (negocio) => {
+  playSound();
   $q.dialog({
     title: `<strong>Entrar a ${negocio.nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',

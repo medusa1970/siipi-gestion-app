@@ -1,5 +1,5 @@
 <template>
-  <div class="cont-center">
+  <div class="flex flex-col justify-center items-center h-[100vh]">
     <img class="w-80 border-2" :src="Logo" alt="prueba" />
     <Formulario title-btn="Registrarse" register :submit="register">
       <template #inputs>

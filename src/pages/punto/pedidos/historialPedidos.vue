@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h1>Historial de pedidos</h1>
+    <Navigation label="historial pedido" icon="folder" />
     <q-input
       filled
       v-model="date"
       mask="date"
       :rules="['date']"
-      class="w-[300px]"
+      class="w-[250px]"
+      dense
+      clearable
     >
       <template v-slot:append>
         <q-icon name="event" class="cursor-pointer">
@@ -23,6 +25,9 @@
   </div>
 </template>
 <script setup>
+definePageMeta({
+  layout: 'punto',
+});
 import { ref } from 'vue';
 const date = ref('');
 </script>

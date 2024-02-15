@@ -10,13 +10,26 @@ OPINION
 - limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅
 - empleadoss/..;
 - editar cargo y permisos en una vista.
-- poner fotos. MANDAR DIMENSIONES.
+- poner fotos. MANDAR DIMENSIONES. ✅
+
+CATHERING
+
+- ver pedidos Hechos por puntos (ver estado, aceptar pedido entrante)
+- ver pedidos realizados a proveedor
+- realizar pedido a PROVEEDOR
+- historial pedidos
+
+PUNTO
+
+- ver pedidos realizados a punto(estado)
+- realizar pedido a CATHERING
+- historial pedidos
 
 - Ver pedidos compra/venta PUNTO/CATHERING (ESTADO) \*\*\*\*
 - Realizar Pedidos Proveedor CATHERING
 - Realizar Pedidos a Produccion PUNTO
-- Formato y recopilacion de datos Para impresion de factura de pedidos.
-- Cambiar la estructura a algo mas simple
+- Formato y recopilacion de datos Para impresion de factura de pedidos. **\***
+- Cambiar la estructura a algo mas simple ✅
 
 !IMPORTANT:
 

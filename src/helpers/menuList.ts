@@ -51,12 +51,16 @@ export const menuListPunto = [
     label: 'Pedidos',
     subMenu: [
       {
-        label: 'ver pedidos',
-        to: '/pedidos',
-      },
-      {
         label: 'Realizar pedido',
         to: '/punto/pedidos/realizarPedido',
+      },
+      {
+        label: 'ver pedidos',
+        to: '/punto/pedidos/verPedido',
+      },
+      {
+        label: 'historial pedidos',
+        to: '/punto/pedidos/historialPedidos',
       },
     ],
   },

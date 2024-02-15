@@ -22,10 +22,10 @@
           class="mt-2 mb-1"
           no-caps
           style="font-size: 15px"
+          padding="4px 10px"
           label="Guardar"
           color="secondary"
           type="submit"
-          padding="4px 10px"
           @click="handleSubmit"
         ></q-btn>
       </div>

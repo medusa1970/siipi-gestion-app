@@ -1,5 +1,5 @@
 <template>
-  <div class="cont-center">
+  <div class="flex flex-col justify-center items-center h-[100vh]">
     <img v-if="user.nombre === ''" class="w-80" :src="Logo" />
     <Formulario
       v-if="user.nombre === ''"

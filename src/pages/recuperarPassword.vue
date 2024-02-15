@@ -1,5 +1,5 @@
 <template>
-  <div class="cont-center">
+  <div class="flex flex-col justify-center items-center h-[100vh]">
     <h1 class="font-bold text-lg">¿OLVIDASTE TU CONTRASEÑA😮?</h1>
     <q-form class="w-80 flex flex-col gap-3 my-4" @submit="sendOTP">
       <q-input
@@ -11,7 +11,7 @@
       />
       <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
     </q-form>
-    <NuxtImg class="w-80" src="/img/logo.png" />
+    <img class="w-80" :src="Logo" />
   </div>
   <!-- DIALOG -->
   <Dialog
@@ -46,12 +46,13 @@ import {
   NotifyError,
   NotifySucess,
   hideLoading,
-  showLoading
+  showLoading,
 } from '@/helpers/message.service';
 import { useRouter } from 'vue-router';
 definePageMeta({
-  layout: false
+  layout: false,
 });
+import Logo from '@/assets/img/logo.png';
 
 const router = useRouter();
 const correo = ref('');
@@ -63,7 +64,7 @@ const sendOTP = async () => {
   try {
     showLoading();
     const { pedirReinicioDeContrasena: res } = await GqlPedirRDC({
-      correo: correo.value
+      correo: correo.value,
     });
     if (res) isOtp.value = true;
     NotifySucess('Se ha enviado un codigo a tu correo');
@@ -77,7 +78,7 @@ const actualizarContraseña = async () => {
     showLoading();
     const { actuarReinicioDeContrasena: res } = await GqlActuarRDC({
       token: otp.value,
-      contrasena: contrasena.value
+      contrasena: contrasena.value,
     });
     if (res) {
       NotifySucess('Se ha actualizado tu contraseña');

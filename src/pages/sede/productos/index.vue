@@ -6,8 +6,10 @@
       icon="check"
       label="ver categorias"
       outline
+      no-caps
+      style="font-size: 14.5px; margin-bottom: 10px"
+      padding="4px 10px"
       @click="$router.push('productos/categorias')"
-      style="margin-bottom: 20px"
     />
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
@@ -16,7 +18,8 @@
           color="green"
           label="Agregar producto"
           no-caps
-          style="padding: 7px 15px"
+          style="font-size: 14.5px"
+          padding="4px 10px"
           @click="modalAgregarProducto()"
         />
       </template>

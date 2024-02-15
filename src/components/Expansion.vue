@@ -5,11 +5,9 @@
         <q-item-section avatar v-if="icon">
           <q-avatar :icon="icon" :color="color" text-color="white" />
         </q-item-section>
-
         <q-item-section class="font-semibold text-lg">
           {{ title }}</q-item-section
         >
-
         <q-item-section side>
           <h1>data adicional</h1>
           <!-- <div class="row items-center">
@@ -32,9 +30,9 @@
 defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   icon: String,
-  color: String
+  color: String,
 });
 </script>

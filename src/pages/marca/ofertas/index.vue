@@ -166,6 +166,7 @@ definePageMeta({
 });
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
+import { onMounted } from 'vue';
 
 const {
   estado,
@@ -173,7 +174,12 @@ const {
   abrirEditarOferta,
   abrirAgregarOferta,
   borrarOferta,
+  obtenerTodasofertas,
 } = useOferta();
+
+onMounted(() => {
+  obtenerTodasofertas();
+});
 </script>
 <style scoped>
 /* Estilo base del checkbox */

@@ -1,12 +1,16 @@
 # META 4
 
+OPINION
+
+- que la cajera pueda hacer consulta del stock de otras sucursales apra redireccionar al cliente si no hay producto en su sucursal
+
 - Arreglar funcion en la parte de hacer/terminarInventario
 - Refactorizar solucionProblemasInventario
 - refactorizar estructura de carpetas del front ✅
-- limpiar y ordenar, revisar el codigo antes del miercoles 1/25
+- limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅
 - empleadoss/..;
 - editar cargo y permisos en una vista.
-- poner fotos. MANDAR DIMENSIONES
+- poner fotos. MANDAR DIMENSIONES.
 
 - Ver pedidos compra/venta PUNTO/CATHERING (ESTADO) \*\*\*\*
 - Realizar Pedidos Proveedor CATHERING

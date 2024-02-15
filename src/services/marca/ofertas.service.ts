@@ -33,7 +33,7 @@ export const ofertaService = {
     ),
   buscarCatalogos: async () =>
     postData(
-      GqlBuscarCatalogos({ busqueda: { _id: '65a447574b237c900167c41c' } }),
+      GqlBuscarCatalogos({ busqueda: { nombre: 'Todos las catalogos' } }),
     ),
   buscarCatalogoID: async (catalogoID: string) =>
     postData(GqlBuscarCatalogos({ busqueda: { _id: catalogoID } })),

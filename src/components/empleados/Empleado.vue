@@ -12,9 +12,10 @@
         <q-btn
           icon-right="add"
           color="green"
-          label="Agregar empleadooo"
+          label="Agregar empleado"
           no-caps
-          style="padding: 7px 15px"
+          style="font-size: 15px"
+          padding="4px 10px"
           @click="abrirModal"
         />
       </template>

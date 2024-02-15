@@ -1,7 +1,7 @@
 # CRUD OFERTA
 #  BUSCAR
 query ofertaBuscar($busqueda: BuscarOfertaDto!) {
-  ofertaBuscar(busqueda: $busqueda, opciones: { populate: true }) {
+  ofertaBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
     _id
     _creado
     nombre
@@ -29,6 +29,7 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
         items {
           producto {
             _id
+            nombre
           }
           cantidad
           costoAdicional

@@ -30,7 +30,7 @@
                 self="top end"
               >
                 <q-list style="min-width: 100px">
-                  <q-item clickable>
+                  <q-item clickable @click="editProfile">
                     <q-item-section avatar>
                       <q-avatar>
                         <img
@@ -116,7 +116,23 @@
                   style="object-fit: cover"
                   src="https://i.pinimg.com/564x/cf/c2/5b/cfc25b552003ba8881db6e678bda0b1b.jpg"
                 />
+                <q-btn
+                  color="red"
+                  icon="edit"
+                  class="absolute bottom-0 left-[75%]"
+                  dense
+                  round
+                  size="10px"
+                  padding="5px"
+                />
               </q-avatar>
+              <!-- <div size="70px" class="q-mb-sm">
+                <img
+                  style="object-fit: cover"
+                  src="https://i.pinimg.com/564x/cf/c2/5b/cfc25b552003ba8881db6e678bda0b1b.jpg"
+                />
+                <q-btn color="primary" icon="check" />
+              </div> -->
               <div class="text-weight-bold">
                 <!-- {{ user2.name + ' ' + user2.lastname }} -->
                 will chambi
@@ -169,6 +185,71 @@
       </div>
     </q-page-container>
   </q-layout>
+
+  <!-- MODAL -->
+  <Dialog v-model="isEditProfile" title="Editar perfil">
+    <template #inputsDialog>
+      <div class="flex flex-col gap-2">
+        <!-- IMAGE -->
+        <q-file
+          v-model="imagen"
+          label="Seleccionar imagen"
+          accept=".jpg, .png, .jpge"
+          max-total-size="560000"
+          @rejected="onRejected"
+          counter
+          outlined
+          dense
+          hint="Tamaño máximo de imagen 540KB"
+          clearable
+        >
+          <template v-slot:prepend>
+            <q-icon name="cloud_upload" @click.stop.prevent />
+          </template>
+          <!-- <template v-slot:append>
+            <q-icon
+              name="close"
+              @click.stop.prevent="imagen = null"
+              class="cursor-pointer"
+            />
+          </template> -->
+        </q-file>
+        <div
+          v-if="imagePreview"
+          style="width: 200px; height: 200px; margin: auto"
+        >
+          <q-img
+            style="width: 100%; height: 100%; object-fit: cover"
+            :src="imagePreview"
+          ></q-img>
+        </div>
+        <q-input
+          v-model="useAuth.user.nombre"
+          type="text"
+          label="Nombre"
+          outlined
+          dense
+          clearable
+        />
+        <q-input
+          v-model="persona.apellido"
+          type="text"
+          label="Apellido"
+          outlined
+          dense
+          clearable
+        />
+        <q-input
+          v-model="persona.correo"
+          type="email"
+          label="Correo"
+          outlined
+          dense
+          clearable
+        />
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup>
@@ -178,17 +259,28 @@ defineProps({
 });
 
 // IMPORTS
-import { ref } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
+import { ApiError, showLoading, hideLoading } from '~/helpers/message.service';
 
 const useAuth = authStore();
 const router = useRouter();
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
+const isEditProfile = ref(false);
+const persona = reactive({
+  nombre: '',
+  apellido: '',
+  correo: '',
+  imagen: null,
+});
+const imagen = ref(null);
+const selectedFileProfile = ref('');
+const imagePreview = ref('');
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -203,11 +295,9 @@ const logout = () => {
 };
 
 // Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
-// const sonido = new Audio('ruta/del/archivo/sonido.mp3');
-const sonido = new Audio(RickRoll);
-
 // Función para reproducir el sonido
 const playSound = () => {
+  const sonido = new Audio(RickRoll);
   sonido.play();
   setTimeout(() => {
     sonido.pause();
@@ -233,6 +323,67 @@ const prueba = (negocio) => {
       timeout: 1000,
     });
   });
+};
+
+const editProfile = () => {
+  isEditProfile.value = true;
+  getPersona();
+};
+
+/**IMAGE VALIDATE */
+const onRejected = (rejectedEntries) => {
+  // const messageError = {
+  //   maxTotalSize: "la imagen excede el tamaño maximo del formato",
+  //   accept: "El tipo de formato no es correcto",
+  // };
+  const men =
+    rejectedEntries[0].failedPropValidation === 'max-total-size'
+      ? 'la imagen excede el tamaño maximo del formato'
+      : 'El tipo de formato no es correcto';
+  $q.notify({
+    type: 'negative',
+    message: `${men}`,
+  });
+};
+watch(imagen, () => {
+  const lector = new FileReader();
+  selectedFileProfile.value = imagen.value;
+
+  lector.addEventListener('load', () => {
+    imagePreview.value = lector.result;
+  });
+  lector.readAsDataURL(selectedFileProfile.value);
+});
+const modificarPersona = async () => {
+  delete profile.value._id;
+  try {
+    showLoading();
+    await GqlModificarPersona({
+      busqueda: { _id: useAuth.user._id },
+      datos: profile.value,
+    });
+    NotifySucess('Persona modificada correctamente');
+    hideLoading();
+  } catch (error) {
+    ApiError(error);
+  }
+};
+const getPersona = async () => {
+  try {
+    showLoading();
+    const { personaBuscar } = await GqlBuscarPersona({
+      busqueda: { _id: useAuth.user._id },
+    });
+    // profile.value = personaBuscar[0];
+    console.log(personaBuscar);
+    persona.nombre = personaBuscar[0].nombre;
+    persona.apellido = personaBuscar[0].apellido;
+    persona.correo = personaBuscar[0].correo;
+    imagen.value = personaBuscar[0].imagen;
+    hideLoading();
+  } catch (error) {
+    ApiError(error);
+  }
 };
 </script>
 

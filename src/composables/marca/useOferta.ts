@@ -48,6 +48,7 @@ export const useOferta = () => {
   });
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
+    // console.log(ofertaBuscar);
     estado.ofertas = ofertaBuscar;
     // storeOferta.oferta = ofertaBuscar;
     // console.log(estado.ofertas);
@@ -120,6 +121,7 @@ export const useOferta = () => {
 
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
+    console.log(catalogoArbol);
     console.log(catalogoArbol);
     estado.catalogos = catalogoArbol;
   };
@@ -243,12 +245,13 @@ export const useOferta = () => {
   };
 
   //on mounted
-  onMounted(() => {
-    obtenerTodasofertas();
-  });
+  // onMounted(() => {
+  //   obtenerTodasofertas();
+  // });
   return {
     estado,
     crearOferta,
+    obtenerTodasofertas,
     abrirModalIngredientes,
     obtenerTodosProductos,
     crearIngredienteProducto,

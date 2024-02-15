@@ -8,6 +8,7 @@ const postData = async (gql: any) => {
     // NotifySucess(message || 'Operación realizada con éxito');
     return data;
   } catch (error) {
+    console.log(error);
     ApiError(error);
     //   LOGICA PARA MANEJAR ERRORES
   }

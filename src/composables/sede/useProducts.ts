@@ -94,7 +94,7 @@ export const useProducts = () => {
   };
 
   const navegarDetalleProducto = (row: any) => {
-    console.log(row);
+    // console.log(row);
     useProduct.product = row;
     estado.producto = row;
     useProduct.isEdit = true;
@@ -127,8 +127,9 @@ export const useProducts = () => {
   };
   const editProductBasicInfo = async () => {
     //@ts-ignore
-    const { presentaciones, _creado, _id, nombre, ...productoData } =
+    const { presentaciones, categoria, _creado, _id, nombre, ...productoData } =
       estado.producto;
+    // console.log(productoData);
     const { productoModificar } = await productoService.editarProducto(
       useProduct.product._id,
       productoData,

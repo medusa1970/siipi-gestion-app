@@ -1,7 +1,7 @@
 <template>
   <q-breadcrumbs style="font-size: 15px">
     <q-breadcrumbs-el icon="home" :to="path" />
-    <q-breadcrumbs-el :label="label" :icon="icon" :href="href" />
+    <q-breadcrumbs-el :label="label" :icon="icon" :to="href" />
     <q-breadcrumbs-el v-if="label2" :label="label2" :icon="icon2" :to="href2" />
   </q-breadcrumbs>
   <br />
@@ -16,7 +16,7 @@ defineProps({
   href: String,
   label2: String,
   icon2: String,
-  href2: String
+  href2: String,
 });
 
 const useAuth = authStore();

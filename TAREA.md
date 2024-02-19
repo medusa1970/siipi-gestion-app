@@ -1,5 +1,8 @@
 # META 4
 
+HACER PEDIDO PUNTO, MENU CATALOGOS, SI HAY ofertas en el catalogo arbol solo que no renderiza las ofertas
+de lado del cliente, revisar y arreglar.
+
 IDEAS PEDIDOS
 
 - factura no modificable. si se equivoco y le falta productos seria otro pedido.
@@ -24,28 +27,28 @@ OPINION.
 
 - Arreglar funcion en la parte de hacer/terminarInventario.
 - Refactorizar solucionProblemasInventario.
+- editar cargo y permisos en una vista.
 - refactorizar estructura de carpetas del front ✅.
 - limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅.
 - empleadoss/..; ✅.
-- editar cargo y permisos en una vista.
 - poner fotos. MANDAR DIMENSIONES. ✅.
 
 CATHERING
 
-- ver pedidos Hechos por puntos (ver estado, aceptar pedido entrante).
-- ver pedidos realizados a proveedor.
-- realizar pedido a PROVEEDOR.
-- historial pedidos.
+- ver pedidos Hechos por puntos (ver estado, aceptar pedido entrante). ✅(LOGICA)
+- ver pedidos realizados a proveedor. ✅(LOGICA)
+- realizar pedido a PROVEEDOR. ✅(LOGICA)
+- historial pedidos.✅(LOGICA)
 
 PUNTO
 
-- ver pedidos realizados a punto(estado).
-- realizar pedido a CATHERING.
-- historial pedidos.
+- ver pedidos realizados a punto(estado). ✅(LOGICA)
+- realizar pedido a CATHERING. ✅(LOGICA)
+- historial pedidos. ✅(LOGICA)
 
-- Ver pedidos compra/venta PUNTO/CATHERING (ESTADO) \*\*\*\*.
-- Realizar Pedidos Proveedor CATHERING.
-- Realizar Pedidos a Produccion PUNTO.
+- Ver pedidos compra/venta PUNTO/CATHERING (ESTADO). ✅(LOGICA)
+- Realizar Pedidos Proveedor CATHERING. ✅(LOGICA)
+- Realizar Pedidos a Produccion PUNTO. ✅(LOGICA)
 - Formato y recopilacion de datos Para impresion de factura de pedidos. **\***.
 - Cambiar la estructura a algo mas simple ✅.
 
@@ -69,10 +72,10 @@ PUNTO
 
 * IMAGEN LEO
 
-- ofertas(), persona(empleadores, propietarios), entidad (sede,marca,punto)
-- Tamano de imagen menos de 2MB
-- dimension, 564x564 PX
-- Formato JPEG, JPG, PNG
+- ofertas(), persona(empleadores, propietarios), entidad (sede,marca,punto) ✅
+- Tamano de imagen menos de 2MB ✅
+- dimension, 564x564 PX ✅
+- Formato JPEG, JPG, PNG ✅
 
 # META 3
 

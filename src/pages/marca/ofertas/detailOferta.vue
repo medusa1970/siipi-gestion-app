@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div class="border-[1px] p-4 border-slate-400">
+    <Navigation
+      label="Ofertas"
+      icon="list_alt"
+      href="/marca/ofertas"
+      label2="DetailOferta"
+    />
+    <div class="p-2">
       <h1 class="font-semibold text-base mb-3">Información basica:</h1>
       <div
         class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
@@ -14,8 +20,8 @@
         </label>
         <span class="text-gray-500">Subir imagen</span>
       </div>
-      <span class="flex gap-8 items-center my-3">
-        <span class="flex flex-col gap-2 w-80">
+      <span class="flex gap-8 max-sm:gap-3 items-center my-3">
+        <span class="flex flex-col gap-2 w-80 max-sm:w-full">
           <q-input
             v-model="estado.oferta.nombre"
             type="text"
@@ -55,7 +61,7 @@
           />
         </span>
         <q-input
-          class="w-1/2"
+          class="w-1/2 max-sm:w-full"
           v-model="estado.oferta.descripcion"
           type="textarea"
           label="Descripcion"

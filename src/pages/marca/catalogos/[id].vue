@@ -1,5 +1,10 @@
 <template>
-  <h1>CATEGORIA ARBOL</h1>
+  <Navigation
+    label="Catalogos"
+    icon="list_alt"
+    href="/marca/catalogos"
+    label2="DetailCatalogo"
+  />
 
   <!-- <code>{{ storeOferta.catalogoElegido }}</code> -->
   <!-- TREE -->

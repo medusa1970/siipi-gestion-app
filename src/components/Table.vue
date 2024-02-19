@@ -47,7 +47,7 @@
           margin: 10px 0;
           border-bottom: 0.5px solid #757575;
           padding: 0px 7px;
-          width: 160px;
+          width: 150px;
         "
         placeholder="Buscar"
         clearable

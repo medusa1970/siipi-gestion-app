@@ -1,7 +1,12 @@
 <template>
-  <div class="flex flex-col justify-center items-center h-[100vh]">
+  <div
+    class="flex flex-col justify-center items-center h-[100vh] max-sm:h-[92vh]"
+  >
     <h1 class="font-bold text-lg">¿OLVIDASTE TU CONTRASEÑA😮?</h1>
-    <q-form class="w-80 flex flex-col gap-3 my-4" @submit="sendOTP">
+    <q-form
+      class="w-80 max-sm:w-[300px] flex flex-col gap-3 my-4"
+      @submit="sendOTP"
+    >
       <q-input
         v-model="correo"
         type="email"

@@ -17,6 +17,7 @@ export const useAuth = () => {
     telefono: '',
     correo: '',
   });
+  const isPwd = ref(true);
 
   const clearAuthPersona = () => {
     authPersona.value.usuario = '';
@@ -54,5 +55,6 @@ export const useAuth = () => {
     elegirNegocio,
     user,
     register,
+    isPwd,
   };
 };

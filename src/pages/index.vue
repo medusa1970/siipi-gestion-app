@@ -1,6 +1,8 @@
 <template>
-  <div class="flex flex-col justify-center items-center h-[100vh]">
-    <img v-if="user.nombre === ''" class="w-80" :src="Logo" />
+  <div
+    class="flex flex-col justify-center items-center h-[100vh] max-sm:h-[92vh]"
+  >
+    <img v-if="user.nombre === ''" class="w-80 max-sm:w-[300px]" :src="Logo" />
     <Formulario
       v-if="user.nombre === ''"
       title-btn="Iniciar sesion"
@@ -14,15 +16,25 @@
           label="Corre electronico"
           outlined
           dense
+          clearable
         />
         <q-input
           v-model="authPersona.contrasena"
-          type="password"
           label="Contraseña"
           outlined
           dense
           :rules="[password]"
-        />
+          clearable
+          :type="isPwd ? 'password' : password"
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
       </template>
     </Formulario>
     <div v-if="user.nombre !== '' && user.negocios.length !== 0">
@@ -55,7 +67,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 import Logo from '@/assets/img/logo.png';
 definePageMeta({
   layout: false,
@@ -63,5 +75,5 @@ definePageMeta({
 });
 import { password } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';
-const { authPersona, login, elegirNegocio, user } = useAuth();
+const { authPersona, login, elegirNegocio, user, isPwd } = useAuth();
 </script>

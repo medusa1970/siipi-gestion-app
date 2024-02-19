@@ -10,11 +10,21 @@
       </template>
       <template #dropdown>
         <q-btn
+          v-if="$q.platform.is.desktop"
           icon-right="add"
           color="green"
           label="Agregar empleado"
           no-caps
           style="font-size: 15px"
+          padding="4px 10px"
+          @click="abrirModal"
+        />
+        <q-btn
+          v-if="$q.platform.is.mobile"
+          color="green"
+          label="Agregar empleado"
+          no-caps
+          style="font-size: 14.5px"
           padding="4px 10px"
           @click="abrirModal"
         />

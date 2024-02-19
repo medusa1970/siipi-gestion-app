@@ -15,7 +15,7 @@
       </label>
       <span class="text-gray-500">Subir imagen</span>
     </div>
-    <span class="flex flex-col gap-2 my-3 w-[50vw]">
+    <span class="flex flex-col gap-2 my-3 w-[50vw] max-sm:w-full">
       <q-input
         v-model="estado.producto.nombre"
         type="text"

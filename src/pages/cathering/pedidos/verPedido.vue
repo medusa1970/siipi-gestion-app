@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-tabs v-model="tab" inline-label no-caps>
+    <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab name="proveedor" icon="bi-cart4" label="Pedidos Proveedor" />
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />
@@ -10,58 +10,139 @@
       animated
       transition-prev="jump-up"
       transition-next="jump-up"
+      class="bg-transparent"
     >
-      <q-tab-panel name="proveedor">
-        <div class="text-h6">COMPRA</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      <!-- VER PEDIDOS PROVEEDOR -->
+      <q-tab-panel name="proveedor" class="flex justify-center items-center">
+        <Item title="pedido proveedor 1" class="w-[400px]">
+          <template v-slot:actions>
+            <div class="flex">
+              <q-btn
+                dense
+                round
+                icon="check"
+                flat
+                color="green"
+                padding="4px"
+                size="12px"
+              />
+              <q-btn
+                dense
+                round
+                icon="edit"
+                flat
+                color="blue"
+                padding="4px"
+                size="12px"
+              />
+              <q-btn
+                dense
+                round
+                icon="print"
+                flat
+                color="orange"
+                padding="4px"
+                size="12px"
+              />
+            </div>
+          </template>
+        </Item>
       </q-tab-panel>
+      <!-- VER PEDIDOS PUNTOS -->
       <q-tab-panel name="puntos">
-        <div class="text-h6 text-center mb-4">
-          PUNTOS QUE REALIZARON SUS PEDIDOS
-        </div>
         <div class="flex flex-col gap-2 justify-center items-center">
+          <h1 class="font-bold">Pedidos por Aceptar:</h1>
           <Item
             :title="punto.nombre"
-            v-for="punto in puntos"
-            class="w-[500px]"
+            v-for="punto in porAceptar"
+            class="w-[400px]"
             :key="punto"
           >
             <template v-slot:actions>
-              <div class="flex gap-1">
+              <div class="flex">
                 <q-btn
-                  flat
                   dense
                   round
                   icon="check"
-                  class="bg-green-500 text-white"
-                />
-                <q-btn
                   flat
+                  color="green"
+                  padding="4px"
+                  size="12px"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Aceptar pedido</q-tooltip
+                  ></q-btn
+                >
+                <q-btn
                   dense
                   round
                   icon="edit"
-                  class="bg-primary text-white"
-                />
-                <q-btn
                   flat
+                  color="blue"
+                  padding="4px"
+                  size="12px"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Editar pedido</q-tooltip
+                  ></q-btn
+                >
+                <q-btn
                   dense
                   round
                   icon="print"
-                  class="bg-orange-500 text-white"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Imprimir pedido</q-tooltip
+                  ></q-btn
+                >
+              </div>
+            </template>
+          </Item>
+          <h1 class="font-bold">Pedidos Aceptados:</h1>
+          <Item
+            :title="punto.nombre"
+            v-for="punto in aceptados"
+            class="w-[400px]"
+            :key="punto"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">Preparando...</h1>
+                <q-btn
+                  dense
+                  round
+                  icon="edit"
+                  flat
+                  color="blue"
+                  padding="4px"
+                  size="12px"
+                />
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
                 />
               </div>
             </template>
           </Item>
         </div>
       </q-tab-panel>
+      <!-- VER HISTORIAL DE PEDIDOS -->
       <q-tab-panel name="historial">
         <div class="flex justify-center">
           <q-input
+            dense
             filled
             v-model="date"
             mask="date"
             :rules="['date']"
-            class="w-[300px]"
+            class="w-[250px]"
+            clearable
           >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -85,8 +166,11 @@
   </div>
 </template>
 <script setup>
+definePageMeta({
+  layout: 'cathering',
+});
 import { ref } from 'vue';
-import puntos from '@/mocks/puntos.json';
+import { aceptados, porAceptar } from '@/mocks/puntos.json';
 
 const tab = ref('proveedor');
 const date = ref('2020/07/08');

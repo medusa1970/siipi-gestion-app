@@ -1,42 +1,60 @@
 # META 4
 
-OPINION
+IDEAS PEDIDOS
 
-- que la cajera pueda hacer consulta del stock de otras sucursales apra redireccionar al cliente si no hay producto en su sucursal
+- factura no modificable. si se equivoco y le falta productos seria otro pedido.
+- Encargado almacen realiza el pedido:
+  ej1.- llame al proveedor pil y le diga si hay tantos productos para que realize el pedido el enecargado
+  ej2.- llame a los proveedores de HUEVO para ver de quien comprar, asi elige el mejor precio,
+  EL SISTEMA SOLO GUARDA NUMEROS DE PROVEEDORES Y SU NOMBRE: para que encargado pueda saber su informacion y
+  a quien consultar.
+  -TESORIA SOLO MUESTRA SUELDO BASICO. CATHERING/PUNTO
+  ACTIVIDAD: [iniciado,pausado,reactivado,cobrado,archivado]
+  ACTIVIDAD PRODUCTOS: [confirmado, encargado, preparado, despachado, entregado, aceptado, finalizado, anulado, reactivado]
 
-- Arreglar funcion en la parte de hacer/terminarInventario
-- Refactorizar solucionProblemasInventario
-- refactorizar estructura de carpetas del front ✅
-- limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅
-- empleadoss/..;
+ACTIVIDAD PUNTO: [iniciado, pausado, reactivado].
+ACTIVIDAD CATHERING: [aceptado, entregado ].
+ACTIVIDAD PUNTO: [recibido, finalizado ].
+
+- QUE SE PUEDE ELEGIR A QUE ENTIDAD REALIZAR EL PEDIDO.
+
+OPINION.
+
+- que la cajera pueda hacer consulta del stock de otras sucursales apra redireccionar al cliente si no hay producto en su sucursal.
+
+- Arreglar funcion en la parte de hacer/terminarInventario.
+- Refactorizar solucionProblemasInventario.
+- refactorizar estructura de carpetas del front ✅.
+- limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅.
+- empleadoss/..; ✅.
 - editar cargo y permisos en una vista.
-- poner fotos. MANDAR DIMENSIONES. ✅
+- poner fotos. MANDAR DIMENSIONES. ✅.
 
 CATHERING
 
-- ver pedidos Hechos por puntos (ver estado, aceptar pedido entrante)
-- ver pedidos realizados a proveedor
-- realizar pedido a PROVEEDOR
-- historial pedidos
+- ver pedidos Hechos por puntos (ver estado, aceptar pedido entrante).
+- ver pedidos realizados a proveedor.
+- realizar pedido a PROVEEDOR.
+- historial pedidos.
 
 PUNTO
 
-- ver pedidos realizados a punto(estado)
-- realizar pedido a CATHERING
-- historial pedidos
+- ver pedidos realizados a punto(estado).
+- realizar pedido a CATHERING.
+- historial pedidos.
 
-- Ver pedidos compra/venta PUNTO/CATHERING (ESTADO) \*\*\*\*
-- Realizar Pedidos Proveedor CATHERING
-- Realizar Pedidos a Produccion PUNTO
-- Formato y recopilacion de datos Para impresion de factura de pedidos. **\***
-- Cambiar la estructura a algo mas simple ✅
+- Ver pedidos compra/venta PUNTO/CATHERING (ESTADO) \*\*\*\*.
+- Realizar Pedidos Proveedor CATHERING.
+- Realizar Pedidos a Produccion PUNTO.
+- Formato y recopilacion de datos Para impresion de factura de pedidos. **\***.
+- Cambiar la estructura a algo mas simple ✅.
 
 !IMPORTANT:
 
-- PUNTO (Menu, crear menu, al crear que jale un catalogo, y de exepciones de productos.) ✅
-- PUNTO (Inventario, al crear un menu renderiza una lista para inventariar de todos los productos del menu creado para almacenar en stock.) ✅
-- CONSULTAS (MENU, CATALOGO ARBOL para jalar un catalogo.) ✅
-- MAQUETAR ✅
+- PUNTO (Menu, crear menu, al crear que jale un catalogo, y de exepciones de productos.) ✅.
+- PUNTO (Inventario, al crear un menu renderiza una lista para inventariar de todos los productos del menu creado para almacenar en stock.) ✅.
+- CONSULTAS (MENU, CATALOGO ARBOL para jalar un catalogo.) ✅.
+- MAQUETAR ✅.
 
 - AREAS CATHERING ...................META 5
 - FORMULARIO TEMPORAL PARA AGREGAR PRODUCTOS DE COMPRA PROVEEDORES

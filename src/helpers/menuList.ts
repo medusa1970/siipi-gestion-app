@@ -58,10 +58,6 @@ export const menuListPunto = [
         label: 'ver pedidos',
         to: '/punto/pedidos/verPedido',
       },
-      {
-        label: 'historial pedidos',
-        to: '/punto/pedidos/historialPedidos',
-      },
     ],
   },
   {
@@ -89,6 +85,67 @@ export const menuListMarca = [
     icon: 'fact_check',
     label: 'Gestion de catalogos',
     to: '/marca/catalogos',
+    subMenu: [],
+  },
+];
+
+export const menuListCathering = [
+  {
+    icon: 'people',
+    label: 'Empleados',
+    to: '/cathering/empleados',
+    subMenu: [],
+  },
+  {
+    icon: 'fact_check',
+    label: 'Menu',
+    to: '/cathering/menu',
+    subMenu: [],
+  },
+  {
+    icon: 'warehouse',
+    label: 'Stock',
+    to: '/cathering/stock',
+    subMenu: [],
+  },
+  {
+    icon: 'inventory_2',
+    label: 'Inventario',
+    subMenu: [
+      {
+        label: 'Lista Inventario',
+        to: '/cathering/inventario',
+      },
+      {
+        label: 'Problemas Inventario',
+        to: '/cathering/inventario/listaProblemas',
+      },
+    ],
+  },
+  {
+    icon: 'description',
+    label: 'Pedidos',
+    subMenu: [
+      {
+        label: 'Realizar pedido',
+        to: '/cathering/pedidos/realizarPedido',
+      },
+      {
+        label: 'ver pedidos',
+        to: '/cathering/pedidos/verPedido',
+      },
+    ],
+  },
+  {
+    icon: 'point_of_sale',
+    label: 'Caja',
+    to: '/cathering/caja',
+    subMenu: [],
+  },
+  {
+    icon: 'settings',
+    label: 'Configuración',
+    to: '/cathering/configuracion',
     subMenu: [],
   },
 ];

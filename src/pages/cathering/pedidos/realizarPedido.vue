@@ -144,6 +144,9 @@
   </q-dialog>
 </template>
 <script setup>
+definePageMeta({
+  layout: 'cathering',
+});
 import { useProducts } from '@/composables/sede/useProducts';
 import { ref } from 'vue';
 

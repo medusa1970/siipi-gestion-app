@@ -12,6 +12,7 @@
     <!-- HEADER -->
     <template v-slot:top-right="props">
       <q-input
+        v-if="$q.platform.is.desktop"
         borderless
         dense
         debounce="300"
@@ -37,13 +38,31 @@
           <q-icon name="search" size="22px" />
         </template>
       </q-input>
+      <q-input
+        v-if="$q.platform.is.mobile"
+        borderless
+        dense
+        v-model="filter"
+        style="
+          margin: 10px 0;
+          border-bottom: 0.5px solid #757575;
+          padding: 0px 7px;
+          width: 160px;
+        "
+        placeholder="Buscar"
+        clearable
+      >
+        <template v-slot:prepend>
+          <q-icon name="search" size="22px" />
+        </template>
+      </q-input>
+
       <q-btn
         flat
         round
         dense
         :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
         @click="props.toggleFullscreen"
-        class="q-ml-md"
       />
     </template>
 
@@ -73,14 +92,14 @@ const filter = ref('');
 defineProps({
   rows: {
     type: Array,
-    required: true
+    required: true,
   },
   columns: {
     type: Array,
-    required: true
+    required: true,
   },
   dense: Boolean,
-  badge: Boolean
+  badge: Boolean,
 });
 </script>
 <style>

@@ -14,7 +14,17 @@
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <q-btn
+          v-if="$q.platform.is.desktop"
           icon-right="add"
+          color="green"
+          label="Agregar producto"
+          no-caps
+          style="font-size: 14.5px"
+          padding="4px 10px"
+          @click="modalAgregarProducto()"
+        />
+        <q-btn
+          v-if="$q.platform.is.mobile"
           color="green"
           label="Agregar producto"
           no-caps

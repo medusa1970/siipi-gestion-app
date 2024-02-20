@@ -32,6 +32,7 @@ OPINION.
 - limpiar y ordenar, revisar el codigo antes del miercoles 1/25 ✅.
 - empleadoss/..; ✅.
 - poner fotos. MANDAR DIMENSIONES. ✅.
+- buscar Producto SEDE no sirve.
 
 CATHERING
 

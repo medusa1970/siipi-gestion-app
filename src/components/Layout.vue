@@ -7,7 +7,9 @@
         <q-toolbar-title class="navBar">
           <h1 class="font-bold uppercase">
             {{
-              useAuth.negocioElegido ? useAuth.negocioElegido.nombre : 'Cliente'
+              storeAuth.negocioElegido
+                ? storeAuth.negocioElegido.nombre
+                : 'Cliente'
             }}
           </h1>
           <!-- NAV END -->
@@ -42,7 +44,7 @@
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
                       <q-item-label caption lines="1"
-                        >{{ useAuth.user.nombre }}@gmail.com</q-item-label
+                        >{{ storeAuth.user.nombre }}@gmail.com</q-item-label
                       >
                     </q-item-section>
                   </q-item>
@@ -67,7 +69,7 @@
                       <q-item
                         clickable
                         @click="sede"
-                        v-for="negocio in useAuth.user.negocios"
+                        v-for="negocio in storeAuth.user.negocios"
                         :key="negocio.nombre"
                       >
                         <q-item-section @click="prueba(negocio)">{{
@@ -193,7 +195,9 @@
         <q-toolbar-title class="navBar">
           <h1 class="font-bold uppercase">
             {{
-              useAuth.negocioElegido ? useAuth.negocioElegido.nombre : 'Cliente'
+              storeAuth.negocioElegido
+                ? storeAuth.negocioElegido.nombre
+                : 'Cliente'
             }}
           </h1>
           <!-- NAV END -->
@@ -228,7 +232,7 @@
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
                       <q-item-label caption lines="1"
-                        >{{ useAuth.user.nombre }}@gmail.com</q-item-label
+                        >{{ storeAuth.user.nombre }}@gmail.com</q-item-label
                       >
                     </q-item-section>
                   </q-item>
@@ -253,7 +257,7 @@
                       <q-item
                         clickable
                         @click="sede"
-                        v-for="negocio in useAuth.user.negocios"
+                        v-for="negocio in storeAuth.user.negocios"
                         :key="negocio.nombre"
                       >
                         <q-item-section @click="prueba(negocio)">{{
@@ -452,8 +456,10 @@ import {
   hideLoading,
   NotifySucess,
 } from '~/helpers/message.service';
+import { authService } from '~/services/auth.service';
 
-const useAuth = authStore();
+// storeAuth
+const storeAuth = authStore();
 const router = useRouter();
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
@@ -469,17 +475,18 @@ const persona = ref({
 const imagen = ref(null);
 const selectedFileProfile = ref('');
 const imagePreview = ref('');
+const contrasena = ref('');
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 const logout = () => {
   LocalStorage.remove('token');
-  useAuth.user.nombre = '';
-  useAuth.user.negocios = [];
-  useAuth.token = '';
+  storeAuth.user.nombre = '';
+  storeAuth.user.negocios = [];
+  storeAuth.token = '';
   router.push('/');
-  useAuth.negocioElegido = '';
+  storeAuth.negocioElegido = '';
 };
 
 // Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
@@ -500,16 +507,37 @@ const prueba = (negocio) => {
     cancel: true,
     persistent: true,
     html: true,
+    prompt: {
+      model: contrasena,
+      type: 'password',
+      clearable: true,
+      // native attributes:
+      min: 0,
+      max: 10,
+      step: 2,
+      label: 'Ingrese tu contrasena',
+      outlined: true,
+      dense: true,
+    },
   }).onOk(async () => {
-    router.push(`/${negocio.tipo.toLowerCase()}`);
-    useAuth.negocioElegido = negocio; //solucion
-    $q.notify({
-      type: 'positive',
-      position: 'center',
-      message: `Bienvenido a ${negocio.nombre}`,
-      progress: true,
-      timeout: 1000,
-    });
+    const { conectar } = await authService.login(
+      storeAuth.user.usuario,
+      contrasena.value,
+      negocio._id,
+    );
+    storeAuth.token = conectar.token;
+    if (conectar.token) {
+      router.push(`/${negocio.tipo.toLowerCase()}`);
+      storeAuth.negocioElegido = negocio; //solucion
+      $q.notify({
+        type: 'positive',
+        position: 'center',
+        message: `Bienvenido a ${negocio.nombre}`,
+        progress: true,
+        timeout: 1000,
+      });
+    }
+    contrasena.value = '';
   });
 };
 
@@ -538,7 +566,7 @@ const modificarPersona = async () => {
   const formData = new FormData();
   formData.append('imagen', selectedFileProfile.value);
   // // Agregar los otros datos a la imagen en el objeto FormData
-  // formData.append('busqueda', JSON.stringify({ _id: useAuth.user._id }));
+  // formData.append('busqueda', JSON.stringify({ _id: storeAuth.user._id }));
   // formData.append(
   //   'datos',
   //   JSON.stringify({ apellido: persona.value.apellido }),
@@ -558,7 +586,7 @@ const modificarPersona = async () => {
     showLoading();
     await GqlModificarPersona(
       {
-        busqueda: { _id: useAuth.user._id },
+        busqueda: { _id: storeAuth.user._id },
         datos: persona.value,
       },
       // {
@@ -569,6 +597,7 @@ const modificarPersona = async () => {
       // 😊
       useGqlHeaders({
         'apollo-require-preflight': '1',
+        'Content-Type': 'multipart/form-data',
       }),
       // useGqlHeaders({
       //   headers: {
@@ -588,7 +617,7 @@ const getPersona = async () => {
   try {
     showLoading();
     const { personaBuscar } = await GqlBuscarPersona({
-      busqueda: { _id: useAuth.user._id },
+      busqueda: { _id: storeAuth.user._id },
     });
     persona.value = personaBuscar[0];
     imagen.value = personaBuscar[0].imagen;

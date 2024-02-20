@@ -4,6 +4,7 @@
 export interface UserProps {
   _id: string;
   nombre: string;
+  usuario: string;
   negocios: Negocio[];
 }
 export interface Negocio {

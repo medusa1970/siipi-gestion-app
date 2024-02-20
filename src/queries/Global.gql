@@ -2,12 +2,15 @@ query conectar($datos: ConexionDto!) {
   conectar(datos: $datos) {
     token
     persona {
-      _id
+      nombre
+      usuario
+    }
+    entidad {
       nombre
     }
+    permisos
   }
 }
-
 query buscarEntidadesConUsuario($opciones: OpcionesDto) {
   entidadesUsuarioConectado(opciones: $opciones) {
     _id

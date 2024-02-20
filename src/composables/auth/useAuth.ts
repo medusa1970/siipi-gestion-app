@@ -2,6 +2,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
 import type { Negocio, PersonaProps } from '~/interfaces/product.interface';
+import { authService } from '~/services/auth.service';
+import auth from '~/middleware/auth';
 export const useAuth = () => {
   /**
    * REACTIVIDAD Y ESTADO
@@ -35,13 +37,32 @@ export const useAuth = () => {
       authPersona.value.usuario,
       authPersona.value.contrasena,
     );
-    // if (useAuth.token && user.value.negocios.length === 0)
-    //   router.push('/cliente');
+    LocalStorage.set('prohibido', {
+      nombre: authPersona.value.usuario,
+      contrasena: authPersona.value.contrasena,
+    });
     clearAuthPersona();
   };
-  const elegirNegocio = (negocio: Negocio) => {
+
+  const loginConEntidad = async () => {
+    console.log('loginConEntidad');
+  };
+
+  const elegirNegocio = async (negocio: Negocio) => {
     useAuth.negocioElegido = negocio;
     router.push(negocio.tipo.toLowerCase());
+    interface DataProps {
+      nombre: string;
+      contrasena: string;
+    } //@ts-ignore
+    const data: DataProps = LocalStorage.getItem('prohibido');
+    LocalStorage.remove('prohibido'); //@ts-ignore
+    const { conectar } = await authService.login(
+      data.nombre,
+      data.contrasena,
+      negocio._id,
+    );
+    useAuth.token = conectar.token;
   };
   const register = async () => {
     await useAuth.register(authPersona.value);
@@ -56,5 +77,6 @@ export const useAuth = () => {
     user,
     register,
     isPwd,
+    loginConEntidad,
   };
 };

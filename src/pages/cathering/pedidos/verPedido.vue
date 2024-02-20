@@ -14,7 +14,7 @@
     >
       <!-- VER PEDIDOS PROVEEDOR -->
       <q-tab-panel name="proveedor" class="flex justify-center items-center">
-        <Item title="pedido proveedor 1" class="w-[400px]">
+        <Item title="pedido proveedor 1" class="w-[400px] max-sm:w-full">
           <template v-slot:actions>
             <div class="flex">
               <q-btn
@@ -55,7 +55,7 @@
           <Item
             :title="punto.nombre"
             v-for="punto in porAceptar"
-            class="w-[400px]"
+            class="w-[400px] max-sm:w-full"
             :key="punto"
           >
             <template v-slot:actions>
@@ -103,7 +103,7 @@
           <Item
             :title="punto.nombre"
             v-for="punto in aceptados"
-            class="w-[400px]"
+            class="w-[400px] max-sm:w-full"
             :key="punto"
           >
             <template v-slot:actions>

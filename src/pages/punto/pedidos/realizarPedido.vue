@@ -3,7 +3,10 @@
   <!-- <code>{{ estado.catalogosOfertas }}</code> -->
   <div class="grid grid-cols-4 h-[70vh]">
     <!-- 1 -->
-    <div class="col-span-1" v-if="estado.catalogosOfertas">
+    <div
+      class="col-span-1 max-sm:col-span-4 max-sm:mx-auto"
+      v-if="estado.catalogosOfertas"
+    >
       <q-list
         class="rounded-borders w-[350px]"
         v-for="categoria in estado.catalogosOfertas"
@@ -71,7 +74,9 @@
     </div> -->
 
     <!-- 3 -->
-    <div class="col-span-3 p-2 w-[480px] mx-auto">
+    <div
+      class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
+    >
       <h1 class="text-center bg-gray-500 text-white font-bold">PEDIDO</h1>
       <div v-for="pedido in listaPedidos" :key="pedido">
         <h1 class="bg-gray-300 text-center my-2">{{ pedido.nombre }}</h1>

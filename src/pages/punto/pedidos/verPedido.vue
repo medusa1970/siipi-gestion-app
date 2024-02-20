@@ -17,7 +17,7 @@
           <Item
             :title="punto.nombre"
             v-for="punto in aceptados"
-            class="w-[400px]"
+            class="w-[400px] max-sm:w-full"
             :key="punto"
           >
             <template v-slot:actions>

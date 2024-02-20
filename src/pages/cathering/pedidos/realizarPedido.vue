@@ -2,7 +2,7 @@
   <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
   <div class="grid grid-cols-4 h-[70vh]">
     <!-- 1 -->
-    <div class="col-span-1">
+    <div class="col-span-1 max-sm:col-span-4 max-sm:mx-auto">
       <q-list
         class="rounded-borders w-[350px]"
         v-for="categoria in estado.categoriaArbol"
@@ -70,7 +70,9 @@
     </div> -->
 
     <!-- 3 -->
-    <div class="col-span-3 p-2 w-[480px] mx-auto">
+    <div
+      class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
+    >
       <h1 class="text-center bg-gray-500 text-white font-bold">PEDIDO</h1>
       <div v-for="pedido in listaPedidos" :key="pedido">
         <h1 class="bg-gray-300 text-center my-2">{{ pedido.nombre }}</h1>
@@ -105,6 +107,13 @@
           </span>
         </span>
       </div>
+      <q-btn
+        class="bg-red-500 text-white mt-2 mr-2"
+        label="Cancelar"
+        dense
+        no-caps
+        padding="3px 10px"
+      />
       <q-btn
         class="bg-gray-500 text-white mt-2"
         label="Guardar"

@@ -51,6 +51,19 @@ PUNTO
 - Realizar Pedidos Proveedor CATHERING. ✅(LOGICA)
 - Realizar Pedidos a Produccion PUNTO. ✅(LOGICA)
 - Formato y recopilacion de datos Para impresion de factura de pedidos. **\***.
+  [ FACTURA:
+
+* fecha de inicio de pedido,
+* Entidad origen
+* Entidad Destino
+* Usuario
+* CI
+* LOGO SIIPI
+* ATENCION AL CONSUMIDOR
+  ]
+
+- EL PEDIDO SE HACE A UNA OFERTA O A UN PRODUCTO? por que el producto no tiene precio, entonces se crearia una oferta para un producto, para pedir ese con su respetivo precio, entonces el stock entra la oferta y no producto y la ofertas tiene varias ofertas dentro y ya no productos. pero el stock si la oferta JUGO(tiene baso, bombilla) baso y jugo seria una oferta con precio de un producto, entonces esa oferta entra a stock pero al entrar la oferta stock entraria en stock hasta el jugos 2x1 :(.
+
 - Cambiar la estructura a algo mas simple ✅.
 
 !IMPORTANT:
@@ -65,7 +78,7 @@ PUNTO
 - TESORERIA BASICA que los puntos hacen pedidos a cathering y cathering tendra su estado de cuenta. CUANDO TENGA PEDIDOs
 - lista de transacciones compra y venta actualizar su estado de cuenta.
 - Pedidos estados.
-- SOLO UN ACCESO ADMINISTRADOR todavia no permisos
+- SOLO UN ACCESO ADMINISTRADOR todavia no permisos ✅
 
 * WHITEBOARD
 

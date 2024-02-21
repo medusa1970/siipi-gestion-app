@@ -1,8 +1,11 @@
 <template>
-  <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
-  <div class="grid grid-cols-4 h-[70vh]">
+  <Navigation label="Realizar pedido" icon="group" />
+  <h1 class="font-bold text-lg text-center mb-2">Realizar pedido</h1>
+  <div class="grid grid-cols-4 h-[80vh]">
     <!-- 1 -->
-    <div class="col-span-1 max-sm:col-span-4 max-sm:mx-auto">
+    <div
+      class="col-span-1 max-sm:col-span-4 max-2xl:col-span-2 max-sm:mx-auto overflow-y-scroll"
+    >
       <q-list
         class="rounded-borders w-[350px]"
         v-for="categoria in estado.categoriaArbol"
@@ -17,7 +20,7 @@
         >
           <q-list v-for="(item, index) in categoria.hijas" :key="index">
             <q-expansion-item
-              :header-inset-level="0.5"
+              :header-inset-level="0"
               switch-toggle-side
               dense-toggle
               :label="`${item.nombre} (${item.hijas.length})`"
@@ -32,7 +35,7 @@
                   :class="item2 == test && 'bg-gray-500 [&>div]:text-white'"
                 >
                   <q-item-section side>
-                    <h1 class="ml-24">{{ item2.nombre }}</h1>
+                    <h1 class="ml-14">{{ item2.nombre }}</h1>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -71,7 +74,7 @@
 
     <!-- 3 -->
     <div
-      class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
+      class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4 max-2xl:col-span-2"
     >
       <h1 class="text-center bg-gray-500 text-white font-bold">PEDIDO</h1>
       <div v-for="pedido in listaPedidos" :key="pedido">

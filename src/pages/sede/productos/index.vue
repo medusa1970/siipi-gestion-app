@@ -35,7 +35,7 @@
       </template>
       <!-- BADGE -->
       <template #rows-badge="{ props }">
-        <q-tr :props="props">
+        <q-tr :props="props" @dblclick="ControladorFila(props)">
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
@@ -153,15 +153,52 @@
       </div>
     </template>
   </Dialog>
+
+  <!-- DIALOG DOUBLECLICK -->
+  <q-dialog persistent v-model="isDoubleClick">
+    <q-card style="width: 200px" class="px-3 py-1">
+      <div class="flex justify-between items-center">
+        <h1 class="text-md font-bold truncate-7">{{ row.nombre }}</h1>
+        <q-btn icon="close" flat round dense v-close-popup />
+      </div>
+
+      <div class="flex gap-2 mb-3 mt-2 justify-center">
+        <q-btn
+          color="primary"
+          label="Editar"
+          no-caps
+          style="font-size: 14px; width: 70px"
+          padding="4px 10px"
+          @click="navegarDetalleProducto(row)"
+        />
+        <q-btn
+          color="red"
+          label="Eliminar"
+          no-caps
+          style="font-size: 14px; width: 70px"
+          padding="4px 10px"
+          @click="borrarProducto(row)"
+        />
+      </div>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
 definePageMeta({
   layout: 'sede',
 });
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
+
+const isDoubleClick = ref(false);
+const row = ref('');
+
+const ControladorFila = (props) => {
+  row.value = props.row;
+  isDoubleClick.value = true;
+};
 
 const {
   estado,
@@ -191,5 +228,16 @@ onMounted(() => {
 .cell-image {
   width: 70px;
   height: 70px;
+}
+.q-poput-edit {
+  min-width: 400px !important;
+}
+.truncate-7 {
+  display: inline-block;
+  width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
 }
 </style>

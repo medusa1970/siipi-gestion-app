@@ -1,4 +1,5 @@
 <template>
+  <Navigation label="pedidos" icon="group" />
   <div>
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab name="proveedor" icon="bi-cart4" label="Pedidos Proveedor" />

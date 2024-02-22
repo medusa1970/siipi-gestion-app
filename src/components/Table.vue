@@ -5,7 +5,7 @@
     :rows="rows"
     :columns="columns"
     :filter="filter"
-    :rows-per-page-options="[10, 20, 50, 100]"
+    :rows-per-page-options="[13, 26]"
     :dense="dense"
     class="border-none"
   >

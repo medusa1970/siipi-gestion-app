@@ -1,6 +1,6 @@
 <template>
   <q-layout v-if="$q.platform.is.desktop" view="lHh lpR lFf">
-    <q-header elevated class="text-white" style="background-color: #010f1a">
+    <q-header elevated class="text-white colorBackground" style="">
       <q-toolbar class="h-[6vh]">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
@@ -100,7 +100,8 @@
       v-model="leftDrawerOpen"
       side="left"
       behavior="desktop"
-      style="background-color: #010f1a"
+      style=""
+      class="colorBackground"
     >
       <!-- drawer content -->
       <q-list>
@@ -179,7 +180,7 @@
     </q-drawer>
 
     <q-page-container>
-      <div style="padding: 0.5rem">
+      <div class="layoutContainer">
         <slot name="slot" />
       </div>
     </q-page-container>
@@ -188,7 +189,7 @@
 
   <!-- RESPONSIVE MOBILE -->
   <q-layout v-if="$q.platform.is.mobile" view="lHh lpR lFf">
-    <q-header elevated class="text-white" style="background-color: #010f1a">
+    <q-header elevated class="text-white colorBackground" style="">
       <q-toolbar class="h-[6vh]">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
@@ -283,7 +284,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" style="background-color: #010f1a">
+    <q-drawer v-model="leftDrawerOpen" class="colorBackground" style="">
       <!-- drawer content -->
       <q-list>
         <!-- PERFIL -->
@@ -354,7 +355,7 @@
     </q-drawer>
 
     <q-page-container>
-      <div style="padding: 0.5rem">
+      <div class="layoutContainer">
         <slot name="slot" />
       </div>
     </q-page-container>
@@ -652,5 +653,14 @@ watch(imagen, () => {
   h6 {
     color: $white;
   }
+}
+.colorBackground {
+  // #231f20 011627
+  background-color: #011627;
+}
+.layoutContainer {
+  // #002b3c #032541
+  padding: 0.5rem;
+  // background-color: #071c2f;
 }
 </style>

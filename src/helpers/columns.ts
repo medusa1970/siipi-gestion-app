@@ -101,9 +101,11 @@ export const columnsOfertas = [
 export const columnsProductos = [
   {
     name: 'nombre',
-    label: 'Nombre',
+    required: true,
+    label: 'Nombre(s)',
     align: 'left',
     field: (row: any) => row.nombre,
+    sortable: true,
   },
   {
     name: 'comentario',
@@ -129,14 +131,14 @@ export const columnsProductos = [
     field: (row: any) => row.presentaciones.map((p: any) => p.nombre),
     sortable: true,
   },
-  {
-    name: 'categoria',
-    required: true,
-    label: 'categoria',
-    align: 'left',
-    field: (row: any) => row.categoria.nombre,
-    sortable: true,
-  },
+  // {
+  //   name: 'categoria',
+  //   required: true,
+  //   label: 'categoria',
+  //   align: 'left',
+  //   field: (row: any) => row.categoria.nombre,
+  //   sortable: true,
+  // },
   {
     name: 'actions',
     label: 'Acciones',

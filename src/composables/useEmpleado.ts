@@ -18,13 +18,13 @@ export const useEmpleado = () => {
     personaSelect: { id: '', nombre: '' },
     personas: [{ id: '', nombre: '' }],
     cargo: '',
-    rows: []
+    rows: [],
   });
 
   const obtenerTodosEmpleados = async () => {
     const { entidadBuscarEmpleado } =
       await empleadoService.obtenerTodosEmpleados(
-        useAuth.negocioElegido.nombre
+        useAuth.negocioElegido.nombre,
       );
     estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
       return {
@@ -33,9 +33,10 @@ export const useEmpleado = () => {
         nombre: empleado.persona.nombre + ' ' + empleado.persona.apellido,
         correo: empleado.persona.correo,
         telefono: empleado.persona.telefono,
-        foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg'
+        foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg',
       };
     });
+    console.log(estado.rows);
   };
 
   const buscarPersonas = async () => {
@@ -43,7 +44,7 @@ export const useEmpleado = () => {
     estado.personas = personaBuscar?.map((persona: Persona) => {
       return {
         id: persona._id,
-        nombre: persona.nombre
+        nombre: persona.nombre,
       };
     });
   };
@@ -57,7 +58,7 @@ export const useEmpleado = () => {
     await empleadoService.agregarEmpleado(
       useAuth.negocioElegido._id, //@ts-ignore
       estado.personaSelect.nombre.id,
-      estado.cargo
+      estado.cargo,
     );
     NotifySucessCenter('Empleado agregado correctamente');
     obtenerTodosEmpleados();
@@ -72,7 +73,7 @@ export const useEmpleado = () => {
       title: `Eliminar ${row.nombre}`,
       message: '¿Está seguro de eliminar este articulo?',
       cancel: true,
-      persistent: true
+      persistent: true,
     }).onOk(async () => {
       await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
       NotifySucessCenter('Empleado eliminado');

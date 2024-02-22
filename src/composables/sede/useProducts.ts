@@ -76,6 +76,17 @@ export const useProducts = () => {
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
+    // estado.productos = productoBuscar.map((producto: any) => {
+    //   return {
+    //     nombre: producto.nombre,
+    //     comentario: producto.comentario,
+    //     presentacionBasica: producto.presentacionBasica,
+    //     presentaciones: ['paquete'],
+    //   };
+    // });
+    //  = productoBuscar.slice(0, 5);
+    // console.log(test);
+    console.log(estado.productos);
     const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
     estado.categorias = categoriaArbol;
   };

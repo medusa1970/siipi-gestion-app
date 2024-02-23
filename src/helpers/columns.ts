@@ -131,14 +131,14 @@ export const columnsProductos = [
     field: (row: any) => row.presentaciones.map((p: any) => p.nombre),
     sortable: true,
   },
-  // {
-  //   name: 'categoria',
-  //   required: true,
-  //   label: 'categoria',
-  //   align: 'left',
-  //   field: (row: any) => row.categoria.nombre,
-  //   sortable: true,
-  // },
+  {
+    name: 'categoria',
+    required: true,
+    label: 'categoria',
+    align: 'left',
+    field: (row: any) => row.categoria.nombre,
+    sortable: true,
+  },
   {
     name: 'actions',
     label: 'Acciones',

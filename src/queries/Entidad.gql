@@ -136,7 +136,6 @@ mutation hacerInventario(
 query ListarProblemas(
   $entidadBusqueda: BuscarEntidadDto!
   $problemaBusqueda: BuscarProblemaDto!
-  $opciones: OpcionesDto
 ) {
   entidadListarProblemas(
     entidadBusqueda: $entidadBusqueda

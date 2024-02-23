@@ -5,19 +5,17 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
     opciones: { limit: 0, buscarCategoria: true }
   ) {
     _id
-    _creado
     nombre
     comentario
-    # categoria {
-    #   _id
-    #   nombre
-    # }
     presentacionBasica
     presentaciones {
       _id
-      _creado
       nombre
       cantidad
+    }
+    categoria {
+      _id
+      nombre
     }
   }
 }
@@ -25,20 +23,27 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
 mutation crearProducto($datos: CrearProductoDto!) {
   productoCrear(datos: $datos) {
     _id
-    _creado
     nombre
     comentario
     presentacionBasica
     presentaciones {
+      nombre
+    }
+    categoria {
       _id
       nombre
-      cantidad
     }
   }
 }
 
-mutation borrarProducto($busqueda: BuscarProductoDto!) {
-  productoBorrar(busqueda: $busqueda)
+# mutation borrarProducto($busqueda: BuscarProductoDto!) {
+#   productoBorrar(busqueda: $busqueda)
+# }
+mutation ProductoBorrar($busqueda: BuscarProductoDto!) {
+  productoBorrar(busqueda: $busqueda, opciones: { limit: 1 }) {
+    _id
+    nombre
+  }
 }
 
 mutation modificarProductos(
@@ -54,6 +59,9 @@ mutation modificarProductos(
     nombre
     comentario
     presentacionBasica
+    categoria {
+      nombre
+    }
   }
 }
 

@@ -7,7 +7,7 @@
         style="display: flex; place-items: center; flex-direction: column"
         class="col-span-1 max-sm:col-span-2"
       >
-        <h1 class="font-bold">Lista de productos vencidos</h1>
+        <h1 class="font-bold">LISTA DE PRODUCTOS</h1>
         <q-list class="h-[76vh] w-[360px] overflow-y-scroll">
           <q-item
             clickable
@@ -36,7 +36,7 @@
             {{ estado.countInventary }} realizados
           </h1></span
         > -->
-        <h1 class="font-bold">Lista de productos vencidos</h1>
+        <h1 class="font-bold">FORMULARIO INVENTARIAR</h1>
         <div
           class="h-[76vh] w-[360px] overflow-y-scroll flex justify-center items-center"
           v-if="estado.productoElegido"
@@ -68,6 +68,7 @@
                 outlined
                 dense
                 class="mb-[13px]"
+                clearable
               />
               <div class="w-full grid grid-cols-2 gap-3">
                 <q-input
@@ -76,6 +77,7 @@
                   label="Cantidad"
                   outlined
                   dense
+                  clearable
                 />
                 <q-input
                   v-model="lote.bloque"
@@ -83,6 +85,7 @@
                   label="Bloque"
                   outlined
                   dense
+                  clearable
                 />
               </div>
             </div>

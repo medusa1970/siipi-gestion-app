@@ -26,6 +26,43 @@
         clearable
       />
 
+      <span class="flex flex-row gap-2">
+        <q-select
+          v-model="estado.categoriaFija.categoria"
+          :options="estado.categorias.hijas"
+          label="Seleccionar categoria"
+          option-label="nombre"
+          style="width: auto; flex: 1 0 auto"
+          dense
+          onfocus="this.select()"
+          outlined
+          clearable
+        >
+          <template v-slot:prepend>
+            <q-icon name="category" />
+          </template>
+        </q-select>
+        <q-select
+          v-model="estado.producto.categoria"
+          :options="estado.categoriaFija.categoria.hijas"
+          label="Seleccionar subCategoria"
+          option-label="nombre"
+          style="width: auto; flex: 1 0 auto"
+          dense
+          onfocus="this.select()"
+          outlined
+          clearable
+        >
+          <!-- <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No hay resultados
+              </q-item-section>
+            </q-item>
+          </template> -->
+        </q-select>
+      </span>
+
       <q-input
         v-model="estado.producto.presentacionBasica"
         type="text"
@@ -121,6 +158,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import DragDrop from '@/components/DrogDrop.vue';
 
@@ -135,9 +173,14 @@ const {
   modalEditarPresentacion,
   modificarPresentacion,
   borrarPresentacion,
+  getCategoria,
 } = useProducts();
 
 definePageMeta({
   layout: 'sede',
+});
+
+onMounted(() => {
+  getCategoria();
 });
 </script>

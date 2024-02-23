@@ -8,7 +8,7 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
     descripcion
     precio
     grupos
-    ocultar
+    # ocultar
     ingredientes {
       ... on IngredienteProducto {
         _id
@@ -90,8 +90,14 @@ mutation modificarOfertas(
   }
 }
 # BORRAR
+# mutation borrarOfertas($busqueda: BuscarOfertaDto!) {
+#   ofertaBorrar(busqueda: $busqueda, opciones: { limit: 0 })
+# }
 mutation borrarOfertas($busqueda: BuscarOfertaDto!) {
-  ofertaBorrar(busqueda: $busqueda, opciones: { limit: 0 })
+  ofertaBorrar(busqueda: $busqueda, opciones: { limit: 1 }) {
+    _id
+    nombre
+  }
 }
 
 mutation crearIngredienteProducto(

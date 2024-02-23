@@ -13,25 +13,27 @@
     />
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
-        <q-btn
-          v-if="$q.platform.is.desktop"
-          icon-right="add"
-          color="green"
-          label="Agregar producto"
-          no-caps
-          style="font-size: 14.5px"
-          padding="4px 10px"
-          @click="modalAgregarProducto()"
-        />
-        <q-btn
-          v-if="$q.platform.is.mobile"
-          color="green"
-          label="Agregar producto"
-          no-caps
-          style="font-size: 14.5px"
-          padding="4px 10px"
-          @click="modalAgregarProducto()"
-        />
+        <NuxtLink to="productos/detailProduct">
+          <q-btn
+            v-if="$q.platform.is.desktop"
+            icon-right="add"
+            color="green"
+            label="Agregar producto"
+            no-caps
+            style="font-size: 14.5px"
+            padding="4px 10px"
+            @click="modalAgregarProducto()"
+          />
+          <q-btn
+            v-if="$q.platform.is.mobile"
+            color="green"
+            label="Agregar producto"
+            no-caps
+            style="font-size: 14.5px"
+            padding="4px 10px"
+            @click="modalAgregarProducto()"
+          />
+        </NuxtLink>
       </template>
       <!-- BADGE -->
       <template #rows-badge="{ props }">
@@ -56,12 +58,12 @@
           </q-td>
           <q-td key="categoria" :props="props" class="flex gap-1">
             {{ props.row.categoria && props.row.categoria.nombre }}
-            <p
+            <!-- <p
               class="text-blue-400 underline cursor-pointer"
               @click="cambiarCategoria(props.row)"
             >
               Editar
-            </p>
+            </p> -->
             <!-- {{ props.row.categoria }} -->
             <!-- NOMBRE DE CATEGORIA -->
             <!-- <div class="flex gap-1">
@@ -73,14 +75,16 @@
             </div> -->
           </q-td>
           <q-td key="actions" :props="props">
-            <q-btn
-              color="primary"
-              icon="edit"
-              round
-              dense
-              flat
-              @click="navegarDetalleProducto(props.row)"
-            />
+            <NuxtLink to="productos/detailProduct">
+              <q-btn
+                color="primary"
+                icon="edit"
+                round
+                dense
+                flat
+                @click="navegarDetalleProducto(props.row)"
+              />
+            </NuxtLink>
             <q-btn
               color="red"
               icon="delete"
@@ -95,7 +99,7 @@
     </Table>
   </div>
   <!-- AGREGAR CATEGORIA -->
-  <Dialog
+  <!-- <Dialog
     v-model="estado.modal.isAddCategory"
     title="Categoria"
     :handle-submit="guardarCategoria"
@@ -152,7 +156,7 @@
         </q-select>
       </div>
     </template>
-  </Dialog>
+  </Dialog> -->
 
   <!-- DIALOG DOUBLECLICK -->
   <q-dialog persistent v-model="isDoubleClick">

@@ -32,6 +32,7 @@ export interface Product {
   comentario: string;
   presentacionBasica: string;
   presentaciones: Presentacion[];
+  categoria: { _id: string; nombre: string };
 }
 export interface Presentacion {
   _id?: string | null | undefined;

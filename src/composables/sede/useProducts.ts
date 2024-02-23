@@ -33,6 +33,7 @@ export const useProducts = () => {
       comentario: '',
       presentacionBasica: '',
       presentaciones: [{ nombre: '', cantidad: 0 }],
+      categoria: { _id: '', nombre: '' },
     },
     presentacion: <Presentacion>{
       _id: '',
@@ -76,17 +77,10 @@ export const useProducts = () => {
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
-    // estado.productos = productoBuscar.map((producto: any) => {
-    //   return {
-    //     nombre: producto.nombre,
-    //     comentario: producto.comentario,
-    //     presentacionBasica: producto.presentacionBasica,
-    //     presentaciones: ['paquete'],
-    //   };
-    // });
-    //  = productoBuscar.slice(0, 5);
-    // console.log(test);
-    console.log(estado.productos);
+    // const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
+    // estado.categorias = categoriaArbol;
+  };
+  const getCategoria = async () => {
     const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
     estado.categorias = categoriaArbol;
   };
@@ -105,15 +99,14 @@ export const useProducts = () => {
   };
 
   const navegarDetalleProducto = (row: any) => {
-    // console.log(row);
     useProduct.product = row;
     estado.producto = row;
     useProduct.isEdit = true;
 
-    router.push('productos/detailProduct');
+    // router.push('productos/detailProduct');
   };
   const modalAgregarProducto = () => {
-    router.push('productos/detailProduct');
+    // router.push('productos/detailProduct');
     useProduct.isEdit = false;
     useProduct.product = {
       _id: '',
@@ -121,6 +114,7 @@ export const useProducts = () => {
       comentario: '',
       presentacionBasica: '',
       presentaciones: [],
+      categoria: { _id: '', nombre: '' },
     };
   };
   //STORE
@@ -130,20 +124,24 @@ export const useProducts = () => {
 
   // AGREGAR PRODUCTO
   const agregarProducto = async () => {
-    delete estado.producto._id;
-    console.log(estado.producto);
-    await productoService.agregarProducto(estado.producto);
+    delete estado.producto._id; //@ts-ignore
+    delete estado.producto.categoria.productos;
+    await productoService.agregarProducto({
+      ...estado.producto,
+      categoria: estado.producto.categoria._id,
+    });
     NotifySucess('Producto agregado correctamente');
     router.push('/sede/productos');
   };
   const editProductBasicInfo = async () => {
     //@ts-ignore
-    const { presentaciones, categoria, _creado, _id, nombre, ...productoData } =
+    delete estado.producto.categoria.productos;
+    //@ts-ignore
+    const { presentaciones, _creado, _id, nombre, ...productoData } =
       estado.producto;
-    // console.log(productoData);
     const { productoModificar } = await productoService.editarProducto(
       useProduct.product._id,
-      productoData,
+      { ...productoData, categoria: productoData.categoria._id },
     );
     estado.producto = Object.assign(estado.producto, productoModificar[0]);
     NotifySucess('información básica actualizada correctamente');
@@ -180,7 +178,6 @@ export const useProducts = () => {
     }
   };
   const modalEditarPresentacion = (p: Presentacion) => {
-    console.log(p);
     estado.dialog.isAddPresentation = true;
     estado.dialog.isEditPresentation = true;
     estado.presentacion._id = p._id;
@@ -197,13 +194,11 @@ export const useProducts = () => {
           estado.presentacion,
         );
       if (res) {
-        console.log(estado.producto.presentaciones);
         const index = estado.producto.presentaciones.findIndex(
           (p) => p._id === estado.presentacion._id,
         );
         if (index !== -1)
           estado.producto.presentaciones[index] = estado.presentacion;
-        console.log(estado.producto.presentaciones);
       }
       NotifySucess('Presentacion modificado correctamente');
       estado.dialog.isAddPresentation = false;
@@ -283,7 +278,6 @@ export const useProducts = () => {
   const obtenerTodasCategorias = async () => {
     const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
     estado.categoriaArbol = [categoriaArbol];
-    console.log(estado.categoriaArbol);
     const data = [
       {
         label: categoriaArbol.nombre,
@@ -317,6 +311,7 @@ export const useProducts = () => {
     estado,
     tags,
     getAllProductos,
+    getCategoria,
     borrarProducto,
     navegarDetalleProducto,
     modalAgregarProducto,

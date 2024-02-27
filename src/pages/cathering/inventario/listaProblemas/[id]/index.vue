@@ -109,7 +109,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
 definePageMeta({
-  layout: "punto",
+  layout: "cathering",
 });
 
 const { params } = useRoute();

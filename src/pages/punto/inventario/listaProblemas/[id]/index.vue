@@ -20,8 +20,8 @@
             icon: $q.iconSet.editor.align,
             fixedLabel: true,
             list: 'only-icons',
-            options: ['left', 'center', 'right', 'justify']
-          }
+            options: ['left', 'center', 'right', 'justify'],
+          },
         ],
         ['bold', 'italic', 'strike', 'underline'],
         ['link', 'custom_btn'],
@@ -31,7 +31,7 @@
             label: $q.lang.editor.formatting,
             icon: $q.iconSet.editor.formatting,
             list: 'no-icons',
-            options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'code']
+            options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'code'],
           },
           {
             label: $q.lang.editor.fontSize,
@@ -46,8 +46,8 @@
               'size-4',
               'size-5',
               'size-6',
-              'size-7'
-            ]
+              'size-7',
+            ],
           },
           {
             label: $q.lang.editor.defaultFont,
@@ -63,14 +63,14 @@
               'impact',
               'lucida_grande',
               'times_new_roman',
-              'verdana'
-            ]
+              'verdana',
+            ],
           },
-          'removeFormat'
+          'removeFormat',
         ],
         ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
 
-        ['viewsource']
+        ['viewsource'],
       ]"
       :fonts="{
         arial: 'Arial',
@@ -80,7 +80,7 @@
         impact: 'Impact',
         lucida_grande: 'Lucida Grande',
         times_new_roman: 'Times New Roman',
-        verdana: 'Verdana'
+        verdana: 'Verdana',
       }"
     />
     <span class="flex justify-end my-4">
@@ -101,7 +101,7 @@ import {
   hideLoading,
   showLoading,
   NotifyWarning,
-  NotifySucessCenter
+  NotifySucessCenter,
 } from '~/helpers/message.service';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
@@ -123,8 +123,8 @@ const getProblem = async () => {
   try {
     showLoading();
     const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      problemaBusqueda: { _id: params.id }
+      entidadBusqueda: { _id: useAuth.negocioElegido._id },
+      problemaBusqueda: { _id: params.id },
     });
     problem.value = res[0];
     const text = problem.value.diferencias.map((item) => {
@@ -132,7 +132,7 @@ const getProblem = async () => {
     <li><strong>¿Cómo solucionaste la diferencia de ${
       item.diferencia
     } productos, con el vencimiento de ${formatDate(
-        item.vencimiento
+        item.vencimiento,
       )}?</strong></li>
     </ol>
     <ul>
@@ -155,8 +155,8 @@ const resolverProblema = async () => {
       problemaBusqueda: { _id: params.id },
       datos: {
         reporte: qeditor.value,
-        resuelto: true
-      }
+        resuelto: true,
+      },
     });
     NotifySucessCenter('Problema resuelto 🙂');
     hideLoading();

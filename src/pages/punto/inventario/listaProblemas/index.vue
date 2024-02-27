@@ -54,10 +54,10 @@ const getAllProblem = async () => {
   try {
     showLoading();
     const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioIDSelected },
+      entidadBusqueda: { _id: useAuth.negocioElegido._id },
       problemaBusqueda: { resuelto: false },
     });
-    // console.log(res);
+    console.log(res);
     listProblems.value = res;
     if (res.length > 0) {
       NotifyWarning('Se encontraron problemas debe resolverlas');

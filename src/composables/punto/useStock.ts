@@ -33,6 +33,8 @@ export const useStock = () => {
     modal: {
       isShowCantidad: false,
       isShowAlertProduct: false,
+      isShowVencidos: false,
+      isShowAllProducts: false,
     },
     productosVencidos: [] as any[],
   });
@@ -41,13 +43,19 @@ export const useStock = () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
     );
+    // console.log(entidadBuscar);
     estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
         0,
       );
       const alertStyle =
-        cantidadTotal <= stock.cantidadLimite ? 'background-color: orange' : '';
+        cantidadTotal <= stock.cantidadLimite
+          ? 'background-color: #D8A460'
+          : '';
+      // const vencidoStyle =
+      // cantidadTotal <= stock.cantidadLimite ? 'background-color: orange' : '';
+
       if (cantidadTotal <= stock.cantidadLimite) {
         estado.alerta++;
         // Verificar si el producto ya está en la lista de alerta
@@ -89,6 +97,43 @@ export const useStock = () => {
         alertStyle: alertStyle,
       };
     });
+    console.log(estado.stocks);
+
+    // ALERTA VENCIDOS
+    console.log(estado.stocks);
+    estado.productosVencidos = estado.stocks
+      .map((stock) => {
+        //@ts-ignore
+        const lotesVencidos = stock.lotes.filter((lote) => {
+          const fechaActual = new Date();
+          // const fechaVencimiento = new Date(
+          //   lote.vencimiento.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3'),
+          // );
+          const fechaVencimiento = new Date(lote.vencimiento);
+          console.log('sdasd');
+          console.log(fechaActual, fechaVencimiento);
+          // Filtrar lotes vencidos
+          return (
+            fechaActual > fechaVencimiento || //@ts-ignore
+            (fechaVencimiento - fechaActual) / (1000 * 60 * 60 * 24) <= 5
+          );
+        });
+        // console.log(lotesVencidos);
+
+        // Retornar solo el stock con lotes vencidos
+        if (lotesVencidos.length > 0) {
+          return {
+            //@ts-ignore
+            ...stock,
+            alertStyle: 'background-color: #B0E0E6',
+            lotes: lotesVencidos, // Sobrescribir lotes con solo los lotes vencidos
+          };
+        }
+
+        return null; // No hay lotes vencidos para este stock
+      })
+      .filter(Boolean); // Filtrar los stocks que tienen lotes vencidos
+    console.log(estado.productosVencidos);
   };
   const formatearFecha = (date: any) => {
     return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
@@ -129,14 +174,21 @@ export const useStock = () => {
       NotifyError('Ya se encuentra en la lista de  inventario');
     }
   };
-  onMounted(() => {
-    obtenerTodoStock();
-  });
+  console.log(estado.stocks);
+  function prueba() {
+    console.log('prueba');
+    console.log(estado.stocks);
+  }
+  // onMounted(() => {
+  //   obtenerTodoStock();
+  // });
   return {
     estado,
     formatearFecha,
     modalEditarCantidad,
     guardarCantidad,
     agregarListaInventario,
+    obtenerTodoStock,
+    prueba,
   };
 };

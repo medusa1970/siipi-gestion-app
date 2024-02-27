@@ -80,7 +80,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'punto',
+  layout: 'cathering',
 });
 import { useMenu } from '@/composables/punto/useMenu';
 import { onMounted, ref } from 'vue';

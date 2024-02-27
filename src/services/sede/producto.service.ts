@@ -9,7 +9,7 @@ export const productoService = {
       }),
     ),
   borrarProducto: async (productoID: string) =>
-    postData(GqlBorrarProducto({ busqueda: { _id: productoID } })),
+    postData(GqlProductoBorrar({ busqueda: { _id: productoID } })),
   agregarProducto: async (datos: any) =>
     postData(
       GqlCrearProducto({

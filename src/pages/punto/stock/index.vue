@@ -2,7 +2,7 @@
   <div>
     <Navigation label="Stock" icon="folder" />
     <!-- <code>{{ stock }}</code> -->
-    <Table badge :rows="stocks" :columns="stockProducts" dense>
+    <Table badge :rows="rowsParaMostrar" :columns="stockProducts" dense>
       <!-- DROPDOW -->
       <template #dropdown>
         <q-btn
@@ -12,6 +12,17 @@
           icon="bi-filetype-pdf"
         />
         <div class="ml-3">
+          <span class="flex gap-1"
+            >{{ estado.stocks.length }} total de
+            <p
+              @click="
+                estado.modal.isShowAllProducts = !estado.modal.isShowAllProducts
+              "
+              class="text-red-500 cursor-pointer"
+            >
+              Productos
+            </p>
+          </span>
           <span class="flex gap-1"
             >{{ estado.productosEnAlerta.length }} con stock en
             <p
@@ -24,22 +35,27 @@
               Alerta
             </p>
           </span>
-          <span class="flex gap-1"
-            >0 con stock en
-            <p class="text-red-500 cursor-pointer">Agotado</p>
-          </span>
+
           <span class="flex gap-1"
             >{{ estado.productosVencidos.length }} con stock en
-            <p class="text-blue-500 cursor-pointer">Vencidos</p>
+            <p
+              class="text-blue-500 cursor-pointer"
+              @click="
+                estado.modal.isShowVencidos = !estado.modal.isShowVencidos
+              "
+            >
+              Vencidos
+            </p>
           </span>
         </div>
       </template>
-      <!-- BADGE -->
+      <!-- TABLA CON BADGE -->
       <template #rows-badge="{ props }">
         <q-tr
           :props="props"
           :style="
-            (props.row.cantidad === 0 && 'background-color: red !important') ||
+            (props.row.cantidad === 0 &&
+              'background-color: #FFA08A !important') ||
             props.row.alertStyle
           "
         >
@@ -53,9 +69,22 @@
           <q-td key="producto" :props="props">
             {{ props.row.producto.nombre }}
           </q-td>
-          <q-td key="presentaciones" :props="props">
-            {{ props.row.presentaciones[0].nombre }}
-            {{ props.row.presentaciones[0].cantidad }} ...
+          <q-td
+            key="presentaciones"
+            :props="props"
+            :class="props.row.presentaciones.length === 0 && 'text-red-500'"
+          >
+            {{
+              props.row.presentaciones.length === 0 ? 'Sin presentaciones' : ''
+            }}
+            {{
+              props.row.presentaciones[0] && props.row.presentaciones[0].nombre
+            }}
+            {{
+              props.row.presentaciones[0] &&
+              props.row.presentaciones[0].cantidad
+            }}
+            ...
             <q-popup-edit
               v-model="props.row.presentaciones"
               anchor="bottom end"
@@ -74,10 +103,14 @@
             </q-popup-edit>
           </q-td>
           <q-td key="lotes" :props="props">
-            {{ props.row.lotes[0].fecha }}.
-            <!-- {{ formatearFecha(props.row.lotes[0].vencimiento) }}. -->
+            <!-- {{ props.row.lotes[0].fecha }} -->
+            {{
+              props.row.lotes[0] &&
+              formatearFecha(props.row.lotes[0].vencimiento)
+            }}.
             <!-- <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}. -->
-            <strong>Cantidad:</strong>{{ props.row.lotes[0].cantidad }} ...
+            <strong>Cantidad:</strong
+            >{{ props.row.lotes[0] && props.row.lotes[0].cantidad }} ...
             <q-popup-edit
               v-model="props.row.lotes"
               anchor="bottom end"
@@ -90,7 +123,8 @@
                   <span class="flex gap-2 leading-none">
                     <p>Vencimiento:</p>
                     <q-badge color="red" class="capitalize">
-                      {{ formatDate(lote.vencimiento) }}
+                      {{ formatearFecha(lote.vencimiento) }}
+                      <!-- {{ lote.vencimiento }} -->
                     </q-badge>
                   </span>
                   <span class="flex gap-2">
@@ -172,11 +206,10 @@
 import { stockProducts } from '@/helpers/columns';
 import { useStock } from '@/composables/punto/useStock';
 import stock from '@/mocks/stock.json';
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 definePageMeta({
   layout: 'punto',
 });
-// console.log(stock);
 
 const {
   estado,
@@ -184,55 +217,25 @@ const {
   modalEditarCantidad,
   guardarCantidad,
   agregarListaInventario,
+  obtenerTodoStock,
 } = useStock();
 
-const stocks = ref([]);
-stocks.value = stock.map((s) => {
-  const cantidadTotal = s.lotes.reduce(
-    (total, lote) => parseInt(total) + parseInt(lote.cantidad),
-    0,
-  );
-
-  return {
-    foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
-    producto: s.producto,
-    presentaciones: s.presentaciones,
-    lotes: s.lotes,
-    cantidad: cantidadTotal,
-    cantidadMinima: s.cantidadMinima,
-  };
+const rowsParaMostrar = computed(() => {
+  if (estado.modal.isShowAlertProduct) {
+    return estado.productosEnAlerta;
+  } else if (estado.modal.isShowVencidos) {
+    return estado.productosVencidos;
+  } else if (estado.modal.isShowAllProducts) {
+    return estado.stocks;
+  } else {
+    return estado.stocks;
+  }
 });
-console.log(stocks.value);
 
-// ALERTA VENCIDOS
-estado.productosVencidos = stocks.value
-  .map((stock) => {
-    const lotesVencidos = stock.lotes.filter((lote) => {
-      const fechaActual = new Date();
-      const fechaVencimiento = new Date(
-        lote.fecha.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3'),
-      );
-
-      // Filtrar lotes vencidos
-      return (
-        fechaActual > fechaVencimiento ||
-        (fechaVencimiento - fechaActual) / (1000 * 60 * 60 * 24) <= 5
-      );
-    });
-    console.log(lotesVencidos);
-
-    // Retornar solo el stock con lotes vencidos
-    if (lotesVencidos.length > 0) {
-      return {
-        ...stock,
-        lotes: lotesVencidos, // Sobrescribir lotes con solo los lotes vencidos
-      };
-    }
-
-    return null; // No hay lotes vencidos para este stock
-  })
-  .filter(Boolean); // Filtrar los stocks que tienen lotes vencidos
-console.log(estado.productosVencidos);
+onMounted(() => {
+  obtenerTodoStock();
+});
+// console.log(estado.stocks)
 </script>
 
 <style scoped>

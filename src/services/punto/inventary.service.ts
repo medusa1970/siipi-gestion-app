@@ -3,7 +3,7 @@ import { postData } from '@/services/service.config';
 export const inventarioService = {
   realizarInventario: async (
     negocioID: string | null | undefined,
-    producto: any,
+    productoID: any,
     lotes: any,
     guardar: boolean,
   ) =>
@@ -12,7 +12,7 @@ export const inventarioService = {
         entidadBusqueda: { _id: negocioID },
         guardar: guardar,
         datos: {
-          producto: producto,
+          producto: productoID,
           lotes: lotes,
           reporte: 'se hizo',
         },

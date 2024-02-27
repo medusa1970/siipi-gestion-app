@@ -53,8 +53,6 @@ mutation borrarEmpleadoEntidad(
 # BUSCAR STOCKS DE UNA ENTIDAD
 query buscarStocks($busqueda: BuscarEntidadDto!) {
   entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
-    _id
-    nombre
     almacen {
       producto {
         _id
@@ -69,12 +67,6 @@ query buscarStocks($busqueda: BuscarEntidadDto!) {
         vencimiento
         cantidad
         bloque
-      }
-    }
-    problemas {
-      _id
-      producto {
-        nombre
       }
     }
   }
@@ -131,6 +123,36 @@ mutation hacerInventario(
     }
   }
 }
+# mutation hacerInventario(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $datos: CrearInventarioDto!
+#   $guardar: Boolean!
+# ) {
+#   entidadHacerInventario(
+#     entidadBusqueda: $entidadBusqueda
+#     datos: $datos
+#     guardar: $guardar
+#     opciones: { populate: true }
+#   ) {
+#     fecha
+#     producto {
+#       _id
+#       nombre
+#     }
+#     reporte
+#     diferencias {
+#       vencimiento
+#       diferencia
+#     }
+#     lotes {
+#       vencimiento
+#       cantidad
+#       bloque
+#       presentacion
+#       cantidadPresentacion
+#     }
+#   }
+# }
 
 # LISTA DE PROBLEMAS DE INVENTARIO
 query ListarProblemas(
@@ -160,6 +182,33 @@ query ListarProblemas(
     resuelto
   }
 }
+# query ListarProblemas(
+#   $entidadBusqueda: BuscarEntidadDto!
+#   $problemaBusqueda: BuscarProblemaDto!
+# ) {
+#   entidadListarProblemas(
+#     entidadBusqueda: $entidadBusqueda
+#     problemaBusqueda: $problemaBusqueda
+#     opciones: { populate: true }
+#   ) {
+#     _id
+#     inventario {
+#       _id
+#     }
+#     producto {
+#       _id
+#       nombre
+#     }
+#     diferencias {
+#       vencimiento
+#       diferencia
+#     }
+#     fechaAparicion
+#     fechaResolucion
+#     reporte
+#     resuelto
+#   }
+# }
 
 # RESOLVER PROBLEMA
 mutation ResolverProblema(

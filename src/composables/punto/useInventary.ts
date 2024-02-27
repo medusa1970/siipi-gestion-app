@@ -73,6 +73,7 @@ export const useInventary = () => {
           useProduct.ListInventario.push({ id: item._id, nombre: item.nombre });
         }
       });
+    console.log(useProduct.ListInventario);
     // console.log('first');
     // entidadProductosMenu.forEach((item: any) =>
     //   useProduct.ListInventario.push(item),
@@ -83,84 +84,94 @@ export const useInventary = () => {
     // ];
   };
   const terminarInventario = async () => {
-    // useProduct.ListInventario = useProduct.ListInventario.filter(
-    //   //@ts-ignore
-    //   (item) => item.producto.id !== estado.productoElegido.producto.id,
-    // );
-    NotifySucess('Inventario guardado');
-    estado.productoElegido = '';
-    estado.countInventary++;
-    // console.log(useAuth.negocioIDSelected);
+    useProduct.ListInventario = useProduct.ListInventario.filter(
+      //@ts-ignore
+      (item) => item.id !== estado.productoElegido.id,
+    );
+    // console.log(useProduct.ListInventario);
+    // console.log(estado.productoElegido);
+
+    // estado.inventario.producto = estado.productoElegido;
+    // delete estado.inventario.presentacion;
+    // console.log(estado.inventario);
+    // estado.productoElegido = '';
+    // estado.countInventary++;
+    // @ts-ignore
+    // console.log(useAuth.negocioElegido._id);
+    // console.log(estado.productoElegido);
+    // console.log(estado.inventario.lotes);
+    // NotifySucess('Inventario guardado');
     // console.log(useProduct.ListInventario[currentIndex.value].producto._id);
     // console.log(estado.inventario.lotes);
-    // if (useProduct.ListInventario.length > 0) {
-    //   /**LOGICA */
-    //   showLoading();
-    //   inventarioService
-    //     .realizarInventario(
-    //       useAuth.negocioElegido._id, //@ts-ignore
-    //       useProduct.ListInventario[estado.currentIndex].producto._id,
-    //       estado.inventario.lotes,
-    //       false
-    //     )
-    //     .then((res) => {
-    //       if (
-    //         //@ts-ignores
-    //         res.entidadHacerInventario.diferencias?.length > 0
-    //       ) {
-    //         estado.countRetry++;
-    //         console.log(estado.countRetry);
-    //         if (estado.countRetry > 1) {
-    //           // console.log('first');
-    //           showLoading();
-    //           // console.log(useAuth.negocioElegido._id);
-    //           // console.log(
-    //           //   useProduct.ListInventario[estado.currentIndex].producto._id
-    //           // );
-    //           console.log(estado.inventario.lotes);
-    //           //ARREGLAR ESTA FUNCION NO SE ESTA EJECUTANDO
-    //           GqlHacerInventario({
-    //             entidadBusqueda: { _id: useAuth.negocioElegido._id },
-    //             guardar: true,
-    //             datos: {
-    //               producto:
-    //                 //@ts-ignore
-    //                 useProduct.ListInventario[estado.currentIndex].producto._id, //@ts-ignore
-    //               lotes: estado.inventario.lotes,
-    //               reporte: 'se hizo'
-    //             }
-    //           })
-    //             .then(() => {
-    //               NotifySucess('Inventario guardado');
-    //               logica();
-    //             })
-    //             .finally(() => {
-    //               hideLoading();
-    //             });
-    //         } else {
-    //           NotifyError('Hay diferencias, vuelva a hacer el inventario');
-    //         }
-    //       } else {
-    //         inventarioService
-    //           .realizarInventario(
-    //             useAuth.negocioElegido._id, //@ts-ignore
-    //             useProduct.ListInventario[estado.currentIndex].producto._id,
-    //             estado.inventario.lotes,
-    //             true
-    //           )
-    //           .then((res) => {
-    //             NotifySucess('Inventario guardado');
-    //             logica();
-    //           })
-    //           .finally(() => {
-    //             hideLoading();
-    //           });
-    //       }
-    //     })
-    //     .finally(() => {
-    //       hideLoading();
-    //     });
-    // }
+
+    if (useProduct.ListInventario.length > 0) {
+      /**LOGICA */
+      showLoading();
+      inventarioService
+        .realizarInventario(
+          useAuth.negocioElegido._id, //@ts-ignore
+          estado.productoElegido.id,
+          estado.inventario.lotes,
+          false,
+        )
+        .then((res) => {
+          if (
+            //@ts-ignores
+            res.entidadHacerInventario.diferencias?.length > 0
+          ) {
+            estado.countRetry++;
+            console.log(estado.countRetry);
+            if (estado.countRetry > 1) {
+              // console.log('first');
+              showLoading();
+              // console.log(useAuth.negocioElegido._id);
+              // console.log(
+              //   useProduct.ListInventario[estado.currentIndex].producto._id
+              // );
+              console.log(estado.inventario.lotes);
+              //ARREGLAR ESTA FUNCION NO SE ESTA EJECUTANDO
+              GqlHacerInventario({
+                entidadBusqueda: { _id: useAuth.negocioElegido._id },
+                guardar: true,
+                datos: {
+                  producto:
+                    //@ts-ignore
+                    estado.productoElegido.id, //@ts-ignore
+                  lotes: estado.inventario.lotes,
+                  reporte: 'se hizo',
+                },
+              })
+                .then(() => {
+                  NotifySucess('Inventario guardado');
+                  logica();
+                })
+                .finally(() => {
+                  hideLoading();
+                });
+            } else {
+              NotifyError('Hay diferencias, vuelva a hacer el inventario');
+            }
+          } else {
+            inventarioService
+              .realizarInventario(
+                useAuth.negocioElegido._id, //@ts-ignore
+                estado.productoElegido.id,
+                estado.inventario.lotes,
+                true,
+              )
+              .then((res) => {
+                NotifySucess('Inventario guardado');
+                logica();
+              })
+              .finally(() => {
+                hideLoading();
+              });
+          }
+        })
+        .finally(() => {
+          hideLoading();
+        });
+    }
     // console.log(useProduct.ListInventarioPDF);
   };
   const logica = () => {

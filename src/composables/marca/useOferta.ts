@@ -55,7 +55,7 @@ export const useOferta = () => {
   };
 
   const crearOferta = async () => {
-    console.log('first');
+    // console.log('first');
     const { _id, ingredientes, condiciones, preparados, ...ofertaData } =
       estado.oferta;
     const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
@@ -73,13 +73,13 @@ export const useOferta = () => {
   };
   const obtenerTodosProductos = async () => {
     const { productoBuscar } = await ofertaService.buscarProductos();
-    console.log(productoBuscar);
+    // console.log(productoBuscar);
     estado.productos = productoBuscar;
   };
   const crearIngredienteProducto = async () => {
-    console.log(estado.oferta._id); //@ts-ignore
-    console.log(estado.productoFijo.producto._id);
-    console.log(estado.productoFijo.presentacion);
+    // console.log(estado.oferta._id); //@ts-ignore
+    // console.log(estado.productoFijo.producto._id);
+    // console.log(estado.productoFijo.presentacion);
     const { ofertaCrearIngredienteProducto } =
       await ofertaService.crearIngredienteProducto(
         estado.oferta._id, //@ts-ignore
@@ -102,7 +102,7 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
-    console.log('first');
+    // console.log('first');
     // estado.oferta.nombre = oferta.nombre;
     storeOferta.oferta = oferta;
     estado.oferta = oferta;
@@ -121,12 +121,12 @@ export const useOferta = () => {
 
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
-    console.log(catalogoArbol);
-    console.log(catalogoArbol);
+    // console.log(catalogoArbol);
+    // console.log(catalogoArbol);
     estado.catalogos = catalogoArbol;
   };
   const redirectCatalogoArbol = (catalogo: any) => {
-    console.log(catalogo);
+    // console.log(catalogo);
     storeOferta.catalogoElegido = [catalogo];
     router.push('catalogos/' + catalogo._id);
   };
@@ -172,7 +172,7 @@ export const useOferta = () => {
     NotifySucessCenter('Oferta editada correctamente');
   };
   const editarIngrediente = async (ingrediente: any) => {
-    console.log(ingrediente);
+    // console.log(ingrediente);
     storeOferta.isEdit = true;
     if (ingrediente._tipo === 'IngredienteProducto') {
       estado.modal.isAddIngredientProduct = true;
@@ -205,14 +205,14 @@ export const useOferta = () => {
         estado.productoFijo.presentacion,
       );
     if (res) {
-      console.log(res); //@ts-ignore
+      // console.log(res); //@ts-ignore
       estado.oferta.ingredientes = estado.oferta.ingredientes.map(
         (ingrediente: any) => {
           return ingrediente._id === res[0]._id ? res[0] : ingrediente;
         },
       );
-      console.log(estado.oferta.ingredientes);
-      console.log(storeOferta.oferta.ingredientes);
+      // console.log(estado.oferta.ingredientes);
+      // console.log(storeOferta.oferta.ingredientes);
       // const index = estado.oferta.ingredientes.findIndex(
       //   //@ts-ignore
       //   (p) => p._id === estado.productoFijo.producto._id,
@@ -220,7 +220,7 @@ export const useOferta = () => {
       // if (index !== -1)
       //   //@ts-ignore
       //   estado.oferta.ingredientes[index] = estado.productoFijo.presentacion;
-      console.log(estado.oferta.ingredientes);
+      // console.log(estado.oferta.ingredientes);
       NotifySucessCenter('IngredienteProducto editado correctamente');
       estado.modal.isAddIngredientProduct = false;
     }
@@ -231,7 +231,7 @@ export const useOferta = () => {
     storeOferta.isEdit = false;
   };
   const borrarOferta = async (oferta: any) => {
-    console.log(oferta);
+    // console.log(oferta);
     $q.dialog({
       title: `Eliminar ${oferta.nombre}`,
       message: '¿Está seguro de eliminar esta oferta?',

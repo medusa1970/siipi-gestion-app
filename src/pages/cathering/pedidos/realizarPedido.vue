@@ -205,11 +205,11 @@ const handleInputChange = (event, product) => {
       productos: [producto],
     });
 
-  console.log(listaPedidos.value);
+  // console.log(listaPedidos.value);
 };
 
 const editarCantidad = (producto) => {
-  console.log(producto);
+  // console.log(producto);
   estado.isEditCantidad = !estado.isEditCantidad;
   producto.edit = !producto.edit;
 };

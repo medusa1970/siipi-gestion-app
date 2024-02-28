@@ -97,10 +97,10 @@ export const useStock = () => {
         alertStyle: alertStyle,
       };
     });
-    console.log(estado.stocks);
+    // console.log(estado.stocks);
 
     // ALERTA VENCIDOS
-    console.log(estado.stocks);
+    // console.log(estado.stocks);
     estado.productosVencidos = estado.stocks
       .map((stock) => {
         //@ts-ignore
@@ -110,8 +110,8 @@ export const useStock = () => {
           //   lote.vencimiento.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3'),
           // );
           const fechaVencimiento = new Date(lote.vencimiento);
-          console.log('sdasd');
-          console.log(fechaActual, fechaVencimiento);
+          // console.log('sdasd');
+          // console.log(fechaActual, fechaVencimiento);
           // Filtrar lotes vencidos
           return (
             fechaActual > fechaVencimiento || //@ts-ignore
@@ -133,7 +133,7 @@ export const useStock = () => {
         return null; // No hay lotes vencidos para este stock
       })
       .filter(Boolean); // Filtrar los stocks que tienen lotes vencidos
-    console.log(estado.productosVencidos);
+    // console.log(estado.productosVencidos);
   };
   const formatearFecha = (date: any) => {
     return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
@@ -174,10 +174,10 @@ export const useStock = () => {
       NotifyError('Ya se encuentra en la lista de  inventario');
     }
   };
-  console.log(estado.stocks);
+  // console.log(estado.stocks);
   function prueba() {
-    console.log('prueba');
-    console.log(estado.stocks);
+    // console.log('prueba');
+    // console.log(estado.stocks);
   }
   // onMounted(() => {
   //   obtenerTodoStock();

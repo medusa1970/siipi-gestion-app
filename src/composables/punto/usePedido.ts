@@ -22,15 +22,14 @@ export const usePedido = () => {
   });
 
   const obtenerCatalogosProductos = async () => {
-    console.log(useAuth.negocioElegido._id);
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
     estado.catalogosOfertas = [entidadLeerMenu];
-    console.log(estado.catalogosOfertas);
   };
 
   return {
+    useAuth,
     estado,
     obtenerCatalogosProductos,
   };

@@ -98,7 +98,7 @@ const ofertasDeCatalogo = async (id) => {
   return test;
 };
 const res = await ofertasDeCatalogo('65a4475e446a5885b05739c4');
-console.log(exepciones.value);
+// console.log(exepciones.value);
 
 onMounted(() => {
   obtenerMenus();

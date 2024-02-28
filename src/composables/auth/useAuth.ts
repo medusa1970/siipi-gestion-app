@@ -45,7 +45,7 @@ export const useAuth = () => {
   };
 
   const loginConEntidad = async () => {
-    console.log('loginConEntidad');
+    // console.log('loginConEntidad');
   };
 
   const elegirNegocio = async (negocio: Negocio) => {

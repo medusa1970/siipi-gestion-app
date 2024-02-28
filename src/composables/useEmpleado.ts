@@ -36,7 +36,7 @@ export const useEmpleado = () => {
         foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg',
       };
     });
-    console.log(estado.rows);
+    // console.log(estado.rows);
   };
 
   const buscarPersonas = async () => {

@@ -1,7 +1,9 @@
 # META 4
 
+buscarPedido por entidad.
+
 HACER PEDIDO PUNTO, MENU CATALOGOS, SI HAY ofertas en el catalogo arbol solo que no renderiza las ofertas
-de lado del cliente, revisar y arreglar.
+de lado del cliente, revisar y arresglar.
 
 IDEAS PEDIDOS
 

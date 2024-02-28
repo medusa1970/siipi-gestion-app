@@ -73,7 +73,7 @@ export const useInventary = () => {
           useProduct.ListInventario.push({ id: item._id, nombre: item.nombre });
         }
       });
-    console.log(useProduct.ListInventario);
+    // console.log(useProduct.ListInventario);
     // console.log('first');
     // entidadProductosMenu.forEach((item: any) =>
     //   useProduct.ListInventario.push(item),
@@ -120,7 +120,7 @@ export const useInventary = () => {
             res.entidadHacerInventario.diferencias?.length > 0
           ) {
             estado.countRetry++;
-            console.log(estado.countRetry);
+            // console.log(estado.countRetry);
             if (estado.countRetry > 1) {
               // console.log('first');
               showLoading();

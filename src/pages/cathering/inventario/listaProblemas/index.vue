@@ -25,8 +25,8 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { authStore } from "@/stores/auth.store";
+import { ref, onMounted } from 'vue';
+import { authStore } from '@/stores/auth.store';
 import {
   ApiError,
   hideLoading,
@@ -34,12 +34,12 @@ import {
   NotifySucess,
   NotifyError,
   NotifyWarning,
-} from "@/helpers/message.service";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { useRouter } from "vue-router";
+} from '@/helpers/message.service';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { useRouter } from 'vue-router';
 definePageMeta({
-  layout: "cathering",
+  layout: 'cathering',
 });
 
 const router = useRouter();
@@ -47,7 +47,7 @@ const useAuth = authStore();
 const listProblems = ref([]);
 
 const formatDate = (date) => {
-  return format(new Date(date), "dd-MM-yyyy, EEEE", { locale: es });
+  return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
 };
 
 const getAllProblem = async () => {
@@ -57,12 +57,12 @@ const getAllProblem = async () => {
       entidadBusqueda: { _id: useAuth.negocioElegido._id },
       problemaBusqueda: { resuelto: false },
     });
-    console.log(res);
+    // console.log(res);
     listProblems.value = res;
     if (res.length > 0) {
-      NotifyWarning("Se encontraron problemas debe resolverlas");
+      NotifyWarning('Se encontraron problemas debe resolverlas');
     } else {
-      NotifySucess("No hay problemas por resolver😯");
+      NotifySucess('No hay problemas por resolver😯');
     }
     hideLoading();
   } catch (error) {

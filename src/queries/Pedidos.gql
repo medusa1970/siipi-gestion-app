@@ -1,0 +1,21 @@
+# INICIAR PEDIDO (PUNTO)
+mutation pedidoIniciar($datos: CrearPedidoDto!) {
+  pedidoIniciar(datos: $datos) {
+    _id
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    estado {
+      estado
+    }
+    items {
+      oferta {
+        _id
+      }
+      cantidad
+    }
+  }
+}

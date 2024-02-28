@@ -581,8 +581,8 @@ const modificarPersona = async () => {
   delete imagen.value.__key;
   persona.value.imagen = formData.get('imagen');
   // delete persona.value.imagen;
-  console.log(persona.value);
-  console.log(persona.value.imagen);
+  // console.log(persona.value);
+  // console.log(persona.value.imagen);
   try {
     showLoading();
     await GqlModificarPersona(
@@ -623,7 +623,7 @@ const getPersona = async () => {
     persona.value = personaBuscar[0];
     imagen.value = personaBuscar[0].imagen;
     imagePreview.value = `https://siipi-gestion-production.up.railway.app/public/personas/${persona.value.imagen}`;
-    console.log(imagePreview.value);
+    // console.log(imagePreview.value);
     hideLoading();
   } catch (error) {
     ApiError(error);

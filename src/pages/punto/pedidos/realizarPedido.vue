@@ -77,7 +77,7 @@
     <div
       class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
     >
-      <h1 class="text-center bg-gray-500 text-white font-bold">PEDIDO</h1>
+      <h1 class="text-center bg-[#011627] text-white font-bold">PEDIDO</h1>
       <div v-for="pedido in listaPedidos" :key="pedido">
         <h1 class="bg-gray-300 text-center my-2">{{ pedido.nombre }}</h1>
         <span
@@ -120,11 +120,19 @@
         </span>
       </div>
       <q-btn
-        class="bg-gray-500 text-white mt-2"
+        class="bg-red-500 text-white mt-2 mr-2"
+        label="Cancelar"
+        dense
+        no-caps
+        padding="3px 10px"
+      />
+      <q-btn
+        class="bg-[#011627] text-white mt-2"
         label="Guardar"
         dense
         no-caps
         padding="3px 10px"
+        @click="realizarPedido"
       />
     </div>
   </div>
@@ -161,11 +169,13 @@
 import { useProducts } from '@/composables/sede/useProducts';
 import { usePedido } from '@/composables/punto/usePedido';
 import { ref } from 'vue';
+import { pedidoService } from '~/services/punto/pedido.service';
+import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 definePageMeta({
   layout: 'punto',
 });
 
-const { estado, obtenerCatalogosProductos } = usePedido();
+const { estado, obtenerCatalogosProductos, useAuth } = usePedido();
 
 // const { estado, obtenerTodasCategorias } = useProducts();
 const test = ref(null);
@@ -178,11 +188,13 @@ const selectCategory = (category) => {
   estado.modal.isAddOferta = true;
 };
 const handleInputChange = (event, product) => {
+  // console.log(product);
   const categoriaActual = test.value?.nombre; // Obtén el nombre de la categoría actual
 
   const nuevoValor = event.target.value;
 
   const producto = {
+    id: product._id,
     nombre: product.nombre,
     cantidad: nuevoValor,
     edit: false,
@@ -227,6 +239,26 @@ const deleteOfertaInList = (producto) => {
     );
     if (indiceProducto !== -1) categoria.productos.splice(indiceProducto, 1);
   });
+};
+
+const realizarPedido = async () => {
+  //solo quiero sacar el productonombre y su cantidad
+  const items = listaPedidos.value.flatMap((categoria) => {
+    return categoria.productos.map((producto) => {
+      return {
+        oferta: producto.id,
+        cantidad: parseInt(producto.cantidad),
+      };
+    });
+  });
+  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+    useAuth.negocioElegido._id,
+    '65a5a9af08c1a906d83522d0',
+    items,
+  );
+  if (pedidoIniciar) NotifySucessCenter('Pedido realizado con éxito');
+  else NotifyError('Error al realizar el pedido');
+  // console.log(pedidoIniciar);
 };
 
 onMounted(() => {

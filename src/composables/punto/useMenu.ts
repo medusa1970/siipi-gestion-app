@@ -18,11 +18,11 @@ export const useMenu = () => {
   });
 
   const obtenerMenus = async () => {
-    console.log(useAuth.negocioElegido._id);
+    // console.log(useAuth.negocioElegido._id);
     const { entidadBuscarMenu } = await menuService.listarMenus(
       useAuth.negocioElegido._id,
     );
-    console.log(entidadBuscarMenu);
+    // console.log(entidadBuscarMenu);
     estado.menus = entidadBuscarMenu;
   };
   const obtenerCatalogos = async () => {

@@ -56,7 +56,7 @@ export const menuListPunto = [
       },
       {
         label: 'ver pedidos',
-        to: '/punto/pedidos/verPedido',
+        to: '/punto/pedidos/listaPedidos',
       },
     ],
   },
@@ -132,7 +132,7 @@ export const menuListCathering = [
       },
       {
         label: 'ver pedidos',
-        to: '/cathering/pedidos/verPedido',
+        to: '/cathering/pedidos/listaPedidos',
       },
     ],
   },

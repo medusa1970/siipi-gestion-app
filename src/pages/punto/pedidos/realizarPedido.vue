@@ -255,6 +255,7 @@ const realizarPedido = async () => {
     useAuth.negocioElegido._id,
     '65a5a9af08c1a906d83522d0',
     items,
+    useGqlToken(useAuth.token),
   );
   if (pedidoIniciar) NotifySucessCenter('Pedido realizado con éxito');
   else NotifyError('Error al realizar el pedido');

@@ -14,36 +14,43 @@
       <!-- VER PEDIDOS CATHERING -->
       <q-tab-panel name="cathering" class="flex justify-center items-center">
         <div class="flex flex-col gap-2 justify-center items-center">
-          <Item
-            :title="punto.nombre"
-            v-for="punto in aceptados"
-            class="w-[400px] max-sm:w-full"
-            :key="punto"
+          <NuxtLink
+            v-for="punto in estado.pedidosEntidad"
+            :key="punto._id"
+            :href="`listaPedidos/${punto._id}`"
           >
-            <template v-slot:actions>
-              <div class="flex">
-                <h1 class="text-orange-500 font-bold">Preparando...</h1>
-                <q-btn
-                  dense
-                  round
-                  icon="edit"
-                  flat
-                  color="blue"
-                  padding="4px"
-                  size="12px"
-                />
-                <q-btn
-                  dense
-                  round
-                  icon="print"
-                  flat
-                  color="orange"
-                  padding="4px"
-                  size="12px"
-                />
-              </div>
-            </template>
-          </Item>
+            <Item
+              :title="punto._id"
+              class="w-[400px] max-sm:w-full"
+              :title2="formatearFecha(punto.estado[0].fecha)"
+            >
+              <template v-slot:actions>
+                <div class="flex">
+                  <h1 class="text-orange-500 font-bold">
+                    {{ punto.estado[0].estado }}
+                  </h1>
+                  <q-btn
+                    dense
+                    round
+                    icon="edit"
+                    flat
+                    color="blue"
+                    padding="4px"
+                    size="12px"
+                  />
+                  <q-btn
+                    dense
+                    round
+                    icon="print"
+                    flat
+                    color="orange"
+                    padding="4px"
+                    size="12px"
+                  />
+                </div>
+              </template>
+            </Item>
+          </NuxtLink>
         </div>
       </q-tab-panel>
 
@@ -84,9 +91,16 @@
 definePageMeta({
   layout: 'punto',
 });
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { aceptados } from '@/mocks/puntos.json';
+// import { usePedido2 } from '@/composables/punto/usePedido2';
+import { usePedido } from '@/composables/punto/usePedido';
 
+const { buscarPedidos, estado, formatearFecha } = usePedido();
 const tab = ref('cathering');
 const date = ref('2020/07/08');
+
+onMounted(() => {
+  buscarPedidos();
+});
 </script>

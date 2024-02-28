@@ -1,5 +1,6 @@
 # META 4
 
+al aceptar items de un pedido, el pedido general pasa a un estado aceptado, al aceptar todo, acepta todos los items.
 buscarPedido por entidad.
 
 HACER PEDIDO PUNTO, MENU CATALOGOS, SI HAY ofertas en el catalogo arbol solo que no renderiza las ofertas

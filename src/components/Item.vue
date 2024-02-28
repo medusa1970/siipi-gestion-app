@@ -6,6 +6,7 @@
 
     <q-item-section>
       <h1 class="capitalize">{{ title }}</h1>
+      <p class="italic text-xs" v-if="title2">({{ title2 }})</p>
       <!-- <q-item-label class="font-bold uppercase">{{ title }}</q-item-label> -->
       <!-- <q-item-label caption>February 22nd, 2019</q-item-label> -->
     </q-item-section>
@@ -23,6 +24,7 @@ defineProps({
     type: String,
     required: true,
   },
+  title2: String,
   icon: {
     type: String,
     default: 'folder',

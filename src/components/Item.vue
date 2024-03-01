@@ -1,12 +1,14 @@
 <template>
-  <q-item clickable v-ripple class="border-[1px] bg-white py-1" dense>
+  <q-item clickable v-ripple class="border-[1px] bg-white p-0" dense>
     <!-- <q-item-section avatar top>
       <q-avatar :icon="icon" :color="colorIcon" text-color="white" />
     </q-item-section> -->
 
-    <q-item-section>
-      <h1 class="capitalize">{{ title }}</h1>
-      <p class="italic text-xs" v-if="title2">({{ title2 }})</p>
+    <q-item-section class="py-1 px-2">
+      <NuxtLink :href="href">
+        <h1 class="capitalize">{{ title }}</h1>
+        <p class="italic text-xs" v-if="title2">({{ title2 }})</p>
+      </NuxtLink>
       <!-- <q-item-label class="font-bold uppercase">{{ title }}</q-item-label> -->
       <!-- <q-item-label caption>February 22nd, 2019</q-item-label> -->
     </q-item-section>
@@ -33,6 +35,7 @@ defineProps({
     type: String,
     default: 'primary',
   },
+  href: String,
 });
 </script>
 

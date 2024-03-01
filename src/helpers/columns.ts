@@ -234,3 +234,43 @@ export const detallePedido = [
     sortable: true,
   },
 ];
+
+export const detallePedidoAccion = [
+  {
+    name: 'oferta',
+    required: true,
+    label: 'Oferta',
+    align: 'left',
+    field: (row: any) => row.oferta.nombre,
+    sortable: true,
+  },
+  {
+    name: 'precio',
+    required: true,
+    label: 'Precio U.',
+    align: 'center',
+    field: (row: any) => row.oferta.precio,
+    sortable: true,
+  },
+  {
+    name: 'cantidad',
+    required: true,
+    label: 'Cantidad',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'precioTotal',
+    required: true,
+    label: 'Precio Total',
+    align: 'right',
+    field: (row: any) => row.cantidad * row.oferta.precio,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];

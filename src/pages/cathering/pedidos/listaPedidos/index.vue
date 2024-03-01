@@ -54,94 +54,96 @@
       <q-tab-panel name="puntos">
         <div class="flex flex-col gap-2 justify-center items-center">
           <h1 class="font-bold">Pedidos por Aceptar:</h1>
-          <NuxtLink
+
+          <Item
             v-for="punto in estado.pedidosSinAceptar"
             :key="punto._id"
+            :title="punto.comprador.nombre"
+            class="w-[400px] max-sm:w-full"
+            :title2="formatearFecha(punto.estado[0].fecha)"
             :href="`listaPedidos/${punto._id}`"
           >
-            <Item
-              :title="punto.comprador.nombre"
-              class="w-[400px] max-sm:w-full"
-              :title2="formatearFecha(punto.estado[0].fecha)"
-            >
-              <template v-slot:actions>
-                <div class="flex">
-                  <q-btn
-                    dense
-                    round
-                    icon="check"
-                    flat
-                    color="green"
-                    padding="4px"
-                    size="12px"
-                    ><q-tooltip class="bg-gray-400-500"
-                      >Aceptar pedido</q-tooltip
-                    ></q-btn
-                  >
-                  <q-btn
-                    dense
-                    round
-                    icon="edit"
-                    flat
-                    color="blue"
-                    padding="4px"
-                    size="12px"
-                    ><q-tooltip class="bg-gray-400-500"
-                      >Editar pedido</q-tooltip
-                    ></q-btn
-                  >
-                  <q-btn
-                    dense
-                    round
-                    icon="print"
-                    flat
-                    color="orange"
-                    padding="4px"
-                    size="12px"
-                    ><q-tooltip class="bg-gray-400-500"
-                      >Imprimir pedido</q-tooltip
-                    ></q-btn
-                  >
-                </div>
-              </template>
-            </Item>
-          </NuxtLink>
+            <template v-slot:actions>
+              <div class="flex">
+                <!-- <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1> -->
+                <q-btn
+                  dense
+                  round
+                  icon="check"
+                  flat
+                  color="green"
+                  padding="4px"
+                  size="12px"
+                  @click="aceptarTodoPedido(punto._id)"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Aceptar pedido</q-tooltip
+                  ></q-btn
+                >
+                <q-btn
+                  dense
+                  round
+                  icon="edit"
+                  flat
+                  color="blue"
+                  padding="4px"
+                  size="12px"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Editar pedido</q-tooltip
+                  ></q-btn
+                >
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                  ><q-tooltip class="bg-gray-400-500"
+                    >Imprimir pedido</q-tooltip
+                  ></q-btn
+                >
+              </div>
+            </template>
+          </Item>
           <h1 class="font-bold">Pedidos Aceptados:</h1>
-          <NuxtLink
+
+          <Item
             v-for="punto in estado.pedidosAceptados"
             :key="punto._id"
             :href="`listaPedidos/${punto._id}`"
+            :title="punto.comprador.nombre"
+            class="w-[400px] max-sm:w-full"
+            :title2="formatearFecha(punto.estado[0].fecha)"
           >
-            <Item
-              :title="punto.comprador.nombre"
-              class="w-[400px] max-sm:w-full"
-              :title2="formatearFecha(punto.estado[0].fecha)"
-            >
-              <template v-slot:actions>
-                <div class="flex">
-                  <h1 class="text-orange-500 font-bold">Aceptado</h1>
-                  <q-btn
-                    dense
-                    round
-                    icon="edit"
-                    flat
-                    color="blue"
-                    padding="4px"
-                    size="12px"
-                  />
-                  <q-btn
-                    dense
-                    round
-                    icon="print"
-                    flat
-                    color="orange"
-                    padding="4px"
-                    size="12px"
-                  />
-                </div>
-              </template>
-            </Item>
-          </NuxtLink>
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1>
+                <q-btn
+                  dense
+                  round
+                  icon="edit"
+                  flat
+                  color="blue"
+                  padding="4px"
+                  size="12px"
+                />
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                />
+              </div>
+            </template>
+          </Item>
         </div>
       </q-tab-panel>
       <!-- VER HISTORIAL DE PEDIDOS -->
@@ -185,7 +187,8 @@ import { ref, onMounted } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
 import { usePedido } from '@/composables/punto/usePedido';
 
-const { buscarPedidos2, estado, formatearFecha } = usePedido();
+const { buscarPedidos2, estado, formatearFecha, aceptarTodoPedido } =
+  usePedido();
 
 const tab = ref('puntos');
 const date = ref('2020/07/08');

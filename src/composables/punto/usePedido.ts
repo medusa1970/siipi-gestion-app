@@ -2,6 +2,7 @@ import { ref, reactive, onMounted } from 'vue';
 import {
   NotifyError,
   NotifySucess,
+  NotifySucessCenter,
   hideLoading,
   showLoading,
 } from '~/helpers/message.service';
@@ -10,15 +11,20 @@ import { pedidoService } from '@/services/punto/pedido.service';
 import { authStore } from '@/stores/auth.store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useRouter } from 'vue-router';
+import { pedidoStore } from '@/stores/pedido.store';
 /**
  * LOGICA
  */
 export const usePedido = () => {
   const useAuth = authStore();
+  const router = useRouter();
+  const usePedidoStore = pedidoStore();
   const estado = reactive({
     catalogosOfertas: [],
     modal: {
       isAddOferta: false,
+      isAjustarItem: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -26,6 +32,12 @@ export const usePedido = () => {
     precioGeneral: 0,
     pedidosAceptados: [],
     pedidosSinAceptar: [],
+    pedidoItemsEstado: '',
+    itemPedido: {
+      id: '',
+      cantidad: 0,
+      comentario: '',
+    },
   });
 
   const obtenerCatalogosProductos = async () => {
@@ -36,34 +48,51 @@ export const usePedido = () => {
   };
 
   const buscarPedidos = async () => {
+    showLoading();
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       useAuth.negocioElegido._id,
       undefined,
       undefined,
       useGqlToken(useAuth.token),
     ); //@ts-ignore
-    estado.pedidosEntidad = pedidoBuscar;
+    estado.pedidosEntidad = await Promise.all(
+      pedidoBuscar.map((pedido) =>
+        pedidoService
+          .pedidoLeerEstado(pedido._id)
+          .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
+      ),
+    );
+    hideLoading();
   };
   const buscarPedidos2 = async () => {
+    showLoading();
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       undefined,
       useAuth.negocioElegido._id,
       undefined,
       useGqlToken(useAuth.token),
     ); //@ts-ignore
-    estado.pedidosEntidad = pedidoBuscar; //@ts-ignore
-    estado.pedidosAceptados = pedidoBuscar.filter(
-      (
-        pedido, //@ts-ignore
-      ) => pedido.estado.some((estado) => estado.estado === 'pagado'),
-    ); //@ts-ignore
-    estado.pedidosSinAceptar = pedidoBuscar.filter(
-      //@ts-ignore
-      (pedido) => !pedido.estado.some((estado) => estado.estado === 'pagado'),
+    estado.pedidosEntidad = await Promise.all(
+      pedidoBuscar.map((pedido) =>
+        pedidoService
+          .pedidoLeerEstado(pedido._id)
+          .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
+      ),
     );
-
-    // console.log(pedidosConAceptado);
-    // console.log(pedidosSinAceptar);
+    hideLoading();
+    //@ts-ignore
+    estado.pedidosAceptados = estado.pedidosEntidad.filter(
+      (
+        pedido, // prettier-ignore
+      ) =>
+        //@ts-ignore
+        pedido.estadoItems == 'aceptado' || pedido.estadoItems == 'preparado',
+    ); //@ts-ignore
+    estado.pedidosSinAceptar = estado.pedidosEntidad.filter(
+      // prettier-ignore
+      //@ts-ignore
+      (pedido) => pedido.estadoItems == 'iniciado' || pedido.estadoItems == 'confirmado',
+    );
   };
 
   const buscarPedidoID = async (id: string) => {
@@ -73,17 +102,63 @@ export const usePedido = () => {
       id,
       useGqlToken(useAuth.token),
     );
-    // console.log(pedidoBuscar);
     estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
     estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
       return total + item.oferta.precio * item.cantidad;
     }, 0);
+
+    const { pedidoLeerEstado } = await pedidoService.pedidoLeerEstado(id);
+    estado.pedidoItemsEstado = pedidoLeerEstado;
 
     // console.log(estado.precioGeneral);
   };
 
   const formatearFecha = (date: any) => {
     return format(new Date(date), 'dd-MM-yyyy, EEEE, HH:mm:ss', { locale: es });
+  };
+
+  const aceptarTodoPedido = async (pedidoID: string) => {
+    const { pedidoAceptarItems } = await pedidoService.pedidoAceptarItems(
+      pedidoID,
+    );
+    const { pedidoPrepararItems } = await pedidoService.pedidoPrepararItems(
+      pedidoID,
+    );
+    if (pedidoAceptarItems && pedidoPrepararItems)
+      NotifySucessCenter('Pedido aceptado y en preparacion');
+    else NotifyError('Error al aceptar pedido');
+    buscarPedidos2();
+  };
+
+  const ajustarItem = async (row: any) => {
+    console.log(row);
+    estado.modal.isAjustarItem = true;
+    estado.itemPedido.id = row._id;
+    estado.itemPedido.cantidad = row.cantidad;
+  };
+  const ajustarItemGuardar = async () => {
+    const { pedidoAjustarItem } = await pedidoService.pedidoAjustarItem(
+      //@ts-ignore
+      estado.pedidoDetalle._id,
+      estado.itemPedido.id,
+      estado.itemPedido.cantidad,
+      estado.itemPedido.comentario,
+    );
+    if (pedidoAjustarItem) {
+      NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
+      buscarPedidoID(estado.pedidoDetalle._id);
+    } else NotifyError('Error al ajustar cantidad');
+    estado.modal.isAjustarItem = false;
+  };
+
+  const recibirPedido = async (pedidoID: string) => {
+    const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
+      pedidoID,
+    );
+    if (pedidoRecibirItems) {
+      NotifySucessCenter('Pedido recibido');
+      router.push('/punto/pedidos/listaPedidos');
+    } else NotifyError('Error al recibir pedido');
   };
 
   return {
@@ -94,5 +169,9 @@ export const usePedido = () => {
     buscarPedidos2,
     buscarPedidoID,
     formatearFecha,
+    aceptarTodoPedido,
+    ajustarItem,
+    ajustarItemGuardar,
+    recibirPedido,
   };
 };

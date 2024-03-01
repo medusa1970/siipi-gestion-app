@@ -28,6 +28,10 @@ export const pedidoService = {
         // useGqlToken(useAuth.token),
       ),
     ),
+  pedidoConfirmarItems: async (pedidoID: string) =>
+    postData(
+      GqlPedidoConfirmarItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
+    ),
   pedidoBuscar: async (
     puntoID?: string | null | undefined,
     punto2ID?: string | null | undefined,
@@ -37,5 +41,34 @@ export const pedidoService = {
     GqlPedidoBuscar(
       { busqueda: { comprador: puntoID, vendedor: punto2ID, _id: pedidoID } },
       token,
+    ),
+  pedidoLeerEstado: async (pedidoID?: string | null | undefined) =>
+    GqlPedidoLeerEstado({ busqueda: { _id: pedidoID } }),
+
+  pedidoAceptarItems: async (pedidoID: string) =>
+    postData(
+      GqlPedidoAceptarItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
+    ),
+  pedidoAjustarItem: async (
+    pedidoID: string,
+    itemID: string,
+    cantidad: number,
+    comentario: string,
+  ) =>
+    postData(
+      GqlPedidoAjustarItem({
+        busqueda: { _id: pedidoID },
+        itemId: itemID,
+        nuevaCantidad: cantidad,
+        comentario,
+      }),
+    ),
+  pedidoPrepararItems: async (pedidoID: string) =>
+    postData(
+      GqlPedidoPrepararItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
+    ),
+  pedidoRecibirItems: async (pedidoID: string) =>
+    postData(
+      GqlPedidoRecibirItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
     ),
 };

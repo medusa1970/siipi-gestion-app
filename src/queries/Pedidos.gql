@@ -20,6 +20,19 @@ mutation pedidoIniciar($datos: CrearPedidoDto!) {
   }
 }
 
+# CONFIRMAR PEDIDO (PUNTO)
+mutation pedidoConfirmarItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
+  pedidoConfirmarItems(busqueda: $busqueda, itemIds: $itemIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+    }
+  }
+}
+
 # BUSCAR PEDIDOS
 query pedidoBuscar($busqueda: BuscarPedidoDto!) {
   pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
@@ -45,11 +58,80 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
       }
     }
     items {
+      _id
       oferta {
         nombre
         precio
       }
       cantidad
+    }
+  }
+}
+
+# LEER ESTADO
+query pedidoLeerEstado($busqueda: BuscarPedidoDto!) {
+  pedidoLeerEstado(busqueda: $busqueda)
+}
+
+# ACEPTAR ITEMS PEDIDO (CATHERING)
+mutation pedidoAceptarItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
+  pedidoAceptarItems(busqueda: $busqueda, itemIds: $itemIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+    }
+  }
+}
+
+# AJUSTAR ITEMS PEDIDO (CATHERING)
+mutation pedidoAjustarItem(
+  $busqueda: BuscarPedidoDto!
+  $itemId: ID!
+  $nuevaCantidad: Float!
+  $comentario: String!
+) {
+  pedidoAjustarItem(
+    busqueda: $busqueda
+    itemId: $itemId
+    nuevaCantidad: $nuevaCantidad
+    comentario: $comentario
+  ) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      cantidad
+    }
+  }
+}
+
+# PREPARAR ITEMS PEDIDO (CATHERING)
+mutation pedidoPrepararItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
+  pedidoPrepararItems(busqueda: $busqueda, itemIds: $itemIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+    }
+  }
+}
+
+# RECIBIR ITEMS PEDIDO (PUNTO)
+mutation pedidoRecibirItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
+  pedidoRecibirItems(busqueda: $busqueda, itemIds: $itemIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
     }
   }
 }

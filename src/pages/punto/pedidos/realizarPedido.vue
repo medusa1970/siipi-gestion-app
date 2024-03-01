@@ -171,12 +171,15 @@ import { usePedido } from '@/composables/punto/usePedido';
 import { ref } from 'vue';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
+import { pedidoStore } from '@/stores/pedido.store';
+import { useRouter } from 'vue-router';
 definePageMeta({
   layout: 'punto',
 });
 
 const { estado, obtenerCatalogosProductos, useAuth } = usePedido();
-
+const usePedidoStore = pedidoStore();
+const router = useRouter();
 // const { estado, obtenerTodasCategorias } = useProducts();
 const test = ref(null);
 const listaPedidos = ref([]);
@@ -216,12 +219,17 @@ const handleInputChange = (event, product) => {
     else categoriaEnPedido.productos.push(producto);
   }
   // La categoría no existe en el pedido, agrégala con el producto
-  else
+  else {
     listaPedidos.value.push({
       nombre: categoriaActual,
       productos: [producto],
     });
-
+    // usePedidoStore.listaPedido.push({
+    //   nombre: categoriaActual,
+    //   productos: [producto],
+    // });
+  }
+  // ---------------------------------------------------------------------------------------------------------
   // console.log(listaPedidos.value);
 };
 
@@ -257,14 +265,19 @@ const realizarPedido = async () => {
     items,
     useGqlToken(useAuth.token),
   );
-  if (pedidoIniciar) NotifySucessCenter('Pedido realizado con éxito');
-  else NotifyError('Error al realizar el pedido');
+  if (pedidoIniciar) {
+    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+    NotifySucessCenter('Pedido realizado con éxito');
+    router.push('/punto/pedidos/listaPedidos');
+    usePedidoStore.listaPedido = [];
+  } else NotifyError('Error al realizar el pedido');
   // console.log(pedidoIniciar);
 };
 
 onMounted(() => {
   // obtenerTodasCategorias();
   obtenerCatalogosProductos();
+  listaPedidos.value = usePedidoStore.listaPedido;
 });
 </script>
 

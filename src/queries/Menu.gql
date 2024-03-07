@@ -1,0 +1,47 @@
+query buscarMenusEntidad(
+  $busqueda: BuscarEntidadDto!
+  $busquedaMenu: BuscarMenuDto!
+) {
+  entidadBuscarMenu(
+    busqueda: $busqueda
+    busquedaMenu: $busquedaMenu
+    opciones: { populate: true }
+  ) {
+    _id
+    catalogo {
+      _id
+      nombre
+    }
+    exepciones {
+      _id
+      nombre
+    }
+  }
+}
+mutation crearMenuEntidad($busqueda: BuscarEntidadDto!, $datos: CrearMenuDto!) {
+  entidadCrearMenu(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: { populate: true }
+  ) {
+    catalogo {
+      _id
+      nombre
+    }
+    exepciones {
+      _id
+      nombre
+    }
+  }
+}
+
+query obtenerTodosCatalogos($busqueda: BuscarCatalogoDto!) {
+  catalogoArbol(busqueda: $busqueda, opciones: { populate: true }) {
+    _id
+    nombre
+    hijas {
+      _id
+      nombre
+    }
+  }
+}

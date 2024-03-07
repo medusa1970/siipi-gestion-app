@@ -1,0 +1,247 @@
+<template>
+  <div>
+    <Navigation label="Productos" icon="list_alt" />
+    <q-btn
+      color="primary"
+      icon="check"
+      label="ver categorias"
+      outline
+      no-caps
+      style="font-size: 14.5px; margin-bottom: 10px"
+      padding="4px 10px"
+      @click="$router.push('productos/categorias')"
+    />
+    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
+      <template #dropdown>
+        <NuxtLink to="productos/detailProduct">
+          <q-btn
+            v-if="$q.platform.is.desktop"
+            icon-right="add"
+            color="green"
+            label="Agregar producto"
+            no-caps
+            style="font-size: 14.5px"
+            padding="4px 10px"
+            @click="modalAgregarProducto()"
+          />
+          <q-btn
+            v-if="$q.platform.is.mobile"
+            color="green"
+            label="Agregar producto"
+            no-caps
+            style="font-size: 14.5px"
+            padding="4px 10px"
+            @click="modalAgregarProducto()"
+          />
+        </NuxtLink>
+      </template>
+      <!-- BADGE -->
+      <template #rows-badge="{ props }">
+        <q-tr :props="props" @dblclick="ControladorFila(props)">
+          <q-td key="nombre" :props="props">
+            {{ props.row.nombre }}
+          </q-td>
+          <q-td key="comentario" :props="props">
+            {{ props.row.comentario }}
+          </q-td>
+          <q-td key="presentacionBasica" :props="props">
+            {{ props.row.presentacionBasica }}
+          </q-td>
+          <q-td key="presentaciones" :props="props">
+            <div class="flex gap-1">
+              <div v-for="(p, index) in props.row.presentaciones" :key="index">
+                <q-badge color="blue" class="capitalize">
+                  {{ p.nombre }}
+                </q-badge>
+              </div>
+            </div>
+          </q-td>
+          <q-td key="categoria" :props="props" class="flex gap-1">
+            {{ props.row.categoria && props.row.categoria.nombre }}
+            <!-- <p
+              class="text-blue-400 underline cursor-pointer"
+              @click="cambiarCategoria(props.row)"
+            >
+              Editar
+            </p> -->
+            <!-- {{ props.row.categoria }} -->
+            <!-- NOMBRE DE CATEGORIA -->
+            <!-- <div class="flex gap-1">
+              <div v-for="(p, index) in props.row.tags" :key="index">
+                <q-badge color="green" class="capitalize">
+                  {{ p }}
+                </q-badge>
+              </div>
+            </div> -->
+          </q-td>
+          <q-td key="actions" :props="props">
+            <NuxtLink to="productos/detailProduct">
+              <q-btn
+                color="primary"
+                icon="edit"
+                round
+                dense
+                flat
+                @click="navegarDetalleProducto(props.row)"
+              />
+            </NuxtLink>
+            <q-btn
+              color="red"
+              icon="delete"
+              round
+              dense
+              flat
+              @click="borrarProducto(props.row)"
+            />
+          </q-td>
+        </q-tr>
+      </template>
+    </Table>
+  </div>
+  <!-- AGREGAR CATEGORIA -->
+  <!-- <Dialog
+    v-model="estado.modal.isAddCategory"
+    title="Categoria"
+    :handle-submit="guardarCategoria"
+  >
+    <template #inputsDialog>
+      <div class="row items-center" style="width: 100%">
+        <q-select
+          v-model="estado.categoriaFija.categoria"
+          :options="estado.categorias.hijas"
+          label="Seleccionar categoria"
+          option-label="nombre"
+          style="width: 100%; flex: 1 0 auto"
+          dense
+          onfocus="this.select()"
+          filled
+        >
+          <template v-slot:append>
+            <q-icon
+              style="margin: 0"
+              name="close"
+              @click.stop.prevent="estado.inputCategoria = ''"
+              class="cursor-pointer q-mr-md"
+            />
+          </template>
+          <template v-slot:prepend>
+            <q-icon name="category" />
+          </template>
+        </q-select>
+        <q-select
+          v-model="estado.categoriaFija.hijas"
+          :options="estado.categoriaFija.categoria.hijas"
+          label="Seleccionar categoria"
+          option-label="nombre"
+          style="width: 100%; flex: 1 0 auto; margin-top: 10px"
+          dense
+          onfocus="this.select()"
+          filled
+        >
+          <template v-slot:append>
+            <q-icon
+              style="margin: 0"
+              name="close"
+              @click.stop.prevent="estado.categoriaFija.hijas = ''"
+              class="cursor-pointer q-mr-md"
+            />
+          </template>
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No hay resultados
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </div>
+    </template>
+  </Dialog> -->
+
+  <!-- DIALOG DOUBLECLICK -->
+  <q-dialog persistent v-model="isDoubleClick">
+    <q-card style="width: 200px" class="px-3 py-1">
+      <div class="flex justify-between items-center">
+        <h1 class="text-md font-bold truncate-7">{{ row.nombre }}</h1>
+        <q-btn icon="close" flat round dense v-close-popup />
+      </div>
+
+      <div class="flex gap-2 mb-3 mt-2 justify-center">
+        <q-btn
+          color="primary"
+          label="Editar"
+          no-caps
+          style="font-size: 14px; width: 70px"
+          padding="4px 10px"
+          @click="navegarDetalleProducto(row)"
+        />
+        <q-btn
+          color="red"
+          label="Eliminar"
+          no-caps
+          style="font-size: 14px; width: 70px"
+          padding="4px 10px"
+          @click="borrarProducto(row)"
+        />
+      </div>
+    </q-card>
+  </q-dialog>
+</template>
+
+<script setup>
+definePageMeta({
+  layout: 'sede',
+});
+import { ref, onMounted } from 'vue';
+import { useProducts } from '@/composables/sede/useProducts';
+import { columnsProductos } from '~/helpers/columns';
+
+const isDoubleClick = ref(false);
+const row = ref('');
+
+const ControladorFila = (props) => {
+  row.value = props.row;
+  isDoubleClick.value = true;
+};
+
+const {
+  estado,
+  tags,
+  getAllProductos,
+  navegarDetalleProducto,
+  modalAgregarProducto,
+  borrarProducto,
+  cambiarCategoria,
+  guardarCategoria,
+} = useProducts();
+
+onMounted(() => {
+  getAllProductos();
+});
+</script>
+
+<style scoped>
+.prove {
+  border: 1px solid red;
+}
+.table-cell-image {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+}
+.cell-image {
+  width: 70px;
+  height: 70px;
+}
+.q-poput-edit {
+  min-width: 400px !important;
+}
+.truncate-7 {
+  display: inline-block;
+  width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+</style>

@@ -1,0 +1,367 @@
+<template>
+  <Navigation label="Hacer pedido" icon="folder" />
+  <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
+  <!-- <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
+  <div class="grid grid-cols-4 h-[70vh]">
+    
+    <div
+      class="col-span-1 max-sm:col-span-4 max-sm:mx-auto"
+      v-if="estado.catalogosOfertas"
+    >
+      <q-list
+        class="rounded-borders w-[350px]"
+        v-for="categoria in estado.catalogosOfertas"
+        :key="categoria.nombre"
+      >
+        <q-expansion-item
+          expand-separator
+          icon="category"
+          :label="`${categoria.nombre} (${categoria.hijas.length})`"
+          default-opened
+          dense
+        >
+          <q-list v-for="(item, index) in categoria.hijas" :key="index">
+            <q-expansion-item
+              :header-inset-level="0.5"
+              switch-toggle-side
+              dense-toggle
+              :label="`${item.nombre} (${item.hijas.length})`"
+              default-opened
+              dense
+            >
+              <q-list v-for="(item2, index) in item.hijas" :key="index">
+                <q-item
+                  clickable
+                  dense
+                  @click="selectCategory(item2)"
+                  :class="item2 == test && 'bg-gray-500 [&>div]:text-white'"
+                >
+                  <q-item-section side>
+                    <h1 class="ml-24">{{ item2.nombre }}</h1>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-expansion-item>
+          </q-list>
+        </q-expansion-item>
+      </q-list>
+    </div>
+
+    <div
+      class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
+    >
+      <h1 class="text-center bg-[#011627] text-white font-bold">PEDIDO</h1>
+      <div v-for="pedido in listaPedidos" :key="pedido">
+        <h1 class="bg-gray-300 text-center my-2">{{ pedido.nombre }}</h1>
+        <span
+          class="flex mt-[6px] items-center"
+          v-for="producto in pedido.productos"
+          :key="producto"
+        >
+          <input
+            v-if="producto.edit"
+            type="number"
+            placeholder="Cantidad"
+            class="test border-[1px] border-gray-400 px-2 py-1 w-[70px] outline-none bg-transparent col-span-1"
+            v-model="producto.cantidad"
+          />
+          <h1 v-if="producto.edit === false" class="w-[60px]">
+            {{ producto.cantidad }}
+          </h1>
+
+          <h1 class="col-span-2 flex-1 ml-2">{{ producto.nombre }}</h1>
+          <span>
+            <q-btn
+              color="primary"
+              icon="edit"
+              flat
+              round
+              dense
+              size="sm"
+              @click="editarCantidad(producto)"
+            />
+            <q-btn
+              color="red"
+              icon="delete"
+              flat
+              round
+              dense
+              size="sm"
+              @click="deleteOfertaInList(producto)"
+            />
+          </span>
+        </span>
+      </div>
+      <q-btn
+        class="bg-red-500 text-white mt-2 mr-2"
+        label="Cancelar"
+        dense
+        no-caps
+        padding="3px 10px"
+      />
+      <q-btn
+        class="bg-[#011627] text-white mt-2"
+        label="Guardar"
+        dense
+        no-caps
+        padding="3px 10px"
+        @click="realizarPedido"
+      />
+    </div>
+  </div> -->
+
+  <TableExpand :rows="estado.ListaOfertasPedido">
+    <template #slot-header1>
+      <!-- <q-btn
+        color="primary"
+        label="Ver Stock"
+        no-caps
+        dense
+        padding="7px 15px"
+        @click="estado.ListaOfertasPedido = []"
+      /> -->
+    </template>
+
+    <template #slot-footer>
+      <h1 class="font-bold uppercase text-center">
+        Selecciona el producto e ingrese la cantidad
+      </h1>
+    </template>
+
+    <template #body-data="{ props }">
+      <div class="col-span-1">
+        <q-list class="shadow-1">
+          <q-expansion-item
+            switch-toggle-side
+            expand-separator
+            group="somegroup"
+            class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+          >
+            <template v-slot:header>
+              <div class="flex items-center justify-center">
+                <!-- uppercase font-bold line-clamp-1 -->
+                <p class="font-bold">
+                  {{ props.row.nombre }}
+                </p>
+              </div>
+              <q-item-section side class="h-[50px]">
+                <!-- <h1>sds</h1> -->
+                <img
+                  v-if="props.row.foto"
+                  :src="props.row.foto"
+                  class="h-full w-full object-cover"
+                  alt=""
+                />
+              </q-item-section>
+            </template>
+            <q-card class="pb-3 flex justify-center col-span-3">
+              <div class="flex flex-col">
+                <span class="flex gap-2 items-center">
+                  <q-btn
+                    padding="4px"
+                    size="9px"
+                    icon="add"
+                    rounded
+                    color="primary"
+                    dense
+                  />
+                  <input
+                    type="number"
+                    placeholder="Cantidad"
+                    class="test border-[1px] border-gray-400 px-2 py-1 w-[90px] outline-none bg-transparent"
+                    @input="handleInputChange2($event, props.row)"
+                  />
+                  <!-- <q-input
+                      v-model.number="text"
+                      type="number"
+                      dense
+                      outlined
+                      label="Cantidad"
+                    /> -->
+                  <q-btn
+                    padding="4px"
+                    size="9px"
+                    icon="remove"
+                    rounded
+                    color="primary"
+                    dense
+                  />
+                </span>
+              </div>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+      </div>
+    </template>
+  </TableExpand>
+
+  <!-- MODAL -->
+  <q-dialog v-model="estado.modal.isAddOferta" persistent>
+    <q-card class="w-[370px]">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-lg font-semibold">Agregar productoss</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <h1 class="bg-gray-300 text-center my-2">{{ test.nombre }}</h1>
+        <div
+          class="flex items-center gap-1 mb-[6px]"
+          v-for="producto in test.ofertas"
+          :key="producto._id"
+        >
+          <input
+            type="number"
+            placeholder="Cantidade"
+            class="test border-[1px] border-gray-400 px-2 py-1 w-[95px] outline-none bg-transparent"
+            @input="handleInputChange($event, producto)"
+          />
+          <h1 class="font-bold">{{ producto.nombre }}</h1>
+          <!-- <q-btn icon="add" round dense color="green" size="sm" /> -->
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+</template>
+<script setup>
+import { useProducts } from '@/composables/sede/useProducts';
+import { usePedido } from '@/composables/punto/usePedido';
+import { ref } from 'vue';
+import { pedidoService } from '~/services/punto/pedido.service';
+import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
+import { pedidoStore } from '@/stores/pedido.store';
+import { useRouter } from 'vue-router';
+definePageMeta({
+  layout: 'punto',
+});
+
+const { estado, obtenerCatalogosProductos, useAuth, obtenerListaOfertas } =
+  usePedido();
+const usePedidoStore = pedidoStore();
+const router = useRouter();
+// const { estado, obtenerTodasCategorias } = useProducts();
+const test = ref(null);
+const listaPedidos = ref([]);
+const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categoría
+
+// const selectCategory = (category) => {
+//   // console.log(category);
+//   test.value = category;
+//   estado.modal.isAddOferta = true;
+// };
+const handleInputChange2 = (event, product) => {
+  const nuevoValor = event.target.value;
+
+  const producto = {
+    id: product._id,
+    nombre: product.nombre,
+    cantidad: nuevoValor,
+    // edit: false,
+  };
+  // Buscar si el producto ya existe en listaPedidos
+  const index = usePedidoStore.listaPedido.findIndex(
+    (item) => item.id === producto.id,
+  );
+
+  if (index > -1) {
+    // Si el producto existe, actualizar su cantidad
+    usePedidoStore.listaPedido[index].cantidad = nuevoValor;
+  } else {
+    // Si el producto no existe, añadirlo al array
+    usePedidoStore.listaPedido.push(producto);
+  }
+
+  console.log(usePedidoStore.listaPedido);
+};
+const handleInputChange = (event, product) => {
+  // console.log(product);
+  const categoriaActual = test.value?.nombre; // Obtén el nombre de la categoría actual
+
+  const nuevoValor = event.target.value;
+
+  const producto = {
+    id: product._id,
+    nombre: product.nombre,
+    cantidad: nuevoValor,
+    edit: false,
+  };
+
+  // Busca la categoría actual en el pedido
+  const categoriaEnPedido = listaPedidos.value.find(
+    (categoria) => categoria.nombre === categoriaActual,
+  );
+
+  if (categoriaEnPedido) {
+    // La categoría ya existe en el pedido, busca el producto en la categoría
+    const indiceProducto = categoriaEnPedido.productos.findIndex(
+      (item) => item.nombre === producto.nombre,
+    );
+
+    if (indiceProducto !== -1)
+      categoriaEnPedido.productos[indiceProducto].cantidad = nuevoValor;
+    else categoriaEnPedido.productos.push(producto);
+  }
+  // La categoría no existe en el pedido, agrégala con el producto
+  else {
+    listaPedidos.value.push({
+      nombre: categoriaActual,
+      productos: [producto],
+    });
+    // usePedidoStore.listaPedido.push({
+    //   nombre: categoriaActual,
+    //   productos: [producto],
+    // });
+  }
+};
+
+// const editarCantidad = (producto) => {
+//   // console.log(producto);
+//   estado.isEditCantidad = !estado.isEditCantidad;
+//   producto.edit = !producto.edit;
+// };
+const deleteOfertaInList = (producto) => {
+  // console.log(producto);
+  // console.log(listaPedidos.value);
+  listaPedidos.value.forEach((categoria) => {
+    const indiceProducto = categoria.productos.findIndex(
+      (item) => item.nombre === producto.nombre,
+    );
+    if (indiceProducto !== -1) categoria.productos.splice(indiceProducto, 1);
+  });
+};
+
+const realizarPedido = async () => {
+  //solo quiero sacar el productonombre y su cantidad
+  const items = usePedidoStore.listaPedido.flatMap((categoria) => {
+    return categoria.productos.map((producto) => {
+      return {
+        oferta: producto.id,
+        cantidad: parseInt(producto.cantidad),
+      };
+    });
+  });
+  // console.log(items)
+  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+    useAuth.negocioElegido._id,
+    '65a5a9af08c1a906d83522d0',
+    items,
+    useGqlToken(useAuth.token),
+  );
+  if (pedidoIniciar) {
+    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+    NotifySucessCenter('Pedido realizado con éxito');
+    router.push('/punto/pedidos/listaPedidos');
+    usePedidoStore.listaPedido = [];
+  } else NotifyError('Error al realizar el pedido');
+  // console.log(pedidoIniciar);
+};
+
+onMounted(() => {
+  // obtenerTodasCategorias();
+  // obtenerCatalogosProductos();
+  obtenerListaOfertas();
+  // listaPedidos.value = usePedidoStore.listaPedido;
+});
+</script>
+
+<style scoped></style>

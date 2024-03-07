@@ -1,0 +1,154 @@
+[
+  {
+    "foto": "url",
+    "producto": { "id": "1", "nombre": "vasos de plástico" },
+    "presentaciones": [
+      {
+        "cantidad": "100",
+        "nombre": "bolsa"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "12/12/2024",
+        "cantidad": "10"
+      },
+      {
+        "fecha": "12/12/2019",
+        "cantidad": "20"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "10"
+  },
+  {
+    "foto": "url",
+    "producto": { "id": "2", "nombre": "platos desechables" },
+    "presentaciones": [
+      {
+        "cantidad": "50",
+        "nombre": "bolsa"
+      },
+      {
+        "cantidad": "100",
+        "nombre": "paquete"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "15/01/2024",
+        "cantidad": "15"
+      },
+      {
+        "fecha": "20/05/2024",
+        "cantidad": "25"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "5"
+  },
+  {
+    "foto": "url",
+    "producto": { "id": "3", "nombre": "servilletas de papel" },
+    "presentaciones": [
+      {
+        "cantidad": "200",
+        "nombre": "paquete"
+      },
+      {
+        "cantidad": "500",
+        "nombre": "paquete"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "10/11/2024",
+        "cantidad": "30"
+      },
+      {
+        "fecha": "05/08/2024",
+        "cantidad": "40"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "15"
+  },
+  {
+    "foto": "url",
+    "producto": { "id": "4", "nombre": "cucharas de plástico" },
+    "presentaciones": [
+      {
+        "cantidad": "50",
+        "nombre": "bolsa"
+      },
+      {
+        "cantidad": "100",
+        "nombre": "paquete"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "18/09/2024",
+        "cantidad": "12"
+      },
+      {
+        "fecha": "23/01/2024",
+        "cantidad": "18"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "8"
+  },
+  {
+    "foto": "url",
+    "producto": { "id": "5", "nombre": "tazas de papel" },
+    "presentaciones": [
+      {
+        "cantidad": "50",
+        "nombre": "bolsa"
+      },
+      {
+        "cantidad": "150",
+        "nombre": "paquete"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "03/04/2023",
+        "cantidad": "25"
+      },
+      {
+        "fecha": "08/12/2021",
+        "cantidad": "35"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "12"
+  },
+  {
+    "foto": "url",
+    "producto": { "id": "6", "nombre": "platos de papel" },
+    "presentaciones": [
+      {
+        "cantidad": "75",
+        "nombre": "bolsa"
+      },
+      {
+        "cantidad": "120",
+        "nombre": "paquete"
+      }
+    ],
+    "lotes": [
+      {
+        "fecha": "24/01/2024",
+        "cantidad": "20"
+      },
+      {
+        "fecha": "15/03/2024",
+        "cantidad": "30"
+      }
+    ],
+    "cantidad": "",
+    "cantidadMinima": "10"
+  }
+]

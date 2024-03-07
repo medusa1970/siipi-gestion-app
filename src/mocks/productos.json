@@ -1,0 +1,122 @@
+[
+  {
+    "nombre": "Manzana",
+    "precio": 1.2,
+    "cantidad": 100,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Banana",
+    "precio": 0.5,
+    "cantidad": 200,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Naranja",
+    "precio": 1.5,
+    "cantidad": 150,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Uvas",
+    "precio": 2.0,
+    "cantidad": 50,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Manzana",
+    "precio": 1.2,
+    "cantidad": 100,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Banana",
+    "precio": 0.5,
+    "cantidad": 200,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Naranja",
+    "precio": 1.5,
+    "cantidad": 150,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Uvas",
+    "precio": 2.0,
+    "cantidad": 50,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Manzana",
+    "precio": 1.2,
+    "cantidad": 100,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Banana",
+    "precio": 0.5,
+    "cantidad": 200,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Naranja",
+    "precio": 1.5,
+    "cantidad": 150,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Uvas",
+    "precio": 2.0,
+    "cantidad": 50,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Manzana",
+    "precio": 1.2,
+    "cantidad": 100,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Banana",
+    "precio": 0.5,
+    "cantidad": 200,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Naranja",
+    "precio": 1.5,
+    "cantidad": 150,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Uvas",
+    "precio": 2.0,
+    "cantidad": 50,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Manzana",
+    "precio": 1.2,
+    "cantidad": 100,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Banana",
+    "precio": 0.5,
+    "cantidad": 200,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Naranja",
+    "precio": 1.5,
+    "cantidad": 150,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  },
+  {
+    "nombre": "Uvas",
+    "precio": 2.0,
+    "cantidad": 50,
+    "imagen": "https://frutabona.com/wp/wp-content/uploads/2019/08/8-frutilla.jpg"
+  }
+]

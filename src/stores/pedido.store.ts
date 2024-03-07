@@ -10,7 +10,7 @@ interface Lista {
   productos: Producto[];
 }
 interface PedidoState {
-  listaPedido: Lista[];
+  listaPedido: Producto[];
 }
 
 export const pedidoStore = defineStore('pedido', {

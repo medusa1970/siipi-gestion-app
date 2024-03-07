@@ -3,7 +3,12 @@
   <!-- <code>{{ estado.pedidosEntidad }}</code> -->
   <div>
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
-      <q-tab name="proveedor" icon="bi-cart4" label="Pedidos Proveedor" />
+      <q-tab
+        name="proveedor"
+        icon="bi-cart4"
+        label="Pedidos Proveedor"
+        @click="buscarPedidos"
+      />
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />
     </q-tabs>
@@ -16,7 +21,44 @@
     >
       <!-- VER PEDIDOS PROVEEDOR -->
       <q-tab-panel name="proveedor" class="flex justify-center items-center">
-        <Item title="pedido proveedor 1" class="w-[400px] max-sm:w-full">
+        <div class="flex flex-col gap-2 justify-center items-center">
+          <h1 v-if="estado.pedidosEntidad.length === 0">No hay pedido😯...</h1>
+          <Item
+            v-for="punto in estado.pedidosEntidad"
+            :key="punto._id"
+            :href="`listaPedidos/${punto._id}`"
+            :title="punto._id"
+            class="w-[400px] max-sm:w-full"
+            :title2="formatearFecha(punto.estado[0].fecha)"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1>
+                <q-btn
+                  dense
+                  round
+                  icon="edit"
+                  flat
+                  color="blue"
+                  padding="4px"
+                  size="12px"
+                />
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                />
+              </div>
+            </template>
+          </Item>
+        </div>
+        <!-- <Item title="pedido proveedor 1" class="w-[400px] max-sm:w-full">
           <template v-slot:actions>
             <div class="flex">
               <q-btn
@@ -48,13 +90,15 @@
               />
             </div>
           </template>
-        </Item>
+        </Item> -->
       </q-tab-panel>
       <!-- VER PEDIDOS PUNTOS -->
       <q-tab-panel name="puntos">
         <div class="flex flex-col gap-2 justify-center items-center">
           <h1 class="font-bold">Pedidos por Aceptar:</h1>
-
+          <h1 v-if="estado.pedidosSinAceptar.length === 0">
+            No hay pedidos😯...
+          </h1>
           <Item
             v-for="punto in estado.pedidosSinAceptar"
             :key="punto._id"
@@ -109,7 +153,9 @@
             </template>
           </Item>
           <h1 class="font-bold">Pedidos Aceptados:</h1>
-
+          <h1 v-if="estado.pedidosAceptados.length === 0">
+            No hay pedidos😯...
+          </h1>
           <Item
             v-for="punto in estado.pedidosAceptados"
             :key="punto._id"
@@ -187,8 +233,13 @@ import { ref, onMounted } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
 import { usePedido } from '@/composables/punto/usePedido';
 
-const { buscarPedidos2, estado, formatearFecha, aceptarTodoPedido } =
-  usePedido();
+const {
+  buscarPedidos2,
+  estado,
+  formatearFecha,
+  aceptarTodoPedido,
+  buscarPedidos,
+} = usePedido();
 
 const tab = ref('puntos');
 const date = ref('2020/07/08');

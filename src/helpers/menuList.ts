@@ -127,8 +127,8 @@ export const menuListCathering = [
     label: 'Pedidos',
     subMenu: [
       {
-        label: 'Realizar pedido',
-        to: '/cathering/pedidos/realizarPedido',
+        label: 'Recibir pedido',
+        to: '/cathering/pedidos/recibirPedido',
       },
       {
         label: 'ver pedidos',

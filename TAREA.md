@@ -1,3 +1,24 @@
+# LISTA DE ESPECIFICACION DE WIREFRAME
+
+- Modificacion de tabla (COMPONENTE)✅
+  - cada linea tiene menos informacion y desliza hacia abajo para mostrar la informacion completa✅
+  - ya no filas sino bloques.(nombre, imagen, agotamiento)✅
+- STOCK, poder hacer pedido e inventario en un template. ✅
+- SIDEBAR en la parte derecha para rendirazar, carrito.✅
+- Buscar por arbol de categorios, buscar por tags.
+- Tabla, renderiza agotado, alerta, vencido. BUSQUEDA string. ✅
+- Tabla seleccion multiple
+- Tabla COMPONENTE para inventariar y al desglozar que muestre el formulario
+- PEDIDO un template hacer pedido Tabla con la lsita de productos y un input para poner cantidad +-
+  y alado el detalle del pedido.
+- hay wireframes diferentes segun el estado que este (confirmado, aceptado, recibido)
+- numero de pedido.
+- precio total pedido.
+- Realizar pedido, seleccionar vendedor (LISTA)
+- Alerta de cambio de la seleccion del vendedor.
+- CATHERING, seleccionar todos los pedidos, tambien individual, grupo productos.
+- Input del chofer para recibir un pedido.
+
 # META 4
 
 al aceptar items de un pedido, el pedido general pasa a un estado aceptado, al aceptar todo, acepta todos los items.

@@ -1,8 +1,9 @@
 <template>
-  <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
-  <!-- <code>{{ estado.catalogosOfertas }}</code> -->
+  <Navigation label="Hacer pedido" icon="folder" />
+  <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
+  <!-- <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
   <div class="grid grid-cols-4 h-[70vh]">
-    <!-- 1 -->
+    
     <div
       class="col-span-1 max-sm:col-span-4 max-sm:mx-auto"
       v-if="estado.catalogosOfertas"
@@ -46,34 +47,6 @@
       </q-list>
     </div>
 
-    <!-- 2 -->
-    <!-- <div class="col-span-2 p-2">
-      <h1 class="text-center font-bold bg-gray-300 text-md uppercase">
-        {{
-          test
-            ? `${test.nombre} (${test.productos.length})`
-            : 'Seleccione una categoria'
-        }}
-      </h1>
-      <div class="grid grid-cols-2 mt-3 gap-2" v-if="test">
-        <h1 v-if="test.productos.length === 0">No hay productos...</h1>
-        <div
-          class="flex items-center gap-1"
-          v-for="producto in test.productos"
-          :key="producto._id"
-        >
-          <input
-            type="number"
-            placeholder="Cantidad"
-            class="test border-[1px] border-gray-400 px-2 py-1 w-[88px] outline-none bg-transparent"
-            @input="handleInputChange($event, producto)"
-          />
-          <h1 class="font-bold">{{ producto.nombre }}</h1>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- 3 -->
     <div
       class="col-span-3 p-2 w-[480px] mx-auto max-sm:w-full max-sm:col-span-4"
     >
@@ -135,13 +108,98 @@
         @click="realizarPedido"
       />
     </div>
-  </div>
+  </div> -->
+
+  <TableExpand :rows="estado.ListaOfertasPedido">
+    <template #slot-header1>
+      <!-- <q-btn
+        color="primary"
+        label="Ver Stock"
+        no-caps
+        dense
+        padding="7px 15px"
+        @click="estado.ListaOfertasPedido = []"
+      /> -->
+    </template>
+
+    <template #slot-footer>
+      <h1 class="font-bold uppercase text-center">
+        Selecciona el producto e ingrese la cantidad
+      </h1>
+    </template>
+
+    <template #body-data="{ props }">
+      <div class="col-span-1">
+        <q-list class="shadow-1">
+          <q-expansion-item
+            switch-toggle-side
+            expand-separator
+            group="somegroup"
+            class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+          >
+            <template v-slot:header>
+              <div class="flex items-center justify-center">
+                <!-- uppercase font-bold line-clamp-1 -->
+                <p class="font-bold">
+                  {{ props.row.nombre }}
+                </p>
+              </div>
+              <q-item-section side class="h-[50px]">
+                <!-- <h1>sds</h1> -->
+                <img
+                  v-if="props.row.foto"
+                  :src="props.row.foto"
+                  class="h-full w-full object-cover"
+                  alt=""
+                />
+              </q-item-section>
+            </template>
+            <q-card class="pb-3 flex justify-center col-span-3">
+              <div class="flex flex-col">
+                <span class="flex gap-2 items-center">
+                  <q-btn
+                    padding="4px"
+                    size="9px"
+                    icon="add"
+                    rounded
+                    color="primary"
+                    dense
+                  />
+                  <input
+                    type="number"
+                    placeholder="Cantidad"
+                    class="test border-[1px] border-gray-400 px-2 py-1 w-[90px] outline-none bg-transparent"
+                    @input="handleInputChange2($event, props.row)"
+                  />
+                  <!-- <q-input
+                      v-model.number="text"
+                      type="number"
+                      dense
+                      outlined
+                      label="Cantidad"
+                    /> -->
+                  <q-btn
+                    padding="4px"
+                    size="9px"
+                    icon="remove"
+                    rounded
+                    color="primary"
+                    dense
+                  />
+                </span>
+              </div>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+      </div>
+    </template>
+  </TableExpand>
 
   <!-- MODAL -->
   <q-dialog v-model="estado.modal.isAddOferta" persistent>
     <q-card class="w-[370px]">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-lg font-semibold">Agregar productos</div>
+        <div class="text-lg font-semibold">Agregar productoss</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -154,8 +212,8 @@
         >
           <input
             type="number"
-            placeholder="Cantidad"
-            class="test border-[1px] border-gray-400 px-2 py-1 w-[88px] outline-none bg-transparent"
+            placeholder="Cantidade"
+            class="test border-[1px] border-gray-400 px-2 py-1 w-[95px] outline-none bg-transparent"
             @input="handleInputChange($event, producto)"
           />
           <h1 class="font-bold">{{ producto.nombre }}</h1>
@@ -177,7 +235,8 @@ definePageMeta({
   layout: 'punto',
 });
 
-const { estado, obtenerCatalogosProductos, useAuth } = usePedido();
+const { estado, obtenerCatalogosProductos, useAuth, obtenerListaOfertas } =
+  usePedido();
 const usePedidoStore = pedidoStore();
 const router = useRouter();
 // const { estado, obtenerTodasCategorias } = useProducts();
@@ -185,10 +244,34 @@ const test = ref(null);
 const listaPedidos = ref([]);
 const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categoría
 
-const selectCategory = (category) => {
-  // console.log(category);
-  test.value = category;
-  estado.modal.isAddOferta = true;
+// const selectCategory = (category) => {
+//   // console.log(category);
+//   test.value = category;
+//   estado.modal.isAddOferta = true;
+// };
+const handleInputChange2 = (event, product) => {
+  const nuevoValor = event.target.value;
+
+  const producto = {
+    id: product._id,
+    nombre: product.nombre,
+    cantidad: nuevoValor,
+    // edit: false,
+  };
+  // Buscar si el producto ya existe en listaPedidos
+  const index = usePedidoStore.listaPedido.findIndex(
+    (item) => item.id === producto.id,
+  );
+
+  if (index > -1) {
+    // Si el producto existe, actualizar su cantidad
+    usePedidoStore.listaPedido[index].cantidad = nuevoValor;
+  } else {
+    // Si el producto no existe, añadirlo al array
+    usePedidoStore.listaPedido.push(producto);
+  }
+
+  console.log(usePedidoStore.listaPedido);
 };
 const handleInputChange = (event, product) => {
   // console.log(product);
@@ -229,15 +312,13 @@ const handleInputChange = (event, product) => {
     //   productos: [producto],
     // });
   }
-  // ---------------------------------------------------------------------------------------------------------
-  // console.log(listaPedidos.value);
 };
 
-const editarCantidad = (producto) => {
-  // console.log(producto);
-  estado.isEditCantidad = !estado.isEditCantidad;
-  producto.edit = !producto.edit;
-};
+// const editarCantidad = (producto) => {
+//   // console.log(producto);
+//   estado.isEditCantidad = !estado.isEditCantidad;
+//   producto.edit = !producto.edit;
+// };
 const deleteOfertaInList = (producto) => {
   // console.log(producto);
   // console.log(listaPedidos.value);
@@ -251,7 +332,7 @@ const deleteOfertaInList = (producto) => {
 
 const realizarPedido = async () => {
   //solo quiero sacar el productonombre y su cantidad
-  const items = listaPedidos.value.flatMap((categoria) => {
+  const items = usePedidoStore.listaPedido.flatMap((categoria) => {
     return categoria.productos.map((producto) => {
       return {
         oferta: producto.id,
@@ -259,6 +340,7 @@ const realizarPedido = async () => {
       };
     });
   });
+  // console.log(items)
   const { pedidoIniciar } = await pedidoService.pedidoIniciar(
     useAuth.negocioElegido._id,
     '65a5a9af08c1a906d83522d0',
@@ -276,8 +358,9 @@ const realizarPedido = async () => {
 
 onMounted(() => {
   // obtenerTodasCategorias();
-  obtenerCatalogosProductos();
-  listaPedidos.value = usePedidoStore.listaPedido;
+  // obtenerCatalogosProductos();
+  obtenerListaOfertas();
+  // listaPedidos.value = usePedidoStore.listaPedido;
 });
 </script>
 

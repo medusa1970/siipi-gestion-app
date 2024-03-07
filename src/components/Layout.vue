@@ -1,5 +1,7 @@
 <template>
-  <q-layout v-if="$q.platform.is.desktop" view="lHh lpR lFf">
+  <!-- view="lHr lpR lFr" -->
+  <!-- lHh lpR lFf -->
+  <q-layout v-if="$q.platform.is.desktop" view="lHr lpR lFr ">
     <q-header elevated class="text-white colorBackground" style="">
       <q-toolbar class="h-[6vh]">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -76,9 +78,6 @@
                           negocio.nombre
                         }}</q-item-section>
                       </q-item>
-                      <!-- <q-item clickable @click="marca">
-                    <q-item-section> Negocio 2 </q-item-section>
-                  </q-item> -->
                     </q-list>
                   </q-expansion-item>
                   <q-item clickable @click="logout">
@@ -89,6 +88,17 @@
                   </q-item>
                 </q-list>
               </q-menu>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="shopping_cart"
+              @click="toggleRightDrawer"
+            >
+              <q-badge class="rounded-full" rounded color="orange" floating>{{
+                storePedido.listaPedido.length
+              }}</q-badge>
             </q-btn>
           </nav>
         </q-toolbar-title>
@@ -175,6 +185,59 @@
             <!-- <q-separator /> -->
           </q-list>
           <!-- <DrawerMenuAdm :menu-list="menuList" /> -->
+        </div>
+      </q-list>
+    </q-drawer>
+    <q-drawer
+      v-model="rightDrawerOpen"
+      side="right"
+      class="colorBackground"
+      style=""
+    >
+      <!-- drawer content -->
+      <q-list>
+        <!-- SIDEBAR -->
+        <div class="text-white py-4 flex flex-col gap-4">
+          <h1 class="text-center font-extrabold">SIDE_BAR</h1>
+
+          <q-list class="shadow-1 border-2 border-orange-400">
+            <q-expansion-item
+              switch-toggle-side
+              expand-separator
+              default-opened
+              class="[&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+            >
+              <template v-slot:header>
+                <div class="flex items-center">
+                  <!-- uppercase font-bold line-clamp-1 -->
+                  <p class="font-semibold">
+                    Pedido productos ({{ storePedido.listaPedido.length }})
+                  </p>
+                </div>
+              </template>
+              <div class="p-2">
+                <div
+                  class="grid grid-cols-[70px_1fr] gap-2 mb-2"
+                  v-for="producto in storePedido.listaPedido"
+                  :key="producto.id"
+                >
+                  <div>
+                    <input
+                      type="number"
+                      class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
+                      v-model.number="producto.cantidad"
+                    />
+                  </div>
+                  <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
+                  <h1>{{ producto.nombre }}</h1>
+                </div>
+
+                <span class="flex gap-2 justify-center">
+                  <slot name="actionPedido" />
+                </span>
+              </div>
+            </q-expansion-item>
+          </q-list>
         </div>
       </q-list>
     </q-drawer>
@@ -353,6 +416,9 @@
         </div>
       </q-list>
     </q-drawer>
+    <!-- <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+      
+    </q-drawer> -->
 
     <q-page-container>
       <div class="layoutContainer">
@@ -451,19 +517,24 @@ import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
+import { pedidoStore } from '@/stores/pedido.store';
+import { pedidoService } from '~/services/punto/pedido.service';
 import {
   ApiError,
   showLoading,
   hideLoading,
   NotifySucess,
+  NotifySucessCenter,
 } from '~/helpers/message.service';
 import { authService } from '~/services/auth.service';
 
 // storeAuth
 const storeAuth = authStore();
+const storePedido = pedidoStore();
 const router = useRouter();
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
+const rightDrawerOpen = ref(false);
 const isEditProfile = ref(false);
 const persona = ref({
   nombre: '',
@@ -481,6 +552,10 @@ const contrasena = ref('');
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+function toggleRightDrawer() {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
+}
+
 const logout = () => {
   LocalStorage.remove('token');
   storeAuth.user.nombre = '';
@@ -630,6 +705,26 @@ const getPersona = async () => {
   }
 };
 
+const realizarPedido = async () => {
+  const items = storePedido.listaPedido.map((p) => ({
+    oferta: p.id,
+    cantidad: parseInt(p.cantidad),
+  }));
+  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+    storeAuth.negocioElegido._id,
+    '65a5a9af08c1a906d83522d0',
+    items,
+    useGqlToken(storeAuth.token),
+  );
+  if (pedidoIniciar) {
+    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+    NotifySucessCenter('Pedido realizado con éxito');
+    router.push('/punto/pedidos/listaPedidos');
+    storePedido.listaPedido = [];
+  } else NotifyError('Error al realizar el pedido');
+  // console.log(pedidoIniciar);
+};
+
 //WATCH
 watch(imagen, () => {
   if (imagen.value instanceof Blob) {
@@ -663,4 +758,8 @@ watch(imagen, () => {
   padding: 0.5rem;
   // background-color: #071c2f;
 }
+
+// .q-drawer.q-drawer--right {
+//   width: 340px !important;
+// }
 </style>

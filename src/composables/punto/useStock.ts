@@ -6,6 +6,8 @@ import { productStore } from '@/stores/producto.store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { stockService } from '~/services/punto/stock.service';
+import { ofertaService } from '~/services/marca/ofertas.service';
+import { menuService } from '~/services/punto/menu.service';
 
 type ProductoEnAlerta = {
   foto: string;
@@ -66,6 +68,8 @@ export const useStock = () => {
         // Si no existe, agregarlo
         if (!productoExistente) {
           estado.productosEnAlerta.push({
+            //@ts-ignore
+            nombreProducto: stock.producto.nombre,
             foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
             producto: stock.producto,
             presentaciones: stock.producto.presentaciones,
@@ -88,6 +92,7 @@ export const useStock = () => {
       }
 
       return {
+        nombreProducto: stock.producto.nombre,
         foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
         producto: stock.producto,
         presentaciones: stock.producto.presentaciones,
@@ -174,14 +179,7 @@ export const useStock = () => {
       NotifyError('Ya se encuentra en la lista de  inventario');
     }
   };
-  // console.log(estado.stocks);
-  function prueba() {
-    // console.log('prueba');
-    // console.log(estado.stocks);
-  }
-  // onMounted(() => {
-  //   obtenerTodoStock();
-  // });
+
   return {
     estado,
     formatearFecha,
@@ -189,6 +187,5 @@ export const useStock = () => {
     guardarCantidad,
     agregarListaInventario,
     obtenerTodoStock,
-    prueba,
   };
 };

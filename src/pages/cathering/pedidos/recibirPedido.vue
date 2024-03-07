@@ -1,19 +1,8 @@
 <template>
   <Navigation label="Realizar pedido" icon="group" />
-  <h1 class="font-bold text-lg text-center mb-2">Realizar pedido</h1>
+  <h1 class="font-bold text-lg text-center mb-2">Recibir pedido</h1>
 
   <TableExpand :rows="estado.ListaOfertasPedido">
-    <template #slot-header1>
-      <!-- <q-btn
-      color="primary"
-      label="Ver Stock"
-      no-caps
-      dense
-      padding="7px 15px"
-      @click="estado.ListaOfertasPedido = []"
-    /> -->
-    </template>
-
     <template #slot-footer>
       <h1 class="font-bold uppercase text-center">
         Selecciona el producto e ingrese la cantidad
@@ -114,69 +103,20 @@ const handleInputChange2 = (event, product) => {
     id: product._id,
     nombre: product.nombre,
     cantidad: nuevoValor,
-    // edit: false,
   };
-  // Buscar si el producto ya existe en listaPedidos
   const index = usePedidoStore.listaPedido.findIndex(
     (item) => item.id === producto.id,
   );
 
   if (index > -1) {
-    // Si el producto existe, actualizar su cantidad
     usePedidoStore.listaPedido[index].cantidad = nuevoValor;
   } else {
-    // Si el producto no existe, añadirlo al array
     usePedidoStore.listaPedido.push(producto);
   }
 
   console.log(usePedidoStore.listaPedido);
 };
-const handleInputChange = (event, product) => {
-  // console.log(product);
-  const categoriaActual = test.value?.nombre; // Obtén el nombre de la categoría actual
 
-  const nuevoValor = event.target.value;
-
-  const producto = {
-    id: product._id,
-    nombre: product.nombre,
-    cantidad: nuevoValor,
-    edit: false,
-  };
-
-  // Busca la categoría actual en el pedido
-  const categoriaEnPedido = listaPedidos.value.find(
-    (categoria) => categoria.nombre === categoriaActual,
-  );
-
-  if (categoriaEnPedido) {
-    // La categoría ya existe en el pedido, busca el producto en la categoría
-    const indiceProducto = categoriaEnPedido.productos.findIndex(
-      (item) => item.nombre === producto.nombre,
-    );
-
-    if (indiceProducto !== -1)
-      categoriaEnPedido.productos[indiceProducto].cantidad = nuevoValor;
-    else categoriaEnPedido.productos.push(producto);
-  }
-  // La categoría no existe en el pedido, agrégala con el producto
-  else {
-    listaPedidos.value.push({
-      nombre: categoriaActual,
-      productos: [producto],
-    });
-    // usePedidoStore.listaPedido.push({
-    //   nombre: categoriaActual,
-    //   productos: [producto],
-    // });
-  }
-};
-
-// const editarCantidad = (producto) => {
-//   // console.log(producto);
-//   estado.isEditCantidad = !estado.isEditCantidad;
-//   producto.edit = !producto.edit;
-// };
 const deleteOfertaInList = (producto) => {
   // console.log(producto);
   // console.log(listaPedidos.value);
@@ -207,18 +147,17 @@ const realizarPedido = async () => {
   );
   if (pedidoIniciar) {
     await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido realizado con éxito');
-    router.push('/punto/pedidos/listaPedidos');
+    await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+    await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+    await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+    NotifySucessCenter('Pedido recibido con éxito');
+    router.push('/cathering/pedidos/listaPedidos');
     usePedidoStore.listaPedido = [];
   } else NotifyError('Error al realizar el pedido');
-  // console.log(pedidoIniciar);
 };
 
 onMounted(() => {
-  // obtenerTodasCategorias();
-  // obtenerCatalogosProductos();
   obtenerListaOfertas();
-  // listaPedidos.value = usePedidoStore.listaPedido;
 });
 </script>
 

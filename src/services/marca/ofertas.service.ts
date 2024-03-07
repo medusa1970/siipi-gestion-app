@@ -43,4 +43,6 @@ export const ofertaService = {
         datos: { nombre, pariente: catalogoID, ofertas: [] },
       }),
     ),
+  catalogoRecursivo: async (catalogoID: string) =>
+    postData(GqlCatalogoOfertasRecursivo({ busqueda: { _id: catalogoID } })),
 };

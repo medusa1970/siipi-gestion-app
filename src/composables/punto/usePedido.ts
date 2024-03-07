@@ -13,6 +13,8 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
+import { menuService } from '~/services/punto/menu.service';
+import { ofertaService } from '~/services/marca/ofertas.service';
 /**
  * LOGICA
  */
@@ -38,6 +40,7 @@ export const usePedido = () => {
       cantidad: 0,
       comentario: '',
     },
+    ListaOfertasPedido: [] as any[],
   });
 
   const obtenerCatalogosProductos = async () => {
@@ -71,7 +74,9 @@ export const usePedido = () => {
       useAuth.negocioElegido._id,
       undefined,
       useGqlToken(useAuth.token),
-    ); //@ts-ignore
+    );
+    console.log('first', pedidoBuscar);
+    //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
       pedidoBuscar.map((pedido) =>
         pedidoService
@@ -80,6 +85,7 @@ export const usePedido = () => {
       ),
     );
     hideLoading();
+    console.log(estado.pedidosEntidad);
     //@ts-ignore
     estado.pedidosAceptados = estado.pedidosEntidad.filter(
       (
@@ -161,6 +167,17 @@ export const usePedido = () => {
     } else NotifyError('Error al recibir pedido');
   };
 
+  const obtenerListaOfertas = async () => {
+    const { entidadBuscarMenu } = await menuService.listarMenus(
+      useAuth.negocioElegido._id,
+    );
+    const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
+      entidadBuscarMenu[0].catalogo._id,
+    );
+    estado.ListaOfertasPedido = catalogoOfertasRecursivo;
+    // ofertaService.catalogoRecursivo()
+  };
+
   return {
     useAuth,
     estado,
@@ -173,5 +190,6 @@ export const usePedido = () => {
     ajustarItem,
     ajustarItemGuardar,
     recibirPedido,
+    obtenerListaOfertas,
   };
 };

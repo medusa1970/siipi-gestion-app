@@ -262,3 +262,13 @@ query puntoLeerCatalogo(
     }
   }
 }
+
+# CATALOGO RECURSIVO
+query catalogoOfertasRecursivo($busqueda: BuscarCatalogoDto!) {
+  catalogoOfertasRecursivo(busqueda: $busqueda, opciones: { populate: true }) {
+    _id
+    nombre
+    precio
+    grupos
+  }
+}

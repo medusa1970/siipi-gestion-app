@@ -108,11 +108,10 @@ export const useInventary = () => {
       /**LOGICA */
       showLoading();
       inventarioService
-        .realizarInventario(
+        .realizarInventarioFalse(
           useAuth.negocioElegido._id, //@ts-ignore
           estado.productoElegido.id,
           estado.inventario.lotes,
-          false,
         )
         .then((res) => {
           if (
@@ -153,11 +152,10 @@ export const useInventary = () => {
             }
           } else {
             inventarioService
-              .realizarInventario(
+              .realizarInventarioTrue(
                 useAuth.negocioElegido._id, //@ts-ignore
                 estado.productoElegido.id,
                 estado.inventario.lotes,
-                true,
               )
               .then((res) => {
                 NotifySucess('Inventario guardado');
@@ -214,12 +212,10 @@ export const useInventary = () => {
   };
 
   onMounted(() => {
-    existInventary();
+    // existInventary();
     // Obtener la longitud de lotes del primer producto
-
     // const firstProductLotesLength = //@ts-ignore
     //   useProduct.ListInventario[0]?.lotes?.length || 0;
-
     // // Inicializar table.value con la longitud correspondiente
     // estado.inventario.lotes = Array.from(
     //   { length: firstProductLotesLength },

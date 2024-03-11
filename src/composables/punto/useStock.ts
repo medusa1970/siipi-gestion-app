@@ -45,6 +45,7 @@ export const useStock = () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
     );
+
     // console.log(entidadBuscar);
     estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(

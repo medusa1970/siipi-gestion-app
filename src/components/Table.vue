@@ -13,6 +13,7 @@
     <template v-slot:top-right="props">
       <q-input
         v-if="$q.platform.is.desktop"
+        class="no-print"
         borderless
         dense
         debounce="300"

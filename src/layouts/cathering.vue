@@ -43,7 +43,7 @@ const realizarPedido = async () => {
   }));
   const { pedidoIniciar } = await pedidoService.pedidoIniciar(
     storeAuth.negocioElegido._id,
-    '65a1a6c9566e40c934929a47',
+    '65a1a6c9566e40c934929a56',
     items,
     useGqlToken(storeAuth.token),
   );

@@ -1,4 +1,24 @@
+# HACER PARA FUNCION
+
+hacer pedido
+aceptar todos los pedidos
+calcular cantidad total de cada item
+
 # LISTA DE ESPECIFICACION DE WIREFRAME
+
+- en la tabla de ajustar pedido que le salga la cantidadTotal de ese producto en stock para ajustar y ver si hay producto.
+<!-- INVENTARIO -->
+
+HILO DE COMENTARIO.
+
+- lista de productos para inventariar con BLOQUE NULl
+- Lista para inventariar manual
+- (HACER TIPOS DE LISTA PARA INVENTARIARr - BLOQUE, MANUAL)
+
+- stock inicalizado 0 al cargar el sistema
+- consulta borrar, empleado
+- pedido proveedor no incrementa stock
+- hacer bloques buscar, inventoriar, array de estados stocks.
 
 - Modificacion de tabla (COMPONENTE)✅
   - cada linea tiene menos informacion y desliza hacia abajo para mostrar la informacion completa✅

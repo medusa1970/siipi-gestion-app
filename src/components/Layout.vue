@@ -24,7 +24,7 @@
               style="width: 45px; height: 45px"
               ><img
                 style="border-radius: 100%; object-fit: cover"
-                src="https://avatars.githubusercontent.com/u/739984?v=4"
+                src="data:image/png;base64,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"
                 alt=""
               />
               <q-menu
@@ -38,7 +38,7 @@
                     <q-item-section avatar>
                       <q-avatar>
                         <img
-                          src="https://avatars.githubusercontent.com/u/739984?v=4"
+                          src="data:image/png;base64,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"
                         />
                       </q-avatar>
                     </q-item-section>
@@ -127,7 +127,7 @@
               <q-avatar size="70px" class="q-mb-sm">
                 <img
                   style="object-fit: cover"
-                  src="https://i.pinimg.com/564x/cf/c2/5b/cfc25b552003ba8881db6e678bda0b1b.jpg"
+                  src="data:image/png;base64,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"
                 />
                 <q-btn
                   color="red"
@@ -146,11 +146,11 @@
                 />
                 <q-btn color="primary" icon="check" />
               </div> -->
-              <div class="text-weight-bold">
+              <h1 class="text-weight-bold">
                 <!-- {{ user2.name + ' ' + user2.lastname }} -->
-                will chambi
-              </div>
-              <div>willch@gmail.com</div>
+                {{ `${storeAuth.user.nombre} ${storeAuth.user.apellido}` }}
+              </h1>
+              <h1>{{ storeAuth.user.correo }}</h1>
             </div>
           </q-img>
         </q-item>
@@ -163,11 +163,7 @@
               style="border: 0px; color: white"
               :to="item.to"
             >
-              <q-list
-                class="q-pl-lg"
-                style="background-color: $dark"
-                v-if="item.subMenu.length > 0"
-              >
+              <q-list class="q-pl-lg" v-if="item.subMenu.length > 0">
                 <q-item
                   clickable
                   v-for="i in item.subMenu"
@@ -200,7 +196,7 @@
         <div class="text-white py-4 flex flex-col gap-4">
           <h1 class="text-center font-extrabold">SIDE_BAR</h1>
 
-          <q-list class="shadow-1 border-2 border-orange-400">
+          <q-list class="shadow-md border-b-[1px] border-orange-400">
             <q-expansion-item
               switch-toggle-side
               expand-separator
@@ -217,7 +213,7 @@
               </template>
               <div class="p-2">
                 <div
-                  class="grid grid-cols-[70px_1fr] gap-2 mb-2"
+                  class="grid grid-cols-[70px_1fr_30px] gap-2 mb-2"
                   v-for="producto in storePedido.listaPedido"
                   :key="producto.id"
                 >
@@ -230,6 +226,15 @@
                   </div>
                   <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
                   <h1>{{ producto.nombre }}</h1>
+                  <q-btn
+                    color="red"
+                    icon="delete"
+                    flat
+                    dense
+                    rounded
+                    size="sm"
+                    @click="deleteProductoPedido(producto.id)"
+                  />
                 </div>
 
                 <span class="flex gap-2 justify-center">
@@ -391,11 +396,7 @@
               style="border: 0px; color: white"
               :to="item.to"
             >
-              <q-list
-                class="q-pl-lg"
-                style="background-color: $dark"
-                v-if="item.subMenu.length > 0"
-              >
+              <q-list class="q-pl-lg" v-if="item.subMenu.length > 0">
                 <q-item
                   clickable
                   v-for="i in item.subMenu"
@@ -624,10 +625,6 @@ const editProfile = () => {
 
 /**IMAGE VALIDATE */
 const onRejected = (rejectedEntries) => {
-  // const messageError = {
-  //   maxTotalSize: "la imagen excede el tamaño maximo del formato",
-  //   accept: "El tipo de formato no es correcto",
-  // };
   const men =
     rejectedEntries[0].failedPropValidation === 'max-total-size'
       ? 'la imagen excede el tamaño maximo del formato'
@@ -641,15 +638,6 @@ const onRejected = (rejectedEntries) => {
 const modificarPersona = async () => {
   const formData = new FormData();
   formData.append('imagen', selectedFileProfile.value);
-  // // Agregar los otros datos a la imagen en el objeto FormData
-  // formData.append('busqueda', JSON.stringify({ _id: storeAuth.user._id }));
-  // formData.append(
-  //   'datos',
-  //   JSON.stringify({ apellido: persona.value.apellido }),
-  // );
-  // console.log(formData.get('datos.imagen'));
-  // console.log(formData.get('busqueda'));
-  // console.log(formData.get('datos'));
 
   delete persona.value.telefono;
   delete persona.value._id;
@@ -665,22 +653,10 @@ const modificarPersona = async () => {
         busqueda: { _id: storeAuth.user._id },
         datos: persona.value,
       },
-      // {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // },
-      // 😊
       useGqlHeaders({
         'apollo-require-preflight': '1',
         'Content-Type': 'multipart/form-data',
       }),
-      // useGqlHeaders({
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //     'apollo-require-preflight': '1',
-      //   },
-      // }),
     );
     NotifySucess('Persona modificada correctamente');
     hideLoading();
@@ -705,24 +681,10 @@ const getPersona = async () => {
   }
 };
 
-const realizarPedido = async () => {
-  const items = storePedido.listaPedido.map((p) => ({
-    oferta: p.id,
-    cantidad: parseInt(p.cantidad),
-  }));
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    storeAuth.negocioElegido._id,
-    '65a5a9af08c1a906d83522d0',
-    items,
-    useGqlToken(storeAuth.token),
+const deleteProductoPedido = (id) => {
+  storePedido.listaPedido = storePedido.listaPedido.filter(
+    (producto) => producto.id !== id,
   );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido realizado con éxito');
-    router.push('/punto/pedidos/listaPedidos');
-    storePedido.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
-  // console.log(pedidoIniciar);
 };
 
 //WATCH

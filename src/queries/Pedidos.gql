@@ -135,3 +135,21 @@ mutation pedidoRecibirItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
     }
   }
 }
+
+query pedidoItemsEstado($busqueda: BuscarPedidoDto!) {
+  pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
+    _id
+    items {
+      _id
+      oferta {
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+        comentario
+        valor
+      }
+    }
+  }
+}

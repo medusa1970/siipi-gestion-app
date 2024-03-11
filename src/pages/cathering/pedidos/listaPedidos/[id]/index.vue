@@ -5,8 +5,7 @@
     href="/cathering/pedidos/listaPedidos"
     label2="pedidoDetalle"
   />
-  <!-- <code>{{ estado.pedidoDetalle }}</code> -->
-  <div class="p-2">
+  <div class="p-2" id="divParaImprimir">
     <h1 class="text-lg font-bold text-orange-500 uppercase">
       Informacion del pedido {{ estado.pedidoDetalle._id }}
     </h1>
@@ -38,10 +37,14 @@
             {{ estado.pedidoItemsEstado }}🫡
           </p>
         </span>
-        <!-- <p class="text-2xl text-orange-500">
-          <strong class="text-2xl">Estado: </strong
-          >{{ estado.pedidoItemsEstado }}🫡
-        </p> -->
+        <q-btn
+          color="primary"
+          label="Imprimir"
+          padding="3px 15px"
+          no-caps
+          class="no-print"
+          @click="imprimir"
+        />
       </div>
     </div>
     <div v-else>Cargando datos...</div>
@@ -130,7 +133,39 @@ definePageMeta({
   layout: 'cathering',
 });
 
+const imprimir = () => {
+  console.log('imprimir');
+  // let printContents = document.getElementById('imprimir').innerHTML;
+  // let originalContents = document.body.innerHTML;
+
+  // document.body.innerHTML = printContents;
+
+  window.print();
+
+  // document.body.innerHTML = originalContents;
+};
+
 onMounted(() => {
   buscarPedidoID(params.id);
 });
 </script>
+
+<style lang="scss">
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .no-print {
+    display: none;
+  }
+  #divParaImprimir,
+  #divParaImprimir * {
+    visibility: visible;
+  }
+  #divParaImprimir {
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+}
+</style>

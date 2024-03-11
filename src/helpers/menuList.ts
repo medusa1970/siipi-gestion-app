@@ -63,13 +63,13 @@ export const menuListPunto = [
   {
     icon: 'point_of_sale',
     label: 'Caja',
-    to: '/punto/caja',
+    // to: '/punto/caja',
     subMenu: [],
   },
   {
     icon: 'settings',
     label: 'Configuración',
-    to: '/punto/configuracion',
+    // to: '/punto/configuracion',
     subMenu: [],
   },
 ];
@@ -105,8 +105,16 @@ export const menuListCathering = [
   {
     icon: 'warehouse',
     label: 'Stock',
-    to: '/cathering/stock',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Recibir productos',
+        to: '/cathering/pedidos/recibirPedido',
+      },
+      {
+        label: 'ver stock',
+        to: '/cathering/stock',
+      },
+    ],
   },
   {
     icon: 'inventory_2',
@@ -127,10 +135,6 @@ export const menuListCathering = [
     label: 'Pedidos',
     subMenu: [
       {
-        label: 'Recibir pedido',
-        to: '/cathering/pedidos/recibirPedido',
-      },
-      {
         label: 'ver pedidos',
         to: '/cathering/pedidos/listaPedidos',
       },
@@ -139,13 +143,13 @@ export const menuListCathering = [
   {
     icon: 'point_of_sale',
     label: 'Caja',
-    to: '/cathering/caja',
+    // to: '/cathering/caja',
     subMenu: [],
   },
   {
     icon: 'settings',
     label: 'Configuración',
-    to: '/cathering/configuracion',
+    // to: '/cathering/configuracion',
     subMenu: [],
   },
 ];

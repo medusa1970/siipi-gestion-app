@@ -75,6 +75,7 @@ export const useEmpleado = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
+      console.log(useAuth.negocioElegido._id, row.id);
       await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
       NotifySucessCenter('Empleado eliminado');
       obtenerTodosEmpleados();

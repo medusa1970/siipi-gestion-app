@@ -110,16 +110,20 @@
     </div>
   </div> -->
 
-  <TableExpand :rows="estado.ListaOfertasPedido">
+  <TableExpand
+    :rows="estado.ListaOfertasPedido"
+    prueba
+    v-model:will="pruebaFilter"
+  >
     <template #slot-header1>
-      <!-- <q-btn
+      <q-btn
         color="primary"
-        label="Ver Stock"
+        label="Buscar por categoria"
         no-caps
         dense
-        padding="7px 15px"
-        @click="estado.ListaOfertasPedido = []"
-      /> -->
+        padding="6px 14px"
+        @click="buscarPorCategoria"
+      />
     </template>
 
     <template #slot-footer>
@@ -157,14 +161,14 @@
             <q-card class="pb-3 flex justify-center col-span-3">
               <div class="flex flex-col">
                 <span class="flex gap-2 items-center">
-                  <q-btn
+                  <!-- <q-btn
                     padding="4px"
                     size="9px"
                     icon="add"
                     rounded
                     color="primary"
                     dense
-                  />
+                  /> -->
                   <input
                     type="number"
                     placeholder="Cantidad"
@@ -178,14 +182,14 @@
                       outlined
                       label="Cantidad"
                     /> -->
-                  <q-btn
+                  <!-- <q-btn
                     padding="4px"
                     size="9px"
                     icon="remove"
                     rounded
                     color="primary"
                     dense
-                  />
+                  /> -->
                 </span>
               </div>
             </q-card>
@@ -222,6 +226,90 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+
+  <q-dialog v-model="estado.modal.isBuscarPorCategoria" persistent>
+    <q-card class="w-[370px]">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-lg font-semibold">Seleccionar productos</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <div
+          class="col-span-1 max-sm:col-span-4 max-sm:mx-auto"
+          v-if="estado.catalogosOfertas"
+        >
+          <q-list
+            class="rounded-borders w-[350px]"
+            v-for="categoria in estado.catalogosOfertas"
+            :key="categoria.nombre"
+          >
+            <q-expansion-item
+              expand-separator
+              icon="category"
+              :label="`${categoria.nombre} (${categoria.hijas.length})`"
+              default-opened
+              dense
+            >
+              <q-list v-for="(item, index) in categoria.hijas" :key="index">
+                <q-expansion-item
+                  :header-inset-level="0.5"
+                  switch-toggle-side
+                  dense-toggle
+                  :label="`${item.nombre} (${item.hijas.length})`"
+                  dense
+                >
+                  <q-list
+                    v-for="(item2, index) in item.hijas"
+                    :key="index"
+                    dense
+                  >
+                    <q-expansion-item
+                      :header-inset-level="1"
+                      switch-toggle-side
+                      dense-toggle
+                      :label="`${item2.nombre} (${item.hijas.length})`"
+                      dense
+                    >
+                      <!-- <code>{{ item2 }}</code> -->
+                      <q-list
+                        v-for="(item3, index) in item2.ofertas"
+                        :key="index"
+                        dense
+                      >
+                        <q-item
+                          clickable
+                          dense
+                          @click="selectProduct(item3)"
+                          :class="
+                            item3 == test && 'bg-gray-500 [&>div]:text-white'
+                          "
+                        >
+                          <q-item-section side>
+                            <h1 class="ml-24">{{ item3.nombre }}</h1>
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-expansion-item>
+                    <!-- <q-item
+                      clickable
+                      dense
+                      @click="selectProduct(item2)"
+                      :class="item2 == test && 'bg-gray-500 [&>div]:text-white'"
+                    >
+                      <q-item-section side>
+                        <h1 class="ml-24">{{ item2.nombre }}</h1>
+                      </q-item-section>
+                    </q-item> -->
+                  </q-list>
+                </q-expansion-item>
+              </q-list>
+            </q-expansion-item>
+          </q-list>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import { useProducts } from '@/composables/sede/useProducts';
@@ -242,6 +330,7 @@ const router = useRouter();
 // const { estado, obtenerTodasCategorias } = useProducts();
 const test = ref(null);
 const listaPedidos = ref([]);
+// const pruebaFilter = ref('sandia');
 const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categoría
 
 // const selectCategory = (category) => {
@@ -356,10 +445,22 @@ const realizarPedido = async () => {
   // console.log(pedidoIniciar);
 };
 
+const buscarPorCategoria = () => {
+  estado.modal.isBuscarPorCategoria = true;
+  obtenerCatalogosProductos();
+};
+
+const selectProduct = (product) => {
+  console.log(product.nombre);
+  console.log(prueba.value);
+  // estado.modal.isBuscarPorCategoria = false;
+};
+
 onMounted(() => {
   // obtenerTodasCategorias();
   // obtenerCatalogosProductos();
   obtenerListaOfertas();
+
   // listaPedidos.value = usePedidoStore.listaPedido;
 });
 </script>

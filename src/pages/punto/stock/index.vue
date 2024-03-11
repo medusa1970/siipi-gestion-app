@@ -5,14 +5,26 @@
     <!-- TABLEEXPANDED -->
     <TableExpand :rows="rowsParaMostrar" ::columns="stockProducts">
       <template #slot-header1>
-        <q-btn
-          color="primary"
-          label="Realizar pedido"
-          no-caps
-          dense
-          padding="7px 15px"
-          @click="obtenerListaOfertas"
-        />
+        <NuxtLink href="/punto/pedidos/realizarPedido">
+          <q-btn
+            color="primary"
+            label="Realizar pedido"
+            no-caps
+            dense
+            padding="7px 15px"
+          />
+        </NuxtLink>
+      </template>
+      <template #slot-header2>
+        <NuxtLink href="/punto/inventario">
+          <q-btn
+            color="primary"
+            label="Realizar inventario"
+            no-caps
+            dense
+            padding="7px 15px"
+          />
+        </NuxtLink>
       </template>
       <template #slot-footer>
         <div class="flex justify-center gap-2">
@@ -21,11 +33,9 @@
             padding="0 10px"
             size="13px"
             dense
-            color="primary"
+            color="green"
             :label="`${estado.stocks.length} Productos total`"
-            @click="
-              estado.modal.isShowAllProducts = !estado.modal.isShowAllProducts
-            "
+            @click="toggleModal('isShowAllProducts')"
           />
           <q-btn
             no-caps
@@ -34,24 +44,29 @@
             dense
             color="orange"
             :label="`${estado.productosEnAlerta.length} Productos en alerta`"
-            @click="
-              estado.modal.isShowAlertProduct = !estado.modal.isShowAlertProduct
-            "
+            @click="toggleModal('isShowAlertProduct')"
           />
           <q-btn
             no-caps
             padding="0 10px"
             size="13px"
             dense
-            color="green"
+            color="primary"
             :label="`${estado.productosVencidos.length} Productos por vencer`"
-            @click="estado.modal.isShowVencidos = !estado.modal.isShowVencidos"
+            @click="toggleModal('isShowVencidos')"
           />
         </div>
       </template>
       <template #body-data="{ props }">
         <div class="col-span-1">
-          <q-list class="shadow-1">
+          <q-list
+            :class="[
+              'shadow-1',
+              estado.modal.isShowAlertProduct && 'bg-orange-100',
+              estado.modal.isShowVencidos && 'bg-blue-100',
+              estado.modal.isShowAllProducts && 'bg-green-100',
+            ]"
+          >
             <q-expansion-item
               switch-toggle-side
               expand-separator
@@ -240,6 +255,14 @@ const {
 } = useStock();
 
 // const { handleInputChange2 } = usePedido();
+const toggleModal = (key) => {
+  estado.modal[key] = !estado.modal[key];
+  Object.keys(estado.modal).forEach((modalKey) => {
+    if (modalKey !== key) {
+      estado.modal[modalKey] = false;
+    }
+  });
+};
 
 const rowsParaMostrar = computed(() => {
   if (estado.modal.isShowAlertProduct) {

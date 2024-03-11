@@ -71,4 +71,6 @@ export const pedidoService = {
     postData(
       GqlPedidoRecibirItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
     ),
+  pedidoItemsEstado: async (pedidoID: string) =>
+    postData(GqlPedidoItemsEstado({ busqueda: { _id: pedidoID } })),
 };

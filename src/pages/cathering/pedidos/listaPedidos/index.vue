@@ -58,39 +58,6 @@
             </template>
           </Item>
         </div>
-        <!-- <Item title="pedido proveedor 1" class="w-[400px] max-sm:w-full">
-          <template v-slot:actions>
-            <div class="flex">
-              <q-btn
-                dense
-                round
-                icon="check"
-                flat
-                color="green"
-                padding="4px"
-                size="12px"
-              />
-              <q-btn
-                dense
-                round
-                icon="edit"
-                flat
-                color="blue"
-                padding="4px"
-                size="12px"
-              />
-              <q-btn
-                dense
-                round
-                icon="print"
-                flat
-                color="orange"
-                padding="4px"
-                size="12px"
-              />
-            </div>
-          </template>
-        </Item> -->
       </q-tab-panel>
       <!-- VER PEDIDOS PUNTOS -->
       <q-tab-panel name="puntos">
@@ -128,23 +95,13 @@
                 <q-btn
                   dense
                   round
-                  icon="edit"
-                  flat
-                  color="blue"
-                  padding="4px"
-                  size="12px"
-                  ><q-tooltip class="bg-gray-400-500"
-                    >Editar pedido</q-tooltip
-                  ></q-btn
-                >
-                <q-btn
-                  dense
-                  round
                   icon="print"
                   flat
                   color="orange"
                   padding="4px"
                   size="12px"
+                  class="no-print"
+                  @click="imprimir"
                   ><q-tooltip class="bg-gray-400-500"
                     >Imprimir pedido</q-tooltip
                   ></q-btn
@@ -172,20 +129,13 @@
                 <q-btn
                   dense
                   round
-                  icon="edit"
-                  flat
-                  color="blue"
-                  padding="4px"
-                  size="12px"
-                />
-                <q-btn
-                  dense
-                  round
                   icon="print"
                   flat
                   color="orange"
                   padding="4px"
                   size="12px"
+                  class="no-print"
+                  @click="imprimir"
                 />
               </div>
             </template>
@@ -247,4 +197,24 @@ const date = ref('2020/07/08');
 onMounted(() => {
   buscarPedidos2();
 });
+
+const imprimir = () => {
+  console.log('imprimir');
+  let printContents = document.getElementById('imprimir').innerHTML;
+  let originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents;
+
+  window.print();
+
+  document.body.innerHTML = originalContents;
+};
 </script>
+
+<style lang="scss" scoped>
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+</style>

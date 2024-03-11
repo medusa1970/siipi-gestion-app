@@ -4,6 +4,8 @@ query conectar($datos: ConexionDto!) {
     persona {
       nombre
       usuario
+      apellido
+      correo
     }
     entidad {
       nombre

@@ -27,6 +27,8 @@ export const usePedido = () => {
     modal: {
       isAddOferta: false,
       isAjustarItem: false,
+      isShowPassword: false,
+      isBuscarPorCategoria: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -41,6 +43,9 @@ export const usePedido = () => {
       comentario: '',
     },
     ListaOfertasPedido: [] as any[],
+    itemsEstadoAjustado: [] as any[],
+    passwordChofer: '',
+    pedidoID: '',
   });
 
   const obtenerCatalogosProductos = async () => {
@@ -75,7 +80,7 @@ export const usePedido = () => {
       undefined,
       useGqlToken(useAuth.token),
     );
-    console.log('first', pedidoBuscar);
+    // console.log('first', pedidoBuscar);
     //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
       pedidoBuscar.map((pedido) =>
@@ -157,14 +162,30 @@ export const usePedido = () => {
     estado.modal.isAjustarItem = false;
   };
 
-  const recibirPedido = async (pedidoID: string) => {
-    const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
-      pedidoID,
-    );
-    if (pedidoRecibirItems) {
-      NotifySucessCenter('Pedido recibido');
-      router.push('/punto/pedidos/listaPedidos');
-    } else NotifyError('Error al recibir pedido');
+  const abrirModalRecibirPedido = (pedidoID: string) => {
+    estado.modal.isShowPassword = true;
+    estado.pedidoID = pedidoID;
+  };
+
+  const recibirPedido = async () => {
+    // INPUT PASSWORD CHOFER
+    const password = 'choferSiipi123';
+
+    if (estado.passwordChofer == password) {
+      const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
+        estado.pedidoID,
+      );
+      if (pedidoRecibirItems) {
+        NotifySucessCenter('Pedido recibido');
+        estado.modal.isShowPassword = false;
+        estado.passwordChofer = '';
+        router.push('/punto/pedidos/listaPedidos');
+      } else NotifyError('Error al recibir pedido');
+    } else {
+      NotifyError('Contraseña incorrecta');
+      estado.modal.isShowPassword = false;
+      estado.passwordChofer = '';
+    }
   };
 
   const obtenerListaOfertas = async () => {
@@ -176,6 +197,37 @@ export const usePedido = () => {
     );
     estado.ListaOfertasPedido = catalogoOfertasRecursivo;
     // ofertaService.catalogoRecursivo()
+  };
+
+  const obtenerItemsEstado = async (pedidoID: string) => {
+    const { pedidoBuscar } = await pedidoService.pedidoItemsEstado(pedidoID);
+    console.log(pedidoBuscar[0]);
+    // Filtrar items que tienen un estado ajustado
+    const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
+    });
+    console.log(itemsConEstadoAjustado);
+
+    // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
+    estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      const ultimoEstadoAjustado =
+        estadosAjustados[estadosAjustados.length - 1];
+      return {
+        nombre: item.oferta.nombre,
+        estadoAjustado: ultimoEstadoAjustado.estado,
+        comentario: ultimoEstadoAjustado.comentario,
+        valor: ultimoEstadoAjustado.valor,
+      };
+    });
+
+    // Mostrar la información
+    console.log(estado.itemsEstadoAjustado);
   };
 
   return {
@@ -191,5 +243,7 @@ export const usePedido = () => {
     ajustarItemGuardar,
     recibirPedido,
     obtenerListaOfertas,
+    obtenerItemsEstado,
+    abrirModalRecibirPedido,
   };
 };

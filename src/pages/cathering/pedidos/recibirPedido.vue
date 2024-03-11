@@ -1,6 +1,6 @@
 <template>
   <Navigation label="Realizar pedido" icon="group" />
-  <h1 class="font-bold text-lg text-center mb-2">Recibir pedido</h1>
+  <h1 class="font-bold text-lg text-center mb-2">Recibir productos</h1>
 
   <TableExpand :rows="estado.ListaOfertasPedido">
     <template #slot-footer>
@@ -38,14 +38,14 @@
             <q-card class="pb-3 flex justify-center col-span-3">
               <div class="flex flex-col">
                 <span class="flex gap-2 items-center">
-                  <q-btn
+                  <!-- <q-btn
                     padding="4px"
                     size="9px"
                     icon="add"
                     rounded
                     color="primary"
                     dense
-                  />
+                  /> -->
                   <input
                     type="number"
                     placeholder="Cantidad"
@@ -59,14 +59,14 @@
                     outlined
                     label="Cantidad"
                   /> -->
-                  <q-btn
+                  <!-- <q-btn
                     padding="4px"
                     size="9px"
                     icon="remove"
                     rounded
                     color="primary"
                     dense
-                  />
+                  /> -->
                 </span>
               </div>
             </q-card>
@@ -161,4 +161,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<!-- <style scoped></style> -->

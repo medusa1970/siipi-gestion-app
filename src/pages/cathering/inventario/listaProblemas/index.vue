@@ -1,7 +1,7 @@
 <template>
   <Navigation label="listaProblemas" icon="folder" />
   <h1 class="font-bold text-lg">Lista de problemas</h1>
-  <div class="flex flex-wrap gap-5 my-3">
+  <div class="flex flex-wrap gap-5 my-3 justify-center">
     <div
       class="shadow-md w-56 p-4 flex"
       v-for="problema in listProblems"

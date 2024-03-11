@@ -16,7 +16,14 @@ interface AuthStoreProps {
   negocioElegido: Negocio;
 }
 const estadoInicial: AuthStoreProps = {
-  user: { _id: '', nombre: '', usuario: '', negocios: [] },
+  user: {
+    _id: '',
+    nombre: '',
+    apellido: '',
+    correo: '',
+    usuario: '',
+    negocios: [],
+  },
   token: '',
   negocioElegido: {
     _id: '',
@@ -33,6 +40,8 @@ export const authStore = defineStore('auth', {
       this.user._id = conectar.persona._id;
       this.user.nombre = conectar.persona.nombre;
       this.user.usuario = conectar.persona.usuario;
+      this.user.apellido = conectar.persona.apellido;
+      this.user.correo = conectar.persona.correo;
       this.token = conectar.token;
 
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);

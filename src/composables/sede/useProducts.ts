@@ -10,11 +10,13 @@ import { productStore } from '@/stores/producto.store';
 import { productoService } from '~/services/sede/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
 import DragDrop from '@/components/DrogDrop.vue';
+import { ofertaStore } from '@/stores/oferta.store';
 
 export const useProducts = () => {
   const useProduct = productStore();
   const router = useRouter();
   const $q = useQuasar();
+  const storeOferta = ofertaStore();
 
   const estado = reactive({
     test: false,
@@ -306,6 +308,10 @@ export const useProducts = () => {
     estado.modal.isAddCategoryArbol = true;
     estado.categoria.pariente = data._id;
   };
+  const navegarCrearOferta = (producto: any) => {
+    let { categoria, comentario, ...productoData } = producto;
+    storeOferta.oferta.producto = productoData;
+  };
 
   return {
     estado,
@@ -328,5 +334,6 @@ export const useProducts = () => {
     obtenerTodasCategorias,
     agregarCategoriaArbol,
     modalAgregarCategoria,
+    navegarCrearOferta,
   };
 };

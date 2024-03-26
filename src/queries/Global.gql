@@ -2,6 +2,7 @@ query conectar($datos: ConexionDto!) {
   conectar(datos: $datos) {
     token
     persona {
+      _id
       nombre
       usuario
       apellido
@@ -29,4 +30,17 @@ query pedirRDC($correo: String!) {
 # cambiar contraseña (OTP, nueva contraseña)
 query actuarRDC($token: String!, $contrasena: String!) {
   actuarReinicioDeContrasena(token: $token, contrasena: $contrasena)
+}
+
+# Buscar empleado para saber su cargo
+query entidadBuscarEmpleado(
+  $busqueda: BuscarEntidadDto!
+  $busquedaEmpleado: BuscarEmpleadoDto!
+) {
+  entidadBuscarEmpleado(
+    busqueda: $busqueda
+    busquedaEmpleado: $busquedaEmpleado
+  ) {
+    cargo
+  }
 }

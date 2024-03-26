@@ -1,16 +1,18 @@
 <template>
   <div>
     <Navigation label="Productos" icon="list_alt" />
-    <q-btn
-      color="primary"
-      icon="check"
-      label="ver categorias"
-      outline
-      no-caps
-      style="font-size: 14.5px; margin-bottom: 10px"
-      padding="4px 10px"
-      @click="$router.push('productos/categorias')"
-    />
+    <span class="flex gap-2">
+      <h1 class="font-bold text-xl">Gestion de productos</h1>
+      <q-btn
+        color="primary"
+        icon="bi-eye"
+        rounded
+        dense
+        size="12px"
+        @click="$router.push('productos/categorias')"
+        ><q-tooltip>Ver cataegorias</q-tooltip></q-btn
+      >
+    </span>
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <NuxtLink to="productos/detailProduct">
@@ -56,7 +58,7 @@
               </div>
             </div>
           </q-td>
-          <q-td key="categoria" :props="props" class="flex gap-1">
+          <q-td key="categoria" :props="props">
             {{ props.row.categoria && props.row.categoria.nombre }}
             <!-- <p
               class="text-blue-400 underline cursor-pointer"
@@ -64,17 +66,21 @@
             >
               Editar
             </p> -->
-            <!-- {{ props.row.categoria }} -->
-            <!-- NOMBRE DE CATEGORIA -->
-            <!-- <div class="flex gap-1">
-              <div v-for="(p, index) in props.row.tags" :key="index">
-                <q-badge color="green" class="capitalize">
-                  {{ p }}
-                </q-badge>
-              </div>
-            </div> -->
           </q-td>
           <q-td key="actions" :props="props">
+            <NuxtLink to="ofertas/detailOferta">
+              <q-btn
+                color="green"
+                icon="add"
+                round
+                dense
+                flat
+                padding="3px"
+                size="12px"
+                @click="navegarCrearOferta(props.row)"
+                ><q-tooltip> Crear oferta </q-tooltip></q-btn
+              >
+            </NuxtLink>
             <NuxtLink to="productos/detailProduct">
               <q-btn
                 color="primary"
@@ -82,6 +88,8 @@
                 round
                 dense
                 flat
+                padding="3px"
+                size="10px"
                 @click="navegarDetalleProducto(props.row)"
               />
             </NuxtLink>
@@ -91,6 +99,8 @@
               round
               dense
               flat
+              padding="3px"
+              size="11px"
               @click="borrarProducto(props.row)"
             />
           </q-td>
@@ -98,65 +108,6 @@
       </template>
     </Table>
   </div>
-  <!-- AGREGAR CATEGORIA -->
-  <!-- <Dialog
-    v-model="estado.modal.isAddCategory"
-    title="Categoria"
-    :handle-submit="guardarCategoria"
-  >
-    <template #inputsDialog>
-      <div class="row items-center" style="width: 100%">
-        <q-select
-          v-model="estado.categoriaFija.categoria"
-          :options="estado.categorias.hijas"
-          label="Seleccionar categoria"
-          option-label="nombre"
-          style="width: 100%; flex: 1 0 auto"
-          dense
-          onfocus="this.select()"
-          filled
-        >
-          <template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="estado.inputCategoria = ''"
-              class="cursor-pointer q-mr-md"
-            />
-          </template>
-          <template v-slot:prepend>
-            <q-icon name="category" />
-          </template>
-        </q-select>
-        <q-select
-          v-model="estado.categoriaFija.hijas"
-          :options="estado.categoriaFija.categoria.hijas"
-          label="Seleccionar categoria"
-          option-label="nombre"
-          style="width: 100%; flex: 1 0 auto; margin-top: 10px"
-          dense
-          onfocus="this.select()"
-          filled
-        >
-          <template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="estado.categoriaFija.hijas = ''"
-              class="cursor-pointer q-mr-md"
-            />
-          </template>
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">
-                No hay resultados
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
-      </div>
-    </template>
-  </Dialog> -->
 
   <!-- DIALOG DOUBLECLICK -->
   <q-dialog persistent v-model="isDoubleClick">
@@ -213,6 +164,7 @@ const {
   borrarProducto,
   cambiarCategoria,
   guardarCategoria,
+  navegarCrearOferta,
 } = useProducts();
 
 onMounted(() => {

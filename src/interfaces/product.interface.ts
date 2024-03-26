@@ -5,6 +5,7 @@ export interface UserProps {
   _id: string;
   nombre: string;
   usuario: string;
+  cargo: string;
   apellido: string;
   correo: string;
   negocios: Negocio[];

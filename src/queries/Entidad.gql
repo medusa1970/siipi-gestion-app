@@ -33,6 +33,7 @@ mutation agregarEmpleadoEntidad(
     _id
     cargo
     persona {
+      _id
       nombre
     }
   }
@@ -264,5 +265,27 @@ query productosInventariar($entidadBusqueda: BuscarEntidadDto!) {
   ) {
     nombre
     _id
+  }
+}
+
+# AGREGAR ROL EMPLEADO
+mutation entidadAsignarRoles(
+  $entidadBusqueda: BuscarEntidadDto!
+  $datos: [AsignacionRolDto!]!
+) {
+  entidadAsignarRoles(
+    entidadBusqueda: $entidadBusqueda
+    datos: $datos
+    opciones: { populate: true }
+  ) {
+    _id
+    nombre
+    roles {
+      persona {
+        nombre
+      }
+      rol
+      vencimiento
+    }
   }
 }

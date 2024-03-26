@@ -20,6 +20,7 @@ const estadoInicial: AuthStoreProps = {
     _id: '',
     nombre: '',
     apellido: '',
+    cargo: '',
     correo: '',
     usuario: '',
     negocios: [],

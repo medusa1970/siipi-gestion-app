@@ -1,6 +1,101 @@
 <template>
   <Navigation label="Hacer pedido" icon="folder" />
-  <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
+  <!-- <code>{{ estado.catalogosOfertas }}</code> -->
+  <div class="block mx-auto w-[400px]">
+    <q-input
+      v-if="$q.platform.is.desktop"
+      borderless
+      dense
+      debounce="300"
+      color="secondary"
+      v-model="filter"
+      style="padding: 0 10px"
+      placeholder="Buscar"
+      clearable
+      class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a]"
+    >
+      <template v-slot:prepend>
+        <q-icon name="search" size="22px" class="text-[#010f1a]" />
+      </template>
+    </q-input>
+    <!-- #F0F0F0 -->
+    <div class="flex gap-2 justify-center my-2">
+      <div
+        class="cursor-pointer"
+        v-for="catalogo in estado.catalogosOfertas"
+        :key="catalogo._id"
+      >
+        <h1
+          @click="selectCatalogo(catalogo)"
+          :class="[
+            'bg-[#F0F0F0] p-2',
+            estado.catalogoSeleccionado.nombre === catalogo.nombre &&
+              'font-bold',
+          ]"
+        >
+          {{ catalogo.nombre }}
+        </h1>
+      </div>
+    </div>
+    <!-- <code>{{ estado.catalogoSeleccionado }}</code> -->
+    <q-list v-if="estado.catalogoSeleccionado" class="flex flex-col gap-1">
+      <div v-for="item in estado.catalogoSeleccionado.hijas" :key="item._id">
+        <q-expansion-item
+          class="bg-[#F0F0F0]"
+          dense
+          dense-toggle
+          group="somegroup"
+          icon="category"
+          :label="item.nombre"
+        >
+          <q-card class="px-4">
+            <div
+              v-for="item in item.ofertas"
+              :key="item._id"
+              class="grid grid-cols-[70px_1fr_auto] gap-2"
+            >
+              <div>
+                <input
+                  type="number"
+                  class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
+                  @input="handleInputChange2($event, item)"
+                />
+              </div>
+
+              <h1>{{ item.nombre }}</h1>
+
+              <q-btn
+                color="primary"
+                icon="visibility"
+                flat
+                round
+                dense
+                size="12px"
+              >
+                <q-tooltip> ver foto </q-tooltip>
+              </q-btn>
+            </div>
+          </q-card>
+        </q-expansion-item>
+      </div>
+      <!-- <div v-if="estado.catalogoSeleccionado.hijas.length == 0">
+      Producto no encontrado😧
+    </div> -->
+      <div
+        v-if="
+          estado.catalogoSeleccionado.hijas &&
+          estado.catalogoSeleccionado.hijas.length === 0
+        "
+        class="text-center"
+      >
+        <h1>Producto no encontrado😧</h1>
+      </div>
+    </q-list>
+    <div v-if="estado.catalogoSeleccionado.length === 0">
+      Cargando productos...
+    </div>
+  </div>
+
   <!-- <h1 class="font-bold text-lg text-center mb-6">Realizar pedido</h1>
   <div class="grid grid-cols-4 h-[70vh]">
     
@@ -110,7 +205,7 @@
     </div>
   </div> -->
 
-  <TableExpand
+  <!-- <TableExpand
     :rows="estado.ListaOfertasPedido"
     prueba
     v-model:will="pruebaFilter"
@@ -143,13 +238,12 @@
           >
             <template v-slot:header>
               <div class="flex items-center justify-center">
-                <!-- uppercase font-bold line-clamp-1 -->
                 <p class="font-bold">
                   {{ props.row.nombre }}
                 </p>
               </div>
               <q-item-section side class="h-[50px]">
-                <!-- <h1>sds</h1> -->
+               
                 <img
                   v-if="props.row.foto"
                   :src="props.row.foto"
@@ -161,35 +255,13 @@
             <q-card class="pb-3 flex justify-center col-span-3">
               <div class="flex flex-col">
                 <span class="flex gap-2 items-center">
-                  <!-- <q-btn
-                    padding="4px"
-                    size="9px"
-                    icon="add"
-                    rounded
-                    color="primary"
-                    dense
-                  /> -->
+                  
                   <input
                     type="number"
                     placeholder="Cantidad"
                     class="test border-[1px] border-gray-400 px-2 py-1 w-[90px] outline-none bg-transparent"
                     @input="handleInputChange2($event, props.row)"
                   />
-                  <!-- <q-input
-                      v-model.number="text"
-                      type="number"
-                      dense
-                      outlined
-                      label="Cantidad"
-                    /> -->
-                  <!-- <q-btn
-                    padding="4px"
-                    size="9px"
-                    icon="remove"
-                    rounded
-                    color="primary"
-                    dense
-                  /> -->
                 </span>
               </div>
             </q-card>
@@ -197,7 +269,7 @@
         </q-list>
       </div>
     </template>
-  </TableExpand>
+  </TableExpand> -->
 
   <!-- MODAL -->
   <q-dialog v-model="estado.modal.isAddOferta" persistent>
@@ -314,7 +386,7 @@
 <script setup>
 import { useProducts } from '@/composables/sede/useProducts';
 import { usePedido } from '@/composables/punto/usePedido';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { pedidoStore } from '@/stores/pedido.store';
@@ -323,13 +395,20 @@ definePageMeta({
   layout: 'punto',
 });
 
-const { estado, obtenerCatalogosProductos, useAuth, obtenerListaOfertas } =
-  usePedido();
+const {
+  estado,
+  obtenerCatalogosProductos,
+  useAuth,
+  obtenerListaOfertas,
+  filter,
+  filteredCatalogos,
+} = usePedido();
 const usePedidoStore = pedidoStore();
 const router = useRouter();
 // const { estado, obtenerTodasCategorias } = useProducts();
 const test = ref(null);
 const listaPedidos = ref([]);
+const catalogoSeleccionado = ref([]);
 // const pruebaFilter = ref('sandia');
 const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categoría
 
@@ -339,6 +418,8 @@ const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categorí
 //   estado.modal.isAddOferta = true;
 // };
 const handleInputChange2 = (event, product) => {
+  console.log(event);
+  console.log(product);
   const nuevoValor = event.target.value;
 
   const producto = {
@@ -347,6 +428,13 @@ const handleInputChange2 = (event, product) => {
     cantidad: nuevoValor,
     // edit: false,
   };
+  console.log(producto);
+  // Busca la categoría actual en el pedido
+  // const categoriaEnPedido = listaPedidos.value.find(
+  //   (categoria) => categoria.nombre === categoriaActual,
+  // );
+  // console.log(categoriaEnPedido);
+
   // Buscar si el producto ya existe en listaPedidos
   const index = usePedidoStore.listaPedido.findIndex(
     (item) => item.id === producto.id,
@@ -456,9 +544,22 @@ const selectProduct = (product) => {
   // estado.modal.isBuscarPorCategoria = false;
 };
 
+const selectCatalogo = (catalogo) => {
+  console.log('hola');
+  console.log(catalogo);
+  estado.catalogoSeleccionado = catalogo;
+};
+
+watch(filter, () => {
+  // console.log('first');
+  // console.log(filteredCatalogos.value);
+  estado.catalogoSeleccionado = filteredCatalogos.value;
+  // console.log(estado.catalogoSeleccionado);
+});
+
 onMounted(() => {
   // obtenerTodasCategorias();
-  // obtenerCatalogosProductos();
+  obtenerCatalogosProductos();
   obtenerListaOfertas();
 
   // listaPedidos.value = usePedidoStore.listaPedido;

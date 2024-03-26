@@ -2,7 +2,11 @@
   <!-- view="lHr lpR lFr" -->
   <!-- lHh lpR lFf -->
   <q-layout v-if="$q.platform.is.desktop" view="lHr lpR lFr ">
-    <q-header elevated class="text-white colorBackground" style="">
+    <q-header
+      elevated
+      :class="['text-white ', punto ? 'bg-orange-500' : 'colorBackground']"
+      style=""
+    >
       <q-toolbar class="h-[6vh]">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
@@ -508,6 +512,7 @@
 // PROPS
 defineProps({
   menuList: Array,
+  punto: Boolean,
 });
 
 // IMPORTS

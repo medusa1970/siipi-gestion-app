@@ -53,9 +53,6 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
         apellido
         telefono
       }
-      entidad {
-        nombre
-      }
     }
     items {
       _id
@@ -64,6 +61,9 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
         precio
       }
       cantidad
+      estado {
+        estado
+      }
     }
   }
 }
@@ -149,6 +149,118 @@ query pedidoItemsEstado($busqueda: BuscarPedidoDto!) {
         estado
         comentario
         valor
+      }
+    }
+  }
+}
+
+# Buscar items de todos los pedidos
+query pedidosBuscarItems($busqueda: BuscarPedidoDto!) {
+  pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
+    _id
+    items {
+      _id
+      oferta {
+        nombre
+        precio
+        grupos
+      }
+      cantidad
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO ACEPTAR TODAS OFERTAS SOLICITABLES
+mutation pedidosAceptarOfertasSolicitables($busqueda: BuscarPedidoDto!) {
+  pedidosAceptarOfertasSolicitables(busqueda: $busqueda) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+    }
+    items {
+      _id
+      cantidad
+      # TRAER OFERTA MAS POPULATE TRUE
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          ... on IngredienteProducto {
+            _id
+            _tipo
+            producto {
+              _id
+              nombre
+            }
+            cantidad
+          }
+        }
+      }
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO ACEPTAR TODAS OFERTAS DIRECTAS
+mutation pedidosAceptarOfertasDirectas($busqueda: BuscarPedidoDto!) {
+  pedidosAceptarOfertasDirectas(busqueda: $busqueda) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+    }
+    items {
+      _id
+      cantidad
+      # TRAER OFERTA MAS POPULATE TRUE
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          ... on IngredienteProducto {
+            _id
+            _tipo
+            producto {
+              _id
+              nombre
+            }
+            cantidad
+          }
+        }
+      }
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO OFERTA PREPARADA
+mutation pedidosPrepararOfertas(
+  $busqueda: BuscarPedidoDto!
+  $ofertaIds: [ID!]!
+) {
+  pedidosPrepararOfertas(busqueda: $busqueda, ofertaIds: $ofertaIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      estado {
+        estado
       }
     }
   }

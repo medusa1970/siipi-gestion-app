@@ -1,4 +1,4 @@
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import {
   NotifyError,
   NotifySucess,
@@ -15,13 +15,14 @@ import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/punto/menu.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
+import { stockService } from '~/services/punto/stock.service';
 /**
  * LOGICA
  */
 export const usePedido = () => {
   const useAuth = authStore();
   const router = useRouter();
-  const usePedidoStore = pedidoStore();
+  const storePedido = pedidoStore();
   const estado = reactive({
     catalogosOfertas: [],
     modal: {
@@ -29,6 +30,7 @@ export const usePedido = () => {
       isAjustarItem: false,
       isShowPassword: false,
       isBuscarPorCategoria: false,
+      isShowPedidos: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -46,13 +48,28 @@ export const usePedido = () => {
     itemsEstadoAjustado: [] as any[],
     passwordChofer: '',
     pedidoID: '',
+    catalogoSeleccionado: [],
+    catalogoSeleccionado2: [],
+    filter: '',
+    PedidosIDS: [],
+    stocks: [],
+    pedidoPuntos: [
+      {
+        nombre: '',
+        cantidad: '',
+      },
+    ],
   });
+  const filter = ref('');
 
   const obtenerCatalogosProductos = async () => {
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
-    estado.catalogosOfertas = [entidadLeerMenu];
+    // console.log(entidadLeerMenu.hijas);
+    estado.catalogosOfertas = entidadLeerMenu.hijas;
+    estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
+    estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
   };
 
   const buscarPedidos = async () => {
@@ -62,7 +79,9 @@ export const usePedido = () => {
       undefined,
       undefined,
       useGqlToken(useAuth.token),
-    ); //@ts-ignore
+    );
+    console.log(pedidoBuscar);
+    //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
       pedidoBuscar.map((pedido) =>
         pedidoService
@@ -70,40 +89,46 @@ export const usePedido = () => {
           .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
       ),
     );
+
     hideLoading();
   };
   const buscarPedidos2 = async () => {
     showLoading();
+    // const {pedidoBuscar} = await pedidoService.pedidoBuscarVendedor(
+    //   useAuth.negocioElegido._id,
+    //   useGqlToken(useAuth.token),
+    // );
+    // console.log(pedidoBuscar);
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       undefined,
       useAuth.negocioElegido._id,
       undefined,
       useGqlToken(useAuth.token),
     );
-    // console.log('first', pedidoBuscar);
-    //@ts-ignore
-    estado.pedidosEntidad = await Promise.all(
-      pedidoBuscar.map((pedido) =>
-        pedidoService
-          .pedidoLeerEstado(pedido._id)
-          .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
-      ),
+    console.log(pedidoBuscar);
+
+    const pedidos = pedidoBuscar.reduce(
+      (accumulator: any, pedido: any) => {
+        const allAccepted = pedido.items.every((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'aceptado'),
+        );
+
+        if (allAccepted) {
+          accumulator.aceptados.push(pedido);
+        } else {
+          accumulator.noAceptados.push(pedido);
+        }
+
+        return accumulator;
+      },
+      { aceptados: [], noAceptados: [] },
     );
+    console.log(estado.pedidosSinAceptar);
+    console.log(estado.pedidosAceptados);
     hideLoading();
-    console.log(estado.pedidosEntidad);
-    //@ts-ignore
-    estado.pedidosAceptados = estado.pedidosEntidad.filter(
-      (
-        pedido, // prettier-ignore
-      ) =>
-        //@ts-ignore
-        pedido.estadoItems == 'aceptado' || pedido.estadoItems == 'preparado',
-    ); //@ts-ignore
-    estado.pedidosSinAceptar = estado.pedidosEntidad.filter(
-      // prettier-ignore
-      //@ts-ignore
-      (pedido) => pedido.estadoItems == 'iniciado' || pedido.estadoItems == 'confirmado',
-    );
+
+    estado.pedidosSinAceptar = pedidos.noAceptados;
+    estado.pedidosAceptados = pedidos.aceptados;
   };
 
   const buscarPedidoID = async (id: string) => {
@@ -230,6 +255,237 @@ export const usePedido = () => {
     console.log(estado.itemsEstadoAjustado);
   };
 
+  let filteredCatalogos = computed(() => {
+    if (!filter.value) {
+      return estado.catalogoSeleccionado2;
+    }
+    console.log(estado.catalogoSeleccionado);
+    const res = {
+      ...estado.catalogoSeleccionado, //@ts-ignore
+      hijas: estado.catalogoSeleccionado.hijas
+        .map((hija: any) => ({
+          ...hija,
+          ofertas: hija.ofertas.filter((oferta: any) =>
+            oferta.nombre.toLowerCase().includes(filter.value.toLowerCase()),
+          ),
+        }))
+        .filter((hija: any) => hija.ofertas.length > 0),
+    };
+    console.log(res);
+
+    return res;
+  });
+
+  const aceptarTodosLosPedidosSolicitables = async () => {
+    console.log('first');
+    const pedidosIDS = estado.pedidosSinAceptar.map(
+      (pedido: any) => pedido._id,
+    );
+    const { pedidosAceptarOfertasSolicitables } =
+      await pedidoService.pedidosAceptarOfertasSolicitables(pedidosIDS);
+    console.log(pedidosAceptarOfertasSolicitables);
+
+    // const res = pedidosAceptarOfertasSolicitables.map(item => ({
+    //   comprador: item.comprador,
+    //   cantidadOferta: item.items.reduce((total, current) => total + current.cantidad, 0)
+    //  }));
+    //  console.log(res)
+
+    const result = pedidosAceptarOfertasSolicitables.reduce(
+      (acumulador: any, pedido: any) => {
+        pedido.items.forEach((item: any) => {
+          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+            const itemExistente = acumulador.find(
+              (itemAcumulador: any) =>
+                itemAcumulador.oferta._id === item.oferta._id,
+            );
+
+            if (itemExistente) {
+              itemExistente.cantidad += item.cantidad;
+              itemExistente.pedidoIDS.push(pedido._id);
+              const compradorExistente = itemExistente.entidad.find(
+                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
+              );
+              if (compradorExistente) {
+                compradorExistente.cantidad += item.cantidad;
+              } else {
+                itemExistente.entidad.push({
+                  nombre: pedido.comprador.nombre,
+                  cantidad: item.cantidad,
+                });
+              }
+            } else {
+              acumulador.push({
+                pedidoIDS: [pedido._id],
+                estado: pedido.items[0].estado,
+                oferta: {
+                  _id: item.oferta._id,
+                  nombre: item.oferta.nombre,
+                },
+                producto: {
+                  _id: item.oferta.ingredientes[0].producto._id,
+                  nombre: item.oferta.ingredientes[0].producto.nombre,
+                },
+                cantidad: item.cantidad,
+                entidad: [
+                  {
+                    nombre: pedido.comprador.nombre,
+                    cantidad: item.cantidad,
+                  },
+                ],
+              });
+            }
+          }
+        });
+        return acumulador;
+      },
+      [],
+    );
+
+    console.log(result);
+    storePedido.pedidosSolicitado = result.map((pedido: any) => {
+      const stock = estado.stocks.find(
+        //@ts-ignore
+        (stock: any) => stock.producto._id === pedido.producto._id,
+      );
+      console.log(stock);
+      if (stock) {
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock.cantidad,
+        };
+      }
+      return null;
+    });
+    console.log(storePedido.pedidosSolicitado);
+    NotifySucessCenter('Pedidos de solicitud aceptados');
+    buscarPedidos2();
+  };
+
+  const aceptarTodosLosPedidosDirectos = async () => {
+    const pedidosIDS = estado.pedidosSinAceptar.map(
+      (pedido: any) => pedido._id,
+    );
+    console.log(pedidosIDS);
+    const { pedidosAceptarOfertasDirectas } =
+      await pedidoService.pedidosAceptarOfertasDirectas(pedidosIDS);
+    console.log(pedidosAceptarOfertasDirectas);
+
+    const result = pedidosAceptarOfertasDirectas.reduce(
+      (acumulador: any, pedido: any) => {
+        pedido.items.forEach((item: any) => {
+          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+            const itemExistente = acumulador.find(
+              (itemAcumulador: any) =>
+                itemAcumulador.oferta._id === item.oferta._id,
+            );
+
+            if (itemExistente) {
+              itemExistente.cantidad += item.cantidad;
+              itemExistente.pedidoIDS.push(pedido._id);
+              const compradorExistente = itemExistente.entidad.find(
+                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
+              );
+              if (compradorExistente) {
+                compradorExistente.cantidad += item.cantidad;
+              } else {
+                itemExistente.entidad.push({
+                  nombre: pedido.comprador.nombre,
+                  cantidad: item.cantidad,
+                });
+              }
+            } else {
+              acumulador.push({
+                pedidoIDS: [pedido._id],
+                estado: pedido.items[0].estado,
+                oferta: {
+                  _id: item.oferta._id,
+                  nombre: item.oferta.nombre,
+                },
+                producto: {
+                  _id: item.oferta.ingredientes[0].producto._id,
+                  nombre: item.oferta.ingredientes[0].producto.nombre,
+                },
+                cantidad: item.cantidad,
+                entidad: [
+                  {
+                    nombre: pedido.comprador.nombre,
+                    cantidad: item.cantidad,
+                  },
+                ],
+              });
+            }
+          }
+        });
+        return acumulador;
+      },
+      [],
+    );
+
+    console.log(result);
+    storePedido.pedidosDirecto = result.map((pedido: any) => {
+      const stock = estado.stocks.find(
+        //@ts-ignore
+        (stock: any) => stock.producto._id === pedido.producto._id,
+      );
+      console.log(stock);
+      if (stock) {
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock.cantidad,
+        };
+      }
+      return null;
+    });
+    console.log(storePedido.pedidosDirecto);
+    NotifySucessCenter('Pedidos de directos aceptados');
+    buscarPedidos2();
+  };
+
+  const verPedidoPuntos = (row: any) => {
+    console.log('first');
+    console.log(row);
+    estado.modal.isShowPedidos = true;
+    estado.pedidoPuntos = row.entidad;
+    console.log(estado.pedidoPuntos);
+  };
+
+  const ofertaPreparado = async (fila: any) => {
+    console.log('first');
+    console.log(fila);
+    const { pedidosPrepararOfertas } =
+      await pedidoService.pedidosOfertaPreparados(fila.pedidoIDS, [
+        fila.oferta._id,
+      ]);
+    if (pedidosPrepararOfertas)
+      NotifySucessCenter('Oferta preparada exitosamente');
+    console.log(pedidosPrepararOfertas);
+  };
+
+  onMounted(async () => {
+    const { entidadBuscar } = await stockService.obtenerTodoStock(
+      useAuth.negocioElegido._id,
+    );
+
+    // console.log(entidadBuscar);
+    estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
+      const cantidadTotal = stock.lotes.reduce(
+        (total: any, lote: any) => total + lote.cantidad,
+        0,
+      );
+
+      return {
+        nombreProducto: stock.producto.nombre,
+        foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
+        producto: stock.producto,
+        presentaciones: stock.producto.presentaciones,
+        lotes: stock.lotes,
+        cantidad: cantidadTotal,
+      };
+    });
+    console.log(estado.stocks);
+  });
+
   return {
     useAuth,
     estado,
@@ -245,5 +501,12 @@ export const usePedido = () => {
     obtenerListaOfertas,
     obtenerItemsEstado,
     abrirModalRecibirPedido,
+    filter,
+    filteredCatalogos,
+    aceptarTodosLosPedidosSolicitables,
+    storePedido,
+    aceptarTodosLosPedidosDirectos,
+    verPedidoPuntos,
+    ofertaPreparado,
   };
 };

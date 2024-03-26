@@ -11,6 +11,18 @@ export const menuListSede = [
     to: '/sede/productos',
     subMenu: [],
   },
+  {
+    icon: 'fact_check',
+    label: 'Catalogos',
+    to: '/sede/catalogos',
+    subMenu: [],
+  },
+  {
+    icon: 'people',
+    label: 'Ofertas',
+    to: '/sede/ofertas',
+    subMenu: [],
+  },
 ];
 
 export const menuListPunto = [

@@ -68,11 +68,11 @@ export const columnsOfertas = [
     sortable: true,
   },
   {
-    name: 'grupos',
+    name: 'catalogo',
     required: true,
-    label: 'grupos',
+    label: 'Catalogo',
     align: 'left',
-    field: (row: any) => row.grupos,
+    field: (row: any) => row.catalogo,
     sortable: true,
   },
   {
@@ -136,7 +136,7 @@ export const columnsProductos = [
     required: true,
     label: 'categoria',
     align: 'left',
-    field: (row: any) => row.categoria.nombre,
+    field: (row: any) => row.categoria,
     sortable: true,
   },
   {
@@ -266,6 +266,46 @@ export const detallePedidoAccion = [
     label: 'Precio Total',
     align: 'right',
     field: (row: any) => row.cantidad * row.oferta.precio,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const pedidoGlobal = [
+  {
+    name: 'nombre',
+    required: true,
+    label: 'Nombre(s)',
+    align: 'left',
+    field: (row: any) => row.oferta.nombre,
+    sortable: true,
+  },
+  {
+    name: 'cantidadPedido',
+    required: true,
+    label: 'Cantidad Pedido',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'cantidadStock',
+    required: true,
+    label: 'Cantidad Stock',
+    align: 'center',
+    field: (row: any) => row.stockEntidad,
+    sortable: true,
+  },
+  {
+    name: 'diferencia',
+    required: true,
+    label: 'Diferencia',
+    align: 'right',
+    field: (row: any) => row.stockEntidad - row.cantidad,
     sortable: true,
   },
   {

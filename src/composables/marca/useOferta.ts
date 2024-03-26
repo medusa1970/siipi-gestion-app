@@ -1,4 +1,4 @@
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { NotifySucessCenter } from '~/helpers/message.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
@@ -10,6 +10,7 @@ export const useOferta = () => {
   const storeOferta = ofertaStore();
   const router = useRouter();
   const $q = useQuasar();
+  const pruebaProducto = ref('');
 
   const estado = reactive({
     ofertas: [],
@@ -18,7 +19,7 @@ export const useOferta = () => {
       nombre: '',
       descripcion: '',
       precio: 0,
-      grupos: [],
+      catalogo: '',
       ingredientes: [],
       preparados: [],
       condiciones: [],
@@ -31,11 +32,17 @@ export const useOferta = () => {
       isImportPresentation: false,
       isAddCatalogo: false,
       isEditIngrediente: false,
+      isShowCatalogo: false,
     },
     toogle: false,
     productoFijo: {
       ingredienteID: '',
-      producto: '',
+      producto: {
+        _id: '',
+        nombre: '',
+        presentacionBasica: '',
+        presentaciones: [],
+      },
       presentacion: 0,
       import: '',
     },
@@ -45,27 +52,55 @@ export const useOferta = () => {
       nombre: '',
       id: '',
     },
+    catalogoSeleccionado: null,
   });
+
+  const clearOferta = {
+    _id: '',
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    catalogo: '',
+    producto: {
+      _id: '',
+      nombre: '',
+      presentacionBasica: '',
+      presentaciones: [],
+    },
+    cantidad: 0,
+  };
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
-    // console.log(ofertaBuscar);
     estado.ofertas = ofertaBuscar;
-    // storeOferta.oferta = ofertaBuscar;
     // console.log(estado.ofertas);
+    // OBTENER CATALOGOS
   };
 
   const crearOferta = async () => {
-    // console.log('first');
     const { _id, ingredientes, condiciones, preparados, ...ofertaData } =
       estado.oferta;
+    console.log(ofertaData);
     const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
+    console.log(ofertaCrear);
     if (ofertaCrear._id) {
+      await ofertaService.crearIngredienteProducto(
+        ofertaCrear._id, //@ts-ignore
+        estado.productoFijo.producto._id, //@ts-ignore
+        estado.productoFijo.presentacion,
+      );
       NotifySucessCenter('Oferta creada correctamente');
       estado.modal.isCreatedOferta = true;
-      estado.oferta._id = ofertaCrear._id;
       storeOferta.isEdit = true;
       storeOferta.isEditIngrediente = true;
+      router.push('/sede/ofertas');
     }
+    // if (ofertaCrear._id) {
+    //   NotifySucessCenter('Oferta creada correctamente');
+    //   estado.modal.isCreatedOferta = true;
+    //   estado.oferta._id = ofertaCrear._id;
+    //   storeOferta.isEdit = true;
+    //   storeOferta.isEditIngrediente = true;
+    // }
   };
 
   const abrirModalIngredientes = () => {
@@ -91,7 +126,7 @@ export const useOferta = () => {
       NotifySucessCenter('Ingrediente creado correctamente'); //@ts-ignore
     estado.oferta.ingredientes.push(ofertaCrearIngredienteProducto);
     estado.modal.isAddIngredientProduct = false;
-    estado.productoFijo.producto = '';
+    // estado.productoFijo.producto = '';
     estado.productoFijo.presentacion = 0;
   };
   const importarPresentacion = async () => {
@@ -102,10 +137,16 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
-    // console.log('first');
-    // estado.oferta.nombre = oferta.nombre;
-    storeOferta.oferta = oferta;
-    estado.oferta = oferta;
+    console.log(oferta);
+    storeOferta.oferta._id = oferta._id;
+    storeOferta.oferta.nombre = oferta.nombre;
+    storeOferta.oferta.descripcion = oferta.descripcion;
+    storeOferta.oferta.precio = oferta.precio;
+    storeOferta.oferta.catalogo = oferta.catalogo._id;
+    storeOferta.oferta.producto = oferta.ingredientes[0].producto;
+    storeOferta.oferta.cantidad = oferta.ingredientes[0].cantidad;
+    console.log(storeOferta.oferta);
+
     storeOferta.isEdit = true;
     storeOferta.isEditIngrediente = true;
 
@@ -115,17 +156,17 @@ export const useOferta = () => {
   const abrirAgregarOferta = () => {
     storeOferta.isEdit = false;
     storeOferta.isEditIngrediente = false;
-    storeOferta.oferta = ''; //@ts-ignore
+    storeOferta.oferta = clearOferta; //@ts-ignore
     estado.oferta = '';
   };
 
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
-    // console.log(catalogoArbol);
-    // console.log(catalogoArbol);
     estado.catalogos = catalogoArbol;
+    // console.log(catalogoArbol);
   };
   const redirectCatalogoArbol = (catalogo: any) => {
+    // console.log(catalogo);
     // console.log(catalogo);
     storeOferta.catalogoElegido = [catalogo];
     router.push('catalogos/' + catalogo._id);
@@ -168,8 +209,19 @@ export const useOferta = () => {
       preparados,
       ...ofertaData
     } = estado.oferta;
+    console.log(ofertaData);
+    console.log(estado.productoFijo);
     await ofertaService.editarOferta(estado.oferta._id, ofertaData);
+    // const { ofertaModificarIngredienteProducto: res } =
+    // await ofertaService.editarIngredienteProducto(
+    //   estado.oferta._id, //@ts-ignore
+    //   estado.productoFijo.ingredienteID, //@ts-ignore
+    //   estado.productoFijo.producto._id,
+    //   estado.productoFijo.presentacion,
+    // );
+    // console.log(res);
     NotifySucessCenter('Oferta editada correctamente');
+    router.push('/sede/ofertas');
   };
   const editarIngrediente = async (ingrediente: any) => {
     // console.log(ingrediente);
@@ -205,7 +257,7 @@ export const useOferta = () => {
         estado.productoFijo.presentacion,
       );
     if (res) {
-      // console.log(res); //@ts-ignore
+      //@ts-ignore
       estado.oferta.ingredientes = estado.oferta.ingredientes.map(
         (ingrediente: any) => {
           return ingrediente._id === res[0]._id ? res[0] : ingrediente;
@@ -243,6 +295,20 @@ export const useOferta = () => {
       obtenerTodasofertas();
     });
   };
+  const abrirModalCatalogo = (catalogo: any) => {
+    // console.log(catalogo);
+    // console.log(catalogo);
+    estado.modal.isShowCatalogo = true;
+    estado.catalogoSeleccionado = catalogo;
+    console.log(estado.catalogoSeleccionado);
+  };
+  const elegirCatalogo = (catalogoID: string) => {
+    console.log(catalogoID);
+    estado.oferta.catalogo = catalogoID;
+    estado.modal.isShowCatalogo = false;
+    // const valor = '2';
+    // estado.oferta.catalogo = valor;
+  };
 
   //on mounted
   // onMounted(() => {
@@ -269,5 +335,8 @@ export const useOferta = () => {
     editarIngredienteProducto,
     test,
     borrarOferta,
+    abrirModalCatalogo,
+    elegirCatalogo,
+    pruebaProducto,
   };
 };

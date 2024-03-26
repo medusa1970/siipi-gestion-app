@@ -1,5 +1,5 @@
 <template>
-  <Layout :menuList="menuListCathering">
+  <Layout :menuList="menuListComputed">
     <template #actionPedido>
       <q-btn
         dense
@@ -28,6 +28,7 @@
 import { menuListCathering } from '@/helpers/menuList';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
@@ -47,7 +48,6 @@ const realizarPedido = async () => {
     items,
     useGqlToken(storeAuth.token),
   );
-  console.log(pedidoIniciar);
   if (pedidoIniciar) {
     await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
     await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
@@ -60,4 +60,22 @@ const realizarPedido = async () => {
 
   console.log(storePedido.listaPedido);
 };
+
+console.log(menuListCathering);
+console.log(storeAuth.user.cargo);
+
+// const cargo = menuListCathering.filter(
+//   (item) => item.label === 'Stock' || item.label === 'Pedidos',
+// );
+// console.log(cargo);
+
+const menuListComputed = computed(() => {
+  if (storeAuth.user.cargo === 'almacen') {
+    return menuListCathering.filter(
+      (item) => item.label === 'Stock' || item.label === 'Pedidos',
+    );
+  } else {
+    return menuListCathering;
+  }
+});
 </script>

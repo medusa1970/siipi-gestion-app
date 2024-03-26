@@ -1,8 +1,22 @@
+# ROL ALMACEN
+
+- ver stock
+- ingreso/salida
+- recibir pedidos
+- hacer pedidos
+- ver pedido n sucursal
+- ver pedido global
+- imprimir boleta pedido
+- hacer inventario?
+
 # HACER PARA FUNCION
 
 hacer pedido
-aceptar todos los pedidos
-calcular cantidad total de cada item
+
+- aceptar todos los pedidos
+- calcular cantidad total de cada item
+- Modificar formulario para hacer pedido por la anterior (busqueda)
+- Salida de otra sucursal (entidad panaderia, entidad cocina, entidad reposteria)
 
 # LISTA DE ESPECIFICACION DE WIREFRAME
 

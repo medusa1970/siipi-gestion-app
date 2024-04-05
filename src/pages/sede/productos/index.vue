@@ -40,6 +40,9 @@
       <!-- BADGE -->
       <template #rows-badge="{ props }">
         <q-tr :props="props" @dblclick="ControladorFila(props)">
+          <q-td key="creado" :props="props">
+            {{ formatearFecha(props.row._creado) }}
+          </q-td>
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
@@ -146,6 +149,11 @@ definePageMeta({
 import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+const formatearFecha = (date) => {
+  return format(new Date(date), 'dd-MM-yyyy', { locale: es });
+};
 
 const isDoubleClick = ref(false);
 const row = ref('');

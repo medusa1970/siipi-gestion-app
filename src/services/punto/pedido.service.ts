@@ -101,4 +101,18 @@ export const pedidoService = {
     postData(
       GqlPedidosPrepararOfertas({ busqueda: { _ids: pedidoIds }, ofertaIds }),
     ),
+  pedidosOfertaAjustar: async (
+    pedidoIds: string[],
+    ofertaId: string,
+    comentario: string,
+    diferenciaTotal: number,
+  ) =>
+    postData(
+      GqlPedidosAjustarOferta({
+        busqueda: { _ids: pedidoIds },
+        ofertaId,
+        diferenciaTotal,
+        comentario,
+      }),
+    ),
 };

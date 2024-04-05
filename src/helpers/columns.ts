@@ -46,6 +46,12 @@ export const columnsEmpleados = [
 
 export const columnsOfertas = [
   {
+    name: 'creado',
+    label: 'Creado',
+    align: 'left',
+    field: (row: any) => row._creado,
+  },
+  {
     name: 'nombre',
     label: 'Nombre',
     align: 'left',
@@ -59,14 +65,14 @@ export const columnsOfertas = [
     field: (row: any) => row.ingredientes,
     sortable: true,
   },
-  {
-    name: 'preparados',
-    required: true,
-    label: 'Preparados',
-    align: 'left',
-    field: (row: any) => row.preparados.map((p: any) => p),
-    sortable: true,
-  },
+  // {
+  //   name: 'preparados',
+  //   required: true,
+  //   label: 'Preparados',
+  //   align: 'left',
+  //   field: (row: any) => row.preparados.map((p: any) => p),
+  //   sortable: true,
+  // },
   {
     name: 'catalogo',
     required: true,
@@ -84,14 +90,6 @@ export const columnsOfertas = [
     sortable: true,
   },
   {
-    name: 'ocultar',
-    required: true,
-    label: 'Desabilitar',
-    align: 'left',
-    field: (row: any) => row.ocultar,
-    sortable: true,
-  },
-  {
     name: 'actions',
     label: 'Acciones',
     align: 'right',
@@ -99,6 +97,12 @@ export const columnsOfertas = [
 ];
 
 export const columnsProductos = [
+  {
+    name: 'creado',
+    label: 'Creado',
+    align: 'left',
+    field: (row: any) => row._creado,
+  },
   {
     name: 'nombre',
     required: true,
@@ -306,6 +310,85 @@ export const pedidoGlobal = [
     label: 'Diferencia',
     align: 'right',
     field: (row: any) => row.stockEntidad - row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const tesoreriaCobrar = [
+  {
+    name: 'entidad',
+    required: true,
+    label: 'Cliente',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: 'pedidosAnteriores',
+    required: true,
+    label: 'Semanas Anteriores',
+    align: 'center',
+    field: (row: any) => row.pedidosAnteriores,
+    sortable: true,
+  },
+  {
+    name: 'pedidosSemanaActual',
+    required: true,
+    label: 'Ultima Semana',
+    align: 'center',
+    field: (row: any) => row.pedidosSemanaActual,
+    sortable: true,
+  },
+  {
+    name: 'total',
+    required: true,
+    label: 'Total',
+    align: 'right',
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const tesoreriaPendiente = [
+  {
+    name: 'entidad',
+    required: true,
+    label: 'Cliente',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: '_creado',
+    required: true,
+    label: 'Fecha',
+    align: 'center',
+    field: (row: any) => row._creado,
+    sortable: true,
+  },
+  {
+    name: 'monto',
+    required: true,
+    label: 'Monto',
+    align: 'center',
+    field: (row: any) => row.monto,
+    sortable: true,
+  },
+  {
+    name: 'tipo',
+    required: true,
+    label: 'Tipo',
+    align: 'center',
+    field: (row: any) => row.tipo,
     sortable: true,
   },
   {

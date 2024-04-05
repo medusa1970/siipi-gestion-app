@@ -75,28 +75,13 @@ export const menuListPunto = [
   {
     icon: 'point_of_sale',
     label: 'Caja',
-    // to: '/punto/caja',
+    to: '/punto/caja',
     subMenu: [],
   },
   {
     icon: 'settings',
     label: 'Configuración',
     // to: '/punto/configuracion',
-    subMenu: [],
-  },
-];
-
-export const menuListMarca = [
-  {
-    icon: 'people',
-    label: 'Ofertas',
-    to: '/marca/ofertas',
-    subMenu: [],
-  },
-  {
-    icon: 'fact_check',
-    label: 'Gestion de catalogos',
-    to: '/marca/catalogos',
     subMenu: [],
   },
 ];
@@ -120,7 +105,11 @@ export const menuListCathering = [
     subMenu: [
       {
         label: 'Recibir productos',
-        to: '/cathering/pedidos/recibirPedido',
+        to: '/cathering/pedidos/recibirProductos',
+      },
+      {
+        label: 'Despachar productos',
+        to: '/cathering/pedidos/despacharProductos',
       },
       {
         label: 'ver stock',
@@ -155,8 +144,16 @@ export const menuListCathering = [
   {
     icon: 'point_of_sale',
     label: 'Caja',
-    // to: '/cathering/caja',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Sucursal cobrar',
+        to: '/cathering/caja',
+      },
+      {
+        label: 'Confirmar pagos',
+        to: '/cathering/caja/confirmarPagos',
+      },
+    ],
   },
   {
     icon: 'settings',

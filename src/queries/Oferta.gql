@@ -9,13 +9,18 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
     _creado
     nombre
     descripcion
-    precio
-    grupos
     catalogo {
       _id
       nombre
     }
-    # ocultar
+    precio
+    grupos
+    preparados {
+      producto {
+        _id
+      }
+      cantidad
+    }
     ingredientes {
       ... on IngredienteProducto {
         _id
@@ -31,51 +36,10 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
         }
         cantidad
       }
-      ... on IngredienteEleccion {
+      ... on IngredienteGrupo {
         _id
         _tipo
-        nombre
-        cantidadMin
-        cantidadMax
-        costoAdicional
-        items {
-          producto {
-            _id
-            nombre
-          }
-          cantidad
-          costoAdicional
-        }
-      }
-    }
-    preparados {
-      producto {
-        _id
-      }
-      cantidad
-    }
-    condiciones {
-      ... on CondicionMontoMinimo {
-        _id
-        _tipo
-        montoMinimo
-      }
-      ... on CondicionPorFechas {
-        _id
-        _tipo
-        fechaInicio
-        fechaFin
-      }
-      ... on CondicionPorDias {
-        _id
-        _tipo
-        dias
-      }
-      ... on CondicionPorHorarios {
-        _id
-        _tipo
-        horarioInicio
-        horarioFin
+        grupo
       }
     }
   }

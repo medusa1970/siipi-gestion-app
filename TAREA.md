@@ -1,3 +1,6 @@
+- solo supervisor visualiza precio CATHERING
+- catalogo nombre (id quitar) LOGISTICA
+
 # ROL ALMACEN
 
 - ver stock
@@ -51,7 +54,7 @@ HILO DE COMENTARIO.
 - Realizar pedido, seleccionar vendedor (LISTA)
 - Alerta de cambio de la seleccion del vendedor.
 - CATHERING, seleccionar todos los pedidos, tambien individual, grupo productos.
-- Input del chofer para recibir un pedido.
+- Input del chofer para recibir un pedido choferSiipi123.
 
 # META 4
 

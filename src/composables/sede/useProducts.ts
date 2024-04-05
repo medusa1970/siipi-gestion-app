@@ -79,6 +79,7 @@ export const useProducts = () => {
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
+    console.log(productoBuscar);
     // const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
     // estado.categorias = categoriaArbol;
   };
@@ -309,6 +310,13 @@ export const useProducts = () => {
     estado.categoria.pariente = data._id;
   };
   const navegarCrearOferta = (producto: any) => {
+    storeOferta.oferta._id = '';
+    storeOferta.oferta.nombre = '';
+    storeOferta.oferta.descripcion = '';
+    storeOferta.oferta.precio = 0;
+    storeOferta.oferta.catalogo = '';
+    storeOferta.isEdit = false;
+
     let { categoria, comentario, ...productoData } = producto;
     storeOferta.oferta.producto = productoData;
   };

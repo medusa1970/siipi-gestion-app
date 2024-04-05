@@ -20,6 +20,7 @@ export const useOferta = () => {
       descripcion: '',
       precio: 0,
       catalogo: '',
+      catalogoNombre: '',
       ingredientes: [],
       preparados: [],
       condiciones: [],
@@ -52,7 +53,7 @@ export const useOferta = () => {
       nombre: '',
       id: '',
     },
-    catalogoSeleccionado: null,
+    catalogoSeleccionado: [],
   });
 
   const clearOferta = {
@@ -71,14 +72,22 @@ export const useOferta = () => {
   };
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
+    console.log(ofertaBuscar);
     estado.ofertas = ofertaBuscar;
     // console.log(estado.ofertas);
     // OBTENER CATALOGOS
   };
+  // const
 
   const crearOferta = async () => {
-    const { _id, ingredientes, condiciones, preparados, ...ofertaData } =
-      estado.oferta;
+    const {
+      _id,
+      ingredientes,
+      condiciones,
+      preparados,
+      catalogoNombre,
+      ...ofertaData
+    } = estado.oferta;
     console.log(ofertaData);
     const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
     console.log(ofertaCrear);
@@ -94,13 +103,6 @@ export const useOferta = () => {
       storeOferta.isEditIngrediente = true;
       router.push('/sede/ofertas');
     }
-    // if (ofertaCrear._id) {
-    //   NotifySucessCenter('Oferta creada correctamente');
-    //   estado.modal.isCreatedOferta = true;
-    //   estado.oferta._id = ofertaCrear._id;
-    //   storeOferta.isEdit = true;
-    //   storeOferta.isEditIngrediente = true;
-    // }
   };
 
   const abrirModalIngredientes = () => {
@@ -163,12 +165,21 @@ export const useOferta = () => {
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
     estado.catalogos = catalogoArbol;
+    console.log(estado.catalogos);
     // console.log(catalogoArbol);
   };
+
+  const obtenerCatalogoId = async (catalogoId: string) => {
+    console.log('first');
+    const { catalogoArbol } = await ofertaService.buscarCatalogoID(catalogoId);
+    //@ts-ignore
+    if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
+  };
+
   const redirectCatalogoArbol = (catalogo: any) => {
     // console.log(catalogo);
     // console.log(catalogo);
-    storeOferta.catalogoElegido = [catalogo];
+    // storeOferta.catalogoElegido = [catalogo];
     router.push('catalogos/' + catalogo._id);
   };
   const crearCatalogo = async () => {
@@ -185,18 +196,18 @@ export const useOferta = () => {
   const modalCrearCategoriaArbol = (data: any) => {
     estado.modal.isAddCatalogo = true;
     estado.catalogo.id = data._id;
+    console.log('first');
   };
 
-  const crearCatalogoArbol = async () => {
-    // console.log(estado.catalogo);
+  const crearCatalogoArbol = async (catalogoId: string) => {
     await ofertaService.crearCatalogo(
       estado.catalogo.nombre, //@ts-ignore
       estado.catalogo.id,
     );
-    // obtenerTodoCatalagos();
     estado.modal.isAddCatalogo = false;
     estado.catalogo.nombre = '';
     estado.catalogo.id = '';
+    obtenerCatalogoId(catalogoId);
     NotifySucessCenter('Catalogo creado correctamente');
   };
   const editarOferta = async () => {
@@ -207,6 +218,7 @@ export const useOferta = () => {
       condiciones,
       ingredientes,
       preparados,
+      catalogoNombre,
       ...ofertaData
     } = estado.oferta;
     console.log(ofertaData);
@@ -302,12 +314,11 @@ export const useOferta = () => {
     estado.catalogoSeleccionado = catalogo;
     console.log(estado.catalogoSeleccionado);
   };
-  const elegirCatalogo = (catalogoID: string) => {
-    console.log(catalogoID);
-    estado.oferta.catalogo = catalogoID;
+  const elegirCatalogo = (item: { _id: string; nombre: string }) => {
+    estado.oferta.catalogo = item._id;
+    estado.oferta.catalogoNombre = item.nombre;
+
     estado.modal.isShowCatalogo = false;
-    // const valor = '2';
-    // estado.oferta.catalogo = valor;
   };
 
   //on mounted
@@ -338,5 +349,6 @@ export const useOferta = () => {
     abrirModalCatalogo,
     elegirCatalogo,
     pruebaProducto,
+    obtenerCatalogoId,
   };
 };

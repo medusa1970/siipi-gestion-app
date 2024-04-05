@@ -73,6 +73,7 @@
             class="[&>div>div]:font-bold"
             name="pGlobal"
             label="Pedido global"
+            @click="handlePedidoGlobal"
           />
         </q-tabs>
 
@@ -101,20 +102,6 @@
                     flat
                     round
                   />
-                  <!-- <q-btn
-                    color="primary"
-                    label="Directo"
-                    padding="0px 10px"
-                    no-caps
-                    @click="aceptarTodosLosPedidosDirectos"
-                  />
-                  <q-btn
-                    color="primary"
-                    label="Solicitud"
-                    padding="0px 10px"
-                    no-caps
-                    @click="aceptarTodosLosPedidosSolicitables"
-                  /> -->
                 </span>
               </div>
               <h1 v-if="estado.pedidosSinAceptar.length === 0">
@@ -130,22 +117,6 @@
               >
                 <template v-slot:actions>
                   <div class="flex">
-                    <!-- <h1 class="text-orange-500 font-bold">
-                  {{ punto.estadoItems }}
-                </h1> -->
-                    <!-- <q-btn
-                      dense
-                      round
-                      icon="check"
-                      flat
-                      color="green"
-                      padding="4px"
-                      size="12px"
-                      @click="aceptarTodoPedido(punto._id)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Aceptar pedido</q-tooltip
-                      ></q-btn
-                    > -->
                     <q-btn
                       dense
                       round
@@ -155,8 +126,8 @@
                       padding="4px"
                       size="12px"
                       class="no-print"
-                      @click="imprimir"
-                      ><q-tooltip class="bg-gray-400-500"
+                      @click="imprimir(punto)"
+                      ><q-tooltip class="no-print bg-gray-400-500"
                         >Imprimir pedido</q-tooltip
                       ></q-btn
                     >
@@ -218,10 +189,105 @@
                 :rows="storePedido.pedidosSolicitado"
                 :columns="pedidoGlobal"
                 dense
+                badge
               >
+                <!-- BADGE -->
+                <template #rows-badge="{ props }">
+                  <q-tr
+                    :props="props"
+                    :class="[
+                      props.row.estado.some((e) => e.estado === 'preparado') &&
+                        '!text-gray-300 !font-bold',
+                    ]"
+                  >
+                    <q-td key="nombre" :props="props">
+                      {{ props.row.oferta.nombre }}
+                    </q-td>
+                    <q-td key="cantidadPedido" :props="props">
+                      {{ props.row.cantidad }}
+                    </q-td>
+                    <q-td key="cantidadStock" :props="props">
+                      {{ props.row.stockEntidad }}
+                    </q-td>
+                    <q-td key="diferencia" :props="props">
+                      {{ props.row.stockEntidad - props.row.cantidad }}
+                    </q-td>
+                    <q-td key="actions" :props="props">
+                      <div class="flex justify-end">
+                        <q-btn
+                          v-if="props.row.stockEntidad - props.row.cantidad < 0"
+                          color="orange"
+                          icon="bi-wrench-adjustable"
+                          dense
+                          flat
+                          round
+                          size="10px"
+                          padding="2px"
+                          :disable="
+                            props.row.estado.some(
+                              (e) => e.estado === 'ajustado',
+                            )
+                          "
+                          @click="ajustarOferta(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Ajustar</q-tooltip
+                          ></q-btn
+                        >
+                        <q-btn
+                          color="orange"
+                          icon="bi-check2-circle"
+                          dense
+                          flat
+                          round
+                          size="12px"
+                          padding="2px"
+                          :disable="
+                            props.row.estado.some(
+                              (e) => e.estado === 'preparado',
+                            )
+                          "
+                          @click="ofertaPreparado(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Preparado</q-tooltip
+                          ></q-btn
+                        >
+                        <q-btn
+                          color="primary"
+                          icon="bi-eye"
+                          dense
+                          flat
+                          round
+                          size="12px"
+                          padding="2px"
+                          @click="verPedidoPuntos(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Ver Producto</q-tooltip
+                          ></q-btn
+                        >
+                      </div>
+                    </q-td>
+                  </q-tr>
+                </template>
                 <!-- ACTIONS -->
                 <template #body-cell-actions="{ props }">
                   <q-td :props="props">
+                    <q-btn
+                      v-if="props.row.stockEntidad - props.row.cantidad < 0"
+                      color="orange"
+                      icon="bi-wrench-adjustable"
+                      dense
+                      flat
+                      round
+                      size="10px"
+                      padding="2px"
+                      :disable="
+                        props.row.estado.some((e) => e.estado === 'ajustado')
+                      "
+                      @click="ajustarOferta(props.row)"
+                      ><q-tooltip class="bg-gray-400-500"
+                        >Ajustar</q-tooltip
+                      ></q-btn
+                    >
                     <q-btn
                       color="orange"
                       icon="bi-check2-circle"
@@ -230,6 +296,9 @@
                       round
                       size="12px"
                       padding="2px"
+                      :disable="
+                        props.row.estado.some((e) => e.estado === 'preparado')
+                      "
                       @click="ofertaPreparado(props.row)"
                       ><q-tooltip class="bg-gray-400-500"
                         >Preparado</q-tooltip
@@ -275,6 +344,20 @@
                 <template #body-cell-actions="{ props }">
                   <q-td :props="props">
                     <q-btn
+                      v-if="props.row.stockEntidad - props.row.cantidad < 0"
+                      color="orange"
+                      icon="bi-wrench-adjustable"
+                      dense
+                      flat
+                      round
+                      size="10px"
+                      padding="2px"
+                      @click="ajustarOferta(props.row)"
+                      ><q-tooltip class="bg-gray-400-500"
+                        >Ajustar</q-tooltip
+                      ></q-btn
+                    >
+                    <q-btn
                       color="orange"
                       icon="bi-check2-circle"
                       dense
@@ -282,6 +365,9 @@
                       round
                       size="12px"
                       padding="2px"
+                      :disable="
+                        props.row.estado.some((e) => e.estado === 'preparado')
+                      "
                       @click="ofertaPreparado(props.row)"
                       ><q-tooltip class="bg-gray-400-500"
                         >Preparado</q-tooltip
@@ -338,6 +424,30 @@
         </div>
       </q-tab-panel>
     </q-tab-panels>
+    <div
+      id="divParaImprimir"
+      v-if="pedidoSeleccionado"
+      class="w-[283px] border-[1px] [&>p]:!text-[10px] !p-2"
+    >
+      <h1 class="text-center font-bold !text-[13px]">Siipi Factura</h1>
+      <p>Origen: {{ pedidoSeleccionado.comprador.nombre }}</p>
+      <p>Destino: {{ pedidoSeleccionado.vendedor.nombre }}</p>
+      <p>
+        Responsable: {{ pedidoSeleccionado.estado[0].persona.nombre }}
+        {{ pedidoSeleccionado.estado[0].persona.apellido }}
+      </p>
+      <p>Fecha: {{ formatearFecha(pedidoSeleccionado.estado[0].fecha) }}</p>
+      <p class="text-center">
+        ------------------------------------------------
+      </p>
+      <h1 class="font-bold !text-[11px]">Productos:</h1>
+      <div v-for="item in pedidoSeleccionado.items" :key="item._id">
+        <div class="flex gap-2 !text-[10px]">
+          <p>{{ item.cantidad }}</p>
+          <p>{{ item.oferta.nombre }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- MODAL -->
@@ -349,15 +459,29 @@
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
       <q-card-section>
-        <h1 class="bg-gray-300 text-center my-2">puntos</h1>
-        <div
-          class="flex items-center gap-1 mb-[6px]"
-          v-for="punto in estado.pedidoPuntos"
-          :key="punto"
-        >
-          <h1 class="font-bold">{{ punto.nombre }}</h1>
-          <h1 class="font-bold">{{ punto.cantidad }}</h1>
-        </div>
+        <!-- <h1 class="bg-gray-300 text-center my-2">puntos</h1> -->
+        <table class="w-full !my-2">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Ruta</th>
+              <th>Orden</th>
+            </tr>
+          </thead>
+          <tbody class="[&>tr]:border-b-[1px]">
+            <tr
+              v-for="punto in estado.pedidoPuntos"
+              :key="punto"
+              class="text-center"
+            >
+              <td>{{ punto.nombre }}</td>
+              <td>{{ punto.cantidad }}</td>
+              <td>{{ punto.ruta }}</td>
+              <td>{{ punto.orden }}</td>
+            </tr>
+          </tbody>
+        </table>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -382,31 +506,71 @@ const {
   aceptarTodosLosPedidosDirectos,
   verPedidoPuntos,
   ofertaPreparado,
+  ajustarOferta,
+  handlePedidoGlobal,
 } = usePedido();
 
 const tab = ref('puntos');
 const tabPuntos = ref('pGlobal');
 const date = ref('2020/07/08');
+const pedidoSeleccionado = ref(null);
+
+const imprimir = (pedido) => {
+  console.log('imprimir');
+  pedidoSeleccionado.value = pedido;
+
+  // Ocultar el resto del contenido
+  // document.body.style.display = 'none';
+
+  // Mostrar solo el div que deseas imprimir
+  const divParaImprimir = document.getElementById('divParaImprimir');
+
+  divParaImprimir.style.display = 'block';
+
+  // Imprimir la ventana actual
+  window.print();
+
+  // Restaurar la visibilidad del contenido después de imprimir
+  document.body.style.display = 'block';
+  divParaImprimir.style.display = 'none';
+};
 
 onMounted(() => {
   buscarPedidos2();
 });
-
-const imprimir = () => {
-  console.log('imprimir');
-  let printContents = document.getElementById('imprimir').innerHTML;
-  let originalContents = document.body.innerHTML;
-
-  document.body.innerHTML = printContents;
-
-  window.print();
-
-  document.body.innerHTML = originalContents;
-};
 </script>
 
 <style lang="scss" scoped>
+// @media print {
+//   body * {
+//     visibility: hidden;
+//   }
+//   .no-print {
+//     display: none;
+//   }
+//   #divParaImprimir,
+//   #divParaImprimir * {
+//     visibility: visible;
+//   }
+//   #divParaImprimir {
+//     position: absolute;
+//     left: 0;
+//     top: 10px;
+//   }
+// }
 @media print {
+  /* Ocultar la URL del navegador en la impresión */
+  #url {
+    display: none;
+  }
+
+  @page :left {
+    margin: 0.5cm;
+  }
+
+  @page :right {
+    margin: 0.8cm;
+  }
   .no-print {
     display: none;
   }

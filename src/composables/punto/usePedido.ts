@@ -21,6 +21,7 @@ import { stockService } from '~/services/punto/stock.service';
  */
 export const usePedido = () => {
   const useAuth = authStore();
+  const $q = useQuasar();
   const router = useRouter();
   const storePedido = pedidoStore();
   const estado = reactive({
@@ -57,8 +58,11 @@ export const usePedido = () => {
       {
         nombre: '',
         cantidad: '',
+        ruta: '',
+        orden: '',
       },
     ],
+    comentario: '',
   });
   const filter = ref('');
 
@@ -66,7 +70,7 @@ export const usePedido = () => {
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
-    // console.log(entidadLeerMenu.hijas);
+    console.log(entidadLeerMenu.hijas);
     estado.catalogosOfertas = entidadLeerMenu.hijas;
     estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
     estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
@@ -217,10 +221,12 @@ export const usePedido = () => {
     const { entidadBuscarMenu } = await menuService.listarMenus(
       useAuth.negocioElegido._id,
     );
+    console.log(entidadBuscarMenu);
     const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
       entidadBuscarMenu[0].catalogo._id,
     );
     estado.ListaOfertasPedido = catalogoOfertasRecursivo;
+    console.log(estado.ListaOfertasPedido);
     // ofertaService.catalogoRecursivo()
   };
 
@@ -312,6 +318,8 @@ export const usePedido = () => {
                 itemExistente.entidad.push({
                   nombre: pedido.comprador.nombre,
                   cantidad: item.cantidad,
+                  ruta: pedido.comprador.ruta,
+                  orden: pedido.comprador.orden,
                 });
               }
             } else {
@@ -331,6 +339,8 @@ export const usePedido = () => {
                   {
                     nombre: pedido.comprador.nombre,
                     cantidad: item.cantidad,
+                    ruta: pedido.comprador.ruta,
+                    orden: pedido.comprador.orden,
                   },
                 ],
               });
@@ -349,13 +359,10 @@ export const usePedido = () => {
         (stock: any) => stock.producto._id === pedido.producto._id,
       );
       console.log(stock);
-      if (stock) {
-        return {
-          ...pedido, //@ts-ignore
-          stockEntidad: stock.cantidad,
-        };
-      }
-      return null;
+      return {
+        ...pedido, //@ts-ignore
+        stockEntidad: stock ? stock.cantidad : 0,
+      };
     });
     console.log(storePedido.pedidosSolicitado);
     NotifySucessCenter('Pedidos de solicitud aceptados');
@@ -392,6 +399,8 @@ export const usePedido = () => {
                 itemExistente.entidad.push({
                   nombre: pedido.comprador.nombre,
                   cantidad: item.cantidad,
+                  ruta: pedido.comprador.ruta,
+                  orden: pedido.comprador.orden,
                 });
               }
             } else {
@@ -411,6 +420,8 @@ export const usePedido = () => {
                   {
                     nombre: pedido.comprador.nombre,
                     cantidad: item.cantidad,
+                    ruta: pedido.comprador.ruta,
+                    orden: pedido.comprador.orden,
                   },
                 ],
               });
@@ -429,13 +440,11 @@ export const usePedido = () => {
         (stock: any) => stock.producto._id === pedido.producto._id,
       );
       console.log(stock);
-      if (stock) {
-        return {
-          ...pedido, //@ts-ignore
-          stockEntidad: stock.cantidad,
-        };
-      }
-      return null;
+
+      return {
+        ...pedido, //@ts-ignore
+        stockEntidad: stock ? stock.cantidad : 0,
+      };
     });
     console.log(storePedido.pedidosDirecto);
     NotifySucessCenter('Pedidos de directos aceptados');
@@ -443,11 +452,25 @@ export const usePedido = () => {
   };
 
   const verPedidoPuntos = (row: any) => {
-    console.log('first');
-    console.log(row);
+    console.log(row.entidad);
     estado.modal.isShowPedidos = true;
-    estado.pedidoPuntos = row.entidad;
-    console.log(estado.pedidoPuntos);
+    estado.pedidoPuntos = row.entidad.map((pedido: any) => {
+      const diaDeLaSemana = new Date().getDay();
+      const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;
+      return {
+        ...pedido,
+        ruta: pedido.ruta[indice],
+        orden: pedido.orden[indice],
+      };
+    });
+
+    // const diaDeLaSemana = new Date().getDay();
+    // console.log(diaDeLaSemana);
+    // // Ajusta el índice para que 0 sea lunes
+    // const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;
+    // console.log(indice);
+    // // Muestra el valor correspondiente del array ruta
+    // console.log(row.entidad[0].ruta[indice]);
   };
 
   const ofertaPreparado = async (fila: any) => {
@@ -457,9 +480,108 @@ export const usePedido = () => {
       await pedidoService.pedidosOfertaPreparados(fila.pedidoIDS, [
         fila.oferta._id,
       ]);
+    console.log(pedidosPrepararOfertas);
+
+    // const test = pedidosPrepararOfertas[0].items[0].estado.some(
+    //   (estado: any) => estado.estado === 'preparado',
+    // );
+    // console.log(test);
+
     if (pedidosPrepararOfertas)
       NotifySucessCenter('Oferta preparada exitosamente');
     console.log(pedidosPrepararOfertas);
+    let item = pedidosPrepararOfertas[0].items[0];
+
+    storePedido.pedidosSolicitado.forEach((pedido) => {
+      if (pedido.oferta._id == item.oferta._id) {
+        pedido.estado = item.estado;
+      }
+    });
+    storePedido.pedidosDirecto.forEach((pedido) => {
+      if (pedido.oferta._id == item.oferta._id) {
+        pedido.estado = item.estado;
+      }
+    });
+  };
+
+  const ajustarOferta = async (fila: any) => {
+    console.log('first');
+    console.log(fila);
+    let diferencia = fila.cantidad - fila.stockEntidad;
+    console.log(diferencia);
+    // const res = await pedidoService.pedidosOfertaAjustar(fila.pedidoIDS, fila.oferta._id, )
+    $q.dialog({
+      title: `<strong>Ajustar ${fila.oferta.nombre}</strong>`,
+      message: `Ingrese un comentario por la cual esta ajustando automaticamente esta oferta`,
+      cancel: true,
+      persistent: true,
+      html: true,
+      prompt: {
+        model: estado.comentario,
+        type: 'text',
+        clearable: true,
+        // native attributes:
+        step: 2,
+        label: 'Ingrese un comentario*',
+        dense: true,
+      },
+    }).onOk(async () => {
+      const { pedidosAjustarOferta } = await pedidoService.pedidosOfertaAjustar(
+        fila.pedidoIDS,
+        fila.oferta._id,
+        estado.comentario,
+        diferencia,
+      );
+      console.log(pedidosAjustarOferta);
+      if (pedidosAjustarOferta) {
+        let item = pedidosAjustarOferta[0].items[0];
+        storePedido.pedidosSolicitado.forEach((pedido) => {
+          if (pedido.oferta._id == item.oferta._id) {
+            pedido.estado = item.estado;
+          }
+        });
+        storePedido.pedidosDirecto.forEach((pedido) => {
+          if (pedido.oferta._id == item.oferta._id) {
+            pedido.estado = item.estado;
+          }
+        });
+
+        NotifySucessCenter('Oferta ajustado correctamente');
+      }
+    });
+  };
+
+  const handlePedidoGlobal = () => {
+    storePedido.pedidosSolicitado = storePedido.pedidosSolicitado.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0,
+        };
+      },
+    );
+    storePedido.pedidosDirecto = storePedido.pedidosDirecto.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0,
+        };
+      },
+    );
+    console.log(storePedido.pedidosSolicitado);
+    console.log(storePedido.pedidosDirecto);
   };
 
   onMounted(async () => {
@@ -508,5 +630,7 @@ export const usePedido = () => {
     aceptarTodosLosPedidosDirectos,
     verPedidoPuntos,
     ofertaPreparado,
+    ajustarOferta,
+    handlePedidoGlobal,
   };
 };

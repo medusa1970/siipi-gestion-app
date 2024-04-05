@@ -9,7 +9,7 @@
   <div class="flex justify-center mt-4">
     <q-list
       class="rounded-borders w-[350px]"
-      v-for="categoria in storeOferta.catalogoElegido"
+      v-for="categoria in estado.catalogoSeleccionado"
       :key="categoria.nombre"
     >
       <q-expansion-item
@@ -66,7 +66,43 @@
   </div>
 
   <!-- MODAL CATALOGO -->
-  <Dialog
+  <q-dialog persistent v-model="estado.modal.isAddCatalogo">
+    <q-card class="p-3 w-[380px]">
+      <div class="flex justify-between">
+        <h1 class="text-lg font-bold">Agregar Catalogoo</h1>
+        <q-btn
+          icon="close"
+          flat
+          round
+          dense
+          v-close-popup
+          class="border-2 border-red-500"
+        />
+      </div>
+      <!-- <q-space /> -->
+
+      <div class="my-1">
+        <q-input
+          v-model="estado.catalogo.nombre"
+          label="Nombre del catalogo"
+          dense
+        />
+      </div>
+      <div class="flex row justify-center">
+        <q-btn
+          class="mt-2 mb-1"
+          no-caps
+          style="font-size: 15px"
+          padding="4px 10px"
+          label="Guardar"
+          color="secondary"
+          type="submit"
+          @click="crearCatalogoArbol(route.params.id)"
+        ></q-btn>
+      </div>
+    </q-card>
+  </q-dialog>
+  <!-- <Dialog
     v-model="estado.modal.isAddCatalogo"
     title="Agregar catalogo"
     :handle-submit="crearCatalogoArbol"
@@ -78,7 +114,7 @@
         dense
       />
     </template>
-  </Dialog>
+  </Dialog> -->
 </template>
 
 <script setup>
@@ -87,6 +123,15 @@ definePageMeta({
 });
 import { useOferta } from '@/composables/marca/useOferta';
 import Dialog from '@/components/Dialog.vue';
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+console.log(route.params.id);
+
+onMounted(() => {
+  obtenerCatalogoId(route.params.id);
+});
 
 const {
   storeOferta,
@@ -94,5 +139,6 @@ const {
   crearCatalogoArbol,
   modalCrearCategoriaArbol,
   obtenerTodoCatalagos,
+  obtenerCatalogoId,
 } = useOferta();
 </script>

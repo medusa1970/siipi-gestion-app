@@ -1,14 +1,13 @@
 <template>
   <div>
     <Navigation label="Stock" icon="folder" />
-    <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
     <!-- TABLEEXPANDED -->
-    <TableExpand :rows="rowsParaMostrar" ::columns="stockProducts">
+    <Table2 badge :rows="rowsParaMostrar" :columns="stockProducts" dense>
       <template #slot-header1>
-        <NuxtLink href="/punto/pedidos/realizarPedido">
+        <NuxtLink href="/cathering/pedidos/recibirPedido">
           <q-btn
             color="primary"
-            label="Realizar pedido"
+            label="Recibir productos"
             no-caps
             dense
             padding="7px 15px"
@@ -16,7 +15,7 @@
         </NuxtLink>
       </template>
       <template #slot-header2>
-        <NuxtLink href="/punto/inventario">
+        <NuxtLink href="/cathering/inventario">
           <q-btn
             color="primary"
             label="Realizar inventario"
@@ -57,167 +56,140 @@
           />
         </div>
       </template>
-      <template #body-data="{ props }">
-        <div class="col-span-1">
-          <q-list
-            :class="[
-              'shadow-1',
-              estado.modal.isShowAlertProduct && 'bg-orange-100',
-              estado.modal.isShowVencidos && 'bg-blue-100',
-              estado.modal.isShowAllProducts && 'bg-green-100',
-            ]"
+      <!-- TABLA CON BADGE -->
+      <template #rows-badge="{ props }">
+        <q-tr
+          :props="props"
+          :style="
+            (props.row.cantidad === 0 &&
+              'background-color: #FFA08A !important') ||
+            props.row.alertStyle
+          "
+        >
+          <q-td key="foto" :props="props" class="w-[83px]">
+            <q-img
+              :src="props.row.foto"
+              spinner-color="black"
+              class="cell-image"
+            />
+          </q-td>
+          <q-td key="producto" :props="props">
+            {{ props.row.producto.nombre }}
+          </q-td>
+          <q-td
+            key="presentaciones"
+            :props="props"
+            :class="props.row.presentaciones.length === 0 && 'text-red-500'"
           >
-            <q-expansion-item
-              switch-toggle-side
-              expand-separator
-              group="somegroup"
-              class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+            {{
+              props.row.presentaciones.length === 0 ? 'Sin presentaciones' : ''
+            }}
+            {{
+              props.row.presentaciones[0] && props.row.presentaciones[0].nombre
+            }}
+            {{
+              props.row.presentaciones[0] &&
+              props.row.presentaciones[0].cantidad
+            }}
+            ...
+            <q-popup-edit
+              v-model="props.row.presentaciones"
+              anchor="bottom end"
+              self="bottom end"
+              class="flex flex-col gap-[2px] border-[1px]"
             >
-              <template v-slot:header>
-                <div class="flex items-center justify-center">
-                  <!-- uppercase font-bold line-clamp-1 -->
-                  <p class="font-bold">
-                    {{ props.row.nombreProducto }}
-                  </p>
-                </div>
-                <q-item-section side class="h-[50px]">
-                  <!-- <h1>sds</h1> -->
-                  <img
-                    :src="props.row.foto"
-                    class="h-full w-full object-cover"
-                    alt=""
-                  />
-                </q-item-section>
-              </template>
-              <q-card class="pb-3 flex justify-center col-span-3">
-                <div
-                  class="flex flex-col [&>span]:flex [&>span>h1]:w-[105px] [&>span>h1]:font-bold"
-                >
-                  <span>
-                    <h1>Presentaciones</h1>
-                    <div
-                      :class="[
-                        props.row.presentaciones.length === 0 && 'text-red-500',
-                        'cursor-pointer',
-                      ]"
-                    >
-                      <q-badge
-                        color="green"
-                        :label="props.row.presentaciones.length"
-                      />
-
-                      <q-popup-edit
-                        v-model="props.row.presentaciones"
-                        anchor="bottom end"
-                        self="bottom end"
-                        class="flex flex-col gap-[2px] border-[1px]"
-                      >
-                        <h1 class="font-bold">Presentaciones:</h1>
-                        <div
-                          v-for="presentacion in props.row.presentaciones"
-                          :key="presentacion.nombre"
-                        >
-                          <q-badge color="red" class="capitalize">
-                            {{ presentacion.nombre }}:
-                            {{ presentacion.cantidad }}
-                          </q-badge>
-                        </div>
-                      </q-popup-edit>
-                    </div>
+              <h1 class="font-bold">Presentaciones:</h1>
+              <div
+                v-for="presentacion in props.row.presentaciones"
+                :key="presentacion.nombre"
+              >
+                <q-badge color="red" class="capitalize">
+                  {{ presentacion.nombre }}: {{ presentacion.cantidad }}
+                </q-badge>
+              </div>
+            </q-popup-edit>
+          </q-td>
+          <q-td key="lotes" :props="props">
+            <!-- {{ props.row.lotes[0].fecha }} -->
+            {{
+              props.row.lotes[0] &&
+              formatearFecha(props.row.lotes[0].vencimiento)
+            }}.
+            <!-- <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}. -->
+            <strong>Cantidad:</strong
+            >{{ props.row.lotes[0] && props.row.lotes[0].cantidad }} ...
+            <q-popup-edit
+              v-model="props.row.lotes"
+              anchor="bottom end"
+              self="bottom end"
+              class="flex flex-col gap-[3px]"
+            >
+              <h1 class="font-bold">Lotes:</h1>
+              <div class="grid grid-cols-2 gap-3">
+                <div v-for="lote in props.row.lotes" :key="lote.nombre">
+                  <span class="flex gap-2 leading-none">
+                    <p>Vencimiento:</p>
+                    <q-badge color="red" class="capitalize">
+                      {{ formatearFecha(lote.vencimiento) }}
+                      <!-- {{ lote.vencimiento }} -->
+                    </q-badge>
                   </span>
-                  <span>
-                    <h1>Lotes</h1>
-                    <div class="cursor-pointer">
-                      <q-badge color="green" :label="props.row.lotes.length" />
-                      <!-- <h1 class="text-blue-600">
-                        {{ `${props.row.lotes.length}. click!` }}
-                      </h1> -->
-                      <q-popup-edit
-                        v-model="props.row.lotes"
-                        anchor="bottom end"
-                        self="bottom end"
-                        class="flex flex-col gap-[3px]"
-                      >
-                        <h1 class="font-bold">Lotes:</h1>
-                        <div class="grid grid-cols-2 gap-3">
-                          <div
-                            v-for="lote in props.row.lotes"
-                            :key="lote.nombre"
-                          >
-                            <span class="flex gap-2 leading-none">
-                              <p>Vencimiento:</p>
-                              <q-badge color="red" class="capitalize">
-                                {{ formatearFecha(lote.vencimiento) }}
-                              </q-badge>
-                            </span>
-                            <span class="flex gap-2">
-                              <p>Bloque:</p>
-                              <q-badge color="green" class="capitalize">
-                                {{ lote.bloque }}
-                              </q-badge> </span
-                            ><span class="flex gap-2">
-                              <p>Cantidad:</p>
-                              <q-badge color="orange" class="capitalize">
-                                {{ lote.cantidad }}
-                              </q-badge>
-                            </span>
-                          </div>
-                        </div>
-                      </q-popup-edit>
-                    </div>
-                  </span>
-                  <span>
-                    <h1>Cantidad Min.</h1>
-                    <div>
-                      <q-badge
-                        color="green"
-                        class="capitalize cursor-pointer"
-                        @click="modalEditarCantidad(props.row)"
-                      >
-                        {{ props.row.cantidadMinima }} Unidades
-                      </q-badge>
-                    </div>
-                  </span>
-                  <span>
-                    <h1>Cantidad</h1>
-                    <p>{{ props.row.cantidad }} Unidades</p>
-                  </span>
-
-                  <span>
-                    <h1>Accion</h1>
-                    <span class="flex gap-1">
-                      <q-btn
-                        padding="4px"
-                        size="9px"
-                        icon="add"
-                        color="primary"
-                        dense
-                        @click="agregarListaInventario(props.row)"
-                      >
-                        <q-tooltip class="bg-blue-500"
-                          >Añadir a inventario</q-tooltip
-                        >
-                      </q-btn>
-                      <q-btn
-                        icon="content_paste"
-                        color="orange"
-                        dense
-                        padding="4px"
-                        size="9px"
-                      >
-                        <q-tooltip class="bg-blue-500"
-                          >Mandar papelera</q-tooltip
-                        >
-                      </q-btn>
-                    </span>
+                  <span class="flex gap-2">
+                    <p>Bloque:</p>
+                    <q-badge color="green" class="capitalize">
+                      {{ lote.bloque }}
+                    </q-badge> </span
+                  ><span class="flex gap-2">
+                    <p>Cantidad:</p>
+                    <q-badge color="orange" class="capitalize">
+                      {{ lote.cantidad }}
+                    </q-badge>
                   </span>
                 </div>
-              </q-card>
-            </q-expansion-item>
-          </q-list>
-        </div>
+              </div>
+            </q-popup-edit>
+          </q-td>
+          <q-td key="cantidad" :props="props">
+            <q-badge color="green" class="capitalize">
+              {{ props.row.cantidad }} Unidades
+            </q-badge>
+          </q-td>
+          <q-td key="cantidadMinima" :props="props">
+            <q-badge
+              color="green"
+              class="capitalize"
+              @click="modalEditarCantidad(props.row)"
+            >
+              {{ props.row.cantidadMinima }} Unidades
+            </q-badge>
+          </q-td>
+          <q-td key="actions" :props="props">
+            <q-btn
+              flat
+              round
+              padding="1px"
+              icon="add"
+              color="primary"
+              dense
+              size="13px"
+              @click="agregarListaInventario(props.row)"
+            >
+              <q-tooltip class="bg-blue-500">Añadir a inventario</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              icon="content_paste"
+              color="primary"
+              dense
+              size="10px"
+            >
+              <q-tooltip class="bg-blue-500">Mandar papelera</q-tooltip>
+            </q-btn>
+          </q-td>
+        </q-tr>
       </template>
-    </TableExpand>
+    </Table2>
   </div>
 
   <!-- DIALOG -->

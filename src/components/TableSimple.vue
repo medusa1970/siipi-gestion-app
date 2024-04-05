@@ -53,9 +53,9 @@ defineProps({
   badge: Boolean,
 });
 </script>
-<style>
+<style scoped>
 .q-table tbody tr:nth-child(odd) {
   --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  background-color: white !important;
 }
 </style>

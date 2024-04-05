@@ -42,26 +42,13 @@
         />
         <q-input
           class="col-span-2"
-          v-model="estado.oferta.catalogo"
+          v-model="estado.oferta.catalogoNombre"
           label="Catalogo"
           outlined
           dense
           clearable
           disable
         />
-        <!-- <q-select
-          class="col-span-2"
-          v-model="estado.oferta.catalogo"
-          :options="estado.catalogos && estado.catalogos.hijas"
-          label="Seleccionar catalogo"
-          option-label="nombre"
-          style="width: 100%; flex: 1 0 auto"
-          dense
-          onfocus="this.select()"
-          clearable
-          outlined
-        >
-        </q-select> -->
         <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
           <h1 class="font-bold">Seleccionar catalogo:</h1>
           <div class="flex gap-2 flex-wrap">
@@ -122,13 +109,6 @@
           outlined
         ></q-input>
       </div>
-      <!-- <q-btn
-        color="secondary"
-        label="Crear oferta"
-        no-caps
-        v-if="estado.modal.isCreatedOferta === false"
-        @click="crearOferta"
-      /> -->
       <q-btn
         color="secondary"
         :label="
@@ -141,46 +121,6 @@
     </div>
 
     <br />
-    <!-- <code>{{ storeOferta.oferta }}</code> -->
-    <!-- <div>
-      <div class="border-[1px] p-4 border-slate-400">
-        <div class="flex gap-3 mb-3 items-center">
-          <span class="leading-none">
-            <h1 class="font-semibold text-base">Ingredientes</h1>
-            <p style="font-size: 12px" class="text-gray-500">
-              Producto con diferente ingredientes
-            </p>
-          </span>
-          <q-btn
-            icon="add"
-            dense
-            round
-            color="primary"
-            size="12px"
-            @click="abrirModalIngredientes"
-          />
-        </div>
-        <DragDrop
-          :lista="estado.oferta.ingredientes"
-          item-key="_tipo"
-          @edit="editarIngrediente"
-        />
-      </div>
-      <br />
-      <div class="border-[1px] p-4 border-slate-400">
-        <div class="flex gap-3 mb-3 items-center">
-          <span class="leading-none">
-            <h1 class="font-semibold text-base">Preparados</h1>
-            <p style="font-size: 12px" class="text-gray-500">
-              Producto con diferentes preparados
-            </p>
-          </span>
-          <q-btn icon="add" dense round color="primary" size="12px" />
-        </div>
-        <DragDrop :lista="condiciones" item-key="tipo" />
-      </div>
-      <br />
-    </div> -->
   </div>
 
   <!-- MODAL ELEGIR INGREDIENTE-->
@@ -336,7 +276,7 @@
             class=""
           >
             <q-item clickable dense>
-              <q-item-section side @click="elegirCatalogo(item._id)">
+              <q-item-section side @click="elegirCatalogo(item)">
                 <h1 class="ml-11">{{ item.nombre }}</h1>
               </q-item-section>
             </q-item>

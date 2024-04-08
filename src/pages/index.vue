@@ -13,7 +13,7 @@
         <q-input
           v-model="authPersona.usuario"
           type="text"
-          label="Corre electronico"
+          label="Usuario"
           outlined
           dense
           clearable
@@ -38,9 +38,24 @@
       </template>
     </Formulario>
     <div v-if="user.nombre !== '' && user.negocios.length !== 0">
-      <h1 class="font-bold text-xl text-center">
-        Selecciona a que negocio ingresar
-      </h1>
+      <div class="flex gap-2 justify-center">
+        <h1 class="font-bold text-xl text-center">
+          Selecciona a que negocio ingresar
+        </h1>
+        <q-btn
+          dense
+          no-caps
+          padding="0 10px"
+          color="primary"
+          label="Atras"
+          @click="
+            () => {
+              user.nombre = '';
+              user.negocios = [];
+            }
+          "
+        />
+      </div>
       <div class="flex gap-3 mt-2 cursor-pointer justify-center">
         <q-card
           v-for="negocio in user.negocios"

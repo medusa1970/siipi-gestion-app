@@ -76,6 +76,9 @@
           <q-td key="producto" :props="props">
             {{ props.row.producto.nombre }}
           </q-td>
+          <q-td key="presentacionBasica" :props="props">
+            {{ props.row.producto.presentacionBasica }}
+          </q-td>
           <q-td
             key="presentaciones"
             :props="props"

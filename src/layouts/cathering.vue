@@ -32,7 +32,9 @@ import { computed } from 'vue';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
+import { useQuasar } from 'quasar';
 const storeAuth = authStore();
+const $q = useQuasar();
 
 const storePedido = pedidoStore();
 const router = useRouter();
@@ -42,32 +44,32 @@ const realizarPedido = async () => {
     oferta: p.id,
     cantidad: parseInt(p.cantidad),
   }));
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    storeAuth.negocioElegido._id,
-    '65a1a6c9566e40c934929a56',
-    items,
-    useGqlToken(storeAuth.token),
-  );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-    await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-    await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido recibido con éxito');
-    router.push('/cathering/pedidos/listaPedidos');
-    storePedido.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
 
-  console.log(storePedido.listaPedido);
+  $q.dialog({
+    // title: `Eliminar ${row.nombre}`,
+    message: '¿Estas seguro de aceptar este pedido?',
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+      storeAuth.negocioElegido._id,
+      '65a1a6c9566e40c934929a56',
+      items,
+      useGqlToken(storeAuth.token),
+    );
+    if (pedidoIniciar) {
+      await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+      await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+      await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+      await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+      NotifySucessCenter('Pedido recibido con éxito');
+      router.push('/cathering/pedidos/listaPedidos');
+      storePedido.listaPedido = [];
+    } else NotifyError('Error al realizar el pedido');
+
+    console.log(storePedido.listaPedido);
+  });
 };
-
-console.log(menuListCathering);
-console.log(storeAuth.user.cargo);
-
-// const cargo = menuListCathering.filter(
-//   (item) => item.label === 'Stock' || item.label === 'Pedidos',
-// );
-// console.log(cargo);
 
 const menuListComputed = computed(() => {
   if (storeAuth.user.cargo === 'almacen') {

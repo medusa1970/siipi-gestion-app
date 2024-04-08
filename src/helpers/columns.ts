@@ -151,18 +151,26 @@ export const columnsProductos = [
 ];
 
 export const stockProducts = [
-  {
-    name: 'foto',
-    label: 'Imagen',
-    align: 'left',
-    field: (row: any) => row.foto,
-  },
+  // {
+  //   name: 'foto',
+  //   label: 'Imagen',
+  //   align: 'left',
+  //   field: (row: any) => row.foto,
+  // },
   {
     name: 'producto',
     required: true,
     label: 'Producto',
     align: 'left',
     field: (row: any) => row.producto.nombre,
+    sortable: true,
+  },
+  {
+    name: 'presentacionBasica',
+    required: true,
+    label: 'P. basica',
+    align: 'left',
+    field: (row: any) => row.producto.presentacionBasica,
     sortable: true,
   },
   {

@@ -57,6 +57,7 @@
                   type="number"
                   class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
                   @input="handleInputChange2($event, item)"
+                  min="0"
                 />
               </div>
 

@@ -293,6 +293,10 @@ mutation pedidosAjustarOferta(
     comentario: $comentario
   ) {
     _id
+    comprador {
+      _id
+      nombre
+    }
     items {
       oferta {
         _id

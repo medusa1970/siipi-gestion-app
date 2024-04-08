@@ -62,6 +62,7 @@
                     placeholder="Cantidad"
                     class="test border-[1px] border-gray-400 px-2 py-1 w-[90px] outline-none bg-transparent"
                     @input="handleInputChange2($event, props.row)"
+                    min="0"
                   />
                   <!-- <q-input
                     v-model.number="text"

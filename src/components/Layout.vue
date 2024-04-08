@@ -226,6 +226,7 @@
                       type="number"
                       class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
                       v-model.number="producto.cantidad"
+                      min="0"
                     />
                   </div>
                   <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->

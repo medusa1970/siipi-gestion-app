@@ -463,14 +463,6 @@ export const usePedido = () => {
         orden: pedido.orden[indice],
       };
     });
-
-    // const diaDeLaSemana = new Date().getDay();
-    // console.log(diaDeLaSemana);
-    // // Ajusta el índice para que 0 sea lunes
-    // const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;
-    // console.log(indice);
-    // // Muestra el valor correspondiente del array ruta
-    // console.log(row.entidad[0].ruta[indice]);
   };
 
   const ofertaPreparado = async (fila: any) => {
@@ -522,7 +514,7 @@ export const usePedido = () => {
         clearable: true,
         // native attributes:
         step: 2,
-        label: 'Ingrese un comentario*',
+        label: 'Ingrese un comentario',
         dense: true,
       },
     }).onOk(async () => {
@@ -533,12 +525,64 @@ export const usePedido = () => {
         diferencia,
       );
       console.log(pedidosAjustarOferta);
+      console.log(storePedido.pedidosDirecto);
+      console.log(storePedido.pedidosSolicitado);
+
       if (pedidosAjustarOferta) {
         let item = pedidosAjustarOferta[0].items[0];
+        // SOLICITUD
+        pedidosAjustarOferta.map((pedido: any) => {
+          storePedido.pedidosSolicitado.forEach((pedidoSolicitud) => {
+            // Verificar si el ID del pedido coincide
+            if (pedidoSolicitud.pedidoIDS.includes(pedido._id)) {
+              pedido.items.forEach((item: any) => {
+                // Verificar si la oferta en el pedido coincide con la oferta en storePedido.pedidosDirecto
+                if (item.oferta._id === pedidoSolicitud.oferta._id) {
+                  // Actualizar la cantidad en la entidad correspondiente
+                  pedidoSolicitud.entidad.forEach((entidad: any) => {
+                    if (entidad.nombre === pedido.comprador.nombre) {
+                      entidad.cantidad = item.cantidad;
+                    }
+                  });
+                }
+              });
+              pedidoSolicitud.cantidad = pedidoSolicitud.entidad.reduce(
+                (accumulator: any, current: any) =>
+                  accumulator + current.cantidad,
+                0,
+              );
+            }
+          });
+        });
         storePedido.pedidosSolicitado.forEach((pedido) => {
           if (pedido.oferta._id == item.oferta._id) {
             pedido.estado = item.estado;
           }
+        });
+
+        // DIRECTOS
+        pedidosAjustarOferta.map((pedido: any) => {
+          storePedido.pedidosDirecto.forEach((pedidoDirecto) => {
+            // Verificar si el ID del pedido coincide
+            if (pedidoDirecto.pedidoIDS.includes(pedido._id)) {
+              pedido.items.forEach((item: any) => {
+                // Verificar si la oferta en el pedido coincide con la oferta en storePedido.pedidosDirecto
+                if (item.oferta._id === pedidoDirecto.oferta._id) {
+                  // Actualizar la cantidad en la entidad correspondiente
+                  pedidoDirecto.entidad.forEach((entidad: any) => {
+                    if (entidad.nombre === pedido.comprador.nombre) {
+                      entidad.cantidad = item.cantidad;
+                    }
+                  });
+                }
+              });
+              pedidoDirecto.cantidad = pedidoDirecto.entidad.reduce(
+                (accumulator: any, current: any) =>
+                  accumulator + current.cantidad,
+                0,
+              );
+            }
+          });
         });
         storePedido.pedidosDirecto.forEach((pedido) => {
           if (pedido.oferta._id == item.oferta._id) {

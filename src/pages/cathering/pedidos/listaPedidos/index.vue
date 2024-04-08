@@ -114,6 +114,7 @@
                 :title="punto.comprador.nombre"
                 class="w-full max-sm:w-full"
                 :href="`listaPedidos/${punto._id}`"
+                :title2="formatearFecha(punto.estado[0].fecha)"
               >
                 <template v-slot:actions>
                   <div class="flex">
@@ -178,6 +179,13 @@
                   Pedidos Solicitables
                 </h1>
                 <q-btn
+                  v-if="
+                    storePedido.pedidosSolicitado.every((pedido) =>
+                      pedido.estado.some(
+                        (estado) => estado.estado === 'preparado',
+                      ),
+                    )
+                  "
                   color="primary"
                   label="Aceptar todos"
                   padding="0px 10px"
@@ -216,25 +224,30 @@
                       <div class="flex justify-end">
                         <q-btn
                           v-if="props.row.stockEntidad - props.row.cantidad < 0"
-                          color="orange"
+                          :class="[
+                            'text-orange-500',
+                            props.row.estado.some(
+                              (e) => e.estado === 'ajustado',
+                            ) && '!text-gray-300 !font-bold',
+                          ]"
                           icon="bi-wrench-adjustable"
                           dense
                           flat
                           round
                           size="10px"
                           padding="2px"
-                          :disable="
-                            props.row.estado.some(
-                              (e) => e.estado === 'ajustado',
-                            )
-                          "
                           @click="ajustarOferta(props.row)"
                           ><q-tooltip class="bg-gray-400-500"
                             >Ajustar</q-tooltip
                           ></q-btn
                         >
                         <q-btn
-                          color="orange"
+                          :class="[
+                            'text-green-500',
+                            props.row.estado.some(
+                              (e) => e.estado === 'preparado',
+                            ) && '!text-gray-300 !font-bold',
+                          ]"
                           icon="bi-check2-circle"
                           dense
                           flat
@@ -268,66 +281,25 @@
                     </q-td>
                   </q-tr>
                 </template>
-                <!-- ACTIONS -->
-                <template #body-cell-actions="{ props }">
-                  <q-td :props="props">
-                    <q-btn
-                      v-if="props.row.stockEntidad - props.row.cantidad < 0"
-                      color="orange"
-                      icon="bi-wrench-adjustable"
-                      dense
-                      flat
-                      round
-                      size="10px"
-                      padding="2px"
-                      :disable="
-                        props.row.estado.some((e) => e.estado === 'ajustado')
-                      "
-                      @click="ajustarOferta(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Ajustar</q-tooltip
-                      ></q-btn
-                    >
-                    <q-btn
-                      color="orange"
-                      icon="bi-check2-circle"
-                      dense
-                      flat
-                      round
-                      size="12px"
-                      padding="2px"
-                      :disable="
-                        props.row.estado.some((e) => e.estado === 'preparado')
-                      "
-                      @click="ofertaPreparado(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Preparado</q-tooltip
-                      ></q-btn
-                    >
-                    <q-btn
-                      color="primary"
-                      icon="bi-eye"
-                      dense
-                      flat
-                      round
-                      size="12px"
-                      padding="2px"
-                      @click="verPedidoPuntos(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Ver Producto</q-tooltip
-                      ></q-btn
-                    >
-                  </q-td>
-                </template>
               </TableSimple>
               <div
                 class="flex gap-3 items-center"
                 style="margin: 0 0 10px 0 !important"
               >
+                <!-- <code>{{
+                  storePedido.pedidosDirecto.map((pedido) => pedido.estado)
+                }}</code> -->
                 <h1 class="font-extrabold text-lg uppercase">
                   Pedidos Directos
                 </h1>
                 <q-btn
+                  v-if="
+                    storePedido.pedidosDirecto.every((pedido) =>
+                      pedido.estado.some(
+                        (estado) => estado.estado === 'preparado',
+                      ),
+                    )
+                  "
                   color="primary"
                   label="Aceptar todos"
                   padding="0px 10px"
@@ -345,7 +317,11 @@
                   <q-td :props="props">
                     <q-btn
                       v-if="props.row.stockEntidad - props.row.cantidad < 0"
-                      color="orange"
+                      :class="[
+                        'text-orange-500',
+                        props.row.estado.some((e) => e.estado === 'ajustado') &&
+                          '!text-gray-300 !font-bold',
+                      ]"
                       icon="bi-wrench-adjustable"
                       dense
                       flat
@@ -358,7 +334,13 @@
                       ></q-btn
                     >
                     <q-btn
-                      color="orange"
+                      :class="[
+                        'text-green-500',
+                        props.row.estado.some(
+                          (e) => e.estado === 'preparado',
+                        ) && '!text-gray-300 !font-bold',
+                      ]"
+                      color="green-5"
                       icon="bi-check2-circle"
                       dense
                       flat

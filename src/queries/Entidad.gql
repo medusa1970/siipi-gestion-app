@@ -58,6 +58,7 @@ query buscarStocks($busqueda: BuscarEntidadDto!) {
       producto {
         _id
         nombre
+        presentacionBasica
         presentaciones {
           nombre
           cantidad

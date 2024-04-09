@@ -3,8 +3,8 @@
     <Navigation label="Stock" icon="folder" />
     <!-- TABLEEXPANDED -->
     <Table2 badge :rows="rowsParaMostrar" :columns="stockProducts" dense>
-      <template #slot-header1>
-        <NuxtLink href="/cathering/pedidos/recibirPedido">
+      <!-- <template #slot-header1>
+        <NuxtLink href="/punto/pedidos/recibirPedido">
           <q-btn
             color="primary"
             label="Recibir productos"
@@ -15,7 +15,7 @@
         </NuxtLink>
       </template>
       <template #slot-header2>
-        <NuxtLink href="/cathering/inventario">
+        <NuxtLink href="/punto/inventario">
           <q-btn
             color="primary"
             label="Realizar inventario"
@@ -24,7 +24,7 @@
             padding="7px 15px"
           />
         </NuxtLink>
-      </template>
+      </template> -->
       <template #slot-footer>
         <div class="flex justify-center gap-2">
           <q-btn
@@ -113,14 +113,11 @@
             </q-popup-edit>
           </q-td>
           <q-td key="lotes" :props="props">
-            <!-- {{ props.row.lotes[0].fecha }} -->
-            {{
-              props.row.lotes[0] &&
-              formatearFecha(props.row.lotes[0].vencimiento)
-            }}.
+            <!-- {{ props.row.lotes[0].vencimiento }} -->
+            <p>{{ props.row.lotes.length }} lote</p>
             <!-- <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}. -->
-            <strong>Cantidad:</strong
-            >{{ props.row.lotes[0] && props.row.lotes[0].cantidad }} ...
+            <!-- <strong>Cantidad:</strong
+            >{{ props.row.lotes[0] && props.row.lotes[0].cantidad }} ... -->
             <q-popup-edit
               v-model="props.row.lotes"
               anchor="bottom end"
@@ -133,8 +130,11 @@
                   <span class="flex gap-2 leading-none">
                     <p>Vencimiento:</p>
                     <q-badge color="red" class="capitalize">
-                      {{ formatearFecha(lote.vencimiento) }}
-                      <!-- {{ lote.vencimiento }} -->
+                      {{
+                        lote.vencimiento === null
+                          ? 'Sin fecha'
+                          : formatearFecha(lote.vencimiento)
+                      }}
                     </q-badge>
                   </span>
                   <span class="flex gap-2">

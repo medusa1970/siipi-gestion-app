@@ -3,7 +3,7 @@
     <Navigation label="Stock" icon="folder" />
     <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
     <Table2 badge :rows="rowsParaMostrar" :columns="stockProducts" dense>
-      <template #slot-header1>
+      <!-- <template #slot-header1>
         <NuxtLink href="/cathering/pedidos/recibirPedido">
           <q-btn
             color="primary"
@@ -24,7 +24,7 @@
             padding="7px 15px"
           />
         </NuxtLink>
-      </template>
+      </template> -->
       <template #slot-footer>
         <div class="flex justify-center gap-2">
           <q-btn

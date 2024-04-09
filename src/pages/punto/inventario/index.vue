@@ -1,16 +1,8 @@
 <template>
   <div>
     <Navigation label="Inventario" icon="folder" />
+
     <TableExpand :rows="estado.productosBloquesNull" ::columns="stockProducts">
-      <!-- <template #slot-header1>
-        <q-btn
-          color="primary"
-          label="Ver stock"
-          no-caps
-          dense
-          padding="7px 15px"
-        />
-      </template> -->
       <template #slot-footer>
         <div class="flex justify-center gap-2">
           <q-btn no-caps padding="0 10px" size="13px" dense color="primary" />
@@ -84,6 +76,7 @@
                         outlined
                         dense
                         clearable
+                        min="0"
                       />
                       <q-input
                         v-model="lote.bloque"
@@ -92,7 +85,7 @@
                         outlined
                         dense
                         clearable
-                        :rules="[(val) => val.length > 0 || 'Campo requerido']"
+                        required
                       />
                     </div>
                   </div>
@@ -162,7 +155,7 @@
 <script setup>
 import { useInventary } from '@/composables/punto/useInventary';
 // import { useStock } from '@/composables/punto/useStock';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, nextTick } from 'vue';
 import { stockService } from '~/services/punto/stock.service';
 import { authStore } from '@/stores/auth.store';
 import { inventarioService } from '~/services/punto/inventary.service';
@@ -195,24 +188,13 @@ const estado = reactive({
   },
   countRetry: 0,
 });
+const expanded = ref(false);
 
-// const obtenerTodoStock = async () => {
-//   const { entidadBuscar } = await stockService.obtenerTodoStock(
-//     useAuth.negocioElegido._id,
-//   );
-//   console.log('first');
-//   console.log(entidadBuscar[0].almacen);
-//   // Filtrar los productos con bloque igual a null
-//   estado.productosBloquesNull = entidadBuscar[0].almacen.filter(
-//     (producto) => producto.lotes[0].bloque === null,
-//   );
-//   console.log(estado.productosBloquesNull);
-// };
 const obtenerProductosInventariar = async () => {
-  const { produccionBuscarProductosNuevos } =
-    await inventarioService.productosInventariar(useAuth.negocioElegido._id);
-  console.log(produccionBuscarProductosNuevos);
-  estado.productosBloquesNull = produccionBuscarProductosNuevos;
+  const { filaInventario } = await inventarioService.filaInventario(
+    useAuth.negocioElegido._id,
+  );
+  estado.productosBloquesNull = filaInventario;
 };
 
 const agregarFila = () => {
@@ -224,6 +206,8 @@ const agregarFila = () => {
 };
 
 const terminarInventario = async (producto) => {
+  console.log(producto);
+  console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
     .realizarInventarioFalse(
@@ -247,13 +231,7 @@ const terminarInventario = async (producto) => {
                 //@ts-ignore
                 (item) => item._id !== producto._id,
               );
-              estado.inventario.lotes = [
-                {
-                  vencimiento: '',
-                  cantidad: '',
-                  bloque: '',
-                },
-              ];
+              limpiarInputs();
             })
             .finally(() => {
               hideLoading();
@@ -275,13 +253,7 @@ const terminarInventario = async (producto) => {
               //@ts-ignore
               (item) => item._id !== producto._id,
             );
-            estado.inventario.lotes = [
-              {
-                vencimiento: '',
-                cantidad: '',
-                bloque: '',
-              },
-            ];
+            limpiarInputs();
           })
           .finally(() => {
             hideLoading();
@@ -291,6 +263,16 @@ const terminarInventario = async (producto) => {
     .finally(() => {
       hideLoading();
     });
+};
+
+const limpiarInputs = () => {
+  estado.inventario.lotes = [
+    {
+      vencimiento: '',
+      cantidad: '',
+      bloque: '',
+    },
+  ];
 };
 
 onMounted(() => {

@@ -42,4 +42,6 @@ export const inventarioService = {
     ),
   productosInventariar: async (entidadID: string | null | undefined) =>
     postData(GqlProductosInventariar({ entidadBusqueda: { _id: entidadID } })),
+  filaInventario: async (entidadID: string) =>
+    postData(GqlFilaInventario({ entidadBusqueda: { _id: entidadID } })),
 };

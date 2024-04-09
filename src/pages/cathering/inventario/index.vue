@@ -26,6 +26,7 @@
               expand-separator
               group="somegroup"
               class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+              @click="limpiarInputs"
             >
               <template v-slot:header>
                 <div class="flex items-center justify-center">
@@ -196,21 +197,21 @@ const estado = reactive({
   countRetry: 0,
 });
 
-const obtenerTodoStock = async () => {
-  const { entidadBuscar } = await stockService.obtenerTodoStock(
+// const obtenerTodoStock = async () => {
+//   const { entidadBuscar } = await stockService.obtenerTodoStock(
+//     useAuth.negocioElegido._id,
+//   );
+
+//   estado.productosBloquesNull = entidadBuscar[0].almacen.filter((producto) => {
+//     const primerLote = producto.lotes[0];
+//     return primerLote ? primerLote.bloque === null : true; // Si no hay lote, considerarlo como válido
+//   });
+// };
+const obtenerProductosInventariar = async () => {
+  const { filaInventario } = await inventarioService.filaInventario(
     useAuth.negocioElegido._id,
   );
-
-  estado.productosBloquesNull = entidadBuscar[0].almacen.filter((producto) => {
-    const primerLote = producto.lotes[0];
-    return primerLote ? primerLote.bloque === null : true; // Si no hay lote, considerarlo como válido
-  });
-};
-const obtenerProductosInventariar = async () => {
-  const { produccionBuscarProductosNuevos } =
-    await inventarioService.productosInventariar(useAuth.negocioElegido._id);
-  // console.log(produccionBuscarProductosNuevos);
-  estado.productosBloquesNull = produccionBuscarProductosNuevos;
+  estado.productosBloquesNull = filaInventario;
 };
 
 const agregarFila = () => {
@@ -222,6 +223,8 @@ const agregarFila = () => {
 };
 
 const terminarInventario = async (producto) => {
+  console.log(producto);
+  console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
     .realizarInventarioFalse(
@@ -236,7 +239,7 @@ const terminarInventario = async (producto) => {
           inventarioService
             .realizarInventarioTrue(
               useAuth.negocioElegido._id, //@ts-ignore
-              producto.producto._id,
+              producto._id,
               estado.inventario.lotes,
             )
             .then(() => {
@@ -245,13 +248,7 @@ const terminarInventario = async (producto) => {
                 //@ts-ignore
                 (item) => item._id !== producto._id,
               );
-              estado.inventario.lotes = [
-                {
-                  vencimiento: '',
-                  cantidad: '',
-                  bloque: '',
-                },
-              ];
+              limpiarInputs();
             })
             .finally(() => {
               hideLoading();
@@ -273,13 +270,7 @@ const terminarInventario = async (producto) => {
               //@ts-ignore
               (item) => item._id !== producto._id,
             );
-            estado.inventario.lotes = [
-              {
-                vencimiento: '',
-                cantidad: '',
-                bloque: '',
-              },
-            ];
+            limpiarInputs();
           })
           .finally(() => {
             hideLoading();
@@ -289,6 +280,15 @@ const terminarInventario = async (producto) => {
     .finally(() => {
       hideLoading();
     });
+};
+const limpiarInputs = () => {
+  estado.inventario.lotes = [
+    {
+      vencimiento: '',
+      cantidad: '',
+      bloque: '',
+    },
+  ];
 };
 
 onMounted(() => {

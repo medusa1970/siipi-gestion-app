@@ -93,7 +93,7 @@
                         outlined
                         dense
                         clearable
-                        :rules="[(val) => val.length > 0 || 'Campo requerido']"
+                        required
                       />
                     </div>
                   </div>

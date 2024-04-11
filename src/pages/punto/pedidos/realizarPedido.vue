@@ -101,7 +101,7 @@
   <q-dialog v-model="estado.modal.isAddOferta" persistent>
     <q-card class="w-[370px]">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-lg font-semibold">Agregar productoss</div>
+        <div class="text-lg font-semibold">Agregar productos</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -246,6 +246,7 @@ const categoriasPedido = ref({}); // Objeto para almacenar pedidos por categorí
 const handleInputChange2 = (event, product) => {
   console.log(event);
   console.log(product);
+  event.target.value = Math.max(0, event.target.value);
   const nuevoValor = event.target.value;
 
   const producto = {

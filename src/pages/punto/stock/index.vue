@@ -113,11 +113,7 @@
             </q-popup-edit>
           </q-td>
           <q-td key="lotes" :props="props">
-            <!-- {{ props.row.lotes[0].vencimiento }} -->
             <p>{{ props.row.lotes.length }} lote</p>
-            <!-- <strong>Bloque:</strong> {{ props.row.lotes[0].bloque }}. -->
-            <!-- <strong>Cantidad:</strong
-            >{{ props.row.lotes[0] && props.row.lotes[0].cantidad }} ... -->
             <q-popup-edit
               v-model="props.row.lotes"
               anchor="bottom end"

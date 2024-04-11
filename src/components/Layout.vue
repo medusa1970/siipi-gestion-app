@@ -94,6 +94,7 @@
               </q-menu>
             </q-btn>
             <q-btn
+              v-if="sede === false"
               flat
               round
               color="primary"
@@ -189,6 +190,7 @@
       </q-list>
     </q-drawer>
     <q-drawer
+      v-if="sede === false"
       v-model="rightDrawerOpen"
       side="right"
       class="colorBackground"
@@ -200,7 +202,7 @@
         <div class="text-white py-4 flex flex-col gap-4">
           <h1 class="text-center font-extrabold">SIDE_BAR</h1>
 
-          <q-list class="shadow-md border-b-[1px] border-orange-400">
+          <q-list class="shadow-[0_0px_5px] shadow-orange-300">
             <q-expansion-item
               switch-toggle-side
               expand-separator
@@ -227,6 +229,9 @@
                       class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
                       v-model.number="producto.cantidad"
                       min="0"
+                      @input="
+                        producto.cantidad = Math.max(0, producto.cantidad)
+                      "
                     />
                   </div>
                   <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
@@ -458,7 +463,7 @@
             <q-icon name="cloud_upload" @click.stop.prevent />
           </template>
         </q-file> -->
-        <div
+        <!-- <div
           v-if="imagePreview"
           style="width: 200px; height: 200px; margin: auto"
         >
@@ -479,7 +484,7 @@
           clearable
         >
           <img :src="persona.imagen" alt="" />
-        </q-file>
+        </q-file> -->
         <q-input
           v-model="persona.nombre"
           type="text"
@@ -514,6 +519,7 @@
 defineProps({
   menuList: Array,
   punto: Boolean,
+  sede: Boolean,
 });
 
 // IMPORTS
@@ -642,13 +648,13 @@ const onRejected = (rejectedEntries) => {
 };
 
 const modificarPersona = async () => {
-  const formData = new FormData();
-  formData.append('imagen', selectedFileProfile.value);
-
+  // const formData = new FormData();
+  // formData.append('imagen', selectedFileProfile.value);
+  console.log('first');
   delete persona.value.telefono;
   delete persona.value._id;
-  delete imagen.value.__key;
-  persona.value.imagen = formData.get('imagen');
+  console.log(persona.value);
+  // persona.value.imagen = formData.get('imagen');
   // delete persona.value.imagen;
   // console.log(persona.value);
   // console.log(persona.value.imagen);
@@ -694,17 +700,17 @@ const deleteProductoPedido = (id) => {
 };
 
 //WATCH
-watch(imagen, () => {
-  if (imagen.value instanceof Blob) {
-    const lector = new FileReader();
-    selectedFileProfile.value = imagen.value;
+// watch(imagen, () => {
+//   if (imagen.value instanceof Blob) {
+//     const lector = new FileReader();
+//     selectedFileProfile.value = imagen.value;
 
-    lector.addEventListener('load', () => {
-      imagePreview.value = lector.result;
-    });
-    lector.readAsDataURL(selectedFileProfile.value);
-  }
-});
+//     lector.addEventListener('load', () => {
+//       imagePreview.value = lector.result;
+//     });
+//     lector.readAsDataURL(selectedFileProfile.value);
+//   }
+// });
 </script>
 
 <style lang="scss">

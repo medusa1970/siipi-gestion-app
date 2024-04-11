@@ -6,22 +6,32 @@ export const menuListSede = [
     subMenu: [],
   },
   {
-    icon: 'fact_check',
+    icon: 'bi-box',
     label: 'Productos',
-    to: '/sede/productos',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Gestion de categorias',
+        to: '/sede/productos/categorias',
+      },
+      {
+        label: 'Productos',
+        to: '/sede/productos',
+      },
+    ],
   },
   {
-    icon: 'fact_check',
-    label: 'Catalogos',
-    to: '/sede/catalogos',
-    subMenu: [],
-  },
-  {
-    icon: 'people',
+    icon: 'sell',
     label: 'Ofertas',
-    to: '/sede/ofertas',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Gestion de catalogos',
+        to: '/sede/catalogos',
+      },
+      {
+        label: 'Ofertas',
+        to: '/sede/ofertas',
+      },
+    ],
   },
 ];
 

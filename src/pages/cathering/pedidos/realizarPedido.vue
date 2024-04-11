@@ -109,6 +109,7 @@ const listaPedidos = ref([]);
 const categoriasPedido = ref({});
 
 const handleInputChange2 = (event, product) => {
+  event.target.value = Math.max(0, event.target.value);
   const nuevoValor = event.target.value;
 
   const producto = {

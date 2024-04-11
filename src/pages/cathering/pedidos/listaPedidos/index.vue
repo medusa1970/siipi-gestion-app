@@ -39,15 +39,6 @@
                 <q-btn
                   dense
                   round
-                  icon="edit"
-                  flat
-                  color="blue"
-                  padding="4px"
-                  size="12px"
-                />
-                <q-btn
-                  dense
-                  round
                   icon="print"
                   flat
                   color="orange"
@@ -101,7 +92,11 @@
                     size="11px"
                     flat
                     round
-                  />
+                    @click="mostrarEntidadSinPedidos"
+                    ><q-tooltip class="no-print bg-gray-400-500"
+                      >Entidades sin pedidos</q-tooltip
+                    ></q-btn
+                  >
                 </span>
               </div>
               <h1 v-if="estado.pedidosSinAceptar.length === 0">
@@ -161,8 +156,11 @@
                       padding="4px"
                       size="12px"
                       class="no-print"
-                      @click="imprimir"
-                    />
+                      @click="imprimir(punto)"
+                      ><q-tooltip class="no-print bg-gray-400-500"
+                        >Imprimir pedido</q-tooltip
+                      ></q-btn
+                    >
                   </div>
                 </template>
               </Item>
@@ -193,6 +191,7 @@
                   @click="aceptarTodosLosPedidosSolicitables"
                 />
               </div>
+              <!-- <code>{{ storePedido.pedidosSolicitado }}</code> -->
               <TableSimple
                 :rows="storePedido.pedidosSolicitado"
                 :columns="pedidoGlobal"
@@ -211,11 +210,18 @@
                     <q-td key="nombre" :props="props">
                       {{ props.row.oferta.nombre }}
                     </q-td>
-                    <q-td key="cantidadPedido" :props="props">
+                    <q-td key="pedido" :props="props">
                       {{ props.row.cantidad }}
+                      <!-- {{ props.row.items[0] }} -->
+                    </q-td>
+                    <q-td key="cantidadPedido" :props="props">
+                      {{ props.row.cantidad * props.row.oferta.cantidad }}
+                      ({{ props.row.presentacionBasica }})
+                      <!-- {{ props.row.items[0] }} -->
                     </q-td>
                     <q-td key="cantidadStock" :props="props">
                       {{ props.row.stockEntidad }}
+                      ({{ props.row.presentacionBasica }})
                     </q-td>
                     <q-td key="diferencia" :props="props">
                       {{ props.row.stockEntidad - props.row.cantidad }}
@@ -404,6 +410,34 @@
             </template>
           </q-input>
         </div>
+        <div class="flex flex-col gap-2 justify-center items-center">
+          <h1 v-if="estado.pedidosEntidad.length === 0">No hay pedido😯...</h1>
+          <Item
+            v-for="punto in estado.pedidosRecibidos"
+            :key="punto._id"
+            :href="`listaPedidos/${punto._id}`"
+            :title="punto._id"
+            class="w-[400px] max-sm:w-full"
+            :title2="formatearFecha(punto.estado[0].fecha)"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1>
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                />
+              </div>
+            </template>
+          </Item>
+        </div>
       </q-tab-panel>
     </q-tab-panels>
     <div
@@ -467,6 +501,27 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+
+  <!-- MODAL -->
+  <q-dialog v-model="estado.modal.isShowEntidad" persistent>
+    <q-card class="w-[370px]" style="padding: 0.5rem !important">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-lg font-bold">
+          {{ estado.entidadesSinPedidos.length }} Entidades sin pedidos
+        </div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <!-- <h1 class="bg-gray-300 text-center my-2">
+          {{ estado.entidadesSinPedidos.length }} entidades
+        </h1> -->
+        <div v-for="entidad in estado.entidadesSinPedidos" :key="entidad">
+          <h1>{{ entidad.nombre }}</h1>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 definePageMeta({
@@ -490,6 +545,7 @@ const {
   ofertaPreparado,
   ajustarOferta,
   handlePedidoGlobal,
+  mostrarEntidadSinPedidos,
 } = usePedido();
 
 const tab = ref('puntos');

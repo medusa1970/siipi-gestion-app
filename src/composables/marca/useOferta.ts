@@ -320,6 +320,13 @@ export const useOferta = () => {
 
     estado.modal.isShowCatalogo = false;
   };
+  function calcularTotalOfertas(catalogo: any) {
+    const total = catalogo
+      .map((hija: any) => hija.hijas.length)
+      .reduce((a: any, b: any) => a + b, 0);
+    console.log(total);
+    return total;
+  }
 
   //on mounted
   // onMounted(() => {
@@ -350,5 +357,6 @@ export const useOferta = () => {
     elegirCatalogo,
     pruebaProducto,
     obtenerCatalogoId,
+    calcularTotalOfertas,
   };
 };

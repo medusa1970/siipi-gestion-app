@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="font-extrabold text-lg">Recibir productosss</h1>
+    <h1 class="font-extrabold text-lg">Recibir productos</h1>
     <div class="flex gap-2 flex-wrap justify-center mt-2">
       <NuxtLink
         href="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c4"
@@ -27,7 +27,13 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { pedidoStore } from '@/stores/pedido.store';
 definePageMeta({
   layout: 'cathering',
+});
+const storePedido = pedidoStore();
+onMounted(() => {
+  storePedido.isDespachar = false;
 });
 </script>

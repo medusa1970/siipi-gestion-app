@@ -3,7 +3,7 @@
     <Navigation label="Productos" icon="list_alt" />
     <span class="flex gap-2">
       <h1 class="font-bold text-xl">Gestion de productos</h1>
-      <q-btn
+      <!-- <q-btn
         color="primary"
         icon="bi-eye"
         rounded
@@ -11,7 +11,7 @@
         size="12px"
         @click="$router.push('productos/categorias')"
         ><q-tooltip>Ver cataegorias</q-tooltip></q-btn
-      >
+      > -->
     </span>
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>

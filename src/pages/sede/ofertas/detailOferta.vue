@@ -8,7 +8,7 @@
     />
     <div class="p-2">
       <h1 class="font-semibold text-base mb-3">Información basicaa:</h1>
-      <div
+      <!-- <div
         class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
       >
         <input type="file" class="hidden" id="fileInput" />
@@ -19,105 +19,113 @@
           <q-icon name="add" size="xs" />
         </label>
         <span class="text-gray-500">Subir imagen</span>
-      </div>
+      </div> -->
       <!-- INPUTS -->
-      <div class="w-full grid grid-cols-6 gap-2 my-4">
-        <q-input
-          class="col-span-2"
-          v-model="estado.oferta.nombre"
-          type="text"
-          label="Nombre"
-          outlined
-          dense
-          clearable
-        />
-        <q-input
-          class="col-span-2"
-          v-model.number="estado.oferta.precio"
-          type="number"
-          label="Precio"
-          outlined
-          dense
-          clearable
-        />
-        <q-input
-          class="col-span-2"
-          v-model="estado.oferta.catalogoNombre"
-          label="Catalogo"
-          outlined
-          dense
-          clearable
-          disable
-        />
-        <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
-          <h1 class="font-bold">Seleccionar catalogo:</h1>
-          <div class="flex gap-2 flex-wrap">
-            <div v-for="catalogo in estado.catalogos.hijas" :key="catalogo">
-              <q-btn
-                color="primary"
-                :label="catalogo.nombre"
-                no-caps
-                padding="0 10px"
-                size="13px"
-                @click="abrirModalCatalogo(catalogo)"
-              />
+      <form
+        @submit.prevent="
+          storeOferta.isEdit === false ? crearOferta() : editarOferta()
+        "
+      >
+        <div class="w-full grid grid-cols-6 gap-2 my-4">
+          <q-input
+            class="col-span-2"
+            v-model="estado.oferta.nombre"
+            type="text"
+            label="Nombre"
+            outlined
+            dense
+            clearable
+            required
+          />
+          <q-input
+            class="col-span-2"
+            v-model.number="estado.oferta.precio"
+            type="number"
+            label="Precio"
+            outlined
+            dense
+            clearable
+            required
+          />
+          <q-input
+            class="col-span-2"
+            v-model="estado.oferta.catalogoNombre"
+            label="Catalogo"
+            outlined
+            dense
+            clearable
+            disable
+            required
+          />
+          <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
+            <h1 class="font-bold">Seleccionar catalogo:</h1>
+            <div class="flex gap-2 flex-wrap">
+              <div v-for="catalogo in estado.catalogos.hijas" :key="catalogo">
+                <q-btn
+                  color="primary"
+                  :label="catalogo.nombre"
+                  no-caps
+                  padding="0 10px"
+                  size="13px"
+                  @click="abrirModalCatalogo(catalogo)"
+                />
+              </div>
             </div>
           </div>
+          <q-input
+            class="col-span-6"
+            v-model="estado.oferta.descripcion"
+            type="textarea"
+            label="Descripcion"
+            outlined
+            dense
+          />
+          <q-select
+            class="col-span-3"
+            v-model="estado.productoFijo.producto"
+            :options="estado.productos"
+            label="Seleccionar productos"
+            option-label="nombre"
+            style="width: 100%; flex: 1 0 auto"
+            dense
+            onfocus="this.select()"
+            clearable
+            outlined
+            emit-value
+            use-input
+            input-debounce="0"
+          >
+            <template v-slot:prepend>
+              <q-icon name="bi-cart-plus" />
+            </template>
+          </q-select>
+          <q-btn
+            v-if="estado.productoFijo.producto"
+            color="primary"
+            label="Imp. prest."
+            no-caps=""
+            @click="estado.modal.isImportPresentation = true"
+          />
+          <q-input
+            class="col-span-2"
+            v-model.number="estado.productoFijo.presentacion"
+            type="number"
+            label="Cantidad"
+            dense
+            clearable
+            onfocus="this.select()"
+            outlined
+          ></q-input>
         </div>
-        <q-input
-          class="col-span-6"
-          v-model="estado.oferta.descripcion"
-          type="textarea"
-          label="Descripcion"
-          outlined
-          dense
-        />
-        <q-select
-          class="col-span-3"
-          v-model="estado.productoFijo.producto"
-          :options="estado.productos"
-          label="Seleccionar productosss"
-          option-label="nombre"
-          style="width: 100%; flex: 1 0 auto"
-          dense
-          onfocus="this.select()"
-          clearable
-          outlined
-          emit-value
-          use-input
-          input-debounce="0"
-        >
-          <template v-slot:prepend>
-            <q-icon name="bi-cart-plus" />
-          </template>
-        </q-select>
         <q-btn
-          v-if="estado.productoFijo.producto"
-          color="primary"
-          label="Imp. prest."
-          no-caps=""
-          @click="estado.modal.isImportPresentation = true"
+          color="secondary"
+          :label="
+            storeOferta.isEdit === false ? 'Crear oferta' : 'Editar información'
+          "
+          no-caps
+          type="submit"
         />
-        <q-input
-          class="col-span-2"
-          v-model.number="estado.productoFijo.presentacion"
-          type="number"
-          label="Cantidad"
-          dense
-          clearable
-          onfocus="this.select()"
-          outlined
-        ></q-input>
-      </div>
-      <q-btn
-        color="secondary"
-        :label="
-          storeOferta.isEdit === false ? 'Crear oferta' : 'Editar información'
-        "
-        no-caps
-        @click="storeOferta.isEdit === false ? crearOferta() : editarOferta()"
-      />
-      <!-- <q-btn color="secondary" label="Editar información" no-caps class="mb-3" /> -->
+      </form>
     </div>
 
     <br />
@@ -253,10 +261,11 @@
   </Dialog>
 
   <!-- SELECCIONAR CATALOGO -->
-  <Dialog
+  <Dialog2
     v-model="estado.modal.isShowCatalogo"
     title="Seleccionar catalogo"
     close-manual
+    no-btn
   >
     <template #inputsDialog>
       <q-list
@@ -284,7 +293,7 @@
         </q-expansion-item>
       </q-list>
     </template>
-  </Dialog>
+  </Dialog2>
 </template>
 
 <script setup>

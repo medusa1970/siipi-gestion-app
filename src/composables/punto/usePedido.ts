@@ -16,6 +16,7 @@ import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/punto/menu.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { stockService } from '~/services/punto/stock.service';
+import { authService } from '~/services/auth.service';
 /**
  * LOGICA
  */
@@ -32,6 +33,7 @@ export const usePedido = () => {
       isShowPassword: false,
       isBuscarPorCategoria: false,
       isShowPedidos: false,
+      isShowEntidad: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -39,6 +41,7 @@ export const usePedido = () => {
     precioGeneral: 0,
     pedidosAceptados: [],
     pedidosSinAceptar: [],
+    pedidosRecibidos: [],
     pedidoItemsEstado: '',
     itemPedido: {
       id: '',
@@ -63,6 +66,7 @@ export const usePedido = () => {
       },
     ],
     comentario: '',
+    entidadesSinPedidos: [],
   });
   const filter = ref('');
 
@@ -93,16 +97,14 @@ export const usePedido = () => {
           .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
       ),
     );
+    console.log(estado.pedidosEntidad);
 
     hideLoading();
   };
   const buscarPedidos2 = async () => {
+    console.log('first');
+    console.log(useAuth.negocioElegido._id);
     showLoading();
-    // const {pedidoBuscar} = await pedidoService.pedidoBuscarVendedor(
-    //   useAuth.negocioElegido._id,
-    //   useGqlToken(useAuth.token),
-    // );
-    // console.log(pedidoBuscar);
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       undefined,
       useAuth.negocioElegido._id,
@@ -117,22 +119,34 @@ export const usePedido = () => {
           item.estado.some((estado: any) => estado.estado === 'aceptado'),
         );
 
-        if (allAccepted) {
+        const hasReceived = pedido.items.some((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'recibido'),
+        );
+        const allConfirmed = pedido.items.some((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'confirmado'),
+        );
+
+        if (allAccepted && !hasReceived) {
           accumulator.aceptados.push(pedido);
-        } else {
+        } else if (allConfirmed && !allAccepted) {
           accumulator.noAceptados.push(pedido);
+        }
+        if (hasReceived) {
+          accumulator.recibidos.push(pedido);
         }
 
         return accumulator;
       },
-      { aceptados: [], noAceptados: [] },
+      { aceptados: [], noAceptados: [], recibidos: [] },
     );
-    console.log(estado.pedidosSinAceptar);
-    console.log(estado.pedidosAceptados);
     hideLoading();
+    console.log(pedidos.noAceptados);
+    console.log(pedidos.aceptados);
+    console.log(pedidos.recibidos);
 
     estado.pedidosSinAceptar = pedidos.noAceptados;
     estado.pedidosAceptados = pedidos.aceptados;
+    estado.pedidosRecibidos = pedidos.recibidos;
   };
 
   const buscarPedidoID = async (id: string) => {
@@ -144,6 +158,7 @@ export const usePedido = () => {
     );
     estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
     estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
+      //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
 
@@ -300,6 +315,7 @@ export const usePedido = () => {
     const result = pedidosAceptarOfertasSolicitables.reduce(
       (acumulador: any, pedido: any) => {
         pedido.items.forEach((item: any) => {
+          console.log(item);
           if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
             const itemExistente = acumulador.find(
               (itemAcumulador: any) =>
@@ -329,6 +345,7 @@ export const usePedido = () => {
                 oferta: {
                   _id: item.oferta._id,
                   nombre: item.oferta.nombre,
+                  cantidad: item.oferta.ingredientes[0].cantidad,
                 },
                 producto: {
                   _id: item.oferta.ingredientes[0].producto._id,
@@ -361,7 +378,8 @@ export const usePedido = () => {
       console.log(stock);
       return {
         ...pedido, //@ts-ignore
-        stockEntidad: stock ? stock.cantidad : 0,
+        stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+        presentacionBasica: stock ? stock.producto.presentacionBasica : '',
       };
     });
     console.log(storePedido.pedidosSolicitado);
@@ -410,6 +428,7 @@ export const usePedido = () => {
                 oferta: {
                   _id: item.oferta._id,
                   nombre: item.oferta.nombre,
+                  cantidad: item.oferta.ingredientes[0].cantidad,
                 },
                 producto: {
                   _id: item.oferta.ingredientes[0].producto._id,
@@ -443,7 +462,8 @@ export const usePedido = () => {
 
       return {
         ...pedido, //@ts-ignore
-        stockEntidad: stock ? stock.cantidad : 0,
+        stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+        presentacionBasica: stock ? stock.producto.presentacionBasica : '',
       };
     });
     console.log(storePedido.pedidosDirecto);
@@ -628,6 +648,18 @@ export const usePedido = () => {
     console.log(storePedido.pedidosDirecto);
   };
 
+  const mostrarEntidadSinPedidos = async () => {
+    estado.modal.isShowEntidad = true;
+    const { entidadBuscar } = await authService.buscarTodasEntidades();
+
+    estado.entidadesSinPedidos = entidadBuscar.filter((entidad: any) => {
+      if (entidad.tipo !== 'PUNTO') return false;
+      return !estado.pedidosSinAceptar.some(
+        (pedido: any) => pedido.comprador._id === entidad._id,
+      );
+    });
+  };
+
   onMounted(async () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
@@ -650,6 +682,37 @@ export const usePedido = () => {
       };
     });
     console.log(estado.stocks);
+
+    storePedido.pedidosSolicitado = storePedido.pedidosSolicitado.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+          presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+        };
+      },
+    );
+    storePedido.pedidosDirecto = storePedido.pedidosDirecto.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+          presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+        };
+      },
+    );
   });
 
   return {
@@ -676,5 +739,6 @@ export const usePedido = () => {
     ofertaPreparado,
     ajustarOferta,
     handlePedidoGlobal,
+    mostrarEntidadSinPedidos,
   };
 };

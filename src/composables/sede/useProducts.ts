@@ -127,14 +127,18 @@ export const useProducts = () => {
 
   // AGREGAR PRODUCTO
   const agregarProducto = async () => {
+    console.log('first');
     delete estado.producto._id; //@ts-ignore
     delete estado.producto.categoria.productos;
-    await productoService.agregarProducto({
-      ...estado.producto,
-      categoria: estado.producto.categoria._id,
-    });
-    NotifySucess('Producto agregado correctamente');
-    router.push('/sede/productos');
+    productoService
+      .agregarProducto({
+        ...estado.producto,
+        categoria: estado.producto.categoria._id,
+      })
+      .then((res) => {
+        NotifySucessCenter('Producto agregado correctamente');
+        router.push('/sede/productos');
+      });
   };
   const editProductBasicInfo = async () => {
     //@ts-ignore

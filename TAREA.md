@@ -1,3 +1,30 @@
+- ocultar menu.
+- arreglar fecha null sin ''.✅
+- recibir productos 'sss'. ✅
+- titulo de formulario de que stock. ✅
+- watch negativo input no permitir. ✅
+- despachar productos cambiar consulta. ✅
+- archivar pedidos recibidos. ✅
+- triangulo puntos que no hicieron su pedido. ✅
+- en inventariar poner presentacion basica en cantidad. ✅
+- pedidos global poner la presentacion basica. ✅
+- en la consulta recorrer la cantidad de presentacion.✅
+- historial funcionar ya. ✅
+- rol precioss solo ver logistica.
+  LOGISTICA
+- si no crea producto no tirar creado correctamente notify. ✅
+- validacion de campios requerido. ✅
+- 0 ofertas catalogos leer desde el 2do nivel.✅
+- iconos de los menus CAMBIAR ✅
+- borrar catalogo, colocar submenu gestion de categoria para producto y gestion de catalogo para oferta.✅
+- borrar carrito de logistica ✅
+- cambiar imagen por LOGO SIIPI
+- quitar boton que no hacen nada ✅
+- no hacer crear btn si los campos no estan llenos, productosss arreglar. ✅
+- que hace btn guardar en agregar catalogo en oferta??? ✅
+- cantidad en presentacion basica, y el btn al final por que es de ayuda mas no importante
+- rutas orden :).
+
 - solo supervisor visualiza precio CATHERING
 - catalogo nombre (id quitar) LOGISTICA
 

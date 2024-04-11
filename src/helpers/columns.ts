@@ -297,11 +297,20 @@ export const pedidoGlobal = [
     sortable: true,
   },
   {
+    name: 'pedido',
+    required: true,
+    label: 'Pedido',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+  {
     name: 'cantidadPedido',
     required: true,
     label: 'Cantidad Pedido',
     align: 'center',
-    field: (row: any) => row.cantidad,
+    field: (row: any) =>
+      row.cantidad * row.oferta.cantidad + `(${row.presentacionBasica})`,
     sortable: true,
   },
   {
@@ -309,7 +318,7 @@ export const pedidoGlobal = [
     required: true,
     label: 'Cantidad Stock',
     align: 'center',
-    field: (row: any) => row.stockEntidad,
+    field: (row: any) => row.stockEntidad + `(${row.presentacionBasica})`,
     sortable: true,
   },
   {

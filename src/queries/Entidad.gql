@@ -125,37 +125,6 @@ mutation hacerInventario(
     }
   }
 }
-# mutation hacerInventario(
-#   $entidadBusqueda: BuscarEntidadDto!
-#   $datos: CrearInventarioDto!
-#   $guardar: Boolean!
-# ) {
-#   entidadHacerInventario(
-#     entidadBusqueda: $entidadBusqueda
-#     datos: $datos
-#     guardar: $guardar
-#     opciones: { populate: true }
-#   ) {
-#     fecha
-#     producto {
-#       _id
-#       nombre
-#     }
-#     reporte
-#     diferencias {
-#       vencimiento
-#       diferencia
-#     }
-#     lotes {
-#       vencimiento
-#       cantidad
-#       bloque
-#       presentacion
-#       cantidadPresentacion
-#     }
-#   }
-# }
-
 # LISTA DE PROBLEMAS DE INVENTARIO
 query ListarProblemas(
   $entidadBusqueda: BuscarEntidadDto!
@@ -296,5 +265,15 @@ query filaInventario($entidadBusqueda: BuscarEntidadDto!) {
   filaInventario(entidadBusqueda: $entidadBusqueda) {
     _id
     nombre
+    presentacionBasica
+  }
+}
+
+# BUSCAR ENTIDADES PUNTOS
+query buscarTodasEntidades($busqueda: BuscarEntidadDto!) {
+  entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+    _id
+    nombre
+    tipo
   }
 }

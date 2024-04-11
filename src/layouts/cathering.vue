@@ -51,23 +51,43 @@ const realizarPedido = async () => {
     cancel: true,
     persistent: true,
   }).onOk(async () => {
-    const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-      storeAuth.negocioElegido._id,
-      '65a1a6c9566e40c934929a56',
-      items,
-      useGqlToken(storeAuth.token),
-    );
-    if (pedidoIniciar) {
-      await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-      await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-      await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-      await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
-      NotifySucessCenter('Pedido recibido con éxito');
-      router.push('/cathering/pedidos/listaPedidos');
-      storePedido.listaPedido = [];
-    } else NotifyError('Error al realizar el pedido');
+    if (storePedido.isDespachar == false) {
+      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+        storeAuth.negocioElegido._id,
+        '65a1a6c9566e40c934929a56',
+        items,
+        useGqlToken(storeAuth.token),
+      );
+      if (pedidoIniciar) {
+        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+        NotifySucessCenter('Pedido recibido con éxito');
+        router.push('/cathering/pedidos/listaPedidos');
+        storePedido.listaPedido = [];
+      } else NotifyError('Error al realizar el pedido');
 
-    console.log(storePedido.listaPedido);
+      console.log(storePedido.listaPedido);
+    } else {
+      console.log('first');
+      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+        '65a1a6c9566e40c934929a56',
+        storeAuth.negocioElegido._id,
+        items,
+        useGqlToken(storeAuth.token),
+      );
+      console.log(pedidoIniciar);
+      if (pedidoIniciar) {
+        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+        NotifySucessCenter('Pedido realizado con éxito');
+        router.push('/cathering/pedidos/listaPedidos');
+        storePedido.listaPedido = [];
+      } else NotifyError('Error al realizar el pedido');
+    }
   });
 };
 

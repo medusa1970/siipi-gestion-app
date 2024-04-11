@@ -22,7 +22,14 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { pedidoStore } from '@/stores/pedido.store';
 definePageMeta({
   layout: 'cathering',
+});
+
+const storePedido = pedidoStore();
+onMounted(() => {
+  storePedido.isDespachar = true;
 });
 </script>

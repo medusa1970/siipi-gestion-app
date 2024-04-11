@@ -31,9 +31,14 @@
               <template v-slot:header>
                 <div class="flex items-center justify-center">
                   <!-- uppercase font-bold line-clamp-1 -->
-                  <p class="font-bold">
-                    {{ props.row.nombre }}
-                  </p>
+                  <div class="flex flex-col items-center">
+                    <p class="font-bold">
+                      {{ props.row.nombre }}
+                    </p>
+                    <p class="text-[13px]">
+                      ({{ props.row.presentacionBasica }})
+                    </p>
+                  </div>
                 </div>
                 <q-item-section side class="h-[50px]">
                   <!-- <h1>sds</h1> -->
@@ -212,6 +217,7 @@ const obtenerProductosInventariar = async () => {
     useAuth.negocioElegido._id,
   );
   estado.productosBloquesNull = filaInventario;
+  console.log(filaInventario);
 };
 
 const agregarFila = () => {
@@ -223,8 +229,10 @@ const agregarFila = () => {
 };
 
 const terminarInventario = async (producto) => {
-  console.log(producto);
-  console.log(estado.inventario.lotes);
+  estado.inventario.lotes.forEach((lote) => {
+    if (lote.vencimiento === '') lote.vencimiento = null;
+  });
+
   /**LOGICA */
   inventarioService
     .realizarInventarioFalse(

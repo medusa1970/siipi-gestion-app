@@ -1,5 +1,13 @@
 <template>
   <div class="block mx-auto w-[400px]">
+    <h1 class="font-bold mb-2 text-center uppercase">
+      {{
+        nombreCatalogo.includes('PRODUCCION')
+          ? 'catalogo compra PROVEEDOR'
+          : nombreCatalogo
+      }}
+    </h1>
+
     <q-input
       v-if="$q.platform.is.desktop"
       borderless
@@ -107,10 +115,12 @@ const { estado, useAuth, filter, obtenerListaOfertas, filteredCatalogos } =
 const catalogosOfertas = ref([]);
 const catalogoSeleccionado = ref([]);
 const catalogoSeleccionado2 = ref([]);
+const nombreCatalogo = ref('');
 
 // const filter = ref('');
 
 const handleInputChange2 = (event, product) => {
+  event.target.value = Math.max(0, event.target.value);
   const nuevoValor = event.target.value;
 
   const producto = {
@@ -147,6 +157,7 @@ const obtenerCatalogosProductos = async () => {
     route.params.id,
   );
   console.log(catalogoArbol);
+  nombreCatalogo.value = catalogoArbol.nombre;
   catalogosOfertas.value = catalogoArbol.hijas;
   catalogoSeleccionado.value = catalogoArbol.hijas[0];
   catalogoSeleccionado2.value = catalogoArbol.hijas[0];

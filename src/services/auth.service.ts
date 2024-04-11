@@ -24,4 +24,6 @@ export const authService = {
         busquedaEmpleado: { persona: personaID },
       }),
     ),
+  buscarTodasEntidades: async () =>
+    postData(GqlBuscarTodasEntidades({ busqueda: {} })),
 };

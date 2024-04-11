@@ -33,7 +33,7 @@
       <!-- ACTIONS -->
       <template #body-cell-actions="{ props }">
         <q-td :props="props">
-          <q-btn
+          <!-- <q-btn
             color="primary"
             icon="accessibility"
             dense
@@ -41,7 +41,7 @@
             round
             size="13px"
             @click="abrirPermisos(props.row)"
-          />
+          /> -->
           <q-btn
             color="red"
             icon="delete"

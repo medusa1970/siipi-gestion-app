@@ -1,9 +1,15 @@
 <template>
-  <div class="p-2">
+  <Navigation
+    label="Productos"
+    icon="list_alt"
+    label2="DetalleProducto"
+    href="/sede/productos"
+  />
+  <form @submit.prevent="agregarProducto()" class="p-2">
     <h1 class="text-lg font-bold mb-1">
       {{ useProduct.isEdit === true ? 'Editar Producto' : 'Agregar Producto' }}
     </h1>
-    <div
+    <!-- <div
       class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
     >
       <input type="file" class="hidden" id="fileInput" />
@@ -14,7 +20,7 @@
         <q-icon name="add" size="xs" />
       </label>
       <span class="text-gray-500">Subir imagen</span>
-    </div>
+    </div> -->
     <span class="flex flex-col gap-2 my-3 w-[50vw] max-sm:w-full">
       <q-input
         v-model="estado.producto.nombre"
@@ -24,6 +30,7 @@
         dense
         :readonly="useProduct.isEdit"
         clearable
+        required
       />
 
       <span class="flex flex-row gap-2">
@@ -78,6 +85,7 @@
         outlined
         dense
         clearable
+        required
       />
     </span>
     <q-btn
@@ -118,10 +126,10 @@
       label="
         Agregar Producto
       "
-      @click="agregarProducto()"
+      type="submit"
       no-caps
     />
-  </div>
+  </form>
   <!-- DIALOG -->
   <Dialog
     v-model="estado.dialog.isAddPresentation"

@@ -1,5 +1,6 @@
 // import type { GqlPedidoIniciar } from '#gql';
 import { postData } from '@/services/service.config';
+import punto from '~/layouts/punto.vue';
 // import { authStore } from '@/stores/auth.store';
 
 // const useAuth = authStore();
@@ -42,6 +43,19 @@ export const pedidoService = {
       { busqueda: { comprador: puntoID, vendedor: punto2ID, _id: pedidoID } },
       token,
     ),
+  // pedidoBuscarVendedor: async (
+  //   puntoID?: string | null | undefined,
+  //   token?: any,
+  // ) =>
+  //   postData(
+  //     GqlPedidoBuscar(
+  //       {
+  //         busqueda: { vendedor: puntoID },
+  //         opciones: { limit: 0, populate: true },
+  //       },
+  //       token,
+  //     ),
+  //   ),
   pedidoLeerEstado: async (pedidoID?: string | null | undefined) =>
     GqlPedidoLeerEstado({ busqueda: { _id: pedidoID } }),
 
@@ -70,5 +84,35 @@ export const pedidoService = {
   pedidoRecibirItems: async (pedidoID: string) =>
     postData(
       GqlPedidoRecibirItems({ busqueda: { _id: pedidoID }, itemIds: [] }),
+    ),
+  pedidoItemsEstado: async (pedidoID: string) =>
+    postData(GqlPedidoItemsEstado({ busqueda: { _id: pedidoID } })),
+  pedidosBuscarItems: async (pedidoIDS: string[]) =>
+    postData(GqlPedidosBuscarItems({ busqueda: { _ids: pedidoIDS } })),
+  pedidosAceptarOfertasSolicitables: async (pedidoIDS: string[]) =>
+    postData(
+      GqlPedidosAceptarOfertasSolicitables({ busqueda: { _ids: pedidoIDS } }),
+    ),
+  pedidosAceptarOfertasDirectas: async (pedidoIDS: string[]) =>
+    postData(
+      GqlPedidosAceptarOfertasDirectas({ busqueda: { _ids: pedidoIDS } }),
+    ),
+  pedidosOfertaPreparados: async (pedidoIds: string[], ofertaIds: string[]) =>
+    postData(
+      GqlPedidosPrepararOfertas({ busqueda: { _ids: pedidoIds }, ofertaIds }),
+    ),
+  pedidosOfertaAjustar: async (
+    pedidoIds: string[],
+    ofertaId: string,
+    comentario: string,
+    diferenciaTotal: number,
+  ) =>
+    postData(
+      GqlPedidosAjustarOferta({
+        busqueda: { _ids: pedidoIds },
+        ofertaId,
+        diferenciaTotal,
+        comentario,
+      }),
     ),
 };

@@ -1,7 +1,8 @@
 <template>
+  <Navigation label="Catalogos" icon="group" />
+  <h1 class="font-bold text-xl mb-3">Gestion de catalogos</h1>
   <q-btn
     color="primary"
-    icon="add"
     label="Crear catalogo"
     dense
     no-caps
@@ -20,8 +21,17 @@
       @click="redirectCatalogoArbol(catalogo)"
     >
       <h1 class="font-bold text-center">{{ catalogo.nombre }}</h1>
-      <p>{{ catalogo.ofertas.length }} ofertas👌</p>
-      <p class="italic">29 diciembre 2023</p>
+      <p>
+        {{
+          catalogo.hijas && catalogo.hijas.length > 0
+            ? catalogo.hijas
+                .map((hija) => (hija.hijas ? hija.hijas.length : 0))
+                .reduce((a, b) => a + b, 0)
+            : 0
+        }}
+        categorias👌
+      </p>
+      <!-- <p class="italic">29 diciembre 2023</p> -->
     </q-item>
   </div>
 
@@ -43,30 +53,17 @@
 
 <script setup>
 definePageMeta({
-  layout: 'marca',
+  layout: 'sede',
 });
 import { onMounted } from 'vue';
 import { useOferta } from '@/composables/marca/useOferta';
-const { obtenerTodoCatalagos, estado, redirectCatalogoArbol, crearCatalogo } =
-  useOferta();
-
-const catalogos = [
-  {
-    nombre: 'Catalogo Produccion',
-    items: 56,
-    fecha: '12 febrero 2023',
-  },
-  {
-    nombre: 'Catalogo Punto',
-    items: 156,
-    fecha: '29 diciembre 2023',
-  },
-  {
-    nombre: 'Catalogo 3',
-    items: 91,
-    fecha: '28 enero 2024',
-  },
-];
+const {
+  obtenerTodoCatalagos,
+  estado,
+  redirectCatalogoArbol,
+  crearCatalogo,
+  calcularTotalOfertas,
+} = useOferta();
 
 onMounted(() => {
   obtenerTodoCatalagos();

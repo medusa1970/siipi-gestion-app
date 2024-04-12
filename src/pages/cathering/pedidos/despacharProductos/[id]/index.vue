@@ -1,8 +1,12 @@
 <template>
-  <Navigation label="Realizar pedido" icon="group" />
-  <h1 class="font-bold text-lg text-center mb-2">Recibir productos</h1>
-
   <div class="block mx-auto w-[400px]">
+    <h1 class="font-bold mb-2 text-center uppercase">
+      {{
+        nombreCatalogo.includes('PRODUCCION')
+          ? 'catalogo compra PROVEEDOR'
+          : nombreCatalogo
+      }}
+    </h1>
     <q-input
       v-if="$q.platform.is.desktop"
       borderless
@@ -23,15 +27,14 @@
     <div class="flex gap-2 justify-center my-2">
       <div
         class="cursor-pointer"
-        v-for="catalogo in estado.catalogosOfertas"
+        v-for="catalogo in catalogosOfertas"
         :key="catalogo._id"
       >
         <h1
           @click="selectCatalogo(catalogo)"
           :class="[
             'bg-[#F0F0F0] p-2',
-            estado.catalogoSeleccionado.nombre === catalogo.nombre &&
-              'font-bold',
+            catalogoSeleccionado.nombre === catalogo.nombre && 'font-bold',
           ]"
         >
           {{ catalogo.nombre }}
@@ -39,8 +42,8 @@
       </div>
     </div>
     <!-- <code>{{ estado.catalogoSeleccionado }}</code> -->
-    <q-list v-if="estado.catalogoSeleccionado" class="flex flex-col gap-1">
-      <div v-for="item in estado.catalogoSeleccionado.hijas" :key="item._id">
+    <q-list v-if="catalogoSeleccionado" class="flex flex-col gap-1">
+      <div v-for="item in catalogoSeleccionado.hijas" :key="item._id">
         <q-expansion-item
           class="bg-[#F0F0F0]"
           dense
@@ -80,50 +83,40 @@
           </q-card>
         </q-expansion-item>
       </div>
-      <!-- <div v-if="estado.catalogoSeleccionado.hijas.length == 0">
-      Producto no encontrado😧
-    </div> -->
       <div
         v-if="
-          estado.catalogoSeleccionado.hijas &&
-          estado.catalogoSeleccionado.hijas.length === 0
+          catalogoSeleccionado.hijas && catalogoSeleccionado.hijas.length === 0
         "
         class="text-center"
       >
         <h1>Producto no encontrado😧</h1>
       </div>
     </q-list>
-    <div v-if="estado.catalogoSeleccionado.length === 0">
-      Cargando productos...
-    </div>
+    <div v-if="catalogoSeleccionado.length === 0">Cargando productos...</div>
   </div>
 </template>
+
 <script setup>
-import { watch } from 'vue';
-import { useProducts } from '@/composables/sede/useProducts';
-import { usePedido } from '@/composables/punto/usePedido';
-import { ref } from 'vue';
-import { pedidoService } from '~/services/punto/pedido.service';
-import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
-import { pedidoStore } from '@/stores/pedido.store';
-import { useRouter } from 'vue-router';
 definePageMeta({
   layout: 'cathering',
 });
+import { ref, onMounted, watch } from 'vue';
+import { usePedido } from '~/composables/punto/usePedido';
+import { pedidoStore } from '@/stores/pedido.store';
+import { useRoute } from 'vue-router';
+import { ofertaService } from '~/services/marca/ofertas.service';
+const route = useRoute();
 
-const {
-  estado,
-  obtenerCatalogosProductos,
-  useAuth,
-  obtenerListaOfertas,
-  filter,
-  filteredCatalogos,
-} = usePedido();
 const usePedidoStore = pedidoStore();
-const router = useRouter();
-const test = ref(null);
-const listaPedidos = ref([]);
-const categoriasPedido = ref({});
+const { estado, useAuth, filter, obtenerListaOfertas, filteredCatalogos } =
+  usePedido();
+
+const catalogosOfertas = ref([]);
+const catalogoSeleccionado = ref([]);
+const catalogoSeleccionado2 = ref([]);
+const nombreCatalogo = ref('');
+
+// const filter = ref('');
 
 const handleInputChange2 = (event, product) => {
   event.target.value = Math.max(0, event.target.value);
@@ -146,49 +139,9 @@ const handleInputChange2 = (event, product) => {
 
   console.log(usePedidoStore.listaPedido);
 };
-
-const deleteOfertaInList = (producto) => {
-  // console.log(producto);
-  // console.log(listaPedidos.value);
-  listaPedidos.value.forEach((categoria) => {
-    const indiceProducto = categoria.productos.findIndex(
-      (item) => item.nombre === producto.nombre,
-    );
-    if (indiceProducto !== -1) categoria.productos.splice(indiceProducto, 1);
-  });
-};
-
-const realizarPedido = async () => {
-  //solo quiero sacar el productonombre y su cantidad
-  const items = usePedidoStore.listaPedido.flatMap((categoria) => {
-    return categoria.productos.map((producto) => {
-      return {
-        oferta: producto.id,
-        cantidad: parseInt(producto.cantidad),
-      };
-    });
-  });
-  // console.log(items)
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    useAuth.negocioElegido._id,
-    '65a5a9af08c1a906d83522d0',
-    items,
-    useGqlToken(useAuth.token),
-  );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-    await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-    await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido recibido con éxito');
-    router.push('/cathering/pedidos/listaPedidos');
-    usePedidoStore.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
-};
 const selectCatalogo = (catalogo) => {
-  console.log('hola');
   console.log(catalogo);
-  estado.catalogoSeleccionado = catalogo;
+  catalogoSeleccionado.value = catalogo;
 };
 
 watch(filter, () => {
@@ -198,10 +151,23 @@ watch(filter, () => {
   // console.log(estado.catalogoSeleccionado);
 });
 
+const obtenerCatalogosProductos = async () => {
+  const { catalogoArbol } = await ofertaService.buscarCatalogoID(
+    route.params.id,
+  );
+  console.log(catalogoArbol);
+  nombreCatalogo.value = catalogoArbol.nombre;
+  catalogosOfertas.value = catalogoArbol.hijas;
+  catalogoSeleccionado.value = catalogoArbol.hijas[0];
+  catalogoSeleccionado2.value = catalogoArbol.hijas[0];
+};
+
+onMounted(() => {
+  obtenerCatalogosProductos();
+});
+
 onMounted(() => {
   obtenerListaOfertas();
   obtenerCatalogosProductos();
 });
 </script>
-
-<!-- <style scoped></style> -->

@@ -31,6 +31,9 @@ import { useRouter } from 'vue-router';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
 
 const storeAuth = authStore();
 const storePedido = pedidoStore();
@@ -41,18 +44,24 @@ const realizarPedido = async () => {
     oferta: p.id,
     cantidad: parseInt(p.cantidad),
   }));
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    storeAuth.negocioElegido._id,
-    '65a5a9af08c1a906d83522d0',
-    items,
-    useGqlToken(storeAuth.token),
-  );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido realizado con éxito');
-    router.push('/punto/pedidos/listaPedidos');
-    storePedido.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
-  // console.log(pedidoIniciar);
+  $q.dialog({
+    // title: `Eliminar ${row.nombre}`,
+    message: '¿Estas seguro de aceptar este pedido?',
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+      storeAuth.negocioElegido._id,
+      '65a5a9af08c1a906d83522d0',
+      items,
+      useGqlToken(storeAuth.token),
+    );
+    if (pedidoIniciar) {
+      await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+      NotifySucessCenter('Pedido realizado con éxito');
+      router.push('/punto/pedidos/listaPedidos');
+      storePedido.listaPedido = [];
+    } else NotifyError('Error al realizar el pedido');
+  });
 };
 </script>

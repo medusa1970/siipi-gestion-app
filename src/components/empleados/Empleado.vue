@@ -1,6 +1,7 @@
 <template>
   <div>
     <Navigation label="Empleados" icon="group" />
+    <h1 class="font-bold text-xl">Gestion de empleados</h1>
     <Table :rows="estado.rows" :columns="columnsEmpleados" dense>
       <!-- IMAGES -->
       <template #body-cell-image="{ value }">
@@ -32,7 +33,7 @@
       <!-- ACTIONS -->
       <template #body-cell-actions="{ props }">
         <q-td :props="props">
-          <q-btn
+          <!-- <q-btn
             color="primary"
             icon="accessibility"
             dense
@@ -40,7 +41,7 @@
             round
             size="13px"
             @click="abrirPermisos(props.row)"
-          />
+          /> -->
           <q-btn
             color="red"
             icon="delete"
@@ -103,27 +104,17 @@
     <template #inputsDialog>
       <div class="row items-center" style="width: 100%">
         <q-select
-          color="primary"
           v-model="estado.personaSelect.nombre"
           :options="estado.personas"
           label="Seleccionar persona"
           option-label="nombre"
           style="width: 100%; flex: 1 0 auto"
           use-input
-          input-debounce="0"
           hide-selected
           fill-input
-          onfocus="this.select()"
           dense
+          clearable
         >
-          <template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="estado.personaSelect.nombre = ''"
-              class="cursor-pointer q-mr-md"
-            />
-          </template>
           <template v-slot:prepend>
             <q-icon name="group" />
           </template>
@@ -136,7 +127,25 @@
           </template>
         </q-select>
       </div>
-      <q-input v-model="estado.cargo" type="text" label="Cargo" dense />
+      <q-select
+        v-model="estado.cargo"
+        :options="cargos"
+        label="Seleccionar rol"
+        style="width: 100%; flex: 1 0 auto"
+        dense
+        clearable
+      >
+        <template v-slot:prepend>
+          <q-icon name="group" />
+        </template>
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No hay resultados
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
     </template>
   </Dialog>
 </template>
@@ -147,6 +156,8 @@ import { useEmpleado } from '@/composables/useEmpleado';
 
 const { estado, abrirModal, abrirPermisos, agregarEmpleado, borrarEmpleado } =
   useEmpleado();
+
+const cargos = ['almacen', 'repartidor'];
 </script>
 
 <style scoped>

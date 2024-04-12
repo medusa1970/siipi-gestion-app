@@ -1,4 +1,4 @@
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { NotifySucessCenter } from '~/helpers/message.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
@@ -10,6 +10,7 @@ export const useOferta = () => {
   const storeOferta = ofertaStore();
   const router = useRouter();
   const $q = useQuasar();
+  const pruebaProducto = ref('');
 
   const estado = reactive({
     ofertas: [],
@@ -18,7 +19,8 @@ export const useOferta = () => {
       nombre: '',
       descripcion: '',
       precio: 0,
-      grupos: [],
+      catalogo: '',
+      catalogoNombre: '',
       ingredientes: [],
       preparados: [],
       condiciones: [],
@@ -31,11 +33,17 @@ export const useOferta = () => {
       isImportPresentation: false,
       isAddCatalogo: false,
       isEditIngrediente: false,
+      isShowCatalogo: false,
     },
     toogle: false,
     productoFijo: {
       ingredienteID: '',
-      producto: '',
+      producto: {
+        _id: '',
+        nombre: '',
+        presentacionBasica: '',
+        presentaciones: [],
+      },
       presentacion: 0,
       import: '',
     },
@@ -45,26 +53,55 @@ export const useOferta = () => {
       nombre: '',
       id: '',
     },
+    catalogoSeleccionado: [],
   });
+
+  const clearOferta = {
+    _id: '',
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    catalogo: '',
+    producto: {
+      _id: '',
+      nombre: '',
+      presentacionBasica: '',
+      presentaciones: [],
+    },
+    cantidad: 0,
+  };
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
-    // console.log(ofertaBuscar);
+    console.log(ofertaBuscar);
     estado.ofertas = ofertaBuscar;
-    // storeOferta.oferta = ofertaBuscar;
     // console.log(estado.ofertas);
+    // OBTENER CATALOGOS
   };
+  // const
 
   const crearOferta = async () => {
-    // console.log('first');
-    const { _id, ingredientes, condiciones, preparados, ...ofertaData } =
-      estado.oferta;
+    const {
+      _id,
+      ingredientes,
+      condiciones,
+      preparados,
+      catalogoNombre,
+      ...ofertaData
+    } = estado.oferta;
+    console.log(ofertaData);
     const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
+    console.log(ofertaCrear);
     if (ofertaCrear._id) {
+      await ofertaService.crearIngredienteProducto(
+        ofertaCrear._id, //@ts-ignore
+        estado.productoFijo.producto._id, //@ts-ignore
+        estado.productoFijo.presentacion,
+      );
       NotifySucessCenter('Oferta creada correctamente');
       estado.modal.isCreatedOferta = true;
-      estado.oferta._id = ofertaCrear._id;
       storeOferta.isEdit = true;
       storeOferta.isEditIngrediente = true;
+      router.push('/sede/ofertas');
     }
   };
 
@@ -91,7 +128,7 @@ export const useOferta = () => {
       NotifySucessCenter('Ingrediente creado correctamente'); //@ts-ignore
     estado.oferta.ingredientes.push(ofertaCrearIngredienteProducto);
     estado.modal.isAddIngredientProduct = false;
-    estado.productoFijo.producto = '';
+    // estado.productoFijo.producto = '';
     estado.productoFijo.presentacion = 0;
   };
   const importarPresentacion = async () => {
@@ -102,10 +139,16 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
-    // console.log('first');
-    // estado.oferta.nombre = oferta.nombre;
-    storeOferta.oferta = oferta;
-    estado.oferta = oferta;
+    console.log(oferta);
+    storeOferta.oferta._id = oferta._id;
+    storeOferta.oferta.nombre = oferta.nombre;
+    storeOferta.oferta.descripcion = oferta.descripcion;
+    storeOferta.oferta.precio = oferta.precio;
+    storeOferta.oferta.catalogo = oferta.catalogo._id;
+    storeOferta.oferta.producto = oferta.ingredientes[0].producto;
+    storeOferta.oferta.cantidad = oferta.ingredientes[0].cantidad;
+    console.log(storeOferta.oferta);
+
     storeOferta.isEdit = true;
     storeOferta.isEditIngrediente = true;
 
@@ -115,19 +158,28 @@ export const useOferta = () => {
   const abrirAgregarOferta = () => {
     storeOferta.isEdit = false;
     storeOferta.isEditIngrediente = false;
-    storeOferta.oferta = ''; //@ts-ignore
+    storeOferta.oferta = clearOferta; //@ts-ignore
     estado.oferta = '';
   };
 
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
-    // console.log(catalogoArbol);
-    // console.log(catalogoArbol);
     estado.catalogos = catalogoArbol;
+    console.log(estado.catalogos);
+    // console.log(catalogoArbol);
   };
+
+  const obtenerCatalogoId = async (catalogoId: string) => {
+    console.log('first');
+    const { catalogoArbol } = await ofertaService.buscarCatalogoID(catalogoId);
+    //@ts-ignore
+    if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
+  };
+
   const redirectCatalogoArbol = (catalogo: any) => {
     // console.log(catalogo);
-    storeOferta.catalogoElegido = [catalogo];
+    // console.log(catalogo);
+    // storeOferta.catalogoElegido = [catalogo];
     router.push('catalogos/' + catalogo._id);
   };
   const crearCatalogo = async () => {
@@ -144,18 +196,18 @@ export const useOferta = () => {
   const modalCrearCategoriaArbol = (data: any) => {
     estado.modal.isAddCatalogo = true;
     estado.catalogo.id = data._id;
+    console.log('first');
   };
 
-  const crearCatalogoArbol = async () => {
-    // console.log(estado.catalogo);
+  const crearCatalogoArbol = async (catalogoId: string) => {
     await ofertaService.crearCatalogo(
       estado.catalogo.nombre, //@ts-ignore
       estado.catalogo.id,
     );
-    // obtenerTodoCatalagos();
     estado.modal.isAddCatalogo = false;
     estado.catalogo.nombre = '';
     estado.catalogo.id = '';
+    obtenerCatalogoId(catalogoId);
     NotifySucessCenter('Catalogo creado correctamente');
   };
   const editarOferta = async () => {
@@ -166,10 +218,22 @@ export const useOferta = () => {
       condiciones,
       ingredientes,
       preparados,
+      catalogoNombre,
       ...ofertaData
     } = estado.oferta;
+    console.log(ofertaData);
+    console.log(estado.productoFijo);
     await ofertaService.editarOferta(estado.oferta._id, ofertaData);
+    // const { ofertaModificarIngredienteProducto: res } =
+    // await ofertaService.editarIngredienteProducto(
+    //   estado.oferta._id, //@ts-ignore
+    //   estado.productoFijo.ingredienteID, //@ts-ignore
+    //   estado.productoFijo.producto._id,
+    //   estado.productoFijo.presentacion,
+    // );
+    // console.log(res);
     NotifySucessCenter('Oferta editada correctamente');
+    router.push('/sede/ofertas');
   };
   const editarIngrediente = async (ingrediente: any) => {
     // console.log(ingrediente);
@@ -205,7 +269,7 @@ export const useOferta = () => {
         estado.productoFijo.presentacion,
       );
     if (res) {
-      // console.log(res); //@ts-ignore
+      //@ts-ignore
       estado.oferta.ingredientes = estado.oferta.ingredientes.map(
         (ingrediente: any) => {
           return ingrediente._id === res[0]._id ? res[0] : ingrediente;
@@ -243,6 +307,26 @@ export const useOferta = () => {
       obtenerTodasofertas();
     });
   };
+  const abrirModalCatalogo = (catalogo: any) => {
+    // console.log(catalogo);
+    // console.log(catalogo);
+    estado.modal.isShowCatalogo = true;
+    estado.catalogoSeleccionado = catalogo;
+    console.log(estado.catalogoSeleccionado);
+  };
+  const elegirCatalogo = (item: { _id: string; nombre: string }) => {
+    estado.oferta.catalogo = item._id;
+    estado.oferta.catalogoNombre = item.nombre;
+
+    estado.modal.isShowCatalogo = false;
+  };
+  function calcularTotalOfertas(catalogo: any) {
+    const total = catalogo
+      .map((hija: any) => hija.hijas.length)
+      .reduce((a: any, b: any) => a + b, 0);
+    console.log(total);
+    return total;
+  }
 
   //on mounted
   // onMounted(() => {
@@ -269,5 +353,10 @@ export const useOferta = () => {
     editarIngredienteProducto,
     test,
     borrarOferta,
+    abrirModalCatalogo,
+    elegirCatalogo,
+    pruebaProducto,
+    obtenerCatalogoId,
+    calcularTotalOfertas,
   };
 };

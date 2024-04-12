@@ -1,6 +1,7 @@
 <template>
   <Navigation label="Caja" icon="group" />
 
+  <h1 class="font-extrabold text-xl">Deudas Pedidos</h1>
   <Table badge :rows="pedidosCaja" :columns="tesoreriaCobrar" dense>
     <!-- BADGE -->
     <template #rows-badge="{ props }">
@@ -21,6 +22,7 @@
                     0,
                   )
                 }}
+                Bs
               </span>
               <span v-else>0</span>
             </p>
@@ -78,6 +80,7 @@
                     0,
                   )
                 }}
+                Bs
               </span>
               <span v-else>0</span>
             </p>
@@ -125,44 +128,31 @@
                 0,
               )
             }}
+            Bs
           </p>
         </q-td>
         <q-td key="actions" :props="props">
-          <div class="flex gap-1 justify-end">
+          <div class="flex justify-end">
             <q-btn
               color="blue"
-              label="I"
+              icon="print"
               dense
-              padding="0 6px"
+              flat
+              rounded
+              padding="0 3px"
               class="font-bold text-[12px]"
               ><q-tooltip> Imprimir </q-tooltip></q-btn
             >
             <q-btn
-              color="orange"
-              label="M"
-              dense
-              padding="0 3px"
-              class="font-bold text-[12px]"
-              @click="multar(props.row)"
-              ><q-tooltip> Multar </q-tooltip></q-btn
-            >
-            <q-btn
-              color="red"
-              label="B"
-              dense
-              padding="0 3px"
-              class="font-bold text-[12px]"
-              @click="bloquear(props.row)"
-              ><q-tooltip> Bloquear </q-tooltip></q-btn
-            >
-            <q-btn
               color="pink-4"
-              label="C"
+              icon="local_atm"
               dense
+              flat
+              rounded
               padding="0 3px"
-              class="font-bold text-[12px]"
-              @click="abrirCobrar(props.row)"
-              ><q-tooltip> Cobrar </q-tooltip></q-btn
+              class="font-bold text-[14px]"
+              @click="abrirPagar(props.row)"
+              ><q-tooltip> Pagar </q-tooltip></q-btn
             >
           </div>
         </q-td>
@@ -170,158 +160,51 @@
     </template>
   </Table>
 
-  <!-- COBRAR -->
-  <Dialog2 v-model="isShowCobrar" title="Recibir efectivo" labelBtn="Confirmar">
+  <!-- PAGAR -->
+  <Dialog2 v-model="isShowPagar" title="Realizar Pago" labelBtn="Confirmar">
     <template #inputsDialog>
-      <div class="flex justify-center gap-3">
-        <div class="flex flex-col">
-          <h1>Seleccionar monto</h1>
-          <span class="flex gap-1 items-center">
-            <q-icon
-              name="bi-calculator"
-              size="25px"
-              @click="isShowCalculator = true"
-            />
-            <input
-              type="number"
-              class="w-[90px] test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
-              v-model.number="totalCambio"
-              disabled
-            />
-          </span>
-        </div>
-        <div class="flex flex-col">
-          <h1>Seleccionar cambio</h1>
-          <span class="flex gap-2 items-center">
-            <q-icon name="bi-calculator" size="25px" />
-            <input
-              type="number"
-              class="w-[90px] test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
-              v-model.number="montoCambio"
-            />
-          </span>
-        </div>
-      </div>
-      <section class="flex justify-between [&>h1]:text-[13px] px-1 mt-1">
-        <h1>Saldo Actual: {{ detalleCobro.saldoTotal }}Bs</h1>
-        <h1>Nuevo saldo: 10.000</h1>
-      </section>
-      <hr class="border-gray-300" />
-      <div class="flex gap-2 my-2">
-        <div class="p-1">
-          <h1 class="uppercase font-bold">
-            {{ storeAuth.negocioElegido.nombre }}
-          </h1>
-          <div class="grid grid-cols-[1fr,1fr,auto] place-items-center gap-2">
-            <q-input
-              v-model="storeAuth.user.usuario"
-              type="text"
-              label="Usuario"
-              dense
-              disable
-            />
-            <q-input
-              v-model="personaPro.contrasena"
-              type="text"
-              label="Contrasena"
-              dense
-              clearable
-            />
-            <q-btn color="primary" label="OK" dense rounded size="12px" />
-          </div>
-        </div>
-        <div class="p-1">
-          <h1 class="uppercase font-bold">{{ detalleCobro.entidad }}</h1>
-          <div class="grid grid-cols-[1fr,1fr,auto] place-items-center gap-2">
-            <q-input
-              v-model="personaPun.usuario"
-              type="text"
-              label="Usuario"
-              dense
-              clearable
-            />
-            <q-input
-              v-model="personaPun.contrasena"
-              type="text"
-              label="Contrasena"
-              dense
-              clearable
-            />
-            <q-btn color="primary" label="OK" dense rounded size="12px" />
-          </div>
-        </div>
-      </div>
-    </template>
-  </Dialog2>
-
-  <!-- CALCULADORE DE BILLETE -->
-  <Dialog2 v-model="isShowCalculator" title="Calculadora de billetes" noBtn>
-    <template #inputsDialog>
-      <div class="grid grid-cols-2">
-        <section
-          v-for="(monto, index) in montos"
-          :key="index"
-          class="flex gap-2 [&>h1]:w-[50px]"
-        >
-          <h1>{{ monto }}Bs</h1>
+      <div class="">
+        <h1 class="uppercase font-extrabold">{{ pedidoPagar.entidad }}</h1>
+        <p>Saldo Actual: {{ pedidoPagar.saldoTotal }}Bs</p>
+        <section class="flex gap-2 items-center">
+          <p>Va a pagar:</p>
           <input
-            v-model="cantidades[index]"
+            v-model.number="monto"
             type="number"
             onfocus="this.select()"
-            class="w-[70px] test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
+            class="w-[80px] test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
           />
         </section>
+        <p>Nuevo saldo: {{ pedidoPagar.nuevoSaldo }}Bs</p>
+        <q-option-group v-model="shape" :options="options" inline dense />
       </div>
-
-      <!-- LOGICA PARA HACER EL TOTAL -->
-      <h1 class="text-center mt-2 font-extrabold">TOTAL: {{ totalCambio }}</h1>
     </template>
   </Dialog2>
 </template>
 <script setup>
 //@ts-ignore
 definePageMeta({
-  layout: 'cathering',
+  layout: 'punto',
 });
 
-import caja from '@/mocks/caja.json';
+import cajaPunto from '@/mocks/cajaPunto.json';
 import { tesoreriaCobrar } from '~/helpers/columns';
-import { onMounted, ref } from 'vue';
-import { useQuasar } from 'quasar';
-import { NotifySucessCenter } from '~/helpers/message.service';
-import { authStore } from '~/stores/auth.store';
+import { onMounted, ref, watch } from 'vue';
 
-const storeAuth = authStore();
-const $q = useQuasar();
-// console.log(caja);
 const pedidosCaja = ref([]);
-const multa = ref();
-const isShowCobrar = ref(false);
-const isShowCalculator = ref(false);
-const montoCobrar = ref();
-const montoCambio = ref();
-const personaPro = ref({
-  usuario: '',
-  contrasena: '',
-});
-const personaPun = ref({
-  usuario: '',
-  contrasena: '',
-});
-const montos = ref([200, 5, 100, 2, 50, 1, 20, 0.5, 10]); // Montos disponibles
-const cantidades = ref(new Array(montos.value.length).fill(0)); // Cantidades ingresadas
-const detalleCobro = ref({
+const isShowPagar = ref(false);
+const shape = ref('transferencia');
+const options = [
+  { label: 'QR code', value: 'qr' },
+  { label: 'Transferencia', value: 'transferencia' },
+];
+const pedidoPagar = ref({
   entidad: '',
+  monto: 0,
   saldoTotal: 0,
+  nuevoSaldo: 0,
 });
-
-const totalCambio = computed(() => {
-  let total = 0;
-  for (let i = 0; i < montos.value.length; i++) {
-    total += montos.value[i] * cantidades.value[i];
-  }
-  return total;
-});
+const monto = ref(0);
 
 const getTable = () => {
   // Obtener la fecha de inicio y fin de la semana actual
@@ -334,7 +217,7 @@ const getTable = () => {
   console.log(startOfWeek);
   console.log(endOfWeek);
   // Filtrar los pedidos de la semana actual
-  pedidosCaja.value = caja
+  pedidosCaja.value = cajaPunto
     .map((entidad) => {
       return {
         entidad: entidad.entidad,
@@ -389,42 +272,11 @@ const obtenerDiaSemana = (fechaPedido) => {
   return nombreDia;
 };
 
-const multar = (row) => {
-  console.log('first');
-  $q.dialog({
-    title: `${row.entidad}`,
-    message: '¿Quiere activar multa?',
-    cancel: true,
-    persistent: true,
-    prompt: {
-      model: multa,
-      type: 'number',
-      clearable: true,
-      step: 2,
-      label: 'Ingrese la cantidad',
-      outlined: true,
-      dense: true,
-    },
-  }).onOk(async () => {
-    NotifySucessCenter('Multa agregado correctamente');
-  });
-};
-const bloquear = (row) => {
-  console.log('first');
-  $q.dialog({
-    title: `${row.entidad}`,
-    message: '¿Quiere bloquear los pedidos?',
-    cancel: true,
-    persistent: true,
-  }).onOk(async () => {
-    NotifySucessCenter('Multa agregado correctamente');
-  });
-};
-const abrirCobrar = (fila) => {
+const abrirPagar = (fila) => {
   console.log('first');
   console.log(fila);
-  isShowCobrar.value = true;
-  detalleCobro.value.entidad = fila.entidad;
+  isShowPagar.value = true;
+  pedidoPagar.value.entidad = fila.entidad;
   // pedidoPagar.value.saldoTotal = fi
 
   let totalPedidosPorPagar = 0;
@@ -436,13 +288,15 @@ const abrirCobrar = (fila) => {
   for (const pedido of fila.pedidosAnteriores) {
     totalPedidosPorPagar += pedido.porPagar;
   }
-  console.log(totalPedidosPorPagar);
-  detalleCobro.value.saldoTotal = totalPedidosPorPagar;
-  // pedidoPagar.value.nuevoSaldo = totalPedidosPorPagar - monto.value;
+  pedidoPagar.value.saldoTotal = totalPedidosPorPagar;
+  pedidoPagar.value.nuevoSaldo = totalPedidosPorPagar - monto.value;
 };
 
 const filter = ref('');
 
+watch(monto, () => {
+  pedidoPagar.value.nuevoSaldo = pedidoPagar.value.saldoTotal - monto.value;
+});
 onMounted(() => {
   getTable();
 });

@@ -10,7 +10,7 @@
     :rows-per-page-options="[24, 48]"
   >
     <!-- HEADER -->
-    <template v-slot:top="props">
+    <template v-slot:top="">
       <div class="w-full grid grid-cols-8 mb-3">
         <div class="col-span-2">
           <slot name="slot-header1" />
@@ -33,6 +33,7 @@
             </template>
           </q-input>
         </div>
+
         <div class="col-span-2 flex justify-center">
           <slot name="slot-header2" />
         </div>
@@ -42,46 +43,6 @@
       </div>
     </template>
 
-    <!-- Search -->
-    <!-- <template v-slot:top-right="props">
-      <q-input
-        v-if="$q.platform.is.desktop"
-        borderless
-        dense
-        debounce="300"
-        color="secondary"
-        v-model="filter"
-        style="
-          margin: 10px 0;
-          border: 0.5px solid #757575;
-          padding: 0 10px;
-          width: 220px;
-        "
-        placeholder="Buscar"
-        clearable
-      >
-        <template v-slot:prepend>
-          <q-icon name="search" size="22px" />
-        </template>
-      </q-input>
-
-      <q-btn
-        flat
-        round
-        dense
-        :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-        @click="props.toggleFullscreen"
-      />
-    </template> -->
-    <!-- Add -->
-    <!-- <template v-slot:top-left>
-      <q-btn
-        color="orange"
-        label="nueva tablaaaa"
-        no-caps
-        style="padding: 9px 18px"
-      />
-    </template> -->
     <!-- Actions -->
     <template v-slot:item="props">
       <slot name="body-data" :props="props"></slot>
@@ -89,15 +50,11 @@
   </q-table>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, defineModel } from 'vue';
 //@ts-ignore
 definePageMeta({
   layout: 'cathering',
 });
-
-import productos from '@/mocks/productos.json';
-
-// console.log(productos);
 
 const filter = ref('');
 defineProps({
@@ -107,42 +64,10 @@ defineProps({
   },
   columns: Array,
 });
+// const will = defineModel('will');
 </script>
 
 <style lang="scss">
-.cardComp {
-  border-radius: 0;
-  width: 200px;
-  // background-image: linear-gradient(
-  //   76.3deg,
-  //   rgba(44, 62, 78, 1) 10.6%,
-  //   rgba(69, 103, 131, 1) 82.8%
-  // );
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.point-details {
-  color: #999999;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.textDesc {
-  text-align: justify;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.25rem;
-  height: 4rem;
-}
-.textDesc::first-letter {
-  text-transform: capitalize;
-}
 // TABLAAAAA EXPANSIVA
 .q-item {
   min-height: 48px;
@@ -154,27 +79,17 @@ defineProps({
 .q-item__section--avatar {
   color: inherit;
   min-width: 0px;
-  // width: 100px;
-
-  // margin-right: 10px;
-  // background: red;
-
-  // .q-icon {
-  //   border: 1px solid red;
-  //   border-radius: 100%;
-  //   background-color: orange;
-  //   color: white;
-  // }
 }
-.q-item__section--side {
-  color: #757575;
-  align-items: flex-start;
-  padding-right: 8px;
-  width: auto;
-  min-width: 0;
-  // max-width: 100%;
-  // border: 2px solid green;
-}
+// .q-item__section--side {
+//   color: red;
+//   // color: #757575;
+//   align-items: flex-start;
+//   padding-right: 8px;
+//   width: auto;
+//   min-width: 0;
+//   // max-width: 100%;
+//   // border: 2px solid green;
+// }
 
 .q-table__grid-content {
   // border: 1px solid blue;

@@ -1,5 +1,5 @@
 <template>
-  <Layout :menuList="menuListCathering">
+  <Layout :menuList="menuListComputed">
     <template #actionPedido>
       <q-btn
         dense
@@ -28,10 +28,13 @@
 import { menuListCathering } from '@/helpers/menuList';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
+import { useQuasar } from 'quasar';
 const storeAuth = authStore();
+const $q = useQuasar();
 
 const storePedido = pedidoStore();
 const router = useRouter();
@@ -41,23 +44,62 @@ const realizarPedido = async () => {
     oferta: p.id,
     cantidad: parseInt(p.cantidad),
   }));
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    storeAuth.negocioElegido._id,
-    '65a1a6c9566e40c934929a47',
-    items,
-    useGqlToken(storeAuth.token),
-  );
-  console.log(pedidoIniciar);
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-    await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-    await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido recibido con éxito');
-    router.push('/cathering/pedidos/listaPedidos');
-    storePedido.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
 
-  console.log(storePedido.listaPedido);
+  $q.dialog({
+    // title: `Eliminar ${row.nombre}`,
+    message: '¿Estas seguro de aceptar este pedido?',
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    if (storePedido.isDespachar == false) {
+      // RECIBE PEDIDO
+      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+        storeAuth.negocioElegido._id,
+        '65a1a6c9566e40c934929a56',
+        items,
+        useGqlToken(storeAuth.token),
+      );
+      if (pedidoIniciar) {
+        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+        NotifySucessCenter('Pedido recibido con éxito');
+        router.push('/cathering/pedidos/listaPedidos');
+        storePedido.listaPedido = [];
+      } else NotifyError('Error al realizar el pedido');
+
+      console.log(storePedido.listaPedido);
+    } else {
+      // SE DESPACHA PRODUCTO
+      console.log('first');
+      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+        '65a5a9af08c1a906d83522d1',
+        storeAuth.negocioElegido._id,
+        items,
+        useGqlToken(storeAuth.token),
+      );
+      console.log(pedidoIniciar);
+      if (pedidoIniciar) {
+        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
+        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
+        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+        NotifySucessCenter('Pedido realizado con éxito');
+        router.push('/cathering/pedidos/listaPedidos');
+        storePedido.listaPedido = [];
+      } else NotifyError('Error al realizar el pedido');
+    }
+  });
 };
+
+const menuListComputed = computed(() => {
+  if (storeAuth.user.cargo === 'almacen') {
+    return menuListCathering.filter(
+      (item) => item.label === 'Stock' || item.label === 'Pedidos',
+    );
+  } else {
+    return menuListCathering;
+  }
+});
 </script>

@@ -1,14 +1,26 @@
 # CRUD OFERTA
 #  BUSCAR
 query ofertaBuscar($busqueda: BuscarOfertaDto!) {
-  ofertaBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+  ofertaBuscar(
+    busqueda: $busqueda
+    opciones: { populate: true, limit: 0, buscarCatalogo: true }
+  ) {
     _id
     _creado
     nombre
     descripcion
+    catalogo {
+      _id
+      nombre
+    }
     precio
     grupos
-    # ocultar
+    preparados {
+      producto {
+        _id
+      }
+      cantidad
+    }
     ingredientes {
       ... on IngredienteProducto {
         _id
@@ -16,54 +28,18 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
         producto {
           _id
           nombre
+          presentacionBasica
+          presentaciones {
+            cantidad
+            nombre
+          }
         }
         cantidad
       }
-      ... on IngredienteEleccion {
+      ... on IngredienteGrupo {
         _id
         _tipo
-        nombre
-        cantidadMin
-        cantidadMax
-        costoAdicional
-        items {
-          producto {
-            _id
-            nombre
-          }
-          cantidad
-          costoAdicional
-        }
-      }
-    }
-    preparados {
-      producto {
-        _id
-      }
-      cantidad
-    }
-    condiciones {
-      ... on CondicionMontoMinimo {
-        _id
-        _tipo
-        montoMinimo
-      }
-      ... on CondicionPorFechas {
-        _id
-        _tipo
-        fechaInicio
-        fechaFin
-      }
-      ... on CondicionPorDias {
-        _id
-        _tipo
-        dias
-      }
-      ... on CondicionPorHorarios {
-        _id
-        _tipo
-        horarioInicio
-        horarioFin
+        grupo
       }
     }
   }
@@ -76,6 +52,10 @@ mutation crearOferta($datos: CrearOfertaDto!) {
     descripcion
     precio
     grupos
+    catalogo {
+      _id
+      nombre
+    }
   }
 }
 # EDITAR

@@ -26,9 +26,11 @@ export const useEmpleado = () => {
       await empleadoService.obtenerTodosEmpleados(
         useAuth.negocioElegido.nombre,
       );
+    console.log(entidadBuscarEmpleado);
     estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
       return {
         id: empleado._id,
+        personaID: empleado.persona._id,
         cargo: empleado.cargo,
         nombre: empleado.persona.nombre + ' ' + empleado.persona.apellido,
         correo: empleado.persona.correo,
@@ -55,9 +57,14 @@ export const useEmpleado = () => {
   const abrirModal = () => (estado.test = true);
 
   const agregarEmpleado = async () => {
-    await empleadoService.agregarEmpleado(
+    const { entidadCrearEmpleado } = await empleadoService.agregarEmpleado(
       useAuth.negocioElegido._id, //@ts-ignore
       estado.personaSelect.nombre.id,
+      estado.cargo,
+    );
+    await empleadoService.agregarRolEmpleado(
+      useAuth.negocioElegido._id,
+      entidadCrearEmpleado.persona._id,
       estado.cargo,
     );
     NotifySucessCenter('Empleado agregado correctamente');
@@ -68,7 +75,12 @@ export const useEmpleado = () => {
     estado.test = false;
   };
 
-  const borrarEmpleado = async (row: { id: string; nombre: string }) => {
+  const borrarEmpleado = async (row: {
+    id: string;
+    nombre: string;
+    cargo: string;
+    personaID: string;
+  }) => {
     $q.dialog({
       title: `Eliminar ${row.nombre}`,
       message: '¿Está seguro de eliminar este articulo?',
@@ -76,6 +88,11 @@ export const useEmpleado = () => {
       persistent: true,
     }).onOk(async () => {
       await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
+      await empleadoService.eliminarRolEmpleado(
+        useAuth.negocioElegido._id,
+        row.personaID,
+        row.cargo,
+      );
       NotifySucessCenter('Empleado eliminado');
       obtenerTodosEmpleados();
     });

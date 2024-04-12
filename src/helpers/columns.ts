@@ -46,6 +46,12 @@ export const columnsEmpleados = [
 
 export const columnsOfertas = [
   {
+    name: 'creado',
+    label: 'Creado',
+    align: 'left',
+    field: (row: any) => row._creado,
+  },
+  {
     name: 'nombre',
     label: 'Nombre',
     align: 'left',
@@ -59,20 +65,20 @@ export const columnsOfertas = [
     field: (row: any) => row.ingredientes,
     sortable: true,
   },
+  // {
+  //   name: 'preparados',
+  //   required: true,
+  //   label: 'Preparados',
+  //   align: 'left',
+  //   field: (row: any) => row.preparados.map((p: any) => p),
+  //   sortable: true,
+  // },
   {
-    name: 'preparados',
+    name: 'catalogo',
     required: true,
-    label: 'Preparados',
+    label: 'Catalogo',
     align: 'left',
-    field: (row: any) => row.preparados.map((p: any) => p),
-    sortable: true,
-  },
-  {
-    name: 'grupos',
-    required: true,
-    label: 'grupos',
-    align: 'left',
-    field: (row: any) => row.grupos,
+    field: (row: any) => row.catalogo,
     sortable: true,
   },
   {
@@ -84,14 +90,6 @@ export const columnsOfertas = [
     sortable: true,
   },
   {
-    name: 'ocultar',
-    required: true,
-    label: 'Desabilitar',
-    align: 'left',
-    field: (row: any) => row.ocultar,
-    sortable: true,
-  },
-  {
     name: 'actions',
     label: 'Acciones',
     align: 'right',
@@ -99,6 +97,12 @@ export const columnsOfertas = [
 ];
 
 export const columnsProductos = [
+  {
+    name: 'creado',
+    label: 'Creado',
+    align: 'left',
+    field: (row: any) => row._creado,
+  },
   {
     name: 'nombre',
     required: true,
@@ -136,7 +140,7 @@ export const columnsProductos = [
     required: true,
     label: 'categoria',
     align: 'left',
-    field: (row: any) => row.categoria.nombre,
+    field: (row: any) => row.categoria,
     sortable: true,
   },
   {
@@ -147,18 +151,26 @@ export const columnsProductos = [
 ];
 
 export const stockProducts = [
-  {
-    name: 'foto',
-    label: 'Imagen',
-    align: 'left',
-    field: (row: any) => row.foto,
-  },
+  // {
+  //   name: 'foto',
+  //   label: 'Imagen',
+  //   align: 'left',
+  //   field: (row: any) => row.foto,
+  // },
   {
     name: 'producto',
     required: true,
     label: 'Producto',
     align: 'left',
     field: (row: any) => row.producto.nombre,
+    sortable: true,
+  },
+  {
+    name: 'presentacionBasica',
+    required: true,
+    label: 'P. basica',
+    align: 'left',
+    field: (row: any) => row.producto.presentacionBasica,
     sortable: true,
   },
   {
@@ -266,6 +278,134 @@ export const detallePedidoAccion = [
     label: 'Precio Total',
     align: 'right',
     field: (row: any) => row.cantidad * row.oferta.precio,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const pedidoGlobal = [
+  {
+    name: 'nombre',
+    required: true,
+    label: 'Nombre(s)',
+    align: 'left',
+    field: (row: any) => row.oferta.nombre,
+    sortable: true,
+  },
+  {
+    name: 'pedido',
+    required: true,
+    label: 'Pedido',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'cantidadPedido',
+    required: true,
+    label: 'Cantidad Pedido',
+    align: 'center',
+    field: (row: any) =>
+      row.cantidad * row.oferta.cantidad + `(${row.presentacionBasica})`,
+    sortable: true,
+  },
+  {
+    name: 'cantidadStock',
+    required: true,
+    label: 'Cantidad Stock',
+    align: 'center',
+    field: (row: any) => row.stockEntidad + `(${row.presentacionBasica})`,
+    sortable: true,
+  },
+  {
+    name: 'diferencia',
+    required: true,
+    label: 'Diferencia',
+    align: 'right',
+    field: (row: any) => row.stockEntidad - row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const tesoreriaCobrar = [
+  {
+    name: 'entidad',
+    required: true,
+    label: 'Cliente',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: 'pedidosAnteriores',
+    required: true,
+    label: 'Semanas Anteriores',
+    align: 'center',
+    field: (row: any) => row.pedidosAnteriores,
+    sortable: true,
+  },
+  {
+    name: 'pedidosSemanaActual',
+    required: true,
+    label: 'Ultima Semana',
+    align: 'center',
+    field: (row: any) => row.pedidosSemanaActual,
+    sortable: true,
+  },
+  {
+    name: 'total',
+    required: true,
+    label: 'Total',
+    align: 'right',
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const tesoreriaPendiente = [
+  {
+    name: 'entidad',
+    required: true,
+    label: 'Cliente',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: '_creado',
+    required: true,
+    label: 'Fecha',
+    align: 'center',
+    field: (row: any) => row._creado,
+    sortable: true,
+  },
+  {
+    name: 'monto',
+    required: true,
+    label: 'Monto',
+    align: 'center',
+    field: (row: any) => row.monto,
+    sortable: true,
+  },
+  {
+    name: 'tipo',
+    required: true,
+    label: 'Tipo',
+    align: 'center',
+    field: (row: any) => row.tipo,
     sortable: true,
   },
   {

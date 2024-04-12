@@ -10,11 +10,13 @@ import { productStore } from '@/stores/producto.store';
 import { productoService } from '~/services/sede/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
 import DragDrop from '@/components/DrogDrop.vue';
+import { ofertaStore } from '@/stores/oferta.store';
 
 export const useProducts = () => {
   const useProduct = productStore();
   const router = useRouter();
   const $q = useQuasar();
+  const storeOferta = ofertaStore();
 
   const estado = reactive({
     test: false,
@@ -77,6 +79,7 @@ export const useProducts = () => {
   const getAllProductos = async () => {
     const { productoBuscar } = await productoService.buscarProductos();
     estado.productos = productoBuscar;
+    console.log(productoBuscar);
     // const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
     // estado.categorias = categoriaArbol;
   };
@@ -124,14 +127,18 @@ export const useProducts = () => {
 
   // AGREGAR PRODUCTO
   const agregarProducto = async () => {
+    console.log('first');
     delete estado.producto._id; //@ts-ignore
     delete estado.producto.categoria.productos;
-    await productoService.agregarProducto({
-      ...estado.producto,
-      categoria: estado.producto.categoria._id,
-    });
-    NotifySucess('Producto agregado correctamente');
-    router.push('/sede/productos');
+    productoService
+      .agregarProducto({
+        ...estado.producto,
+        categoria: estado.producto.categoria._id,
+      })
+      .then((res) => {
+        NotifySucessCenter('Producto agregado correctamente');
+        router.push('/sede/productos');
+      });
   };
   const editProductBasicInfo = async () => {
     //@ts-ignore
@@ -306,6 +313,17 @@ export const useProducts = () => {
     estado.modal.isAddCategoryArbol = true;
     estado.categoria.pariente = data._id;
   };
+  const navegarCrearOferta = (producto: any) => {
+    storeOferta.oferta._id = '';
+    storeOferta.oferta.nombre = '';
+    storeOferta.oferta.descripcion = '';
+    storeOferta.oferta.precio = 0;
+    storeOferta.oferta.catalogo = '';
+    storeOferta.isEdit = false;
+
+    let { categoria, comentario, ...productoData } = producto;
+    storeOferta.oferta.producto = productoData;
+  };
 
   return {
     estado,
@@ -328,5 +346,6 @@ export const useProducts = () => {
     obtenerTodasCategorias,
     agregarCategoriaArbol,
     modalAgregarCategoria,
+    navegarCrearOferta,
   };
 };

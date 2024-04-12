@@ -1,4 +1,79 @@
+- ocultar menu.
+- arreglar fecha null sin ''.✅
+- recibir productos 'sss'. ✅
+- titulo de formulario de que stock. ✅
+- watch negativo input no permitir. ✅
+- despachar productos cambiar consulta. ✅
+- archivar pedidos recibidos. ✅
+- triangulo puntos que no hicieron su pedido. ✅
+- en inventariar poner presentacion basica en cantidad. ✅
+- pedidos global poner la presentacion basica. ✅
+- en la consulta recorrer la cantidad de presentacion.✅
+- historial funcionar ya. ✅
+- rol precioss solo ver logistica.
+  LOGISTICA
+- si no crea producto no tirar creado correctamente notify. ✅
+- validacion de campios requerido. ✅
+- 0 ofertas catalogos leer desde el 2do nivel.✅
+- iconos de los menus CAMBIAR ✅
+- borrar catalogo, colocar submenu gestion de categoria para producto y gestion de catalogo para oferta.✅
+- borrar carrito de logistica ✅
+- cambiar imagen por LOGO SIIPI
+- quitar boton que no hacen nada ✅
+- no hacer crear btn si los campos no estan llenos, productosss arreglar. ✅
+- que hace btn guardar en agregar catalogo en oferta??? ✅
+- cantidad en presentacion basica, y el btn al final por que es de ayuda mas no importante
+- rutas orden :).
+- fecha filtro defecto 0
+- nombre sucursal no id
+- rol alado de nombre de sucursal
+- probar inventario con leo, tiene
+- corregir error de inventario.
+- nombre de problema.
+- menu desaparece.
+- quitar btn editar de layout.
+- pasar del dev al main
+- pedidos verfoto quitar
+- id entidad de proveedor despacho y recibo.
+
+- solo supervisor visualiza precio CATHERING
+- catalogo nombre (id quitar) LOGISTICA
+
+# ROL ALMACEN
+
+- ver stock
+- ingreso/salida
+- recibir pedidos
+- hacer pedidos
+- ver pedido n sucursal
+- ver pedido global
+- imprimir boleta pedido
+- hacer inventario?
+
+# HACER PARA FUNCION
+
+hacer pedido
+
+- aceptar todos los pedidos
+- calcular cantidad total de cada item
+- Modificar formulario para hacer pedido por la anterior (busqueda)
+- Salida de otra sucursal (entidad panaderia, entidad cocina, entidad reposteria)
+
 # LISTA DE ESPECIFICACION DE WIREFRAME
+
+- en la tabla de ajustar pedido que le salga la cantidadTotal de ese producto en stock para ajustar y ver si hay producto.
+<!-- INVENTARIO -->
+
+HILO DE COMENTARIO.
+
+- lista de productos para inventariar con BLOQUE NULl
+- Lista para inventariar manual
+- (HACER TIPOS DE LISTA PARA INVENTARIARr - BLOQUE, MANUAL)
+
+- stock inicalizado 0 al cargar el sistema
+- consulta borrar, empleado
+- pedido proveedor no incrementa stock
+- hacer bloques buscar, inventoriar, array de estados stocks.
 
 - Modificacion de tabla (COMPONENTE)✅
   - cada linea tiene menos informacion y desliza hacia abajo para mostrar la informacion completa✅
@@ -17,7 +92,7 @@
 - Realizar pedido, seleccionar vendedor (LISTA)
 - Alerta de cambio de la seleccion del vendedor.
 - CATHERING, seleccionar todos los pedidos, tambien individual, grupo productos.
-- Input del chofer para recibir un pedido.
+- Input del chofer para recibir un pedido choferSiipi123.
 
 # META 4
 

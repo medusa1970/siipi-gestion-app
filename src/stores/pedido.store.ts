@@ -11,11 +11,17 @@ interface Lista {
 }
 interface PedidoState {
   listaPedido: Producto[];
+  pedidosSolicitado: any[];
+  pedidosDirecto: any[];
+  isDespachar: boolean;
 }
 
 export const pedidoStore = defineStore('pedido', {
   state: (): PedidoState => ({
     listaPedido: [],
+    pedidosSolicitado: [],
+    pedidosDirecto: [],
+    isDespachar: false,
   }),
   persist: true,
 });

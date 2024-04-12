@@ -1,4 +1,4 @@
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import {
   NotifyError,
   NotifySucess,
@@ -15,18 +15,25 @@ import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/punto/menu.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
+import { stockService } from '~/services/punto/stock.service';
+import { authService } from '~/services/auth.service';
 /**
  * LOGICA
  */
 export const usePedido = () => {
   const useAuth = authStore();
+  const $q = useQuasar();
   const router = useRouter();
-  const usePedidoStore = pedidoStore();
+  const storePedido = pedidoStore();
   const estado = reactive({
     catalogosOfertas: [],
     modal: {
       isAddOferta: false,
       isAjustarItem: false,
+      isShowPassword: false,
+      isBuscarPorCategoria: false,
+      isShowPedidos: false,
+      isShowEntidad: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -34,6 +41,7 @@ export const usePedido = () => {
     precioGeneral: 0,
     pedidosAceptados: [],
     pedidosSinAceptar: [],
+    pedidosRecibidos: [],
     pedidoItemsEstado: '',
     itemPedido: {
       id: '',
@@ -41,13 +49,35 @@ export const usePedido = () => {
       comentario: '',
     },
     ListaOfertasPedido: [] as any[],
+    itemsEstadoAjustado: [] as any[],
+    passwordChofer: '',
+    pedidoID: '',
+    catalogoSeleccionado: [],
+    catalogoSeleccionado2: [],
+    filter: '',
+    PedidosIDS: [],
+    stocks: [],
+    pedidoPuntos: [
+      {
+        nombre: '',
+        cantidad: '',
+        ruta: '',
+        orden: '',
+      },
+    ],
+    comentario: '',
+    entidadesSinPedidos: [],
   });
+  const filter = ref('');
 
   const obtenerCatalogosProductos = async () => {
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
-    estado.catalogosOfertas = [entidadLeerMenu];
+    console.log(entidadLeerMenu.hijas);
+    estado.catalogosOfertas = entidadLeerMenu.hijas;
+    estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
+    estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
   };
 
   const buscarPedidos = async () => {
@@ -57,7 +87,9 @@ export const usePedido = () => {
       undefined,
       undefined,
       useGqlToken(useAuth.token),
-    ); //@ts-ignore
+    );
+    console.log(pedidoBuscar);
+    //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
       pedidoBuscar.map((pedido) =>
         pedidoService
@@ -65,9 +97,13 @@ export const usePedido = () => {
           .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
       ),
     );
+    console.log(estado.pedidosEntidad);
+
     hideLoading();
   };
   const buscarPedidos2 = async () => {
+    console.log('first');
+    console.log(useAuth.negocioElegido._id);
     showLoading();
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       undefined,
@@ -75,30 +111,42 @@ export const usePedido = () => {
       undefined,
       useGqlToken(useAuth.token),
     );
-    console.log('first', pedidoBuscar);
-    //@ts-ignore
-    estado.pedidosEntidad = await Promise.all(
-      pedidoBuscar.map((pedido) =>
-        pedidoService
-          .pedidoLeerEstado(pedido._id)
-          .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
-      ),
+    console.log(pedidoBuscar);
+
+    const pedidos = pedidoBuscar.reduce(
+      (accumulator: any, pedido: any) => {
+        const allAccepted = pedido.items.every((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'aceptado'),
+        );
+
+        const hasReceived = pedido.items.some((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'recibido'),
+        );
+        const allConfirmed = pedido.items.some((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'confirmado'),
+        );
+
+        if (allAccepted && !hasReceived) {
+          accumulator.aceptados.push(pedido);
+        } else if (allConfirmed && !allAccepted) {
+          accumulator.noAceptados.push(pedido);
+        }
+        if (hasReceived) {
+          accumulator.recibidos.push(pedido);
+        }
+
+        return accumulator;
+      },
+      { aceptados: [], noAceptados: [], recibidos: [] },
     );
     hideLoading();
-    console.log(estado.pedidosEntidad);
-    //@ts-ignore
-    estado.pedidosAceptados = estado.pedidosEntidad.filter(
-      (
-        pedido, // prettier-ignore
-      ) =>
-        //@ts-ignore
-        pedido.estadoItems == 'aceptado' || pedido.estadoItems == 'preparado',
-    ); //@ts-ignore
-    estado.pedidosSinAceptar = estado.pedidosEntidad.filter(
-      // prettier-ignore
-      //@ts-ignore
-      (pedido) => pedido.estadoItems == 'iniciado' || pedido.estadoItems == 'confirmado',
-    );
+    console.log(pedidos.noAceptados);
+    console.log(pedidos.aceptados);
+    console.log(pedidos.recibidos);
+
+    estado.pedidosSinAceptar = pedidos.noAceptados;
+    estado.pedidosAceptados = pedidos.aceptados;
+    estado.pedidosRecibidos = pedidos.recibidos;
   };
 
   const buscarPedidoID = async (id: string) => {
@@ -110,6 +158,7 @@ export const usePedido = () => {
     );
     estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
     estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
+      //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
 
@@ -157,26 +206,514 @@ export const usePedido = () => {
     estado.modal.isAjustarItem = false;
   };
 
-  const recibirPedido = async (pedidoID: string) => {
-    const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
-      pedidoID,
-    );
-    if (pedidoRecibirItems) {
-      NotifySucessCenter('Pedido recibido');
-      router.push('/punto/pedidos/listaPedidos');
-    } else NotifyError('Error al recibir pedido');
+  const abrirModalRecibirPedido = (pedidoID: string) => {
+    estado.modal.isShowPassword = true;
+    estado.pedidoID = pedidoID;
+  };
+
+  const recibirPedido = async () => {
+    // INPUT PASSWORD CHOFER
+    const password = 'choferSiipi123';
+
+    if (estado.passwordChofer == password) {
+      const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
+        estado.pedidoID,
+      );
+      if (pedidoRecibirItems) {
+        NotifySucessCenter('Pedido recibido');
+        estado.modal.isShowPassword = false;
+        estado.passwordChofer = '';
+        router.push('/punto/pedidos/listaPedidos');
+      } else NotifyError('Error al recibir pedido');
+    } else {
+      NotifyError('Contraseña incorrecta');
+      estado.modal.isShowPassword = false;
+      estado.passwordChofer = '';
+    }
   };
 
   const obtenerListaOfertas = async () => {
     const { entidadBuscarMenu } = await menuService.listarMenus(
       useAuth.negocioElegido._id,
     );
+    console.log(entidadBuscarMenu);
     const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
       entidadBuscarMenu[0].catalogo._id,
     );
     estado.ListaOfertasPedido = catalogoOfertasRecursivo;
+    console.log(estado.ListaOfertasPedido);
     // ofertaService.catalogoRecursivo()
   };
+
+  const obtenerItemsEstado = async (pedidoID: string) => {
+    const { pedidoBuscar } = await pedidoService.pedidoItemsEstado(pedidoID);
+    console.log(pedidoBuscar[0]);
+    // Filtrar items que tienen un estado ajustado
+    const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
+    });
+    console.log(itemsConEstadoAjustado);
+
+    // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
+    estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      const ultimoEstadoAjustado =
+        estadosAjustados[estadosAjustados.length - 1];
+      return {
+        nombre: item.oferta.nombre,
+        estadoAjustado: ultimoEstadoAjustado.estado,
+        comentario: ultimoEstadoAjustado.comentario,
+        valor: ultimoEstadoAjustado.valor,
+      };
+    });
+
+    // Mostrar la información
+    console.log(estado.itemsEstadoAjustado);
+  };
+
+  let filteredCatalogos = computed(() => {
+    if (!filter.value) {
+      return estado.catalogoSeleccionado2;
+    }
+    console.log(estado.catalogoSeleccionado);
+    const res = {
+      ...estado.catalogoSeleccionado, //@ts-ignore
+      hijas: estado.catalogoSeleccionado.hijas
+        .map((hija: any) => ({
+          ...hija,
+          ofertas: hija.ofertas.filter((oferta: any) =>
+            oferta.nombre.toLowerCase().includes(filter.value.toLowerCase()),
+          ),
+        }))
+        .filter((hija: any) => hija.ofertas.length > 0),
+    };
+    console.log(res);
+
+    return res;
+  });
+
+  const aceptarTodosLosPedidosSolicitables = async () => {
+    console.log('first');
+    const pedidosIDS = estado.pedidosSinAceptar.map(
+      (pedido: any) => pedido._id,
+    );
+    const { pedidosAceptarOfertasSolicitables } =
+      await pedidoService.pedidosAceptarOfertasSolicitables(pedidosIDS);
+    console.log(pedidosAceptarOfertasSolicitables);
+
+    // const res = pedidosAceptarOfertasSolicitables.map(item => ({
+    //   comprador: item.comprador,
+    //   cantidadOferta: item.items.reduce((total, current) => total + current.cantidad, 0)
+    //  }));
+    //  console.log(res)
+
+    const result = pedidosAceptarOfertasSolicitables.reduce(
+      (acumulador: any, pedido: any) => {
+        pedido.items.forEach((item: any) => {
+          console.log(item);
+          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+            const itemExistente = acumulador.find(
+              (itemAcumulador: any) =>
+                itemAcumulador.oferta._id === item.oferta._id,
+            );
+
+            if (itemExistente) {
+              itemExistente.cantidad += item.cantidad;
+              itemExistente.pedidoIDS.push(pedido._id);
+              const compradorExistente = itemExistente.entidad.find(
+                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
+              );
+              if (compradorExistente) {
+                compradorExistente.cantidad += item.cantidad;
+              } else {
+                itemExistente.entidad.push({
+                  nombre: pedido.comprador.nombre,
+                  cantidad: item.cantidad,
+                  ruta: pedido.comprador.ruta,
+                  orden: pedido.comprador.orden,
+                });
+              }
+            } else {
+              acumulador.push({
+                pedidoIDS: [pedido._id],
+                estado: pedido.items[0].estado,
+                oferta: {
+                  _id: item.oferta._id,
+                  nombre: item.oferta.nombre,
+                  cantidad: item.oferta.ingredientes[0].cantidad,
+                },
+                producto: {
+                  _id: item.oferta.ingredientes[0].producto._id,
+                  nombre: item.oferta.ingredientes[0].producto.nombre,
+                },
+                cantidad: item.cantidad,
+                entidad: [
+                  {
+                    nombre: pedido.comprador.nombre,
+                    cantidad: item.cantidad,
+                    ruta: pedido.comprador.ruta,
+                    orden: pedido.comprador.orden,
+                  },
+                ],
+              });
+            }
+          }
+        });
+        return acumulador;
+      },
+      [],
+    );
+
+    console.log(result);
+    storePedido.pedidosSolicitado = result.map((pedido: any) => {
+      const stock = estado.stocks.find(
+        //@ts-ignore
+        (stock: any) => stock.producto._id === pedido.producto._id,
+      );
+      console.log(stock);
+      return {
+        ...pedido, //@ts-ignore
+        stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+        presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+      };
+    });
+    console.log(storePedido.pedidosSolicitado);
+    NotifySucessCenter('Pedidos de solicitud aceptados');
+    buscarPedidos2();
+  };
+
+  const aceptarTodosLosPedidosDirectos = async () => {
+    const pedidosIDS = estado.pedidosSinAceptar.map(
+      (pedido: any) => pedido._id,
+    );
+    console.log(pedidosIDS);
+    const { pedidosAceptarOfertasDirectas } =
+      await pedidoService.pedidosAceptarOfertasDirectas(pedidosIDS);
+    console.log(pedidosAceptarOfertasDirectas);
+
+    const result = pedidosAceptarOfertasDirectas.reduce(
+      (acumulador: any, pedido: any) => {
+        pedido.items.forEach((item: any) => {
+          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+            const itemExistente = acumulador.find(
+              (itemAcumulador: any) =>
+                itemAcumulador.oferta._id === item.oferta._id,
+            );
+
+            if (itemExistente) {
+              itemExistente.cantidad += item.cantidad;
+              itemExistente.pedidoIDS.push(pedido._id);
+              const compradorExistente = itemExistente.entidad.find(
+                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
+              );
+              if (compradorExistente) {
+                compradorExistente.cantidad += item.cantidad;
+              } else {
+                itemExistente.entidad.push({
+                  nombre: pedido.comprador.nombre,
+                  cantidad: item.cantidad,
+                  ruta: pedido.comprador.ruta,
+                  orden: pedido.comprador.orden,
+                });
+              }
+            } else {
+              acumulador.push({
+                pedidoIDS: [pedido._id],
+                estado: pedido.items[0].estado,
+                oferta: {
+                  _id: item.oferta._id,
+                  nombre: item.oferta.nombre,
+                  cantidad: item.oferta.ingredientes[0].cantidad,
+                },
+                producto: {
+                  _id: item.oferta.ingredientes[0].producto._id,
+                  nombre: item.oferta.ingredientes[0].producto.nombre,
+                },
+                cantidad: item.cantidad,
+                entidad: [
+                  {
+                    nombre: pedido.comprador.nombre,
+                    cantidad: item.cantidad,
+                    ruta: pedido.comprador.ruta,
+                    orden: pedido.comprador.orden,
+                  },
+                ],
+              });
+            }
+          }
+        });
+        return acumulador;
+      },
+      [],
+    );
+
+    console.log(result);
+    storePedido.pedidosDirecto = result.map((pedido: any) => {
+      const stock = estado.stocks.find(
+        //@ts-ignore
+        (stock: any) => stock.producto._id === pedido.producto._id,
+      );
+      console.log(stock);
+
+      return {
+        ...pedido, //@ts-ignore
+        stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+        presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+      };
+    });
+    console.log(storePedido.pedidosDirecto);
+    NotifySucessCenter('Pedidos de directos aceptados');
+    buscarPedidos2();
+  };
+
+  const verPedidoPuntos = (row: any) => {
+    console.log(row.entidad);
+    estado.modal.isShowPedidos = true;
+    estado.pedidoPuntos = row.entidad.map((pedido: any) => {
+      const diaDeLaSemana = new Date().getDay();
+      const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;
+      return {
+        ...pedido,
+        ruta: pedido.ruta[indice],
+        orden: pedido.orden[indice],
+      };
+    });
+  };
+
+  const ofertaPreparado = async (fila: any) => {
+    console.log('first');
+    console.log(fila);
+    const { pedidosPrepararOfertas } =
+      await pedidoService.pedidosOfertaPreparados(fila.pedidoIDS, [
+        fila.oferta._id,
+      ]);
+    console.log(pedidosPrepararOfertas);
+
+    // const test = pedidosPrepararOfertas[0].items[0].estado.some(
+    //   (estado: any) => estado.estado === 'preparado',
+    // );
+    // console.log(test);
+
+    if (pedidosPrepararOfertas)
+      NotifySucessCenter('Oferta preparada exitosamente');
+    console.log(pedidosPrepararOfertas);
+    let item = pedidosPrepararOfertas[0].items[0];
+
+    storePedido.pedidosSolicitado.forEach((pedido) => {
+      if (pedido.oferta._id == item.oferta._id) {
+        pedido.estado = item.estado;
+      }
+    });
+    storePedido.pedidosDirecto.forEach((pedido) => {
+      if (pedido.oferta._id == item.oferta._id) {
+        pedido.estado = item.estado;
+      }
+    });
+  };
+
+  const ajustarOferta = async (fila: any) => {
+    console.log('first');
+    console.log(fila);
+    let diferencia = fila.cantidad - fila.stockEntidad;
+    console.log(diferencia);
+    // const res = await pedidoService.pedidosOfertaAjustar(fila.pedidoIDS, fila.oferta._id, )
+    $q.dialog({
+      title: `<strong>Ajustar ${fila.oferta.nombre}</strong>`,
+      message: `Ingrese un comentario por la cual esta ajustando automaticamente esta oferta`,
+      cancel: true,
+      persistent: true,
+      html: true,
+      prompt: {
+        model: estado.comentario,
+        type: 'text',
+        clearable: true,
+        // native attributes:
+        step: 2,
+        label: 'Ingrese un comentario',
+        dense: true,
+      },
+    }).onOk(async () => {
+      const { pedidosAjustarOferta } = await pedidoService.pedidosOfertaAjustar(
+        fila.pedidoIDS,
+        fila.oferta._id,
+        estado.comentario,
+        diferencia,
+      );
+      console.log(pedidosAjustarOferta);
+      console.log(storePedido.pedidosDirecto);
+      console.log(storePedido.pedidosSolicitado);
+
+      if (pedidosAjustarOferta) {
+        let item = pedidosAjustarOferta[0].items[0];
+        // SOLICITUD
+        pedidosAjustarOferta.map((pedido: any) => {
+          storePedido.pedidosSolicitado.forEach((pedidoSolicitud) => {
+            // Verificar si el ID del pedido coincide
+            if (pedidoSolicitud.pedidoIDS.includes(pedido._id)) {
+              pedido.items.forEach((item: any) => {
+                // Verificar si la oferta en el pedido coincide con la oferta en storePedido.pedidosDirecto
+                if (item.oferta._id === pedidoSolicitud.oferta._id) {
+                  // Actualizar la cantidad en la entidad correspondiente
+                  pedidoSolicitud.entidad.forEach((entidad: any) => {
+                    if (entidad.nombre === pedido.comprador.nombre) {
+                      entidad.cantidad = item.cantidad;
+                    }
+                  });
+                }
+              });
+              pedidoSolicitud.cantidad = pedidoSolicitud.entidad.reduce(
+                (accumulator: any, current: any) =>
+                  accumulator + current.cantidad,
+                0,
+              );
+            }
+          });
+        });
+        storePedido.pedidosSolicitado.forEach((pedido) => {
+          if (pedido.oferta._id == item.oferta._id) {
+            pedido.estado = item.estado;
+          }
+        });
+
+        // DIRECTOS
+        pedidosAjustarOferta.map((pedido: any) => {
+          storePedido.pedidosDirecto.forEach((pedidoDirecto) => {
+            // Verificar si el ID del pedido coincide
+            if (pedidoDirecto.pedidoIDS.includes(pedido._id)) {
+              pedido.items.forEach((item: any) => {
+                // Verificar si la oferta en el pedido coincide con la oferta en storePedido.pedidosDirecto
+                if (item.oferta._id === pedidoDirecto.oferta._id) {
+                  // Actualizar la cantidad en la entidad correspondiente
+                  pedidoDirecto.entidad.forEach((entidad: any) => {
+                    if (entidad.nombre === pedido.comprador.nombre) {
+                      entidad.cantidad = item.cantidad;
+                    }
+                  });
+                }
+              });
+              pedidoDirecto.cantidad = pedidoDirecto.entidad.reduce(
+                (accumulator: any, current: any) =>
+                  accumulator + current.cantidad,
+                0,
+              );
+            }
+          });
+        });
+        storePedido.pedidosDirecto.forEach((pedido) => {
+          if (pedido.oferta._id == item.oferta._id) {
+            pedido.estado = item.estado;
+          }
+        });
+
+        NotifySucessCenter('Oferta ajustado correctamente');
+      }
+    });
+  };
+
+  const handlePedidoGlobal = () => {
+    storePedido.pedidosSolicitado = storePedido.pedidosSolicitado.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0,
+        };
+      },
+    );
+    storePedido.pedidosDirecto = storePedido.pedidosDirecto.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0,
+        };
+      },
+    );
+    console.log(storePedido.pedidosSolicitado);
+    console.log(storePedido.pedidosDirecto);
+  };
+
+  const mostrarEntidadSinPedidos = async () => {
+    estado.modal.isShowEntidad = true;
+    const { entidadBuscar } = await authService.buscarTodasEntidades();
+
+    estado.entidadesSinPedidos = entidadBuscar.filter((entidad: any) => {
+      if (entidad.tipo !== 'PUNTO') return false;
+      return !estado.pedidosSinAceptar.some(
+        (pedido: any) => pedido.comprador._id === entidad._id,
+      );
+    });
+  };
+
+  onMounted(async () => {
+    const { entidadBuscar } = await stockService.obtenerTodoStock(
+      useAuth.negocioElegido._id,
+    );
+
+    // console.log(entidadBuscar);
+    estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
+      const cantidadTotal = stock.lotes.reduce(
+        (total: any, lote: any) => total + lote.cantidad,
+        0,
+      );
+
+      return {
+        nombreProducto: stock.producto.nombre,
+        foto: 'https://i.pinimg.com/564x/8d/1e/29/8d1e29fb76056c385d2d75117268c57d.jpg',
+        producto: stock.producto,
+        presentaciones: stock.producto.presentaciones,
+        lotes: stock.lotes,
+        cantidad: cantidadTotal,
+      };
+    });
+    console.log(estado.stocks);
+
+    storePedido.pedidosSolicitado = storePedido.pedidosSolicitado.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+          presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+        };
+      },
+    );
+    storePedido.pedidosDirecto = storePedido.pedidosDirecto.map(
+      (pedido: any) => {
+        const stock = estado.stocks.find(
+          //@ts-ignore
+          (stock: any) => stock.producto._id === pedido.producto._id,
+        );
+        console.log(stock);
+
+        return {
+          ...pedido, //@ts-ignore
+          stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
+          presentacionBasica: stock ? stock.producto.presentacionBasica : '',
+        };
+      },
+    );
+  });
 
   return {
     useAuth,
@@ -191,5 +728,17 @@ export const usePedido = () => {
     ajustarItemGuardar,
     recibirPedido,
     obtenerListaOfertas,
+    obtenerItemsEstado,
+    abrirModalRecibirPedido,
+    filter,
+    filteredCatalogos,
+    aceptarTodosLosPedidosSolicitables,
+    storePedido,
+    aceptarTodosLosPedidosDirectos,
+    verPedidoPuntos,
+    ofertaPreparado,
+    ajustarOferta,
+    handlePedidoGlobal,
+    mostrarEntidadSinPedidos,
   };
 };

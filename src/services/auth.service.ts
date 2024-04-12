@@ -14,4 +14,16 @@ export const authService = {
     const { _id, usuario, ...nuevoDato } = datos;
     return postData(GqlCrearPersona({ datos: nuevoDato }));
   },
+  buscarEmpleadoCargo: async (
+    entidadID: string | null | undefined,
+    personaID: string,
+  ) =>
+    postData(
+      GqlEntidadBuscarEmpleado({
+        busqueda: { _id: entidadID },
+        busquedaEmpleado: { persona: personaID },
+      }),
+    ),
+  buscarTodasEntidades: async () =>
+    postData(GqlBuscarTodasEntidades({ busqueda: {} })),
 };

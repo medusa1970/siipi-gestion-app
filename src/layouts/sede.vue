@@ -1,5 +1,5 @@
 <template>
-  <layout :menuList="menuListSede">
+  <layout :menuList="menuListSede" sede>
     <template #slot>
       <slot />
     </template>

@@ -35,15 +35,23 @@ mutation pedidoConfirmarItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
 
 # BUSCAR PEDIDOS
 query pedidoBuscar($busqueda: BuscarPedidoDto!) {
-  pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
+  pedidoBuscar(
+    busqueda: $busqueda
+    opciones: { limit: 0, populate: true, populateRecursivo: true }
+  ) {
     _id
+    _creado
     comprador {
       nombre
       _id
+      ruta
+      orden
     }
     vendedor {
       nombre
       _id
+      ruta
+      orden
     }
     estado {
       estado
@@ -53,17 +61,27 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
         apellido
         telefono
       }
-      entidad {
-        nombre
-      }
     }
     items {
       _id
       oferta {
         nombre
-        precio
+        _id
+        ingredientes {
+          ... on IngredienteProducto {
+            _tipo
+            producto {
+              nombre
+            }
+            cantidad
+          }
+        }
       }
       cantidad
+      estado {
+        estado
+        valor
+      }
     }
   }
 }
@@ -132,6 +150,176 @@ mutation pedidoRecibirItems($busqueda: BuscarPedidoDto!, $itemIds: [ID!]!) {
     }
     items {
       _id
+    }
+  }
+}
+
+query pedidoItemsEstado($busqueda: BuscarPedidoDto!) {
+  pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
+    _id
+    items {
+      _id
+      oferta {
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+        comentario
+        valor
+      }
+    }
+  }
+}
+
+# Buscar items de todos los pedidos
+query pedidosBuscarItems($busqueda: BuscarPedidoDto!) {
+  pedidoBuscar(busqueda: $busqueda, opciones: { limit: 0, populate: true }) {
+    _id
+    items {
+      _id
+      oferta {
+        nombre
+        precio
+        grupos
+      }
+      cantidad
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO ACEPTAR TODAS OFERTAS SOLICITABLES
+mutation pedidosAceptarOfertasSolicitables($busqueda: BuscarPedidoDto!) {
+  pedidosAceptarOfertasSolicitables(busqueda: $busqueda) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+      ruta
+      orden
+    }
+    items {
+      _id
+      cantidad
+      # TRAER OFERTA MAS POPULATE TRUE
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          ... on IngredienteProducto {
+            _id
+            _tipo
+            producto {
+              _id
+              nombre
+            }
+            cantidad
+          }
+        }
+      }
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO ACEPTAR TODAS OFERTAS DIRECTAS
+mutation pedidosAceptarOfertasDirectas($busqueda: BuscarPedidoDto!) {
+  pedidosAceptarOfertasDirectas(busqueda: $busqueda) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+      ruta
+      orden
+    }
+    items {
+      _id
+      cantidad
+      # TRAER OFERTA MAS POPULATE TRUE
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          ... on IngredienteProducto {
+            _id
+            _tipo
+            producto {
+              _id
+              nombre
+            }
+            cantidad
+          }
+        }
+      }
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO OFERTA PREPARADA
+mutation pedidosPrepararOfertas(
+  $busqueda: BuscarPedidoDto!
+  $ofertaIds: [ID!]!
+) {
+  pedidosPrepararOfertas(busqueda: $busqueda, ofertaIds: $ofertaIds) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      oferta {
+        _id
+        nombre
+      }
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+# PEDIDO OFERTA AJUSTAR
+mutation pedidosAjustarOferta(
+  $busqueda: BuscarPedidoDto!
+  $ofertaId: ID!
+  $diferenciaTotal: Float!
+  $comentario: String!
+) {
+  pedidosAjustarOferta(
+    busqueda: $busqueda
+    ofertaId: $ofertaId
+    diferenciaTotal: $diferenciaTotal
+    comentario: $comentario
+  ) {
+    _id
+    comprador {
+      _id
+      nombre
+    }
+    items {
+      oferta {
+        _id
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+        valor
+      }
     }
   }
 }

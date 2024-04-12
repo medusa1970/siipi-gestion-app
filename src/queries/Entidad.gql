@@ -33,6 +33,7 @@ mutation agregarEmpleadoEntidad(
     _id
     cargo
     persona {
+      _id
       nombre
     }
   }
@@ -57,6 +58,7 @@ query buscarStocks($busqueda: BuscarEntidadDto!) {
       producto {
         _id
         nombre
+        presentacionBasica
         presentaciones {
           nombre
           cantidad
@@ -123,37 +125,6 @@ mutation hacerInventario(
     }
   }
 }
-# mutation hacerInventario(
-#   $entidadBusqueda: BuscarEntidadDto!
-#   $datos: CrearInventarioDto!
-#   $guardar: Boolean!
-# ) {
-#   entidadHacerInventario(
-#     entidadBusqueda: $entidadBusqueda
-#     datos: $datos
-#     guardar: $guardar
-#     opciones: { populate: true }
-#   ) {
-#     fecha
-#     producto {
-#       _id
-#       nombre
-#     }
-#     reporte
-#     diferencias {
-#       vencimiento
-#       diferencia
-#     }
-#     lotes {
-#       vencimiento
-#       cantidad
-#       bloque
-#       presentacion
-#       cantidadPresentacion
-#     }
-#   }
-# }
-
 # LISTA DE PROBLEMAS DE INVENTARIO
 query ListarProblemas(
   $entidadBusqueda: BuscarEntidadDto!
@@ -253,5 +224,56 @@ query InventarioProductosMenu(
   ) {
     _id
     nombre
+  }
+}
+
+# LISTA DE PRODUCTOS INVENTARIAR
+query productosInventariar($entidadBusqueda: BuscarEntidadDto!) {
+  produccionBuscarProductosNuevos(
+    entidadBusqueda: $entidadBusqueda
+    opciones: {}
+  ) {
+    nombre
+    _id
+  }
+}
+
+# AGREGAR ROL EMPLEADO
+mutation entidadAsignarRoles(
+  $entidadBusqueda: BuscarEntidadDto!
+  $datos: [AsignacionRolDto!]!
+) {
+  entidadAsignarRoles(
+    entidadBusqueda: $entidadBusqueda
+    datos: $datos
+    opciones: { populate: true }
+  ) {
+    _id
+    nombre
+    roles {
+      persona {
+        nombre
+      }
+      rol
+      vencimiento
+    }
+  }
+}
+
+# NUEVO LISTA DE INVENTARIO
+query filaInventario($entidadBusqueda: BuscarEntidadDto!) {
+  filaInventario(entidadBusqueda: $entidadBusqueda) {
+    _id
+    nombre
+    presentacionBasica
+  }
+}
+
+# BUSCAR ENTIDADES PUNTOS
+query buscarTodasEntidades($busqueda: BuscarEntidadDto!) {
+  entidadBuscar(busqueda: $busqueda, opciones: { populate: true, limit: 0 }) {
+    _id
+    nombre
+    tipo
   }
 }

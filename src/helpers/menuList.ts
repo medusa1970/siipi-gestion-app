@@ -6,10 +6,32 @@ export const menuListSede = [
     subMenu: [],
   },
   {
-    icon: 'fact_check',
+    icon: 'bi-box',
     label: 'Productos',
-    to: '/sede/productos',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Gestion de categorias',
+        to: '/sede/productos/categorias',
+      },
+      {
+        label: 'Productos',
+        to: '/sede/productos',
+      },
+    ],
+  },
+  {
+    icon: 'sell',
+    label: 'Ofertas',
+    subMenu: [
+      {
+        label: 'Gestion de catalogos',
+        to: '/sede/catalogos',
+      },
+      {
+        label: 'Ofertas',
+        to: '/sede/ofertas',
+      },
+    ],
   },
 ];
 
@@ -69,22 +91,7 @@ export const menuListPunto = [
   {
     icon: 'settings',
     label: 'Configuración',
-    to: '/punto/configuracion',
-    subMenu: [],
-  },
-];
-
-export const menuListMarca = [
-  {
-    icon: 'people',
-    label: 'Ofertas',
-    to: '/marca/ofertas',
-    subMenu: [],
-  },
-  {
-    icon: 'fact_check',
-    label: 'Gestion de catalogos',
-    to: '/marca/catalogos',
+    // to: '/punto/configuracion',
     subMenu: [],
   },
 ];
@@ -105,8 +112,20 @@ export const menuListCathering = [
   {
     icon: 'warehouse',
     label: 'Stock',
-    to: '/cathering/stock',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Recibir productos',
+        to: '/cathering/pedidos/recibirProductos',
+      },
+      {
+        label: 'Despachar productos',
+        to: '/cathering/pedidos/despacharProductos',
+      },
+      {
+        label: 'ver stock',
+        to: '/cathering/stock',
+      },
+    ],
   },
   {
     icon: 'inventory_2',
@@ -127,10 +146,6 @@ export const menuListCathering = [
     label: 'Pedidos',
     subMenu: [
       {
-        label: 'Recibir pedido',
-        to: '/cathering/pedidos/recibirPedido',
-      },
-      {
         label: 'ver pedidos',
         to: '/cathering/pedidos/listaPedidos',
       },
@@ -139,13 +154,21 @@ export const menuListCathering = [
   {
     icon: 'point_of_sale',
     label: 'Caja',
-    to: '/cathering/caja',
-    subMenu: [],
+    subMenu: [
+      {
+        label: 'Sucursal cobrar',
+        to: '/cathering/caja',
+      },
+      {
+        label: 'Confirmar pagos',
+        to: '/cathering/caja/confirmarPagos',
+      },
+    ],
   },
   {
     icon: 'settings',
     label: 'Configuración',
-    to: '/cathering/configuracion',
+    // to: '/cathering/configuracion',
     subMenu: [],
   },
 ];

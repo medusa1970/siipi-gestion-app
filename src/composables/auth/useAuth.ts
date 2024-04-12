@@ -63,6 +63,11 @@ export const useAuth = () => {
       negocio._id,
     );
     useAuth.token = conectar.token;
+    const { entidadBuscarEmpleado } = await authService.buscarEmpleadoCargo(
+      negocio._id,
+      useAuth.user._id,
+    );
+    useAuth.user.cargo = entidadBuscarEmpleado[0].cargo;
   };
   const register = async () => {
     await useAuth.register(authPersona.value);

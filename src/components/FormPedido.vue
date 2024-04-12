@@ -1,7 +1,4 @@
 <template>
-  <Navigation label="Realizar pedido" icon="group" />
-  <h1 class="font-bold text-lg text-center mb-2">Recibir productos</h1>
-
   <div class="block mx-auto w-[400px]">
     <q-input
       v-if="$q.platform.is.desktop"
@@ -80,9 +77,6 @@
           </q-card>
         </q-expansion-item>
       </div>
-      <!-- <div v-if="estado.catalogoSeleccionado.hijas.length == 0">
-      Producto no encontrado😧
-    </div> -->
       <div
         v-if="
           estado.catalogoSeleccionado.hijas &&
@@ -98,32 +92,24 @@
     </div>
   </div>
 </template>
+
 <script setup>
-import { watch } from 'vue';
-import { useProducts } from '@/composables/sede/useProducts';
-import { usePedido } from '@/composables/punto/usePedido';
-import { ref } from 'vue';
-import { pedidoService } from '~/services/punto/pedido.service';
-import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
+defineProps(() => {});
+import { ref, onMounted, watch } from 'vue';
+import { usePedido } from '~/composables/punto/usePedido';
 import { pedidoStore } from '@/stores/pedido.store';
-import { useRouter } from 'vue-router';
-definePageMeta({
-  layout: 'cathering',
-});
+const usePedidoStore = pedidoStore();
 
 const {
   estado,
   obtenerCatalogosProductos,
   useAuth,
-  obtenerListaOfertas,
   filter,
+  obtenerListaOfertas,
   filteredCatalogos,
 } = usePedido();
-const usePedidoStore = pedidoStore();
-const router = useRouter();
-const test = ref(null);
-const listaPedidos = ref([]);
-const categoriasPedido = ref({});
+
+// const filter = ref('');
 
 const handleInputChange2 = (event, product) => {
   event.target.value = Math.max(0, event.target.value);
@@ -146,45 +132,6 @@ const handleInputChange2 = (event, product) => {
 
   console.log(usePedidoStore.listaPedido);
 };
-
-const deleteOfertaInList = (producto) => {
-  // console.log(producto);
-  // console.log(listaPedidos.value);
-  listaPedidos.value.forEach((categoria) => {
-    const indiceProducto = categoria.productos.findIndex(
-      (item) => item.nombre === producto.nombre,
-    );
-    if (indiceProducto !== -1) categoria.productos.splice(indiceProducto, 1);
-  });
-};
-
-const realizarPedido = async () => {
-  //solo quiero sacar el productonombre y su cantidad
-  const items = usePedidoStore.listaPedido.flatMap((categoria) => {
-    return categoria.productos.map((producto) => {
-      return {
-        oferta: producto.id,
-        cantidad: parseInt(producto.cantidad),
-      };
-    });
-  });
-  // console.log(items)
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-    useAuth.negocioElegido._id,
-    '65a5a9af08c1a906d83522d0',
-    items,
-    useGqlToken(useAuth.token),
-  );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-    await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-    await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-    await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
-    NotifySucessCenter('Pedido recibido con éxito');
-    router.push('/cathering/pedidos/listaPedidos');
-    usePedidoStore.listaPedido = [];
-  } else NotifyError('Error al realizar el pedido');
-};
 const selectCatalogo = (catalogo) => {
   console.log('hola');
   console.log(catalogo);
@@ -203,5 +150,3 @@ onMounted(() => {
   obtenerCatalogosProductos();
 });
 </script>
-
-<!-- <style scoped></style> -->

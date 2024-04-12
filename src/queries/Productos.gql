@@ -5,6 +5,7 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
     opciones: { limit: 0, buscarCategoria: true }
   ) {
     _id
+    _creado
     nombre
     comentario
     presentacionBasica

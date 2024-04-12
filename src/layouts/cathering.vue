@@ -52,6 +52,7 @@ const realizarPedido = async () => {
     persistent: true,
   }).onOk(async () => {
     if (storePedido.isDespachar == false) {
+      // RECIBE PEDIDO
       const { pedidoIniciar } = await pedidoService.pedidoIniciar(
         storeAuth.negocioElegido._id,
         '65a1a6c9566e40c934929a56',
@@ -70,9 +71,10 @@ const realizarPedido = async () => {
 
       console.log(storePedido.listaPedido);
     } else {
+      // SE DESPACHA PRODUCTO
       console.log('first');
       const { pedidoIniciar } = await pedidoService.pedidoIniciar(
-        '65a1a6c9566e40c934929a56',
+        '65a5a9af08c1a906d83522d1',
         storeAuth.negocioElegido._id,
         items,
         useGqlToken(storeAuth.token),

@@ -27,7 +27,7 @@
             v-for="punto in estado.pedidosEntidad"
             :key="punto._id"
             :href="`listaPedidos/${punto._id}`"
-            :title="punto._id"
+            :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
             :title2="formatearFecha(punto.estado[0].fecha)"
           >
@@ -387,6 +387,7 @@
           <q-input
             dense
             filled
+            readonly
             v-model="date"
             mask="date"
             :rules="['date']"
@@ -394,13 +395,14 @@
             clearable
           >
             <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
+              <!-- <q-btn icon="check" label="OK" @click="onClick" /> -->
+              <q-icon name="bi-calendar-day" class="cursor-pointer">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-date v-model="date">
+                  <q-date v-model="date" :options="dateOption">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -411,12 +413,14 @@
           </q-input>
         </div>
         <div class="flex flex-col gap-2 justify-center items-center">
-          <h1 v-if="estado.pedidosEntidad.length === 0">No hay pedido😯...</h1>
+          <h1 v-if="estado.pedidosFiltrados.length === 0">
+            No hay pedido😯...
+          </h1>
           <Item
-            v-for="punto in estado.pedidosRecibidos"
+            v-for="punto in estado.pedidosFiltrados"
             :key="punto._id"
             :href="`listaPedidos/${punto._id}`"
-            :title="punto._id"
+            :title="punto.comprador.nombre"
             class="w-[400px] max-sm:w-full"
             :title2="formatearFecha(punto.estado[0].fecha)"
           >
@@ -440,6 +444,7 @@
         </div>
       </q-tab-panel>
     </q-tab-panels>
+    <!-- IMPRESION -->
     <div
       id="divParaImprimir"
       v-if="pedidoSeleccionado"
@@ -527,7 +532,7 @@
 definePageMeta({
   layout: 'cathering',
 });
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
 import { usePedido } from '@/composables/punto/usePedido';
 import { pedidoGlobal } from '~/helpers/columns';
@@ -546,56 +551,48 @@ const {
   ajustarOferta,
   handlePedidoGlobal,
   mostrarEntidadSinPedidos,
+  filtroHistorial,
 } = usePedido();
 
 const tab = ref('puntos');
 const tabPuntos = ref('pGlobal');
-const date = ref('2020/07/08');
+const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const pedidoSeleccionado = ref(null);
+// console.log(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 
+// console.log(estado.pedidosRecibidos);
 const imprimir = (pedido) => {
   console.log('imprimir');
   pedidoSeleccionado.value = pedido;
 
-  // Ocultar el resto del contenido
-  // document.body.style.display = 'none';
-
-  // Mostrar solo el div que deseas imprimir
   const divParaImprimir = document.getElementById('divParaImprimir');
 
   divParaImprimir.style.display = 'block';
-
-  // Imprimir la ventana actual
   window.print();
 
   // Restaurar la visibilidad del contenido después de imprimir
   document.body.style.display = 'block';
   divParaImprimir.style.display = 'none';
 };
+const dateOption = (date) => {
+  // console.log(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(date) <= today;
+};
 
-onMounted(() => {
-  buscarPedidos2();
+watch(date, (value) => {
+  // console.log(value);
+  // console.log(date.value);
+  filtroHistorial(value);
+});
+onMounted(async () => {
+  await buscarPedidos2();
+  filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 });
 </script>
 
 <style lang="scss" scoped>
-// @media print {
-//   body * {
-//     visibility: hidden;
-//   }
-//   .no-print {
-//     display: none;
-//   }
-//   #divParaImprimir,
-//   #divParaImprimir * {
-//     visibility: visible;
-//   }
-//   #divParaImprimir {
-//     position: absolute;
-//     left: 0;
-//     top: 10px;
-//   }
-// }
 @media print {
   /* Ocultar la URL del navegador en la impresión */
   #url {

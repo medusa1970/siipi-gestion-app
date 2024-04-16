@@ -66,7 +66,7 @@
 
               <h1>{{ item.nombre }}</h1>
 
-              <q-btn
+              <!-- <q-btn
                 color="primary"
                 icon="visibility"
                 flat
@@ -75,7 +75,7 @@
                 size="12px"
               >
                 <q-tooltip> ver foto </q-tooltip>
-              </q-btn>
+              </q-btn> -->
             </div>
           </q-card>
         </q-expansion-item>

@@ -42,12 +42,12 @@ export const menuListPunto = [
     to: '/punto/empleados',
     subMenu: [],
   },
-  {
-    icon: 'fact_check',
-    label: 'Menu',
-    to: '/punto/menu',
-    subMenu: [],
-  },
+  // {
+  //   icon: 'fact_check',
+  //   label: 'Menu',
+  //   to: '/punto/menu',
+  //   subMenu: [],
+  // },
   {
     icon: 'warehouse',
     label: 'Stock',
@@ -103,12 +103,12 @@ export const menuListCathering = [
     to: '/cathering/empleados',
     subMenu: [],
   },
-  {
-    icon: 'fact_check',
-    label: 'Menu',
-    to: '/cathering/menu',
-    subMenu: [],
-  },
+  // {
+  //   icon: 'fact_check',
+  //   label: 'Menu',
+  //   to: '/cathering/menu',
+  //   subMenu: [],
+  // },
   {
     icon: 'warehouse',
     label: 'Stock',

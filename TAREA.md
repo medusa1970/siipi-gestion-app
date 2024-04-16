@@ -24,20 +24,20 @@
 - que hace btn guardar en agregar catalogo en oferta??? ✅
 - cantidad en presentacion basica, y el btn al final por que es de ayuda mas no importante
 - rutas orden :).
-- fecha filtro defecto 0
-- nombre sucursal no id
-- rol alado de nombre de sucursal
+- fecha filtro defecto 0 ✅
+- rol alado de nombre de sucursal ✅
 - probar inventario con leo, tiene
 - corregir error de inventario.
-- nombre de problema.
-- menu desaparece.
-- quitar btn editar de layout.
+- nombre de problema inventario.
+- menu desaparece. ✅
+- quitar btn editar de layout. ✅
 - pasar del dev al main
-- pedidos verfoto quitar
-- id entidad de proveedor despacho y recibo.
+- pedidos verfoto quitar ✅
+- nombre sucursal no id ✅
+- id entidad de proveedor despacho y recibo. ✅
 
 - solo supervisor visualiza precio CATHERING
-- catalogo nombre (id quitar) LOGISTICA
+- catalogo nombre (id quitar) LOGISTICA ✅
 
 # ROL ALMACEN
 

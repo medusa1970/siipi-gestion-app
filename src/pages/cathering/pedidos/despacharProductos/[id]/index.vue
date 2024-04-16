@@ -69,7 +69,7 @@
 
               <h1>{{ item.nombre }}</h1>
 
-              <q-btn
+              <!-- <q-btn
                 color="primary"
                 icon="visibility"
                 flat
@@ -78,7 +78,7 @@
                 size="12px"
               >
                 <q-tooltip> ver foto </q-tooltip>
-              </q-btn>
+              </q-btn> -->
             </div>
           </q-card>
         </q-expansion-item>
@@ -144,13 +144,6 @@ const selectCatalogo = (catalogo) => {
   catalogoSeleccionado.value = catalogo;
 };
 
-watch(filter, () => {
-  // console.log('first');
-  // console.log(filteredCatalogos.value);
-  estado.catalogoSeleccionado = filteredCatalogos.value;
-  // console.log(estado.catalogoSeleccionado);
-});
-
 const obtenerCatalogosProductos = async () => {
   const { catalogoArbol } = await ofertaService.buscarCatalogoID(
     route.params.id,
@@ -162,10 +155,13 @@ const obtenerCatalogosProductos = async () => {
   catalogoSeleccionado2.value = catalogoArbol.hijas[0];
 };
 
-onMounted(() => {
-  obtenerCatalogosProductos();
+watch(filter, () => {
+  estado.catalogoSeleccionado = filteredCatalogos.value;
 });
-
+// onMounted(() => {
+//   obtenerCatalogosProductos();
+// });
+// console.log(route.query.id);
 onMounted(() => {
   obtenerListaOfertas();
   obtenerCatalogosProductos();

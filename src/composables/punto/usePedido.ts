@@ -42,6 +42,7 @@ export const usePedido = () => {
     pedidosAceptados: [],
     pedidosSinAceptar: [],
     pedidosRecibidos: [],
+    pedidosFiltrados: [],
     pedidoItemsEstado: '',
     itemPedido: {
       id: '',
@@ -147,6 +148,7 @@ export const usePedido = () => {
     estado.pedidosSinAceptar = pedidos.noAceptados;
     estado.pedidosAceptados = pedidos.aceptados;
     estado.pedidosRecibidos = pedidos.recibidos;
+    console.log(estado.pedidosRecibidos);
   };
 
   const buscarPedidoID = async (id: string) => {
@@ -219,6 +221,7 @@ export const usePedido = () => {
       const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
         estado.pedidoID,
       );
+      console.log(pedidoRecibirItems);
       if (pedidoRecibirItems) {
         NotifySucessCenter('Pedido recibido');
         estado.modal.isShowPassword = false;
@@ -659,6 +662,26 @@ export const usePedido = () => {
       );
     });
   };
+  const filtroHistorial = (date: any) => {
+    console.log('first');
+    // console.log(date);
+    // console.log(estado.pedidosRecibidos);
+    // console.log(estado.pedidosRecibidos.length);
+
+    const dateObj = new Date(date);
+    dateObj.setHours(0, 0, 0, 0);
+
+    estado.pedidosFiltrados = estado.pedidosRecibidos.filter((pedido: any) => {
+      const pedidoDate = new Date(pedido._creado);
+      pedidoDate.setHours(0, 0, 0, 0);
+
+      return pedidoDate.getTime() === dateObj.getTime();
+    });
+    // console.log(estado.pedidosFiltrados);
+
+    // console.log(pedidosFiltrados);
+    // console.log(pedidosFiltrados.length);
+  };
 
   onMounted(async () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
@@ -681,7 +704,7 @@ export const usePedido = () => {
         cantidad: cantidadTotal,
       };
     });
-    console.log(estado.stocks);
+    // console.log(estado.stocks);
 
     storePedido.pedidosSolicitado = storePedido.pedidosSolicitado.map(
       (pedido: any) => {
@@ -689,7 +712,7 @@ export const usePedido = () => {
           //@ts-ignore
           (stock: any) => stock.producto._id === pedido.producto._id,
         );
-        console.log(stock);
+        // console.log(stock);
 
         return {
           ...pedido, //@ts-ignore
@@ -704,7 +727,7 @@ export const usePedido = () => {
           //@ts-ignore
           (stock: any) => stock.producto._id === pedido.producto._id,
         );
-        console.log(stock);
+        // console.log(stock);
 
         return {
           ...pedido, //@ts-ignore
@@ -740,5 +763,6 @@ export const usePedido = () => {
     ajustarOferta,
     handlePedidoGlobal,
     mostrarEntidadSinPedidos,
+    filtroHistorial,
   };
 };

@@ -70,7 +70,7 @@
 
               <h1>{{ item.nombre }}</h1>
 
-              <q-btn
+              <!-- <q-btn
                 color="primary"
                 icon="visibility"
                 flat
@@ -79,7 +79,7 @@
                 size="12px"
               >
                 <q-tooltip> ver foto </q-tooltip>
-              </q-btn>
+              </q-btn> -->
             </div>
           </q-card>
         </q-expansion-item>
@@ -162,13 +162,15 @@ const obtenerCatalogosProductos = async () => {
   catalogoSeleccionado.value = catalogoArbol.hijas[0];
   catalogoSeleccionado2.value = catalogoArbol.hijas[0];
 };
+console.log(route.query.id);
 
-onMounted(() => {
-  obtenerCatalogosProductos();
-});
+// onMounted(() => {
+//   obtenerCatalogosProductos();
+// });
 
 onMounted(() => {
   obtenerListaOfertas();
   obtenerCatalogosProductos();
+  usePedidoStore.areaPedidoID = route.query.id;
 });
 </script>

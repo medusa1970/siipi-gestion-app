@@ -18,7 +18,7 @@
             v-for="punto in estado.pedidosEntidad"
             :key="punto._id"
             :href="`listaPedidos/${punto._id}`"
-            :title="punto._id"
+            :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
             :title2="formatearFecha(punto.estado[0].fecha)"
           >

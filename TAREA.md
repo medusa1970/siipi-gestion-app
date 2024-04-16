@@ -31,7 +31,7 @@
 - nombre de problema inventario.
 - menu desaparece. ✅
 - quitar btn editar de layout. ✅
-- pasar del dev al main
+- pasar del dev al main ✅
 - pedidos verfoto quitar ✅
 - nombre sucursal no id ✅
 - id entidad de proveedor despacho y recibo. ✅

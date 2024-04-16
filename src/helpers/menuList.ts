@@ -151,24 +151,24 @@ export const menuListCathering = [
       },
     ],
   },
-  {
-    icon: 'point_of_sale',
-    label: 'Caja',
-    subMenu: [
-      {
-        label: 'Sucursal cobrar',
-        to: '/cathering/caja',
-      },
-      {
-        label: 'Confirmar pagos',
-        to: '/cathering/caja/confirmarPagos',
-      },
-    ],
-  },
-  {
-    icon: 'settings',
-    label: 'Configuración',
-    // to: '/cathering/configuracion',
-    subMenu: [],
-  },
+  // {
+  //   icon: 'point_of_sale',
+  //   label: 'Caja',
+  //   subMenu: [
+  //     {
+  //       label: 'Sucursal cobrar',
+  //       to: '/cathering/caja',
+  //     },
+  //     {
+  //       label: 'Confirmar pagos',
+  //       to: '/cathering/caja/confirmarPagos',
+  //     },
+  //   ],
+  // },
+  // {
+  //   icon: 'settings',
+  //   label: 'Configuración',
+  //   // to: '/cathering/configuracion',
+  //   subMenu: [],
+  // },
 ];

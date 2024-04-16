@@ -52,7 +52,7 @@
               </template>
               <q-card class="pb-3 flex justify-center col-span-3">
                 <q-form
-                  class="shadow-md py-2 px-4 flex flex-col gap-3"
+                  class="py-2 px-4 flex flex-col gap-3"
                   @submit="terminarInventario(props.row)"
                 >
                   <div
@@ -77,6 +77,7 @@
                       v-model="lote.vencimiento"
                       type="date"
                       label="Vencimiento"
+                      mask="date"
                       outlined
                       dense
                       class="mb-[13px]"

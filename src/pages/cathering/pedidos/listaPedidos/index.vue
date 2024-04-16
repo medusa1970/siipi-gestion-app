@@ -558,21 +558,18 @@ const tab = ref('puntos');
 const tabPuntos = ref('pGlobal');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const pedidoSeleccionado = ref(null);
-// console.log(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
-
-// console.log(estado.pedidosRecibidos);
 const imprimir = (pedido) => {
   console.log('imprimir');
   pedidoSeleccionado.value = pedido;
 
-  const divParaImprimir = document.getElementById('divParaImprimir');
+  setTimeout(() => {
+    const divParaImprimir = document.getElementById('divParaImprimir');
 
-  divParaImprimir.style.display = 'block';
-  window.print();
-
-  // Restaurar la visibilidad del contenido después de imprimir
-  document.body.style.display = 'block';
-  divParaImprimir.style.display = 'none';
+    divParaImprimir.style.display = 'block';
+    window.print();
+    document.body.style.display = 'block';
+    divParaImprimir.style.display = 'none';
+  }, 200);
 };
 const dateOption = (date) => {
   // console.log(date);

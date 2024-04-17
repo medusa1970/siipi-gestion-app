@@ -6,8 +6,8 @@
     :label2="problem._id"
     icon2="folder"
   />
-  <h1 class="font-bold text-center text-lg mt-2 mb-4">
-    Solucion de problema INVENTARIO {{ problem._id }}
+  <h1 class="font-bold text-center text-lg mt-2 mb-4" v-if="problem.producto">
+    Solucion de problema INVENTARIO {{ problem.producto.nombre }}
   </h1>
   <div class="my-3 px-6">
     <q-editor
@@ -94,33 +94,33 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { authStore } from "@/stores/auth.store";
+import { ref, onMounted } from 'vue';
+import { authStore } from '@/stores/auth.store';
 import {
   ApiError,
   hideLoading,
   showLoading,
   NotifyWarning,
   NotifySucessCenter,
-} from "~/helpers/message.service";
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
+} from '~/helpers/message.service';
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 definePageMeta({
-  layout: "punto",
+  layout: 'punto',
 });
 
 const { params } = useRoute();
 const router = useRouter();
 const useAuth = authStore();
-const texto = ref("");
+const texto = ref('');
 const qeditor = ref(texto);
 const problem = ref({});
 
 const formatDate = (date) => {
-  return format(new Date(date), "dd-MM-yyyy, EEEE", { locale: es });
+  return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
 };
 
 const getProblem = async () => {
@@ -136,7 +136,7 @@ const getProblem = async () => {
     <li><strong>¿Cómo solucionaste la diferencia de ${
       item.diferencia
     } productos, con el vencimiento de ${formatDate(
-        item.vencimiento
+        item.vencimiento,
       )}?</strong></li>
     </ol>
     <ul>
@@ -162,10 +162,10 @@ const resolverProblema = async () => {
         resuelto: true,
       },
     });
-    NotifySucessCenter("Problema resuelto 🙂");
+    NotifySucessCenter('Problema resuelto 🙂');
     hideLoading();
     setTimeout(() => {
-      router.push("/punto/inventario/listaProblemas");
+      router.push('/punto/inventario/listaProblemas');
     }, 1000);
   } catch (error) {
     ApiError(error);

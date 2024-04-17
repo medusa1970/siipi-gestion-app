@@ -7,7 +7,7 @@
       v-for="problema in listProblems"
       :key="problema._id"
     >
-      <h1 class="font-bold">{{ problema._id }}</h1>
+      <h1 class="font-bold">{{ problema.producto.nombre }}</h1>
       <p class="italic">{{ formatDate(problema.fechaAparicion) }}</p>
       <h1>Hay {{ problema.diferencias.length }} diferencias</h1>
       <q-btn

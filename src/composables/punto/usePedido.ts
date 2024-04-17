@@ -99,6 +99,27 @@ export const usePedido = () => {
       ),
     );
     console.log(estado.pedidosEntidad);
+    const pedidos = estado.pedidosEntidad.reduce(
+      (accumulator: any, pedido: any) => {
+        const hasReceived = pedido.items.some((item: any) =>
+          item.estado.some((estado: any) => estado.estado === 'recibido'),
+        );
+
+        if (hasReceived) {
+          accumulator.recibidos.push(pedido);
+        } else {
+          accumulator.noRecibidos.push(pedido);
+        }
+
+        return accumulator;
+      },
+      { recibidos: [], noRecibidos: [] },
+    );
+    hideLoading();
+    console.log(pedidos.noRecibidos);
+    console.log(pedidos.recibidos);
+    estado.pedidosRecibidos = pedidos.recibidos;
+    estado.pedidosEntidad = pedidos.noRecibidos;
 
     hideLoading();
   };
@@ -158,11 +179,13 @@ export const usePedido = () => {
       id,
       useGqlToken(useAuth.token),
     );
+    console.log(pedidoBuscar);
     estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
     estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
       //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
+    console.log(estado.precioGeneral);
 
     const { pedidoLeerEstado } = await pedidoService.pedidoLeerEstado(id);
     estado.pedidoItemsEstado = pedidoLeerEstado;
@@ -486,6 +509,17 @@ export const usePedido = () => {
         orden: pedido.orden[indice],
       };
     });
+    // console.log(estado.pedidoPuntos);
+
+    // ORDEN
+    estado.pedidoPuntos.sort((a: any, b: any) => {
+      if (a.ruta === b.ruta) {
+        return a.orden - b.orden;
+      }
+      return a.ruta - b.ruta;
+    });
+
+    // console.log(estado.pedidoPuntos);
   };
 
   const ofertaPreparado = async (fila: any) => {

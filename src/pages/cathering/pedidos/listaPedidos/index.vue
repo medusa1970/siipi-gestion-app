@@ -559,7 +559,6 @@ const tabPuntos = ref('pGlobal');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const pedidoSeleccionado = ref(null);
 const imprimir = (pedido) => {
-  console.log('imprimir');
   pedidoSeleccionado.value = pedido;
 
   setTimeout(() => {

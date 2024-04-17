@@ -23,20 +23,23 @@
 - no hacer crear btn si los campos no estan llenos, productosss arreglar. ✅
 - que hace btn guardar en agregar catalogo en oferta??? ✅
 - cantidad en presentacion basica, y el btn al final por que es de ayuda mas no importante
-- rutas orden :).
+- rutas orden :). ✅
 - fecha filtro defecto 0 ✅
 - rol alado de nombre de sucursal ✅
 - probar inventario con leo, tiene
-- corregir error de inventario.
-- nombre de problema inventario.
+- corregir error de inventario. ✅
+- nombre de problema inventario. ✅
 - menu desaparece. ✅
 - quitar btn editar de layout. ✅
 - pasar del dev al main ✅
 - pedidos verfoto quitar ✅
 - nombre sucursal no id ✅
 - id entidad de proveedor despacho y recibo. ✅
+  quitar caja y configuracion ✅
+  buscador al borrar no recupera los datos
+- resolver un problema bug consulta
 
-- solo supervisor visualiza precio CATHERING
+- solo supervisor visualiza precio CATHERING ✅
 - catalogo nombre (id quitar) LOGISTICA ✅
 
 # ROL ALMACEN
@@ -93,6 +96,7 @@ HILO DE COMENTARIO.
 - Alerta de cambio de la seleccion del vendedor.
 - CATHERING, seleccionar todos los pedidos, tambien individual, grupo productos.
 - Input del chofer para recibir un pedido choferSiipi123.
+  leoe no se recibe el pedido
 
 # META 4
 

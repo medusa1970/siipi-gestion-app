@@ -286,6 +286,24 @@ export const detallePedidoAccion = [
     align: 'right',
   },
 ];
+export const detallePedidoAlmacen = [
+  {
+    name: 'oferta',
+    required: true,
+    label: 'Oferta',
+    align: 'left',
+    field: (row: any) => row.oferta.nombre,
+    sortable: true,
+  },
+  {
+    name: 'cantidad',
+    required: true,
+    label: 'Cantidad',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+];
 
 export const pedidoGlobal = [
   {

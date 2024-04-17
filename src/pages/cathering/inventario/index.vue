@@ -201,6 +201,7 @@ const estado = reactive({
     presentacion: '',
   },
   countRetry: 0,
+  diferencias: [],
 });
 
 // const obtenerTodoStock = async () => {
@@ -242,9 +243,15 @@ const terminarInventario = async (producto) => {
       estado.inventario.lotes,
     )
     .then((res) => {
+      console.log(res);
       if (res.entidadHacerInventario.diferencias?.length > 0) {
+        estado.diferencias = res.entidadHacerInventario.diferencias;
+        console.log(estado.diferencias);
+        // console.log('first');
         estado.countRetry++;
         if (estado.countRetry > 1) {
+          if (estado.diferencias == res.entidadHacerInventario.diferencias)
+            console.log('first');
           inventarioService
             .realizarInventarioTrue(
               useAuth.negocioElegido._id, //@ts-ignore
@@ -267,6 +274,7 @@ const terminarInventario = async (producto) => {
         }
       } else {
         showLoading();
+        // console.log('first');
         inventarioService
           .realizarInventarioTrue(
             useAuth.negocioElegido._id, //@ts-ignore

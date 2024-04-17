@@ -82,18 +82,18 @@ export const menuListPunto = [
       },
     ],
   },
-  {
-    icon: 'point_of_sale',
-    label: 'Caja',
-    to: '/punto/caja',
-    subMenu: [],
-  },
-  {
-    icon: 'settings',
-    label: 'Configuración',
-    // to: '/punto/configuracion',
-    subMenu: [],
-  },
+  // {
+  //   icon: 'point_of_sale',
+  //   label: 'Caja',
+  //   to: '/punto/caja',
+  //   subMenu: [],
+  // },
+  // {
+  //   icon: 'settings',
+  //   label: 'Configuración',
+  //   // to: '/punto/configuracion',
+  //   subMenu: [],
+  // },
 ];
 
 export const menuListCathering = [

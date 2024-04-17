@@ -27,7 +27,7 @@
                 <h1 class="text-orange-500 font-bold">
                   {{ punto.estadoItems }}
                 </h1>
-                <q-btn
+                <!-- <q-btn
                   dense
                   round
                   icon="edit"
@@ -35,7 +35,7 @@
                   color="blue"
                   padding="4px"
                   size="12px"
-                />
+                /> -->
                 <q-btn
                   dense
                   round
@@ -57,6 +57,7 @@
           <q-input
             dense
             filled
+            readonly
             v-model="date"
             mask="date"
             :rules="['date']"
@@ -64,13 +65,14 @@
             clearable
           >
             <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
+              <!-- <q-btn icon="check" label="OK" @click="onClick" /> -->
+              <q-icon name="bi-calendar-day" class="cursor-pointer">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-date v-model="date">
+                  <q-date v-model="date" :options="dateOption">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -79,6 +81,36 @@
               </q-icon>
             </template>
           </q-input>
+        </div>
+        <div class="flex flex-col gap-2 justify-center items-center">
+          <h1 v-if="estado.pedidosFiltrados.length === 0">
+            No hay pedido😯...
+          </h1>
+          <Item
+            v-for="punto in estado.pedidosFiltrados"
+            :key="punto._id"
+            :href="`listaPedidos/${punto._id}`"
+            :title="punto.comprador.nombre"
+            class="w-[400px] max-sm:w-full"
+            :title2="formatearFecha(punto.estado[0].fecha)"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1>
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                />
+              </div>
+            </template>
+          </Item>
         </div>
       </q-tab-panel>
     </q-tab-panels>
@@ -91,11 +123,24 @@ definePageMeta({
 import { ref, onMounted } from 'vue';
 import { usePedido } from '@/composables/punto/usePedido';
 
-const { buscarPedidos, estado, formatearFecha } = usePedido();
+const { buscarPedidos, estado, formatearFecha, filtroHistorial } = usePedido();
 const tab = ref('cathering');
-const date = ref('2020/07/08');
+const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
+const dateOption = (date) => {
+  // console.log(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(date) <= today;
+};
 
-onMounted(() => {
-  buscarPedidos();
+watch(date, (value) => {
+  // console.log(value);
+  // console.log(date.value);
+  filtroHistorial(value);
+});
+
+onMounted(async () => {
+  await buscarPedidos();
+  filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 });
 </script>

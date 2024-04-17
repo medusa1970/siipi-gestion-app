@@ -252,9 +252,12 @@
                   />
                 </div>
 
-                <span class="flex gap-2 justify-center">
+                <div
+                  v-if="storePedido.listaPedido.length > 0"
+                  class="flex gap-2 justify-center"
+                >
                   <slot name="actionPedido" />
-                </span>
+                </div>
               </div>
             </q-expansion-item>
           </q-list>

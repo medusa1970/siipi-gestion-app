@@ -30,26 +30,32 @@
           >{{ formatearFecha(estado.pedidoDetalle.estado[0].fecha) }}
         </p>
       </div>
-      <div>
-        <span class="text-2xl flex gap-2">
+      <div class="col-span-1 justify-self-end">
+        <span class="text-lg flex gap-2">
           <p class="font-bold">Estado:</p>
           <p class="font-bold text-orange-500 uppercase">
             {{ estado.pedidoItemsEstado }}🫡
           </p>
         </span>
-        <q-btn
-          color="primary"
-          label="Imprimir"
-          padding="3px 15px"
-          no-caps
-          class="no-print"
-          @click="imprimir"
-        />
+        <div class="flex justify-end">
+          <q-btn
+            color="primary"
+            label="Imprimir"
+            padding="3px 15px"
+            no-caps
+            class="no-print"
+            @click="imprimir"
+          />
+        </div>
       </div>
     </div>
     <div v-else>Cargando datos...</div>
 
+    <!-- <h1 v-if="useAuth.user.cargo != 'almacen'" class="text-red-500 text-xl">
+      hola
+    </h1> -->
     <Table
+      v-if="useAuth.user.cargo != 'almacen'"
       :rows="estado.pedidoDetalle.items"
       :columns="
         estado.pedidoItemsEstado === 'preparado'
@@ -66,6 +72,28 @@
           <p class="font-bold text-2xl">{{ estado.precioGeneral }} Bs.</p>
         </span>
       </template>
+      <!-- ACTIONS -->
+      <template #body-cell-actions="{ props }">
+        <q-td :props="props">
+          <q-btn
+            color="primary"
+            icon="edit"
+            dense
+            flat
+            round
+            size="13px"
+            @click="ajustarItem(props.row)"
+            ><QTooltip>Ajustar Item</QTooltip></q-btn
+          >
+        </q-td>
+      </template>
+    </Table>
+    <Table
+      v-else
+      :rows="estado.pedidoDetalle.items"
+      :columns="detallePedidoAlmacen"
+      dense
+    >
       <!-- ACTIONS -->
       <template #body-cell-actions="{ props }">
         <q-td :props="props">
@@ -117,7 +145,11 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePedido } from '@/composables/punto/usePedido';
-import { detallePedido, detallePedidoAccion } from '@/helpers/columns';
+import {
+  detallePedido,
+  detallePedidoAccion,
+  detallePedidoAlmacen,
+} from '@/helpers/columns';
 import { hideLoading, showLoading } from '~/helpers/message.service';
 
 const { params } = useRoute();
@@ -127,6 +159,7 @@ const {
   formatearFecha,
   ajustarItem,
   ajustarItemGuardar,
+  useAuth,
 } = usePedido();
 
 definePageMeta({

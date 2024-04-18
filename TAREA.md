@@ -38,6 +38,9 @@
   quitar caja y configuracion ✅
   buscador al borrar no recupera los datos
 - resolver un problema bug consulta
+  leoe no se recibe el pedido
+
+  - formatDatte sacar de imports listaPedidos[id]
 
 - solo supervisor visualiza precio CATHERING ✅
 - catalogo nombre (id quitar) LOGISTICA ✅
@@ -96,7 +99,6 @@ HILO DE COMENTARIO.
 - Alerta de cambio de la seleccion del vendedor.
 - CATHERING, seleccionar todos los pedidos, tambien individual, grupo productos.
 - Input del chofer para recibir un pedido choferSiipi123.
-  leoe no se recibe el pedido
 
 # META 4
 

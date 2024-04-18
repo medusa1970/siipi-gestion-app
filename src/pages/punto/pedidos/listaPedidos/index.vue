@@ -122,8 +122,10 @@ definePageMeta({
 });
 import { ref, onMounted } from 'vue';
 import { usePedido } from '@/composables/punto/usePedido';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
-const { buscarPedidos, estado, formatearFecha, filtroHistorial } = usePedido();
+const { buscarPedidos, estado, filtroHistorial } = usePedido();
 const tab = ref('cathering');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const dateOption = (date) => {
@@ -131,6 +133,9 @@ const dateOption = (date) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return new Date(date) <= today;
+};
+const formatearFecha = (date) => {
+  return format(new Date(date), 'dd-MM-yyyy, EEEE, HH:mm:ss', { locale: es });
 };
 
 watch(date, (value) => {

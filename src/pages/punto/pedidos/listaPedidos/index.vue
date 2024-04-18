@@ -123,7 +123,7 @@ definePageMeta({
 import { ref, onMounted } from 'vue';
 import { usePedido } from '@/composables/punto/usePedido';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { es } from 'date-fns/locale/index';
 
 const { buscarPedidos, estado, filtroHistorial } = usePedido();
 const tab = ref('cathering');

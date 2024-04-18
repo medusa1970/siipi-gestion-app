@@ -40,10 +40,18 @@
 - resolver un problema bug consulta
   leoe no se recibe el pedido
 
+  - jefe de almacen
+  - repartidor
+  - imprimir la ver productos. pedido global.
+  - producto campo area para ordenar la impresion pedido global y ver el excel.
+
   - formatDatte sacar de imports listaPedidos[id]
 
 - solo supervisor visualiza precio CATHERING ✅
 - catalogo nombre (id quitar) LOGISTICA ✅
+
+- devoluciones dentro de las 24hrs estado recibido no mandarlo anhistorial dentro de 24hrs para posible reclamo y edicion.
+- datasets fotos.
 
 # ROL ALMACEN
 

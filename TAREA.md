@@ -38,7 +38,7 @@
   quitar caja y configuracion ✅
   buscador al borrar no recupera los datos
 - resolver un problema bug consulta
-  leoe no se recibe el pedido
+- leoe no se recibe el pedido
 
   - jefe de almacen
   - repartidor

@@ -23,7 +23,7 @@
         <q-tr :props="props">
           <q-td key="creado" :props="props">
             <h1 v-if="props.row._creado">
-              {{ formatearFecha(props.row._creado) }}
+              {{ fechaMes(props.row._creado) }}
             </h1>
           </q-td>
           <q-td key="nombre" :props="props">
@@ -113,11 +113,12 @@ definePageMeta({
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
 import { onMounted } from 'vue';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-const formatearFecha = (date: any) => {
-  return format(new Date(date), 'dd-MM-yyyy', { locale: es });
-};
+import { fechaMes } from '@/helpers/fecha';
+// import { format } from 'date-fns';
+// import { es } from 'date-fns/locale';
+// const formatearFecha = (date: any) => {
+//   return format(new Date(date), 'dd-MM-yyyy', { locale: es });
+// };
 
 const {
   estado,

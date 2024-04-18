@@ -29,7 +29,7 @@
             :href="`listaPedidos/${punto._id}`"
             :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
-            :title2="formatearFecha(punto.estado[0].fecha)"
+            :title2="formateadorFecha(punto.estado[0].fecha)"
           >
             <template v-slot:actions>
               <div class="flex">
@@ -109,7 +109,7 @@
                 :title="punto.comprador.nombre"
                 class="w-full max-sm:w-full"
                 :href="`listaPedidos/${punto._id}`"
-                :title2="formatearFecha(punto.estado[0].fecha)"
+                :title2="formateadorFecha(punto.estado[0].fecha)"
               >
                 <template v-slot:actions>
                   <div class="flex">
@@ -140,7 +140,7 @@
                 :href="`listaPedidos/${punto._id}`"
                 :title="punto.comprador.nombre"
                 class="w-[400px] max-sm:w-full"
-                :title2="formatearFecha(punto.estado[0].fecha)"
+                :title2="formateadorFecha(punto.estado[0].fecha)"
               >
                 <template v-slot:actions>
                   <div class="flex">
@@ -422,7 +422,7 @@
             :href="`listaPedidos/${punto._id}`"
             :title="punto.comprador.nombre"
             class="w-[400px] max-sm:w-full"
-            :title2="formatearFecha(punto.estado[0].fecha)"
+            :title2="formateadorFecha(punto.estado[0].fecha)"
           >
             <template v-slot:actions>
               <div class="flex">
@@ -457,7 +457,7 @@
         Responsable: {{ pedidoSeleccionado.estado[0].persona.nombre }}
         {{ pedidoSeleccionado.estado[0].persona.apellido }}
       </p>
-      <p>Fecha: {{ formatearFecha(pedidoSeleccionado.estado[0].fecha) }}</p>
+      <p>Fecha: {{ formateadorFecha(pedidoSeleccionado.estado[0].fecha) }}</p>
       <p class="text-center">
         ------------------------------------------------
       </p>
@@ -536,11 +536,11 @@ import { ref, onMounted, watch } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
 import { usePedido } from '@/composables/punto/usePedido';
 import { pedidoGlobal } from '~/helpers/columns';
+import { formateadorFecha } from '@/helpers/fecha';
 
 const {
   buscarPedidos2,
   estado,
-  formatearFecha,
   aceptarTodoPedido,
   buscarPedidos,
   aceptarTodosLosPedidosSolicitables,

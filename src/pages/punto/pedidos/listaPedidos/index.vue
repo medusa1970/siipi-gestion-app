@@ -135,9 +135,6 @@ const dateOption = (date) => {
   today.setHours(0, 0, 0, 0);
   return new Date(date) <= today;
 };
-// const formatearFecha = (date) => {
-//   return format(new Date(date), 'dd-MM-yyyy, EEEE, HH:mm:ss');
-// };
 
 watch(date, (value) => {
   // console.log(value);

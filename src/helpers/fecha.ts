@@ -19,3 +19,17 @@ export const formateadorFecha = (fecha: any) => {
   // console.log(fechaHoraFormateada);
   // return fechaHoraFormateada;
 };
+
+export const fechaMes = (fecha: any) => {
+  // console.log(fecha);
+  return new Date(fecha).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  // return fechaConvertida.toLocaleDateString('es-ES', {
+  //   year: 'numeric',
+  //   month: '2-digit',
+  //   day: '2-digit',
+  // });
+};

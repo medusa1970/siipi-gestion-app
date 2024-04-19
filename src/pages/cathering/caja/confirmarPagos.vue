@@ -10,7 +10,7 @@
           {{ props.row.entidad }}
         </q-td>
         <q-td key="_creado" :props="props">
-          {{ formatearFecha(props.row._creado) }}
+          {{ formateadorFecha(props.row._creado) }}
         </q-td>
         <q-td key="monto" :props="props"> {{ props.row.monto }} Bs </q-td>
         <q-td key="tipo" :props="props">
@@ -74,10 +74,9 @@ definePageMeta({
 import cajaPendiente from '@/mocks/cajaPendiente.json';
 import { tesoreriaPendiente } from '~/helpers/columns';
 import { onMounted, ref, watch } from 'vue';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { useQuasar } from 'quasar';
 import { NotifySucessCenter } from '~/helpers/message.service';
+import { formateadorFecha } from '~/helpers/fecha';
 const $q = useQuasar();
 
 console.log(cajaPendiente);
@@ -106,9 +105,6 @@ const validarPago = (fila) => {
   }).onOk(async () => {
     NotifySucessCenter('Pago aceptado correctamente');
   });
-};
-const formatearFecha = (date) => {
-  return format(new Date(date), 'dd/MM/yyyy, EEEE', { locale: es });
 };
 
 const filter = ref('');

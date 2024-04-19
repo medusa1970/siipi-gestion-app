@@ -9,8 +9,6 @@ import {
 import { useQuasar } from 'quasar';
 import { pedidoService } from '@/services/punto/pedido.service';
 import { authStore } from '@/stores/auth.store';
-// import { format } from 'date-fns';
-// import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/punto/menu.service';
@@ -192,10 +190,6 @@ export const usePedido = () => {
 
     // console.log(estado.precioGeneral);
   };
-
-  // const formatearFecha = (date: any) => {
-  //   return format(new Date(date), 'dd-MM-yyyy, EEEE, HH:mm:ss', { locale: es });
-  // };
 
   const aceptarTodoPedido = async (pedidoID: string) => {
     const { pedidoAceptarItems } = await pedidoService.pedidoAceptarItems(

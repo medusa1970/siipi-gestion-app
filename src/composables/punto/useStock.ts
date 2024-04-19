@@ -3,8 +3,6 @@ import { reactive, onMounted } from 'vue';
 import { NotifySucess, NotifyError } from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { productStore } from '@/stores/producto.store';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { stockService } from '~/services/punto/stock.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { menuService } from '~/services/punto/menu.service';
@@ -143,9 +141,6 @@ export const useStock = () => {
       .filter(Boolean); // Filtrar los stocks que tienen lotes vencidos
     // console.log(estado.productosVencidos);
   };
-  const formatearFecha = (date: any) => {
-    return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
-  };
 
   const modalEditarCantidad = (row: any) => {
     estado.modal.isShowCantidad = true;
@@ -185,7 +180,6 @@ export const useStock = () => {
 
   return {
     estado,
-    formatearFecha,
     modalEditarCantidad,
     guardarCantidad,
     agregarListaInventario,

@@ -28,7 +28,7 @@
         </p>
         <p>
           <strong>Fecha: </strong
-          >{{ formatearFecha(estado.pedidoDetalle.estado[0].fecha) }}
+          >{{ formateadorFecha(estado.pedidoDetalle.estado[0].fecha) }}
         </p>
       </div>
       <div>
@@ -130,8 +130,7 @@ import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePedido } from '@/composables/punto/usePedido';
 import { detallePedido } from '@/helpers/columns';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { formateadorFecha } from '~/helpers/fecha';
 import realizarPedido from '../../realizarPedido.vue';
 
 const { params } = useRoute();
@@ -146,10 +145,6 @@ const {
 definePageMeta({
   layout: 'punto',
 });
-
-const formatearFecha = (date) => {
-  return format(new Date(date), 'dd-MM-yyyy, EEEE', { locale: es });
-};
 
 onMounted(() => {
   buscarPedidoID(params.id);

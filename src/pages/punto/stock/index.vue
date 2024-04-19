@@ -129,7 +129,7 @@
                       {{
                         lote.vencimiento === null
                           ? 'Sin fecha'
-                          : formatearFecha(lote.vencimiento)
+                          : fechaDiaMes(lote.vencimiento)
                       }}
                     </q-badge>
                   </span>
@@ -212,13 +212,13 @@
 import { stockProducts } from '@/helpers/columns';
 import { useStock } from '@/composables/punto/useStock';
 import { ref, onMounted, computed } from 'vue';
+import { fechaDiaMes } from '@/helpers/fecha';
 definePageMeta({
   layout: 'punto',
 });
 
 const {
   estado,
-  formatearFecha,
   modalEditarCantidad,
   guardarCantidad,
   agregarListaInventario,

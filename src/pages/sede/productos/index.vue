@@ -149,13 +149,7 @@ definePageMeta({
 import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
-// import { format } from 'date-fns';
-// import { es } from 'date-fns/locale';
 import { fechaMes } from '@/helpers/fecha';
-
-// const formatearFecha = (date) => {
-//   return format(new Date(date), 'dd-MM-yyyy', { locale: es });
-// };
 
 const isDoubleClick = ref(false);
 const row = ref('');

@@ -27,7 +27,7 @@
         </p>
         <p>
           <strong>Fecha: </strong
-          >{{ formatearFecha(estado.pedidoDetalle.estado[0].fecha) }}
+          >{{ formateadorFecha(estado.pedidoDetalle.estado[0].fecha) }}
         </p>
       </div>
       <div class="col-span-1 justify-self-end">
@@ -145,6 +145,7 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePedido } from '@/composables/punto/usePedido';
+import { formateadorFecha } from '~/helpers/fecha';
 import {
   detallePedido,
   detallePedidoAccion,
@@ -153,14 +154,8 @@ import {
 import { hideLoading, showLoading } from '~/helpers/message.service';
 
 const { params } = useRoute();
-const {
-  buscarPedidoID,
-  estado,
-  formatearFecha,
-  ajustarItem,
-  ajustarItemGuardar,
-  useAuth,
-} = usePedido();
+const { buscarPedidoID, estado, ajustarItem, ajustarItemGuardar, useAuth } =
+  usePedido();
 
 definePageMeta({
   layout: 'cathering',

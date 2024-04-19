@@ -32,7 +32,6 @@
             </h1>
           </q-td>
           <q-td key="ingredientes" :props="props">
-            <!-- <code>{{ props.row.ingredientes }}</code> -->
             <h1 v-if="props.row.ingredientes[0]">
               {{ props.row.ingredientes.length }}
             </h1>
@@ -114,11 +113,6 @@ import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
 import { onMounted } from 'vue';
 import { fechaMes } from '@/helpers/fecha';
-// import { format } from 'date-fns';
-// import { es } from 'date-fns/locale';
-// const formatearFecha = (date: any) => {
-//   return format(new Date(date), 'dd-MM-yyyy', { locale: es });
-// };
 
 const {
   estado,

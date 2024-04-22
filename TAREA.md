@@ -1,3 +1,7 @@
+- responsive movile
+- 24hrs modificacion
+- orden global area, reposteria, etc..
+
 - ocultar menu.
 - arreglar fecha null sin ''.✅
 - recibir productos 'sss'. ✅
@@ -43,15 +47,21 @@
   - jefe de almacen
   - repartidor
   - imprimir la ver productos. pedido global.
-  - producto campo area para ordenar la impresion pedido global y ver el excel.
+  - producto campo area para ordenar la impresion pedido global y ver el exce
+    l.
 
   - formatDatte sacar de imports listaPedidos[id]
 
 - solo supervisor visualiza precio CATHERING ✅
 - catalogo nombre (id quitar) LOGISTICA ✅
 
+### TAREA NUEVO
+
 - devoluciones dentro de las 24hrs estado recibido no mandarlo anhistorial dentro de 24hrs para posible reclamo y edicion.
 - datasets fotos.
+- pedidos 0 desde punto.
+- pedidos directos no funciona bien, aceptar todo, preparar item.
+- pedidos con estado confirmado, al acpetar todos los pedidos directos, solicitables guardar todos los pedidos viendo que ruta(RUTA 1,2,3), orden pertenecen, que area imprimen (reposteria, panaderia). al aceptar pedidos solicitables guarda en un estaod global todos los items pedidos de los puntos y ordena segun ruta y orden, y acepta directo y lo suma los items o si no hay la entidad agrega uno nuevo y si existen aumenta el producto.
 
 # ROL ALMACEN
 
@@ -146,6 +156,7 @@ OPINION.
 - empleadoss/..; ✅.
 - poner fotos. MANDAR DIMENSIONES. ✅.
 - buscar Producto SEDE no sirve.
+- pedidos directos NO FUNCIONA BIEN. preparado y aceptar
 
 CATHERING
 

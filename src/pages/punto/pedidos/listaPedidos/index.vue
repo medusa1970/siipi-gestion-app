@@ -125,8 +125,14 @@ import { usePedido } from '@/composables/punto/usePedido';
 // import { format } from 'date-fns';
 // import { es } from 'date-fns/locale';
 import { formateadorFecha } from '@/helpers/fecha';
+// import { pedidoStore } from '@/stores/pedido.store';
 
-const { buscarPedidos, estado, filtroHistorial } = usePedido();
+// const storePedido = pedidoStore();
+
+// console.log(storePedido.pedidosSolicitado);
+
+const { buscarPedidos, estado, filtroHistorial, filtroPedidosGlobal } =
+  usePedido();
 const tab = ref('cathering');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const dateOption = (date) => {

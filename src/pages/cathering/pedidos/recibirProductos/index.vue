@@ -3,14 +3,14 @@
     <h1 class="font-extrabold text-lg">Recibir productos</h1>
     <div class="flex gap-2 flex-wrap justify-center mt-2">
       <NuxtLink
-        href="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c4"
+        to="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c4"
         @click="() => (storePedido.areaPedidoID = '65a1a6c9566e40c934929a56')"
       >
         <q-btn color="primary" label="Proveedor" />
       </NuxtLink>
       <NuxtLink
-        to="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c6"
         @click="() => (storePedido.areaPedidoID = '65a5a9af08c1a906d83522d1')"
+        to="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c6"
       >
         <q-btn color="green" label="Panaderia" />
       </NuxtLink>
@@ -36,8 +36,22 @@ import { pedidoStore } from '@/stores/pedido.store';
 definePageMeta({
   layout: 'cathering',
 });
+
 const storePedido = pedidoStore();
 onMounted(() => {
   storePedido.isDespachar = false;
 });
+
+// const handleRedirect = () => {
+//   console.log('first');
+//   storePedido.areaPedidoID = '65a1a6c9566e40c934929a56';
+//   console.log(storePedido.areaPedidoID);
+
+//   // showLoading();
+//   // setTimeout(() => {
+//   //   router.push('/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c4');
+//   //   hideLoading();
+//   // }, 1000);
+//   // storePedido.isDespachar = true;
+// };
 </script>

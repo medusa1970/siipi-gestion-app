@@ -711,6 +711,11 @@ export const usePedido = () => {
     // console.log(pedidosFiltrados.length);
   };
 
+  const filtroPedidosGlobal = () => {
+    console.log('first');
+    console.log(storePedido.pedidosSolicitado);
+  };
+
   onMounted(async () => {
     const { entidadBuscar } = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
@@ -791,5 +796,6 @@ export const usePedido = () => {
     handlePedidoGlobal,
     mostrarEntidadSinPedidos,
     filtroHistorial,
+    filtroPedidosGlobal,
   };
 };

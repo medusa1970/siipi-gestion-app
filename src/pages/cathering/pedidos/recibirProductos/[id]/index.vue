@@ -162,7 +162,7 @@ const obtenerCatalogosProductos = async () => {
   catalogoSeleccionado.value = catalogoArbol.hijas[0];
   catalogoSeleccionado2.value = catalogoArbol.hijas[0];
 };
-console.log(route.query.id);
+// console.log(route.query.idArea);
 
 // onMounted(() => {
 //   obtenerCatalogosProductos();
@@ -171,6 +171,6 @@ console.log(route.query.id);
 onMounted(() => {
   obtenerListaOfertas();
   obtenerCatalogosProductos();
-  usePedidoStore.areaPedidoID = route.query.id;
+  // usePedidoStore.areaPedidoID = route.query.id;
 });
 </script>

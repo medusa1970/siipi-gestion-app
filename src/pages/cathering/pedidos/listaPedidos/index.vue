@@ -168,6 +168,15 @@
           </q-tab-panel>
           <!-- PEDIDOS GLOBAL -->
           <q-tab-panel name="pGlobal">
+            <div class="flex justify-center">
+              <q-btn
+                no-caps
+                padding="2px 10px"
+                color="primary"
+                label="orden global"
+                @click="filtroPedidosGlobal"
+              />
+            </div>
             <div class="">
               <div
                 class="flex gap-3 items-center"
@@ -177,13 +186,6 @@
                   Pedidos Solicitables
                 </h1>
                 <q-btn
-                  v-if="
-                    storePedido.pedidosSolicitado.every((pedido) =>
-                      pedido.estado.some(
-                        (estado) => estado.estado === 'preparado',
-                      ),
-                    )
-                  "
                   color="primary"
                   label="Aceptar todos"
                   padding="0px 10px"
@@ -298,14 +300,16 @@
                 <h1 class="font-extrabold text-lg uppercase">
                   Pedidos Directos
                 </h1>
-                <q-btn
-                  v-if="
+                <!-- v-if="
                     storePedido.pedidosDirecto.every((pedido) =>
                       pedido.estado.some(
                         (estado) => estado.estado === 'preparado',
                       ),
                     )
-                  "
+
+                    NO FUNCIONA ARREGLAR
+                  " -->
+                <q-btn
                   color="primary"
                   label="Aceptar todos"
                   padding="0px 10px"
@@ -552,6 +556,7 @@ const {
   handlePedidoGlobal,
   mostrarEntidadSinPedidos,
   filtroHistorial,
+  filtroPedidosGlobal,
 } = usePedido();
 
 const tab = ref('puntos');

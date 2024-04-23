@@ -1,30 +1,7 @@
 <template>
   <div>
     <Navigation label="Stock" icon="folder" />
-    <!-- <code>{{ estado.ListaOfertasPedido }}</code> -->
     <Table2 badge :rows="rowsParaMostrar" :columns="stockProducts" dense>
-      <!-- <template #slot-header1>
-        <NuxtLink href="/cathering/pedidos/recibirPedido">
-          <q-btn
-            color="primary"
-            label="Recibir productos"
-            no-caps
-            dense
-            padding="7px 15px"
-          />
-        </NuxtLink>
-      </template>
-      <template #slot-header2>
-        <NuxtLink href="/cathering/inventario">
-          <q-btn
-            color="primary"
-            label="Realizar inventario"
-            no-caps
-            dense
-            padding="7px 15px"
-          />
-        </NuxtLink>
-      </template> -->
       <template #slot-footer>
         <div class="flex justify-center gap-2">
           <q-btn

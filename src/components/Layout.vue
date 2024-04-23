@@ -288,13 +288,13 @@
             }}
           </h1>
           <!-- NAV END -->
-          <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
+          <nav class="flex flex-grow justify-end basis-0 items-center">
             <q-btn
               class="lg:mr-1"
               dense
               flat
               round
-              style="width: 45px; height: 45px"
+              style="width: 40px; height: 40px"
               ><img
                 style="border-radius: 100%; object-fit: cover"
                 src="https://avatars.githubusercontent.com/u/739984?v=4"
@@ -365,6 +365,19 @@
                 </q-list>
               </q-menu>
             </q-btn>
+            <q-btn
+              v-if="sede === false"
+              flat
+              round
+              color="primary"
+              icon="shopping_cart"
+              size="12px"
+              @click="toggleRightDrawer"
+            >
+              <q-badge class="rounded-full" rounded color="orange" floating>{{
+                storePedido.listaPedido.length
+              }}</q-badge>
+            </q-btn>
           </nav>
         </q-toolbar-title>
       </q-toolbar>
@@ -387,7 +400,7 @@
                   style="object-fit: cover"
                   src="https://i.pinimg.com/564x/cf/c2/5b/cfc25b552003ba8881db6e678bda0b1b.jpg"
                 />
-                <q-btn
+                <!-- <q-btn
                   color="red"
                   icon="edit"
                   class="absolute bottom-0 left-[75%]"
@@ -395,13 +408,13 @@
                   round
                   size="10px"
                   padding="5px"
-                />
+                /> -->
               </q-avatar>
-              <div class="text-weight-bold">
+              <h1 class="text-weight-bold">
                 <!-- {{ user2.name + ' ' + user2.lastname }} -->
-                will chambi
-              </div>
-              <div>willch@gmail.com</div>
+                {{ `${storeAuth.user.nombre} ${storeAuth.user.apellido}` }}
+              </h1>
+              <h1>{{ storeAuth.user.correo }}</h1>
             </div>
           </q-img>
         </q-item>
@@ -435,9 +448,77 @@
         </div>
       </q-list>
     </q-drawer>
-    <!-- <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
-      
-    </q-drawer> -->
+
+    <q-drawer
+      v-if="sede === false"
+      v-model="rightDrawerOpen"
+      side="right"
+      class="colorBackground"
+      style=""
+    >
+      <!-- drawer content -->
+      <q-list>
+        <!-- SIDEBAR -->
+        <div class="text-white py-4 flex flex-col gap-4">
+          <h1 class="text-center font-extrabold">SIDE_BAR</h1>
+
+          <q-list class="shadow-[0_0px_5px] shadow-orange-300">
+            <q-expansion-item
+              switch-toggle-side
+              expand-separator
+              default-opened
+              class="[&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+            >
+              <template v-slot:header>
+                <div class="flex items-center">
+                  <!-- uppercase font-bold line-clamp-1 -->
+                  <p class="font-semibold">
+                    Pedido productos ({{ storePedido.listaPedido.length }})
+                  </p>
+                </div>
+              </template>
+              <div class="p-2">
+                <div
+                  class="grid grid-cols-[70px_1fr_30px] gap-2 mb-2"
+                  v-for="producto in storePedido.listaPedido"
+                  :key="producto.id"
+                >
+                  <div>
+                    <input
+                      type="number"
+                      class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
+                      v-model.number="producto.cantidad"
+                      min="0"
+                      @input="
+                        producto.cantidad = Math.max(0, producto.cantidad)
+                      "
+                    />
+                  </div>
+                  <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
+                  <h1>{{ producto.nombre }}</h1>
+                  <q-btn
+                    color="red"
+                    icon="delete"
+                    flat
+                    dense
+                    rounded
+                    size="sm"
+                    @click="deleteProductoPedido(producto.id)"
+                  />
+                </div>
+
+                <div
+                  v-if="storePedido.listaPedido.length > 0"
+                  class="flex gap-2 justify-center"
+                >
+                  <slot name="actionPedido" />
+                </div>
+              </div>
+            </q-expansion-item>
+          </q-list>
+        </div>
+      </q-list> </q-drawer
+    >s
 
     <q-page-container>
       <div class="layoutContainer">

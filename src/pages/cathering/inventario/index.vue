@@ -2,15 +2,6 @@
   <div>
     <Navigation label="Inventario" icon="folder" />
     <TableExpand :rows="estado.productosBloquesNull" ::columns="stockProducts">
-      <!-- <template #slot-header1>
-        <q-btn
-          color="primary"
-          label="Ver stock"
-          no-caps
-          dense
-          padding="7px 15px"
-        />
-      </template> -->
       <template #slot-footer>
         <div class="flex justify-center gap-2">
           <q-btn no-caps padding="0 10px" size="13px" dense color="primary" />
@@ -25,7 +16,7 @@
               switch-toggle-side
               expand-separator
               group="somegroup"
-              class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+              class="w-expansion [&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white max-sm:[&>div>div]:!grid-cols-[0px_40px_1fr]"
               @click="limpiarInputs"
             >
               <template v-slot:header>
@@ -40,15 +31,14 @@
                     </p>
                   </div>
                 </div>
-                <q-item-section side class="h-[50px]">
-                  <!-- <h1>sds</h1> -->
+                <!-- <q-item-section side class="h-[50px]">
                   <img
                     v-if="props.row.foto"
                     :src="props.row.foto"
                     class="h-full w-full object-cover"
                     alt=""
                   />
-                </q-item-section>
+                </q-item-section> -->
               </template>
               <q-card class="pb-3 flex justify-center col-span-3">
                 <q-form
@@ -332,4 +322,8 @@ onMounted(() => {
     top: 10px;
   }
 }
+
+// .w-expansion > div > div {
+//   @apply max-sm:grid-cols-[0px_40px_1fr];
+// }
 </style>

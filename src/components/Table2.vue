@@ -17,7 +17,6 @@
         </div>
         <div class="col-span-4 max-sm:col-span-8">
           <q-input
-            v-if="$q.platform.is.desktop"
             borderless
             dense
             debounce="300"

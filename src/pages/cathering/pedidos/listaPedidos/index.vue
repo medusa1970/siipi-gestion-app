@@ -77,7 +77,7 @@
         >
           <!-- PEDIDOS PUNTOS -->
           <q-tab-panel name="pPuntos" class="flex justify-center">
-            <div class="w-full max-w-[400px] mx-auto">
+            <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
               <div class="flex justify-between items-center mb-4">
                 <h1 class="font-bold">Pedidos por Aceptar:</h1>
 
@@ -168,7 +168,7 @@
           </q-tab-panel>
           <!-- PEDIDOS GLOBAL -->
           <q-tab-panel name="pGlobal">
-            <div class="flex justify-center">
+            <!-- <div class="flex justify-center">
               <q-btn
                 no-caps
                 padding="2px 10px"
@@ -176,7 +176,7 @@
                 label="orden global"
                 @click="filtroPedidosGlobal"
               />
-            </div>
+            </div> -->
             <div class="">
               <div
                 class="flex gap-3 items-center"
@@ -386,37 +386,37 @@
         </q-tab-panels>
       </q-tab-panel>
       <!-- VER HISTORIAL DE PEDIDOS -->
-      <q-tab-panel name="historial">
-        <div class="flex justify-center">
-          <q-input
-            dense
-            filled
-            readonly
-            v-model="date"
-            mask="date"
-            :rules="['date']"
-            class="w-[250px]"
-            clearable
-          >
-            <template v-slot:append>
-              <!-- <q-btn icon="check" label="OK" @click="onClick" /> -->
-              <q-icon name="bi-calendar-day" class="cursor-pointer">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date v-model="date" :options="dateOption">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-        <div class="flex flex-col gap-2 justify-center items-center">
+      <q-tab-panel name="historial" class="flex justify-center">
+        <q-input
+          dense
+          filled
+          readonly
+          v-model="date"
+          mask="date"
+          :rules="['date']"
+          class="w-[250px] !my-2"
+          clearable
+        >
+          <template v-slot:append>
+            <!-- <q-btn icon="check" label="OK" @click="onClick" /> -->
+            <q-icon name="bi-calendar-day" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-date v-model="date" :options="dateOption">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+        <div
+          class="flex flex-col gap-2 justify-center items-center max-sm:w-[350px]"
+        >
           <h1 v-if="estado.pedidosFiltrados.length === 0">
             No hay pedido😯...
           </h1>

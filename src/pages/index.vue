@@ -1,83 +1,132 @@
 <template>
-  <div
-    class="flex flex-col justify-center items-center h-[100vh] max-sm:h-[92vh]"
-  >
-    <img v-if="user.nombre === ''" class="w-80 max-sm:w-[300px]" :src="Logo" />
-    <Formulario
-      v-if="user.nombre === ''"
-      title-btn="Iniciar sesion"
-      login
-      :submit="login"
-    >
-      <template #inputs>
-        <q-input
-          v-model="authPersona.usuario"
-          type="text"
-          label="Usuario"
-          outlined
-          dense
-          clearable
-        />
-        <q-input
-          v-model="authPersona.contrasena"
-          label="Contraseña"
-          outlined
-          dense
-          :rules="[password]"
-          clearable
-          :type="isPwd ? 'password' : password"
+  <div class="flex flex-col justify-center items-center h-[100vh]">
+    <div v-if="user.nombre === ''">
+      <img class="w-80 max-sm:w-[300px]" :src="Logo" />
+      <Formulario title-btn="Iniciar sesion" login :submit="login">
+        <template #inputs>
+          <q-input
+            v-model="authPersona.usuario"
+            type="text"
+            label="Usuario"
+            outlined
+            dense
+            clearable
+          />
+          <q-input
+            v-model="authPersona.contrasena"
+            label="Contraseña"
+            outlined
+            dense
+            :rules="[password]"
+            clearable
+            :type="isPwd ? 'password' : password"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
+        </template>
+      </Formulario>
+    </div>
+    <div v-if="$q.platform.is.mobile">
+      <div v-if="user.nombre !== '' && user.negocios.length !== 0" class="">
+        <div class="flex gap-2 justify-center">
+          <h1 class="font-bold text-xl text-center">
+            Selecciona a que negocio ingresar
+          </h1>
+          <q-btn
+            dense
+            no-caps
+            padding="0 10px"
+            color="primary"
+            label="Atras"
+            @click="
+              () => {
+                user.nombre = '';
+                user.negocios = [];
+              }
+            "
+          />
+        </div>
+        <div
+          class="flex gap-3 mt-2 cursor-pointer justify-center max-h-[65vh] min-h-max overflow-x-auto"
         >
-          <template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-            />
-          </template>
-        </q-input>
-      </template>
-    </Formulario>
-    <div v-if="user.nombre !== '' && user.negocios.length !== 0">
-      <div class="flex gap-2 justify-center">
-        <h1 class="font-bold text-xl text-center">
-          Selecciona a que negocio ingresar
-        </h1>
-        <q-btn
-          dense
-          no-caps
-          padding="0 10px"
-          color="primary"
-          label="Atras"
-          @click="
-            () => {
-              user.nombre = '';
-              user.negocios = [];
-            }
-          "
-        />
+          <q-card
+            v-for="negocio in user.negocios"
+            :key="negocio.nombre"
+            @click="elegirNegocio(negocio)"
+            :class="[
+              'w-44 hover:opacity-90 border-4 rounded-none',
+              negocio.tipo === 'SEDE' && 'border-blue-500',
+              negocio.tipo === 'MARCA' && 'border-orange-500',
+              negocio.tipo === 'PUNTO' && 'border-green-500',
+              negocio.tipo === 'CATHERING' && 'border-green-500',
+              negocio.tipo === 'CLIENTE' && 'border-white',
+            ]"
+          >
+            <q-img
+              src="https://cdn.quasar.dev/img/parallax2.jpg"
+              class="w-full h-full"
+            >
+              <div class="absolute-bottom text-center font-bold bg-red-500">
+                <h1 class="">
+                  {{ negocio.nombre }}
+                </h1>
+              </div>
+            </q-img>
+          </q-card>
+        </div>
       </div>
-      <div class="flex gap-3 mt-2 cursor-pointer justify-center">
-        <q-card
-          v-for="negocio in user.negocios"
-          :key="negocio.nombre"
-          @click="elegirNegocio(negocio)"
-          :class="[
-            'w-52 hover:opacity-90 border-4 rounded-none',
-            negocio.tipo === 'SEDE' && 'border-blue-500',
-            negocio.tipo === 'MARCA' && 'border-orange-500',
-            negocio.tipo === 'PUNTO' && 'border-green-500',
-            negocio.tipo === 'CATHERING' && 'border-green-500',
-            negocio.tipo === 'CLIENTE' && 'border-white',
-          ]"
+    </div>
+    <div v-else>
+      <div v-if="user.nombre !== '' && user.negocios.length !== 0" class="">
+        <div class="flex gap-2 justify-center">
+          <h1 class="font-bold text-xl text-center">
+            Selecciona a que negocio ingresar
+          </h1>
+          <q-btn
+            dense
+            no-caps
+            padding="0 10px"
+            color="primary"
+            label="Atras"
+            @click="
+              () => {
+                user.nombre = '';
+                user.negocios = [];
+              }
+            "
+          />
+        </div>
+        <div
+          class="flex gap-3 mt-2 cursor-pointer justify-center max-h-[65vh] min-h-max overflow-x-auto"
         >
-          <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-            <div class="absolute-bottom text-center font-bold bg-red-500">
-              <h1 class="">
-                {{ negocio.nombre }}
-              </h1>
-            </div>
-          </q-img>
-        </q-card>
+          <q-card
+            v-for="negocio in user.negocios"
+            :key="negocio.nombre"
+            @click="elegirNegocio(negocio)"
+            :class="[
+              'w-52 hover:opacity-90 border-4 rounded-none',
+              negocio.tipo === 'SEDE' && 'border-blue-500',
+              negocio.tipo === 'MARCA' && 'border-orange-500',
+              negocio.tipo === 'PUNTO' && 'border-green-500',
+              negocio.tipo === 'CATHERING' && 'border-green-500',
+              negocio.tipo === 'CLIENTE' && 'border-white',
+            ]"
+          >
+            <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+              <div class="absolute-bottom text-center font-bold bg-red-500">
+                <h1 class="">
+                  {{ negocio.nombre }}
+                </h1>
+              </div>
+            </q-img>
+          </q-card>
+        </div>
       </div>
     </div>
   </div>

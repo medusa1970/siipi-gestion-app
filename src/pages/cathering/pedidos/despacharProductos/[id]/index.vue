@@ -1,5 +1,5 @@
 <template>
-  <div class="block mx-auto w-[400px]">
+  <div class="block mx-auto w-[400px] max-sm:w-[350px]">
     <h1 class="font-bold mb-2 text-center uppercase">
       {{
         nombreCatalogo.includes('PRODUCCION')
@@ -8,7 +8,6 @@
       }}
     </h1>
     <q-input
-      v-if="$q.platform.is.desktop"
       borderless
       dense
       debounce="300"

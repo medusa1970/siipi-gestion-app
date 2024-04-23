@@ -3,7 +3,6 @@
   <!-- <code>{{ estado.catalogosOfertas }}</code> -->
   <div class="block mx-auto w-[400px] max-sm:w-[350px]">
     <q-input
-      v-if="$q.platform.is.desktop"
       borderless
       dense
       debounce="300"

@@ -29,3 +29,21 @@ export const fechaDiaMes = (fecha: any) =>
     day: '2-digit',
     weekday: 'short',
   });
+
+export const plazo24hrs = (fecha: any) => {
+  console.log(fecha);
+  let fechaPedido = new Date(fecha);
+  let fechaActual = new Date();
+
+  //10min
+  //@ts-ignore
+  // const diferencia = (fechaActual - fechaPedido) / 1000 / 60;
+  // console.log(diferencia);
+  // return diferencia <= 10;
+
+  //24hrs
+  //@ts-ignore
+  const diferencia = (fechaActual - fechaPedido) / 1000 / 60 / 60;
+  console.log(diferencia);
+  return diferencia <= 24;
+};

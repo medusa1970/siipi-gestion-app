@@ -321,9 +321,100 @@
                 :rows="storePedido.pedidosDirecto"
                 :columns="pedidoGlobal"
                 dense
+                badge
               >
+                <!-- BADGE -->
+                <template #rows-badge="{ props }">
+                  <q-tr
+                    :props="props"
+                    :class="[
+                      props.row.estado.some((e) => e.estado === 'preparado') &&
+                        '!text-gray-300 !font-bold',
+                    ]"
+                  >
+                    <q-td key="nombre" :props="props">
+                      {{ props.row.oferta.nombre }}
+                    </q-td>
+                    <q-td key="pedido" :props="props">
+                      {{ props.row.cantidad }}
+                      <!-- {{ props.row.items[0] }} -->
+                    </q-td>
+                    <q-td key="cantidadPedido" :props="props">
+                      {{ props.row.cantidad * props.row.oferta.cantidad }}
+                      ({{ props.row.presentacionBasica }})
+                      <!-- {{ props.row.items[0] }} -->
+                    </q-td>
+                    <q-td key="cantidadStock" :props="props">
+                      {{ props.row.stockEntidad }}
+                      ({{ props.row.presentacionBasica }})
+                    </q-td>
+                    <q-td key="diferencia" :props="props">
+                      {{ props.row.stockEntidad - props.row.cantidad }}
+                    </q-td>
+                    <q-td key="actions" :props="props">
+                      <div class="flex justify-end">
+                        <q-btn
+                          v-if="props.row.stockEntidad - props.row.cantidad < 0"
+                          :class="[
+                            'text-orange-500',
+                            props.row.estado.some(
+                              (e) => e.estado === 'ajustado',
+                            ) && '!text-gray-300 !font-bold',
+                          ]"
+                          icon="bi-wrench-adjustable"
+                          dense
+                          flat
+                          round
+                          size="10px"
+                          padding="2px"
+                          @click="ajustarOferta(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Ajustar</q-tooltip
+                          ></q-btn
+                        >
+                        <q-btn
+                          :class="[
+                            'text-green-500',
+                            props.row.estado.some(
+                              (e) => e.estado === 'preparado',
+                            ) && '!text-gray-300 !font-bold',
+                          ]"
+                          color="green-5"
+                          icon="bi-check2-circle"
+                          dense
+                          flat
+                          round
+                          size="12px"
+                          padding="2px"
+                          :disable="
+                            props.row.estado.some(
+                              (e) => e.estado === 'preparado',
+                            )
+                          "
+                          @click="ofertaPreparado(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Preparado</q-tooltip
+                          ></q-btn
+                        >
+                        <q-btn
+                          color="primary"
+                          icon="bi-eye"
+                          dense
+                          flat
+                          round
+                          size="12px"
+                          padding="2px"
+                          @click="verPedidoPuntos(props.row)"
+                          ><q-tooltip class="bg-gray-400-500"
+                            >Ver Producto</q-tooltip
+                          ></q-btn
+                        >
+                      </div>
+                    </q-td>
+                  </q-tr>
+                </template>
                 <!-- ACTIONS -->
-                <template #body-cell-actions="{ props }">
+                <!-- <template #body-cell-actions="{ props }">
                   <q-td :props="props">
                     <q-btn
                       v-if="props.row.stockEntidad - props.row.cantidad < 0"
@@ -379,14 +470,17 @@
                       ></q-btn
                     >
                   </q-td>
-                </template>
+                </template> -->
               </TableSimple>
             </div>
           </q-tab-panel>
         </q-tab-panels>
       </q-tab-panel>
       <!-- VER HISTORIAL DE PEDIDOS -->
-      <q-tab-panel name="historial" class="flex justify-center">
+      <q-tab-panel
+        name="historial"
+        class="flex flex-col justify-center items-center"
+      >
         <q-input
           dense
           filled

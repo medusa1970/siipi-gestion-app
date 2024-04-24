@@ -152,10 +152,12 @@ watch(filter, () => {
 });
 
 const obtenerCatalogosProductos = async () => {
+  console.log(route.params.id);
   const { catalogoArbol } = await ofertaService.buscarCatalogoID(
     route.params.id,
   );
   console.log(catalogoArbol);
+
   nombreCatalogo.value = catalogoArbol.nombre;
   catalogosOfertas.value = catalogoArbol.hijas;
   catalogoSeleccionado.value = catalogoArbol.hijas[0];

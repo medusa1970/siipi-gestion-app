@@ -245,6 +245,11 @@ export const detallePedido = [
     field: (row: any) => row.cantidad * row.oferta.precio,
     sortable: true,
   },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
 ];
 
 export const detallePedidoAccion = [
@@ -302,6 +307,11 @@ export const detallePedidoAlmacen = [
     align: 'center',
     field: (row: any) => row.cantidad,
     sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
   },
 ];
 

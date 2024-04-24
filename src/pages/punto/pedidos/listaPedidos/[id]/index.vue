@@ -148,6 +148,6 @@ definePageMeta({
 
 onMounted(() => {
   buscarPedidoID(params.id);
-  obtenerItemsEstado(params.id);
+  // obtenerItemsEstado(params.id);
 });
 </script>

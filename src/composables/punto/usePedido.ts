@@ -177,7 +177,6 @@ export const usePedido = () => {
       id,
       useGqlToken(useAuth.token),
     );
-    console.log(pedidoBuscar);
     estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
     estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
       //@ts-ignore
@@ -185,10 +184,37 @@ export const usePedido = () => {
     }, 0);
     console.log(estado.precioGeneral);
 
-    const { pedidoLeerEstado } = await pedidoService.pedidoLeerEstado(id);
-    estado.pedidoItemsEstado = pedidoLeerEstado;
+    //@ts-ignore
+    estado.pedidoItemsEstado = //@ts-ignore
+      pedidoBuscar[0].items[0].estado?.[ //@ts-ignore
+        pedidoBuscar[0].items[0].estado?.length - 1
+      ];
+    //@ts-ignore
+    const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
+    });
+    console.log(itemsConEstadoAjustado);
 
-    // console.log(estado.precioGeneral);
+    // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
+    estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado',
+      );
+      const ultimoEstadoAjustado =
+        estadosAjustados[estadosAjustados.length - 1];
+      return {
+        nombre: item.oferta.nombre,
+        estadoAjustado: ultimoEstadoAjustado.estado,
+        comentario: ultimoEstadoAjustado.comentario,
+        valor: ultimoEstadoAjustado.valor,
+      };
+    });
+
+    // Mostrar la información
+    console.log(estado.itemsEstadoAjustado);
   };
 
   const aceptarTodoPedido = async (pedidoID: string) => {
@@ -218,6 +244,7 @@ export const usePedido = () => {
       estado.itemPedido.cantidad,
       estado.itemPedido.comentario,
     );
+    console.log(pedidoAjustarItem);
     if (pedidoAjustarItem) {
       NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
       buscarPedidoID(estado.pedidoDetalle._id);
@@ -257,6 +284,7 @@ export const usePedido = () => {
       useAuth.negocioElegido._id,
     );
     console.log(entidadBuscarMenu);
+
     const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
       entidadBuscarMenu[0].catalogo._id,
     );
@@ -407,6 +435,7 @@ export const usePedido = () => {
     buscarPedidos2();
   };
 
+  // REVISAR
   const aceptarTodosLosPedidosDirectos = async () => {
     const pedidosIDS = estado.pedidosSinAceptar.map(
       (pedido: any) => pedido._id,
@@ -419,6 +448,7 @@ export const usePedido = () => {
     const result = pedidosAceptarOfertasDirectas.reduce(
       (acumulador: any, pedido: any) => {
         pedido.items.forEach((item: any) => {
+          console.log(item);
           if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
             const itemExistente = acumulador.find(
               (itemAcumulador: any) =>

@@ -3,7 +3,7 @@
     <h1 class="font-extrabold text-lg">Recibir productos</h1>
     <div class="flex gap-2 flex-wrap justify-center mt-2">
       <NuxtLink
-        to="/cathering/pedidos/recibirProductos/65a4475e446a5885b05739c4"
+        to="/cathering/pedidos/recibirProductos/85a4475e446a5885b05739c4"
         @click="() => (storePedido.areaPedidoID = '65a1a6c9566e40c934929a56')"
       >
         <q-btn color="primary" label="Proveedor" />

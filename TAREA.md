@@ -1,6 +1,11 @@
 - responsive movile
 - 24hrs modificacion
 - orden global area, reposteria, etc..
+- pedidoDirectos script result ver no funciona cantidad undefined
+- sidebar carrito cantidad 0 eliminar pa que no entre un pedido en 0
+- horario de servidor
+- pedido ajustar items, comentario obligatorio.
+- lsita de problema de pedidos ajustado.
 
 - ocultar menu.
 - arreglar fecha null sin ''.✅

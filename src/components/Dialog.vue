@@ -14,21 +14,22 @@
       </div>
       <!-- <q-space /> -->
 
-      <div class="my-1">
-        <slot name="inputsDialog"></slot>
-      </div>
-      <div class="flex row justify-center">
-        <q-btn
-          class="mt-2 mb-1"
-          no-caps
-          style="font-size: 15px"
-          padding="4px 10px"
-          label="Guardar"
-          color="secondary"
-          type="submit"
-          @click="handleSubmit"
-        ></q-btn>
-      </div>
+      <q-form @submit="handleSubmit" class="my-1">
+        <div class="my-1">
+          <slot name="inputsDialog"></slot>
+        </div>
+        <div class="flex row justify-center">
+          <q-btn
+            class="mt-2 mb-1"
+            no-caps
+            style="font-size: 15px"
+            padding="4px 10px"
+            label="Guardar"
+            color="secondary"
+            type="submit"
+          ></q-btn>
+        </div>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>

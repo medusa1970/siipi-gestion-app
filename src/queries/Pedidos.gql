@@ -80,8 +80,10 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
       }
       cantidad
       estado {
+        fecha
         estado
         valor
+        comentario
       }
     }
   }
@@ -226,6 +228,7 @@ mutation pedidosAceptarOfertasSolicitables($busqueda: BuscarPedidoDto!) {
       }
       estado {
         estado
+        fecha
       }
     }
   }
@@ -265,6 +268,7 @@ mutation pedidosAceptarOfertasDirectas($busqueda: BuscarPedidoDto!) {
       }
       estado {
         estado
+        fecha
       }
     }
   }
@@ -288,6 +292,7 @@ mutation pedidosPrepararOfertas(
       }
       estado {
         estado
+        fecha
       }
     }
   }
@@ -320,6 +325,7 @@ mutation pedidosAjustarOferta(
       estado {
         estado
         valor
+        fecha
       }
     }
   }

@@ -42,7 +42,6 @@
           <p class="">
             {{ formateadorFecha(estado.pedidoItemsEstado.fecha) }}🫡
           </p>
-          <p>{{ estado.pedidoItemsEstado.fecha }}</p>
         </span>
         <div class="flex justify-end">
           <q-btn

@@ -31,24 +31,36 @@
           >{{ formateadorFecha(estado.pedidoDetalle.estado[0].fecha) }}
         </p>
       </div>
-      <div>
-        <span class="text-2xl flex gap-2">
+      <div class="col-span-1 justify-self-end">
+        <span class="text-lg flex gap-2">
           <p class="font-bold">Estado:</p>
           <p class="font-bold text-orange-500 uppercase">
-            {{ estado.pedidoItemsEstado }}🫡
+            {{ estado.pedidoItemsEstado.estado }}🫡
           </p>
         </span>
-        <!-- <p class="text-2xl text-orange-500">
-          <strong class="text-2xl">Estado: </strong
-          >{{ estado.pedidoItemsEstado }}🫡
-        </p> -->
+        <span class="flex gap-2">
+          <p class="font-bold">Fecha:</p>
+          <p class="">
+            {{ formateadorFecha(estado.pedidoItemsEstado.fecha) }}🫡
+          </p>
+        </span>
+        <div class="flex justify-end">
+          <q-btn
+            color="primary"
+            label="Imprimir"
+            padding="3px 15px"
+            no-caps
+            class="no-print"
+            @click="imprimir"
+          />
+        </div>
       </div>
     </div>
     <div v-else>Cargando datos...</div>
 
     <Table
       :rows="estado.pedidoDetalle.items"
-      :columns="detallePedido"
+      :columns="detallePedidoPunto"
       dense
       :handle-pedido="() => recibirPedido(params.id)"
     >
@@ -63,7 +75,7 @@
     </Table>
 
     <q-btn
-      v-if="estado.pedidoItemsEstado === 'preparado'"
+      v-if="estado.pedidoItemsEstado.estado === 'preparado'"
       class="bg-[#011627] text-white block mx-auto"
       icon="check"
       label="Recibir Pedido"
@@ -129,7 +141,7 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePedido } from '@/composables/punto/usePedido';
-import { detallePedido } from '@/helpers/columns';
+import { detallePedidoPunto } from '@/helpers/columns';
 import { formateadorFecha } from '~/helpers/fecha';
 import realizarPedido from '../../realizarPedido.vue';
 

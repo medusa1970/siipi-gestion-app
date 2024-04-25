@@ -2,6 +2,7 @@
   <Navigation label="pedidos" icon="group" />
   <!-- <code>{{ estado.pedidosEntidad }}</code> -->
   <div>
+    <!-- TABS MENU -->
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab
         name="proveedor"
@@ -10,8 +11,10 @@
         @click="buscarPedidos"
       />
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
+      <q-tab name="global" icon="bi-box-seam" label="Pedido Global" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />
     </q-tabs>
+    <!-- TABS RENDER PAGE -->
     <q-tab-panels
       v-model="tab"
       animated
@@ -50,21 +53,137 @@
           </Item>
         </div>
       </q-tab-panel>
+
       <!-- VER PEDIDOS PUNTOS -->
-      <q-tab-panel name="puntos">
+      <q-tab-panel
+        name="puntos"
+        class="flex flex-col justify-center items-center"
+      >
+        <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="font-bold">Pedidos por Aceptar:</h1>
+
+            <span class="flex gap-2" v-if="estado.pedidosSinAceptar.length > 0">
+              <q-btn
+                class="text-orange-500"
+                icon="warning"
+                dense
+                size="11px"
+                flat
+                round
+                @click="mostrarEntidadSinPedidos"
+                ><q-tooltip class="no-print bg-gray-400-500"
+                  >Entidades sin pedidos</q-tooltip
+                ></q-btn
+              >
+            </span>
+          </div>
+          <h1 v-if="estado.pedidosSinAceptar.length === 0">
+            No hay pedidos😯...
+          </h1>
+
+          <Item
+            v-for="punto in estado.pedidosSinAceptar"
+            :key="punto._id"
+            :title="punto.comprador.nombre"
+            class="w-full max-sm:w-full"
+            :href="`listaPedidos/${punto._id}`"
+            :title2="formateadorFecha(punto.estado[0].fecha)"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                  class="no-print"
+                  @click="imprimir(punto)"
+                  ><q-tooltip class="no-print bg-gray-400-500"
+                    >Imprimir pedido</q-tooltip
+                  ></q-btn
+                >
+              </div>
+            </template>
+          </Item>
+          <h1 class="font-bold">Pedidos Aceptados:</h1>
+          <h1 v-if="estado.pedidosAceptados.length === 0">
+            No hay pedidos😯...
+          </h1>
+          <Item
+            v-for="punto in estado.pedidosAceptados"
+            :key="punto._id"
+            :href="`listaPedidos/${punto._id}`"
+            :title="punto.comprador.nombre"
+            class="w-[400px] max-sm:w-full"
+            :title2="formateadorFecha(punto.estado[0].fecha)"
+          >
+            <template v-slot:actions>
+              <div class="flex">
+                <h1 class="text-orange-500 font-bold">
+                  {{ punto.estadoItems }}
+                </h1>
+                <q-btn
+                  dense
+                  round
+                  icon="print"
+                  flat
+                  color="orange"
+                  padding="4px"
+                  size="12px"
+                  class="no-print"
+                  @click="imprimir(punto)"
+                  ><q-tooltip class="no-print bg-gray-400-500"
+                    >Imprimir pedido</q-tooltip
+                  ></q-btn
+                >
+              </div>
+            </template>
+          </Item>
+        </div>
+      </q-tab-panel>
+
+      <!-- VER PEDIDO GLOBAL -->
+      <q-tab-panel name="global">
         <!-- NEW FORMAT -->
         <q-tabs v-model="tabPuntos" inline-label no-caps dense>
           <q-tab
             class="[&>div>div]:font-bold"
-            name="pPuntos"
-            label="Pedidos Puntos"
-            @click="buscarPedidos"
+            name="areaGlobal"
+            label="Global"
           />
           <q-tab
             class="[&>div>div]:font-bold"
-            name="pGlobal"
-            label="Pedido global"
-            @click="handlePedidoGlobal"
+            name="panaderia"
+            label="Panaderia"
+            @click="obtenerOfertas(estado.panaderia)"
+          />
+          <q-tab
+            class="[&>div>div]:font-bold"
+            name="reposteria"
+            label="Reposteria"
+            @click="obtenerOfertas(estado.reposteria)"
+          />
+          <q-tab
+            class="[&>div>div]:font-bold"
+            name="envasados"
+            label="Envasados"
+            @click="obtenerOfertas(estado.envasados)"
+          />
+          <q-tab
+            class="[&>div>div]:font-bold"
+            name="embotellados"
+            label="Embotellados"
+            @click="obtenerOfertas(estado.embotellados)"
+          />
+          <q-tab
+            class="[&>div>div]:font-bold"
+            name="siinple"
+            label="Siinple"
+            @click="obtenerOfertas(estado.siinple)"
           />
         </q-tabs>
 
@@ -75,109 +194,8 @@
           transition-next="jump-up"
           class="bg-transparent"
         >
-          <!-- PEDIDOS PUNTOS -->
-          <q-tab-panel name="pPuntos" class="flex justify-center">
-            <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
-              <div class="flex justify-between items-center mb-4">
-                <h1 class="font-bold">Pedidos por Aceptar:</h1>
-
-                <span
-                  class="flex gap-2"
-                  v-if="estado.pedidosSinAceptar.length > 0"
-                >
-                  <q-btn
-                    class="text-orange-500"
-                    icon="warning"
-                    dense
-                    size="11px"
-                    flat
-                    round
-                    @click="mostrarEntidadSinPedidos"
-                    ><q-tooltip class="no-print bg-gray-400-500"
-                      >Entidades sin pedidos</q-tooltip
-                    ></q-btn
-                  >
-                </span>
-              </div>
-              <h1 v-if="estado.pedidosSinAceptar.length === 0">
-                No hay pedidos😯...
-              </h1>
-
-              <Item
-                v-for="punto in estado.pedidosSinAceptar"
-                :key="punto._id"
-                :title="punto.comprador.nombre"
-                class="w-full max-sm:w-full"
-                :href="`listaPedidos/${punto._id}`"
-                :title2="formateadorFecha(punto.estado[0].fecha)"
-              >
-                <template v-slot:actions>
-                  <div class="flex">
-                    <q-btn
-                      dense
-                      round
-                      icon="print"
-                      flat
-                      color="orange"
-                      padding="4px"
-                      size="12px"
-                      class="no-print"
-                      @click="imprimir(punto)"
-                      ><q-tooltip class="no-print bg-gray-400-500"
-                        >Imprimir pedido</q-tooltip
-                      ></q-btn
-                    >
-                  </div>
-                </template>
-              </Item>
-              <h1 class="font-bold">Pedidos Aceptados:</h1>
-              <h1 v-if="estado.pedidosAceptados.length === 0">
-                No hay pedidos😯...
-              </h1>
-              <Item
-                v-for="punto in estado.pedidosAceptados"
-                :key="punto._id"
-                :href="`listaPedidos/${punto._id}`"
-                :title="punto.comprador.nombre"
-                class="w-[400px] max-sm:w-full"
-                :title2="formateadorFecha(punto.estado[0].fecha)"
-              >
-                <template v-slot:actions>
-                  <div class="flex">
-                    <h1 class="text-orange-500 font-bold">
-                      {{ punto.estadoItems }}
-                    </h1>
-                    <q-btn
-                      dense
-                      round
-                      icon="print"
-                      flat
-                      color="orange"
-                      padding="4px"
-                      size="12px"
-                      class="no-print"
-                      @click="imprimir(punto)"
-                      ><q-tooltip class="no-print bg-gray-400-500"
-                        >Imprimir pedido</q-tooltip
-                      ></q-btn
-                    >
-                  </div>
-                </template>
-              </Item>
-            </div>
-          </q-tab-panel>
-          <!-- PEDIDOS GLOBAL -->
-          <q-tab-panel name="pGlobal">
-            <!-- <div class="flex justify-center">
-              <q-btn
-                no-caps
-                padding="2px 10px"
-                color="primary"
-                label="orden global"
-                @click="filtroPedidosGlobal"
-              />
-            </div> -->
-            <div class="">
+          <q-tab-panel name="areaGlobal" class="!p-2">
+            <div>
               <div
                 class="flex gap-3 items-center"
                 style="margin: 0 0 10px 0 !important"
@@ -193,7 +211,6 @@
                   @click="aceptarTodosLosPedidosSolicitables"
                 />
               </div>
-              <!-- <code>{{ storePedido.pedidosSolicitado }}</code> -->
               <TableSimple
                 :rows="storePedido.pedidosSolicitado"
                 :columns="pedidoGlobal"
@@ -290,6 +307,7 @@
                   </q-tr>
                 </template>
               </TableSimple>
+
               <div
                 class="flex gap-3 items-center"
                 style="margin: 0 0 10px 0 !important"
@@ -413,69 +431,184 @@
                     </q-td>
                   </q-tr>
                 </template>
-                <!-- ACTIONS -->
-                <!-- <template #body-cell-actions="{ props }">
-                  <q-td :props="props">
-                    <q-btn
-                      v-if="props.row.stockEntidad - props.row.cantidad < 0"
-                      :class="[
-                        'text-orange-500',
-                        props.row.estado.some((e) => e.estado === 'ajustado') &&
-                          '!text-gray-300 !font-bold',
-                      ]"
-                      icon="bi-wrench-adjustable"
-                      dense
-                      flat
-                      round
-                      size="10px"
-                      padding="2px"
-                      @click="ajustarOferta(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Ajustar</q-tooltip
-                      ></q-btn
-                    >
-                    <q-btn
-                      :class="[
-                        'text-green-500',
-                        props.row.estado.some(
-                          (e) => e.estado === 'preparado',
-                        ) && '!text-gray-300 !font-bold',
-                      ]"
-                      color="green-5"
-                      icon="bi-check2-circle"
-                      dense
-                      flat
-                      round
-                      size="12px"
-                      padding="2px"
-                      :disable="
-                        props.row.estado.some((e) => e.estado === 'preparado')
-                      "
-                      @click="ofertaPreparado(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Preparado</q-tooltip
-                      ></q-btn
-                    >
-                    <q-btn
-                      color="primary"
-                      icon="bi-eye"
-                      dense
-                      flat
-                      round
-                      size="12px"
-                      padding="2px"
-                      @click="verPedidoPuntos(props.row)"
-                      ><q-tooltip class="bg-gray-400-500"
-                        >Ver Producto</q-tooltip
-                      ></q-btn
-                    >
-                  </q-td>
-                </template> -->
               </TableSimple>
             </div>
           </q-tab-panel>
+
+          <!-- PANADERIA -->
+          <q-tab-panel name="panaderia" class="!p-2">
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr v-for="(pedido, index) in estado.panaderia" :key="index">
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </q-tab-panel>
+
+          <!-- REPOSTERIA -->
+          <q-tab-panel name="reposteria" class="!p-2">
+            <table class="min-w-full bg-white rounded-sm overflow-hidden">
+              <thead class="bg-teal-700 text-white">
+                <tr>
+                  <th class="text-center text-xs uppercase tracking-wider">
+                    Entidad
+                  </th>
+                  <th
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="text-center text-xs tracking-wider"
+                  >
+                    {{ abreviarNombre(oferta.nombre) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(pedido, index) in estado.reposteria" :key="index">
+                  <td class="whitespace-nowrap text-center">
+                    {{ pedido.comprador.nombre }}
+                  </td>
+                  <td
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="whitespace-nowrap text-center"
+                  >
+                    {{ obtenerCantidad(pedido.items, oferta._id) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </q-tab-panel>
+
+          <!-- ENVASADOS -->
+          <q-tab-panel name="envasados" class="!p-2">
+            <table class="min-w-full bg-white rounded-sm overflow-hidden">
+              <thead class="bg-teal-700 text-white">
+                <tr>
+                  <th class="text-center text-xs uppercase tracking-wider">
+                    Entidad
+                  </th>
+                  <th
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="text-center text-xs tracking-wider"
+                  >
+                    {{ abreviarNombre(oferta.nombre) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(pedido, index) in estado.envasados" :key="index">
+                  <td class="whitespace-nowrap text-center">
+                    {{ pedido.comprador.nombre }}
+                  </td>
+                  <td
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="whitespace-nowrap text-center"
+                  >
+                    {{ obtenerCantidad(pedido.items, oferta._id) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </q-tab-panel>
+
+          <!-- EMBOTELLADOS -->
+          <q-tab-panel name="embotellados" class="!p-2">
+            <table class="min-w-full bg-white rounded-sm overflow-hidden">
+              <thead class="bg-teal-700 text-white">
+                <tr>
+                  <th class="text-center text-xs uppercase tracking-wider">
+                    Entidad
+                  </th>
+                  <th
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="text-center text-xs tracking-wider"
+                  >
+                    {{ abreviarNombre(oferta.nombre) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(pedido, index) in estado.embotellados" :key="index">
+                  <td class="whitespace-nowrap text-center">
+                    {{ pedido.comprador.nombre }}
+                  </td>
+                  <td
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="whitespace-nowrap text-center"
+                  >
+                    {{ obtenerCantidad(pedido.items, oferta._id) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </q-tab-panel>
+
+          <!-- SIINPLE -->
+          <q-tab-panel name="siinple" class="!p-2">
+            <table class="min-w-full bg-white rounded-sm overflow-hidden">
+              <thead class="bg-teal-700 text-white">
+                <tr>
+                  <th class="text-center text-xs uppercase tracking-wider">
+                    Entidad
+                  </th>
+                  <th
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="text-center text-xs tracking-wider"
+                  >
+                    {{ abreviarNombre(oferta.nombre) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(pedido, index) in estado.siinple" :key="index">
+                  <td class="whitespace-nowrap text-center">
+                    {{ pedido.comprador.nombre }}
+                  </td>
+                  <td
+                    v-for="(oferta, index) in estado.panaderiaTable"
+                    :key="index"
+                    class="whitespace-nowrap text-center"
+                  >
+                    {{ obtenerCantidad(pedido.items, oferta._id) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </q-tab-panel>
         </q-tab-panels>
       </q-tab-panel>
+
       <!-- VER HISTORIAL DE PEDIDOS -->
       <q-tab-panel
         name="historial"
@@ -542,6 +675,7 @@
         </div>
       </q-tab-panel>
     </q-tab-panels>
+
     <!-- IMPRESION -->
     <div
       id="divParaImprimir"
@@ -651,10 +785,12 @@ const {
   mostrarEntidadSinPedidos,
   filtroHistorial,
   filtroPedidosGlobal,
+  obtenerOfertas,
+  obtenerCantidad,
 } = usePedido();
 
 const tab = ref('puntos');
-const tabPuntos = ref('pGlobal');
+const tabPuntos = ref('areaGlobal');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const pedidoSeleccionado = ref(null);
 const imprimir = (pedido) => {
@@ -674,6 +810,21 @@ const dateOption = (date) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return new Date(date) <= today;
+};
+
+const abreviarNombre = (nombre) => {
+  let palabras = nombre.split(' ');
+  let abreviatura = palabras[0].slice(0, 3).toLowerCase();
+  if (palabras.length > 1) {
+    abreviatura += palabras
+      .slice(1)
+      .map((palabra) => palabra[0].toUpperCase())
+      .join('');
+  }
+  let contenidoParentesis = nombre.match(/\((.*?)\)/)[1][0].toUpperCase();
+  console.log(abreviatura, contenidoParentesis);
+
+  return `${abreviatura}${contenidoParentesis})`;
 };
 
 watch(date, (value) => {

@@ -66,6 +66,12 @@ export const usePedido = () => {
     ],
     comentario: '',
     entidadesSinPedidos: [],
+    panaderia: [],
+    reposteria: [],
+    siinple: [],
+    envasados: [],
+    embotellados: [],
+    panaderiaTable: [],
   });
   const filter = ref('');
 
@@ -114,16 +120,12 @@ export const usePedido = () => {
       { recibidos: [], noRecibidos: [] },
     );
     hideLoading();
-    console.log(pedidos.noRecibidos);
-    console.log(pedidos.recibidos);
     estado.pedidosRecibidos = pedidos.recibidos;
     estado.pedidosEntidad = pedidos.noRecibidos;
 
     hideLoading();
   };
   const buscarPedidos2 = async () => {
-    console.log('first');
-    console.log(useAuth.negocioElegido._id);
     showLoading();
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
       undefined,
@@ -131,7 +133,7 @@ export const usePedido = () => {
       undefined,
       useGqlToken(useAuth.token),
     );
-    console.log(pedidoBuscar);
+    // console.log(pedidoBuscar);
 
     const pedidos = pedidoBuscar.reduce(
       (accumulator: any, pedido: any) => {
@@ -159,16 +161,81 @@ export const usePedido = () => {
       },
       { aceptados: [], noAceptados: [], recibidos: [] },
     );
-    hideLoading();
-    console.log(pedidos.noAceptados);
-    console.log(pedidos.aceptados);
-    console.log(pedidos.recibidos);
 
     estado.pedidosSinAceptar = pedidos.noAceptados;
     estado.pedidosAceptados = pedidos.aceptados;
     estado.pedidosRecibidos = pedidos.recibidos;
-    console.log(estado.pedidosRecibidos);
+
+    console.log(pedidoBuscar);
+    console.log(pedidos.aceptados);
+    hideLoading();
+
+    estado.panaderia = pedidos.aceptados.map((pedido: any) => {
+      return {
+        ...pedido,
+        items: pedido.items.filter(
+          (item: any) => item.oferta.panaderia === true,
+        ),
+      };
+    });
+    estado.reposteria = pedidos.aceptados.map((pedido: any) => {
+      return {
+        ...pedido,
+        items: pedido.items.filter(
+          (item: any) => item.oferta.reposteria === true,
+        ),
+      };
+    });
+    estado.envasados = pedidos.aceptados.map((pedido: any) => {
+      return {
+        ...pedido,
+        items: pedido.items.filter(
+          (item: any) => item.oferta.envasados === true,
+        ),
+      };
+    });
+    estado.embotellados = pedidos.aceptados.map((pedido: any) => {
+      return {
+        ...pedido,
+        items: pedido.items.filter(
+          (item: any) => item.oferta.embotellados === true,
+        ),
+      };
+    });
+    estado.siinple = pedidos.aceptados.map((pedido: any) => {
+      return {
+        ...pedido,
+        items: pedido.items.filter((item: any) => item.oferta.siinple === true),
+      };
+    });
+    console.log(estado.panaderia);
+    console.log(estado.reposteria);
+    console.log(estado.envasados);
+    console.log(estado.embotellados);
+    console.log(estado.siinple);
   };
+
+  const obtenerOfertas = (area: any) => {
+    estado.panaderiaTable = [];
+    area.forEach((venta: any) => {
+      venta.items.forEach((item: any) => {
+        const existeOferta = estado.panaderiaTable.some(
+          (oferta: any) => oferta._id === item.oferta._id,
+        );
+
+        if (!existeOferta) {
+          //@ts-ignore
+          estado.panaderiaTable.push(item.oferta);
+        }
+      });
+    });
+    console.log(estado.panaderiaTable);
+  };
+  function obtenerCantidad(items: any, ofertaId: any) {
+    console.log(items, ofertaId);
+    const item = items.find((item: any) => item.oferta._id === ofertaId);
+    return item ? item.cantidad : 0;
+  }
 
   const buscarPedidoID = async (id: string) => {
     const { pedidoBuscar } = await pedidoService.pedidoBuscar(
@@ -827,5 +894,7 @@ export const usePedido = () => {
     mostrarEntidadSinPedidos,
     filtroHistorial,
     filtroPedidosGlobal,
+    obtenerOfertas,
+    obtenerCantidad,
   };
 };

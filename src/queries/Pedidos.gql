@@ -77,6 +77,11 @@ query pedidoBuscar($busqueda: BuscarPedidoDto!) {
           }
         }
         precio
+        panaderia
+        reposteria
+        siinple
+        envasados
+        embotellados
       }
       cantidad
       estado {
@@ -225,6 +230,11 @@ mutation pedidosAceptarOfertasSolicitables($busqueda: BuscarPedidoDto!) {
             cantidad
           }
         }
+        panaderia
+        reposteria
+        siinple
+        envasados
+        embotellados
       }
       estado {
         estado
@@ -265,6 +275,11 @@ mutation pedidosAceptarOfertasDirectas($busqueda: BuscarPedidoDto!) {
             cantidad
           }
         }
+        panaderia
+        reposteria
+        siinple
+        envasados
+        embotellados
       }
       estado {
         estado

@@ -79,7 +79,7 @@ export const usePedido = () => {
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
-    console.log(entidadLeerMenu.hijas);
+    // console.log(entidadLeerMenu.hijas);
     estado.catalogosOfertas = entidadLeerMenu.hijas;
     estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
     estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
@@ -93,7 +93,7 @@ export const usePedido = () => {
       undefined,
       useGqlToken(useAuth.token),
     );
-    console.log(pedidoBuscar);
+    // console.log(pedidoBuscar);
     //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
       pedidoBuscar.map((pedido) =>
@@ -102,7 +102,7 @@ export const usePedido = () => {
           .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
       ),
     );
-    console.log(estado.pedidosEntidad);
+    // console.log(estado.pedidosEntidad);
     const pedidos = estado.pedidosEntidad.reduce(
       (accumulator: any, pedido: any) => {
         const hasReceived = pedido.items.some((item: any) =>
@@ -166,8 +166,6 @@ export const usePedido = () => {
     estado.pedidosAceptados = pedidos.aceptados;
     estado.pedidosRecibidos = pedidos.recibidos;
 
-    console.log(pedidoBuscar);
-    console.log(pedidos.aceptados);
     hideLoading();
 
     estado.panaderia = pedidos.aceptados.map((pedido: any) => {
@@ -208,11 +206,6 @@ export const usePedido = () => {
         items: pedido.items.filter((item: any) => item.oferta.siinple === true),
       };
     });
-    console.log(estado.panaderia);
-    console.log(estado.reposteria);
-    console.log(estado.envasados);
-    console.log(estado.embotellados);
-    console.log(estado.siinple);
   };
 
   const obtenerOfertas = (area: any) => {
@@ -229,10 +222,8 @@ export const usePedido = () => {
         }
       });
     });
-    console.log(estado.panaderiaTable);
   };
   function obtenerCantidad(items: any, ofertaId: any) {
-    console.log(items, ofertaId);
     const item = items.find((item: any) => item.oferta._id === ofertaId);
     return item ? item.cantidad : 0;
   }
@@ -249,7 +240,6 @@ export const usePedido = () => {
       //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
-    console.log(estado.precioGeneral);
 
     //@ts-ignore
     estado.pedidoItemsEstado = //@ts-ignore
@@ -263,7 +253,6 @@ export const usePedido = () => {
       );
       return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
     });
-    console.log(itemsConEstadoAjustado);
 
     // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
     estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
@@ -281,7 +270,6 @@ export const usePedido = () => {
     });
 
     // Mostrar la información
-    console.log(estado.itemsEstadoAjustado);
   };
 
   const aceptarTodoPedido = async (pedidoID: string) => {
@@ -298,7 +286,7 @@ export const usePedido = () => {
   };
 
   const ajustarItem = async (row: any) => {
-    console.log(row);
+    // console.log(row);
     estado.modal.isAjustarItem = true;
     estado.itemPedido.id = row._id;
     estado.itemPedido.cantidad = row.cantidad;
@@ -311,7 +299,7 @@ export const usePedido = () => {
       estado.itemPedido.cantidad,
       estado.itemPedido.comentario,
     );
-    console.log(pedidoAjustarItem);
+    // console.log(pedidoAjustarItem);
     if (pedidoAjustarItem) {
       NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
       buscarPedidoID(estado.pedidoDetalle._id);
@@ -332,7 +320,7 @@ export const usePedido = () => {
       const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
         estado.pedidoID,
       );
-      console.log(pedidoRecibirItems);
+      // console.log(pedidoRecibirItems);
       if (pedidoRecibirItems) {
         NotifySucessCenter('Pedido recibido');
         estado.modal.isShowPassword = false;
@@ -350,19 +338,19 @@ export const usePedido = () => {
     const { entidadBuscarMenu } = await menuService.listarMenus(
       useAuth.negocioElegido._id,
     );
-    console.log(entidadBuscarMenu);
+    // console.log(entidadBuscarMenu);
 
     const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
       entidadBuscarMenu[0].catalogo._id,
     );
     estado.ListaOfertasPedido = catalogoOfertasRecursivo;
-    console.log(estado.ListaOfertasPedido);
+    // console.log(estado.ListaOfertasPedido);
     // ofertaService.catalogoRecursivo()
   };
 
   const obtenerItemsEstado = async (pedidoID: string) => {
     const { pedidoBuscar } = await pedidoService.pedidoItemsEstado(pedidoID);
-    console.log(pedidoBuscar[0]);
+    // console.log(pedidoBuscar[0]);
     // Filtrar items que tienen un estado ajustado
     const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
       const estadosAjustados = item.estado.filter(
@@ -370,7 +358,7 @@ export const usePedido = () => {
       );
       return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
     });
-    console.log(itemsConEstadoAjustado);
+    // console.log(itemsConEstadoAjustado);
 
     // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
     estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
@@ -388,14 +376,14 @@ export const usePedido = () => {
     });
 
     // Mostrar la información
-    console.log(estado.itemsEstadoAjustado);
+    // console.log(estado.itemsEstadoAjustado);
   };
 
   let filteredCatalogos = computed(() => {
     if (!filter.value) {
       return estado.catalogoSeleccionado2;
     }
-    console.log(estado.catalogoSeleccionado);
+    // console.log(estado.catalogoSeleccionado);
     const res = {
       ...estado.catalogoSeleccionado, //@ts-ignore
       hijas: estado.catalogoSeleccionado.hijas
@@ -407,19 +395,19 @@ export const usePedido = () => {
         }))
         .filter((hija: any) => hija.ofertas.length > 0),
     };
-    console.log(res);
+    // console.log(res);
 
     return res;
   });
 
   const aceptarTodosLosPedidosSolicitables = async () => {
-    console.log('first');
+    // console.log('first');
     const pedidosIDS = estado.pedidosSinAceptar.map(
       (pedido: any) => pedido._id,
     );
     const { pedidosAceptarOfertasSolicitables } =
       await pedidoService.pedidosAceptarOfertasSolicitables(pedidosIDS);
-    console.log(pedidosAceptarOfertasSolicitables);
+    // console.log(pedidosAceptarOfertasSolicitables);
 
     // const res = pedidosAceptarOfertasSolicitables.map(item => ({
     //   comprador: item.comprador,
@@ -430,7 +418,7 @@ export const usePedido = () => {
     const result = pedidosAceptarOfertasSolicitables.reduce(
       (acumulador: any, pedido: any) => {
         pedido.items.forEach((item: any) => {
-          console.log(item);
+          // console.log(item);
           if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
             const itemExistente = acumulador.find(
               (itemAcumulador: any) =>
@@ -484,20 +472,20 @@ export const usePedido = () => {
       [],
     );
 
-    console.log(result);
+    // console.log(result);
     storePedido.pedidosSolicitado = result.map((pedido: any) => {
       const stock = estado.stocks.find(
         //@ts-ignore
         (stock: any) => stock.producto._id === pedido.producto._id,
       );
-      console.log(stock);
+      // console.log(stock);
       return {
         ...pedido, //@ts-ignore
         stockEntidad: stock ? stock.cantidad : 0, //@ts-ignore
         presentacionBasica: stock ? stock.producto.presentacionBasica : '',
       };
     });
-    console.log(storePedido.pedidosSolicitado);
+    // console.log(storePedido.pedidosSolicitado);
     NotifySucessCenter('Pedidos de solicitud aceptados');
     buscarPedidos2();
   };
@@ -507,15 +495,15 @@ export const usePedido = () => {
     const pedidosIDS = estado.pedidosSinAceptar.map(
       (pedido: any) => pedido._id,
     );
-    console.log(pedidosIDS);
+    // console.log(pedidosIDS);
     const { pedidosAceptarOfertasDirectas } =
       await pedidoService.pedidosAceptarOfertasDirectas(pedidosIDS);
-    console.log(pedidosAceptarOfertasDirectas);
+    // console.log(pedidosAceptarOfertasDirectas);
 
     const result = pedidosAceptarOfertasDirectas.reduce(
       (acumulador: any, pedido: any) => {
         pedido.items.forEach((item: any) => {
-          console.log(item);
+          // console.log(item);
           if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
             const itemExistente = acumulador.find(
               (itemAcumulador: any) =>
@@ -569,13 +557,13 @@ export const usePedido = () => {
       [],
     );
 
-    console.log(result);
+    // console.log(result);
     storePedido.pedidosDirecto = result.map((pedido: any) => {
       const stock = estado.stocks.find(
         //@ts-ignore
         (stock: any) => stock.producto._id === pedido.producto._id,
       );
-      console.log(stock);
+      // console.log(stock);
 
       return {
         ...pedido, //@ts-ignore
@@ -583,13 +571,13 @@ export const usePedido = () => {
         presentacionBasica: stock ? stock.producto.presentacionBasica : '',
       };
     });
-    console.log(storePedido.pedidosDirecto);
+    // console.log(storePedido.pedidosDirecto);
     NotifySucessCenter('Pedidos de directos aceptados');
     buscarPedidos2();
   };
 
   const verPedidoPuntos = (row: any) => {
-    console.log(row.entidad);
+    // console.log(row.entidad);
     estado.modal.isShowPedidos = true;
     estado.pedidoPuntos = row.entidad.map((pedido: any) => {
       const diaDeLaSemana = new Date().getDay();
@@ -614,8 +602,8 @@ export const usePedido = () => {
   };
 
   const ofertaPreparado = async (fila: any) => {
-    console.log('first');
-    console.log(fila);
+    // console.log('first');
+    // console.log(fila);
     const { pedidosPrepararOfertas } =
       await pedidoService.pedidosOfertaPreparados(fila.pedidoIDS, [
         fila.oferta._id,

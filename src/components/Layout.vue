@@ -739,10 +739,9 @@ const onRejected = (rejectedEntries) => {
 const modificarPersona = async () => {
   // const formData = new FormData();
   // formData.append('imagen', selectedFileProfile.value);
-  console.log('first');
   delete persona.value.telefono;
   delete persona.value._id;
-  console.log(persona.value);
+  // console.log(persona.value);
   // persona.value.imagen = formData.get('imagen');
   // delete persona.value.imagen;
   // console.log(persona.value);

@@ -72,7 +72,6 @@ export const useOferta = () => {
   };
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
-    console.log(ofertaBuscar);
     estado.ofertas = ofertaBuscar;
     // console.log(estado.ofertas);
     // OBTENER CATALOGOS
@@ -88,9 +87,7 @@ export const useOferta = () => {
       catalogoNombre,
       ...ofertaData
     } = estado.oferta;
-    console.log(ofertaData);
     const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
-    console.log(ofertaCrear);
     if (ofertaCrear._id) {
       await ofertaService.crearIngredienteProducto(
         ofertaCrear._id, //@ts-ignore
@@ -139,7 +136,6 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
-    console.log(oferta);
     storeOferta.oferta._id = oferta._id;
     storeOferta.oferta.nombre = oferta.nombre;
     storeOferta.oferta.descripcion = oferta.descripcion;
@@ -147,7 +143,6 @@ export const useOferta = () => {
     storeOferta.oferta.catalogo = oferta.catalogo._id;
     storeOferta.oferta.producto = oferta.ingredientes[0].producto;
     storeOferta.oferta.cantidad = oferta.ingredientes[0].cantidad;
-    console.log(storeOferta.oferta);
 
     storeOferta.isEdit = true;
     storeOferta.isEditIngrediente = true;
@@ -165,12 +160,11 @@ export const useOferta = () => {
   const obtenerTodoCatalagos = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogos();
     estado.catalogos = catalogoArbol;
-    console.log(estado.catalogos);
+    // console.log(estado.catalogos);
     // console.log(catalogoArbol);
   };
 
   const obtenerCatalogoId = async (catalogoId: string) => {
-    console.log('first');
     const { catalogoArbol } = await ofertaService.buscarCatalogoID(catalogoId);
     //@ts-ignore
     if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
@@ -196,7 +190,6 @@ export const useOferta = () => {
   const modalCrearCategoriaArbol = (data: any) => {
     estado.modal.isAddCatalogo = true;
     estado.catalogo.id = data._id;
-    console.log('first');
   };
 
   const crearCatalogoArbol = async (catalogoId: string) => {
@@ -221,8 +214,6 @@ export const useOferta = () => {
       catalogoNombre,
       ...ofertaData
     } = estado.oferta;
-    console.log(ofertaData);
-    console.log(estado.productoFijo);
     await ofertaService.editarOferta(estado.oferta._id, ofertaData);
     // const { ofertaModificarIngredienteProducto: res } =
     // await ofertaService.editarIngredienteProducto(
@@ -312,7 +303,6 @@ export const useOferta = () => {
     // console.log(catalogo);
     estado.modal.isShowCatalogo = true;
     estado.catalogoSeleccionado = catalogo;
-    console.log(estado.catalogoSeleccionado);
   };
   const elegirCatalogo = (item: { _id: string; nombre: string }) => {
     estado.oferta.catalogo = item._id;
@@ -324,7 +314,6 @@ export const useOferta = () => {
     const total = catalogo
       .map((hija: any) => hija.hijas.length)
       .reduce((a: any, b: any) => a + b, 0);
-    console.log(total);
     return total;
   }
 

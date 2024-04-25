@@ -26,7 +26,6 @@ export const useEmpleado = () => {
       await empleadoService.obtenerTodosEmpleados(
         useAuth.negocioElegido.nombre,
       );
-    console.log(entidadBuscarEmpleado);
     estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
       return {
         id: empleado._id,

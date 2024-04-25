@@ -129,11 +129,9 @@ const handleInputChange2 = (event, product) => {
     usePedidoStore.listaPedido.push(producto);
   }
 
-  console.log(usePedidoStore.listaPedido);
+  // console.log(usePedidoStore.listaPedido);
 };
 const selectCatalogo = (catalogo) => {
-  console.log('hola');
-  console.log(catalogo);
   estado.catalogoSeleccionado = catalogo;
 };
 

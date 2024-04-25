@@ -127,7 +127,7 @@ export const useInventary = () => {
               // console.log(
               //   useProduct.ListInventario[estado.currentIndex].producto._id
               // );
-              console.log(estado.inventario.lotes);
+              // console.log(estado.inventario.lotes);
               //ARREGLAR ESTA FUNCION NO SE ESTA EJECUTANDO
               GqlHacerInventario({
                 entidadBusqueda: { _id: useAuth.negocioElegido._id },

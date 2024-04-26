@@ -5,6 +5,10 @@
 - que no sea negativa.
 - mensajes mas claro, hacer inventario (terminar inventario).
 - no entra la 2da vez. terminar inventario.
+- buscador hacer mas agil y ver el input
+
+- nombre quien ajusto el pedido.
+- hora y fecha.
 
 - responsive movile
 - 24hrs modificacion

@@ -54,9 +54,9 @@
 
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
-                      <q-item-label caption lines="1"
-                        >{{ storeAuth.user.nombre }}@gmail.com</q-item-label
-                      >
+                      <q-item-label caption lines="1">{{
+                        storeAuth.user.correo
+                      }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-separator />
@@ -318,9 +318,9 @@
 
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
-                      <q-item-label caption lines="1"
-                        >{{ storeAuth.user.nombre }}@gmail.com</q-item-label
-                      >
+                      <q-item-label caption lines="1">{{
+                        storeAuth.user.correo
+                      }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-separator />

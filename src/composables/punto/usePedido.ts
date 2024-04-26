@@ -776,11 +776,6 @@ export const usePedido = () => {
     });
   };
   const filtroHistorial = (date: any) => {
-    console.log('first');
-    // console.log(date);
-    // console.log(estado.pedidosRecibidos);
-    // console.log(estado.pedidosRecibidos.length);
-
     const dateObj = new Date(date);
     dateObj.setHours(0, 0, 0, 0);
 

@@ -10,7 +10,7 @@
       <q-input
         v-model="correo"
         type="email"
-        label="Corre electronico"
+        label="Correo electronico"
         outlined
         dense
       />
@@ -32,13 +32,14 @@
           label="Ingrese el codigo OTP"
           outlined
           dense
+          required
         />
         <q-input
           v-model="contrasena"
-          type="email"
           label="Nueva contraseña"
           outlined
           dense
+          required
         />
       </div>
     </template>

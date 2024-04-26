@@ -81,6 +81,7 @@
                         outlined
                         dense
                         clearable
+                        required
                       />
                       <q-input
                         v-model="lote.bloque"
@@ -225,6 +226,9 @@ const terminarInventario = async (producto) => {
     if (lote.vencimiento === '') lote.vencimiento = null;
   });
 
+  console.log(useAuth.negocioElegido._id);
+  console.log(producto._id);
+  console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
     .realizarInventarioFalse(

@@ -1,3 +1,11 @@
+- menuflotante @gmail.com.
+- confirmacion de pedido preparado.
+- lista inventario cambiar hacer inventario.
+- cantidad obligatoria hacer inventario.
+- que no sea negativa.
+- mensajes mas claro, hacer inventario (terminar inventario).
+- no entra la 2da vez. terminar inventario.
+
 - responsive movile
 - 24hrs modificacion
 - orden global area, reposteria, etc..

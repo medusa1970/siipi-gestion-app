@@ -208,6 +208,13 @@
                   label="Aceptar todos"
                   padding="0px 10px"
                   no-caps
+                  v-if="
+                    storePedido.pedidosSolicitado.every((pedido) =>
+                      pedido.estado.some(
+                        (estado) => estado.estado === 'preparado',
+                      ),
+                    )
+                  "
                   @click="aceptarTodosLosPedidosSolicitables"
                 />
               </div>
@@ -332,6 +339,13 @@
                   label="Aceptar todos"
                   padding="0px 10px"
                   no-caps
+                  v-if="
+                    storePedido.pedidosDirecto.every((pedido) =>
+                      pedido.estado.some(
+                        (estado) => estado.estado === 'preparado',
+                      ),
+                    )
+                  "
                   @click="aceptarTodosLosPedidosDirectos"
                 />
               </div>

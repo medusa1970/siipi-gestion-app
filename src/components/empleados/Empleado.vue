@@ -153,11 +153,19 @@
 <script setup lang="ts">
 import { columnsEmpleados } from '@/helpers/columns';
 import { useEmpleado } from '@/composables/useEmpleado';
+import { useRoute } from 'vue-router';
+import { string } from '~/helpers/validate.form';
 
+const route = useRoute();
 const { estado, abrirModal, abrirPermisos, agregarEmpleado, borrarEmpleado } =
   useEmpleado();
 
-const cargos = ['almacen', 'repartidor'];
+let cargos: string[] = [];
+route.meta.layout === 'sede'
+  ? (cargos = ['administrador', 'supervisor'])
+  : (cargos = ['almacen', 'repartidor']);
+
+// const cargos = ['almacen', 'repartidor'];
 </script>
 
 <style scoped>

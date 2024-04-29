@@ -79,7 +79,7 @@ export const usePedido = () => {
     const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
     ); //@ts-ignore
-    // console.log(entidadLeerMenu.hijas);
+    console.log(entidadLeerMenu);
     estado.catalogosOfertas = entidadLeerMenu.hijas;
     estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
     estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
@@ -383,6 +383,7 @@ export const usePedido = () => {
     if (!filter.value) {
       return estado.catalogoSeleccionado2;
     }
+    console.log(filter.value);
     // console.log(estado.catalogoSeleccionado);
     const res = {
       ...estado.catalogoSeleccionado, //@ts-ignore

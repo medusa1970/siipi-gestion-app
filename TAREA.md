@@ -7,6 +7,7 @@
 - no entra la 2da vez. terminar inventario.
 - buscador hacer mas agil y ver el input.
 - imprimir area.
+- ver pedidos proveedor o donde todos los pedidos el comprador sea catherign
 
 - nombre quien ajusto el pedido.
 - hora y fecha.

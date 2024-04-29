@@ -377,7 +377,7 @@ const selectCatalogo = (catalogo) => {
 };
 
 watch(filter, () => {
-  // console.log('first');
+  console.log('first');
   // console.log(filteredCatalogos.value);
   estado.catalogoSeleccionado = filteredCatalogos.value;
   // console.log(estado.catalogoSeleccionado);

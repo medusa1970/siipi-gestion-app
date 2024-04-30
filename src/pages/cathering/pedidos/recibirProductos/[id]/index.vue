@@ -16,11 +16,13 @@
       v-model="filter"
       style="padding: 0 10px"
       placeholder="Buscar"
-      clearable
       class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a]"
     >
       <template v-slot:prepend>
         <q-icon name="search" size="22px" class="text-[#010f1a]" />
+      </template>
+      <template v-slot:append>
+        <q-icon name="close" @click="filter = ''" class="cursor-pointer" />
       </template>
     </q-input>
     <!-- #F0F0F0 -->
@@ -41,9 +43,9 @@
         </h1>
       </div>
     </div>
-    <!-- <code>{{ estado.catalogoSeleccionado }}</code> -->
-    <q-list v-if="catalogoSeleccionado" class="flex flex-col gap-1">
-      <div v-for="item in catalogoSeleccionado.hijas" :key="item._id">
+
+    <q-list v-if="searchResults" class="flex flex-col gap-1">
+      <div v-for="item in searchResults" :key="item._id">
         <q-expansion-item
           class="bg-[#F0F0F0]"
           dense
@@ -68,31 +70,12 @@
               </div>
 
               <h1>{{ item.nombre }}</h1>
-
-              <!-- <q-btn
-                color="primary"
-                icon="visibility"
-                flat
-                round
-                dense
-                size="12px"
-              >
-                <q-tooltip> ver foto </q-tooltip>
-              </q-btn> -->
             </div>
           </q-card>
         </q-expansion-item>
       </div>
-      <div
-        v-if="
-          catalogoSeleccionado.hijas && catalogoSeleccionado.hijas.length === 0
-        "
-        class="text-center"
-      >
-        <h1>Producto no encontrado😧</h1>
-      </div>
     </q-list>
-    <div v-if="catalogoSeleccionado.length === 0">Cargando productos...</div>
+    <div v-if="searchResults.length === 0">No hay producto..</div>
   </div>
 </template>
 
@@ -108,15 +91,15 @@ import { ofertaService } from '~/services/marca/ofertas.service';
 const route = useRoute();
 
 const usePedidoStore = pedidoStore();
-const { estado, useAuth, filter, obtenerListaOfertas, filteredCatalogos } =
-  usePedido();
+const { obtenerListaOfertas } = usePedido();
 
 const catalogosOfertas = ref([]);
 const catalogoSeleccionado = ref([]);
 const catalogoSeleccionado2 = ref([]);
+const searchResults = ref([]);
 const nombreCatalogo = ref('');
 
-// const filter = ref('');
+const filter = ref('');
 
 const handleInputChange2 = (event, product) => {
   event.target.value = Math.max(0, event.target.value);
@@ -142,36 +125,159 @@ const handleInputChange2 = (event, product) => {
 const selectCatalogo = (catalogo) => {
   console.log(catalogo);
   catalogoSeleccionado.value = catalogo;
+  // searchResults.value = catalogo;
+  searchResults.value = catalogo.hijas;
 };
 
-watch(filter, () => {
-  // console.log('first');
-  // console.log(filteredCatalogos.value);
-  estado.catalogoSeleccionado = filteredCatalogos.value;
-  // console.log(estado.catalogoSeleccionado);
-});
-
 const obtenerCatalogosProductos = async () => {
-  console.log(route.params.id);
   const { catalogoArbol } = await ofertaService.buscarCatalogoID(
     route.params.id,
   );
-  console.log(catalogoArbol);
 
   nombreCatalogo.value = catalogoArbol.nombre;
   catalogosOfertas.value = catalogoArbol.hijas;
   catalogoSeleccionado.value = catalogoArbol.hijas[0];
+  searchResults.value = catalogoArbol.hijas[0].hijas;
   catalogoSeleccionado2.value = catalogoArbol.hijas[0];
 };
-// console.log(route.query.idArea);
 
-// onMounted(() => {
-//   obtenerCatalogosProductos();
-// });
+const searchCatalog = (searchTerm) => {
+  const catalogo = catalogoSeleccionado.value;
+  if (!catalogo.hijas) {
+    return catalogo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      ? [catalogo]
+      : [];
+  }
+
+  const results = catalogo.hijas.filter((hija) => {
+    return (
+      hija.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      hija.ofertas.some((oferta) =>
+        oferta.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    );
+  });
+
+  return results
+    .map((hija) => {
+      const filteredOfertas = hija.ofertas.filter((oferta) =>
+        oferta.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+      return { ...hija, ofertas: filteredOfertas };
+    })
+    .filter(
+      (hija) =>
+        hija.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        hija.ofertas.length > 0,
+    );
+};
+
+watch(filter, () => {
+  searchResults.value = searchCatalog(filter.value);
+});
 
 onMounted(() => {
-  obtenerListaOfertas();
   obtenerCatalogosProductos();
-  // usePedidoStore.areaPedidoID = route.query.id;
+  obtenerListaOfertas();
 });
+
+catalogoSeleccionado.value = {
+  _id: '85c7ce11ce1b515075092db1',
+  nombre: 'CONSUMIBLES',
+  ofertas: [],
+  hijas: [
+    {
+      _id: '85c7ce11ce1b515075092db3',
+      nombre: 'Fruta',
+      ofertas: [
+        { _id: '6102c1c8df85a46e2f0b960b', nombre: 'Frutilla (kg)' },
+        {
+          _id: '6101c1c8df85a46e2f0b960c',
+          nombre: 'Papaya (unidad)',
+        },
+      ],
+    },
+    {
+      _id: '85c7ce11ce1b515075092db5',
+      nombre: 'Granos',
+      ofertas: [
+        {
+          _id: '6104c1c8df85a46e2f0b9429',
+          nombre: 'Harina Blanca S/M (Q45)',
+        },
+        {
+          _id: '6102c1c8df85a46e2f0b942d',
+          nombre: 'Azucar Blanca (Kg)',
+        },
+      ],
+    },
+    {
+      _id: '85c7ce11ce1b515075092db6',
+      nombre: 'Embolsados',
+      ofertas: [
+        {
+          _id: '6103c1c8df85a46e2f0b947e',
+          nombre: 'Cascara de huevo en polvo (bolsa 1kg)',
+        },
+        {
+          _id: '6104c1c8df85a46e2f0b953d',
+          nombre: 'Moringa (bolsa de 1kg)',
+        },
+      ],
+    },
+    {
+      _id: '85c7ce11ce1b515075092db8',
+      nombre: 'Mates y concentrados',
+      ofertas: [
+        {
+          _id: '6102c1c8df85a46e2f0b9647',
+          nombre: 'Aniz (bolsa de 1kg)',
+        },
+        {
+          _id: '6102c1c8df85a46e2f0b9649',
+          nombre: 'Coca (bolsa de 1kg)',
+        },
+      ],
+    },
+    {
+      _id: '85c7ce11ce1b515075092dba',
+      nombre: 'Embotellados',
+      ofertas: [
+        {
+          _id: '6102c1c8df85a46e2f0b9484',
+          nombre: 'Caramelo miel con jengibre 80gr (Paq)',
+        },
+      ],
+    },
+    {
+      _id: '85c7ce11ce1b515075092dbc',
+      nombre: 'Aderezos siinple',
+      ofertas: [
+        {
+          _id: '6102c1c8df85a46e2f0b95f9',
+          nombre: 'Polvo de hornear (paquete 1kg)',
+        },
+        {
+          _id: '6103c1c8df85a46e2f0b95f9',
+          nombre: 'Polvo de hornear (caja 10x1kg)',
+        },
+      ],
+      hijas: [],
+    },
+    {
+      _id: '85c7ce11ce1b515075092dbe',
+      nombre: 'Ingredientes',
+      ofertas: [
+        {
+          _id: '6102c1c8df85a46e2f0b9601',
+          nombre: 'Champiñon (lata 200g)',
+        },
+        {
+          _id: '6102c1c8df85a46e2f0b9602',
+          nombre: 'Fideo tallarin (paq 400g)',
+        },
+      ],
+    },
+  ],
+};
 </script>

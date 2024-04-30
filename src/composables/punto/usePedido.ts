@@ -53,6 +53,7 @@ export const usePedido = () => {
     pedidoID: '',
     catalogoSeleccionado: [],
     catalogoSeleccionado2: [],
+    searchResults: [],
     filter: '',
     PedidosIDS: [],
     stocks: [],
@@ -80,8 +81,11 @@ export const usePedido = () => {
       useAuth.negocioElegido._id,
     ); //@ts-ignore
     console.log(entidadLeerMenu);
+    console.log(entidadLeerMenu.hijas);
     estado.catalogosOfertas = entidadLeerMenu.hijas;
     estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
+    estado.searchResults = entidadLeerMenu.hijas[0].hijas;
+
     estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
   };
 
@@ -379,27 +383,58 @@ export const usePedido = () => {
     // console.log(estado.itemsEstadoAjustado);
   };
 
-  let filteredCatalogos = computed(() => {
-    if (!filter.value) {
-      return estado.catalogoSeleccionado2;
-    }
-    console.log(filter.value);
-    // console.log(estado.catalogoSeleccionado);
-    const res = {
-      ...estado.catalogoSeleccionado, //@ts-ignore
-      hijas: estado.catalogoSeleccionado.hijas
-        .map((hija: any) => ({
-          ...hija,
-          ofertas: hija.ofertas.filter((oferta: any) =>
-            oferta.nombre.toLowerCase().includes(filter.value.toLowerCase()),
-          ),
-        }))
-        .filter((hija: any) => hija.ofertas.length > 0),
-    };
-    // console.log(res);
+  // let filteredCatalogos = computed(() => {
+  //   if (!filter.value) {
+  //     return estado.catalogoSeleccionado2;
+  //   }
+  //   console.log(filter.value);
+  //   console.log(estado.catalogoSeleccionado);
+  //   const res = {
+  //     ...estado.catalogoSeleccionado, //@ts-ignore
+  //     hijas: estado.catalogoSeleccionado.hijas
+  //       .map((hija: any) => ({
+  //         ...hija,
+  //         ofertas: hija.ofertas.filter((oferta: any) =>
+  //           oferta.nombre.toLowerCase().includes(filter.value.toLowerCase()),
+  //         ),
+  //       }))
+  //       .filter((hija: any) => hija.ofertas.length > 0),
+  //   };
+  //   console.log(res);
 
-    return res;
-  });
+  //   return res;
+  // });
+  const searchCatalog = (searchTerm: string) => {
+    const catalogo = estado.catalogoSeleccionado; //@ts-ignore
+    if (!catalogo.hijas) {
+      //@ts-ignore
+      return catalogo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        ? [catalogo]
+        : [];
+    }
+    //@ts-ignore
+    const results = catalogo.hijas.filter((hija: any) => {
+      return (
+        hija.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        hija.ofertas.some((oferta: any) =>
+          oferta.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      );
+    });
+
+    return results
+      .map((hija: any) => {
+        const filteredOfertas = hija.ofertas.filter((oferta: any) =>
+          oferta.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+        return { ...hija, ofertas: filteredOfertas };
+      })
+      .filter(
+        (hija: any) =>
+          hija.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          hija.ofertas.length > 0,
+      );
+  };
 
   const aceptarTodosLosPedidosSolicitables = async () => {
     // console.log('first');
@@ -867,7 +902,7 @@ export const usePedido = () => {
     obtenerItemsEstado,
     abrirModalRecibirPedido,
     filter,
-    filteredCatalogos,
+    searchCatalog,
     aceptarTodosLosPedidosSolicitables,
     storePedido,
     aceptarTodosLosPedidosDirectos,

@@ -28,6 +28,10 @@ export const useEmpleado = () => {
       );
     console.log(entidadBuscarEmpleado);
     estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
+      // console.log(empleado);
+      // if (empleado.persona.imagen?.cloudinaryUrl) {
+      //   console.log(empleado);
+      // }
       return {
         id: empleado._id,
         personaID: empleado.persona._id,
@@ -36,12 +40,12 @@ export const useEmpleado = () => {
         correo: empleado.persona.correo,
         telefono: empleado.persona.telefono,
         foto:
-          empleado.persona.imagen.cloudinaryUrl === null
+          empleado.persona.imagen?.cloudinaryUrl == null
             ? 'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg'
             : empleado.persona.imagen.cloudinaryUrl,
       };
     });
-    // console.log(estado.rows);
+    console.log(estado.rows);
   };
 
   const buscarPersonas = async () => {

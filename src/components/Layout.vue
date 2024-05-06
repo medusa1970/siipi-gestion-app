@@ -31,10 +31,16 @@
               flat
               round
               style="width: 40px; height: 40px"
-              ><img
+            >
+              <img
+                v-if="storeAuth.user.imagen == ''"
+                style="border-radius: 100%; object-fit: cover"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+              />
+              <img
+                v-else
                 style="border-radius: 100%; object-fit: cover"
                 :src="storeAuth.user.imagen"
-                alt=""
               />
               <q-menu
                 transition-show="rotate"
@@ -142,7 +148,16 @@
           </q-img>
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
-              <img style="object-fit: cover" :src="storeAuth.user.imagen" />
+              <img
+                v-if="storeAuth.user.imagen == ''"
+                style="object-fit: cover"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+              />
+              <img
+                v-else
+                style="object-fit: cover"
+                :src="storeAuth.user.imagen"
+              />
             </q-avatar>
           </div>
         </q-item>

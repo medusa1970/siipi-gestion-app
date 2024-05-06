@@ -47,8 +47,7 @@ export const authStore = defineStore('auth', {
       this.user.correo = conectar.persona.correo;
 
       conectar.persona.imagen.cloudinaryUrl === null
-        ? (this.user.imagen =
-            'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg')
+        ? (this.user.imagen = '')
         : (this.user.imagen = conectar.persona.imagen.cloudinaryUrl);
       // this.user.imagen = conectar.persona.imagen.cloudinaryUrl;
       this.token = conectar.token;

@@ -52,7 +52,16 @@
                   <q-item clickable @click="editProfile">
                     <q-item-section avatar>
                       <q-avatar>
-                        <img :src="storeAuth.user.imagen" />
+                        <img
+                          v-if="storeAuth.user.imagen == ''"
+                          style="border-radius: 100%; object-fit: cover"
+                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                        />
+                        <img
+                          v-else
+                          style="border-radius: 100%; object-fit: cover"
+                          :src="storeAuth.user.imagen"
+                        />
                       </q-avatar>
                     </q-item-section>
 

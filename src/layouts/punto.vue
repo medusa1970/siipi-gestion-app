@@ -1,5 +1,5 @@
 <template>
-  <Layout :menuList="menuListPunto">
+  <Layout :menuList="menuListPunto" :portada-img="PortadaPunto">
     <template #actionPedido>
       <q-btn
         dense
@@ -32,6 +32,7 @@ import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
+import PortadaPunto from '@/assets/img/backPunto.png';
 
 const $q = useQuasar();
 

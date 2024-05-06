@@ -82,12 +82,12 @@ export const menuListPunto = [
       },
     ],
   },
-  // {
-  //   icon: 'point_of_sale',
-  //   label: 'Caja',
-  //   to: '/punto/caja',
-  //   subMenu: [],
-  // },
+  {
+    icon: 'point_of_sale',
+    label: 'Caja',
+    to: '/punto/caja',
+    subMenu: [],
+  },
   // {
   //   icon: 'settings',
   //   label: 'Configuración',

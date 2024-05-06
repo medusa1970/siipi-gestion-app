@@ -10,4 +10,7 @@ export interface Persona {
   apellido: string;
   correo: string;
   telefono: string;
+  imagen: {
+    cloudinaryUrl: string;
+  };
 }

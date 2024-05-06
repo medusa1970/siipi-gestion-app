@@ -16,6 +16,9 @@ query buscarEntidadEmpleados(
       apellido
       correo
       telefono
+      imagen {
+        cloudinaryUrl
+      }
     }
     cargo
   }

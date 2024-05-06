@@ -24,6 +24,7 @@ const estadoInicial: AuthStoreProps = {
     correo: '',
     usuario: '',
     negocios: [],
+    imagen: '',
   },
   token: '',
   negocioElegido: {
@@ -38,11 +39,18 @@ export const authStore = defineStore('auth', {
   actions: {
     async login(usuario: string, contrasena: string) {
       const { conectar } = await authService.login(usuario, contrasena);
+      console.log(conectar);
       this.user._id = conectar.persona._id;
       this.user.nombre = conectar.persona.nombre;
       this.user.usuario = conectar.persona.usuario;
       this.user.apellido = conectar.persona.apellido;
       this.user.correo = conectar.persona.correo;
+
+      conectar.persona.imagen.cloudinaryUrl === null
+        ? (this.user.imagen =
+            'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg')
+        : (this.user.imagen = conectar.persona.imagen.cloudinaryUrl);
+      // this.user.imagen = conectar.persona.imagen.cloudinaryUrl;
       this.token = conectar.token;
 
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);

@@ -1,3 +1,5 @@
+- precio TOTAL 2 decimal.
+
 - menuflotante @gmail.com.
 - confirmacion de pedido preparado.
 - lista inventario cambiar hacer inventario.

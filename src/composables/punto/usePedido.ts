@@ -172,47 +172,115 @@ export const usePedido = () => {
 
     hideLoading();
 
-    estado.panaderia = pedidos.aceptados.map((pedido: any) => {
-      return {
-        ...pedido,
-        items: pedido.items.filter(
-          (item: any) => item.oferta.panaderia === true,
-        ),
-      };
-    });
-    estado.reposteria = pedidos.aceptados.map((pedido: any) => {
-      return {
-        ...pedido,
-        items: pedido.items.filter(
-          (item: any) => item.oferta.reposteria === true,
-        ),
-      };
-    });
-    estado.envasados = pedidos.aceptados.map((pedido: any) => {
-      return {
-        ...pedido,
-        items: pedido.items.filter(
-          (item: any) => item.oferta.envasados === true,
-        ),
-      };
-    });
-    estado.embotellados = pedidos.aceptados.map((pedido: any) => {
-      return {
-        ...pedido,
-        items: pedido.items.filter(
-          (item: any) => item.oferta.embotellados === true,
-        ),
-      };
-    });
-    estado.siinple = pedidos.aceptados.map((pedido: any) => {
-      return {
-        ...pedido,
-        items: pedido.items.filter((item: any) => item.oferta.siinple === true),
-      };
-    });
+    const diaDeLaSemana = new Date().getDay();
+    const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;
+
+    estado.panaderia = pedidos.aceptados
+      .map((pedido: any) => {
+        return {
+          ...pedido,
+          items: pedido.items.filter(
+            (item: any) => item.oferta.panaderia === true,
+          ),
+          comprador: {
+            ...pedido.comprador,
+            ruta: pedido.comprador.ruta[indice],
+            orden: pedido.comprador.orden[indice],
+          },
+        };
+      })
+      .sort((a: any, b: any) => {
+        if (a.comprador.ruta === b.comprador.ruta) {
+          return a.comprador.orden - b.comprador.orden;
+        }
+        return a.comprador.ruta - b.comprador.ruta;
+      });
+    // console.log(estado.panaderia);
+
+    estado.reposteria = pedidos.aceptados
+      .map((pedido: any) => {
+        return {
+          ...pedido,
+          items: pedido.items.filter(
+            (item: any) => item.oferta.reposteria === true,
+          ),
+          comprador: {
+            ...pedido.comprador,
+            ruta: pedido.comprador.ruta[indice],
+            orden: pedido.comprador.orden[indice],
+          },
+        };
+      })
+      .sort((a: any, b: any) => {
+        if (a.comprador.ruta === b.comprador.ruta) {
+          return a.comprador.orden - b.comprador.orden;
+        }
+        return a.comprador.ruta - b.comprador.ruta;
+      });
+    estado.envasados = pedidos.aceptados
+      .map((pedido: any) => {
+        return {
+          ...pedido,
+          items: pedido.items.filter(
+            (item: any) => item.oferta.envasados === true,
+          ),
+          comprador: {
+            ...pedido.comprador,
+            ruta: pedido.comprador.ruta[indice],
+            orden: pedido.comprador.orden[indice],
+          },
+        };
+      })
+      .sort((a: any, b: any) => {
+        if (a.comprador.ruta === b.comprador.ruta) {
+          return a.comprador.orden - b.comprador.orden;
+        }
+        return a.comprador.ruta - b.comprador.ruta;
+      });
+    estado.embotellados = pedidos.aceptados
+      .map((pedido: any) => {
+        return {
+          ...pedido,
+          items: pedido.items.filter(
+            (item: any) => item.oferta.embotellados === true,
+          ),
+          comprador: {
+            ...pedido.comprador,
+            ruta: pedido.comprador.ruta[indice],
+            orden: pedido.comprador.orden[indice],
+          },
+        };
+      })
+      .sort((a: any, b: any) => {
+        if (a.comprador.ruta === b.comprador.ruta) {
+          return a.comprador.orden - b.comprador.orden;
+        }
+        return a.comprador.ruta - b.comprador.ruta;
+      });
+    estado.siinple = pedidos.aceptados
+      .map((pedido: any) => {
+        return {
+          ...pedido,
+          items: pedido.items.filter(
+            (item: any) => item.oferta.siinple === true,
+          ),
+          comprador: {
+            ...pedido.comprador,
+            ruta: pedido.comprador.ruta[indice],
+            orden: pedido.comprador.orden[indice],
+          },
+        };
+      })
+      .sort((a: any, b: any) => {
+        if (a.comprador.ruta === b.comprador.ruta) {
+          return a.comprador.orden - b.comprador.orden;
+        }
+        return a.comprador.ruta - b.comprador.ruta;
+      });
   };
 
   const obtenerOfertas = (area: any) => {
+    console.log(area);
     estado.panaderiaTable = [];
     area.forEach((venta: any) => {
       venta.items.forEach((item: any) => {
@@ -226,6 +294,7 @@ export const usePedido = () => {
         }
       });
     });
+    console.log(estado.panaderiaTable);
   };
   function obtenerCantidad(items: any, ofertaId: any) {
     const item = items.find((item: any) => item.oferta._id === ofertaId);
@@ -613,7 +682,7 @@ export const usePedido = () => {
   };
 
   const verPedidoPuntos = (row: any) => {
-    // console.log(row.entidad);
+    console.log(row.entidad);
     estado.modal.isShowPedidos = true;
     estado.pedidoPuntos = row.entidad.map((pedido: any) => {
       const diaDeLaSemana = new Date().getDay();

@@ -18,6 +18,9 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
       _id
       nombre
     }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -33,6 +36,9 @@ mutation crearProducto($datos: CrearProductoDto!) {
     categoria {
       _id
       nombre
+    }
+    imagen {
+      cloudinaryUrl
     }
   }
 }
@@ -62,6 +68,9 @@ mutation modificarProductos(
     presentacionBasica
     categoria {
       nombre
+    }
+    imagen {
+      cloudinaryUrl
     }
   }
 }

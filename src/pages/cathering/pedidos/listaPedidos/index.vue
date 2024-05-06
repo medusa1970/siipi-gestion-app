@@ -450,8 +450,14 @@
           </q-tab-panel>
 
           <!-- PANADERIA -->
-          <q-tab-panel name="panaderia" class="!p-2">
+          <q-tab-panel name="panaderia" class="!p-2 flex flex-col gap-4">
+            <!-- RUTA 1 -->
             <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 1
+              </h1>
               <table class="min-w-full bg-white rounded-sm overflow-hidden">
                 <thead class="bg-teal-700 text-white">
                   <tr>
@@ -468,7 +474,53 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  <tr v-for="(pedido, index) in estado.panaderia" :key="index">
+                  <tr
+                    v-for="(pedido, index) in estado.panaderia"
+                    :key="index"
+                    v-show="pedido.comprador.ruta == '1'"
+                  >
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- RUTA 2 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 2
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.panaderia"
+                    :key="index"
+                    v-show="pedido.comprador.ruta == '2'"
+                  >
                     <td class="whitespace-nowrap text-center">
                       {{ pedido.comprador.nombre }}
                     </td>
@@ -487,138 +539,354 @@
 
           <!-- REPOSTERIA -->
           <q-tab-panel name="reposteria" class="!p-2">
-            <table class="min-w-full bg-white rounded-sm overflow-hidden">
-              <thead class="bg-teal-700 text-white">
-                <tr>
-                  <th class="text-center text-xs uppercase tracking-wider">
-                    Entidad
-                  </th>
-                  <th
-                    v-for="(oferta, index) in estado.panaderiaTable"
+            <!-- RUTA 1 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 1
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.reposteria"
                     :key="index"
-                    class="text-center text-xs tracking-wider"
+                    v-show="pedido.comprador.ruta == '1'"
                   >
-                    {{ abreviarNombre(oferta.nombre) }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(pedido, index) in estado.reposteria" :key="index">
-                  <td class="whitespace-nowrap text-center">
-                    {{ pedido.comprador.nombre }}
-                  </td>
-                  <td
-                    v-for="(oferta, index) in estado.panaderiaTable"
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- RUTA 2 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 2
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.reposteria"
                     :key="index"
-                    class="whitespace-nowrap text-center"
+                    v-show="pedido.comprador.ruta == '2'"
                   >
-                    {{ obtenerCantidad(pedido.items, oferta._id) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </q-tab-panel>
 
           <!-- ENVASADOS -->
           <q-tab-panel name="envasados" class="!p-2">
-            <table class="min-w-full bg-white rounded-sm overflow-hidden">
-              <thead class="bg-teal-700 text-white">
-                <tr>
-                  <th class="text-center text-xs uppercase tracking-wider">
-                    Entidad
-                  </th>
-                  <th
-                    v-for="(oferta, index) in estado.panaderiaTable"
+            <!-- RUTA 1 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 1
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.envasados"
                     :key="index"
-                    class="text-center text-xs tracking-wider"
+                    v-show="pedido.comprador.ruta == '1'"
                   >
-                    {{ abreviarNombre(oferta.nombre) }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(pedido, index) in estado.envasados" :key="index">
-                  <td class="whitespace-nowrap text-center">
-                    {{ pedido.comprador.nombre }}
-                  </td>
-                  <td
-                    v-for="(oferta, index) in estado.panaderiaTable"
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- RUTA 2 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 2
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.envasados"
                     :key="index"
-                    class="whitespace-nowrap text-center"
+                    v-show="pedido.comprador.ruta == '2'"
                   >
-                    {{ obtenerCantidad(pedido.items, oferta._id) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </q-tab-panel>
 
           <!-- EMBOTELLADOS -->
           <q-tab-panel name="embotellados" class="!p-2">
-            <table class="min-w-full bg-white rounded-sm overflow-hidden">
-              <thead class="bg-teal-700 text-white">
-                <tr>
-                  <th class="text-center text-xs uppercase tracking-wider">
-                    Entidad
-                  </th>
-                  <th
-                    v-for="(oferta, index) in estado.panaderiaTable"
+            <!-- RUTA 1 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 1
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.embotellados"
                     :key="index"
-                    class="text-center text-xs tracking-wider"
+                    v-show="pedido.comprador.ruta == '1'"
                   >
-                    {{ abreviarNombre(oferta.nombre) }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(pedido, index) in estado.embotellados" :key="index">
-                  <td class="whitespace-nowrap text-center">
-                    {{ pedido.comprador.nombre }}
-                  </td>
-                  <td
-                    v-for="(oferta, index) in estado.panaderiaTable"
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- RUTA 2 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 2
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.embotellados"
                     :key="index"
-                    class="whitespace-nowrap text-center"
+                    v-show="pedido.comprador.ruta == '2'"
                   >
-                    {{ obtenerCantidad(pedido.items, oferta._id) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </q-tab-panel>
 
           <!-- SIINPLE -->
           <q-tab-panel name="siinple" class="!p-2">
-            <table class="min-w-full bg-white rounded-sm overflow-hidden">
-              <thead class="bg-teal-700 text-white">
-                <tr>
-                  <th class="text-center text-xs uppercase tracking-wider">
-                    Entidad
-                  </th>
-                  <th
-                    v-for="(oferta, index) in estado.panaderiaTable"
+            <!-- RUTA 1 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 1
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.siinple"
                     :key="index"
-                    class="text-center text-xs tracking-wider"
+                    v-show="pedido.comprador.ruta == '1'"
                   >
-                    {{ abreviarNombre(oferta.nombre) }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(pedido, index) in estado.siinple" :key="index">
-                  <td class="whitespace-nowrap text-center">
-                    {{ pedido.comprador.nombre }}
-                  </td>
-                  <td
-                    v-for="(oferta, index) in estado.panaderiaTable"
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- RUTA 2 -->
+            <div class="overflow-x-auto">
+              <h1
+                class="!text-xs text-center font-extrabold bg-teal-600 text-white"
+              >
+                RUTA 2
+              </h1>
+              <table class="min-w-full bg-white rounded-sm overflow-hidden">
+                <thead class="bg-teal-700 text-white">
+                  <tr>
+                    <th class="text-center text-xs uppercase tracking-wider">
+                      Entidad
+                    </th>
+                    <th
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="text-center text-xs tracking-wider"
+                    >
+                      {{ abreviarNombre(oferta.nombre) }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr
+                    v-for="(pedido, index) in estado.siinple"
                     :key="index"
-                    class="whitespace-nowrap text-center"
+                    v-show="pedido.comprador.ruta == '2'"
                   >
-                    {{ obtenerCantidad(pedido.items, oferta._id) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td class="whitespace-nowrap text-center">
+                      {{ pedido.comprador.nombre }}
+                    </td>
+                    <td
+                      v-for="(oferta, index) in estado.panaderiaTable"
+                      :key="index"
+                      class="whitespace-nowrap text-center"
+                    >
+                      {{ obtenerCantidad(pedido.items, oferta._id) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </q-tab-panel>
         </q-tab-panels>
       </q-tab-panel>

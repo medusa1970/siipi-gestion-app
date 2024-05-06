@@ -9,6 +9,7 @@ export interface UserProps {
   apellido: string;
   correo: string;
   negocios: Negocio[];
+  imagen: string;
 }
 export interface Negocio {
   _id?: string | null | undefined;

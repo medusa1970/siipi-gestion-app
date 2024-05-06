@@ -26,6 +26,24 @@
               {{ fechaMes(props.row._creado) }}
             </h1>
           </q-td>
+          <q-td key="imagen" :props="props" class="">
+            <q-img
+              v-if="props.row.imagen"
+              :src="props.row.imagen.cloudinaryUrl"
+              spinner-color="black"
+              class="cell-image"
+              width="40px"
+              height="40px"
+            />
+            <q-img
+              v-else
+              src="https://cdn.discordapp.com/attachments/1163916287030870056/1237059192079122452/rect45.png?ex=663a44a6&is=6638f326&hm=8404c1e9859bec1f76b367688c76e2d34674e391798b177a88330f4dd0f8e8a9&"
+              spinner-color="black"
+              class="cell-image"
+              width="40px"
+              height="40px"
+            />
+          </q-td>
           <q-td key="nombre" :props="props">
             <h1 v-if="props.row.nombre">
               {{ props.row.nombre }}

@@ -7,13 +7,16 @@ export const authService = {
     contrasena: string,
     entidad?: string | null | undefined,
   ) => postData(GqlConectar({ datos: { usuario, contrasena, entidad } })),
+
   buscarEntidadesDeUsuario: async (
     token: string, //@ts-ignore
   ) => postData(GqlBuscarEntidadesConUsuario(useGqlToken(token))),
+
   registrar: async (datos: PersonaProps) => {
     const { _id, usuario, ...nuevoDato } = datos;
     return postData(GqlCrearPersona({ datos: nuevoDato }));
   },
+
   buscarEmpleadoCargo: async (
     entidadID: string | null | undefined,
     personaID: string,
@@ -24,6 +27,7 @@ export const authService = {
         busquedaEmpleado: { persona: personaID },
       }),
     ),
+
   buscarTodasEntidades: async () =>
     postData(GqlBuscarTodasEntidades({ busqueda: {} })),
 };

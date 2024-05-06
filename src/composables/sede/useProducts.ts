@@ -1,4 +1,4 @@
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import {
   ApiError,
   NotifySucess,
@@ -11,6 +11,7 @@ import { productoService } from '~/services/sede/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
 import DragDrop from '@/components/DrogDrop.vue';
 import { ofertaStore } from '@/stores/oferta.store';
+import { fileToBase64 } from '@/helpers/helpers';
 
 export const useProducts = () => {
   const useProduct = productStore();
@@ -64,6 +65,9 @@ export const useProducts = () => {
     },
     isEditCantidad: false,
   });
+  const imagen = ref(null);
+  const selectedFile = ref('');
+  const imagePreview = ref('');
 
   const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 
@@ -104,6 +108,7 @@ export const useProducts = () => {
   const navegarDetalleProducto = (row: any) => {
     useProduct.product = row;
     estado.producto = row;
+    imagePreview.value = row.imagen.cloudinaryUrl;
     useProduct.isEdit = true;
 
     // router.push('productos/detailProduct');
@@ -122,7 +127,11 @@ export const useProducts = () => {
   };
   //STORE
   if (useProduct.product) {
-    estado.producto = useProduct.product;
+    console.log(useProduct.product);
+    estado.producto = useProduct.product; //@ts-ignore
+    if (useProduct.product.imagen)
+      //@ts-ignore
+      imagePreview.value = useProduct.product.imagen.cloudinaryUrl;
   }
 
   // AGREGAR PRODUCTO
@@ -130,10 +139,17 @@ export const useProducts = () => {
     console.log('first');
     delete estado.producto._id; //@ts-ignore
     delete estado.producto.categoria.productos;
+    const imagenCvt = await fileToBase64(selectedFile.value);
+    console.log(imagenCvt);
+
     productoService
       .agregarProducto({
         ...estado.producto,
         categoria: estado.producto.categoria._id,
+        imagen: {
+          mimetype: 'image/png',
+          data: imagenCvt,
+        },
       })
       .then((res) => {
         NotifySucessCenter('Producto agregado correctamente');
@@ -144,13 +160,35 @@ export const useProducts = () => {
     //@ts-ignore
     delete estado.producto.categoria.productos;
     //@ts-ignore
-    const { presentaciones, _creado, _id, nombre, ...productoData } =
+    const { presentaciones, _creado, _id, nombre, imagen, ...productoData } =
       estado.producto;
-    const { productoModificar } = await productoService.editarProducto(
-      useProduct.product._id,
-      { ...productoData, categoria: productoData.categoria._id },
-    );
-    estado.producto = Object.assign(estado.producto, productoModificar[0]);
+    console.log(selectedFile.value);
+
+    if (selectedFile.value === '') {
+      const { productoModificar } = await productoService.editarProducto(
+        useProduct.product._id,
+        {
+          ...productoData,
+          categoria: productoData.categoria._id,
+        },
+      );
+      estado.producto = Object.assign(estado.producto, productoModificar[0]);
+    } else {
+      const imagenCvt = await fileToBase64(selectedFile.value);
+      const { productoModificar } = await productoService.editarProducto(
+        useProduct.product._id,
+        {
+          ...productoData,
+          categoria: productoData.categoria._id,
+          imagen: {
+            mimetype: 'image/png',
+            data: imagenCvt,
+          },
+        },
+      );
+      estado.producto = Object.assign(estado.producto, productoModificar[0]);
+    }
+
     NotifySucess('información básica actualizada correctamente');
   };
   const modalAgregarPresentacion = () => {
@@ -325,6 +363,21 @@ export const useProducts = () => {
     storeOferta.oferta.producto = productoData;
   };
 
+  //WATCH
+  watch(imagen, () => {
+    //@ts-ignore
+    if (imagen.value instanceof Blob) {
+      const lector = new FileReader();
+      selectedFile.value = imagen.value;
+
+      lector.addEventListener('load', () => {
+        //@ts-ignore
+        imagePreview.value = lector.result;
+      }); //@ts-ignore
+      lector.readAsDataURL(selectedFile.value);
+    }
+  });
+
   return {
     estado,
     tags,
@@ -347,5 +400,8 @@ export const useProducts = () => {
     agregarCategoriaArbol,
     modalAgregarCategoria,
     navegarCrearOferta,
+    imagen,
+    imagePreview,
+    selectedFile,
   };
 };

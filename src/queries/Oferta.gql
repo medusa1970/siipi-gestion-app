@@ -42,6 +42,9 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
         grupo
       }
     }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 # CREAR
@@ -56,6 +59,9 @@ mutation crearOferta($datos: CrearOfertaDto!) {
       _id
       nombre
     }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 # EDITAR
@@ -67,6 +73,9 @@ mutation modificarOfertas(
     _id
     nombre
     descripcion
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 # BORRAR

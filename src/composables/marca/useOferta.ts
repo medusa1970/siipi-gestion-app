@@ -1,10 +1,11 @@
-import { reactive, onMounted, ref } from 'vue';
+import { reactive, onMounted, ref, watch } from 'vue';
 import { NotifySucessCenter } from '~/helpers/message.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
 import { useRouter } from 'vue-router';
-import { da, es } from 'date-fns/locale';
+import { da, es, id } from 'date-fns/locale';
 import { useQuasar } from 'quasar';
+import { fileToBase64 } from '~/helpers/helpers';
 
 export const useOferta = () => {
   const storeOferta = ofertaStore();
@@ -55,6 +56,9 @@ export const useOferta = () => {
     },
     catalogoSeleccionado: [],
   });
+  const imagen = ref(null);
+  const selectedFile = ref('');
+  const imagePreview = ref('');
 
   const clearOferta = {
     _id: '',
@@ -62,6 +66,7 @@ export const useOferta = () => {
     descripcion: '',
     precio: 0,
     catalogo: '',
+    idIngrediente: '',
     producto: {
       _id: '',
       nombre: '',
@@ -69,6 +74,7 @@ export const useOferta = () => {
       presentaciones: [],
     },
     cantidad: 0,
+    imagen: '',
   };
   const obtenerTodasofertas = async () => {
     const { ofertaBuscar } = await ofertaService.buscarOfertas();
@@ -87,7 +93,17 @@ export const useOferta = () => {
       catalogoNombre,
       ...ofertaData
     } = estado.oferta;
-    const { ofertaCrear } = await ofertaService.crearOferta(ofertaData);
+    const imagenCvt = await fileToBase64(selectedFile.value);
+    console.log(imagenCvt);
+    console.log(ofertaData);
+
+    const { ofertaCrear } = await ofertaService.crearOferta({
+      ...ofertaData,
+      imagen: {
+        mimetype: 'image/png',
+        data: imagenCvt,
+      },
+    });
     if (ofertaCrear._id) {
       await ofertaService.crearIngredienteProducto(
         ofertaCrear._id, //@ts-ignore
@@ -136,6 +152,8 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
+    console.log(oferta);
+    storeOferta.oferta.idIngrediente = oferta.ingredientes[0]._id;
     storeOferta.oferta._id = oferta._id;
     storeOferta.oferta.nombre = oferta.nombre;
     storeOferta.oferta.descripcion = oferta.descripcion;
@@ -143,6 +161,11 @@ export const useOferta = () => {
     storeOferta.oferta.catalogo = oferta.catalogo._id;
     storeOferta.oferta.producto = oferta.ingredientes[0].producto;
     storeOferta.oferta.cantidad = oferta.ingredientes[0].cantidad;
+    if (oferta.imagen !== null) {
+      storeOferta.oferta.imagen = oferta.imagen.cloudinaryUrl;
+    } else {
+      storeOferta.oferta.imagen = '';
+    }
 
     storeOferta.isEdit = true;
     storeOferta.isEditIngrediente = true;
@@ -211,18 +234,70 @@ export const useOferta = () => {
       condiciones,
       ingredientes,
       preparados,
-      catalogoNombre,
+      catalogoNombre, //@ts-ignore
+      imagen, //@ts-ignore
+      idIngrediente,
       ...ofertaData
     } = estado.oferta;
-    await ofertaService.editarOferta(estado.oferta._id, ofertaData);
-    // const { ofertaModificarIngredienteProducto: res } =
-    // await ofertaService.editarIngredienteProducto(
-    //   estado.oferta._id, //@ts-ignore
-    //   estado.productoFijo.ingredienteID, //@ts-ignore
-    //   estado.productoFijo.producto._id,
-    //   estado.productoFijo.presentacion,
+    console.log(ofertaData);
+    console.log(estado.productoFijo);
+
+    console.log(selectedFile.value);
+    if (selectedFile.value === '') {
+      const { ofertaModificar } = await ofertaService.editarOferta(
+        estado.oferta._id,
+        ofertaData,
+      );
+      console.log(ofertaModificar);
+      if (ofertaModificar) {
+        const { ofertaModificarIngredienteProducto: res } =
+          await ofertaService.editarIngredienteProducto(
+            estado.oferta._id, //@ts-ignore
+            estado.productoFijo.ingredienteID, //@ts-ignore
+            estado.productoFijo.producto._id,
+            estado.productoFijo.presentacion,
+          );
+        console.log(res);
+      }
+    } else {
+      const { ofertaModificar } = await ofertaService.editarOferta(
+        estado.oferta._id,
+        {
+          ...ofertaData,
+          imagen: {
+            mimetype: 'image/png',
+            data: await fileToBase64(selectedFile.value),
+          },
+        },
+      );
+      console.log(ofertaModificar);
+      if (ofertaModificar) {
+        const { ofertaModificarIngredienteProducto: res } =
+          await ofertaService.editarIngredienteProducto(
+            estado.oferta._id, //@ts-ignore
+            estado.productoFijo.ingredienteID, //@ts-ignore
+            estado.productoFijo.producto._id,
+            estado.productoFijo.presentacion,
+          );
+        console.log(res);
+      }
+    }
+
+    // const { ofertaModificar } = await ofertaService.editarOferta(
+    //   estado.oferta._id,
+    //   ofertaData,
     // );
-    // console.log(res);
+    // console.log(ofertaModificar);
+    // if (ofertaModificar) {
+    //   const { ofertaModificarIngredienteProducto: res } =
+    //     await ofertaService.editarIngredienteProducto(
+    //       estado.oferta._id, //@ts-ignore
+    //       estado.productoFijo.ingredienteID, //@ts-ignore
+    //       estado.productoFijo.producto._id,
+    //       estado.productoFijo.presentacion,
+    //     );
+    //   console.log(res);
+    // }
     NotifySucessCenter('Oferta editada correctamente');
     router.push('/sede/ofertas');
   };
@@ -317,6 +392,21 @@ export const useOferta = () => {
     return total;
   }
 
+  //WATCH
+  watch(imagen, () => {
+    //@ts-ignore
+    if (imagen.value instanceof Blob) {
+      const lector = new FileReader();
+      selectedFile.value = imagen.value;
+
+      lector.addEventListener('load', () => {
+        //@ts-ignore
+        imagePreview.value = lector.result;
+      }); //@ts-ignore
+      lector.readAsDataURL(selectedFile.value);
+    }
+  });
+
   //on mounted
   // onMounted(() => {
   //   obtenerTodasofertas();
@@ -347,5 +437,8 @@ export const useOferta = () => {
     pruebaProducto,
     obtenerCatalogoId,
     calcularTotalOfertas,
+    imagen,
+    imagePreview,
+    selectedFile,
   };
 };

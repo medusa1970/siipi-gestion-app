@@ -9,18 +9,29 @@
     <h1 class="text-lg font-bold mb-1">
       {{ useProduct.isEdit === true ? 'Editar Producto' : 'Agregar Producto' }}
     </h1>
-    <!-- <div
-      class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
+    <!-- IMAGE -->
+    <q-file
+      v-model="imagen"
+      label="Seleccionar imagen"
+      accept=".jpg, .png, .jpge"
+      max-total-size="560000"
+      @rejected="onRejected"
+      counter
+      outlined
+      dense
+      hint="Tamaño máximo de imagen 540KB"
+      clearable
     >
-      <input type="file" class="hidden" id="fileInput" />
-      <label
-        for="fileInput"
-        class="flex items-center justify-center text-gray-500"
-      >
-        <q-icon name="add" size="xs" />
-      </label>
-      <span class="text-gray-500">Subir imagen</span>
-    </div> -->
+      <template v-slot:prepend>
+        <q-icon name="cloud_upload" @click.stop.prevent />
+      </template>
+    </q-file>
+    <div v-if="imagePreview" style="width: 200px; height: 200px; margin: auto">
+      <q-img
+        style="width: 100%; height: 100%; object-fit: cover"
+        :src="imagePreview"
+      ></q-img>
+    </div>
     <span class="flex flex-col gap-2 my-3 w-[50vw] max-sm:w-full">
       <q-input
         v-model="estado.producto.nombre"
@@ -182,6 +193,9 @@ const {
   modificarPresentacion,
   borrarPresentacion,
   getCategoria,
+  imagen,
+  imagePreview,
+  selectedFile,
 } = useProducts();
 
 definePageMeta({

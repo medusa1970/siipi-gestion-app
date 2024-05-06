@@ -9,6 +9,7 @@ interface ofertaState {
     descripcion: string;
     precio: number;
     catalogo: string;
+    idIngrediente: string;
     producto: {
       _id: string;
       nombre: string;
@@ -16,6 +17,7 @@ interface ofertaState {
       presentaciones: null[];
     };
     cantidad: number;
+    imagen: string;
   };
   catalogoElegido: any;
 }
@@ -30,6 +32,7 @@ export const ofertaStore = defineStore('oferta', {
       descripcion: '',
       precio: 0,
       catalogo: '',
+      idIngrediente: '',
       producto: {
         _id: '',
         nombre: '',
@@ -37,6 +40,7 @@ export const ofertaStore = defineStore('oferta', {
         presentaciones: [],
       },
       cantidad: 0,
+      imagen: '',
     },
     catalogoElegido: null,
   }),

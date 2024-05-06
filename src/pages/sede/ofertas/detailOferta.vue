@@ -26,6 +26,31 @@
           storeOferta.isEdit === false ? crearOferta() : editarOferta()
         "
       >
+        <q-file
+          v-model="imagen"
+          label="Seleccionar imagen"
+          accept=".jpg, .png, .jpge"
+          max-total-size="560000"
+          @rejected="onRejected"
+          counter
+          outlined
+          dense
+          hint="Tamaño máximo de imagen 540KB"
+          clearable
+        >
+          <template v-slot:prepend>
+            <q-icon name="cloud_upload" @click.stop.prevent />
+          </template>
+        </q-file>
+        <div
+          v-if="imagePreview"
+          style="width: 200px; height: 200px; margin: auto"
+        >
+          <q-img
+            style="width: 100%; height: 100%; object-fit: cover"
+            :src="imagePreview"
+          ></q-img>
+        </div>
         <div class="w-full grid grid-cols-6 gap-2 my-4">
           <q-input
             class="col-span-2"
@@ -321,6 +346,8 @@ const {
   abrirModalCatalogo,
   elegirCatalogo,
   pruebaProducto,
+  imagen,
+  imagePreview,
 } = useOferta();
 
 //STORE
@@ -329,6 +356,11 @@ if (storeOferta.oferta) {
   estado.oferta = oferta;
   estado.productoFijo.producto = storeOferta.oferta.producto;
   estado.productoFijo.presentacion = storeOferta.oferta.cantidad;
+  estado.productoFijo.ingredienteID = storeOferta.oferta.idIngrediente;
+  console.log(storeOferta.oferta);
+  if (storeOferta.oferta.imagen)
+    //@ts-ignore
+    imagePreview.value = storeOferta.oferta.imagen;
 }
 
 const catalogos = ['catalogo Siipime', 'catalogo compra proveedor'];

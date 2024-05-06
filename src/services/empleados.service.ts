@@ -53,4 +53,17 @@ export const empleadoService = {
         datos: [{ persona: empleadoID, rol, revocar: true }],
       }),
     ),
+  modificarPersona: async (
+    personaID: string,
+    nombre: string,
+    apellido: string,
+    correo: string,
+    imagen: { mimetype: string; data: string },
+  ) =>
+    postData(
+      GqlModificarPersona({
+        busqueda: { _id: personaID },
+        datos: { nombre, apellido, correo, imagen },
+      }),
+    ),
 };

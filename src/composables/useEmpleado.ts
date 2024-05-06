@@ -26,6 +26,7 @@ export const useEmpleado = () => {
       await empleadoService.obtenerTodosEmpleados(
         useAuth.negocioElegido.nombre,
       );
+    console.log(entidadBuscarEmpleado);
     estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
       return {
         id: empleado._id,
@@ -34,7 +35,10 @@ export const useEmpleado = () => {
         nombre: empleado.persona.nombre + ' ' + empleado.persona.apellido,
         correo: empleado.persona.correo,
         telefono: empleado.persona.telefono,
-        foto: 'https://i.pinimg.com/564x/bf/e6/ee/bfe6ee11981399a846f03f8af9105a30.jpg',
+        foto:
+          empleado.persona.imagen.cloudinaryUrl === null
+            ? 'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg'
+            : empleado.persona.imagen.cloudinaryUrl,
       };
     });
     // console.log(estado.rows);

@@ -16,6 +16,10 @@ query buscarPersonas($busqueda: BuscarPersonaDto!) {
     nombre
     telefono
     correo
+    imagen {
+      localUpload
+      cloudinaryUrl
+    }
   }
 }
 
@@ -28,6 +32,10 @@ mutation modificarPersona(
     nombre
     correo
     telefono
+    imagen {
+      localUpload
+      cloudinaryUrl
+    }
   }
 }
 
@@ -38,6 +46,10 @@ query buscarPersona($busqueda: BuscarPersonaDto!, $opciones: OpcionesDto) {
     correo
     telefono
     apellido
-    imagen
+    # imagen
+    imagen {
+      localUpload
+      cloudinaryUrl
+    }
   }
 }

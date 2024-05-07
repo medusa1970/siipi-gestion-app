@@ -26,7 +26,7 @@
           <!-- NAV END -->
           <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
             <q-btn
-              class="lg:mr-1"
+              padding="0"
               dense
               flat
               round
@@ -34,12 +34,14 @@
             >
               <img
                 v-if="storeAuth.user.imagen == ''"
-                style="border-radius: 100%; object-fit: cover"
+                class="rounded-full object-cover"
+                style="width: 40px; height: 40px"
                 src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
               />
               <img
                 v-else
-                style="border-radius: 100%; object-fit: cover"
+                class="rounded-full object-cover"
+                style="width: 40px; height: 40px"
                 :src="storeAuth.user.imagen"
               />
               <q-menu
@@ -54,12 +56,14 @@
                       <q-avatar>
                         <img
                           v-if="storeAuth.user.imagen == ''"
-                          style="border-radius: 100%; object-fit: cover"
+                          class="rounded-full object-cover"
+                          style="width: 40px; height: 40px"
                           src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
                         />
                         <img
                           v-else
-                          style="border-radius: 100%; object-fit: cover"
+                          class="rounded-full object-cover"
+                          style="width: 40px; height: 40px"
                           :src="storeAuth.user.imagen"
                         />
                       </q-avatar>
@@ -296,15 +300,23 @@
           <!-- NAV END -->
           <nav class="flex flex-grow justify-end basis-0 items-center">
             <q-btn
-              class="lg:mr-1"
+              padding="0"
               dense
               flat
               round
               style="width: 40px; height: 40px"
-              ><img
-                style="border-radius: 100%; object-fit: cover"
+            >
+              <img
+                v-if="storeAuth.user.imagen == ''"
+                class="rounded-full object-cover"
+                style="width: 40px; height: 40px"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+              />
+              <img
+                v-else
+                class="rounded-full object-cover"
+                style="width: 40px; height: 40px"
                 :src="storeAuth.user.imagen"
-                alt=""
               />
               <q-menu
                 transition-show="rotate"
@@ -316,7 +328,18 @@
                   <q-item clickable @click="editProfile">
                     <q-item-section avatar>
                       <q-avatar>
-                        <img :src="storeAuth.user.imagen" />
+                        <img
+                          v-if="storeAuth.user.imagen == ''"
+                          class="rounded-full object-cover"
+                          style="width: 38px; height: 38px"
+                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                        />
+                        <img
+                          v-else
+                          class="rounded-full object-cover"
+                          style="width: 38px; height: 38px"
+                          :src="storeAuth.user.imagen"
+                        />
                       </q-avatar>
                     </q-item-section>
 
@@ -355,9 +378,6 @@
                           negocio.nombre
                         }}</q-item-section>
                       </q-item>
-                      <!-- <q-item clickable @click="marca">
-                    <q-item-section> Negocio 2 </q-item-section>
-                  </q-item> -->
                     </q-list>
                   </q-expansion-item>
                   <q-item clickable @click="logout">
@@ -391,33 +411,36 @@
       <!-- drawer content -->
       <q-list>
         <!-- PERFIL -->
-        <q-item style="height: 250px">
+        <q-item style="height: 250px; width: 300px">
           <q-img
             id="portada"
             class="absolute-top"
-            :src="Portada"
+            :src="portadaImg"
             style="height: 250px; object-fit: cover"
           >
             <div id="perfil" class="absolute-bottom text-center">
-              <q-avatar size="70px" class="q-mb-sm">
-                <img style="object-fit: cover" :src="storeAuth.user.imagen" />
-                <!-- <q-btn
-                  color="red"
-                  icon="edit"
-                  class="absolute bottom-0 left-[75%]"
-                  dense
-                  round
-                  size="10px"
-                  padding="5px"
-                /> -->
-              </q-avatar>
-              <h1 class="text-weight-bold">
+              <h1
+                class="inline-block px-4 rounded-lg bg-white text-black uppercase font-bold"
+              >
                 <!-- {{ user2.name + ' ' + user2.lastname }} -->
                 {{ `${storeAuth.user.nombre} ${storeAuth.user.apellido}` }}
               </h1>
-              <h1>{{ storeAuth.user.correo }}</h1>
             </div>
           </q-img>
+          <div class="w-full h-full flex justify-center items-center">
+            <q-avatar size="100px">
+              <img
+                v-if="storeAuth.user.imagen == ''"
+                style="object-fit: cover"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+              />
+              <img
+                v-else
+                style="object-fit: cover"
+                :src="storeAuth.user.imagen"
+              />
+            </q-avatar>
+          </div>
         </q-item>
         <div id="vistas-objetos">
           <q-list v-for="item in menuList" :key="item" clickable :to="item.to">

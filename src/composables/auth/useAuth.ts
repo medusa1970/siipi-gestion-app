@@ -56,13 +56,16 @@ export const useAuth = () => {
       contrasena: string;
     } //@ts-ignore
     const data: DataProps = LocalStorage.getItem('prohibido');
-    LocalStorage.remove('prohibido'); //@ts-ignore
-    const { conectar } = await authService.login(
-      data.nombre,
-      data.contrasena,
-      negocio._id,
-    );
-    useAuth.token = conectar.token;
+
+    if (data) {
+      const { conectar } = await authService.login(
+        data.nombre,
+        data.contrasena,
+        negocio._id,
+      );
+      useAuth.token = conectar.token;
+      LocalStorage.remove('prohibido');
+    }
     const { entidadBuscarEmpleado } = await authService.buscarEmpleadoCargo(
       negocio._id,
       useAuth.user._id,

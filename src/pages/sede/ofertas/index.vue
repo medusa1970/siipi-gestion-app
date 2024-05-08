@@ -37,7 +37,7 @@
             />
             <q-img
               v-else
-              src="https://cdn.discordapp.com/attachments/1163916287030870056/1237059192079122452/rect45.png?ex=663a44a6&is=6638f326&hm=8404c1e9859bec1f76b367688c76e2d34674e391798b177a88330f4dd0f8e8a9&"
+              :src="Oferta"
               spinner-color="black"
               class="cell-image"
               width="40px"
@@ -131,6 +131,8 @@ import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
 import { onMounted } from 'vue';
 import { fechaMes } from '@/helpers/fecha';
+// import {} from "@/as"
+import Oferta from '@/assets/img/oferta.png';
 
 const {
   estado,

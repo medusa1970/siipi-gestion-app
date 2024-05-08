@@ -54,7 +54,7 @@
             />
             <q-img
               v-else
-              src="https://cdn.discordapp.com/attachments/1163916287030870056/1237059191705702511/rect42.png?ex=663a44a6&is=6638f326&hm=b8369b1933163cdb16d278a1b769e56bac7624dbc28ccb4cbba091dc6add46a0&"
+              :src="Producto"
               spinner-color="black"
               class="cell-image"
               width="40px"
@@ -168,6 +168,7 @@ import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
 import { fechaMes } from '@/helpers/fecha';
+import Producto from '@/assets/img/producto.png';
 
 const isDoubleClick = ref(false);
 const row = ref('');

@@ -90,12 +90,11 @@ export const useOferta = () => {
       ingredientes,
       condiciones,
       preparados,
-      catalogoNombre,
+      catalogoNombre, //@ts-ignore
+      idIngrediente,
       ...ofertaData
     } = estado.oferta;
     const imagenCvt = await fileToBase64(selectedFile.value);
-    console.log(imagenCvt);
-    console.log(ofertaData);
 
     const { ofertaCrear } = await ofertaService.crearOferta({
       ...ofertaData,

@@ -1,4 +1,7 @@
 - precio TOTAL 2 decimal.
+- editar empleado.
+- rol mobile
+- rol administrador en cathering
 
 - menuflotante @gmail.com.
 - confirmacion de pedido preparado.

@@ -60,6 +60,13 @@
         class="flex flex-col justify-center items-center"
       >
         <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
+          <q-btn
+            color="primary"
+            label="prueba impresora"
+            no-caps
+            padding="2px 10px"
+            @click="pruebaImpresora"
+          />
           <div class="flex justify-between items-center mb-4">
             <h1 class="font-bold">Pedidos por Aceptar:</h1>
 
@@ -959,29 +966,62 @@
     </q-tab-panels>
 
     <!-- IMPRESION -->
-    <div
-      id="divParaImprimir"
-      v-if="pedidoSeleccionado"
-      class="w-[283px] border-[1px] [&>p]:!text-[10px] !p-2"
-    >
-      <h1 class="text-center font-bold !text-[13px]">Siipi Factura</h1>
-      <p>Origen: {{ pedidoSeleccionado.comprador.nombre }}</p>
-      <p>Destino: {{ pedidoSeleccionado.vendedor.nombre }}</p>
-      <p>
-        Responsable: {{ pedidoSeleccionado.estado[0].persona.nombre }}
-        {{ pedidoSeleccionado.estado[0].persona.apellido }}
-      </p>
-      <p>Fecha: {{ formateadorFecha(pedidoSeleccionado.estado[0].fecha) }}</p>
-      <p class="text-center">
-        ------------------------------------------------
-      </p>
-      <h1 class="font-bold !text-[11px]">Productos:</h1>
-      <div v-for="item in pedidoSeleccionado.items" :key="item._id">
-        <div class="flex gap-2 !text-[10px]">
-          <p>{{ item.cantidad }}</p>
-          <p>{{ item.oferta.nombre }}</p>
-        </div>
+    <div id="divParaImprimir" v-if="pedidoSeleccionado" class="w-[283px]">
+      <div style="text-align: center">
+        <NuxtImg src="/logo.png" alt="logoSiipi" width="100" height="50" />
+        <!-- <img src="/logo.png" alt="logoSiipi" width="100" height="50" /> -->
       </div>
+
+      <div
+        style="
+          font-family: 'Nunito Sans', sans-serif;
+          line-height: 1.2;
+          margin: 10px 0;
+          font-size: 12px;
+        "
+      >
+        <p>Origen: {{ pedidoSeleccionado.comprador.nombre }}</p>
+        <p>Destino: {{ pedidoSeleccionado.vendedor.nombre }}</p>
+        <p>
+          Responsable: {{ pedidoSeleccionado.estado[0].persona.nombre }}
+          {{ pedidoSeleccionado.estado[0].persona.apellido }}
+        </p>
+        <p>Fecha: {{ formateadorFecha(pedidoSeleccionado.estado[0].fecha) }}</p>
+      </div>
+      <p style="text-align: center">
+        ------------------------------------------
+      </p>
+      <table>
+        <!-- <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead> -->
+        <tbody>
+          <tr
+            v-for="item in pedidoSeleccionado.items"
+            :key="item._id"
+            style="font-size: 12px"
+          >
+            <td>{{ item.oferta.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+    </div>
+
+    <div id="printableArea" v-show="printing">
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit officia
+        libero deserunt! Laboriosam amet mollitia rem eligendi quo minus
+        doloribus delectus veritatis at corporis aliquam, optio odio nemo
+        maiores ipsa. Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+        Illo ad, voluptatum rem quae aliquam tenetur sit dolores cumque ab
+        quaerat! Vel esse suscipit sint sed veniam repudiandae quaerat.
+        Blanditiis, laboriosam.
+      </p>
     </div>
   </div>
 
@@ -1046,11 +1086,12 @@
 definePageMeta({
   layout: 'cathering',
 });
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
 import { usePedido } from '@/composables/punto/usePedido';
 import { pedidoGlobal } from '~/helpers/columns';
 import { formateadorFecha } from '@/helpers/fecha';
+import Logo from '@/assets/img/logo.png';
 
 const {
   buscarPedidos2,
@@ -1075,16 +1116,30 @@ const tab = ref('puntos');
 const tabPuntos = ref('areaGlobal');
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 const pedidoSeleccionado = ref(null);
+const printing = ref(false);
+
 const imprimir = (pedido) => {
   pedidoSeleccionado.value = pedido;
 
   setTimeout(() => {
     const divParaImprimir = document.getElementById('divParaImprimir');
+    const ventanaImpresion = window.open('', '_blank');
 
-    divParaImprimir.style.display = 'block';
-    window.print();
-    document.body.style.display = 'block';
-    divParaImprimir.style.display = 'none';
+    ventanaImpresion.document.write(
+      "<style> body { font-family: 'Nunito Sans', sans-serif; font-size: 10px; padding: 4px; } p{ padding: 0; margin: 0;}</style>",
+    );
+
+    ventanaImpresion.document.write(divParaImprimir.outerHTML);
+    console.log(ventanaImpresion.document);
+    ventanaImpresion.document.close();
+    ventanaImpresion.print();
+    ventanaImpresion.close();
+    // divParaImprimir.style.display = 'none';
+
+    // divParaImprimir.style.display = 'block';
+    // window.print();
+    // document.body.style.display = 'block';
+    // divParaImprimir.style.display = 'none';
   }, 200);
 };
 const dateOption = (date) => {
@@ -1109,9 +1164,21 @@ const abreviarNombre = (nombre) => {
   return `${abreviatura}${contenidoParentesis})`;
 };
 
+const pruebaImpresora = async () => {
+  printing.value = true;
+  await nextTick();
+
+  const printableArea = document.getElementById('printableArea');
+  const ventanaImpresion = window.open('', '_blank');
+  ventanaImpresion.document.write(printableArea.outerHTML);
+  ventanaImpresion.document.title = 'Mi título de impresión'; // Agrega esta línea
+  ventanaImpresion.document.close();
+  ventanaImpresion.print();
+  ventanaImpresion.close();
+  printing.value = false;
+};
+
 watch(date, (value) => {
-  // console.log(value);
-  // console.log(date.value);
   filtroHistorial(value);
 });
 onMounted(async () => {
@@ -1137,5 +1204,30 @@ onMounted(async () => {
   .no-print {
     display: none;
   }
+  // body {
+  //   // width: 80mm; /* Ajusta el ancho según las especificaciones de tu impresora térmica */
+  //   // font-size: 12px; /* Ajusta el tamaño de fuente según tus necesidades */
+  //   visibility: hidden;
+  // }
+
+  // #printableArea,
+  // #printableArea * {
+  //   visibility: visible;
+  // }
+  // #printableArea {
+  //   /* Aquí puedes agregar los estilos específicos para el div que quieres imprimir */
+  //   // position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   font-size: 10px;
+  //   line-height: 1.2;
+  //   text-align: justify;
+  // }
+
+  /* Oculta todos los elementos que no quieres imprimir */
+  // .no-print,
+  // .no-print * {
+  //   display: none !important;
+  // }
 }
 </style>

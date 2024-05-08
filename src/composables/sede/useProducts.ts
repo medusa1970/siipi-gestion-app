@@ -108,10 +108,8 @@ export const useProducts = () => {
   const navegarDetalleProducto = (row: any) => {
     useProduct.product = row;
     estado.producto = row;
-    imagePreview.value = row.imagen.cloudinaryUrl;
     useProduct.isEdit = true;
-
-    // router.push('productos/detailProduct');
+    imagePreview.value = row.imagen?.cloudinaryUrl;
   };
   const modalAgregarProducto = () => {
     // router.push('productos/detailProduct');

@@ -1,5 +1,7 @@
 <template>
-  <h1 class="text-center font-bold text-lg">Arbol de categorias</h1>
+  <h1 class="text-lg font-extrabold uppercase text-center">
+    Gestion de categorias
+  </h1>
 
   <!-- TREE -->
   <div class="flex justify-center mt-4">

@@ -1,5 +1,5 @@
 <template>
-  <Layout :menuList="menuListPunto" :portada-img="PortadaPunto">
+  <Layout :menuList="menuListPunto" :portada-img="PortadaPunto" punto>
     <template #actionPedido>
       <q-btn
         dense

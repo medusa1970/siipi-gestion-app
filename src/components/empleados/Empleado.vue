@@ -1,7 +1,9 @@
 <template>
   <div>
     <Navigation label="Empleados" icon="group" />
-    <h1 class="font-bold text-xl">Gestion de empleados</h1>
+    <h1 class="text-lg font-extrabold uppercase text-center">
+      Gestion de empleados
+    </h1>
     <Table :rows="estado.rows" :columns="columnsEmpleados" dense>
       <!-- IMAGES -->
       <template #body-cell-image="{ value }">

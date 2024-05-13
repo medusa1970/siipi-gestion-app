@@ -1,7 +1,18 @@
+- Manual Pedidos como hacer. Video
 - precio TOTAL 2 decimal.
 - editar empleado.
-- rol mobile
-- rol administrador en cathering
+- rol mobile.
+- rol administrador en cathering.
+- ver pedidos sucursal repartidor.
+- ver infomracion de producto/oferta
+- estado pendiente a revision
+- categoria scroll
+- select catalogos ofertas
+
+- Crear producto no agrega.
+- campos obligatorio y poner asterisco.
+
+ROLES: logistica, almacen, reparticion.
 
 - menuflotante @gmail.com.
 - confirmacion de pedido preparado.

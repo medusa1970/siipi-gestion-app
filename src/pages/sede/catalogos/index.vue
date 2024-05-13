@@ -1,6 +1,8 @@
 <template>
   <Navigation label="Catalogos" icon="group" />
-  <h1 class="font-bold text-xl mb-3">Gestion de catalogos</h1>
+  <h1 class="text-lg font-extrabold uppercase text-center">
+    Gestion de catalogos
+  </h1>
   <q-btn
     color="primary"
     label="Crear catalogo"

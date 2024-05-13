@@ -109,7 +109,8 @@ export const useProducts = () => {
     useProduct.product = row;
     estado.producto = row;
     useProduct.isEdit = true;
-    imagePreview.value = row.imagen?.cloudinaryUrl;
+    if (row.imagen) imagePreview.value = row.imagen.cloudinaryUrl;
+    // imagePreview.value = row.imagen?.cloudinaryUrl ?? imagePreview.value;
   };
   const modalAgregarProducto = () => {
     // router.push('productos/detailProduct');
@@ -125,7 +126,7 @@ export const useProducts = () => {
   };
   //STORE
   if (useProduct.product) {
-    console.log(useProduct.product);
+    // console.log(useProduct.product);
     estado.producto = useProduct.product; //@ts-ignore
     if (useProduct.product.imagen)
       //@ts-ignore

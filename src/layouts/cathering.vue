@@ -1,5 +1,9 @@
 <template>
-  <Layout :menuList="menuListComputed" :portada-img="PortadaCathering">
+  <Layout
+    :menuList="menuListComputed"
+    :portada-img="PortadaCathering"
+    cathering
+  >
     <template #actionPedido>
       <q-btn
         dense

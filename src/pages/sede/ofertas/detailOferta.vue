@@ -26,6 +26,9 @@
           storeOferta.isEdit === false ? crearOferta() : editarOferta()
         "
       >
+        <h1 class="text-lg font-extrabold uppercase text-center mb-3">
+          {{ storeOferta.isEdit === true ? 'Editar Oferta' : 'Agregar Oferta' }}
+        </h1>
         <q-file
           v-model="imagen"
           label="Seleccionar imagen"

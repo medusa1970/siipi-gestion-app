@@ -1,18 +1,9 @@
 <template>
   <div>
     <Navigation label="Productos" icon="list_alt" />
-    <span class="flex gap-2">
-      <h1 class="font-bold text-xl">Gestion de productos</h1>
-      <!-- <q-btn
-        color="primary"
-        icon="bi-eye"
-        rounded
-        dense
-        size="12px"
-        @click="$router.push('productos/categorias')"
-        ><q-tooltip>Ver cataegorias</q-tooltip></q-btn
-      > -->
-    </span>
+    <h1 class="text-lg font-extrabold uppercase text-center">
+      Gestion de productos
+    </h1>
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
         <NuxtLink to="productos/detailProduct">

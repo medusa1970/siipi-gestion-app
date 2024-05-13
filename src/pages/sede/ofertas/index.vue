@@ -1,7 +1,9 @@
 <template>
   <div>
     <Navigation label="Ofertas" icon="folder" />
-    <h1 class="font-bold text-xl">Gestion de ofertas</h1>
+    <h1 class="text-lg font-extrabold uppercase text-center">
+      Gestion de ofertas
+    </h1>
     <!-- <code>{{ estado.ofertas }}</code> -->
     <!-- <h1>{{ estado.ofertas.length }}</h1> -->
     <Table :rows="estado.ofertas" :columns="columnsOfertas" badge dense>

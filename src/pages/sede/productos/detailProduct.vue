@@ -6,7 +6,7 @@
     href="/sede/productos"
   />
   <form @submit.prevent="agregarProducto()" class="p-2">
-    <h1 class="text-lg font-bold mb-1">
+    <h1 class="text-lg font-extrabold uppercase text-center mb-3">
       {{ useProduct.isEdit === true ? 'Editar Producto' : 'Agregar Producto' }}
     </h1>
     <!-- IMAGE -->

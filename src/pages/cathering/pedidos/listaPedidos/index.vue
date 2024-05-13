@@ -109,10 +109,7 @@
                   size="12px"
                   class="no-print"
                   @click="imprimir(punto)"
-                  ><q-tooltip class="no-print bg-gray-400-500"
-                    >Imprimir pedido</q-tooltip
-                  ></q-btn
-                >
+                />
               </div>
             </template>
           </Item>
@@ -968,7 +965,14 @@
     <!-- IMPRESION -->
     <div id="divParaImprimir" v-if="pedidoSeleccionado" class="w-[283px]">
       <div style="text-align: center">
-        <NuxtImg src="/logo.png" alt="logoSiipi" width="100" height="50" />
+        <!-- <NuxtImg src="/logo.png" alt="logoSiipi" width="100" height="50" /> -->
+        <NuxtImg
+          id="logoParaImprimir"
+          src="/logo.png"
+          alt="logoSiipi"
+          width="100"
+          height="50"
+        />
         <!-- <img src="/logo.png" alt="logoSiipi" width="100" height="50" /> -->
       </div>
 
@@ -992,12 +996,6 @@
         ------------------------------------------
       </p>
       <table>
-        <!-- <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-          </tr>
-        </thead> -->
         <tbody>
           <tr
             v-for="item in pedidoSeleccionado.items"
@@ -1121,26 +1119,24 @@ const printing = ref(false);
 const imprimir = (pedido) => {
   pedidoSeleccionado.value = pedido;
 
-  setTimeout(() => {
-    const divParaImprimir = document.getElementById('divParaImprimir');
-    const ventanaImpresion = window.open('', '_blank');
+  const img = new Image();
+  img.src = '/logo.png';
+  img.onload = () => {
+    setTimeout(() => {
+      const divParaImprimir = document.getElementById('divParaImprimir');
+      const ventanaImpresion = window.open('', '_blank');
 
-    ventanaImpresion.document.write(
-      "<style> body { font-family: 'Nunito Sans', sans-serif; font-size: 10px; padding: 4px; } p{ padding: 0; margin: 0;}</style>",
-    );
+      ventanaImpresion.document.write(
+        "<style> body { font-family: 'Nunito Sans', sans-serif; font-size: 10px; padding: 0px; } p{ padding: 0; margin: 0;}</style>",
+      );
 
-    ventanaImpresion.document.write(divParaImprimir.outerHTML);
-    console.log(ventanaImpresion.document);
-    ventanaImpresion.document.close();
-    ventanaImpresion.print();
-    ventanaImpresion.close();
-    // divParaImprimir.style.display = 'none';
-
-    // divParaImprimir.style.display = 'block';
-    // window.print();
-    // document.body.style.display = 'block';
-    // divParaImprimir.style.display = 'none';
-  }, 200);
+      ventanaImpresion.document.write(divParaImprimir.outerHTML);
+      console.log(ventanaImpresion.document);
+      ventanaImpresion.document.close();
+      ventanaImpresion.print();
+      ventanaImpresion.close();
+    }, 200);
+  };
 };
 const dateOption = (date) => {
   // console.log(date);

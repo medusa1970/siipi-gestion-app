@@ -4,7 +4,12 @@
   <q-layout v-if="$q.platform.is.desktop" view="lHr lpR lFr ">
     <q-header
       elevated
-      :class="['text-white ', punto ? 'bg-orange-500' : 'colorBackground']"
+      :class="[
+        'text-white ',
+        punto && 'bg-orange-500',
+        cathering && 'bg-green-500',
+        sede && 'colorBackground',
+      ]"
       style=""
     >
       <q-toolbar class="h-[6vh]">
@@ -138,7 +143,12 @@
       side="left"
       behavior="desktop"
       style=""
-      class="colorBackground"
+      :class="[
+        'text-white ',
+        punto && 'bg-orange-500',
+        cathering && 'bg-green-500',
+        sede && 'colorBackground',
+      ]"
     >
       <!-- drawer content -->
       <q-list>
@@ -634,6 +644,7 @@ defineProps({
   punto: Boolean,
   sede: Boolean,
   portadaImg: String,
+  cathering: Boolean,
 });
 
 // IMPORTS

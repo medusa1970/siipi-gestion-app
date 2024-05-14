@@ -18,6 +18,7 @@ export const useOferta = () => {
     oferta: {
       _id: '',
       nombre: '',
+      abreviacion: '',
       descripcion: '',
       precio: 0,
       catalogo: '',
@@ -63,6 +64,7 @@ export const useOferta = () => {
   const clearOferta = {
     _id: '',
     nombre: '',
+    abreviacion: '',
     descripcion: '',
     precio: 0,
     catalogo: '',
@@ -91,10 +93,12 @@ export const useOferta = () => {
       condiciones,
       preparados,
       catalogoNombre, //@ts-ignore
-      idIngrediente,
+      idIngrediente, //@ts-ignore
+      imagen,
       ...ofertaData
     } = estado.oferta;
     const imagenCvt = await fileToBase64(selectedFile.value);
+    console.log(ofertaData);
 
     const { ofertaCrear } = await ofertaService.crearOferta({
       ...ofertaData,
@@ -155,6 +159,7 @@ export const useOferta = () => {
     storeOferta.oferta.idIngrediente = oferta.ingredientes[0]._id;
     storeOferta.oferta._id = oferta._id;
     storeOferta.oferta.nombre = oferta.nombre;
+    storeOferta.oferta.abreviacion = oferta.abreviacion;
     storeOferta.oferta.descripcion = oferta.descripcion;
     storeOferta.oferta.precio = oferta.precio;
     storeOferta.oferta.catalogo = oferta.catalogo._id;
@@ -238,8 +243,6 @@ export const useOferta = () => {
       idIngrediente,
       ...ofertaData
     } = estado.oferta;
-    console.log(ofertaData);
-    console.log(estado.productoFijo);
 
     console.log(selectedFile.value);
     if (selectedFile.value === '') {
@@ -247,7 +250,6 @@ export const useOferta = () => {
         estado.oferta._id,
         ofertaData,
       );
-      console.log(ofertaModificar);
       if (ofertaModificar) {
         const { ofertaModificarIngredienteProducto: res } =
           await ofertaService.editarIngredienteProducto(
@@ -256,7 +258,6 @@ export const useOferta = () => {
             estado.productoFijo.producto._id,
             estado.productoFijo.presentacion,
           );
-        console.log(res);
       }
     } else {
       const { ofertaModificar } = await ofertaService.editarOferta(
@@ -269,7 +270,6 @@ export const useOferta = () => {
           },
         },
       );
-      console.log(ofertaModificar);
       if (ofertaModificar) {
         const { ofertaModificarIngredienteProducto: res } =
           await ofertaService.editarIngredienteProducto(
@@ -278,25 +278,9 @@ export const useOferta = () => {
             estado.productoFijo.producto._id,
             estado.productoFijo.presentacion,
           );
-        console.log(res);
       }
     }
 
-    // const { ofertaModificar } = await ofertaService.editarOferta(
-    //   estado.oferta._id,
-    //   ofertaData,
-    // );
-    // console.log(ofertaModificar);
-    // if (ofertaModificar) {
-    //   const { ofertaModificarIngredienteProducto: res } =
-    //     await ofertaService.editarIngredienteProducto(
-    //       estado.oferta._id, //@ts-ignore
-    //       estado.productoFijo.ingredienteID, //@ts-ignore
-    //       estado.productoFijo.producto._id,
-    //       estado.productoFijo.presentacion,
-    //     );
-    //   console.log(res);
-    // }
     NotifySucessCenter('Oferta editada correctamente');
     router.push('/sede/ofertas');
   };

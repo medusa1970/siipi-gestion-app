@@ -6,6 +6,7 @@ interface ofertaState {
   oferta: {
     _id: string;
     nombre: string;
+    abreviacion: string;
     descripcion: string;
     precio: number;
     catalogo: string;
@@ -29,6 +30,7 @@ export const ofertaStore = defineStore('oferta', {
     oferta: {
       _id: '',
       nombre: '',
+      abreviacion: '',
       descripcion: '',
       precio: 0,
       catalogo: '',

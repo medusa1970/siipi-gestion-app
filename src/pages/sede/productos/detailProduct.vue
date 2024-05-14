@@ -36,7 +36,7 @@
       <q-input
         v-model="estado.producto.nombre"
         type="text"
-        label="Nombre"
+        label="Nombre*"
         outlined
         dense
         :readonly="useProduct.isEdit"
@@ -92,7 +92,7 @@
       <q-input
         v-model="estado.producto.comentario"
         type="textarea"
-        label="Comentario"
+        label="Comentario*"
         outlined
         dense
         clearable

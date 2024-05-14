@@ -45,12 +45,13 @@ export const authStore = defineStore('auth', {
       this.user.usuario = conectar.persona.usuario;
       this.user.apellido = conectar.persona.apellido;
       this.user.correo = conectar.persona.correo;
+      this.user.imagen = conectar.persona.imagen?.cloudinaryUrl;
 
-      if (conectar.persona.imagen?.cloudinaryUrl) {
-        this.user.imagen = conectar.persona.imagen.cloudinaryUrl;
-      } else {
-        this.user.imagen = '';
-      }
+      // if (conectar.persona.imagen?.cloudinaryUrl) {
+      //   this.user.imagen = conectar.persona.imagen.cloudinaryUrl;
+      // } else {
+      //   this.user.imagen = '';
+      // }
       this.token = conectar.token;
 
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);

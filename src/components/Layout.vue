@@ -6,8 +6,8 @@
       elevated
       :class="[
         'text-white ',
-        punto && 'bg-orange-500',
-        cathering && 'bg-green-500',
+        punto && 'bg-orange-600',
+        cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"
       style=""
@@ -38,16 +38,16 @@
               style="width: 40px; height: 40px"
             >
               <img
-                v-if="storeAuth.user.imagen == ''"
+                v-if="storeAuth.user.imagen"
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="storeAuth.user.imagen"
               />
               <img
                 v-else
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                :src="storeAuth.user.imagen"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
               />
               <q-menu
                 transition-show="rotate"
@@ -60,16 +60,16 @@
                     <q-item-section avatar>
                       <q-avatar>
                         <img
-                          v-if="storeAuth.user.imagen == ''"
+                          v-if="storeAuth.user.imagen"
                           class="rounded-full object-cover"
                           style="width: 40px; height: 40px"
-                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                          :src="storeAuth.user.imagen"
                         />
                         <img
                           v-else
                           class="rounded-full object-cover"
                           style="width: 40px; height: 40px"
-                          :src="storeAuth.user.imagen"
+                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
                         />
                       </q-avatar>
                     </q-item-section>
@@ -145,8 +145,8 @@
       style=""
       :class="[
         'text-white ',
-        punto && 'bg-orange-500',
-        cathering && 'bg-green-500',
+        punto && 'bg-orange-600',
+        cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"
     >
@@ -172,14 +172,14 @@
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
               <img
-                v-if="storeAuth.user.imagen == ''"
+                v-if="storeAuth.user.imagen"
                 style="object-fit: cover"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="storeAuth.user.imagen"
               />
               <img
                 v-else
                 style="object-fit: cover"
-                :src="storeAuth.user.imagen"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
               />
             </q-avatar>
           </div>
@@ -317,16 +317,16 @@
               style="width: 40px; height: 40px"
             >
               <img
-                v-if="storeAuth.user.imagen == ''"
+                v-if="storeAuth.user.imagen"
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="storeAuth.user.imagen"
               />
               <img
                 v-else
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                :src="storeAuth.user.imagen"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
               />
               <q-menu
                 transition-show="rotate"
@@ -339,16 +339,16 @@
                     <q-item-section avatar>
                       <q-avatar>
                         <img
-                          v-if="storeAuth.user.imagen == ''"
+                          v-if="storeAuth.user.imagen"
                           class="rounded-full object-cover"
                           style="width: 38px; height: 38px"
-                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                          :src="storeAuth.user.imagen"
                         />
                         <img
                           v-else
                           class="rounded-full object-cover"
                           style="width: 38px; height: 38px"
-                          :src="storeAuth.user.imagen"
+                          src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
                         />
                       </q-avatar>
                     </q-item-section>
@@ -440,14 +440,14 @@
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
               <img
-                v-if="storeAuth.user.imagen == ''"
+                v-if="storeAuth.user.imagen"
                 style="object-fit: cover"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="storeAuth.user.imagen"
               />
               <img
                 v-else
                 style="object-fit: cover"
-                :src="storeAuth.user.imagen"
+                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
               />
             </q-avatar>
           </div>

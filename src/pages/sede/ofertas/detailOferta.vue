@@ -8,18 +8,6 @@
     />
     <div class="p-2">
       <h1 class="font-semibold text-base mb-3">Información basicaa:</h1>
-      <!-- <div
-        class="flex flex-col items-center justify-center bg-gray-200 w-32 h-32 cursor-pointer"
-      >
-        <input type="file" class="hidden" id="fileInput" />
-        <label
-          for="fileInput"
-          class="flex items-center justify-center text-gray-500"
-        >
-          <q-icon name="add" size="xs" />
-        </label>
-        <span class="text-gray-500">Subir imagen</span>
-      </div> -->
       <!-- INPUTS -->
       <form
         @submit.prevent="
@@ -59,32 +47,31 @@
             class="col-span-2"
             v-model="estado.oferta.nombre"
             type="text"
-            label="Nombre"
+            label="Nombre*"
             outlined
             dense
             clearable
             required
+          />
+          <q-input
+            class="col-span-2"
+            v-model="estado.oferta.abreviacion"
+            label="Abreviacion"
+            outlined
+            dense
+            clearable
           />
           <q-input
             class="col-span-2"
             v-model.number="estado.oferta.precio"
             type="number"
-            label="Precio"
+            label="Precio*"
             outlined
             dense
             clearable
             required
           />
-          <q-input
-            class="col-span-2"
-            v-model="estado.oferta.catalogoNombre"
-            label="Catalogo"
-            outlined
-            dense
-            clearable
-            disable
-            required
-          />
+
           <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
             <h1 class="font-bold">Seleccionar catalogo:</h1>
             <div class="flex gap-2 flex-wrap">
@@ -101,7 +88,17 @@
             </div>
           </div>
           <q-input
-            class="col-span-6"
+            class="col-span-3"
+            v-model="estado.oferta.catalogoNombre"
+            label="Catalogo*"
+            outlined
+            dense
+            clearable
+            disable
+            required
+          />
+          <q-input
+            class="col-span-3"
             v-model="estado.oferta.descripcion"
             type="textarea"
             label="Descripcion"

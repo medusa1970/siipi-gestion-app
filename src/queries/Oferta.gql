@@ -8,6 +8,7 @@ query ofertaBuscar($busqueda: BuscarOfertaDto!) {
     _id
     _creado
     nombre
+    abreviacion
     descripcion
     catalogo {
       _id
@@ -52,6 +53,7 @@ mutation crearOferta($datos: CrearOfertaDto!) {
   ofertaCrear(datos: $datos) {
     _id
     nombre
+    abreviacion
     descripcion
     precio
     grupos
@@ -73,6 +75,7 @@ mutation modificarOfertas(
     _id
     nombre
     descripcion
+    abreviacion
     imagen {
       cloudinaryUrl
     }

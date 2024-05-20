@@ -19,6 +19,7 @@ export const productStore = defineStore('product', {
       comentario: '',
       presentacionBasica: '',
       presentaciones: [],
+      categoria: { _id: '', nombre: '' },
     },
     isEdit: false,
     ListInventario: [],

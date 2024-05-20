@@ -52,6 +52,12 @@ export const columnsOfertas = [
     field: (row: any) => row._creado,
   },
   {
+    name: 'modificado',
+    label: 'Modificado',
+    align: 'left',
+    field: (row: any) => row._modificado,
+  },
+  {
     name: 'imagen',
     label: 'Imagen',
     align: 'left',

@@ -3,7 +3,7 @@
 query ofertaBuscar($busqueda: BuscarOfertaDto!) {
   ofertaBuscar(
     busqueda: $busqueda
-    opciones: { populate: true, limit: 0, buscarCatalogo: true }
+    opciones: { populate: true, limit: 10, buscarCatalogo: true }
   ) {
     _id
     _creado
@@ -177,6 +177,17 @@ query buscarCatalogos($busqueda: BuscarCatalogoDto!) {
   }
 }
 
+query buscarCatalogos2($busqueda: BuscarCatalogoDto!) {
+  catalogoArbol(busqueda: $busqueda, opciones: { populate: true }) {
+    _id
+    nombre
+    hijas {
+      _id
+      nombre
+    }
+  }
+}
+
 # query buscarCatalogoID($busqueda: BuscarCatalogoDto!) {
 #   catalogoArbol(busqueda: $busqueda, opciones: { populate: true }) {
 #     _id
@@ -259,8 +270,46 @@ query puntoLeerCatalogo(
 query catalogoOfertasRecursivo($busqueda: BuscarCatalogoDto!) {
   catalogoOfertasRecursivo(busqueda: $busqueda, opciones: { populate: true }) {
     _id
+    _creado
+    _modificado
     nombre
+    abreviacion
+    descripcion
+    catalogo {
+      _id
+      nombre
+    }
     precio
     grupos
+    preparados {
+      producto {
+        _id
+      }
+      cantidad
+    }
+    ingredientes {
+      ... on IngredienteProducto {
+        _id
+        _tipo
+        producto {
+          _id
+          nombre
+          presentacionBasica
+          presentaciones {
+            cantidad
+            nombre
+          }
+        }
+        cantidad
+      }
+      ... on IngredienteGrupo {
+        _id
+        _tipo
+        grupo
+      }
+    }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }

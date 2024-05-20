@@ -57,3 +57,75 @@
 ## No entiendo, Aclarar :
 
 EDITAR PEDIDOS POR RANGOS DENTRO DE DETERMINADOS TIEMPOS:
+
+---------------s-----------------
+
+- poner ya la impresora de areas.
+- pasar el hover y poner nombre completo.
+- solo mostrar pedidos del dia (sin pedidos anteriores) ver pedidos.
+- mostrar los productos/pedidos en global.
+- sumar las entidades de productos area que no se repitan.
+- guardar nombre de quien alista el pedido.
+- borrar modificar catgeroias/catalogos.
+- buscador de productos en select ofertas.
+- decimal precio oferta (agregar).
+- descripcion requerido oferta (agregar).
+- fecha de moficicacion ya.
+- schema (marca, categoria, unidades medida, proveedor).
+
+# NUEVO 05/15/2024
+
+## Tareas rapidas
+
+- _DECIMALES_ : precio TOTAL 2 decimal.
+- POPUT para imprimir areas
+- Quitar poput ver puntos rutas,orden
+- Si no tiene unidad no poner parentesis GLOBAL
+- Campo 0 en formularios.
+- refactorizar las consultas multiples (BACKEND).
+- presentacion Basica = unidad Medida
+- reemplazar de productos/ofertas con el nuevo formulario.
+- Crear Oferta segun el catalogo entrante.
+- Buscar producto desde el select.
+- Permitir campo decimal en precio.
+- Descripcion no obligatoria (BACKEND).
+- Solicitar borrar productos (Estado booleano BACKEND/FRONTEND).
+- Categoria desaparecer.
+- pasar el hover y poner nombre completo.
+- solo mostrar pedidos del dia (sin pedidos anteriores) ver pedidos.
+- mostrar los productos/pedidos en global (CONSULTA BACK).
+- sumar las entidades de productos area que no se repitan.
+- guardar nombre de quien alista el pedido(WIREFRAME LEO).
+- borrar/modificar en Catalogos.
+- Fecha de moficicacion ya.
+
+## ACLARAR LA CONFUSION
+
+- _AGREGAR CAT AL CREAR PROD_ : Recuerdo que antes se podia agregar categoria desde la misma vista de cuando se creaba un producto, ahora si o si debes ir “categorías para agregar”?
+
+## Tareas mas o menos urgentes
+
+- _MANUAL_ : Un manual para cada seccion : boton de manual ? Hacer una video de tutorial
+
+## Tareas urgentes
+
+- _ABREVIACION PRODUCTO_ : tanto al crear producto, como al colocarlo en una oferta (para que eso salga en la factura) : otro campo de formulario, con un numero maximo de caracteres?
+- _ESTADO DE REVISION_ : Por esta primera vez se haga un estado de REVISIÓN, teniendo en cuenta que se importaron datos incluso de productos que ya no se venden, cosa de que se sepa que productos ya se revisaron, y cuales estan pendientes >> Se podria poner un campor para filtrar o bien poder ordenar por fecha de ultima modificacion
+
+## Metas
+
+- _OFERTAS MULTI PRODUCTOS_ : Hacer un ejemplo de como crear producto la bandeja de cupcakes: Producto de cantidades múltiples como el balde
+- _PROVEEDORES SIMPLES_ : proveedores (cambios de precios) y sistema de alertas de cambios de precios
+- _TESORERIA_ : con transacciones, y integrarlo con proveedores
+- _AREAS_ : acceso completo a areas que podran transformar productos y mandar / recibir pedidos >>> hacer wireframes
+- _COPIA LOCAL_ : Trabajar en la copia local de base de datos para no depender de la internet / que las consultas esten mas rapidas :
+  - separar las funcionalidades locales (pedido clientes) y distantes (pedido cathering)
+  - poner ambas apps en el mismo servidor
+  - Ver con Jaime
+- _NOTIFICACIONES_ : sistema de notificacion (mensajes dm, problemas, ediciones por otros empleados, aviso de devoluciones...)
+- _ROLES_ : reorganizar sistema de cargo / roles / permisos
+- _CALCULO DE RECETAS_ : integrarlo al sistema
+
+## No entiendo, Aclarar :
+
+EDITAR PEDIDOS POR RANGOS DENTRO DE DETERMINADOS TIEMPOS:

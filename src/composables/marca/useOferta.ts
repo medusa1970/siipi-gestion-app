@@ -3,7 +3,7 @@ import { NotifySucessCenter } from '~/helpers/message.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
 import { useRouter } from 'vue-router';
-import { da, es, id } from 'date-fns/locale';
+import { ca, da, es, id } from 'date-fns/locale';
 import { useQuasar } from 'quasar';
 import { fileToBase64 } from '~/helpers/helpers';
 
@@ -189,6 +189,32 @@ export const useOferta = () => {
     estado.catalogos = catalogoArbol;
     // console.log(estado.catalogos);
     // console.log(catalogoArbol);
+  };
+  const obtenerTodoCatalagosIdNombre = async () => {
+    const { catalogoArbol } = await ofertaService.buscarCatalogosIdNombre();
+    estado.catalogos = catalogoArbol;
+    console.log(catalogoArbol);
+    estado.catalogoSeleccionado = catalogoArbol?.hijas[0];
+
+    //@ts-ignore
+    if (estado.catalogoSeleccionado?._id) {
+      const { catalogoOfertasRecursivo } =
+        await ofertaService.catalogoRecursivo(
+          //@ts-ignore
+          estado.catalogoSeleccionado._id,
+        );
+      if (catalogoOfertasRecursivo) estado.ofertas = catalogoOfertasRecursivo;
+    }
+    // console.log(estado.catalogos);
+    // console.log(catalogoArbol);
+  };
+  const handleSelectionChange = async (catalogo: any) => {
+    console.log(catalogo);
+    const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
+      //@ts-ignore
+      catalogo._id,
+    );
+    if (catalogoOfertasRecursivo) estado.ofertas = catalogoOfertasRecursivo;
   };
 
   const obtenerCatalogoId = async (catalogoId: string) => {
@@ -423,5 +449,7 @@ export const useOferta = () => {
     imagen,
     imagePreview,
     selectedFile,
+    obtenerTodoCatalagosIdNombre,
+    handleSelectionChange,
   };
 };

@@ -4,16 +4,27 @@
     <h1 class="text-lg font-extrabold uppercase text-center">
       Gestion de ofertas
     </h1>
-    <!-- <code>{{ estado.ofertas }}</code> -->
-    <!-- <h1>{{ estado.ofertas.length }}</h1> -->
     <Table :rows="estado.ofertas" :columns="columnsOfertas" badge dense>
       <!-- AGREGAR -->
       <template #dropdown>
-        <NuxtLink href="ofertas/detailOferta">
+        <!-- <code>{{ estado.catalogos?.hijas }}</code> -->
+        <q-select
+          v-model="estado.catalogoSeleccionado"
+          :options="estado.catalogos?.hijas"
+          option-label="nombre"
+          label="Selecciona un catalogo"
+          style="width: 170px"
+          dense
+          filled
+          color="black"
+          bg-color="orange-5"
+          @update:model-value="handleSelectionChange"
+        />
+        <NuxtLink href="ofertas/detailOferta" class="ml-3">
           <q-btn
             icon-right="add"
             color="green"
-            label="Agregar oferta"
+            label="Crear oferta"
             no-caps
             style="padding: 7px 15px"
             @click="abrirAgregarOferta"
@@ -26,6 +37,14 @@
           <q-td key="creado" :props="props">
             <h1 v-if="props.row._creado">
               {{ fechaMes(props.row._creado) }}
+            </h1>
+          </q-td>
+          <q-td key="creado" :props="props">
+            <h1 v-if="props.row._modificado == null" class="text-green-800">
+              Nuevo
+            </h1>
+            <h1 v-else>
+              {{ fechaMes(props.row._modificado) }}
             </h1>
           </q-td>
           <q-td key="imagen" :props="props" class="">
@@ -78,16 +97,6 @@
               </div>
             </q-popup-edit>
           </q-td>
-          <!-- <q-td key="preparados" :props="props">
-            <span v-if="props.row.preparados">
-              <h1 class="text-red-500" v-if="props.row.preparados.length === 0">
-                Vacio
-              </h1>
-              <h1 v-if="props.row.preparados.length > 0">
-                {{ props.row.preparados.length }}
-              </h1>
-            </span>
-          </q-td> -->
           <q-td key="catalogo" :props="props">
             <h1 v-if="props.row.catalogo && props.row.catalogo.nombre">
               {{ props.row.catalogo.nombre }}
@@ -96,9 +105,6 @@
           <q-td key="precio" :props="props">
             {{ props.row.precio + ' Bs' }}
           </q-td>
-          <!-- <q-td key="ocultar" :props="props">
-              <q-toggle v-model="props.row.ocultar" />
-            </q-td> -->
           <q-td key="actions" :props="props">
             <q-btn
               color="primary"
@@ -131,7 +137,7 @@ definePageMeta({
 });
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fechaMes } from '@/helpers/fecha';
 // import {} from "@/as"
 import Oferta from '@/assets/img/oferta.png';
@@ -144,10 +150,13 @@ const {
   borrarOferta,
   obtenerTodasofertas,
   obtenerTodosProductos,
+  obtenerTodoCatalagosIdNombre,
+  handleSelectionChange,
 } = useOferta();
 
 onMounted(() => {
-  obtenerTodasofertas();
+  // obtenerTodasofertas();
+  obtenerTodoCatalagosIdNombre();
 });
 </script>
 <style scoped>

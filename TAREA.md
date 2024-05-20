@@ -1,3 +1,18 @@
+# TAREA
+
+- poner ya la impresora de areas.
+- pasar el hover y poner nombre completo.
+- solo mostrar pedidos del dia (sin pedidos anteriores) ver pedidos.
+- mostrar los productos/pedidos en global.
+- sumar las entidades de productos area que no se repitan.
+- guardar nombre de quien alista el pedido
+- borrar modificar catgeroias/catalogos
+- buscador de productos en select ofertas.
+- decimal precio oferta (agregar)
+- descripcion requerido oferta (agregar)
+- fecha de moficicacion ya.
+- schema (marca,categoria,unidades medida, proveedor)
+
 - Manual Pedidos como hacer. Video
 - precio TOTAL 2 decimal.
 - editar empleado.

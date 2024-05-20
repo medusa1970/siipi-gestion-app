@@ -35,6 +35,10 @@ export const ofertaService = {
     postData(
       GqlBuscarCatalogos({ busqueda: { nombre: 'Todos las catalogos' } }),
     ),
+  buscarCatalogosIdNombre: async () =>
+    postData(
+      GqlBuscarCatalogos2({ busqueda: { nombre: 'Todos las catalogos' } }),
+    ),
   buscarCatalogoID: async (catalogoID: string) =>
     postData(GqlBuscarCatalogos({ busqueda: { _id: catalogoID } })),
   crearCatalogo: async (nombre: string, catalogoID: string) =>

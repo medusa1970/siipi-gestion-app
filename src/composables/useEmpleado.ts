@@ -5,6 +5,7 @@ import { NotifySucessCenter } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { empleadoService } from '@/services/empleados.service';
 import type { Empleado, Persona } from '~/interfaces/empleado.type';
+import { filterEmpleados } from '~/helpers/helpers';
 
 export const useEmpleado = () => {
   // CONFIGURACION INCIAL
@@ -20,6 +21,9 @@ export const useEmpleado = () => {
     cargo: '',
     rows: [],
   });
+
+  // FILTER INPUT
+  const optionsPersona = ref(estado.personas);
 
   const obtenerTodosEmpleados = async () => {
     const { entidadBuscarEmpleado } =
@@ -105,10 +109,28 @@ export const useEmpleado = () => {
     });
   };
 
+  const filterEmpleados = (val: any, update: any) => {
+    update(() => {
+      let needle = val.toLowerCase();
+      optionsPersona.value = estado.personas.filter((item: any) =>
+        item.nombre.toLowerCase().includes(needle),
+      );
+    });
+  };
+  // const filterEmpleados2 = () => filterEmpleados(optionsPersona.value, estado.personas)
+
   onMounted(() => {
     obtenerTodosEmpleados();
     buscarPersonas();
   });
 
-  return { estado, abrirPermisos, abrirModal, agregarEmpleado, borrarEmpleado };
+  return {
+    estado,
+    abrirPermisos,
+    abrirModal,
+    agregarEmpleado,
+    borrarEmpleado,
+    filterEmpleados,
+    optionsPersona,
+  };
 };

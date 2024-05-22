@@ -61,6 +61,10 @@ export const useOferta = () => {
   const selectedFile = ref('');
   const imagePreview = ref('');
 
+  // FILTER PRODUCTOS
+  const optionsProducts = ref(estado.productos);
+  console.log(optionsProducts.value);
+
   const clearOferta = {
     _id: '',
     nombre: '',
@@ -126,8 +130,8 @@ export const useOferta = () => {
   };
   const obtenerTodosProductos = async () => {
     const { productoBuscar } = await ofertaService.buscarProductos();
-    // console.log(productoBuscar);
     estado.productos = productoBuscar;
+    optionsProducts.value = productoBuscar;
   };
   const crearIngredienteProducto = async () => {
     // console.log(estado.oferta._id); //@ts-ignore
@@ -416,10 +420,15 @@ export const useOferta = () => {
     }
   });
 
-  //on mounted
-  // onMounted(() => {
-  //   obtenerTodasofertas();
-  // });
+  const filterProductos = (val: any, update: any) => {
+    update(() => {
+      let needle = val.toLowerCase();
+      optionsProducts.value = estado.productos.filter((item: any) =>
+        item.nombre.toLowerCase().includes(needle),
+      );
+    });
+  };
+
   return {
     estado,
     crearOferta,
@@ -451,5 +460,7 @@ export const useOferta = () => {
     selectedFile,
     obtenerTodoCatalagosIdNombre,
     handleSelectionChange,
+    optionsProducts,
+    filterProductos,
   };
 };

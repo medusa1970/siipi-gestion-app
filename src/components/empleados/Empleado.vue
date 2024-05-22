@@ -107,10 +107,11 @@
       <div class="row items-center" style="width: 100%">
         <q-select
           v-model="estado.personaSelect.nombre"
-          :options="estado.personas"
+          :options="optionsPersona"
           label="Seleccionar persona"
           option-label="nombre"
           style="width: 100%; flex: 1 0 auto"
+          @filter="filterEmpleados"
           use-input
           hide-selected
           fill-input
@@ -159,8 +160,15 @@ import { useRoute } from 'vue-router';
 import { string } from '~/helpers/validate.form';
 
 const route = useRoute();
-const { estado, abrirModal, abrirPermisos, agregarEmpleado, borrarEmpleado } =
-  useEmpleado();
+const {
+  estado,
+  abrirModal,
+  abrirPermisos,
+  agregarEmpleado,
+  borrarEmpleado,
+  filterEmpleados,
+  optionsPersona,
+} = useEmpleado();
 
 let cargos: string[] = [];
 route.meta.layout === 'sede'

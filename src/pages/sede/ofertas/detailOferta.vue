@@ -108,22 +108,31 @@
           <q-select
             class="col-span-3"
             v-model="estado.productoFijo.producto"
-            :options="estado.productos"
-            label="Seleccionar productos"
+            :options="optionsProducts"
+            label="Seleccionar producto"
             option-label="nombre"
             style="width: 100%; flex: 1 0 auto"
-            dense
-            onfocus="this.select()"
-            clearable
             outlined
-            emit-value
+            @filter="filterProductos"
+            onfocus="this.select()"
             use-input
-            input-debounce="0"
+            hide-selected
+            fill-input
+            dense
+            clearable
           >
             <template v-slot:prepend>
               <q-icon name="bi-cart-plus" />
             </template>
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No hay resultados
+                </q-item-section>
+              </q-item>
+            </template>
           </q-select>
+
           <q-btn
             v-if="estado.productoFijo.producto"
             color="primary"
@@ -191,24 +200,20 @@
     <template #inputsDialog>
       <q-select
         v-model="estado.productoFijo.producto"
-        :options="estado.productos"
+        :options="optionsProducts"
         label="Seleccionar producto"
         option-label="nombre"
         style="width: 100%; flex: 1 0 auto"
-        dense
+        @filter="filterProductos"
         onfocus="this.select()"
-        filled
+        use-input
+        hide-selected
+        fill-input
+        dense
+        clearable
       >
-        <template v-slot:append>
-          <q-icon
-            style="margin: 0"
-            name="close"
-            @click.stop.prevent="estado.productoFijo.producto = ''"
-            class="cursor-pointer q-mr-md"
-          />
-        </template>
         <template v-slot:prepend>
-          <q-icon name="bi-cart-plus" />
+          <q-icon name="group" />
         </template>
         <template v-slot:no-option>
           <q-item>
@@ -348,6 +353,8 @@ const {
   pruebaProducto,
   imagen,
   imagePreview,
+  optionsProducts,
+  filterProductos,
 } = useOferta();
 
 //STORE

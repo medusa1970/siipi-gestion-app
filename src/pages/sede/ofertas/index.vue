@@ -39,7 +39,7 @@
               {{ fechaMes(props.row._creado) }}
             </h1>
           </q-td>
-          <q-td key="creado" :props="props">
+          <q-td key="modificado" :props="props">
             <h1 v-if="props.row._modificado == null" class="text-green-800">
               Nuevo
             </h1>

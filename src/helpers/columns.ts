@@ -56,6 +56,7 @@ export const columnsOfertas = [
     label: 'Modificado',
     align: 'left',
     field: (row: any) => row._modificado,
+    sortable: true,
   },
   {
     name: 'imagen',
@@ -68,6 +69,7 @@ export const columnsOfertas = [
     label: 'Nombre',
     align: 'left',
     field: (row: any) => row.nombre,
+    sortable: true,
   },
   {
     name: 'ingredientes',
@@ -75,7 +77,6 @@ export const columnsOfertas = [
     label: 'Ingredientes',
     align: 'left',
     field: (row: any) => row.ingredientes,
-    sortable: true,
   },
   // {
   //   name: 'preparados',
@@ -114,6 +115,13 @@ export const columnsProductos = [
     label: 'Creado',
     align: 'left',
     field: (row: any) => row._creado,
+  },
+  {
+    name: 'modificado',
+    label: 'Modificado',
+    align: 'left',
+    field: (row: any) => row._modificado,
+    sortable: true,
   },
   {
     name: 'imagen',

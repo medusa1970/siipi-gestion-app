@@ -6,6 +6,7 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
   ) {
     _id
     _creado
+    _modificado
     nombre
     comentario
     presentacionBasica

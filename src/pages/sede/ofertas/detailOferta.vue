@@ -177,7 +177,7 @@
         <div class="flex flex-col gap-2">
           <q-btn color="primary" label="Productos Fijos" dense @click="test" />
           <q-btn color="secondary" label="Productos Eleccion" dense />
-          <q-btn color="orange" label="Productos en grupos" dense />
+          <q-btn color="orange" label="Productos en " dense />
         </div>
       </q-card-section>
     </q-card>
@@ -390,7 +390,7 @@ const removeAt = (idx) => {
 onMounted(async () => {
   obtenerTodoCatalagos();
   obtenerTodosProductos();
-  // const { catalogoArbol } = await ofertaService.buscarCatalogos();
+  // const catalogoArbol = await ofertaService.buscarCatalogos();
   // estado.catalogos = catalogoArbol.hijas.map((item) => {
   //   return {
   //     id: item._id,

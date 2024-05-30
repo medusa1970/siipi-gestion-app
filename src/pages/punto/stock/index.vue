@@ -136,7 +136,7 @@
                   <span class="flex gap-2">
                     <p>Bloque:</p>
                     <q-badge color="green" class="capitalize">
-                      {{ lote.bloque }}
+                      {{ lote.bloque.nombre }}
                     </q-badge> </span
                   ><span class="flex gap-2">
                     <p>Cantidad:</p>

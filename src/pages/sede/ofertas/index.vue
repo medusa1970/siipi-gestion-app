@@ -74,8 +74,16 @@
             </h1>
           </q-td>
           <q-td key="nombre" :props="props">
-            <h1 v-if="props.row.nombre">
-              {{ props.row.nombre }}
+            <h1 v-if="props.row.nombre" class="tooltip">
+              {{
+                props.row.nombre.length > 30
+                  ? props.row.nombre.slice(0, 30) + '...'
+                  : props.row.nombre
+              }}
+              <span
+                class="tooltiptext shadow-lg text-blue-500 font-semibold bg-white px-4 py-1"
+                >{{ props.row.nombre }}</span
+              >
             </h1>
           </q-td>
           <q-td key="ingredientes" :props="props">
@@ -342,7 +350,7 @@ const {
   abrirEditarOferta,
   abrirAgregarOferta,
   borrarOferta,
-  obtenerTodasofertas,
+  obtenerTodasOfertas,
   obtenerTodosProductos,
   obtenerTodoCatalagosIdNombre,
   handleSelectionChange,
@@ -350,7 +358,7 @@ const {
 } = useOferta();
 
 onMounted(() => {
-  // obtenerTodasofertas();
+  // obtenerTodasOfertas();
   // obtenerTodoCatalagosIdNombre();
   obtenerTodoCatalagos();
 });
@@ -374,5 +382,28 @@ input[type='checkbox'] + label {
 input[type='checkbox']:checked + label {
   background: #007bff;
   color: #ffffff;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap; /* Prevent text from wrapping onto new lines */
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

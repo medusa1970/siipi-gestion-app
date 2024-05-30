@@ -38,26 +38,26 @@ export const authStore = defineStore('auth', {
   state: (): AuthStoreProps => estadoInicial,
   actions: {
     async login(usuario: string, contrasena: string) {
-      const { conectar } = await authService.login(usuario, contrasena);
-      console.log(conectar);
-      this.user._id = conectar.persona._id;
-      this.user.nombre = conectar.persona.nombre;
-      this.user.usuario = conectar.persona.usuario;
-      this.user.apellido = conectar.persona.apellido;
-      this.user.correo = conectar.persona.correo;
-      this.user.imagen = conectar.persona.imagen?.cloudinaryUrl;
+      const loginResponse = await authService.login(usuario, contrasena);
+      console.log(loginResponse);
+      this.user._id = loginResponse.persona._id;
+      this.user.nombre = loginResponse.persona.nombre;
+      this.user.usuario = loginResponse.persona.usuario;
+      this.user.apellido = loginResponse.persona.apellido;
+      this.user.correo = loginResponse.persona.correo;
+      this.user.imagen = loginResponse.persona.imagen?.cloudinaryUrl;
 
-      // if (conectar.persona.imagen?.cloudinaryUrl) {
-      //   this.user.imagen = conectar.persona.imagen.cloudinaryUrl;
+      // if (loginResponse.persona.imagen?.cloudinaryUrl) {
+      //   this.user.imagen = loginResponse.persona.imagen.cloudinaryUrl;
       // } else {
       //   this.user.imagen = '';
       // }
-      this.token = conectar.token;
+      this.token = loginResponse.token;
 
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);
-      const { entidadesUsuarioConectado } =
-        await authService.buscarEntidadesDeUsuario(this.token);
-      this.user.negocios = entidadesUsuarioConectado;
+      this.user.negocios = await authService.buscarEntidadesDeUsuario(
+        this.token,
+      );
       this.user.negocios.push({
         _id: 'cliente',
         nombre: 'Cliente',
@@ -65,8 +65,8 @@ export const authStore = defineStore('auth', {
       });
     },
     async register(datos: PersonaProps) {
-      const { personaCrear } = await authService.registrar(datos);
-      NotifySucess(`${personaCrear.nombre} se ha registrado correctamente`);
+      const nuevaPersona = await authService.registrar(datos);
+      NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
     },
   },
   persist: true,

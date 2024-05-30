@@ -201,19 +201,19 @@ const realizarPedido = async () => {
     });
   });
   // console.log(items)
-  const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+  const pedido = await pedidoService.pedidoIniciar(
     useAuth.negocioElegido._id,
     '65a5a9af08c1a906d83522d0',
     items,
     useGqlToken(useAuth.token),
   );
-  if (pedidoIniciar) {
-    await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
+  if (pedido) {
+    await pedidoService.pedidoConfirmarItems(pedido._id);
     NotifySucessCenter('Pedido realizado con éxito');
     router.push('/punto/pedidos/listaPedidos');
     usePedidoStore.listaPedido = [];
   } else NotifyError('Error al realizar el pedido');
-  // console.log(pedidoIniciar);
+  // console.log(pedido);
 };
 
 onMounted(() => {

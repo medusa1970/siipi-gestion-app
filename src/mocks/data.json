@@ -124,21 +124,18 @@
           "nombre": "Pastel de choclo",
           "descripcion": "Combo cafe y empanada para el desayuno",
           "productos": [{ "p": "Pastel de choclo", "q": 1 }],
-          "grupos": ["queques"],
           "tags": [],
           "precio": 5
         },
         {
           "nombre": "Pastel de choclo entero",
           "productos": [{ "p": "Pastel de choclo", "q": 8 }],
-          "grupos": ["queques interos"],
           "tags": [],
           "precio": 35
         },
         {
           "nombre": "Pastel de choclo por mayor",
           "productos": [{ "p": "Pastel de choclo", "q": 8 }],
-          "grupos": ["queques mayoristas"],
           "tags": [],
           "precio": 30,
           "cantidad_minima": 5
@@ -156,7 +153,6 @@
             "dias": "lunes-viernes"
           },
           "precio": 10,
-          "grupos": ["desayunos"],
           "tags": ["combo", "promocion", "desayuno"]
         },
         {
@@ -166,7 +162,6 @@
             { "p": "grupo:semilla", "q": 1 },
             { "p": "bombilla", "q": 1 }
           ],
-          "grupos": ["jugos"],
           "tags": ["jugos", "desayuno", "bebidas"],
           "precio": 12
         },
@@ -177,7 +172,6 @@
             { "p": "Sachete de cafe Ganoderma", "q": 1, "u": "sachete" },
             { "p": "grupo:saborizante", "q": 1, "u": "dosis_cafe" }
           ],
-          "grupos": ["cafes"],
           "tags": ["siipime", "cafes", "desayuno", "bebidas"],
           "precio": 7
         }

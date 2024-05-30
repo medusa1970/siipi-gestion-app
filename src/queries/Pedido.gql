@@ -1,0 +1,280 @@
+#
+# PEDIDOS
+#
+
+mutation iniciarPedido($datos: CrearPedidoDto!, $opciones: CrearOpciones = {}) {
+  iniciarPedido(datos: $datos, opciones: $opciones) {
+    _id
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    estado {
+      estado
+    }
+    items {
+      oferta {
+        _id
+      }
+      cantidad
+    }
+  }
+}
+
+query buscarPedidos(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPedidoDto = {}
+) {
+  buscarPedidos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+        precio
+        panaderia
+        reposteria
+        siinple
+        envasados
+        embotellados
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+}
+
+query buscarPedidos_itemEstados(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPedidoDto = {}
+) {
+  buscarPedidos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    items {
+      _id
+      oferta {
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+        comentario
+        valor
+      }
+    }
+  }
+}
+
+query leerEstadoPedido(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  leerEstadoPedido(busqueda: $busqueda, opciones: $opciones)
+}
+
+mutation cambiarEstadoItems(
+  $busqueda: BuscarPedidoDto = {}
+  $itemIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItems(
+    busqueda: $busqueda
+    itemIds: $itemIds
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+  }
+}
+
+mutation ajustarItem(
+  $busqueda: BuscarPedidoDto = {}
+  $itemId: ID!
+  $nuevaCantidad: Float!
+  $comentario: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  ajustarItem(
+    busqueda: $busqueda
+    itemId: $itemId
+    nuevaCantidad: $nuevaCantidad
+    comentario: $comentario
+    opciones: $opciones
+  ) {
+    _id
+  }
+}
+
+mutation cambiarEstadoItemsPorOfertas(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $tipo: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItemsPorOfertas(
+    busqueda: $busqueda
+    ofertaIds: $ofertaIds
+    estado: $estado
+    tipo: $tipo
+    opciones: $opciones
+  ) {
+    _id
+  }
+}
+
+mutation ajustarItemsPorOferta(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaId: ID!
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  ajustarItemsPorOferta(
+    busqueda: $busqueda
+    ofertaId: $ofertaId
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+  }
+}
+
+mutation cambiarEstadoItemsPorOfertas_aceptar(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $tipo: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItemsPorOfertas(
+    busqueda: $busqueda
+    ofertaIds: $ofertaIds
+    estado: $estado
+    tipo: $tipo
+    opciones: $opciones
+  ) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+      ruta
+      orden
+    }
+    items {
+      _id
+      cantidad
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          tipo
+          producto {
+            _id
+            nombre
+          }
+          cantidad
+        }
+        panaderia
+        reposteria
+        siinple
+        envasados
+        embotellados
+      }
+    }
+    estado {
+      estado
+      _creado
+    }
+  }
+}
+
+mutation cambiarEstadoItemsPorOfertas_preparar(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $tipo: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItemsPorOfertas(
+    busqueda: $busqueda
+    ofertaIds: $ofertaIds
+    estado: $estado
+    tipo: $tipo
+    opciones: $opciones
+  ) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      oferta {
+        _id
+        nombre
+      }
+      estado {
+        estado
+        _creado
+      }
+    }
+  }
+}
+
+mutation ajustarItemsPorOferta(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaId: ID!
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  ajustarItemsPorOferta(
+    busqueda: $busqueda
+    ofertaId: $ofertaId
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+  }
+}

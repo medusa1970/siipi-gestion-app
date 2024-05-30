@@ -144,9 +144,7 @@ const selectCatalogo = (catalogo) => {
 };
 
 const obtenerCatalogosProductos = async () => {
-  const { catalogoArbol } = await ofertaService.buscarCatalogoID(
-    route.params.id,
-  );
+  const catalogoArbol = await ofertaService.buscarCatalogoID(route.params.id);
   console.log(catalogoArbol);
   nombreCatalogo.value = catalogoArbol.nombre;
   catalogosOfertas.value = catalogoArbol.hijas;

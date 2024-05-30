@@ -1,0 +1,30 @@
+#
+# ENTIDADES
+#
+
+query buscarEntidades_problemas(
+  $busqueda: BuscarEntidadDto!
+  $filtro: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    problemas {
+      _id
+      _creado
+      inventario {
+        _id
+      }
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        vencimiento
+        diferencia
+      }
+      fechaResolucion
+      reporte
+      resuelto
+    }
+  }
+}

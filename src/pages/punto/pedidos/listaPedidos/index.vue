@@ -20,7 +20,7 @@
             :href="`listaPedidos/${punto._id}`"
             :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
-            :title2="formateadorFecha(punto.estado[0].fecha)"
+            :title2="formateadorFecha(punto.estado[0]._creado)"
           >
             <template v-slot:actions>
               <div class="flex">
@@ -92,7 +92,7 @@
             :href="`listaPedidos/${punto._id}`"
             :title="punto.comprador.nombre"
             class="w-[400px] max-sm:w-full"
-            :title2="formateadorFecha(punto.estado[0].fecha)"
+            :title2="formateadorFecha(punto.estado[0]._creado)"
           >
             <template v-slot:actions>
               <div class="flex">

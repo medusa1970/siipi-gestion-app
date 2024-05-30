@@ -1,52 +1,195 @@
-import { postData } from '../service.config';
+import types from 'nuxt-quasar-ui';
+import { postDataGql } from '../service.config';
 
 export const ofertaService = {
-  buscarOfertas: async () => postData(GqlOfertaBuscar({ busqueda: {} })),
-  crearOferta: async (datos: any) => postData(GqlCrearOferta({ datos })),
-  editarOferta: async (ofertaID: string, datos: any) =>
-    postData(GqlModificarOfertas({ busqueda: { _id: ofertaID }, datos })),
-  borrarOferta: async (ofertaID: string) =>
-    postData(GqlBorrarOfertas({ busqueda: { _id: ofertaID } })),
-  buscarProductos: async () =>
-    postData(GqlOfertaProductoBuscar({ busqueda: {} })),
+  /**
+   * Busca todas las ofertas
+   * @returns Oferta[]
+   */
+  obtenerTodasOfertas: async () => {
+    const ofertas = await postDataGql(GqlBuscarOfertas({}));
+    return ofertas;
+  },
+
+  /**
+   * Crea una oferta
+   * @returns Oferta
+   */
+  crearOferta: async (datos: any) => {
+    const [nuevaOferta] = await postDataGql(
+      GqlCrearOfertas({
+        datos: [datos],
+      }),
+    );
+    return nuevaOferta;
+  },
+
+  /**
+   * modificar una oferta
+   * @returns Oferta
+   */
+  editarOferta: async (ofertaID: string, datos: any) => {
+    const [ofertaModificada] = await postDataGql(
+      GqlModificarOfertas({
+        busqueda: { _id: [ofertaID] },
+        datos,
+        opciones: { limit: 1, errorSiVacio: true },
+      }),
+    );
+    return ofertaModificada;
+  },
+
+  /**
+   * borrarOferta
+   * @returns Oferta
+   */
+  borrarOferta: async (ofertaID: string) => {
+    const [ofertaBorrada] = await postDataGql(
+      GqlBorrarOfertas({
+        busqueda: { _id: [ofertaID] },
+        opciones: { limit: 1, errorSiVacio: true },
+      }),
+    );
+    return ofertaBorrada;
+  },
+
+  /**
+   * buscar todos los productos
+   * @returns Producto[]
+   */
+  buscarProductos: async () => {
+    const productos = await postDataGql(GqlBuscarProductos_oferta({}));
+    return productos;
+  },
+
+  /**
+   * Crear un ingrediente de producto
+   * @returns Ingrediente
+   */
   crearIngredienteProducto: async (
     ofertaID: string,
     productoID: string,
     cantidad: number,
-  ) =>
-    GqlCrearIngredienteProducto({
-      busqueda: { _id: ofertaID },
-      datos: { producto: productoID, cantidad },
-    }),
+  ) => {
+    const producto = await postDataGql(
+      GqlModificarOfertas({
+        busqueda: { _id: [ofertaID] },
+        datos: {
+          ingredientes: {
+            agregar: [
+              {
+                tipo: 'SIMPLE',
+                producto: productoID,
+                cantidad,
+              },
+            ],
+          },
+        },
+        opciones: { limit: 1, errorSiVacio: true },
+      }),
+    );
+    return producto['ingredientes'][producto['ingredientes'].length - 1];
+  },
+
+  /**ultimo(producto['ingredientes']);
+   * modificar un ingrediente de producto
+   * @returns Ingrediente
+   */
   editarIngredienteProducto: async (
     ofertaID: string,
     ingredienteID: string,
-    producto: string,
+    productoID: string,
     cantidad: number,
-  ) =>
-    postData(
-      GqlEditarIngredienteProducto({
-        busqueda: { _id: ofertaID },
-        busquedaIngrediente: { _id: ingredienteID },
-        datos: { producto, cantidad },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarOfertas({
+        busqueda: { _id: [ofertaID] },
+        datos: {
+          ingredientes: {
+            buscar: { _id: [ingredienteID] },
+            modificar: {
+              producto: productoID,
+              cantidad,
+            },
+          },
+        },
+        opciones: { limit: 1, errorSiVacio: true },
       }),
-    ),
-  buscarCatalogos: async () =>
-    postData(
-      GqlBuscarCatalogos({ busqueda: { nombre: 'Todos las catalogos' } }),
-    ),
-  buscarCatalogosIdNombre: async () =>
-    postData(
-      GqlBuscarCatalogos2({ busqueda: { nombre: 'Todos las catalogos' } }),
-    ),
-  buscarCatalogoID: async (catalogoID: string) =>
-    postData(GqlBuscarCatalogos({ busqueda: { _id: catalogoID } })),
-  crearCatalogo: async (nombre: string, catalogoID: string) =>
-    postData(
-      GqlCrearCatalogo({
-        datos: { nombre, pariente: catalogoID, ofertas: [] },
+    );
+    return producto['ingredientes'].find(
+      // @ts-expect-error estructura en backend
+      (ingrediente) => ingrediente._id.toString() === ingredienteID,
+    );
+  },
+
+  /**
+   * retorna el arbol de los catalogos a partir de la raiz
+   * @returns Catalogo (con sus hijas populadas)
+   */
+  buscarCatalogos: async () => {
+    const arbol = await postDataGql(
+      GqlCatalogoArbol({
+        busqueda: { _id: ['65a447574b237c900167c41c'] },
       }),
-    ),
-  catalogoRecursivo: async (catalogoID: string) =>
-    postData(GqlCatalogoOfertasRecursivo({ busqueda: { _id: catalogoID } })),
+    );
+    return arbol;
+  },
+
+  /**
+   * retorna el arbol de los catalogos a partir de la raiz
+   * pero solo sus ids y sus nombres
+   * @returns Catalogo (con sus hijas populadas)
+   */
+  buscarCatalogosIdNombre: async () => {
+    const arbol = await postDataGql(
+      GqlCatalogoArbol2({
+        busqueda: { _id: ['65a447574b237c900167c41c'] },
+      }),
+    );
+    return arbol;
+  },
+
+  /**
+   * Buscar catalogo por ID
+   * @returns Catalogo
+   */
+  buscarCatalogoID: async (catalogoID: string) => {
+    const arbol = await postDataGql(
+      GqlCatalogoArbol({
+        busqueda: { _id: [catalogoID] },
+      }),
+    );
+    return arbol;
+  },
+
+  /**
+   * Crear un catalogo
+   * @returns Catalogo
+   */
+  crearCatalogo: async (nombre: string, catalogoID: string) => {
+    const [nuevoCatalogo] = await postDataGql(
+      GqlCrearCatalogos({
+        datos: [
+          {
+            nombre,
+            pariente: catalogoID,
+          },
+        ],
+      }),
+    );
+    return nuevoCatalogo;
+  },
+
+  /**
+   * Buscar todas las ofertas de un arbol de catalogos
+   * @returns ofertas
+   */
+  catalogoRecursivo: async (catalogoID: string) => {
+    const ofertas = await postDataGql(
+      GqlCatalogoOfertasRecursivo({
+        busqueda: { _id: [catalogoID] },
+      }),
+    );
+    return ofertas;
+  },
 };

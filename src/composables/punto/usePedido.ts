@@ -15,6 +15,8 @@ import { menuService } from '~/services/punto/menu.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
 import { stockService } from '~/services/punto/stock.service';
 import { authService } from '~/services/auth.service';
+import { extraer } from '../../helpers/leo';
+
 /**
  * LOGICA
  */
@@ -77,33 +79,30 @@ export const usePedido = () => {
   const filter = ref('');
 
   const obtenerCatalogosProductos = async () => {
-    const { entidadLeerMenu } = await pedidoService.leerCatalogoConOfertas(
+    const catalogoArbol = await pedidoService.leerCatalogoConOfertas(
       useAuth.negocioElegido._id,
-    ); //@ts-ignore
-    console.log(entidadLeerMenu);
-    console.log(entidadLeerMenu.hijas);
-    estado.catalogosOfertas = entidadLeerMenu.hijas;
-    estado.catalogoSeleccionado = entidadLeerMenu.hijas[0];
-    estado.searchResults = entidadLeerMenu.hijas[0].hijas;
+    );
+    estado.catalogosOfertas = catalogoArbol.hijas;
+    estado.catalogoSeleccionado = catalogoArbol.hijas[0];
+    estado.searchResults = catalogoArbol.hijas[0].hijas;
 
-    estado.catalogoSeleccionado2 = entidadLeerMenu.hijas[0];
+    estado.catalogoSeleccionado2 = catalogoArbol.hijas[0];
   };
 
   const buscarPedidos = async () => {
     showLoading();
-    const { pedidoBuscar } = await pedidoService.pedidoBuscar(
-      useAuth.negocioElegido._id,
-      undefined,
-      undefined,
+    const listaPedidos = await pedidoService.pedidoBuscar(
+      { comprador: [useAuth.negocioElegido._id] },
+      // @ts-expect-error (creado dinamicamente)
       useGqlToken(useAuth.token),
     );
-    // console.log(pedidoBuscar);
+    // console.log(listaPedidos);
     //@ts-ignore
     estado.pedidosEntidad = await Promise.all(
-      pedidoBuscar.map((pedido) =>
+      listaPedidos.map((pedido) =>
         pedidoService
           .pedidoLeerEstado(pedido._id)
-          .then((res) => ({ ...pedido, estadoItems: res.pedidoLeerEstado })),
+          .then((res) => ({ ...pedido, estadoItems: extraer(res) })),
       ),
     );
     // console.log(estado.pedidosEntidad);
@@ -131,15 +130,14 @@ export const usePedido = () => {
   };
   const buscarPedidos2 = async () => {
     showLoading();
-    const { pedidoBuscar } = await pedidoService.pedidoBuscar(
-      undefined,
-      useAuth.negocioElegido._id,
-      undefined,
+    const listaPedidos = await pedidoService.pedidoBuscar(
+      { vendedor: [useAuth.negocioElegido._id] },
+      // @ts-expect-error (creado dinamicamente)
       useGqlToken(useAuth.token),
     );
-    // console.log(pedidoBuscar);
+    // console.log(listaPedidos);
 
-    const pedidos = pedidoBuscar.reduce(
+    const pedidos = listaPedidos.reduce(
       (accumulator: any, pedido: any) => {
         const allAccepted = pedido.items.every((item: any) =>
           item.estado.some((estado: any) => estado.estado === 'aceptado'),
@@ -301,26 +299,23 @@ export const usePedido = () => {
     return item ? item.cantidad : 0;
   }
 
-  const buscarPedidoID = async (id: string) => {
-    const { pedidoBuscar } = await pedidoService.pedidoBuscar(
-      undefined,
-      undefined,
-      id,
+  const buscarPedidoID = async (pedidoID: string) => {
+    const [pedido] = await pedidoService.pedidoBuscar(
+      { _id: [pedidoID] },
+      // @ts-expect-error (creado dinamicamente)
       useGqlToken(useAuth.token),
     );
-    estado.pedidoDetalle = pedidoBuscar[0]; //@ts-ignore
-    estado.precioGeneral = pedidoBuscar[0].items.reduce((total, item) => {
+    estado.pedidoDetalle = pedido;
+    estado.precioGeneral = pedido.items.reduce((total, item) => {
       //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
 
     //@ts-ignore
     estado.pedidoItemsEstado = //@ts-ignore
-      pedidoBuscar[0].items[0].estado?.[ //@ts-ignore
-        pedidoBuscar[0].items[0].estado?.length - 1
-      ];
+      pedido.items[0].estado?.[pedido.items[0].estado?.length - 1]; //@ts-ignore
     //@ts-ignore
-    const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
+    const itemsConEstadoAjustado = pedido.items.filter((item: any) => {
       const estadosAjustados = item.estado.filter(
         (estado: any) => estado.estado === 'ajustado',
       );
@@ -346,13 +341,9 @@ export const usePedido = () => {
   };
 
   const aceptarTodoPedido = async (pedidoID: string) => {
-    const { pedidoAceptarItems } = await pedidoService.pedidoAceptarItems(
-      pedidoID,
-    );
-    const { pedidoPrepararItems } = await pedidoService.pedidoPrepararItems(
-      pedidoID,
-    );
-    if (pedidoAceptarItems && pedidoPrepararItems)
+    const pedidoAceptado = await pedidoService.pedidoAceptarItems(pedidoID);
+    const pedidoPreparado = await pedidoService.pedidoPrepararItems(pedidoID);
+    if (pedidoAceptado && pedidoPreparado)
       NotifySucessCenter('Pedido aceptado y en preparacion');
     else NotifyError('Error al aceptar pedido');
     buscarPedidos2();
@@ -365,15 +356,15 @@ export const usePedido = () => {
     estado.itemPedido.cantidad = row.cantidad;
   };
   const ajustarItemGuardar = async () => {
-    const { pedidoAjustarItem } = await pedidoService.pedidoAjustarItem(
+    const pedido = await pedidoService.pedidoAjustarItem(
       //@ts-ignore
       estado.pedidoDetalle._id,
       estado.itemPedido.id,
       estado.itemPedido.cantidad,
       estado.itemPedido.comentario,
     );
-    // console.log(pedidoAjustarItem);
-    if (pedidoAjustarItem) {
+    // console.log(pedido);
+    if (pedido) {
       NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
       buscarPedidoID(estado.pedidoDetalle._id);
     } else NotifyError('Error al ajustar cantidad');
@@ -390,11 +381,11 @@ export const usePedido = () => {
     const password = 'choferSiipi123';
 
     if (estado.passwordChofer == password) {
-      const { pedidoRecibirItems } = await pedidoService.pedidoRecibirItems(
+      const pedidoRecibido = await pedidoService.pedidoRecibirItems(
         estado.pedidoID,
       );
-      // console.log(pedidoRecibirItems);
-      if (pedidoRecibirItems) {
+      // console.log(pedidoRecibido);
+      if (pedidoRecibido) {
         NotifySucessCenter('Pedido recibido');
         estado.modal.isShowPassword = false;
         estado.passwordChofer = '';
@@ -408,24 +399,20 @@ export const usePedido = () => {
   };
 
   const obtenerListaOfertas = async () => {
-    const { entidadBuscarMenu } = await menuService.listarMenus(
-      useAuth.negocioElegido._id,
-    );
-    // console.log(entidadBuscarMenu);
+    const menus = await menuService.listarMenus(useAuth.negocioElegido._id);
+    // console.log(menus);
 
-    const { catalogoOfertasRecursivo } = await ofertaService.catalogoRecursivo(
-      entidadBuscarMenu[0].catalogo._id,
+    const ofertas = await ofertaService.catalogoRecursivo(
+      menus[0].catalogo._id,
     );
-    estado.ListaOfertasPedido = catalogoOfertasRecursivo;
+    estado.ListaOfertasPedido = ofertas;
     // console.log(estado.ListaOfertasPedido);
     // ofertaService.catalogoRecursivo()
   };
 
   const obtenerItemsEstado = async (pedidoID: string) => {
-    const { pedidoBuscar } = await pedidoService.pedidoItemsEstado(pedidoID);
-    // console.log(pedidoBuscar[0]);
-    // Filtrar items que tienen un estado ajustado
-    const itemsConEstadoAjustado = pedidoBuscar[0].items.filter((item: any) => {
+    const items = await pedidoService.pedidoItemsEstado(pedidoID);
+    const itemsConEstadoAjustado = items.filter((item: any) => {
       const estadosAjustados = item.estado.filter(
         (estado: any) => estado.estado === 'ajustado',
       );
@@ -510,72 +497,70 @@ export const usePedido = () => {
     const pedidosIDS = estado.pedidosSinAceptar.map(
       (pedido: any) => pedido._id,
     );
-    const { pedidosAceptarOfertasSolicitables } =
-      await pedidoService.pedidosAceptarOfertasSolicitables(pedidosIDS);
-    // console.log(pedidosAceptarOfertasSolicitables);
+    const ofertasAceptadas = await pedidoService.aceptarOfertasSolicitables(
+      pedidosIDS,
+    );
+    // console.log(ofertasAceptadas);
 
-    // const res = pedidosAceptarOfertasSolicitables.map(item => ({
+    // const res = ofertasAceptadas.map(item => ({
     //   comprador: item.comprador,
     //   cantidadOferta: item.items.reduce((total, current) => total + current.cantidad, 0)
     //  }));
     //  console.log(res)
 
-    const result = pedidosAceptarOfertasSolicitables.reduce(
-      (acumulador: any, pedido: any) => {
-        pedido.items.forEach((item: any) => {
-          // console.log(item);
-          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
-            const itemExistente = acumulador.find(
-              (itemAcumulador: any) =>
-                itemAcumulador.oferta._id === item.oferta._id,
-            );
+    const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
+      pedido.items.forEach((item: any) => {
+        // console.log(item);
+        if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+          const itemExistente = acumulador.find(
+            (itemAcumulador: any) =>
+              itemAcumulador.oferta._id === item.oferta._id,
+          );
 
-            if (itemExistente) {
-              itemExistente.cantidad += item.cantidad;
-              itemExistente.pedidoIDS.push(pedido._id);
-              const compradorExistente = itemExistente.entidad.find(
-                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
-              );
-              if (compradorExistente) {
-                compradorExistente.cantidad += item.cantidad;
-              } else {
-                itemExistente.entidad.push({
+          if (itemExistente) {
+            itemExistente.cantidad += item.cantidad;
+            itemExistente.pedidoIDS.push(pedido._id);
+            const compradorExistente = itemExistente.entidad.find(
+              (entidad: any) => entidad.nombre === pedido.comprador.nombre,
+            );
+            if (compradorExistente) {
+              compradorExistente.cantidad += item.cantidad;
+            } else {
+              itemExistente.entidad.push({
+                nombre: pedido.comprador.nombre,
+                cantidad: item.cantidad,
+                ruta: pedido.comprador.ruta,
+                orden: pedido.comprador.orden,
+              });
+            }
+          } else {
+            acumulador.push({
+              pedidoIDS: [pedido._id],
+              estado: pedido.items[0].estado,
+              oferta: {
+                _id: item.oferta._id,
+                nombre: item.oferta.nombre,
+                cantidad: item.oferta.ingredientes[0].cantidad,
+              },
+              producto: {
+                _id: item.oferta.ingredientes[0].producto._id,
+                nombre: item.oferta.ingredientes[0].producto.nombre,
+              },
+              cantidad: item.cantidad,
+              entidad: [
+                {
                   nombre: pedido.comprador.nombre,
                   cantidad: item.cantidad,
                   ruta: pedido.comprador.ruta,
                   orden: pedido.comprador.orden,
-                });
-              }
-            } else {
-              acumulador.push({
-                pedidoIDS: [pedido._id],
-                estado: pedido.items[0].estado,
-                oferta: {
-                  _id: item.oferta._id,
-                  nombre: item.oferta.nombre,
-                  cantidad: item.oferta.ingredientes[0].cantidad,
                 },
-                producto: {
-                  _id: item.oferta.ingredientes[0].producto._id,
-                  nombre: item.oferta.ingredientes[0].producto.nombre,
-                },
-                cantidad: item.cantidad,
-                entidad: [
-                  {
-                    nombre: pedido.comprador.nombre,
-                    cantidad: item.cantidad,
-                    ruta: pedido.comprador.ruta,
-                    orden: pedido.comprador.orden,
-                  },
-                ],
-              });
-            }
+              ],
+            });
           }
-        });
-        return acumulador;
-      },
-      [],
-    );
+        }
+      });
+      return acumulador;
+    }, []);
 
     // console.log(result);
     storePedido.pedidosSolicitado = result.map((pedido: any) => {
@@ -601,66 +586,64 @@ export const usePedido = () => {
       (pedido: any) => pedido._id,
     );
     // console.log(pedidosIDS);
-    const { pedidosAceptarOfertasDirectas } =
-      await pedidoService.pedidosAceptarOfertasDirectas(pedidosIDS);
-    // console.log(pedidosAceptarOfertasDirectas);
+    const ofertasAceptadas = await pedidoService.aceptarOfertasDirectas(
+      pedidosIDS,
+    );
+    // console.log(ofertasAceptadas);
 
-    const result = pedidosAceptarOfertasDirectas.reduce(
-      (acumulador: any, pedido: any) => {
-        pedido.items.forEach((item: any) => {
-          // console.log(item);
-          if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
-            const itemExistente = acumulador.find(
-              (itemAcumulador: any) =>
-                itemAcumulador.oferta._id === item.oferta._id,
+    const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
+      pedido.items.forEach((item: any) => {
+        // console.log(item);
+        if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
+          const itemExistente = acumulador.find(
+            (itemAcumulador: any) =>
+              itemAcumulador.oferta._id === item.oferta._id,
+          );
+
+          if (itemExistente) {
+            itemExistente.cantidad += item.cantidad;
+            itemExistente.pedidoIDS.push(pedido._id);
+            const compradorExistente = itemExistente.entidad.find(
+              (entidad: any) => entidad.nombre === pedido.comprador.nombre,
             );
-
-            if (itemExistente) {
-              itemExistente.cantidad += item.cantidad;
-              itemExistente.pedidoIDS.push(pedido._id);
-              const compradorExistente = itemExistente.entidad.find(
-                (entidad: any) => entidad.nombre === pedido.comprador.nombre,
-              );
-              if (compradorExistente) {
-                compradorExistente.cantidad += item.cantidad;
-              } else {
-                itemExistente.entidad.push({
+            if (compradorExistente) {
+              compradorExistente.cantidad += item.cantidad;
+            } else {
+              itemExistente.entidad.push({
+                nombre: pedido.comprador.nombre,
+                cantidad: item.cantidad,
+                ruta: pedido.comprador.ruta,
+                orden: pedido.comprador.orden,
+              });
+            }
+          } else {
+            acumulador.push({
+              pedidoIDS: [pedido._id],
+              estado: pedido.items[0].estado,
+              oferta: {
+                _id: item.oferta._id,
+                nombre: item.oferta.nombre,
+                cantidad: item.oferta.ingredientes[0].cantidad,
+              },
+              producto: {
+                _id: item.oferta.ingredientes[0].producto._id,
+                nombre: item.oferta.ingredientes[0].producto.nombre,
+              },
+              cantidad: item.cantidad,
+              entidad: [
+                {
                   nombre: pedido.comprador.nombre,
                   cantidad: item.cantidad,
                   ruta: pedido.comprador.ruta,
                   orden: pedido.comprador.orden,
-                });
-              }
-            } else {
-              acumulador.push({
-                pedidoIDS: [pedido._id],
-                estado: pedido.items[0].estado,
-                oferta: {
-                  _id: item.oferta._id,
-                  nombre: item.oferta.nombre,
-                  cantidad: item.oferta.ingredientes[0].cantidad,
                 },
-                producto: {
-                  _id: item.oferta.ingredientes[0].producto._id,
-                  nombre: item.oferta.ingredientes[0].producto.nombre,
-                },
-                cantidad: item.cantidad,
-                entidad: [
-                  {
-                    nombre: pedido.comprador.nombre,
-                    cantidad: item.cantidad,
-                    ruta: pedido.comprador.ruta,
-                    orden: pedido.comprador.orden,
-                  },
-                ],
-              });
-            }
+              ],
+            });
           }
-        });
-        return acumulador;
-      },
-      [],
-    );
+        }
+      });
+      return acumulador;
+    }, []);
 
     // console.log(result);
     storePedido.pedidosDirecto = result.map((pedido: any) => {
@@ -709,21 +692,20 @@ export const usePedido = () => {
   const ofertaPreparado = async (fila: any) => {
     // console.log('first');
     // console.log(fila);
-    const { pedidosPrepararOfertas } =
-      await pedidoService.pedidosOfertaPreparados(fila.pedidoIDS, [
-        fila.oferta._id,
-      ]);
-    console.log(pedidosPrepararOfertas);
+    const ofertasPreparadas = await pedidoService.pedidosOfertaPreparados(
+      fila.pedidoIDS,
+      [fila.oferta._id],
+    );
+    console.log(ofertasPreparadas);
 
     // const test = pedidosPrepararOfertas[0].items[0].estado.some(
     //   (estado: any) => estado.estado === 'preparado',
     // );
     // console.log(test);
 
-    if (pedidosPrepararOfertas)
-      NotifySucessCenter('Oferta preparada exitosamente');
-    console.log(pedidosPrepararOfertas);
-    let item = pedidosPrepararOfertas[0].items[0];
+    if (ofertasPreparadas) NotifySucessCenter('Oferta preparada exitosamente');
+    console.log(ofertasPreparadas);
+    let item = ofertasPreparadas[0].items[0];
 
     storePedido.pedidosSolicitado.forEach((pedido) => {
       if (pedido.oferta._id == item.oferta._id) {
@@ -759,20 +741,20 @@ export const usePedido = () => {
         dense: true,
       },
     }).onOk(async () => {
-      const { pedidosAjustarOferta } = await pedidoService.pedidosOfertaAjustar(
+      const ofertasAjustadas = await pedidoService.pedidosOfertaAjustar(
         fila.pedidoIDS,
         fila.oferta._id,
         estado.comentario,
         diferencia,
       );
-      console.log(pedidosAjustarOferta);
+      console.log(ofertasAjustadas);
       console.log(storePedido.pedidosDirecto);
       console.log(storePedido.pedidosSolicitado);
 
-      if (pedidosAjustarOferta) {
-        let item = pedidosAjustarOferta[0].items[0];
+      if (ofertasAjustadas) {
+        let item = ofertasAjustadas[0].items[0];
         // SOLICITUD
-        pedidosAjustarOferta.map((pedido: any) => {
+        ofertasAjustadas.map((pedido: any) => {
           storePedido.pedidosSolicitado.forEach((pedidoSolicitud) => {
             // Verificar si el ID del pedido coincide
             if (pedidoSolicitud.pedidoIDS.includes(pedido._id)) {
@@ -802,7 +784,7 @@ export const usePedido = () => {
         });
 
         // DIRECTOS
-        pedidosAjustarOferta.map((pedido: any) => {
+        ofertasAjustadas.map((pedido: any) => {
           storePedido.pedidosDirecto.forEach((pedidoDirecto) => {
             // Verificar si el ID del pedido coincide
             if (pedidoDirecto.pedidoIDS.includes(pedido._id)) {
@@ -871,9 +853,9 @@ export const usePedido = () => {
 
   const mostrarEntidadSinPedidos = async () => {
     estado.modal.isShowEntidad = true;
-    const { entidadBuscar } = await authService.buscarTodasEntidades();
+    const listaEntidades = await authService.buscarTodasEntidades();
 
-    estado.entidadesSinPedidos = entidadBuscar.filter((entidad: any) => {
+    estado.entidadesSinPedidos = listaEntidades.filter((entidad: any) => {
       if (entidad.tipo !== 'PUNTO') return false;
       return !estado.pedidosSinAceptar.some(
         (pedido: any) => pedido.comprador._id === entidad._id,
@@ -902,12 +884,12 @@ export const usePedido = () => {
   };
 
   onMounted(async () => {
-    const { entidadBuscar } = await stockService.obtenerTodoStock(
+    const almacen = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
     );
 
     // console.log(entidadBuscar);
-    estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
+    estado.stocks = almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
         0,

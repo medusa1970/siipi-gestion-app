@@ -736,13 +736,13 @@ const prueba = (negocio) => {
       dense: true,
     },
   }).onOk(async () => {
-    const { conectar } = await authService.login(
+    const loginResponse = await authService.login(
       storeAuth.user.usuario,
       contrasena.value,
       negocio._id,
     );
-    storeAuth.token = conectar.token;
-    if (conectar.token) {
+    storeAuth.token = loginResponse.token;
+    if (loginResponse.token) {
       router.push(`/${negocio.tipo.toLowerCase()}`);
       storeAuth.negocioElegido = negocio; //solucion
       $q.notify({
@@ -786,35 +786,37 @@ const modificarPersona = async () => {
   console.log(selectedFileProfile.value);
 
   if (selectedFileProfile.value === '') {
-    const { personaModificar } = await empleadoService.modificarPersona(
+    const personaModificada = await empleadoService.modificarPersona(
       storeAuth.user._id,
-      persona.value.nombre,
-      persona.value.apellido,
-      persona.value.correo,
+      {
+        nombre: persona.value.nombre,
+        apellido: persona.value.apellido,
+        correo: persona.value.correo,
+      },
     );
-    console.log(personaModificar);
-    storeAuth.user.nombre = personaModificar[0].nombre;
-    // storeAuth.user.apellido = personaModificar[0].apellido;
+    console.log(personaModificada);
+    storeAuth.user.nombre = personaModificada.nombre;
+    storeAuth.user.apellido = personaModificada.apellido;
 
-    if (personaModificar) {
+    if (personaModificada) {
       NotifySucess('Persona modificada correctamente');
     }
   } else {
     const imagen = await fileToBase64(selectedFileProfile.value);
-
-    const { personaModificar } = await empleadoService.modificarPersona(
+    const personaModificada = await empleadoService.modificarPersona(
       storeAuth.user._id,
-      persona.value.nombre,
-      persona.value.apellido,
-      persona.value.correo,
-      { mimetype: 'image/png', data: imagen },
+      {
+        nombre: persona.value.nombre,
+        apellido: persona.value.apellido,
+        correo: persona.value.correo,
+        imagen: { mimetype: 'image/png', data: imagen },
+      },
     );
-
     if (personaModificar) {
       NotifySucess('Persona modificada correctamente');
-      storeAuth.user.imagen = personaModificar[0].imagen.cloudinaryUrl;
-      storeAuth.user.nombre = personaModificar[0].nombre;
-      // storeAuth.user.apellido = personaModificar[0].apellido;
+      storeAuth.user.imagen = personaModificada.imagen.cloudinaryUrl;
+      storeAuth.user.nombre = personaModificada.nombre;
+      storeAuth.user.apellido = personaModificada.apellido;
     }
   }
   isEditProfile.value = false;
@@ -823,13 +825,9 @@ const modificarPersona = async () => {
 const getPersona = async () => {
   try {
     showLoading();
-    const { personaBuscar } = await GqlBuscarPersona({
-      busqueda: { _id: storeAuth.user._id },
-    });
-    console.log(personaBuscar);
-    persona.value = personaBuscar[0];
-    imagePreview.value = personaBuscar[0].imagen.cloudinaryUrl;
-    console.log(imagen.value);
+    const persona = await empleadoService.buscarPersona(storeAuth.user._id);
+    persona.value = persona;
+    imagePreview.value = persona.imagen.cloudinaryUrl;
     hideLoading();
   } catch (error) {
     ApiError(error);

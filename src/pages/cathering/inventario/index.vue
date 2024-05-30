@@ -84,7 +84,7 @@
                         required
                       />
                       <q-input
-                        v-model="lote.bloque"
+                        v-model="lote.bloque.nombre"
                         type="text"
                         label="Bloque"
                         outlined
@@ -196,21 +196,21 @@ const estado = reactive({
 });
 
 // const obtenerTodoStock = async () => {
-//   const { entidadBuscar } = await stockService.obtenerTodoStock(
+//   const almacen = await stockService.obtenerTodoStock(
 //     useAuth.negocioElegido._id,
 //   );
 
-//   estado.productosBloquesNull = entidadBuscar[0].almacen.filter((producto) => {
+//   estado.productosBloquesNull = almacen.filter((producto) => {
 //     const primerLote = producto.lotes[0];
 //     return primerLote ? primerLote.bloque === null : true; // Si no hay lote, considerarlo como válido
 //   });
 // };
 const obtenerProductosInventariar = async () => {
-  const { filaInventario } = await inventarioService.filaInventario(
+  const fila = await inventarioService.filaInventario(
     useAuth.negocioElegido._id,
   );
-  estado.productosBloquesNull = filaInventario;
-  console.log(filaInventario);
+  estado.productosBloquesNull = fila;
+  console.log(fila);
 };
 
 const agregarFila = () => {
@@ -231,10 +231,11 @@ const terminarInventario = async (producto) => {
   console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
-    .realizarInventarioFalse(
+    .realizarInventario(
       useAuth.negocioElegido._id, //@ts-ignore
       producto._id,
       estado.inventario.lotes,
+      false,
     )
     .then((res) => {
       console.log(res);
@@ -247,10 +248,11 @@ const terminarInventario = async (producto) => {
           if (estado.diferencias == res.entidadHacerInventario.diferencias)
             console.log('first');
           inventarioService
-            .realizarInventarioTrue(
+            .realizarInventario(
               useAuth.negocioElegido._id, //@ts-ignore
               producto._id,
               estado.inventario.lotes,
+              true,
             )
             .then(() => {
               NotifySucess('Inventario guardado');
@@ -270,10 +272,11 @@ const terminarInventario = async (producto) => {
         showLoading();
         // console.log('first');
         inventarioService
-          .realizarInventarioTrue(
+          .realizarInventario(
             useAuth.negocioElegido._id, //@ts-ignore
             producto._id,
             estado.inventario.lotes,
+            true,
           )
           .then((res) => {
             NotifySucess('Inventario guardado');

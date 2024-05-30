@@ -1,20 +1,19 @@
+#
 # PRODUCTOS
-query buscarProductos($busqueda: BuscarProductoDto!) {
-  productoBuscar(
-    busqueda: $busqueda
-    opciones: { limit: 0, buscarCategoria: true }
-  ) {
+#
+
+query buscarProductos(
+  $busqueda: BuscarProductoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarProductoDto = {}
+) {
+  buscarProductos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
     _id
     _creado
     _modificado
     nombre
     comentario
     presentacionBasica
-    presentaciones {
-      _id
-      nombre
-      cantidad
-    }
     categoria {
       _id
       nombre
@@ -25,8 +24,11 @@ query buscarProductos($busqueda: BuscarProductoDto!) {
   }
 }
 
-mutation crearProducto($datos: CrearProductoDto!) {
-  productoCrear(datos: $datos) {
+mutation crearProductos(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
     _id
     nombre
     comentario
@@ -41,28 +43,15 @@ mutation crearProducto($datos: CrearProductoDto!) {
     imagen {
       cloudinaryUrl
     }
-  }
-}
-
-# mutation borrarProducto($busqueda: BuscarProductoDto!) {
-#   productoBorrar(busqueda: $busqueda)
-# }
-mutation ProductoBorrar($busqueda: BuscarProductoDto!) {
-  productoBorrar(busqueda: $busqueda, opciones: { limit: 1 }) {
-    _id
-    nombre
   }
 }
 
 mutation modificarProductos(
   $busqueda: BuscarProductoDto!
   $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
 ) {
-  productoModificar(
-    busqueda: $busqueda
-    datos: $datos
-    opciones: { limit: 0 }
-  ) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
     _id
     nombre
     comentario
@@ -76,65 +65,62 @@ mutation modificarProductos(
   }
 }
 
-# PRESENTACIONES
-mutation agregarPresentacion(
+mutation modificarProductos_categoria(
   $busqueda: BuscarProductoDto!
-  $datos: CrearPresentacionDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
 ) {
-  productoCrearPresentacion(busqueda: $busqueda, datos: $datos, opciones: {}) {
-    _id
-    nombre
-    cantidad
-  }
-}
-
-mutation modificarPresentacion(
-  $busqueda: BuscarProductoDto!
-  $busquedaPresentacion: BuscarPresentacionDto!
-  $datos: ModificarPresentacionDto!
-) {
-  productoModificarPresentacion(
-    busqueda: $busqueda
-    busquedaPresentacion: $busquedaPresentacion
-    datos: $datos
-    opciones: {}
-  ) {
-    _id
-    nombre
-    cantidad
-  }
-}
-
-mutation borrarPresentacion(
-  $busqueda: BuscarProductoDto!
-  $busquedaPresentacion: BuscarPresentacionDto!
-) {
-  productoBorrarPresentacion(
-    busqueda: $busqueda
-    busquedaPresentacion: $busquedaPresentacion
-    opciones: { limit: 0 }
-  )
-}
-
-# CATEGORIA
-query productoCambiarCategoria(
-  $busquedaProducto: BuscarProductoDto!
-  $busquedaCategoria: BuscarCategoriaDto!
-) {
-  productoCambiarCategoria(
-    busquedaProducto: $busquedaProducto
-    busquedaCategoria: $busquedaCategoria
-    opciones: { populate: true }
-  ) {
-    nombre
-    _id
-    pariente {
-      _id
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    categoria {
       nombre
+      _id
       pariente {
         _id
         nombre
         pariente {
+          _id
+          nombre
+          pariente {
+            _id
+            nombre
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation borrarProductos(
+  $busqueda: BuscarProductoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarProductos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+query categoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    productos {
+      nombre
+    }
+    hijas {
+      _id
+      nombre
+      productos {
+        _id
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        productos {
           _id
           nombre
         }
@@ -142,9 +128,16 @@ query productoCambiarCategoria(
     }
   }
 }
-query categoriaBuscar($busqueda: BuscarCategoriaDto!) {
-  categoriaBuscar(busqueda: $busqueda, opciones: {}) {
+
+mutation crearCategorias(
+  $datos: [CrearCategoriaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearCategorias(datos: $datos, opciones: $opciones) {
     _id
     nombre
+    pariente {
+      nombre
+    }
   }
 }

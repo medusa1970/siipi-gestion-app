@@ -28,7 +28,7 @@
         </p>
         <p>
           <strong>Fecha: </strong
-          >{{ formateadorFecha(estado.pedidoDetalle.estado[0].fecha) }}
+          >{{ formateadorFecha(estado.pedidoDetalle.estado[0]._creado) }}
         </p>
       </div>
       <div class="col-span-1 justify-self-end">
@@ -41,7 +41,7 @@
         <span class="flex gap-2">
           <p class="font-bold">Fecha:</p>
           <p class="">
-            {{ formateadorFecha(estado.pedidoItemsEstado.fecha) }}🫡
+            {{ formateadorFecha(estado.pedidoItemsEstado._creado) }}🫡
           </p>
         </span>
         <div class="flex justify-end">

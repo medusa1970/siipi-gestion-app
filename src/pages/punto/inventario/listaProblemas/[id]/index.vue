@@ -126,11 +126,11 @@ const formatDate = (date) => {
 const getProblem = async () => {
   try {
     showLoading();
-    const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioElegido._id },
-      problemaBusqueda: { _id: params.id },
-    });
-    problem.value = res[0];
+    const problema = await buscarProblema(
+      useAuth.negocioElegido._id,
+      params.id,
+    );
+    problem.value = problema;
     const text = problem.value.diferencias.map((item) => {
       return `<ol>
     <li><strong>¿Cómo solucionaste la diferencia de ${

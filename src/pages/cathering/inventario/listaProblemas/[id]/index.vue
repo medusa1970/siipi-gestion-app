@@ -127,11 +127,11 @@ const getProblem = async () => {
   console.log('first');
   try {
     showLoading();
-    const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioElegido._id },
-      problemaBusqueda: { _id: params.id },
-    });
-    problem.value = res[0];
+    const problema = await buscarProblema(
+      useAuth.negocioElegido._id,
+      params.id,
+    );
+    problem.value = problema;
     const text = problem.value.diferencias.map((item) => {
       return `<ol>
     <li><strong>¿Cómo solucionaste la diferencia de ${
@@ -155,14 +155,14 @@ const getProblem = async () => {
 const resolverProblema = async () => {
   try {
     showLoading();
-    await GqlResolverProblema({
-      entidadBusqueda: { _id: useAuth.negocioIDSelected },
-      problemaBusqueda: { _id: params.id },
-      datos: {
+    const problemaResuelto = awaitresolverProblema(
+      useAuth.negocioIDSelected,
+      params.id,
+      {
         reporte: qeditor.value,
         resuelto: true,
       },
-    });
+    );
     NotifySucessCenter('Problema resuelto 🙂');
     hideLoading();
     setTimeout(() => {

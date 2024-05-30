@@ -19,14 +19,12 @@ export const useMenu = () => {
 
   const obtenerMenus = async () => {
     // console.log(useAuth.negocioElegido._id);
-    const { entidadBuscarMenu } = await menuService.listarMenus(
-      useAuth.negocioElegido._id,
-    );
-    // console.log(entidadBuscarMenu);
-    estado.menus = entidadBuscarMenu;
+    const menus = await menuService.listarMenus(useAuth.negocioElegido._id);
+    // console.log(menus);
+    estado.menus = menus;
   };
   const obtenerCatalogos = async () => {
-    const { catalogoArbol } = await menuService.obtenerCatalogos();
+    const catalogoArbol = await menuService.obtenerCatalogos();
     estado.catalogos = catalogoArbol.hijas;
   };
 

@@ -86,8 +86,8 @@ const modificarPersona = async () => {
   delete profile.value._id;
   try {
     showLoading();
-    await GqlModificarPersona({
-      busqueda: { _id: useAuth.user._id },
+    const personaModificada = await personaModificar({
+      busqueda: { _id: [useAuth.user._id] },
       datos: profile.value,
     });
     NotifySucess('Persona modificada correctamente');
@@ -99,10 +99,11 @@ const modificarPersona = async () => {
 const getPersona = async () => {
   try {
     showLoading();
-    const { personaBuscar } = await GqlBuscarPersona({
-      busqueda: { _id: useAuth.user._id },
+    const persona = await buscarModificar({
+      busqueda: { _id: [useAuth.user._id] },
+      datos: profile.value,
     });
-    profile.value = personaBuscar[0];
+    profile.value = persona;
     hideLoading();
   } catch (error) {
     ApiError(error);

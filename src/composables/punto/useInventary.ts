@@ -57,14 +57,13 @@ export const useInventary = () => {
     //     timeout: 1500,
     //   });
     // }
-    const { entidadProductosMenu } =
-      await inventarioService.inventarioProductosMenu(
-        useAuth.negocioElegido._id,
-      );
+    const productosMenu = await inventarioService.inventarioProductosMenu(
+      useAuth.negocioElegido._id,
+    );
     // console.log(entidadProductosMenu);
     //ARREGLAR NO ESTA FUNCIONANDO
-    if (entidadProductosMenu)
-      entidadProductosMenu.forEach((item: any) => {
+    if (productosMenu)
+      productosMenu.forEach((item: any) => {
         if (
           !useProduct.ListInventario.some(
             (inventario) => inventario.id === item._id,
@@ -108,10 +107,12 @@ export const useInventary = () => {
       /**LOGICA */
       showLoading();
       inventarioService
-        .realizarInventarioFalse(
-          useAuth.negocioElegido._id, //@ts-ignore
+        .realizarInventario(
+          useAuth.negocioElegido._id,
+          //@ts-expect-error Wilder deve saber lo que hace
           estado.productoElegido.id,
           estado.inventario.lotes,
+          false,
         )
         .then((res) => {
           if (
@@ -128,18 +129,20 @@ export const useInventary = () => {
               //   useProduct.ListInventario[estado.currentIndex].producto._id
               // );
               // console.log(estado.inventario.lotes);
-              //ARREGLAR ESTA FUNCION NO SE ESTA EJECUTANDO
-              GqlHacerInventario({
-                entidadBusqueda: { _id: useAuth.negocioElegido._id },
-                guardar: true,
-                datos: {
-                  producto:
-                    //@ts-ignore
-                    estado.productoElegido.id, //@ts-ignore
-                  lotes: estado.inventario.lotes,
-                  reporte: 'se hizo',
-                },
-              })
+
+              // ARREGLAR ESTA FUNCION NO SE ESTA EJECUTANDO
+
+              // Leo : ver :
+              // https://nuxt-graphql-client.web.app/getting-started/gql-functions#limitations
+
+              inventarioService
+                .realizarInventario(
+                  useAuth.negocioElegido._id,
+                  //@ts-expect-error Wilder deve saber lo que hace
+                  estado.productoElegido.id,
+                  estado.inventario.lotes,
+                  true,
+                )
                 .then(() => {
                   NotifySucess('Inventario guardado');
                   logica();
@@ -152,10 +155,11 @@ export const useInventary = () => {
             }
           } else {
             inventarioService
-              .realizarInventarioTrue(
+              .realizarInventario(
                 useAuth.negocioElegido._id, //@ts-ignore
                 estado.productoElegido.id,
                 estado.inventario.lotes,
+                true,
               )
               .then((res) => {
                 NotifySucess('Inventario guardado');

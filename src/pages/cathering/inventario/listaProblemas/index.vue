@@ -10,7 +10,7 @@
       <h1 class="font-bold w-full text-center">
         {{ problema.producto.nombre }}
       </h1>
-      <p class="italic">{{ formatDate(problema.fechaAparicion) }}</p>
+      <p class="italic">{{ formatDate(problema._creado) }}</p>
       <h1>Hay {{ problema.diferencias.length }} diferencias</h1>
       <q-btn
         color="green"
@@ -42,6 +42,7 @@ import {
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
+import { inventarioService } from '../../../../services/punto/inventary.service';
 definePageMeta({
   layout: 'cathering',
 });
@@ -57,14 +58,14 @@ const formatDate = (date) => {
 const getAllProblem = async () => {
   try {
     showLoading();
-    const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioElegido._id },
-      problemaBusqueda: { resuelto: false },
-    });
+    const listaProblemas = await inventarioService.buscarProblemasNoResueltos(
+      useAuth.negocioElegido._id,
+    );
+
     // console.log(res);
     listProblems.value = res;
     if (res.length > 0) {
-      NotifyWarning('Se encontraron problemas debe resolverlas');
+      NotifyWarning('Se encontraron problemas debe resolveross');
     } else {
       NotifySucess('No hay problemas por resolver😯');
     }

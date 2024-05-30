@@ -8,7 +8,7 @@
       :key="problema._id"
     >
       <h1 class="font-bold">{{ problema.producto.nombre }}</h1>
-      <p class="italic">{{ formatDate(problema.fechaAparicion) }}</p>
+      <p class="italic">{{ formatDate(problema._creado) }}</p>
       <h1>Hay {{ problema.diferencias.length }} diferencias</h1>
       <q-btn
         color="green"
@@ -53,12 +53,10 @@ const formatDate = (date) => {
 const getAllProblem = async () => {
   try {
     showLoading();
-    const { entidadListarProblemas: res } = await GqlListarProblemas({
-      entidadBusqueda: { _id: useAuth.negocioElegido._id },
-      problemaBusqueda: { resuelto: false },
-    });
-    // console.log(res);
-    listProblems.value = res;
+    const listaProblemas = await buscarProblemasNoResueltos(
+      useAuth.negocioElegido._id,
+    );
+    listProblems.value = listaProblemas;
     if (res.length > 0) {
       NotifyWarning('Se encontraron problemas debe resolverlas');
     } else {

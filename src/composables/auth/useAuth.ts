@@ -58,19 +58,19 @@ export const useAuth = () => {
     const data: DataProps = LocalStorage.getItem('prohibido');
 
     if (data) {
-      const { conectar } = await authService.login(
+      const loginResponse = await authService.login(
         data.nombre,
         data.contrasena,
         negocio._id,
       );
-      useAuth.token = conectar.token;
+      useAuth.token = loginResponse.token;
       LocalStorage.remove('prohibido');
     }
-    const { entidadBuscarEmpleado } = await authService.buscarEmpleadoCargo(
+    const cargo = await authService.buscarEmpleadoCargo(
       negocio._id,
       useAuth.user._id,
     );
-    useAuth.user.cargo = entidadBuscarEmpleado[0].cargo;
+    useAuth.user.cargo = cargo;
   };
   const register = async () => {
     await useAuth.register(authPersona.value);

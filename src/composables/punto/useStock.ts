@@ -40,13 +40,13 @@ export const useStock = () => {
   });
 
   const obtenerTodoStock = async () => {
-    const { entidadBuscar } = await stockService.obtenerTodoStock(
+    const almacen = await stockService.obtenerTodoStock(
       useAuth.negocioElegido._id,
     );
-    console.log(entidadBuscar);
+    console.log(almacen);
 
     // console.log(entidadBuscar);
-    estado.stocks = entidadBuscar[0].almacen.map((stock: any) => {
+    estado.stocks = almacen.map((stock: any) => {
       const cantidadTotal = stock.lotes.reduce(
         (total: any, lote: any) => total + lote.cantidad,
         0,
@@ -126,7 +126,7 @@ export const useStock = () => {
         });
         // console.log(lotesVencidos);
 
-        // Retornar solo el stock con lotes vencidos
+        // @returnsr solo el stock con lotes vencidos
         if (lotesVencidos.length > 0) {
           return {
             //@ts-ignore

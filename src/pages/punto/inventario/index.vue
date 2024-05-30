@@ -79,7 +79,7 @@
                         min="0"
                       />
                       <q-input
-                        v-model="lote.bloque"
+                        v-model="lote.bloque.nombre"
                         type="text"
                         label="Bloque"
                         outlined
@@ -191,10 +191,10 @@ const estado = reactive({
 const expanded = ref(false);
 
 const obtenerProductosInventariar = async () => {
-  const { filaInventario } = await inventarioService.filaInventario(
+  const fila = await inventarioService.filaInventario(
     useAuth.negocioElegido._id,
   );
-  estado.productosBloquesNull = filaInventario;
+  estado.productosBloquesNull = fila;
 };
 
 const agregarFila = () => {
@@ -210,20 +210,22 @@ const terminarInventario = async (producto) => {
   console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
-    .realizarInventarioFalse(
+    .realizarInventario(
       useAuth.negocioElegido._id, //@ts-ignore
       producto._id,
       estado.inventario.lotes,
+      false,
     )
     .then((res) => {
       if (res.entidadHacerInventario.diferencias?.length > 0) {
         estado.countRetry++;
         if (estado.countRetry > 1) {
           inventarioService
-            .realizarInventarioTrue(
+            .realizarInventario(
               useAuth.negocioElegido._id, //@ts-ignore
               producto._id,
               estado.inventario.lotes,
+              true,
             )
             .then(() => {
               NotifySucess('Inventario guardado');
@@ -242,10 +244,11 @@ const terminarInventario = async (producto) => {
       } else {
         showLoading();
         inventarioService
-          .realizarInventarioTrue(
+          .realizarInventario(
             useAuth.negocioElegido._id, //@ts-ignore
             producto._id,
             estado.inventario.lotes,
+            true,
           )
           .then((res) => {
             NotifySucess('Inventario guardado');

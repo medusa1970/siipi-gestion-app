@@ -87,14 +87,12 @@ export const useProducts = () => {
   //dasdasd
   //dasdasd
   const getAllProductos = async () => {
-    const { productoBuscar } = await productoService.buscarProductos();
-    estado.productos = productoBuscar;
-    console.log(productoBuscar);
-    // const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
-    // estado.categorias = categoriaArbol;
+    const productos = await productoService.buscarProductos();
+    console.log(productos);
+    estado.productos = productos;
   };
   const getCategoria = async () => {
-    const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
+    const categoriaArbol = await productoService.obtenerTodasCategorias();
     estado.categorias = categoriaArbol;
   };
 
@@ -170,17 +168,17 @@ export const useProducts = () => {
     console.log(selectedFile.value);
 
     if (selectedFile.value === '') {
-      const { productoModificar } = await productoService.editarProducto(
+      const productoModificado = await productoService.editarProducto(
         useProduct.product._id,
         {
           ...productoData,
           categoria: productoData.categoria._id,
         },
       );
-      estado.producto = Object.assign(estado.producto, productoModificar[0]);
+      estado.producto = Object.assign(estado.producto, productoModificado);
     } else {
       const imagenCvt = await fileToBase64(selectedFile.value);
-      const { productoModificar } = await productoService.editarProducto(
+      const productoModificado = await productoService.editarProducto(
         useProduct.product._id,
         {
           ...productoData,
@@ -191,7 +189,7 @@ export const useProducts = () => {
           },
         },
       );
-      estado.producto = Object.assign(estado.producto, productoModificar[0]);
+      estado.producto = Object.assign(estado.producto, productoModificado);
     }
 
     NotifySucess('información básica actualizada correctamente');
@@ -208,14 +206,13 @@ export const useProducts = () => {
   //CRUD
   const agregarPresentacion = async () => {
     if (useProduct.isEdit) {
-      const { productoCrearPresentacion: res } =
-        await productoService.agregarPresentacion(
-          useProduct.product._id,
-          estado.presentacion.nombre,
-          estado.presentacion.cantidad,
-        );
-      if (res) {
-        estado.producto.presentaciones.push(res);
+      const nuevaPresentacion = await productoService.agregarPresentacion(
+        useProduct.product._id,
+        estado.presentacion.nombre,
+        estado.presentacion.cantidad,
+      );
+      if (nuevaPresentacion) {
+        estado.producto.presentaciones.push(nuevaPresentacion);
       }
       NotifySucess('presentacion agregado correctamente');
       estado.dialog.isAddPresentation = false;
@@ -237,13 +234,12 @@ export const useProducts = () => {
   };
   const modificarPresentacion = async () => {
     if (useProduct.isEdit) {
-      const { productoModificarPresentacion: res } =
-        await productoService.editarPresentacion(
-          useProduct.product._id,
-          estado.presentacionNombre,
-          estado.presentacion,
-        );
-      if (res) {
+      const presentacionModificada = await productoService.editarPresentacion(
+        useProduct.product._id,
+        estado.presentacionNombre,
+        estado.presentacion,
+      );
+      if (presentacionModificada) {
         const index = estado.producto.presentaciones.findIndex(
           (p) => p._id === estado.presentacion._id,
         );
@@ -283,11 +279,10 @@ export const useProducts = () => {
         cancel: true,
         persistent: true,
       }).onOk(async () => {
-        const { productoBorrarPresentacion: res } =
-          await productoService.borrarPresentacion(
-            useProduct.product._id,
-            presentacion.nombre,
-          );
+        const res = await productoService.borrarPresentacion(
+          useProduct.product._id,
+          presentacion.nombre,
+        );
         NotifySucess('Presentacion eliminado correctamente');
         if (res) {
           const index = estado.producto.presentaciones.findIndex(
@@ -326,7 +321,7 @@ export const useProducts = () => {
   };
 
   const obtenerTodasCategorias = async () => {
-    const { categoriaArbol } = await productoService.obtenerTodasCategorias(); //@ts-ignore
+    const { categoriaArbol } = await productoService.obtenerTodasCategorias();
     estado.categoriaArbol = [categoriaArbol];
     const data = [
       {
@@ -344,7 +339,7 @@ export const useProducts = () => {
     estado.props = data;
   };
   const agregarCategoriaArbol = async () => {
-    await productoService.crearCategoria(
+    const nuevaCategoria = await productoService.crearCategoria(
       estado.categoria.pariente,
       estado.categoria.nombre,
     );

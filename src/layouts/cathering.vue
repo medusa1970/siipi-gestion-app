@@ -59,17 +59,17 @@ const realizarPedido = async () => {
   }).onOk(async () => {
     if (storePedido.isDespachar == false) {
       // RECIBE PEDIDO
-      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+      const pedido = await pedidoService.pedidoIniciar(
         storeAuth.negocioElegido._id,
         storePedido.areaPedidoID,
         items,
         useGqlToken(storeAuth.token),
       );
-      if (pedidoIniciar) {
-        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+      if (pedido) {
+        await pedidoService.pedidoConfirmarItems(pedido._id);
+        await pedidoService.pedidoAceptarItems(pedido._id);
+        await pedidoService.pedidoPrepararItems(pedido._id);
+        await pedidoService.pedidoRecibirItems(pedido._id);
         NotifySucessCenter('Pedido recibido con éxito');
         router.push('/cathering/pedidos/listaPedidos');
         storePedido.listaPedido = [];
@@ -78,18 +78,18 @@ const realizarPedido = async () => {
       console.log(storePedido.listaPedido);
     } else {
       // SE DESPACHA PRODUCTO
-      const { pedidoIniciar } = await pedidoService.pedidoIniciar(
+      const pedido = await pedidoService.pedidoIniciar(
         storePedido.areaPedidoID,
         storeAuth.negocioElegido._id,
         items,
         useGqlToken(storeAuth.token),
       );
-      console.log(pedidoIniciar);
-      if (pedidoIniciar) {
-        await pedidoService.pedidoConfirmarItems(pedidoIniciar._id);
-        await pedidoService.pedidoAceptarItems(pedidoIniciar._id);
-        await pedidoService.pedidoPrepararItems(pedidoIniciar._id);
-        await pedidoService.pedidoRecibirItems(pedidoIniciar._id);
+      console.log(pedido);
+      if (pedido) {
+        await pedidoService.pedidoConfirmarItems(pedido._id);
+        await pedidoService.pedidoAceptarItems(pedido._id);
+        await pedidoService.pedidoPrepararItems(pedido._id);
+        await pedidoService.pedidoRecibirItems(pedido._id);
         NotifySucessCenter('Pedido realizado con éxito');
         router.push('/cathering/pedidos/listaPedidos');
         storePedido.listaPedido = [];

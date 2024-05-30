@@ -5,7 +5,6 @@ import { NotifySucessCenter } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { empleadoService } from '@/services/empleados.service';
 import type { Empleado, Persona } from '~/interfaces/empleado.type';
-import { filterEmpleados } from '~/helpers/helpers';
 
 export const useEmpleado = () => {
   // CONFIGURACION INCIAL
@@ -26,12 +25,10 @@ export const useEmpleado = () => {
   const optionsPersona = ref(estado.personas);
 
   const obtenerTodosEmpleados = async () => {
-    const { entidadBuscarEmpleado } =
-      await empleadoService.obtenerTodosEmpleados(
-        useAuth.negocioElegido.nombre,
-      );
-    console.log(entidadBuscarEmpleado);
-    estado.rows = entidadBuscarEmpleado.map((empleado: Empleado) => {
+    const listaEmpleados = await empleadoService.obtenerTodosEmpleados(
+      useAuth.negocioElegido._id,
+    );
+    estado.rows = listaEmpleados.map((empleado: Empleado) => {
       // console.log(empleado);
       // if (empleado.persona.imagen?.cloudinaryUrl) {
       //   console.log(empleado);
@@ -53,8 +50,8 @@ export const useEmpleado = () => {
   };
 
   const buscarPersonas = async () => {
-    const { personaBuscar } = await empleadoService.buscarPersonas();
-    estado.personas = personaBuscar?.map((persona: Persona) => {
+    const listaPersonas = await empleadoService.buscarPersonas();
+    estado.personas = listaPersonas?.map((persona: Persona) => {
       return {
         id: persona._id,
         nombre: persona.nombre,
@@ -68,14 +65,14 @@ export const useEmpleado = () => {
   const abrirModal = () => (estado.test = true);
 
   const agregarEmpleado = async () => {
-    const { entidadCrearEmpleado } = await empleadoService.agregarEmpleado(
+    const nuevoEmpleado = await empleadoService.agregarEmpleado(
       useAuth.negocioElegido._id, //@ts-ignore
       estado.personaSelect.nombre.id,
       estado.cargo,
     );
     await empleadoService.agregarRolEmpleado(
       useAuth.negocioElegido._id,
-      entidadCrearEmpleado.persona._id,
+      nuevoEmpleado.persona._id,
       estado.cargo,
     );
     NotifySucessCenter('Empleado agregado correctamente');
@@ -94,7 +91,7 @@ export const useEmpleado = () => {
   }) => {
     $q.dialog({
       title: `Eliminar ${row.nombre}`,
-      message: '¿Está seguro de eliminar este articulo?',
+      message: '¿Está seguro de eliminar este empleado?',
       cancel: true,
       persistent: true,
     }).onOk(async () => {

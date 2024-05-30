@@ -90,7 +90,7 @@ const { obtenerMenus, estado, obtenerCatalogos, crearMenu } = useMenu();
 const exepciones = ref([]);
 
 const ofertasDeCatalogo = async (id) => {
-  const { catalogoArbol } = await ofertaService.buscarCatalogoID(id);
+  const catalogoArbol = await ofertaService.buscarCatalogoID(id);
   const test = catalogoArbol.hijas
     .filter((item) => item.hijas)[0]
     .hijas.map((item2) => item2.ofertas)

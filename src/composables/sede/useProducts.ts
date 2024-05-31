@@ -29,6 +29,12 @@ export const useProducts = () => {
       isAddCategory: false,
       isAddCategoryArbol: false,
       isAddProducts: false,
+      // NEW
+      isAddProduct: false,
+      isAddMarca: false,
+      isAddMedida: false,
+      isAddProveedor: false,
+      isDetailProduct: false,
     },
     productos: [],
     producto: <Product>{

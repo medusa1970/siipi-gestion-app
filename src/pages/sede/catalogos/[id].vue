@@ -6,6 +6,10 @@
     label2="DetailCatalogo"
   />
   <!-- TREE -->
+  <h1 class="text-lg font-bold text-center">
+    {{ estado.catalogoSeleccionado[0]?.nombre }}
+  </h1>
+
   <div class="flex justify-center mt-4">
     <q-list
       class="rounded-borders w-[350px]"

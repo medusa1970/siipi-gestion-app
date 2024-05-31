@@ -36,6 +36,10 @@ export const useOferta = () => {
       isAddCatalogo: false,
       isEditIngrediente: false,
       isShowCatalogo: false,
+
+      esOfertaBasicas: false,
+      esOfertaProductos: false,
+      esDetalleOferta: false,
     },
     toogle: false,
     productoFijo: {
@@ -193,12 +197,25 @@ export const useOferta = () => {
     estado.catalogos = catalogoArbol;
     // console.log(estado.catalogos);
     // console.log(catalogoArbol);
+    estado.catalogoSeleccionado = catalogoArbol?.hijas[0];
+    estado.oferta.catalogo = catalogoArbol?.hijas[0];
+
+    //@ts-ignore
+    if (estado.catalogoSeleccionado?._id) {
+      const { catalogoOfertasRecursivo } =
+        await ofertaService.catalogoRecursivo(
+          //@ts-ignore
+          estado.catalogoSeleccionado._id,
+        );
+      if (catalogoOfertasRecursivo) estado.ofertas = catalogoOfertasRecursivo;
+    }
   };
   const obtenerTodoCatalagosIdNombre = async () => {
     const { catalogoArbol } = await ofertaService.buscarCatalogosIdNombre();
     estado.catalogos = catalogoArbol;
     console.log(catalogoArbol);
     estado.catalogoSeleccionado = catalogoArbol?.hijas[0];
+    estado.oferta.catalogo = catalogoArbol?.hijas[0];
 
     //@ts-ignore
     if (estado.catalogoSeleccionado?._id) {
@@ -219,6 +236,8 @@ export const useOferta = () => {
       catalogo._id,
     );
     if (catalogoOfertasRecursivo) estado.ofertas = catalogoOfertasRecursivo;
+    console.log(catalogo);
+    estado.oferta.catalogo = catalogo;
   };
 
   const obtenerCatalogoId = async (catalogoId: string) => {

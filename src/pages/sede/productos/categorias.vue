@@ -14,7 +14,7 @@
       <q-expansion-item
         expand-separator
         icon="category"
-        :label="categoria.nombre"
+        label="Selecciona una categoria"
         default-opened
         dense
       >

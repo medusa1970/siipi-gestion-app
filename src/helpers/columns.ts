@@ -45,11 +45,17 @@ export const columnsEmpleados = [
 ];
 
 export const columnsOfertas = [
+  // {
+  //   name: 'creado',
+  //   label: 'Creado',
+  //   align: 'left',
+  //   field: (row: any) => row._creado,
+  // },
   {
-    name: 'creado',
-    label: 'Creado',
+    name: 'imagen',
+    label: 'Imagen',
     align: 'left',
-    field: (row: any) => row._creado,
+    field: (row: any) => row.imagen,
   },
   {
     name: 'modificado',
@@ -57,12 +63,6 @@ export const columnsOfertas = [
     align: 'left',
     field: (row: any) => row._modificado,
     sortable: true,
-  },
-  {
-    name: 'imagen',
-    label: 'Imagen',
-    align: 'left',
-    field: (row: any) => row.imagen,
   },
   {
     name: 'nombre',
@@ -110,11 +110,17 @@ export const columnsOfertas = [
 ];
 
 export const columnsProductos = [
+  // {
+  //   name: 'creado',
+  //   label: 'Creado',
+  //   align: 'left',
+  //   field: (row: any) => row._creado,
+  // },
   {
-    name: 'creado',
-    label: 'Creado',
+    name: 'imagen',
+    label: 'Imagen',
     align: 'left',
-    field: (row: any) => row._creado,
+    field: (row: any) => row.imagen,
   },
   {
     name: 'modificado',
@@ -124,12 +130,6 @@ export const columnsProductos = [
     sortable: true,
   },
   {
-    name: 'imagen',
-    label: 'Imagen',
-    align: 'left',
-    field: (row: any) => row.imagen,
-  },
-  {
     name: 'nombre',
     required: true,
     label: 'Nombre(s)',
@@ -137,18 +137,18 @@ export const columnsProductos = [
     field: (row: any) => row.nombre,
     sortable: true,
   },
-  {
-    name: 'comentario',
-    required: true,
-    label: 'Comentario',
-    align: 'left',
-    field: (row: any) => row.comentario,
-    sortable: true,
-  },
+  // {
+  //   name: 'comentario',
+  //   required: true,
+  //   label: 'Comentario',
+  //   align: 'left',
+  //   field: (row: any) => row.comentario,
+  //   sortable: true,
+  // },
   {
     name: 'presentacionBasica',
     required: true,
-    label: 'U.M',
+    label: 'Unidad Medida',
     align: 'left',
     field: (row: any) => row.presentacionBasica,
     sortable: true,

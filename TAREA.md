@@ -1,5 +1,9 @@
 # TAREA
 
+- categorias/catalogos hacer borrar editar
+- mover/eliminar categoria
+- borrar nivel 0 de catalogos y colocar titulo ✅
+
 - poner ya la impresora de areas.
 - pasar el hover y poner nombre completo.
 - solo mostrar pedidos del dia (sin pedidos anteriores) ver pedidos.

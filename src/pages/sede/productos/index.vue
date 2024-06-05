@@ -265,7 +265,7 @@
         ></q-img>
       </div>
       <q-input
-        v-model="text"
+        v-model="producto.datosBasicos.nombre"
         type="text"
         label="Nombre*"
         outlined
@@ -278,6 +278,7 @@
         <select
           id="two-level-select"
           class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          v-model="producto.datosBasicos.categoria"
         >
           <option value="" disabled selected>Selecciona una categoria</option>
           <optgroup
@@ -298,7 +299,7 @@
       <!-- EXTRAS -->
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">EXTRAS</h1>
       <q-input
-        v-model="text"
+        v-model="producto.datosBasicos.comentario"
         type="text"
         label="Comentario"
         outlined
@@ -307,7 +308,7 @@
         required
       />
       <q-input
-        v-model="text"
+        v-model="producto.datosBasicos.tiempoVida"
         type="text"
         label="Tiempo de vida"
         outlined
@@ -512,6 +513,9 @@ const {
   borrarProducto,
   navegarCrearOferta,
   getCategoria,
+  producto,
+  imagen,
+  imagePreview,
 } = useProducts();
 
 onMounted(() => {

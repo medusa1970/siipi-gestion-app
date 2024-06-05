@@ -107,23 +107,23 @@ query categoriaArbol(
   categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
     _id
     nombre
-    productos {
-      nombre
-    }
+    # productos {
+    #   nombre
+    # }
     hijas {
       _id
       nombre
-      productos {
-        _id
-        nombre
-      }
+      # productos {
+      #   _id
+      #   nombre
+      # }
       hijas {
         _id
         nombre
-        productos {
-          _id
-          nombre
-        }
+        # productos {
+        #   _id
+        #   nombre
+        # }
       }
     }
   }

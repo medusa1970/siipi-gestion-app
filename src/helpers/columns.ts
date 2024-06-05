@@ -503,3 +503,73 @@ export const tesoreriaPendiente = [
     align: 'right',
   },
 ];
+
+export const marcas = [
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    align: 'left',
+    field: (row: any) => row.imagen,
+  },
+  {
+    name: 'marca',
+    required: true,
+    label: 'Marca',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: 'min',
+    required: true,
+    label: 'Min',
+    align: 'center',
+    field: (row: any) => row._creado,
+    sortable: true,
+  },
+  {
+    name: 'max',
+    required: true,
+    label: 'Max',
+    align: 'center',
+    field: (row: any) => row.monto,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const proveedores = [
+  {
+    name: 'proveedor',
+    required: true,
+    label: 'Proveedor',
+    align: 'left',
+    field: (row: any) => row.entidad,
+    sortable: true,
+  },
+  {
+    name: 'marca',
+    required: true,
+    label: 'Marca',
+    align: 'center',
+    field: (row: any) => row._creado,
+    sortable: true,
+  },
+  {
+    name: 'identificativo',
+    required: true,
+    label: 'Identificativo',
+    align: 'center',
+    field: (row: any) => row.monto,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];

@@ -35,6 +35,7 @@ export const useProducts = () => {
       isAddMedida: false,
       isAddProveedor: false,
       isDetailProduct: false,
+      isAddEmpaque: false,
     },
     productos: [],
     producto: <Product>{
@@ -70,6 +71,16 @@ export const useProducts = () => {
       hijas: '',
     },
     isEditCantidad: false,
+    tab: 'datosBasicos',
+  });
+  const producto = reactive({
+    datosBasicos: {
+      nombre: '',
+      categoria: '',
+      comentario: '',
+      tiempoVida: '',
+      imagen: '',
+    },
   });
   const imagen = ref(null);
   const selectedFile = ref('');
@@ -321,7 +332,7 @@ export const useProducts = () => {
   };
 
   const obtenerTodasCategorias = async () => {
-    const { categoriaArbol } = await productoService.obtenerTodasCategorias();
+    const categoriaArbol = await productoService.obtenerTodasCategorias();
     estado.categoriaArbol = [categoriaArbol];
     const data = [
       {
@@ -361,6 +372,10 @@ export const useProducts = () => {
 
     let { categoria, comentario, ...productoData } = producto;
     storeOferta.oferta.producto = productoData;
+  };
+
+  const editarDatosBasicos = () => {
+    console.log(producto.datosBasicos);
   };
 
   //WATCH
@@ -403,5 +418,7 @@ export const useProducts = () => {
     imagen,
     imagePreview,
     selectedFile,
+    producto,
+    editarDatosBasicos,
   };
 };

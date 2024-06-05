@@ -1,5 +1,6 @@
 # TAREA
 
+- almacen (basico, marca), adquisiociones (medidas, proveedores, marca, extra), logistica (medidas, precio)
 - categorias/catalogos hacer borrar editar
 - mover/eliminar categoria
 - borrar nivel 0 de catalogos y colocar titulo ✅

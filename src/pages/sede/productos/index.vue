@@ -130,7 +130,7 @@
                 ><q-tooltip> Crear oferta </q-tooltip></q-btn
               >
             </NuxtLink> -->
-            <q-btn
+            <!-- <q-btn
               color="primary"
               icon="edit"
               round
@@ -173,8 +173,8 @@
                   </q-item>
                 </q-list>
               </q-menu>
-            </q-btn>
-            <!-- <NuxtLink to="productos/detailProduct">
+            </q-btn> -->
+            <NuxtLink to="productos/detailProduct">
               <q-btn
                 color="primary"
                 icon="edit"
@@ -185,7 +185,7 @@
                 size="10px"
                 @click="navegarDetalleProducto(props.row)"
               />
-            </NuxtLink> -->
+            </NuxtLink>
             <q-btn
               color="red"
               icon="delete"

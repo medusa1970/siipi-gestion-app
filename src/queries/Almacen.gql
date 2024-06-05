@@ -12,11 +12,6 @@ query buscarEntidades_almacen(
       producto {
         _id
         nombre
-        presentacionBasica
-        presentaciones {
-          nombre
-          cantidad
-        }
       }
       cantidadLimite
       lotes {
@@ -40,11 +35,6 @@ mutation modificarEntidades_stock(
       producto {
         _id
         nombre
-        presentacionBasica
-        presentaciones {
-          nombre
-          cantidad
-        }
       }
       cantidadLimite
       lotes {
@@ -85,8 +75,6 @@ mutation HacerInventario(
       bloque {
         nombre
       }
-      presentacion
-      cantidadPresentacion
     }
   }
 }
@@ -113,7 +101,6 @@ query filaInventario(
   filaInventario(busqueda: $busqueda, opciones: $opciones) {
     _id
     nombre
-    presentacionBasica
   }
 }
 

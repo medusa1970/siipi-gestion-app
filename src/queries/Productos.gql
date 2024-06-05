@@ -13,7 +13,17 @@ query buscarProductos(
     _modificado
     nombre
     comentario
-    presentacionBasica
+    medida {
+      nombre
+    }
+    empaques {
+      nombre
+      abreviacion
+      marca {
+        _id
+      }
+      cantidad
+    }
     categoria {
       _id
       nombre
@@ -32,10 +42,6 @@ mutation crearProductos(
     _id
     nombre
     comentario
-    presentacionBasica
-    presentaciones {
-      nombre
-    }
     categoria {
       _id
       nombre
@@ -55,7 +61,6 @@ mutation modificarProductos(
     _id
     nombre
     comentario
-    presentacionBasica
     categoria {
       nombre
     }

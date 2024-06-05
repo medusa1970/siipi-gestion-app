@@ -64,12 +64,6 @@ query buscarPedidos(
           }
           cantidad
         }
-        precio
-        panaderia
-        reposteria
-        siinple
-        envasados
-        embotellados
       }
       cantidad
       estado {
@@ -217,11 +211,6 @@ mutation cambiarEstadoItemsPorOfertas_aceptar(
           }
           cantidad
         }
-        panaderia
-        reposteria
-        siinple
-        envasados
-        embotellados
       }
     }
     estado {

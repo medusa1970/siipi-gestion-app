@@ -17,7 +17,6 @@ query buscarOfertas(
       _id
       nombre
     }
-    precio
     preparados {
       producto {
         _id
@@ -29,7 +28,6 @@ query buscarOfertas(
       producto {
         _id
         nombre
-        presentacionBasica
       }
       cantidad
     }
@@ -48,7 +46,6 @@ mutation crearOfertas(
     nombre
     abreviacion
     descripcion
-    precio
     catalogo {
       _id
       nombre
@@ -93,11 +90,6 @@ query buscarProductos_oferta(
   buscarProductos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
     _id
     nombre
-    presentacionBasica
-    presentaciones {
-      cantidad
-      nombre
-    }
   }
 }
 
@@ -181,7 +173,6 @@ query catalogoOfertasRecursivo(
       _id
       nombre
     }
-    precio
     preparados {
       producto {
         _id
@@ -194,7 +185,6 @@ query catalogoOfertasRecursivo(
       producto {
         _id
         nombre
-        presentacionBasica
       }
       cantidad
     }

@@ -122,7 +122,7 @@ export const useOferta = () => {
       estado.modal.isCreatedOferta = true;
       storeOferta.isEdit = true;
       storeOferta.isEditIngrediente = true;
-      router.push('/sede/ofertas');
+      router.push('/cathering/sede/ofertas');
     }
   };
 
@@ -312,7 +312,7 @@ export const useOferta = () => {
     }
 
     NotifySucessCenter('Oferta editada correctamente');
-    router.push('/sede/ofertas');
+    router.push('/cathering/sede/ofertas');
   };
   const editarIngrediente = async (ingrediente: any) => {
     // console.log(ingrediente);

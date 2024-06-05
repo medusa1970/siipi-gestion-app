@@ -489,8 +489,8 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
-});
+  layout: 'cathering',
+  });
 import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';

@@ -55,7 +55,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import { onMounted } from 'vue';
 import { useOferta } from '@/composables/marca/useOferta';

@@ -25,7 +25,7 @@
               }}
             </h1>
             <p class="text-sm capitalize">
-              ( {{ storeAuth.negocioElegido && storeAuth.user.cargo }} )
+              {{ storeAuth.negocioElegido && storeAuth.user.cargo.nombre }}
             </p>
           </div>
           <!-- NAV END -->

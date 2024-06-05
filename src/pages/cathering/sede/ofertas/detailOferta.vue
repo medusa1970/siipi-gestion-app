@@ -3,7 +3,7 @@
     <Navigation
       label="Ofertas"
       icon="list_alt"
-      href="/sede/ofertas"
+      href="/cathering/sede/ofertas"
       label2="DetailOferta"
     />
     <div class="p-2">
@@ -328,7 +328,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import { ref, onMounted } from 'vue';
 import DragDrop from '@/components/DrogDrop.vue';

@@ -118,6 +118,11 @@ h6 {
   border: 2px solid blue;
 }
 
+.q-drawer-container .q-item.q-router-link--active,
+.q-drawer-container .q-item--active {
+  color: rgb(251, 255, 0);
+}
+
 // // TABLAAAAA EXPANSIVA
 // .q-item {
 //   min-height: 48px;

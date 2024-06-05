@@ -2,7 +2,7 @@
   <Navigation
     label="Catalogos"
     icon="list_alt"
-    href="/sede/catalogos"
+    href="/cathering/sede/catalogos"
     label2="DetailCatalogo"
   />
   <!-- TREE -->
@@ -123,7 +123,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import { useOferta } from '@/composables/marca/useOferta';
 import Dialog from '@/components/Dialog.vue';

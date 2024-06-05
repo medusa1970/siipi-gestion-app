@@ -3,7 +3,7 @@
     label="Productos"
     icon="list_alt"
     label2="DetalleProducto"
-    href="/sede/productos"
+    href="/cathering/sede/productos"
   />
 
   <!-- TABS -->
@@ -616,7 +616,7 @@ const {
 } = useProducts();
 
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 
 const imageSrc = ref(

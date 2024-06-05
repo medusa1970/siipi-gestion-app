@@ -335,7 +335,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import { columnsOfertas } from '@/helpers/columns';
 import { useOferta } from '@/composables/marca/useOferta';

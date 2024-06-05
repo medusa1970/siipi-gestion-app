@@ -3,7 +3,7 @@
 </template>
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import Empleado from '@/components/empleados/Empleado.vue';
 </script>

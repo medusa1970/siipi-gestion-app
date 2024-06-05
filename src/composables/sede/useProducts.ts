@@ -167,7 +167,7 @@ export const useProducts = () => {
       })
       .then((res) => {
         NotifySucessCenter('Producto agregado correctamente');
-        router.push('/sede/productos');
+        router.push('/cathering/sede/productos');
       });
   };
   const editProductBasicInfo = async () => {

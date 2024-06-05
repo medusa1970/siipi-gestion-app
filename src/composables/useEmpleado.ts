@@ -60,7 +60,7 @@ export const useEmpleado = () => {
   };
 
   const abrirPermisos = (row: { id: string }) =>
-    router.push(`/sede/empleados/${row.id}`);
+    router.push(`/cathering/sede/empleados/${row.id}`);
 
   const abrirModal = () => (estado.test = true);
 

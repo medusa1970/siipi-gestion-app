@@ -78,7 +78,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'sede',
+  layout: 'cathering',
 });
 import { useProducts } from '@/composables/sede/useProducts';
 

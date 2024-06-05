@@ -1,38 +1,135 @@
-export const menuListSede = [
-  {
-    icon: 'people',
-    label: 'Empleados',
-    to: '/sede/empleados',
-    subMenu: [],
-  },
+export const menuListCathering = [
   {
     icon: 'bi-box',
-    label: 'Productos',
+    label: 'Logistica',
     subMenu: [
       {
-        label: 'Gestion de categorias',
-        to: '/sede/productos/categorias',
+        label: 'Productos',
+        to: '/cathering/sede/productos',
       },
       {
-        label: 'Productos',
-        to: '/sede/productos',
+        label: 'Categorias de productos ',
+        to: '/cathering/sede/productos/categorias',
+      },
+      {
+        label: 'Proveedores',
+        to: '/cathering',
+      },
+    ],
+  },
+  {
+    icon: 'warehouse',
+    label: 'Almacen',
+    subMenu: [
+      {
+        label: 'Stock ',
+        to: '/cathering/stock',
+      },
+      {
+        label: 'Adquisicion',
+        to: '/cathering/pedidos/recibirProductos/85a4475e446a5885b05739c4',
+      },
+      {
+        label: 'Inventario',
+        to: '/cathering/inventario',
+      },
+      // {
+      //   label: 'Despacho',
+      //   to: '/cathering/pedidos/despacharProductos',
+      // },
+    ],
+  },
+  {
+    icon: 'sell',
+    label: 'Venta',
+    subMenu: [
+      {
+        label: 'Ofertas',
+        to: '/cathering/sede/ofertas',
+      },
+      {
+        label: 'Catalogos de oferta',
+        to: '/cathering/sede/catalogos/75a4475e446a5885b05739c4',
+      },
+    ],
+  },
+  {
+    icon: 'description',
+    label: 'Pedidos',
+    subMenu: [
+      {
+        label: 'ver pedidos',
+        to: '/cathering/pedidos/listaPedidos',
       },
     ],
   },
   {
     icon: 'sell',
-    label: 'Ofertas',
+    label: 'Areas',
     subMenu: [
       {
-        label: 'Gestion de catalogos',
-        to: '/sede/catalogos',
+        label: 'Panaderia',
+        to: '/cathering',
       },
       {
-        label: 'Ofertas',
-        to: '/sede/ofertas',
+        label: 'Reposteria',
+        to: '/cathering',
       },
     ],
   },
+
+  {
+    icon: 'people',
+    label: 'Administracion',
+    subMenu: [
+      {
+        label: 'Datos de la empresa',
+        to: '/cathering',
+      },
+      {
+        label: 'Empleados',
+        to: '/cathering/empleados',
+      },
+    ],
+  },
+  {
+    icon: 'inventory_2',
+    label: 'Gestion',
+    subMenu: [
+      {
+        label: 'Problemas de inventario',
+        to: '/cathering/inventario/listaProblemas',
+      },
+    ],
+  },
+
+  // {
+  //   icon: 'fact_check',
+  //   label: 'Menu',
+  //   to: '/cathering/menu',
+  //   subMenu: [],
+  // },
+
+  // {
+  //   icon: 'point_of_sale',
+  //   label: 'Caja',
+  //   subMenu: [
+  //     {
+  //       label: 'Sucursal cobrar',
+  //       to: '/cathering/caja',
+  //     },
+  //     {
+  //       label: 'Confirmar pagos',
+  //       to: '/cathering/caja/confirmarPagos',
+  //     },
+  //   ],
+  // },
+  // {
+  //   icon: 'settings',
+  //   label: 'Configuración',
+  //   // to: '/cathering/configuracion',
+  //   subMenu: [],
+  // },
 ];
 
 export const menuListPunto = [
@@ -96,79 +193,41 @@ export const menuListPunto = [
   // },
 ];
 
-export const menuListCathering = [
+/*
+export const menuListSede = [
   {
     icon: 'people',
     label: 'Empleados',
-    to: '/cathering/empleados',
+    to: '/cathering/sede/empleados',
     subMenu: [],
   },
-  // {
-  //   icon: 'fact_check',
-  //   label: 'Menu',
-  //   to: '/cathering/menu',
-  //   subMenu: [],
-  // },
   {
-    icon: 'warehouse',
-    label: 'Stock',
+    icon: 'bi-box',
+    label: 'Productos',
     subMenu: [
       {
-        label: 'Recibir productos',
-        to: '/cathering/pedidos/recibirProductos',
+        label: 'Gestion de categorias',
+        to: '/cathering/sede/productos/categorias',
       },
       {
-        label: 'Despachar productos',
-        to: '/cathering/pedidos/despacharProductos',
-      },
-      {
-        label: 'ver stock',
-        to: '/cathering/stock',
+        label: 'Productos',
+        to: '/cathering/sede/productos',
       },
     ],
   },
   {
-    icon: 'inventory_2',
-    label: 'Inventario',
+    icon: 'sell',
+    label: 'Ofertas',
     subMenu: [
       {
-        label: 'Lista Inventario',
-        to: '/cathering/inventario',
+        label: 'Gestion de catalogos',
+        to: '/cathering/sede/catalogos',
       },
       {
-        label: 'Problemas Inventario',
-        to: '/cathering/inventario/listaProblemas',
+        label: 'Ofertas',
+        to: '/cathering/sede/ofertas',
       },
     ],
   },
-  {
-    icon: 'description',
-    label: 'Pedidos',
-    subMenu: [
-      {
-        label: 'ver pedidos',
-        to: '/cathering/pedidos/listaPedidos',
-      },
-    ],
-  },
-  // {
-  //   icon: 'point_of_sale',
-  //   label: 'Caja',
-  //   subMenu: [
-  //     {
-  //       label: 'Sucursal cobrar',
-  //       to: '/cathering/caja',
-  //     },
-  //     {
-  //       label: 'Confirmar pagos',
-  //       to: '/cathering/caja/confirmarPagos',
-  //     },
-  //   ],
-  // },
-  // {
-  //   icon: 'settings',
-  //   label: 'Configuración',
-  //   // to: '/cathering/configuracion',
-  //   subMenu: [],
-  // },
 ];
+*/

@@ -812,7 +812,7 @@ const modificarPersona = async () => {
         imagen: { mimetype: 'image/png', data: imagen },
       },
     );
-    if (personaModificar) {
+    if (personaModificada) {
       NotifySucess('Persona modificada correctamente');
       storeAuth.user.imagen = personaModificada.imagen.cloudinaryUrl;
       storeAuth.user.nombre = personaModificada.nombre;
@@ -825,9 +825,11 @@ const modificarPersona = async () => {
 const getPersona = async () => {
   try {
     showLoading();
-    const persona = await empleadoService.buscarPersona(storeAuth.user._id);
-    persona.value = persona;
-    imagePreview.value = persona.imagen.cloudinaryUrl;
+    const personaEncontrada = await empleadoService.buscarPersona(
+      storeAuth.user._id,
+    );
+    persona.value = personaEncontrada;
+    imagePreview.value = personaEncontrada.imagen.cloudinaryUrl;
     hideLoading();
   } catch (error) {
     ApiError(error);

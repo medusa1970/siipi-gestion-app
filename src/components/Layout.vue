@@ -25,7 +25,12 @@
               }}
             </h1>
             <p class="text-sm capitalize">
-              {{ storeAuth.negocioElegido && storeAuth.user.cargo.nombre }}
+              {{ storeAuth.user.nombre }}
+              {{ storeAuth.user.apellido }}
+              ({{
+                storeAuth.negocioElegido &&
+                storeAuth.negocioElegido.cargos[0].nombre
+              }})
             </p>
           </div>
           <!-- NAV END -->
@@ -153,20 +158,24 @@
       <!-- drawer content -->
       <q-list>
         <!-- PERFIL -->
-        <q-item style="height: 250px; width: 300px">
+        <q-item style="height: 150px; width: 300px">
           <q-img
             id="portada"
             class="absolute-top"
             :src="portadaImg"
-            style="height: 250px; object-fit: cover"
+            style="width: 300px; height: 150px"
+            fit="cover"
+            position="top right"
           >
-            <div id="perfil" class="absolute-bottom text-center">
-              <h1
-                class="inline-block px-4 rounded-lg bg-white text-black uppercase font-bold"
-              >
-                <!-- {{ user2.name + ' ' + user2.lastname }} -->
-                {{ `${storeAuth.user.nombre} ${storeAuth.user.apellido}` }}
-              </h1>
+            <div
+              id="perfil"
+              class="absolute-bottom text-center"
+              style="height: 40px; padding: 9px; z-index: 100"
+            >
+              <!-- {{ user2.name + ' ' + user2.lastname }} -->
+              {{
+                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0].nombre})`
+              }}
             </div>
           </q-img>
           <div class="w-full h-full flex justify-center items-center">
@@ -702,7 +711,7 @@ const logout = () => {
   storeAuth.user.negocios = [];
   storeAuth.token = '';
   router.push('/');
-  storeAuth.negocioElegido = '';
+  storeAuth.negocioElegido = null;
 };
 
 // Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido

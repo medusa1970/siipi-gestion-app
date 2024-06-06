@@ -490,7 +490,7 @@
 <script setup>
 definePageMeta({
   layout: 'cathering',
-  });
+});
 import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';

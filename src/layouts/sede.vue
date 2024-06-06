@@ -8,5 +8,5 @@
 
 <script setup>
 import { menuListSede } from '@/helpers/menuList';
-import PortadaSede from '@/assets/img/backSede.png';
+import PortadaSede from '@/assets/img/buddha.png';
 </script>

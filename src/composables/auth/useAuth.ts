@@ -4,6 +4,7 @@ import { authStore } from '@/stores/auth.store';
 import type { Negocio, PersonaProps } from '~/interfaces/product.interface';
 import { authService } from '~/services/auth.service';
 import auth from '~/middleware/auth';
+import { DrogDrop } from '#build/components';
 export const useAuth = () => {
   /**
    * REACTIVIDAD Y ESTADO
@@ -64,13 +65,13 @@ export const useAuth = () => {
         negocio._id,
       );
       useAuth.token = loginResponse.token;
+      useAuth.negocioElegido.permisos = loginResponse.permisos;
+      useAuth.negocioElegido.cargos = loginResponse.cargos;
+      console.log(useAuth.negocioElegido.cargos);
+      console.log(useAuth.negocioElegido.permisos);
+      console.log(useAuth.user.nombre);
       LocalStorage.remove('prohibido');
     }
-    const cargo = await authService.buscarEmpleadoCargo(
-      negocio._id,
-      useAuth.user._id,
-    );
-    useAuth.user.cargo = cargo;
   };
   const register = async () => {
     await useAuth.register(authPersona.value);

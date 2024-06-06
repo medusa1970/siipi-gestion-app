@@ -37,7 +37,7 @@ import { pedidoService } from '~/services/punto/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
-import PortadaCathering from '@/assets/img/backCathering.png';
+import PortadaCathering from '@/assets/img/cookies.png';
 
 const storeAuth = authStore();
 const $q = useQuasar();

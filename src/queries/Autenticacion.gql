@@ -5,19 +5,17 @@
 query conectar($datos: ConexionDto!) {
   conectar(datos: $datos) {
     token
-    persona {
-      _id
-      nombre
-      apellido
-      correo
-      telefono
-      usuario
-      imagen {
-        cloudinaryUrl
-      }
-    }
-    entidad {
-      _id
+    personaId
+    usuario
+    nombre
+    apellido
+    correo
+    telefono
+    cloudinaryUrl
+    entidadId
+    entidadNombre
+    entidadTipo
+    cargos {
       nombre
     }
     permisos

@@ -20,8 +20,8 @@ const estadoInicial: AuthStoreProps = {
     _id: '',
     nombre: '',
     apellido: '',
-    cargo: '',
     correo: '',
+    telefono: '',
     usuario: '',
     negocios: [],
     imagen: '',
@@ -31,6 +31,8 @@ const estadoInicial: AuthStoreProps = {
     _id: '',
     nombre: '',
     tipo: '',
+    cargos: [],
+    permisos: [],
   },
 };
 
@@ -39,24 +41,20 @@ export const authStore = defineStore('auth', {
   actions: {
     async login(usuario: string, contrasena: string) {
       const loginResponse = await authService.login(usuario, contrasena);
-      console.log(loginResponse);
-      this.user._id = loginResponse.persona._id;
-      this.user.nombre = loginResponse.persona.nombre;
-      this.user.usuario = loginResponse.persona.usuario;
-      this.user.apellido = loginResponse.persona.apellido;
-      this.user.correo = loginResponse.persona.correo;
-      this.user.imagen = loginResponse.persona.imagen?.cloudinaryUrl;
-
-      // if (loginResponse.persona.imagen?.cloudinaryUrl) {
-      //   this.user.imagen = loginResponse.persona.imagen.cloudinaryUrl;
-      // } else {
-      //   this.user.imagen = '';
-      // }
-      this.token = loginResponse.token;
-
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);
+
+      this.token = loginResponse.token;
+      this.user._id = loginResponse.personaId;
+      this.user.nombre = loginResponse.nombre;
+      this.user.usuario = loginResponse.usuario;
+      this.user.apellido = loginResponse.apellido;
+      this.user.correo = loginResponse.correo;
+      this.user.telefono = loginResponse.telefono;
+      this.user.imagen = loginResponse.cloudinaryUrl;
+      this.user.permisos = loginResponse.permisos;
+      this.user.cargos = loginResponse.cargos;
       this.user.negocios = await authService.buscarEntidadesDeUsuario(
-        this.token,
+        loginResponse.personaID,
       );
       this.user.negocios.push({
         _id: 'cliente',

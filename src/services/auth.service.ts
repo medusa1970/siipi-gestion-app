@@ -1,13 +1,14 @@
+import { NotifySucess } from '~/helpers/message.service';
 import type { PersonaProps } from '../interfaces/product.interface';
 import { postDataGql } from './service.config';
 
 export const authService = {
   /**
    * Efectua un pedido de conexion por token jwt
-   * @returns { payload, persona, entidad }
+   * @returns { persona, entidad, permisos, cargos }
    */
   login: async (usuario: string, contrasena: string, entidad?: string) => {
-    const payload = await postDataGql(
+    const response = await postDataGql(
       GqlConectar({
         datos: {
           usuario,
@@ -16,7 +17,7 @@ export const authService = {
         },
       }),
     );
-    return payload;
+    return response;
   },
 
   /**
@@ -43,28 +44,6 @@ export const authService = {
       }),
     );
     return nuevaPersona;
-  },
-
-  /**
-   * Busca el cargo de un empleado en una entidad
-   * @returns String
-   * (nota) cargo ahora es un array de Cargo, por lo momento solo @returnsmos el primero
-   */
-  buscarEmpleadoCargo: async (entidadID: string, personaID: string) => {
-    const [entidad] = await postDataGql(
-      GqlBuscarEntidades_empleadoCargos({
-        busqueda: {
-          _id: [entidadID],
-        },
-        filtro: {
-          empleados: {
-            persona: [personaID],
-          },
-        },
-        opciones: { limit: 1, errorSiVacio: true },
-      }),
-    );
-    return entidad.empleados[0]?.cargos[0];
   },
 
   /**

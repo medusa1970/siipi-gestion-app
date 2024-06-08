@@ -130,18 +130,8 @@ export const useProducts = () => {
 
   const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 
-  // sdasdas
-  //dasdasd
-  //dasdasd
-  //dasdasd
-  //dasdasd
-  //dasdasd
-  //dasdasd
-  //dasdasd
-  //dasdasd
   const getAllProductos = async () => {
     const productos = await productoService.buscarProductos();
-    console.log(productos);
     estado.productos = productos;
   };
   const getCategoria = async () => {

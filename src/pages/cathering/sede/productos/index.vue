@@ -6,27 +6,6 @@
     </h1>
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <template #dropdown>
-        <!-- <NuxtLink to="productos/detailProduct">
-          <q-btn
-            v-if="$q.platform.is.desktop"
-            icon-right="add"
-            color="green"
-            label="Agregar producto"
-            no-caps
-            style="font-size: 14.5px"
-            padding="4px 10px"
-            @click="modalAgregarProducto()"
-          />
-          <q-btn
-            v-if="$q.platform.is.mobile"
-            color="green"
-            label="Agregar producto"
-            no-caps
-            style="font-size: 14.5px"
-            padding="4px 10px"
-            @click="modalAgregarProducto()"
-          />
-        </NuxtLink> -->
         <q-btn
           icon-right="add"
           color="green"
@@ -40,9 +19,6 @@
       <!-- BADGE -->
       <template #rows-badge="{ props }">
         <q-tr :props="props">
-          <!-- <q-td key="creado" :props="props">
-            {{ fechaMes(props.row._creado) }}
-          </q-td> -->
           <q-td key="imagen" :props="props" class="">
             <q-img
               v-if="props.row.imagen"
@@ -72,29 +48,11 @@
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
-          <!-- <q-td key="comentario" :props="props">
-            {{ props.row.comentario }}
-          </q-td> -->
-          <q-td key="presentacionBasica" :props="props">
-            {{ props.row.presentacionBasica }}
-          </q-td>
-          <q-td key="presentaciones" :props="props">
-            <div class="flex gap-1">
-              <div v-for="(p, index) in props.row.presentaciones" :key="index">
-                <q-badge color="blue" class="capitalize">
-                  {{ p.nombre }}
-                </q-badge>
-              </div>
-            </div>
+          <q-td key="medida" :props="props">
+            {{ props.row.medida.nombre }}
           </q-td>
           <q-td key="categoria" :props="props">
             {{ props.row.categoria && props.row.categoria.nombre }}
-            <!-- <p
-              class="text-blue-400 underline cursor-pointer"
-              @click="cambiarCategoria(props.row)"
-            >
-              Editar
-            </p> -->
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
@@ -107,73 +65,7 @@
               size="11px"
               @click="estado.modal.isDetailProduct = true"
             />
-            <q-btn
-              color="green"
-              icon="dataset"
-              round
-              dense
-              flat
-              padding="1px"
-              size="11px"
-              ><q-tooltip> Ofertas </q-tooltip></q-btn
-            >
-            <!-- <NuxtLink to="ofertas/detailOferta">
-              <q-btn
-                color="green"
-                icon="add"
-                round
-                dense
-                flat
-                padding="1px"
-                size="11px"
-                @click="navegarCrearOferta(props.row)"
-                ><q-tooltip> Crear oferta </q-tooltip></q-btn
-              >
-            </NuxtLink> -->
-            <!-- <q-btn
-              color="primary"
-              icon="edit"
-              round
-              dense
-              flat
-              padding="1px"
-              size="10px"
-            >
-              <q-menu
-                transition-show="rotate"
-                transition-hide="rotate"
-                anchor="top start"
-                self="top right"
-              >
-                <q-list dense style="min-width: 100px">
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="estado.modal.esCrearMarcaProducto = true"
-                  >
-                    <q-item-section>Marca</q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="estado.modal.esCrearMedidaProducto = true"
-                  >
-                    <q-item-section>Medidas & Empaques</q-item-section>
-                  </q-item>
-                  <q-separator />
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="estado.modal.isAddProveedor = true"
-                  >
-                    <q-item-section avatar>
-                      <q-icon name="accessibility_new" color="green" />
-                    </q-item-section>
-                    <q-item-section>Proveedores</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn> -->
+
             <q-btn
               color="primary"
               icon="edit"
@@ -184,8 +76,6 @@
               size="10px"
               @click="esEditarProducto(props.row)"
             />
-            <!-- <NuxtLink to="productos/detailProduct">
-            </NuxtLink> -->
             <q-btn
               color="red"
               icon="delete"

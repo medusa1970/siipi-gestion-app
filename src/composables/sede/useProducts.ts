@@ -40,6 +40,8 @@ export const useProducts = () => {
       esCrearMarca: false,
       esCrearMedida: false,
       esCrearEmpaque: false,
+      esMostrarInformacionProducto: false,
+      mostrarImagen: false,
     },
     productos: [],
     producto: <Product>{
@@ -117,6 +119,8 @@ export const useProducts = () => {
       tiempoVida: '',
       imagen: '',
     },
+    informacion: [],
+    imagenSrc: '',
   });
   const imagen = ref(null);
   const selectedFile = ref('');
@@ -427,8 +431,10 @@ export const useProducts = () => {
         mimetype: 'image/png',
       },
     });
-    console.log(res);
-    if (res) NotifySucessCenter('Producto agregado correctamente');
+    if (res) {
+      NotifySucessCenter('Producto agregado correctamente');
+      getAllProductos();
+    }
     estado.modal.isAddProduct = false;
 
     // limpiando campos
@@ -436,6 +442,8 @@ export const useProducts = () => {
     producto.datosBasicos.categoria = { _id: '', nombre: '' };
     producto.datosBasicos.comentario = '';
     imagen.value = null;
+    selectedFile.value = '';
+    imagePreview.value = '';
   };
 
   const editarProductoBasico = async () => {
@@ -559,6 +567,16 @@ export const useProducts = () => {
     // buscarMedidas();
   };
 
+  const mostrarInformacionProducto = (row: any) => {
+    producto.informacion = row;
+    estado.modal.esMostrarInformacionProducto = true;
+  };
+
+  const verImagen = (row: any) => {
+    estado.modal.mostrarImagen = true;
+    producto.imagenSrc = row?.cloudinaryUrl;
+  };
+
   //WATCH
   watch(imagen, () => {
     //@ts-ignore
@@ -635,5 +653,7 @@ export const useProducts = () => {
     crearMedida,
     crearEmpaque,
     editarProductoMedidaEmpaque,
+    mostrarInformacionProducto,
+    verImagen,
   };
 };

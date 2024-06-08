@@ -189,6 +189,7 @@ export const productoService = {
     comentario: string;
     imagen?: { data: any; mimetype: string };
   }) => {
+    console.log(datos);
     const producto = await postDataGql(
       GqlCrearProductosBasicos({
         datos,

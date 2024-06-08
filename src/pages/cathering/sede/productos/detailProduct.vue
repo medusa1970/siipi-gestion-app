@@ -33,13 +33,17 @@
     <q-tab-panel name="datosBasicos" animated>
       <div class="grid grid-cols-2 gap-6">
         <div class="col-span-1 !p-0 flex flex-col gap-4">
-          <q-input
-            v-model="producto.datosBasicos.nombre"
-            type="text"
-            label="Nombre"
-            filled
-          />
-          <div class="select-container">
+          <div class="flex flex-row gap-2 w-full">
+            <q-input
+              v-model="producto.datosBasicos.nombre"
+              type="text"
+              label="Nombre"
+              filled
+            />
+            <BotonDetalle mensaje="" />
+          </div>
+
+          <div class="select-container flex flex-row gap-2 w-full">
             <select
               id="two-level-select"
               class="bg-grey-3 text-grey-7 rounded-[4px] shadow-sm text-base block w-full py-4 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -62,28 +66,37 @@
                 </option>
               </optgroup>
             </select>
+            <BotonDetalle mensaje="" />
           </div>
-          <q-input
-            v-model="producto.datosBasicos.comentario"
-            type="text"
-            label="Comentario"
-            filled
-          />
-          <q-file
-            v-model="imagen"
-            label="Seleccionar imagen"
-            accept=".jpg, .png, .jpge"
-            max-total-size="560000"
-            @rejected="onRejected"
-            counter
-            filled
-            hint="Tamaño máximo de imagen 540KB"
-            clearable
-          >
-            <template v-slot:prepend>
-              <q-icon name="cloud_upload" @click.stop.prevent />
-            </template>
-          </q-file>
+
+          <div class="flex flex-row gap-2 w-full">
+            <q-input
+              v-model="producto.datosBasicos.comentario"
+              type="text"
+              label="Comentario"
+              filled
+            />
+            <BotonDetalle mensaje="" />
+          </div>
+
+          <div class="flex flex-row gap-2 w-full" width="100%">
+            <q-file
+              v-model="imagen"
+              label="Seleccionar imagen"
+              accept=".jpg, .png, .jpge"
+              max-total-size="560000"
+              @rejected="onRejected"
+              counter
+              filled
+              hint="Tamaño máximo de imagen 540KB"
+              clearable
+            >
+              <template v-slot:prepend>
+                <q-icon name="cloud_upload" @click.stop.prevent />
+              </template>
+            </q-file>
+            <BotonDetalle mensaje="" />
+          </div>
         </div>
 
         <div class="col-span-1 !p-0">

@@ -156,7 +156,7 @@ export const productoService = {
   obtenerTodasCategorias: async () => {
     const arbol = await postDataGql(
       GqlCategoriaArbol({
-        busqueda: { nombre: 'CATEGORIA RAIZ' },
+        busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
     );
     return arbol;

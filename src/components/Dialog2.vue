@@ -26,7 +26,6 @@
             :label="labelBtn"
             color="secondary"
             type="submit"
-            @click="handleSubmit"
           ></q-btn>
         </div>
       </q-form>

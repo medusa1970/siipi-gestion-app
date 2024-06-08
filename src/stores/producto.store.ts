@@ -1,4 +1,4 @@
-import type { Product } from '~/interfaces/product.interface';
+import type { Product, Producto } from '~/interfaces/product.interface';
 
 export interface InventarioProps {
   id: string;
@@ -6,6 +6,7 @@ export interface InventarioProps {
 }
 interface ProductState {
   product: Product;
+  producto: Producto;
   isEdit: boolean;
   ListInventario: InventarioProps[];
   ListInventarioPDF: Array<Object>;
@@ -20,6 +21,15 @@ export const productStore = defineStore('product', {
       presentacionBasica: '',
       presentaciones: [],
       categoria: { _id: '', nombre: '' },
+    },
+    producto: {
+      _id: '',
+      nombre: '',
+      comentario: '',
+      categoria: { _id: '', nombre: '' },
+      imagen: '',
+      variedades: [],
+      empaques: [],
     },
     isEdit: false,
     ListInventario: [],

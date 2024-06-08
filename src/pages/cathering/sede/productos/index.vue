@@ -149,14 +149,14 @@
                   <q-item
                     clickable
                     v-close-popup
-                    @click="estado.modal.isAddMarca = true"
+                    @click="estado.modal.esCrearMarcaProducto = true"
                   >
                     <q-item-section>Marca</q-item-section>
                   </q-item>
                   <q-item
                     clickable
                     v-close-popup
-                    @click="estado.modal.isAddMedida = true"
+                    @click="estado.modal.esCrearMedidaProducto = true"
                   >
                     <q-item-section>Medidas & Empaques</q-item-section>
                   </q-item>
@@ -174,18 +174,18 @@
                 </q-list>
               </q-menu>
             </q-btn> -->
-            <NuxtLink to="productos/detailProduct">
-              <q-btn
-                color="primary"
-                icon="edit"
-                round
-                dense
-                flat
-                padding="1px"
-                size="10px"
-                @click="navegarDetalleProducto(props.row)"
-              />
-            </NuxtLink>
+            <q-btn
+              color="primary"
+              icon="edit"
+              round
+              dense
+              flat
+              padding="1px"
+              size="10px"
+              @click="esEditarProducto(props.row)"
+            />
+            <!-- <NuxtLink to="productos/detailProduct">
+            </NuxtLink> -->
             <q-btn
               color="red"
               icon="delete"
@@ -236,6 +236,7 @@
     v-model="estado.modal.isAddProduct"
     title="Crear producto"
     label-btn="Crear"
+    :handle-submit="crearProductoBasico"
   >
     <template #inputsDialog>
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
@@ -307,21 +308,12 @@
         clearable
         required
       />
-      <q-input
-        v-model="producto.datosBasicos.tiempoVida"
-        type="text"
-        label="Tiempo de vida"
-        outlined
-        dense
-        clearable
-        required
-      />
     </template>
   </Dialog2>
 
   <!-- PRODUCTO MARCA -->
   <Dialog2
-    v-model="estado.modal.isAddMarca"
+    v-model="estado.modal.esCrearMarcaProducto"
     title="Crear producto"
     label-btn="Crear"
   >
@@ -355,7 +347,7 @@
 
   <!-- PRODUCTO MEDIDAS & EMPAQUES -->
   <Dialog2
-    v-model="estado.modal.isAddMedida"
+    v-model="estado.modal.esCrearMedidaProducto"
     title="Crear producto"
     label-btn="Crear"
   >
@@ -516,6 +508,8 @@ const {
   producto,
   imagen,
   imagePreview,
+  crearProductoBasico,
+  esEditarProducto,
 } = useProducts();
 
 onMounted(() => {

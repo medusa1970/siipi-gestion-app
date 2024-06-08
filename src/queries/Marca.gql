@@ -1,0 +1,18 @@
+# CRUD MARCAS
+
+mutation crearMarcas($datos: [CrearMarcaDto!]!, $opciones: CrearOpciones = {}) {
+  crearMarcas(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+query buscarMarcas(
+  $busqueda: BuscarMarcaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarMarcaDto = {}
+) {
+  buscarMarcas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    nombre
+  }
+}

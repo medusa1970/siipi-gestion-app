@@ -509,14 +509,14 @@ export const marcas = [
     name: 'imagen',
     label: 'Imagen',
     align: 'left',
-    field: (row: any) => row.imagen,
+    field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
     name: 'marca',
     required: true,
     label: 'Marca',
     align: 'left',
-    field: (row: any) => row.entidad,
+    field: (row: any) => row.marca?.nombre,
     sortable: true,
   },
   {
@@ -524,7 +524,7 @@ export const marcas = [
     required: true,
     label: 'Min',
     align: 'center',
-    field: (row: any) => row._creado,
+    field: (row: any) => row.cantidadMin,
     sortable: true,
   },
   {
@@ -532,7 +532,47 @@ export const marcas = [
     required: true,
     label: 'Max',
     align: 'center',
-    field: (row: any) => row.monto,
+    field: (row: any) => row.cantidadMax,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+];
+
+export const empaques = [
+  {
+    name: 'nombre',
+    required: true,
+    label: 'Nombre',
+    align: 'center',
+    field: (row: any) => row.nombre,
+    sortable: true,
+  },
+  {
+    name: 'abreviacion',
+    required: true,
+    label: 'Abreviacion',
+    align: 'center',
+    field: (row: any) => row.abreviacion,
+    sortable: true,
+  },
+  {
+    name: 'cantidad',
+    required: true,
+    label: 'Cantidad',
+    align: 'center',
+    field: (row: any) => row.cantidad,
+    sortable: true,
+  },
+  {
+    name: 'marca',
+    required: true,
+    label: 'Marca',
+    align: 'left',
+    field: (row: any) => row.marca?.nombre,
     sortable: true,
   },
   {

@@ -25,12 +25,9 @@
               }}
             </h1>
             <p class="text-sm capitalize">
-              {{ storeAuth.user.nombre }}
-              {{ storeAuth.user.apellido }}
-              ({{
-                storeAuth.negocioElegido &&
-                storeAuth.negocioElegido.cargos[0].nombre
-              }})
+              {{
+                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0]?.nombre})`
+              }}
             </p>
           </div>
           <!-- NAV END -->
@@ -172,9 +169,8 @@
               class="absolute-bottom text-center"
               style="height: 40px; padding: 9px; z-index: 100"
             >
-              <!-- {{ user2.name + ' ' + user2.lastname }} -->
               {{
-                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0].nombre})`
+                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0]?.nombre})`
               }}
             </div>
           </q-img>

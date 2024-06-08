@@ -43,8 +43,37 @@ export interface Product {
   presentaciones: Presentacion[];
   categoria: { _id: string; nombre: string };
 }
+export interface Producto {
+  _id?: string;
+  nombre: string;
+  comentario: string;
+  categoria: { _id: string; nombre: string };
+  imagen: string;
+  variedades: Variedad[];
+  empaques: Empaque[];
+}
 export interface Presentacion {
   _id?: string | null | undefined;
   nombre: string;
+  cantidad: number;
+}
+
+export interface Variedad {
+  _id: string;
+  marca: { _id: string; nombre: string };
+  cantidadMin: number;
+  cantidadMax: number;
+  imagen: {
+    cloudinaryUrl: string;
+  };
+}
+
+export interface Empaque {
+  nombre: string;
+  abreviacion: string;
+  marca: {
+    _id: string;
+    nombre: string;
+  };
   cantidad: number;
 }

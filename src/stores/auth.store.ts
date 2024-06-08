@@ -51,10 +51,11 @@ export const authStore = defineStore('auth', {
       this.user.correo = loginResponse.correo;
       this.user.telefono = loginResponse.telefono;
       this.user.imagen = loginResponse.cloudinaryUrl;
-      this.user.permisos = loginResponse.permisos;
-      this.user.cargos = loginResponse.cargos;
+      // this.negocioElegido.permisos = loginResponse.permisos;
+      // this.negocioElegido.cargos = loginResponse.cargos;
+
       this.user.negocios = await authService.buscarEntidadesDeUsuario(
-        loginResponse.personaID,
+        loginResponse.token,
       );
       this.user.negocios.push({
         _id: 'cliente',

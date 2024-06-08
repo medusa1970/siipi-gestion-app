@@ -13,6 +13,19 @@ query buscarProductos(
     _modificado
     nombre
     comentario
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
     medida {
       nombre
     }
@@ -21,6 +34,7 @@ query buscarProductos(
       abreviacion
       marca {
         _id
+        nombre
       }
       cantidad
     }
@@ -143,6 +157,91 @@ mutation crearCategorias(
     nombre
     pariente {
       nombre
+    }
+  }
+}
+
+# NUEVO
+mutation crearProductosBasicos(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    comentario
+    imagen {
+      archivoLocal
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+  }
+}
+
+mutation modificarProductosBasicos(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    comentario
+    imagen {
+      archivoLocal
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+      nombre
+    }
+  }
+}
+
+mutation modificarProductosMarca(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    variedades {
+      marca {
+        _id
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation modificarProductosMedidaEmpaque(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    medida {
+      _id
+      nombre
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+      }
+      cantidad
     }
   }
 }

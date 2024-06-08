@@ -179,4 +179,116 @@ export const productoService = {
     );
     return categoria;
   },
+  /**
+   * Crear una producto con datos basicos
+   * @returns Producto
+   */
+  crearProductoBasico: async (datos: {
+    nombre: string;
+    categoria: string;
+    comentario: string;
+    imagen?: { data: any; mimetype: string };
+  }) => {
+    const producto = await postDataGql(
+      GqlCrearProductosBasicos({
+        datos,
+      }),
+    );
+    return producto;
+  },
+
+  // copilot quiero hacer servicio para modificar producto basico
+  /**
+   * Modifica un producto basico
+   * @returns Producto
+   */
+  modificarProductoBasico: async (
+    productoID: string,
+    datos: {
+      nombre: string;
+      categoria: string;
+      comentario: string;
+      imagen?: { data: any; mimetype: string };
+    },
+  ) => {
+    const producto = await postDataGql(
+      GqlModificarProductosBasicos({
+        busqueda: { _id: [productoID] },
+        datos,
+      }),
+    );
+    return producto;
+  },
+  agregarProductosMarca: async (
+    productoID: string,
+    productoMarca: {
+      imagen: { data: any; mimetype: string };
+      marca: string;
+      cantidadMax: number;
+      cantidadMin: number;
+    },
+  ) => {
+    // console.log(productoID, productoMarca);
+    const res = await postDataGql(
+      GqlModificarProductosMarca({
+        busqueda: { _id: [productoID] },
+        datos: {
+          variedades: {
+            agregar: [productoMarca],
+          },
+        },
+      }),
+    );
+    return res;
+  },
+  agregarProductosMedidaEmpaque: async (
+    productoID: string,
+    empaque: {
+      marca: string;
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    },
+  ) => {
+    const res = await postDataGql(
+      GqlModificarProductosMedidaEmpaque({
+        busqueda: { _id: [productoID] },
+        datos: {
+          empaques: {
+            agregar: [empaque],
+          },
+        },
+      }),
+    );
+    return res;
+  },
+  /**
+   * MARCA PRODUCTOS
+   */
+  crearMarca: async (datos: { nombre: string }) =>
+    await postDataGql(GqlCrearMarcas({ datos })),
+  buscarMarcas: async () => postDataGql(GqlBuscarMarcas()),
+
+  /**
+   * MEDIDAS PRODUCTOS
+   */
+  crearMedida: async (datos: { nombre: string }) =>
+    await postDataGql(GqlCrearMedidas({ datos })),
+  buscarMedidas: async () => postDataGql(GqlBuscarMedidas()),
+  agregarEmpaqueMedida: async (
+    medidaID: string,
+    empaque: { nombre: string; abreviacion: string },
+  ) => {
+    const res = await postDataGql(
+      GqlModificarMedidas({
+        busqueda: { _id: [medidaID] },
+        datos: {
+          tipoEmpaques: {
+            agregar: [empaque],
+          },
+        },
+      }),
+    );
+    return res;
+  },
 };

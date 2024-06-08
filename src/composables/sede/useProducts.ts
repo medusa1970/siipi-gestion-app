@@ -12,6 +12,7 @@ import type { Presentacion, Product } from '@/interfaces/product.interface';
 import DragDrop from '@/components/DrogDrop.vue';
 import { ofertaStore } from '@/stores/oferta.store';
 import { fileToBase64 } from '@/helpers/helpers';
+import { ro } from 'date-fns/locale';
 
 export const useProducts = () => {
   const useProduct = productStore();
@@ -31,11 +32,14 @@ export const useProducts = () => {
       isAddProducts: false,
       // NEW
       isAddProduct: false,
-      isAddMarca: false,
-      isAddMedida: false,
+      esCrearMarcaProducto: false,
+      esCrearMedidaProducto: false,
       isAddProveedor: false,
       isDetailProduct: false,
       isAddEmpaque: false,
+      esCrearMarca: false,
+      esCrearMedida: false,
+      esCrearEmpaque: false,
     },
     productos: [],
     producto: <Product>{
@@ -72,11 +76,43 @@ export const useProducts = () => {
     },
     isEditCantidad: false,
     tab: 'datosBasicos',
+    marcas: [],
+    marcaProducto: {
+      marca: {
+        _id: '',
+        nombre: '',
+      },
+      minimo: '',
+      maximo: '',
+    },
+    medidas: [],
+    medidaProducto: {
+      medida: {
+        _id: '',
+        nombre: '',
+        tipoEmpaques: [
+          {
+            nombre: '',
+            abreviacion: '',
+          },
+        ],
+      },
+      empaque: {
+        nombre: '',
+        abreviacion: '',
+      },
+      marca: {
+        _id: '',
+        nombre: '',
+      },
+      cantidad: 0,
+    },
   });
   const producto = reactive({
+    productoID: '',
     datosBasicos: {
       nombre: '',
-      categoria: '',
+      categoria: { _id: '', nombre: '' },
       comentario: '',
       tiempoVida: '',
       imagen: '',
@@ -85,6 +121,12 @@ export const useProducts = () => {
   const imagen = ref(null);
   const selectedFile = ref('');
   const imagePreview = ref('');
+  const nombre = ref('');
+
+  // IMAGEN MARCA
+  const imagenMarca = ref(null);
+  const selectedFileMarca = ref('');
+  const imagePreviewMarca = ref('');
 
   const tags = ['empanadas', 'Masas', 'Embutidos', 'pedazos'];
 
@@ -374,8 +416,157 @@ export const useProducts = () => {
     storeOferta.oferta.producto = productoData;
   };
 
-  const editarDatosBasicos = () => {
+  const editarDatosBasicos = async () => {
     console.log(producto.datosBasicos);
+    const imagenCvt = await fileToBase64(selectedFile.value);
+    console.log(imagenCvt);
+  };
+
+  // NUEVO
+  /**
+   * CRUD PRODUCTOS
+   */
+  const crearProductoBasico = async () => {
+    const imagenCvt = await fileToBase64(selectedFile.value);
+    const res = await productoService.crearProductoBasico({
+      nombre: producto.datosBasicos.nombre, //@ts-ignore
+      categoria: producto.datosBasicos.categoria._id,
+      comentario: producto.datosBasicos.comentario,
+      imagen: {
+        data: imagenCvt,
+        mimetype: 'image/png',
+      },
+    });
+    console.log(res);
+    if (res) NotifySucessCenter('Producto agregado correctamente');
+    estado.modal.isAddProduct = false;
+
+    // limpiando campos
+    producto.datosBasicos.nombre = '';
+    producto.datosBasicos.categoria = { _id: '', nombre: '' };
+    producto.datosBasicos.comentario = '';
+    imagen.value = null;
+  };
+
+  const editarProductoBasico = async () => {
+    console.log('first');
+    if (imagen.value === null) {
+      const res = await productoService.modificarProductoBasico(
+        producto.productoID,
+        {
+          nombre: producto.datosBasicos.nombre, //@ts-ignore
+          categoria: producto.datosBasicos.categoria._id,
+          comentario: producto.datosBasicos.comentario,
+        },
+      );
+      if (res) NotifySucessCenter('Producto modificado correctamente');
+    } else {
+      const imagenCvt = await fileToBase64(selectedFile.value);
+
+      const res = await productoService.modificarProductoBasico(
+        producto.productoID,
+        {
+          nombre: producto.datosBasicos.nombre, //@ts-ignore
+          categoria: producto.datosBasicos.categoria._id,
+          comentario: producto.datosBasicos.comentario,
+          imagen: {
+            data: imagenCvt,
+            mimetype: 'image/png',
+          },
+        },
+      );
+      if (res) NotifySucessCenter('Producto modificado correctamente');
+    }
+  };
+
+  const editarProductoMarca = async () => {
+    const imagenCvt = await fileToBase64(selectedFileMarca.value);
+    console.log(imagenCvt);
+
+    const res = await productoService.agregarProductosMarca(
+      //@ts-expect-error
+      useProduct.producto._id,
+      {
+        marca: estado.marcaProducto.marca._id,
+        cantidadMin: parseInt(estado.marcaProducto.minimo),
+        cantidadMax: parseInt(estado.marcaProducto.maximo),
+        imagen: {
+          data: imagenCvt,
+          mimetype: 'image/png',
+        },
+      },
+    );
+    if (res) NotifySucessCenter('Marca creado correctamente');
+    estado.modal.esCrearMarcaProducto = false;
+  };
+
+  const editarProductoMedidaEmpaque = async () => {
+    const res = await productoService.agregarProductosMedidaEmpaque(
+      //@ts-expect-errors
+      useProduct.producto._id,
+      {
+        //@ts-expect-errors
+        marca: estado.medidaProducto.marca.marca._id,
+        nombre: estado.medidaProducto.empaque.nombre,
+        abreviacion: estado.medidaProducto.empaque.abreviacion,
+        cantidad: estado.medidaProducto.cantidad,
+      },
+    );
+    if (res) NotifySucessCenter('Medida&Empaque creado correctamente');
+    estado.modal.isAddEmpaque = false;
+  };
+
+  /**
+   * REDIRECCIONAR DESDE TABLA
+   */
+  const esEditarProducto = (row: any) => {
+    console.log(row);
+    const { _creado, _modificado, medida, ...nuevoDato } = row;
+    useProduct.producto = { ...nuevoDato, categoria: nuevoDato.categoria };
+
+    console.log(useProduct.producto);
+    router.push('productos/detailProduct');
+  };
+
+  // MARCAS
+  const buscarMarcas = async () => {
+    const marcas = await productoService.buscarMarcas();
+    // console.log(marcas);
+    estado.marcas = marcas;
+  };
+  const crearMarca = async () => {
+    const res = await productoService.crearMarca({
+      nombre: estado.marcaProducto.marca.nombre,
+    });
+    if (res) NotifySucessCenter('Marca creado correctamente');
+    estado.modal.esCrearMarca = false;
+    estado.marcaProducto.marca.nombre = '';
+    buscarMarcas();
+  };
+  // MEDIDAS
+  const buscarMedidas = async () => {
+    const medidas = await productoService.buscarMedidas();
+    estado.medidas = medidas;
+  };
+  const crearMedida = async () => {
+    const res = await productoService.crearMedida({
+      nombre: estado.medidaProducto.medida.nombre,
+    });
+    if (res) NotifySucessCenter('Medida creado correctamente');
+    estado.modal.esCrearMedida = false;
+    estado.medidaProducto.medida.nombre = '';
+    buscarMedidas();
+  };
+  const crearEmpaque = async () => {
+    const res = await productoService.agregarEmpaqueMedida(
+      estado.medidaProducto.medida._id,
+      estado.medidaProducto.empaque,
+    );
+    if (res) NotifySucessCenter('Empaque creado correctamente');
+    estado.modal.esCrearEmpaque = false;
+    estado.medidaProducto.empaque.nombre = '';
+    estado.medidaProducto.empaque.abreviacion = '';
+    // buscarMedidas();
   };
 
   //WATCH
@@ -392,6 +583,26 @@ export const useProducts = () => {
       lector.readAsDataURL(selectedFile.value);
     }
   });
+  watch(imagenMarca, () => {
+    //@ts-ignore
+    if (imagenMarca.value instanceof Blob) {
+      const lector = new FileReader();
+      selectedFileMarca.value = imagenMarca.value;
+
+      lector.addEventListener('load', () => {
+        //@ts-ignore
+        imagePreviewMarca.value = lector.result;
+      }); //@ts-ignore
+      lector.readAsDataURL(selectedFileMarca.value);
+    }
+  });
+
+  watch(
+    () => estado.medidaProducto.medida,
+    (newVal, oldVal) => {
+      console.log('El valor ha cambiado a: ', newVal);
+    },
+  );
 
   return {
     estado,
@@ -420,5 +631,19 @@ export const useProducts = () => {
     selectedFile,
     producto,
     editarDatosBasicos,
+    crearProductoBasico,
+    editarProductoBasico,
+    esEditarProducto,
+    nombre,
+    buscarMarcas,
+    crearMarca,
+    imagenMarca,
+    selectedFileMarca,
+    imagePreviewMarca,
+    editarProductoMarca,
+    buscarMedidas,
+    crearMedida,
+    crearEmpaque,
+    editarProductoMedidaEmpaque,
   };
 };

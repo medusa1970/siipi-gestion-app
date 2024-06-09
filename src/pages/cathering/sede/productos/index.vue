@@ -1,10 +1,25 @@
 <template>
   <div>
+    <!--
+      BREADCRUMB
+      -->
+
     <Navigation label="Productos" icon="list_alt" />
+
+    <!--
+      TITLE
+      -->
+
     <h1 class="text-lg font-extrabold uppercase text-center">
       Gestion de productos
     </h1>
+
+    <!--
+      TABLE
+      -->
+
     <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
+      <!-- BADGE -->
       <template #dropdown>
         <q-btn
           icon-right="add"
@@ -16,6 +31,7 @@
           @click="estado.modal.isAddProduct = true"
         />
       </template>
+
       <!-- BADGE -->
       <template #rows-badge="{ props }">
         <q-tr :props="props">
@@ -47,17 +63,17 @@
               Nuevo
             </h1>
             <h1 v-else>
-              {{ fechaMes(props.row._modificado) }}
+              {{ fechaHora(props.row._modificado) }}
             </h1>
           </q-td>
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
           <q-td key="medida" :props="props">
-            {{ props.row.medida.nombre }}
+            {{ props.row.medida?.nombre ?? '(a ingresar)' }}
           </q-td>
           <q-td key="categoria" :props="props">
-            {{ props.row.categoria && props.row.categoria.nombre }}
+            {{ props.row.categoria?.nombre ?? '(desconocido)' }}
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
@@ -101,7 +117,10 @@
     </Table>
   </div>
 
-  <!-- DIALOG DOUBLECLICK -->
+  <!--
+      DIALOG DOUBLECLICK
+      -->
+
   <q-dialog persistent>
     <q-card style="width: 200px" class="px-3 py-1">
       <div class="flex justify-between items-center">
@@ -130,7 +149,10 @@
     </q-card>
   </q-dialog>
 
-  <!-- CREAR PRODUCTO BASICO -->
+  <!--
+      CREAR PRODUCTO BASICO
+      -->
+
   <Dialog2
     v-model="estado.modal.isAddProduct"
     title="Crear producto"
@@ -138,26 +160,54 @@
     :handle-submit="crearProductoBasico"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
+      <!--h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1-->
+      <p>
+        Entre los datos básicos del nuevo producto.
+        <b>Por favor asegúrese que todavía no existe</b> ayudándose del
+        buscador.
+      </p>
 
-      <h1 class="font-bold text-xs">IMAGEN:</h1>
-      <q-file
-        v-model="imagen"
-        label="Seleccionar imagen*"
-        accept=".jpg, .png, .jpge"
-        max-total-size="560000"
-        @rejected="onRejected"
-        counter
-        outlined
-        dense
-        hint="Tamaño máximo de imagen 540KB"
-        clearable
-        required
-      >
-        <template v-slot:prepend>
-          <q-icon name="cloud_upload" @click.stop.prevent />
-        </template>
-      </q-file>
+      <h1 class="font-bold text-xs" style="margin-top: 10px">NOMBRE:</h1>
+      <div class="flex">
+        <q-input
+          style="width: 90%"
+          v-model="producto.datosBasicos.nombre"
+          type="text"
+          label="Nombre*"
+          outlined
+          dense
+          clearable
+          required
+        />
+        <BotonDetalle
+          mensaje="Asegúrese que el producto todavía no existe por favor."
+        />
+      </div>
+
+      <h1 class="font-bold text-xs" style="margin-top: 10px">IMAGEN:</h1>
+      <div class="flex">
+        <q-file
+          style="width: 90%"
+          v-model="imagen"
+          label="Seleccionar imagen*"
+          accept=".jpg, .png, .jpge"
+          max-total-size="560000"
+          @rejected="onRejected"
+          counter
+          outlined
+          dense
+          hint="Tamaño máximo de imagen 540KB"
+          clearable
+          required
+        >
+          <template v-slot:prepend>
+            <q-icon name="cloud_upload" @click.stop.prevent />
+          </template>
+        </q-file>
+        <BotonDetalle
+          mensaje="Elija una foto donde el producto este solo y con un fondo blanco."
+        />
+      </div>
       <div
         v-if="imagePreview"
         style="width: 200px; height: 200px; margin: auto"
@@ -168,56 +218,63 @@
         ></q-img>
       </div>
 
-      <h1 class="font-bold text-xs">NOMBRE:</h1>
-      <q-input
-        v-model="producto.datosBasicos.nombre"
-        type="text"
-        label="Nombre*"
-        outlined
-        dense
-        clearable
-        required
-      />
       <!-- <code>{{ estado.categorias.hijas }}</code> -->
-      <h1 class="font-bold text-xs">CATEGORIA:</h1>
-      <div class="select-container">
-        <select
-          id="two-level-select"
-          class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          v-model="producto.datosBasicos.categoria"
-          required
-        >
-          <option value="" disabled selected>Selecciona una categoria*</option>
-          <optgroup
-            v-for="categoria in estado.categorias.hijas"
-            :key="categoria"
-            :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
+      <h1 class="font-bold text-xs" style="margin-top: 10px">CATEGORIA:</h1>
+      <div class="flex">
+        <div class="select-container" style="width: 90%">
+          <select
+            id="two-level-select"
+            class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            v-model="producto.datosBasicos.categoria"
+            required
           >
-            <option
-              v-for="subCategoria in categoria.hijas"
-              :key="subCategoria"
-              :value="subCategoria"
-            >
-              {{ subCategoria.nombre }}
+            <option value="" disabled selected>
+              Selecciona una categoria*
             </option>
-          </optgroup>
-        </select>
+            <optgroup
+              v-for="categoria in estado.categorias.hijas"
+              :key="categoria"
+              :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
+            >
+              <option
+                v-for="subCategoria in categoria.hijas"
+                :key="subCategoria"
+                :value="subCategoria"
+              >
+                {{ subCategoria.nombre }}
+              </option>
+            </optgroup>
+          </select>
+        </div>
+        <BotonDetalle
+          mensaje="La categoría sirve solo a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+        />
       </div>
+
       <!-- EXTRAS -->
       <!-- <h1 class="text-center bg-gray-300 font-bold py-[2px]">EXTRAS</h1> -->
-      <h1 class="font-bold text-xs">COMENTARIO:</h1>
-      <q-input
-        v-model="producto.datosBasicos.comentario"
-        type="text"
-        label="Comentario"
-        outlined
-        dense
-        clearable
-      />
+      <h1 class="font-bold text-xs" style="margin-top: 10px">COMENTARIO:</h1>
+      <div class="flex">
+        <q-input
+          style="width: 90%"
+          v-model="producto.datosBasicos.comentario"
+          type="text"
+          label="Comentario"
+          outlined
+          dense
+          clearable
+        />
+        <BotonDetalle
+          mensaje="Entre cualquier información adicional que sea útil registrar junto con el producto."
+        />
+      </div>
     </template>
   </Dialog2>
 
-  <!-- VER INFORMACION PRODUCTO -->
+  <!-- 
+    VER INFORMACION PRODUCTO
+    -->
+
   <Dialog2
     v-model="estado.modal.esMostrarInformacionProducto"
     title="Informacion producto"
@@ -297,7 +354,10 @@
     </template>
   </Dialog2>
 
-  <!-- VER IMAGEN PRODUCTO -->
+  <!--
+     VER IMAGEN PRODUCTO
+   -->
+
   <Dialog2 v-model="estado.modal.mostrarImagen" title="Imagen producto" no-btn>
     <template #inputsDialog>
       <q-img
@@ -318,6 +378,7 @@ import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
 import { fechaMes } from '@/helpers/fecha';
+import { fechaHora } from '@/helpers/fecha';
 import Producto from '@/assets/img/producto.png';
 
 // const isDoubleClick = ref(false);

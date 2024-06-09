@@ -18,11 +18,11 @@ defineProps({
   mensaje: String,
   colorBtn: {
     type: String,
-    default: 'orange',
+    default: 'blue',
   },
   iconBtn: {
     type: String,
-    default: 'warning',
+    default: 'info',
   },
   size: {
     type: String,

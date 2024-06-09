@@ -2,11 +2,22 @@
   <Navigation
     label="Productos"
     icon="list_alt"
-    label2="DetalleProducto"
+    :label2="producto.datosBasicos.nombre"
     href="/cathering/sede/productos"
   />
 
-  <!-- TABS -->
+  <!--
+      TITLE
+      -->
+
+  <h1 class="text-lg font-extrabold uppercase text-center">
+    {{ producto.datosBasicos.nombre }}
+  </h1>
+
+  <!--
+    TABS
+    -->
+
   <q-tabs
     v-model="estado.tab"
     inline-label
@@ -18,7 +29,7 @@
   >
     <div class="!flex h-full">
       <q-btn icon="arrow_back" flat />
-      <q-btn icon="apps_outage" flat />
+      <!-- <q-btn icon="apps_outage" flat /> -->
     </div>
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
     <q-tab name="marcas" icon="group" label="Marcas Existentes" />
@@ -31,56 +42,77 @@
     style="height: calc(100vh - 115px)"
   >
     <q-tab-panel name="datosBasicos" animated>
-      <div class="grid grid-cols-2 gap-6">
-        <div class="col-span-1 !p-0 flex flex-col gap-4">
-          <div class="flex flex-row gap-2 w-full">
+      <div class="grid grid-cols-2">
+        <div class="flex flex-col">
+          <!-- nombre -->
+          <h1 class="font-bold text-xs" style="margin-top: 10px">NOMBRE:</h1>
+          <div class="flex">
             <q-input
+              style="width: 85%"
               v-model="producto.datosBasicos.nombre"
               type="text"
-              label="Nombre"
               filled
+              required
+              clearable
             />
-            <BotonDetalle mensaje="" />
+            <BotonDetalle
+              mensaje="SOLO modifiquen el nombre en caso de deber corrigir su ortografia."
+            />
           </div>
 
-          <div class="select-container flex flex-row gap-2 w-full">
-            <select
-              id="two-level-select"
-              class="bg-grey-3 text-grey-7 rounded-[4px] shadow-sm text-base block w-full py-4 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              v-model="producto.datosBasicos.categoria"
-            >
-              <option value="" disabled selected>
-                Selecciona una categoria
-              </option>
-              <optgroup
-                v-for="categoria in estado.categorias.hijas"
-                :key="categoria"
-                :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
+          <!-- Categoria -->
+          <h1 class="font-bold text-xs" style="margin-top: 10px">CATEGORIA:</h1>
+          <div class="flex">
+            <div class="select-container" style="width: 85%">
+              <select
+                id="two-level-select"
+                class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                v-model="producto.datosBasicos.categoria"
               >
-                <option
-                  v-for="subCategoria in categoria.hijas"
-                  :key="subCategoria"
-                  :value="subCategoria"
-                >
-                  {{ subCategoria.nombre }}
+                <option value="" disabled selected>
+                  Selecciona una categoria
                 </option>
-              </optgroup>
-            </select>
-            <BotonDetalle mensaje="" />
+                <optgroup
+                  v-for="categoria in estado.categorias.hijas"
+                  :key="categoria"
+                  :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
+                >
+                  <option
+                    v-for="subCategoria in categoria.hijas"
+                    :key="subCategoria"
+                    :value="subCategoria"
+                  >
+                    {{ subCategoria.nombre }}
+                  </option>
+                </optgroup>
+              </select>
+            </div>
+            <BotonDetalle
+              mensaje="La categoría sirve solo a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+            />
           </div>
 
-          <div class="flex flex-row gap-2 w-full">
+          <!-- Comentario -->
+          <h1 class="font-bold text-xs" style="margin-top: 10px">
+            COMENTARIO:
+          </h1>
+          <div class="flex">
             <q-input
+              style="width: 85%"
               v-model="producto.datosBasicos.comentario"
               type="text"
-              label="Comentario"
               filled
             />
-            <BotonDetalle mensaje="" />
+            <BotonDetalle
+              mensaje="Entre cualquier información adicional que sea útil registrar junto con el producto."
+            />
           </div>
 
-          <div class="flex flex-row gap-2 w-full" width="100%">
+          <!-- Imagen -->
+          <h1 class="font-bold text-xs" style="margin-top: 10px">IMAGEN:</h1>
+          <div class="flex">
             <q-file
+              style="width: 85%"
               v-model="imagen"
               label="Seleccionar imagen"
               accept=".jpg, .png, .jpge"
@@ -90,6 +122,7 @@
               filled
               hint="Tamaño máximo de imagen 540KB"
               clearable
+              dense
             >
               <template v-slot:prepend>
                 <q-icon name="cloud_upload" @click.stop.prevent />

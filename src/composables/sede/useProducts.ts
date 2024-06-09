@@ -1,6 +1,7 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import {
   ApiError,
+  NotifyError,
   NotifySucess,
   NotifySucessCenter,
 } from '@/helpers/message.service';
@@ -9,10 +10,8 @@ import { useRouter } from 'vue-router';
 import { productStore } from '@/stores/producto.store';
 import { productoService } from '~/services/sede/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
-import DragDrop from '@/components/DrogDrop.vue';
 import { ofertaStore } from '@/stores/oferta.store';
 import { fileToBase64 } from '@/helpers/helpers';
-import { ro } from 'date-fns/locale';
 
 export const useProducts = () => {
   const useProduct = productStore();
@@ -214,32 +213,33 @@ export const useProducts = () => {
       estado.producto;
     console.log(selectedFile.value);
 
-    if (selectedFile.value === '') {
-      const productoModificado = await productoService.editarProducto(
-        useProduct.product._id,
-        {
-          ...productoData,
-          categoria: productoData.categoria._id,
-        },
-      );
-      estado.producto = Object.assign(estado.producto, productoModificado);
-    } else {
-      const imagenCvt = await fileToBase64(selectedFile.value);
-      const productoModificado = await productoService.editarProducto(
-        useProduct.product._id,
-        {
-          ...productoData,
-          categoria: productoData.categoria._id,
-          imagen: {
-            mimetype: 'image/png',
-            data: imagenCvt,
+    if (useProduct.product._id) {
+      if (selectedFile.value === '') {
+        const productoModificado = await productoService.editarProducto(
+          useProduct.product._id,
+          {
+            ...productoData,
+            categoria: productoData.categoria._id,
           },
-        },
-      );
-      estado.producto = Object.assign(estado.producto, productoModificado);
+        );
+        estado.producto = Object.assign(estado.producto, productoModificado);
+      } else {
+        const imagenCvt = await fileToBase64(selectedFile.value);
+        const productoModificado = await productoService.editarProducto(
+          useProduct.product._id,
+          {
+            ...productoData,
+            categoria: productoData.categoria._id,
+            imagen: {
+              mimetype: 'image/png',
+              data: imagenCvt,
+            },
+          },
+        );
+        estado.producto = Object.assign(estado.producto, productoModificado);
+      }
+      NotifySucess('información básica actualizada correctamente');
     }
-
-    NotifySucess('información básica actualizada correctamente');
   };
   const modalAgregarPresentacion = () => {
     estado.dialog.isAddPresentation = true;

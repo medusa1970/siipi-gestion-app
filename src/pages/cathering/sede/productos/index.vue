@@ -38,7 +38,7 @@
           <q-td
             key="imagen"
             :props="props"
-            class=""
+            class="cursor-pointer"
             @click="verImagen(props.row.imagen)"
           >
             <q-img

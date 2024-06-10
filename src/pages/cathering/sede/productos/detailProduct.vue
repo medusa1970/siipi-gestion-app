@@ -234,13 +234,24 @@
             :options="estado.medidas"
             label="Seleccionar medida basica"
             option-label="nombre"
+            emit-value
             use-input
             outlined
             dense
+            input-debounce="0"
+            hide-selected
+            fill-input
             onfocus="this.select()"
             class="w-full"
-            clearable
           >
+            <template v-slot:append>
+              <q-icon
+                style="margin: 0"
+                name="close"
+                @click.stop.prevent="estado.medidaProducto.medida = ''"
+                class="cursor-pointer q-mr-md"
+              />
+            </template>
             <template v-slot:prepend>
               <q-icon name="straighten" />
             </template>
@@ -499,6 +510,8 @@
             fill-input
             onfocus="this.select()"
             class="w-full"
+            :disable="estado.medidaProducto.medida.nombre === ''"
+            required
           >
             <template v-slot:append>
               <q-icon

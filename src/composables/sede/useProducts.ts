@@ -480,6 +480,7 @@ export const useProducts = () => {
   const editarProductoMarca = async () => {
     const imagenCvt = await fileToBase64(selectedFileMarca.value);
     console.log(imagenCvt);
+    console.log(estado.marcaProducto);
 
     const res = await productoService.agregarProductosMarca(
       //@ts-expect-error
@@ -494,11 +495,17 @@ export const useProducts = () => {
         },
       },
     );
-    if (res) NotifySucessCenter('Marca creado correctamente');
+    if (res) {
+      NotifySucessCenter('Marca creado correctamente');
+      const nuevaMarca = res[0].variedades.pop();
+      useProduct.producto.variedades.push(nuevaMarca);
+    }
+
     estado.modal.esCrearMarcaProducto = false;
   };
 
   const editarProductoMedidaEmpaque = async () => {
+    console.log(estado.medidaProducto);
     const res = await productoService.agregarProductosMedidaEmpaque(
       //@ts-expect-errors
       useProduct.producto._id,
@@ -510,7 +517,13 @@ export const useProducts = () => {
         cantidad: estado.medidaProducto.cantidad,
       },
     );
-    if (res) NotifySucessCenter('Medida&Empaque creado correctamente');
+    console.log(res);
+    if (res) {
+      NotifySucessCenter('Medida&Empaque creado correctamente');
+
+      const nuevaMedida = res[0].empaques.pop();
+      useProduct.producto.empaques.push(nuevaMedida);
+    }
     estado.modal.isAddEmpaque = false;
   };
 
@@ -560,11 +573,17 @@ export const useProducts = () => {
       estado.medidaProducto.medida._id,
       estado.medidaProducto.empaque,
     );
-    if (res) NotifySucessCenter('Empaque creado correctamente');
+
+    if (res) {
+      NotifySucessCenter('Empaque creado correctamente');
+      const nuevoEmpaque = res[0].tipoEmpaques.pop();
+      delete nuevoEmpaque._id;
+      estado.medidaProducto.medida.tipoEmpaques.push(nuevoEmpaque);
+    }
+
     estado.modal.esCrearEmpaque = false;
     estado.medidaProducto.empaque.nombre = '';
     estado.medidaProducto.empaque.abreviacion = '';
-    // buscarMedidas();
   };
 
   const mostrarInformacionProducto = (row: any) => {

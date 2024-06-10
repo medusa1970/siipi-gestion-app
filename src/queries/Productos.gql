@@ -209,8 +209,10 @@ mutation modificarProductosMarca(
     _id
     nombre
     variedades {
+      _id
       marca {
         _id
+        nombre
       }
       cantidadMin
       cantidadMax
@@ -232,7 +234,6 @@ mutation modificarProductosMedidaEmpaque(
     nombre
     medida {
       _id
-      nombre
     }
     empaques {
       _id
@@ -240,6 +241,7 @@ mutation modificarProductosMedidaEmpaque(
       abreviacion
       marca {
         _id
+        nombre
       }
       cantidad
     }

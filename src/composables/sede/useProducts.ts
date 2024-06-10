@@ -108,6 +108,14 @@ export const useProducts = () => {
       },
       cantidad: 0,
     },
+    dataEmpaque: {
+      nombre: '',
+      abreviacion: '',
+    },
+    dataMedida: {
+      _id: '',
+      nombre: '',
+    },
   });
   const producto = reactive({
     productoID: '',
@@ -561,7 +569,7 @@ export const useProducts = () => {
   };
   const crearMedida = async () => {
     const res = await productoService.crearMedida({
-      nombre: estado.medidaProducto.medida.nombre,
+      nombre: estado.dataMedida.nombre,
     });
     if (res) NotifySucessCenter('Medida creado correctamente');
     estado.modal.esCrearMedida = false;
@@ -571,7 +579,7 @@ export const useProducts = () => {
   const crearEmpaque = async () => {
     const res = await productoService.agregarEmpaqueMedida(
       estado.medidaProducto.medida._id,
-      estado.medidaProducto.empaque,
+      estado.dataEmpaque,
     );
 
     if (res) {

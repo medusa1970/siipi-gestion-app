@@ -703,7 +703,7 @@
   <!-- CREAR MEDIDA -->
   <Dialog2
     v-model="estado.modal.esCrearMedida"
-    title="Crear Marca"
+    title="Crear medida"
     label-btn="Crear"
     :handle-submit="crearMedida"
   >
@@ -712,7 +712,7 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
-          v-model="estado.medidaProducto.medida.nombre"
+          v-model="estado.dataMedida.nombre"
           type="text"
           label="Nombre marca"
           outlined
@@ -727,7 +727,7 @@
   <!-- CREAR EMPAQUE -->
   <Dialog2
     v-model="estado.modal.esCrearEmpaque"
-    title="Crear Marca"
+    title="Crear Empaque"
     label-btn="Crear"
     :handle-submit="crearEmpaque"
   >
@@ -736,7 +736,7 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
-          v-model="estado.medidaProducto.empaque.nombre"
+          v-model="estado.dataEmpaque.nombre"
           type="text"
           label="Nombre empaque"
           outlined
@@ -745,7 +745,7 @@
           required
         />
         <q-input
-          v-model="estado.medidaProducto.empaque.abreviacion"
+          v-model="estado.dataEmpaque.abreviacion"
           type="text"
           label="Abreviacion"
           outlined
@@ -799,7 +799,6 @@ definePageMeta({
 });
 
 if (useProduct.producto) {
-  console.log(useProduct.product);
   producto.productoID = useProduct.producto._id;
   // Object.assign(producto.datosBasicos, useProduct.producto);
   producto.datosBasicos = useProduct.producto;

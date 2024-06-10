@@ -28,3 +28,28 @@ query buscarEntidades_problemas(
     }
   }
 }
+
+# BUSCAR ENTIDADES TIPO PROVEEDOR
+query buscarEntidadesProveedor(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    nombre
+    tipo
+  }
+}
+
+# CREAR UNA ENTIDAD PROVEEDOR
+mutation crearEntidadProveedor(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    tipo
+  }
+}

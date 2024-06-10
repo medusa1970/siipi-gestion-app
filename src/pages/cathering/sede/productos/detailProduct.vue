@@ -194,10 +194,10 @@
               {{ props.row.marca.nombre }}
             </q-td>
             <q-td key="min" :props="props">
-              {{ props.row.cantidadMin + ' Bs' }}
+              {{ props.row.cantidadMin }}
             </q-td>
             <q-td key="max" :props="props">
-              {{ props.row.cantidadMax + ' Bs' }}
+              {{ props.row.cantidadMax }}
             </q-td>
             <q-td key="actions" :props="props">
               <q-btn
@@ -458,13 +458,51 @@
     <template #inputsDialog>
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">Empaque</h1>
 
-      <div class="flex flex-col gap-2 mt-3">
+      <h1 class="font-bold text-xs mt-2">MARCA:</h1>
+      <q-select
+        color="primary"
+        v-model="estado.medidaProducto.marca"
+        :options="useProduct.producto.variedades"
+        label="Seleccionar marca"
+        :option-label="(option) => option.marca?.nombre"
+        emit-value
+        use-input
+        outlined
+        dense
+        input-debounce="0"
+        hide-selected
+        fill-input
+        onfocus="this.select()"
+        class="w-full"
+      >
+        <template v-slot:append>
+          <q-icon
+            style="margin: 0"
+            name="close"
+            @click.stop.prevent="brandSelected = ''"
+            class="cursor-pointer q-mr-md"
+          />
+        </template>
+        <template v-slot:prepend>
+          <q-icon name="branding_watermark" />
+        </template>
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No hay resultados
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+
+      <h1 class="font-bold text-xs mt-2">EMPAQUE:</h1>
+      <div class="!flex flex-row w-full gap-3 items-center">
         <q-select
           color="primary"
-          v-model="estado.medidaProducto.marca"
-          :options="useProduct.producto.variedades"
-          label="Seleccionar marca"
-          :option-label="(option) => option.marca?.nombre"
+          v-model="estado.medidaProducto.empaque"
+          :options="estado.medidaProducto.medida.tipoEmpaques"
+          label="Seleccionar empaque"
+          option-label="nombre"
           emit-value
           use-input
           outlined
@@ -474,17 +512,19 @@
           fill-input
           onfocus="this.select()"
           class="w-full"
+          :disable="estado.medidaProducto.medida.nombre === ''"
+          required
         >
           <template v-slot:append>
             <q-icon
               style="margin: 0"
               name="close"
-              @click.stop.prevent="brandSelected = ''"
+              @click.stop.prevent="estado.medidaProducto.empaque = ''"
               class="cursor-pointer q-mr-md"
             />
           </template>
           <template v-slot:prepend>
-            <q-icon name="branding_watermark" />
+            <q-icon name="bi-box2" />
           </template>
           <template v-slot:no-option>
             <q-item>
@@ -494,73 +534,37 @@
             </q-item>
           </template>
         </q-select>
-        <div class="!flex flex-row w-full gap-3 items-center">
-          <q-select
-            color="primary"
-            v-model="estado.medidaProducto.empaque"
-            :options="estado.medidaProducto.medida.tipoEmpaques"
-            label="Seleccionar empaque"
-            option-label="nombre"
-            emit-value
-            use-input
-            outlined
-            dense
-            input-debounce="0"
-            hide-selected
-            fill-input
-            onfocus="this.select()"
-            class="w-full"
-            :disable="estado.medidaProducto.medida.nombre === ''"
-            required
-          >
-            <template v-slot:append>
-              <q-icon
-                style="margin: 0"
-                name="close"
-                @click.stop.prevent="estado.medidaProducto.empaque = ''"
-                class="cursor-pointer q-mr-md"
-              />
-            </template>
-            <template v-slot:prepend>
-              <q-icon name="bi-box2" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-          <q-btn
-            size="12px"
-            icon="add"
-            color="primary"
-            round
-            style="height: 16px"
-            @click="estado.modal.esCrearEmpaque = true"
-          ></q-btn>
-        </div>
-
-        <q-input
-          v-model="estado.medidaProducto.empaque.abreviacion"
-          type="text"
-          label="Abreviacion"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model.number="estado.medidaProducto.cantidad"
-          type="text"
-          label="Cantidad"
-          outlined
-          dense
-          clearable
-          required
-        />
+        <q-btn
+          size="12px"
+          icon="add"
+          color="primary"
+          round
+          style="height: 16px"
+          @click="estado.modal.esCrearEmpaque = true"
+        ></q-btn>
       </div>
+
+      <h1 class="font-bold text-xs mt-2">ABREVIACION:</h1>
+      <q-input
+        v-model="estado.medidaProducto.empaque.abreviacion"
+        type="text"
+        label="Abreviacion"
+        outlined
+        dense
+        clearable
+        required
+      />
+
+      <h1 class="font-bold text-xs mt-2">CANTIDAD:</h1>
+      <q-input
+        v-model.number="estado.medidaProducto.cantidad"
+        type="text"
+        label="Cantidad"
+        outlined
+        dense
+        clearable
+        required
+      />
     </template>
   </Dialog2>
 
@@ -573,13 +577,51 @@
     <template #inputsDialog>
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">PROVEEDORES</h1>
 
-      <div class="flex flex-col gap-2 mt-3">
+      <h1 class="font-bold text-xs mt-2">MARCA:</h1>
+      <q-select
+        color="primary"
+        v-model="estado.medidaProducto.marca"
+        :options="useProduct.producto.variedades"
+        label="Seleccionar marca"
+        :option-label="(option) => option.marca?.nombre"
+        emit-value
+        use-input
+        outlined
+        dense
+        input-debounce="0"
+        hide-selected
+        fill-input
+        onfocus="this.select()"
+        class="w-full"
+      >
+        <template v-slot:append>
+          <q-icon
+            style="margin: 0"
+            name="close"
+            @click.stop.prevent="brandSelected = ''"
+            class="cursor-pointer q-mr-md"
+          />
+        </template>
+        <template v-slot:prepend>
+          <q-icon name="branding_watermark" />
+        </template>
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No hay resultados
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+
+      <h1 class="font-bold text-xs mt-2">PROVEEDOR:</h1>
+      <div class="!flex flex-row w-full gap-3 items-center">
         <q-select
           color="primary"
-          v-model="estado.medidaProducto.marca"
-          :options="useProduct.producto.variedades"
-          label="Seleccionar marca"
-          :option-label="(option) => option.marca?.nombre"
+          v-model="brandSelected"
+          :options="estado.proveedores"
+          label="Seleccionar proveedor"
+          option-label="nombre"
           emit-value
           use-input
           outlined
@@ -609,70 +651,98 @@
             </q-item>
           </template>
         </q-select>
-        <div class="!flex flex-row w-full gap-3 items-center">
-          <q-select
-            color="primary"
-            v-model="brandSelected"
-            :options="optionsBrand"
-            label="Seleccionar proveedor"
-            option-label="name"
-            emit-value
-            use-input
-            outlined
-            dense
-            input-debounce="0"
-            hide-selected
-            fill-input
-            onfocus="this.select()"
-            class="w-full"
-          >
-            <template v-slot:append>
-              <q-icon
-                style="margin: 0"
-                name="close"
-                @click.stop.prevent="brandSelected = ''"
-                class="cursor-pointer q-mr-md"
-              />
-            </template>
-            <template v-slot:prepend>
-              <q-icon name="branding_watermark" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-          <q-btn
-            size="12px"
-            icon="add"
-            color="primary"
-            round
-            style="height: 16px"
-            @click="isAddBrand = true"
-          ></q-btn>
-        </div>
+        <q-btn
+          size="12px"
+          icon="add"
+          color="primary"
+          round
+          style="height: 16px"
+          @click="estado.modal.esCrearProveedor = true"
+        ></q-btn>
+      </div>
+
+      <h1 class="font-bold text-xs mt-2">IDENTIFICATIVO:</h1>
+      <q-input
+        v-model="text"
+        type="text"
+        label="Identificativo"
+        outlined
+        dense
+        clearable
+        required
+      />
+
+      <h1 class="font-bold text-xs mt-2">PRECIO BASE:</h1>
+      <div class="grid grid-cols-2 gap-2">
         <q-input
-          v-model="text"
+          v-model.number="text"
           type="text"
-          label="Identificativo"
+          label="Precio con factura"
           outlined
           dense
           clearable
           required
         />
         <q-input
-          v-model="text"
+          v-model.number="text"
           type="text"
-          label="Precios"
+          label="Precio sin factura"
           outlined
           dense
           clearable
           required
         />
       </div>
+
+      <div class="flex justify-between items-center mt-2 mb-1">
+        <h1 class="font-bold text-xs">PRECIOS POR MAYOR:</h1>
+        <q-btn
+          color="primary"
+          label="Agregar precio"
+          dense
+          no-caps
+          padding="1px 6px"
+          @click="estado.modal.esCrearPrecio = true"
+        />
+      </div>
+
+      <table class="min-w-full bg-white rounded-sm overflow-hidden">
+        <thead class="bg-teal-700 text-white">
+          <tr class="[&>th]:py-1">
+            <th class="text-center text-xs uppercase tracking-wider">
+              Cantidad
+            </th>
+            <th class="text-center text-xs uppercase tracking-wider">
+              Precio C/F
+            </th>
+            <th class="text-center text-xs uppercase tracking-wider">
+              Precio S/F
+            </th>
+            <th class="text-center text-xs uppercase tracking-wider">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr
+            v-for="(precio, index) in estado.productoProveedor.precios"
+            :key="index"
+            class="[&>td]:border [&>td]:border-gray-400"
+          >
+            <td class="whitespace-nowrap text-center">{{ precio.cantidad }}</td>
+            <td class="whitespace-nowrap text-center">
+              {{ precio.precioConFactura }}
+            </td>
+            <td class="whitespace-nowrap text-center">
+              {{ precio.precioSinFactura }}
+            </td>
+            <td class="whitespace-nowrap text-center">
+              <q-btn color="primary" icon="edit" dense size="10px" flat />
+              <q-btn color="red" icon="delete" dense size="10px" flat />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </template>
   </Dialog2>
 
@@ -756,6 +826,83 @@
       </div>
     </template>
   </Dialog2>
+
+  <!-- CREAR PROVEEDOR ENTIDAD -->
+  <Dialog2
+    v-model="estado.modal.esCrearProveedor"
+    title="Crear proveedor"
+    label-btn="Crear"
+    :handle-submit="crearProveedor"
+  >
+    <template #inputsDialog>
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
+        CREAR PROVEEDOR
+      </h1>
+
+      <div class="flex flex-col gap-2 mt-3">
+        <q-input
+          v-model="estado.dataProveedor.nombre"
+          type="text"
+          label="Nombre proveedor"
+          outlined
+          dense
+          clearable
+          required
+        />
+        <q-input
+          v-model="estado.dataProveedor.descripcion"
+          type="text"
+          label="Descripcion"
+          outlined
+          dense
+          clearable
+          required
+        />
+      </div>
+    </template>
+  </Dialog2>
+
+  <!-- CREAR PROVEEDOR ENTIDAD -->
+  <Dialog2
+    v-model="estado.modal.esCrearPrecio"
+    title="Agregar precio"
+    label-btn="Crear"
+    :handle-submit="agregarPrecio"
+  >
+    <template #inputsDialog>
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">AGREGAR PRECIO</h1>
+
+      <div class="flex flex-col gap-2 mt-3">
+        <q-input
+          v-model.number="estado.dataPrecio.cantidad"
+          type="text"
+          label="Cantidad"
+          outlined
+          dense
+          clearable
+          required
+        />
+        <q-input
+          v-model.number="estado.dataPrecio.precioConFactura"
+          type="text"
+          label="Precio con factura"
+          outlined
+          dense
+          clearable
+          required
+        />
+        <q-input
+          v-model.number="estado.dataPrecio.precioSinFactura"
+          type="text"
+          label="Precio sin factura"
+          outlined
+          dense
+          clearable
+          required
+        />
+      </div>
+    </template>
+  </Dialog2>
 </template>
 
 <script setup>
@@ -792,6 +939,9 @@ const {
   crearMedida,
   crearEmpaque,
   editarProductoMedidaEmpaque,
+  buscarProveedores,
+  crearProveedor,
+  agregarPrecio,
 } = useProducts();
 
 definePageMeta({
@@ -828,6 +978,7 @@ onMounted(() => {
   getCategoria();
   buscarMarcas();
   buscarMedidas();
+  buscarProveedores();
   // getAllProductos();
 });
 </script>

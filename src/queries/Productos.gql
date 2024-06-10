@@ -195,7 +195,6 @@ mutation modificarProductosBasicos(
     }
     categoria {
       _id
-      nombre
     }
   }
 }

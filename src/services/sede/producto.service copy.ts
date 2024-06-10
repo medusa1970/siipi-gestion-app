@@ -331,23 +331,4 @@ export const productoService = {
     );
     return medida;
   },
-  /**
-   * PROVEEDORES PRODUCTO
-   */
-  buscarEntidadesProveedor: async () =>
-    postDataGql(
-      GqlBuscarEntidadesProveedor({
-        busqueda: {
-          tipo: ['PROVEEDOR'],
-        },
-      }),
-    ),
-  crearEntidadProveedor: async (datos: {
-    nombre: string;
-    tipo?: string;
-    descripcion: string;
-  }) => {
-    const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
-    return postDataGql(GqlCrearEntidadProveedor({ datos: datosDefecto }));
-  },
 };

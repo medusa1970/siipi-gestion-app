@@ -12,7 +12,6 @@ import { productoService } from '~/services/sede/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
 import { ofertaStore } from '@/stores/oferta.store';
 import { fileToBase64 } from '@/helpers/helpers';
-import { proveedores } from '~/helpers/columns';
 
 export const useProducts = () => {
   const useProduct = productStore();
@@ -20,11 +19,6 @@ export const useProducts = () => {
   const $q = useQuasar();
   const storeOferta = ofertaStore();
 
-  interface Precio {
-    cantidad: number;
-    precioConFactura: number;
-    precioSinFactura: number;
-  }
   const estado = reactive({
     test: false,
     modal: {
@@ -47,8 +41,6 @@ export const useProducts = () => {
       esCrearEmpaque: false,
       esMostrarInformacionProducto: false,
       mostrarImagen: false,
-      esCrearProveedor: false,
-      esCrearPrecio: false,
     },
     productos: [],
     producto: <Product>{
@@ -115,39 +107,6 @@ export const useProducts = () => {
         nombre: '',
       },
       cantidad: 0,
-    },
-    dataEmpaque: {
-      nombre: '',
-      abreviacion: '',
-    },
-    dataMedida: {
-      _id: '',
-      nombre: '',
-    },
-    dataProveedor: {
-      _id: '',
-      nombre: '',
-      descripcion: '',
-    },
-    proveedores: [],
-    productoProveedor: {
-      marca: {
-        _id: '',
-        nombre: '',
-      },
-      proveedor: {
-        _id: '',
-        nombre: '',
-      },
-      identificativo: '',
-      precioConFactura: 0,
-      precioSinFactura: 0,
-      precios: [],
-    },
-    dataPrecio: {
-      cantidad: null,
-      precioConFactura: null,
-      precioSinFactura: null,
     },
   });
   const producto = reactive({
@@ -603,7 +562,7 @@ export const useProducts = () => {
   };
   const crearMedida = async () => {
     const [medidaNueva] = await productoService.crearMedida({
-      nombre: estado.dataMedida.nombre,
+      nombre: estado.medidaProducto.medida.nombre,
     });
     if (medidaNueva) NotifySucessCenter('Medida creado correctamente');
     estado.modal.esCrearMedida = false;
@@ -613,7 +572,7 @@ export const useProducts = () => {
   const crearEmpaque = async () => {
     const medidaConEmpaqueNuevo = await productoService.agregarEmpaqueMedida(
       estado.medidaProducto.medida._id,
-      estado.dataEmpaque,
+      estado.medidaProducto.empaque,
     );
 
     if (medidaConEmpaqueNuevo) {
@@ -627,37 +586,7 @@ export const useProducts = () => {
     estado.medidaProducto.empaque.nombre = '';
     estado.medidaProducto.empaque.abreviacion = '';
   };
-  // PROVEEDORES
-  const buscarProveedores = async () => {
-    const proveedores = await productoService.buscarEntidadesProveedor();
-    estado.proveedores = proveedores;
-  };
-  const crearProveedor = async () => {
-    const res = await productoService.crearEntidadProveedor({
-      nombre: estado.dataProveedor.nombre,
-      descripcion: estado.dataProveedor.descripcion,
-    });
-    if (res) {
-      NotifySucessCenter('Proveedor creado correctamente');
-      estado.dataProveedor.nombre = '';
-      estado.dataProveedor.descripcion = ''; //@ts-ignore
-      estado.proveedores.push(res[0]);
-    }
-    estado.modal.esCrearProveedor = false;
-  };
 
-  const agregarPrecio = () => {
-    //@ts-expect-error
-    estado.productoProveedor.precios.push(estado.dataPrecio);
-    estado.modal.esCrearPrecio = false;
-    estado.dataPrecio = {
-      cantidad: null,
-      precioConFactura: null,
-      precioSinFactura: null,
-    };
-  };
-
-  // EXTRAS
   const mostrarInformacionProducto = (row: any) => {
     producto.informacion = row;
     estado.modal.esMostrarInformacionProducto = true;
@@ -746,8 +675,5 @@ export const useProducts = () => {
     editarProductoMedidaEmpaque,
     mostrarInformacionProducto,
     verImagen,
-    buscarProveedores,
-    crearProveedor,
-    agregarPrecio,
   };
 };

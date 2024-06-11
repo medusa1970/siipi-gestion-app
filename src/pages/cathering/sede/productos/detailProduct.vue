@@ -336,7 +336,11 @@
     <q-tab-panel name="proveedores" animated>
       <h1 class="font-extrabold text-xs">PROVEEDORES:</h1>
 
-      <Table :columns="proveedores" style="border: 1px solid gray">
+      <Table
+        :rows="estado.proveedoresProducto"
+        :columns="proveedores"
+        style="border: 1px solid gray"
+      >
         <template #dropdown>
           <q-btn
             color="primary"
@@ -642,6 +646,7 @@
     v-model="estado.modal.isAddProveedor"
     title="Agregar proveedores"
     label-btn="Crear"
+    :handle-submit="agregarProductoProveedor"
   >
     <template #inputsDialog>
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">PROVEEDORES</h1>
@@ -649,7 +654,7 @@
       <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
-        v-model="estado.medidaProducto.marca"
+        v-model="estado.productoProveedor.marca"
         :options="useProduct.producto.variedades"
         label="Seleccionar marca"
         :option-label="(option) => option.marca?.nombre"
@@ -687,7 +692,7 @@
       <div class="!flex flex-row w-full gap-3 items-center">
         <q-select
           color="primary"
-          v-model="brandSelected"
+          v-model="estado.productoProveedor.proveedor"
           :options="estado.proveedores"
           label="Seleccionar proveedor"
           option-label="nombre"
@@ -732,7 +737,7 @@
 
       <h1 class="font-bold text-xs mt-2">IDENTIFICATIVO:</h1>
       <q-input
-        v-model="text"
+        v-model="estado.productoProveedor.identificativo"
         type="text"
         label="Identificativo"
         outlined
@@ -744,7 +749,7 @@
       <h1 class="font-bold text-xs mt-2">PRECIO BASE:</h1>
       <div class="grid grid-cols-2 gap-2">
         <q-input
-          v-model.number="text"
+          v-model.number="estado.productoProveedor.precioConFactura"
           type="text"
           label="Precio con factura"
           outlined
@@ -753,7 +758,7 @@
           required
         />
         <q-input
-          v-model.number="text"
+          v-model.number="estado.productoProveedor.precioSinFactura"
           type="text"
           label="Precio sin factura"
           outlined
@@ -798,7 +803,9 @@
             :key="index"
             class="[&>td]:border [&>td]:border-gray-400"
           >
-            <td class="whitespace-nowrap text-center">{{ precio.cantidad }}</td>
+            <td class="whitespace-nowrap text-center">
+              {{ precio.cantidadMin }}
+            </td>
             <td class="whitespace-nowrap text-center">
               {{ precio.precioConFactura }}
             </td>
@@ -942,7 +949,7 @@
     </template>
   </Dialog2>
 
-  <!-- CREAR PROVEEDOR ENTIDAD -->
+  <!-- CREAR PRECIO -->
   <Dialog2
     v-model="estado.modal.esCrearPrecio"
     title="Agregar precio"
@@ -954,7 +961,7 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
-          v-model.number="estado.dataPrecio.cantidad"
+          v-model.number="estado.dataPrecio.cantidadMin"
           type="text"
           label="Cantidad"
           outlined
@@ -1032,6 +1039,8 @@ const {
   buscarProveedores,
   crearProveedor,
   agregarPrecio,
+  agregarProductoProveedor,
+  buscarProveedoresProducto,
 } = useProducts();
 
 definePageMeta({
@@ -1047,25 +1056,6 @@ if (useProduct.producto) {
   imagePreview.value = useProduct.producto.imagen?.cloudinaryUrl;
   // console.log(producto.datosBasicos);
 }
-
-const imageSrc = ref(
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8EgZkQGSD3pNxbv7Rh6RVWvXT2oDaZxf_bg&usqp=CAU',
-);
-const uploader = ref(null);
-
-const pickFiles = () => {
-  uploader.value.pickFiles();
-};
-
-const onAdded = (files) => {
-  console.log(files);
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    // console.log(reader);
-    imageSrc.value = e.target.result;
-  };
-  reader.readAsDataURL(files[0]);
-};
 
 onMounted(async () => {
   await getCategoria();
@@ -1090,6 +1080,7 @@ onMounted(async () => {
   buscarMarcas();
   buscarMedidas();
   buscarProveedores();
+  buscarProveedoresProducto();
   // getAllProductos();
 });
 </script>

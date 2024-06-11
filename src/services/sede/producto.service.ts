@@ -352,4 +352,46 @@ export const productoService = {
     const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
     return postDataGql(GqlCrearEntidadProveedor({ datos: datosDefecto }));
   },
+  agregarProveedorProducto: async (
+    proveedorId: string,
+    servicio: {
+      marca: string;
+      producto: string;
+      identificativo: string;
+      precioConFactura: number;
+      precioSinFactura: number;
+      preciosPorMayor: [
+        {
+          cantidadMin: number;
+          precioConFactura: number;
+          precioSinFactura: number;
+        },
+      ];
+    },
+  ) => {
+    const proveedor = await postDataGql(
+      GqlModificarProveedorServicio({
+        busqueda: { _id: [proveedorId] },
+        datos: {
+          servicios: {
+            agregar: [servicio],
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return proveedor;
+  },
+  buscarProveedoresProducto: async (productoID: string) => {
+    const proveedores = await postDataGql(
+      GqlBuscarEntidadProveedoresProducto({
+        busqueda: {
+          servicios: {
+            producto: productoID,
+          },
+        },
+      }),
+    );
+    return proveedores;
+  },
 };

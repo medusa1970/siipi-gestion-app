@@ -575,8 +575,8 @@ export const useProducts = () => {
    * REDIRECCIONAR DESDE TABLA
    */
   const esEditarProducto = (row: any) => {
-    // console.log(row);
-    const { _creado, _modificado, medida, ...nuevoDato } = row;
+    console.log(row);
+    const { _creado, _modificado, ...nuevoDato } = row;
     useProduct.producto = { ...nuevoDato, categoria: nuevoDato.categoria };
 
     // console.log(useProduct.producto);
@@ -605,7 +605,7 @@ export const useProducts = () => {
     estado.medidas = medidas;
   };
   const crearMedida = async () => {
-    const [medidaNueva] = await productoService.crearMedida({
+    const medidaNueva = await productoService.crearMedida({
       nombre: estado.dataMedida.nombre,
     });
     if (medidaNueva) NotifySucessCenter('Medida creado correctamente');
@@ -700,6 +700,17 @@ export const useProducts = () => {
     producto.imagenSrc = row?.cloudinaryUrl;
   };
 
+  const guardarMedidaBasica = async () => {
+    const res = await productoService.guardarMedidaProducto(
+      //@ts-expect-error
+      useProduct.producto._id,
+      estado.medidaProducto.medida._id,
+    );
+    if (res) {
+      NotifySucessCenter('Medida guardada correctamente');
+    }
+  };
+
   //WATCH
   watch(imagen, () => {
     //@ts-ignore
@@ -783,5 +794,6 @@ export const useProducts = () => {
     agregarPrecio,
     agregarProductoProveedor,
     buscarProveedoresProducto,
+    guardarMedidaBasica,
   };
 };

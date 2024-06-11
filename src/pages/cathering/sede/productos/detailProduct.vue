@@ -53,6 +53,7 @@
       label="Proveedores"
     />
   </q-tabs>
+
   <q-tab-panels
     v-model="estado.tab"
     animated
@@ -239,6 +240,7 @@
   -->
 
     <q-tab-panel name="medidas" animated>
+      <p>Medida básica:</p>
       <div class="flex flex-col mt-3 mb-3">
         <div
           v-if="
@@ -247,9 +249,12 @@
               useProduct.producto.empaques.length === 0)
           "
         >
-          <p>
-            Para poder agregar empaques, primero debes definir la medida basica.
-          </p>
+          <div v-if="!estado.medidaProducto.medida">
+            <p>
+              Para poder agregar empaques, primero debes definir la medida
+              basica.
+            </p>
+          </div>
           <div
             class="flex"
             style="justify-content: space-between; margin: 10px 0"
@@ -321,13 +326,12 @@
                 dense
                 no-caps
                 padding="3px 20px"
-                @click="guardarMedidaBasica"
+                @click="fnGuardarMedidaBasica"
               />
             </div>
           </div>
         </div>
         <div v-else>
-          Medida seleccionada {{ estado.medidaProducto.medida.nombre }}
           <div style="flex-grow: 1">
             <q-select
               color="primary"
@@ -339,7 +343,7 @@
               use-input
               outlined
               dense
-              disabled
+              disable
               input-debounce="0"
               hide-selected
               fill-input
@@ -368,23 +372,25 @@
           </div>
         </div>
 
-        <div v-if="estado.medidaProducto.medida">
-          <Table
-            :rows="useProduct.producto.empaques"
-            :columns="empaques"
-            style="border: 1px solid gray"
-          >
+        <div v-if="showTable">
+          <br />
+
+          <div v-if="useProduct.producto.variedades?.length === 0">
+            <p>
+              Para poder agregar empaques, primero debes agregar por lo menos
+              una marca al producto.
+            </p>
+          </div>
+          <Table :rows="useProduct.producto.empaques" :columns="empaques">
             <template #dropdown>
-              <div v-if="useProduct.producto.variedades.length">
-                <q-btn
-                  color="primary"
-                  icon="add"
-                  label="Agregar empaques"
-                  no-caps
-                  @click="estado.modal.isAddEmpaque = true"
-                />
-              </div>
-              <div v-else>Agregar marca primero</div>
+              <q-btn
+                color="primary"
+                icon="add"
+                label="Agregar empaques"
+                no-caps
+                :disable="useProduct.producto.variedades?.length === 0"
+                @click="estado.modal.isAddEmpaque = true"
+              />
             </template>
 
             <template #body-cell-actions="{ props }">
@@ -396,7 +402,7 @@
             </template>
           </Table>
         </div>
-        <div v-else>Agrega la medida basica 2</div>
+        <div v-else></div>
       </div>
     </q-tab-panel>
 
@@ -1232,6 +1238,12 @@ definePageMeta({
 });
 
 const options = ref([]);
+const showTable = ref(false); //estado.medidaProducto.medida;
+
+const fnGuardarMedidaBasica = () => {
+  guardarMedidaBasica();
+  showTable.value = true;
+};
 
 if (useProduct.producto) {
   producto.productoID = useProduct.producto._id;

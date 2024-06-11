@@ -490,13 +490,13 @@ export const useProducts = () => {
   };
 
   const editarProductoBasico = async () => {
-    // console.log(producto.datosBasicos.categoria);
     if (imagen.value === null) {
       const productoModificado = await productoService.modificarProductoBasico(
-        producto.productoID,
+        //@ts-expect-error
+        useProduct.producto._id,
         {
           nombre: producto.datosBasicos.nombre, //@ts-ignore
-          categoria: producto.datosBasicos.categoria.value._id,
+          categoria: producto.datosBasicos.categoria._id,
           comentario: producto.datosBasicos.comentario,
         },
       );

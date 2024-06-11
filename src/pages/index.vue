@@ -130,17 +130,16 @@ definePageMeta({
 import { password } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';
 import { LocalStorage } from 'quasar';
-const { authPersona, login, elegirNegocio, user, isPwd } = useAuth();
+const { authPersona, login, elegirNegocio, user, isPwd, storeAuth } = useAuth();
 
 const hacerAtras = () => {
-  console.log('entrando al hacerAtras');
-  user.nombre = '';
-  user.negocios = [];
-  console.log('entrando al hacerAtras 2');
-  const res = LocalStorage.getItem('prohibido');
-  console.log(res);
-  if (res) {
-    LocalStorage.remove('prohibido');
-  }
+  storeAuth.user.nombre = '';
+  storeAuth.user.negocios = [];
+  storeAuth.token = '';
+  storeAuth.negocioElegido = null;
+  localStorage.clear();
+  router.push('/');
+
+  console.log('first');
 };
 </script>

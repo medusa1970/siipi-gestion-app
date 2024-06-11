@@ -398,8 +398,8 @@
     <template #inputsDialog>
       <p>Se va registrar una marca para este producto.</p>
 
+      <!-- input marca -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <!-- input marca -->
         <div style="flex-grow: 1">
           <q-select
             filled
@@ -533,7 +533,7 @@
     :handle-submit="editarProductoMedidaEmpaque"
   >
     <template #inputsDialog>
-      <h1 class="font-bold text-xs mt-2">MARCA:</h1>
+      <!--   <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
         v-model="estado.medidaProducto.marca"
@@ -618,6 +618,88 @@
           style="height: 16px"
           @click="estado.modal.esCrearEmpaque = true"
         ></q-btn>
+      </div> -->
+
+      <!-- input marca -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            filled
+            required
+            label="Seleccionar marca"
+            class="w-full"
+            v-model="estado.medidaProducto.marca"
+            :options="useProduct.producto.variedades"
+            :option-label="(option) => option.marca?.nombre"
+            map-options
+            dense
+          >
+            <!--  
+            fill-input
+            emit-value
+            use-input
+            outlined
+            input-debounce="0"
+            hide-selected
+            onfocus="this.select()" -->
+
+            <template v-slot:option="scope">
+              <q-item
+                v-bind="scope.itemProps"
+                v-on="scope.itemEvents"
+                :class="scope.opt.class"
+              >
+                <q-item-section>{{ scope.opt.nombre }}</q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+          />
+        </div>
+      </div>
+
+      <!-- input empaque -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            filled
+            required
+            label="Seleccionar empaque"
+            class="w-full"
+            v-model="estado.medidaProducto.empaque"
+            :options="estado.medidaProducto.medida.tipoEmpaques"
+            map-options
+            option-label="nombre"
+            dense
+            :disable="estado.medidaProducto.medida.nombre === ''"
+          >
+            <template v-slot:option="scope">
+              <q-item
+                v-bind="scope.itemProps"
+                v-on="scope.itemEvents"
+                :class="scope.opt.class"
+              >
+                <q-item-section>{{ scope.opt.nombre }}</q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <q-btn
+          size="12px"
+          icon="add"
+          color="primary"
+          round
+          style="height: 16px"
+          @click="estado.modal.esCrearMarca = true"
+        ></q-btn>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+          />
+        </div>
       </div>
 
       <!-- abreviacion -->
@@ -625,7 +707,7 @@
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
-            v-model="estado.marcaProducto.empaque.abreviacion"
+            v-model="estado.medidaProducto.empaque.abreviacion"
             type="text"
             label="Abreviacion"
             filled
@@ -640,14 +722,14 @@
         </div>
       </div>
 
-      <!-- input cantidadMax -->
+      <!-- input cantidad -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
             v-model="estado.medidaProducto.cantidad"
             type="text"
-            label="Cantidad"
+            label="Cantidad en unidades básicas"
             filled
             required
             dense

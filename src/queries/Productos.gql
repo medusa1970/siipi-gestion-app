@@ -27,7 +27,13 @@ query buscarProductos(
       }
     }
     medida {
+      _id
       nombre
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+      }
     }
     empaques {
       nombre
@@ -243,6 +249,22 @@ mutation modificarProductosMedidaEmpaque(
         nombre
       }
       cantidad
+    }
+  }
+}
+
+# MODIFICAR MEDIDA PRODUCTO
+mutation modificarProductoMedida(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    medida {
+      _id
+      nombre
     }
   }
 }

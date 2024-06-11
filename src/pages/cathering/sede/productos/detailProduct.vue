@@ -174,7 +174,7 @@
     </q-tab-panel>
 
     <!-- 
-    NARCAS 
+    MARCAS 
   -->
     <q-tab-panel name="marcas" animated>
       <p>Seleccione las diferentes marcas con que viene el producto.</p>
@@ -224,25 +224,10 @@
             <q-td key="max" :props="props">
               {{ props.row.cantidadMax }}
             </q-td>
-            <q-td key="actions" :props="props">
-              <q-btn
-                color="primary"
-                icon="edit"
-                dense
-                flat
-                round
-                size="12px"
-                padding="2px"
-              />
-              <q-btn
-                color="red"
-                icon="delete"
-                dense
-                flat
-                round
-                size="12px"
-                padding="2px"
-              />
+            <q-td key="actions" :props="props" class="font-bold text-red-500">
+              <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
+            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
+              En desarrollo...
             </q-td>
           </q-tr>
         </template>
@@ -302,6 +287,16 @@
             @click="estado.modal.esCrearMedida = true"
           ></q-btn>
         </div>
+        <q-btn
+          v-if="estado.medidaProducto.medida"
+          class="display-block mx-auto mt-1"
+          color="primary"
+          label="Guardar medida basica"
+          dense
+          no-caps
+          padding="3px 20px"
+          @click="guardarMedidaBasica"
+        />
       </div>
 
       <h1 class="font-extrabold text-xs">EMPAQUES:</h1>
@@ -321,9 +316,10 @@
         </template>
 
         <template #body-cell-actions="{ props }">
-          <q-td :props="props">
-            <q-btn color="primary" icon="edit" dense flat round size="13px" />
-            <q-btn color="red" icon="delete" dense flat round size="13px" />
+          <q-td :props="props" class="font-bold text-red-500">
+            <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
+            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
+            En desarrollo...
           </q-td>
         </template>
       </Table>
@@ -349,6 +345,13 @@
             no-caps
             @click="estado.modal.isAddProveedor = true"
           />
+        </template>
+        <template #body-cell-actions="{ props }">
+          <q-td :props="props" class="font-bold text-red-500">
+            <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
+            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
+            En desarrollo...
+          </q-td>
         </template>
       </Table>
     </q-tab-panel>
@@ -1144,6 +1147,7 @@ const {
   agregarPrecio,
   agregarProductoProveedor,
   buscarProveedoresProducto,
+  guardarMedidaBasica,
 } = useProducts();
 
 definePageMeta({
@@ -1154,8 +1158,8 @@ const options = ref([]);
 
 if (useProduct.producto) {
   producto.productoID = useProduct.producto._id;
-  // Object.assign(producto.datosBasicos, useProduct.producto);
   producto.datosBasicos = useProduct.producto;
+  estado.medidaProducto.medida = useProduct.producto.medida;
   imagePreview.value = useProduct.producto.imagen?.cloudinaryUrl;
   // console.log(producto.datosBasicos);
 }

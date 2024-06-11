@@ -394,4 +394,19 @@ export const productoService = {
     );
     return proveedores;
   },
+  /**
+   * MEDIDA PRODUCTO
+   */
+  guardarMedidaProducto: async (productoID: string, medidaID: string) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductoMedida({
+        busqueda: { _id: [productoID] },
+        datos: {
+          medida: medidaID,
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
 };

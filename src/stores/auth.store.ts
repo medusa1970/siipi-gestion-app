@@ -39,10 +39,12 @@ const estadoInicial: AuthStoreProps = {
 export const authStore = defineStore('auth', {
   state: (): AuthStoreProps => estadoInicial,
   actions: {
+    /**
+     * Login
+     */
     async login(usuario: string, contrasena: string) {
       const loginResponse = await authService.login(usuario, contrasena);
       NotifySucess(`Bienvenido al sistema ${this.user.nombre}`);
-
       this.token = loginResponse.token;
       this.user._id = loginResponse.personaId;
       this.user.nombre = loginResponse.nombre;
@@ -51,9 +53,6 @@ export const authStore = defineStore('auth', {
       this.user.correo = loginResponse.correo;
       this.user.telefono = loginResponse.telefono;
       this.user.imagen = loginResponse.cloudinaryUrl;
-      // this.negocioElegido.permisos = loginResponse.permisos;
-      // this.negocioElegido.cargos = loginResponse.cargos;
-
       this.user.negocios = await authService.buscarEntidadesDeUsuario(
         loginResponse.token,
       );
@@ -63,6 +62,10 @@ export const authStore = defineStore('auth', {
         tipo: 'CLIENTE',
       });
     },
+
+    /**
+     * Register
+     */
     async register(datos: PersonaProps) {
       const nuevaPersona = await authService.registrar(datos);
       NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);

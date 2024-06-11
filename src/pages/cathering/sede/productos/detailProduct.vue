@@ -34,9 +34,24 @@
     </div>
         -->
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
-    <q-tab name="marcas" icon="group" label="Marcas Existentes" />
-    <q-tab name="medidas" icon="folder_copy" label="Medidas & Empaques" />
-    <q-tab name="proveedores" icon="query_stats" label="Proveedores" />
+    <q-tab
+      v-if="soloAlmacen"
+      name="marcas"
+      icon="group"
+      label="Marcas Existentes"
+    />
+    <q-tab
+      v-if="soloAlmacenAdquisicion"
+      name="medidas"
+      icon="folder_copy"
+      label="Medidas & Empaques"
+    />
+    <q-tab
+      v-if="soloAdquisicion"
+      name="proveedores"
+      icon="query_stats"
+      label="Proveedores"
+    />
   </q-tabs>
   <q-tab-panels
     v-model="estado.tab"
@@ -974,6 +989,16 @@
 import { onMounted, ref } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { marcas, proveedores, empaques } from '~/helpers/columns';
+import { useAuth } from '~/composables/auth/useAuth';
+
+// Verificacion de permisos
+const { checkPermisos } = useAuth();
+if (!checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
+  console.log('No tiene el acceso para esta pagina');
+}
+const soloAlmacen = ref(checkPermisos(['ALMACEN']));
+const soloAdquisicion = ref(checkPermisos(['ADQUISICION']));
+const soloAlmacenAdquisicion = ref(checkPermisos(['ADQUISICION', 'ALMACEN']));
 
 const {
   tags,
@@ -1020,7 +1045,7 @@ if (useProduct.producto) {
   // Object.assign(producto.datosBasicos, useProduct.producto);
   producto.datosBasicos = useProduct.producto;
   imagePreview.value = useProduct.producto.imagen?.cloudinaryUrl;
-  console.log(producto.datosBasicos);
+  // console.log(producto.datosBasicos);
 }
 
 const imageSrc = ref(
@@ -1043,7 +1068,6 @@ const onAdded = (files) => {
 };
 
 onMounted(async () => {
-  console.log(estado.categorias);
   await getCategoria();
 
   options.value = [];

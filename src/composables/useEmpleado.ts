@@ -24,13 +24,16 @@ export const useEmpleado = () => {
   // FILTER INPUT
   const optionsPersona = ref(estado.personas);
 
+  /**
+   * obtenerTodosEmpleados
+   */
   const obtenerTodosEmpleados = async () => {
     const listaEmpleados = await empleadoService.obtenerTodosEmpleados(
       useAuth.negocioElegido._id,
     );
     estado.rows = listaEmpleados.map((empleado: Empleado) => {
       // console.log(empleado);
-      // if (empleado.persona.imagen?.cloudinaryUrl) {
+      // if (empleado.penegocioElegidorsona.imagen?.cloudinaryUrl) {
       //   console.log(empleado);
       // }
       return {
@@ -49,6 +52,9 @@ export const useEmpleado = () => {
     // console.log(estado.rows);
   };
 
+  /**
+   * buscarPersonas
+   */
   const buscarPersonas = async () => {
     const listaPersonas = await empleadoService.buscarPersonas();
     estado.personas = listaPersonas?.map((persona: Persona) => {
@@ -59,11 +65,20 @@ export const useEmpleado = () => {
     });
   };
 
+  /**
+   * abrirPermisos
+   */
   const abrirPermisos = (row: { id: string }) =>
     router.push(`/cathering/sede/empleados/${row.id}`);
 
+  /**
+   * abrirModal
+   */
   const abrirModal = () => (estado.test = true);
 
+  /**
+   * agregarEmpleado
+   */
   const agregarEmpleado = async () => {
     const nuevoEmpleado = await empleadoService.agregarEmpleado(
       useAuth.negocioElegido._id, //@ts-ignore
@@ -83,6 +98,9 @@ export const useEmpleado = () => {
     estado.test = false;
   };
 
+  /**
+   * borrarEmpleado
+   */
   const borrarEmpleado = async (row: {
     id: string;
     nombre: string;
@@ -106,6 +124,9 @@ export const useEmpleado = () => {
     });
   };
 
+  /**
+   * filterEmpleados
+   */
   const filterEmpleados = (val: any, update: any) => {
     update(() => {
       let needle = val.toLowerCase();

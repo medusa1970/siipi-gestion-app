@@ -38,6 +38,7 @@ import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import PortadaCathering from '@/assets/img/cookies.png';
+import { useAuth } from '~/composables/auth/useAuth';
 
 const storeAuth = authStore();
 const $q = useQuasar();
@@ -48,7 +49,7 @@ const router = useRouter();
 const realizarPedido = async () => {
   const items = storePedido.listaPedido.map((p) => ({
     oferta: p.id,
-    cantidad: parseInt(p.cantidad),
+    cancheckPermisostidad: parseInt(p.cantidad),
   }));
 
   $q.dialog({
@@ -99,12 +100,21 @@ const realizarPedido = async () => {
 };
 
 const menuListComputed = computed(() => {
-  if (storeAuth.user.cargo === 'almacen') {
+  // FILTRO ALMACEN
+  if (storeAuth.negocioElegido.permisos.includes('almacen')) {
     return menuListCathering.filter(
       (item) => item.label === 'Stock' || item.label === 'Pedidos',
     );
-  } else {
-    return menuListCathering;
   }
+
+  // FILTRO ADQUISICION
+  if (storeAuth.negocioElegido.permisos.includes('almacen')) {
+    return menuListCathering.filter(
+      (item) => item.label === 'Stock' || item.label === 'Pedidos',
+    );
+  }
+
+  // RETURN
+  return menuListCathering;
 });
 </script>

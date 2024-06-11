@@ -139,6 +139,5 @@ definePageMeta({
 });
 import { password } from '@/helpers/validate.form';
 import { useAuth } from '@/composables/auth/useAuth';
-const { authPersona, login, elegirNegocio, user, isPwd, loginConEntidad } =
-  useAuth();
+const { authPersona, login, elegirNegocio, user, isPwd } = useAuth();
 </script>

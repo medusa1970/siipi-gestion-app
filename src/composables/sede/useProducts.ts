@@ -574,11 +574,8 @@ export const useProducts = () => {
    * REDIRECCIONAR DESDE TABLA
    */
   const esEditarProducto = (row: any) => {
-    // console.log(row);
     const { _creado, _modificado, medida, ...nuevoDato } = row;
     useProduct.producto = { ...nuevoDato, categoria: nuevoDato.categoria };
-
-    // console.log(useProduct.producto);
     router.push('productos/detailProduct');
   };
 

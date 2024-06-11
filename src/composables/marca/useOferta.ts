@@ -103,7 +103,7 @@ export const useOferta = () => {
       ...ofertaData
     } = estado.oferta;
     const imagenCvt = await fileToBase64(selectedFile.value);
-    console.log(ofertaData);
+    // console.log(ofertaData);
 
     const nuevaOferta = await ofertaService.crearOferta({
       ...ofertaData,
@@ -159,7 +159,7 @@ export const useOferta = () => {
   };
 
   const abrirEditarOferta = (oferta: any) => {
-    console.log(oferta);
+    // console.log(oferta);
     storeOferta.oferta.idIngrediente = oferta.ingredientes[0]._id;
     storeOferta.oferta._id = oferta._id;
     storeOferta.oferta.nombre = oferta.nombre;
@@ -199,7 +199,7 @@ export const useOferta = () => {
   const obtenerTodoCatalagosIdNombre = async () => {
     const catalogoArbol = await ofertaService.buscarCatalogosIdNombre();
     estado.catalogos = catalogoArbol;
-    console.log(catalogoArbol);
+    // console.log(catalogoArbol);
     estado.catalogoSeleccionado = catalogoArbol?.hijas[0];
     estado.oferta.catalogo = catalogoArbol?.hijas[0];
 
@@ -213,7 +213,7 @@ export const useOferta = () => {
     }
   };
   const handleSelectionChange = async (catalogo: any) => {
-    console.log(catalogo);
+    // console.log(catalogo);
     const ofertas = await ofertaService.catalogoRecursivo(
       //@ts-ignore
       catalogo._id,
@@ -274,7 +274,7 @@ export const useOferta = () => {
       ...ofertaData
     } = estado.oferta;
 
-    console.log(selectedFile.value);
+    // console.log(selectedFile.value);
     if (selectedFile.value === '') {
       const ofertaModificada = await ofertaService.editarOferta(
         estado.oferta._id,

@@ -3,8 +3,7 @@ import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
 import type { Negocio, PersonaProps } from '~/interfaces/product.interface';
 import { authService } from '~/services/auth.service';
-import auth from '~/middleware/auth';
-import { DrogDrop } from '#build/components';
+
 export const useAuth = () => {
   /**
    * REACTIVIDAD Y ESTADO
@@ -22,6 +21,9 @@ export const useAuth = () => {
   });
   const isPwd = ref(true);
 
+  /**
+   * clearAuthPersona
+   */
   const clearAuthPersona = () => {
     authPersona.value.usuario = '';
     authPersona.value.nombre = '';
@@ -30,25 +32,27 @@ export const useAuth = () => {
     authPersona.value.telefono = '';
     authPersona.value.correo = '';
   };
+
   /**
-   * FUNCIONES
+   * login
    */
   const login = async () => {
     await useAuth.login(
       authPersona.value.usuario,
       authPersona.value.contrasena,
     );
-    LocalStorage.set('prohibido', {
+    const prohibido = {
       nombre: authPersona.value.usuario,
       contrasena: authPersona.value.contrasena,
-    });
+    };
+    LocalStorage.set('prohibido', prohibido);
+    // console.log('set prohibido:', prohibido);
     clearAuthPersona();
   };
 
-  const loginConEntidad = async () => {
-    // console.log('loginConEntidad');
-  };
-
+  /**
+   * elegirNegocio
+   */
   const elegirNegocio = async (negocio: Negocio) => {
     // console.log(negocio);
     useAuth.negocioElegido = negocio;
@@ -56,9 +60,14 @@ export const useAuth = () => {
     interface DataProps {
       nombre: string;
       contrasena: string;
-    } //@ts-ignore
-    const data: DataProps = LocalStorage.getItem('prohibido');
-    // console.log(data);
+    }
+
+    const data: DataProps | null = LocalStorage.getItem('prohibido');
+    // console.log('data:', data);
+
+    if (data === null) {
+      // TODO redirect a login
+    }
 
     if (data) {
       const loginResponse = await authService.login(
@@ -66,29 +75,53 @@ export const useAuth = () => {
         data.contrasena,
         negocio._id,
       );
-      console.log(loginResponse);
+      // console.log(loginResponse);
       useAuth.token = loginResponse.token;
       useAuth.negocioElegido.permisos = loginResponse.permisos;
       useAuth.negocioElegido.cargos = loginResponse.cargos;
-      console.log(useAuth.negocioElegido.cargos);
-      console.log(useAuth.negocioElegido.permisos);
-      console.log(useAuth.user.nombre);
+      // console.log(useAuth.negocioElegido.cargos);
+      // console.log(useAuth.negocioElegido.permisos);
+      // console.log(useAuth.user.nombre);
       LocalStorage.remove('prohibido');
     }
   };
+
+  /**
+   * register
+   */
   const register = async () => {
     await useAuth.register(authPersona.value);
     clearAuthPersona();
     router.push('/');
   };
 
+  /**
+   * checkPermisos
+   */
+  const checkPermisos = (permisosRequeridos: string[]) => {
+    const userPermisos = useAuth.negocioElegido.permisos ?? [];
+    if (permisosRequeridos.length > 0) {
+      for (const permisoRequerido of permisosRequeridos) {
+        if (userPermisos.includes(permisoRequerido)) {
+          console.log('autorizado con', permisoRequerido);
+          return true;
+        }
+      }
+      console.log('no autorizado');
+      return false;
+    } else {
+      console.log('autorizado normal');
+      return true;
+    }
+  };
+
   return {
+    checkPermisos,
     authPersona,
     login,
     elegirNegocio,
     user,
     register,
     isPwd,
-    loginConEntidad,
   };
 };

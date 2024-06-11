@@ -137,15 +137,16 @@ export const useProducts = () => {
         nombre: '',
       },
       identificativo: '',
-      precioConFactura: 0,
-      precioSinFactura: 0,
+      precioConFactura: null,
+      precioSinFactura: null,
       precios: [],
     },
     dataPrecio: {
-      cantidad: null,
+      cantidadMin: null,
       precioConFactura: null,
       precioSinFactura: null,
     },
+    proveedoresProducto: [],
   });
   const producto = reactive({
     productoID: '',
@@ -590,10 +591,11 @@ export const useProducts = () => {
   };
   const crearMarca = async () => {
     const [marcaNueva] = await productoService.crearMarca({
+      //@ts-expect-error
       nombre: estado.marcaProducto.marca.nombre,
     });
     if (marcaNueva) NotifySucessCenter('Marca creado correctamente');
-    estado.modal.esCrearMarca = false;
+    estado.modal.esCrearMarca = false; //@ts-expect-error
     estado.marcaProducto.marca.nombre = '';
     buscarMarcas();
   };
@@ -652,10 +654,39 @@ export const useProducts = () => {
     estado.productoProveedor.precios.push(estado.dataPrecio);
     estado.modal.esCrearPrecio = false;
     estado.dataPrecio = {
-      cantidad: null,
+      cantidadMin: null,
       precioConFactura: null,
       precioSinFactura: null,
     };
+  };
+
+  const agregarProductoProveedor = async () => {
+    const [nuevoProveedor] = await productoService.agregarProveedorProducto(
+      estado.productoProveedor.proveedor._id,
+      {
+        //@ts-expect-error
+        marca: estado.productoProveedor.marca.marca._id, //@ts-expect-error
+        producto: useProduct.producto._id,
+        identificativo: estado.productoProveedor.identificativo, //@ts-expect-error
+        precioConFactura: estado.productoProveedor.precioConFactura, //@ts-expect-error
+        precioSinFactura: estado.productoProveedor.precioSinFactura, //@ts-expect-error
+        preciosPorMayor: estado.productoProveedor.precios,
+      },
+    );
+    if (nuevoProveedor) {
+      NotifySucessCenter('Proveedor creado correctamente'); //@ts-expect-error
+      estado.proveedoresProducto.push(nuevoProveedor);
+    }
+    estado.modal.isAddProveedor = false;
+  };
+
+  const buscarProveedoresProducto = async () => {
+    estado.proveedoresProducto =
+      await productoService.buscarProveedoresProducto(
+        //@ts-expect-error
+        useProduct.producto._id,
+      );
+    console.log(estado.proveedoresProducto);
   };
 
   // EXTRAS
@@ -750,5 +781,7 @@ export const useProducts = () => {
     buscarProveedores,
     crearProveedor,
     agregarPrecio,
+    agregarProductoProveedor,
+    buscarProveedoresProducto,
   };
 };

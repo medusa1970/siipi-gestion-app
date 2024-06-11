@@ -572,7 +572,7 @@ export const proveedores = [
     required: true,
     label: 'Proveedor',
     align: 'left',
-    field: (row: any) => row.entidad,
+    field: (row: any) => row.nombre,
     sortable: true,
   },
   {
@@ -580,7 +580,7 @@ export const proveedores = [
     required: true,
     label: 'Marca',
     align: 'center',
-    field: (row: any) => row._creado,
+    field: (row: any) => row.servicios[0].marca.nombre,
     sortable: true,
   },
   {
@@ -588,7 +588,23 @@ export const proveedores = [
     required: true,
     label: 'Identificativo',
     align: 'center',
-    field: (row: any) => row.monto,
+    field: (row: any) => row.servicios[0].identificativo,
+    sortable: true,
+  },
+  {
+    name: 'precioConFactura',
+    required: true,
+    label: 'Precio C/F',
+    align: 'center',
+    field: (row: any) => row.servicios[0].precioConFactura + 'Bs',
+    sortable: true,
+  },
+  {
+    name: 'precioSinFactura',
+    required: true,
+    label: 'Precio S/F',
+    align: 'center',
+    field: (row: any) => row.servicios[0].precioSinFactura + 'Bs',
     sortable: true,
   },
   {

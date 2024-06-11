@@ -399,6 +399,7 @@
       <p>Se va registrar una marca para este producto.</p>
 
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <!-- input marca -->
         <div style="flex-grow: 1">
           <q-select
             filled
@@ -446,7 +447,7 @@
         </div>
       </div>
 
-      <!-- Imagen -->
+      <!-- input imagen -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <q-img
           style="width: 150px; height: 150px; object-fit: cover"
@@ -479,7 +480,7 @@
         </div>
       </div>
 
-      <!-- cantidadMin -->
+      <!-- input cantidadMin -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
@@ -499,7 +500,7 @@
         </div>
       </div>
 
-      <!-- cantidadMax -->
+      <!-- input cantidadMax -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
@@ -521,7 +522,10 @@
     </template>
   </Dialog2>
 
-  <!-- PRODUCTO MEDIDA & EMPAQUE  -->
+  <!-- 
+    MEDIDA & EMPAQUE 
+  -->
+
   <Dialog2
     v-model="estado.modal.isAddEmpaque"
     title="Agregar empaque"
@@ -529,8 +533,6 @@
     :handle-submit="editarProductoMedidaEmpaque"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">Empaque</h1>
-
       <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
@@ -607,6 +609,7 @@
             </q-item>
           </template>
         </q-select>
+
         <q-btn
           size="12px"
           icon="add"
@@ -617,27 +620,45 @@
         ></q-btn>
       </div>
 
-      <h1 class="font-bold text-xs mt-2">ABREVIACION:</h1>
-      <q-input
-        v-model="estado.medidaProducto.empaque.abreviacion"
-        type="text"
-        label="Abreviacion"
-        outlined
-        dense
-        clearable
-        required
-      />
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.marcaProducto.empaque.abreviacion"
+            type="text"
+            label="Abreviacion"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+          />
+        </div>
+      </div>
 
-      <h1 class="font-bold text-xs mt-2">CANTIDAD:</h1>
-      <q-input
-        v-model.number="estado.medidaProducto.cantidad"
-        type="text"
-        label="Cantidad"
-        outlined
-        dense
-        clearable
-        required
-      />
+      <!-- input cantidadMax -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.medidaProducto.cantidad"
+            type="text"
+            label="Cantidad"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+          />
+        </div>
+      </div>
     </template>
   </Dialog2>
 
@@ -842,7 +863,7 @@
             class="w-full"
             v-model="estado.marcaProducto.marca.nombre"
             type="text"
-            label="Nombre "
+            label="Nombre"
             filled
             required
             dense

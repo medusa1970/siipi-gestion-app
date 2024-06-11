@@ -37,17 +37,17 @@ export const useAuth = () => {
    * login
    */
   const login = async () => {
-    await useAuth.login(
-      authPersona.value.usuario,
-      authPersona.value.contrasena,
-    );
-    const prohibido = {
-      nombre: authPersona.value.usuario,
-      contrasena: authPersona.value.contrasena,
-    };
-    LocalStorage.set('prohibido', prohibido);
-    // console.log('set prohibido:', prohibido);
-    clearAuthPersona();
+    useAuth
+      .login(authPersona.value.usuario, authPersona.value.contrasena)
+      .then(() => {
+        const prohibido = {
+          nombre: authPersona.value.usuario,
+          contrasena: authPersona.value.contrasena,
+        };
+        LocalStorage.set('prohibido', prohibido);
+        // console.log('set prohibido:', prohibido);
+        clearAuthPersona();
+      });
   };
 
   /**
@@ -63,7 +63,7 @@ export const useAuth = () => {
     }
 
     const data: DataProps | null = LocalStorage.getItem('prohibido');
-    // console.log('data:', data);
+    console.log('data:', data);
 
     if (data === null) {
       // TODO redirect a login
@@ -100,17 +100,16 @@ export const useAuth = () => {
    */
   const checkPermisos = (permisosRequeridos: string[]) => {
     const userPermisos = useAuth.negocioElegido.permisos ?? [];
+    permisosRequeridos.push('DESAROLLO');
     if (permisosRequeridos.length > 0) {
       for (const permisoRequerido of permisosRequeridos) {
         if (userPermisos.includes(permisoRequerido)) {
-          console.log('autorizado con', permisoRequerido);
+          // console.log('autorizado con', permisoRequerido);
           return true;
         }
       }
-      console.log('no autorizado');
       return false;
     } else {
-      console.log('autorizado normal');
       return true;
     }
   };

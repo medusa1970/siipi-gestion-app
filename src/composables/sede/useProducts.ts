@@ -87,7 +87,10 @@ export const useProducts = () => {
     tab: 'datosBasicos',
     marcas: [],
     marcaProducto: {
-      marca: null,
+      marca: {
+        _id: '',
+        nombre: '',
+      },
       minimo: '',
       maximo: '',
     },
@@ -587,12 +590,11 @@ export const useProducts = () => {
     estado.marcas = marcas;
   };
   const crearMarca = async () => {
-    const [marcaNueva] = await productoService.crearMarca({
-      //@ts-expect-error
+    const marcaNueva = await productoService.crearMarca({
       nombre: estado.marcaProducto.marca.nombre,
     });
     if (marcaNueva) NotifySucessCenter('Marca creado correctamente');
-    estado.modal.esCrearMarca = false; //@ts-expect-error
+    estado.modal.esCrearMarca = false;
     estado.marcaProducto.marca.nombre = '';
     buscarMarcas();
   };

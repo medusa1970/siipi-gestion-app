@@ -773,7 +773,7 @@
           color="primary"
           round
           style="height: 16px"
-          @click="estado.modal.esCrearMarca = true"
+          @click="estado.modal.esCrearEmpaque = true"
         ></q-btn>
         <div>
           <BotonDetalle

@@ -240,89 +240,164 @@
 
     <q-tab-panel name="medidas" animated>
       <div class="flex flex-col mt-3 mb-3">
-        <h1 class="font-extrabold text-xs">MEDIDAS BASICAS:</h1>
-
-        <div class="!flex flex-row w-full gap-3 items-center">
-          <q-select
-            color="primary"
-            v-model="estado.medidaProducto.medida"
-            :options="estado.medidas"
-            label="Seleccionar medida basica"
-            option-label="nombre"
-            emit-value
-            use-input
-            outlined
-            dense
-            input-debounce="0"
-            hide-selected
-            fill-input
-            onfocus="this.select()"
-            class="w-full"
+        <div
+          v-if="
+            !useProduct.producto.empaques ||
+            (useProduct.producto.empaques &&
+              useProduct.producto.empaques.length === 0)
+          "
+        >
+          <p>
+            Para poder agregar empaques, primero debes definir la medida basica.
+          </p>
+          <div
+            class="flex"
+            style="justify-content: space-between; margin: 10px 0"
           >
-            <template v-slot:append>
-              <q-icon
-                style="margin: 0"
-                name="close"
-                @click.stop.prevent="estado.medidaProducto.medida = ''"
-                class="cursor-pointer q-mr-md"
+            <div style="flex-grow: 1">
+              <q-select
+                color="primary"
+                v-model="estado.medidaProducto.medida"
+                :options="estado.medidas"
+                label="Seleccionar medida basica"
+                option-label="nombre"
+                emit-value
+                use-input
+                outlined
+                dense
+                input-debounce="0"
+                hide-selected
+                fill-input
+                onfocus="this.select()"
+                class="w-full"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    style="margin: 0"
+                    name="close"
+                    @click.stop.prevent="estado.medidaProducto.medida = ''"
+                    class="cursor-pointer q-mr-md"
+                  />
+                </template>
+                <template v-slot:prepend>
+                  <q-icon name="straighten" />
+                </template>
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No hay resultados
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+
+            <div>
+              <q-btn
+                size="12px"
+                icon="add"
+                color="primary"
+                round
+                style="height: 16px"
+                @click="estado.modal.esCrearMedida = true"
+              ></q-btn>
+            </div>
+
+            <div>
+              <BotonDetalle
+                mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
               />
-            </template>
-            <template v-slot:prepend>
-              <q-icon name="straighten" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-          <q-btn
-            size="12px"
-            icon="add"
-            color="primary"
-            round
-            style="height: 16px"
-            @click="estado.modal.esCrearMedida = true"
-          ></q-btn>
+            </div>
+
+            <div class="!flex flex-row w-full gap-3 items-center">
+              <q-btn
+                v-if="
+                  useProduct.producto.empaques &&
+                  useProduct.producto.empaques.length === 0
+                "
+                class="display-block mx-auto mt-1"
+                color="primary"
+                label="Guardar medida basica"
+                dense
+                no-caps
+                padding="3px 20px"
+                @click="guardarMedidaBasica"
+              />
+            </div>
+          </div>
         </div>
-        <q-btn
-          v-if="estado.medidaProducto.medida"
-          class="display-block mx-auto mt-1"
-          color="primary"
-          label="Guardar medida basica"
-          dense
-          no-caps
-          padding="3px 20px"
-          @click="guardarMedidaBasica"
-        />
-      </div>
+        <div v-else>
+          Medida seleccionada {{ estado.medidaProducto.medida.nombre }}
+          <div style="flex-grow: 1">
+            <q-select
+              color="primary"
+              v-model="estado.medidaProducto.medida"
+              :options="estado.medidas"
+              label="Seleccionar medida basica"
+              option-label="nombre"
+              emit-value
+              use-input
+              outlined
+              dense
+              disabled
+              input-debounce="0"
+              hide-selected
+              fill-input
+              onfocus="this.select()"
+              class="w-full"
+            >
+              <template v-slot:append>
+                <q-icon
+                  style="margin: 0"
+                  name="close"
+                  @click.stop.prevent="estado.medidaProducto.medida = ''"
+                  class="cursor-pointer q-mr-md"
+                />
+              </template>
+              <template v-slot:prepend>
+                <q-icon name="straighten" />
+              </template>
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No hay resultados
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+        </div>
 
-      <h1 class="font-extrabold text-xs">EMPAQUES:</h1>
-      <Table
-        :rows="useProduct.producto.empaques"
-        :columns="empaques"
-        style="border: 1px solid gray"
-      >
-        <template #dropdown>
-          <q-btn
-            color="primary"
-            icon="add"
-            label="Agregar empaques"
-            no-caps
-            @click="estado.modal.isAddEmpaque = true"
-          />
-        </template>
+        <div v-if="estado.medidaProducto.medida">
+          <Table
+            :rows="useProduct.producto.empaques"
+            :columns="empaques"
+            style="border: 1px solid gray"
+          >
+            <template #dropdown>
+              <div v-if="useProduct.producto.variedades.length">
+                <q-btn
+                  color="primary"
+                  icon="add"
+                  label="Agregar empaques"
+                  no-caps
+                  @click="estado.modal.isAddEmpaque = true"
+                />
+              </div>
+              <div v-else>Agregar marca primero</div>
+            </template>
 
-        <template #body-cell-actions="{ props }">
-          <q-td :props="props" class="font-bold text-red-500">
-            <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
+            <template #body-cell-actions="{ props }">
+              <q-td :props="props" class="font-bold text-red-500">
+                <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
             <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
-            En desarrollo...
-          </q-td>
-        </template>
-      </Table>
+                En desarrollo...
+              </q-td>
+            </template>
+          </Table>
+        </div>
+        <div v-else>Agrega la medida basica 2</div>
+      </div>
     </q-tab-panel>
 
     <!-- 
@@ -632,8 +707,10 @@
             label="Seleccionar marca"
             class="w-full"
             v-model="estado.medidaProducto.marca"
-            :options="useProduct.producto.variedades"
-            :option-label="(option) => option.marca?.nombre"
+            :options="
+              useProduct.producto.variedades.map((variedad) => variedad.marca)
+            "
+            option-label="nombre"
             map-options
             dense
           >
@@ -674,8 +751,8 @@
             class="w-full"
             v-model="estado.medidaProducto.empaque"
             :options="estado.medidaProducto.medida.tipoEmpaques"
-            map-options
             option-label="nombre"
+            map-options
             dense
             :disable="estado.medidaProducto.medida.nombre === ''"
           >

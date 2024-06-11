@@ -549,17 +549,16 @@ export const useProducts = () => {
   };
 
   const editarProductoMedidaEmpaque = async () => {
-    // console.log(estado.medidaProducto);
+    console.log(estado.medidaProducto);
     const productoModificado =
       await productoService.agregarProductosMedidaEmpaque(
         //@ts-expect-errors
         useProduct.producto._id,
         {
-          //@ts-expect-errors
-          marca: estado.medidaProducto.marca.marca._id,
+          marca: estado.medidaProducto.marca._id,
           nombre: estado.medidaProducto.empaque.nombre,
           abreviacion: estado.medidaProducto.empaque.abreviacion,
-          cantidad: estado.medidaProducto.cantidad,
+          cantidad: Number(estado.medidaProducto.cantidad),
         },
       );
     if (productoModificado) {
@@ -699,13 +698,16 @@ export const useProducts = () => {
   };
 
   const guardarMedidaBasica = async () => {
+    console.log(useProduct.producto._id);
+    console.log(estado.medidaProducto.medida._id);
     const res = await productoService.guardarMedidaProducto(
       //@ts-expect-error
       useProduct.producto._id,
       estado.medidaProducto.medida._id,
     );
+    console.log(res);
     if (res) {
-      NotifySucessCenter('Medida guardada correctamente');
+      NotifySucess('Medida guardada correctamente');
     }
   };
 

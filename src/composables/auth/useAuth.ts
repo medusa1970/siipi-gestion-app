@@ -3,14 +3,16 @@ import { useRouter } from 'vue-router';
 import { authStore } from '@/stores/auth.store';
 import type { Negocio, PersonaProps } from '~/interfaces/product.interface';
 import { authService } from '~/services/auth.service';
+import { useQuasar } from 'quasar';
 
 export const useAuth = () => {
   /**
    * REACTIVIDAD Y ESTADO
    */
-  const useAuth = authStore();
+  const $q = useQuasar();
+  const storeAuth = authStore();
   const router = useRouter();
-  const user = ref(useAuth.user);
+  const user = ref(storeAuth.user);
   const authPersona = ref<PersonaProps>({
     usuario: '',
     nombre: '',
@@ -37,52 +39,47 @@ export const useAuth = () => {
    * login
    */
   const login = async () => {
-    useAuth
-      .login(authPersona.value.usuario, authPersona.value.contrasena)
-      .then(() => {
-        const prohibido = {
-          nombre: authPersona.value.usuario,
-          contrasena: authPersona.value.contrasena,
-        };
-        LocalStorage.set('prohibido', prohibido);
-        // console.log('set prohibido:', prohibido);
-        clearAuthPersona();
-      });
+    const res = await storeAuth.login(
+      authPersona.value.usuario,
+      authPersona.value.contrasena,
+    );
+    if (res) {
+      const prohibido = {
+        nombre: authPersona.value.usuario,
+        contrasena: authPersona.value.contrasena,
+      };
+      LocalStorage.set('prohibido', prohibido);
+      clearAuthPersona();
+    }
   };
 
   /**
    * elegirNegocio
    */
+  interface DataProps {
+    nombre: string;
+    contrasena: string;
+  }
   const elegirNegocio = async (negocio: Negocio) => {
-    // console.log(negocio);
-    useAuth.negocioElegido = negocio;
-    router.push(negocio.tipo.toLowerCase());
-    interface DataProps {
-      nombre: string;
-      contrasena: string;
-    }
+    storeAuth.negocioElegido = negocio;
+    const path = negocio.tipo.toLowerCase();
 
     const data: DataProps | null = LocalStorage.getItem('prohibido');
-    console.log('data:', data);
-
-    if (data === null) {
-      // TODO redirect a login
-    }
 
     if (data) {
+      $q.loading.show();
       const loginResponse = await authService.login(
         data.nombre,
         data.contrasena,
         negocio._id,
       );
-      // console.log(loginResponse);
-      useAuth.token = loginResponse.token;
-      useAuth.negocioElegido.permisos = loginResponse.permisos;
-      useAuth.negocioElegido.cargos = loginResponse.cargos;
-      // console.log(useAuth.negocioElegido.cargos);
-      // console.log(useAuth.negocioElegido.permisos);
-      // console.log(useAuth.user.nombre);
-      LocalStorage.remove('prohibido');
+      storeAuth.token = loginResponse.token;
+      storeAuth.negocioElegido.permisos = loginResponse.permisos;
+      storeAuth.negocioElegido.cargos = loginResponse.cargos;
+      localStorage.clear();
+      router.push(path);
+
+      $q.loading.hide();
     }
   };
 
@@ -90,7 +87,7 @@ export const useAuth = () => {
    * register
    */
   const register = async () => {
-    await useAuth.register(authPersona.value);
+    await storeAuth.register(authPersona.value);
     clearAuthPersona();
     router.push('/');
   };
@@ -99,7 +96,7 @@ export const useAuth = () => {
    * checkPermisos
    */
   const checkPermisos = (permisosRequeridos: string[]) => {
-    const userPermisos = useAuth.negocioElegido.permisos ?? [];
+    const userPermisos = storeAuth.negocioElegido.permisos ?? [];
     permisosRequeridos.push('DESAROLLO');
     if (permisosRequeridos.length > 0) {
       for (const permisoRequerido of permisosRequeridos) {
@@ -122,5 +119,6 @@ export const useAuth = () => {
     user,
     register,
     isPwd,
+    storeAuth,
   };
 };

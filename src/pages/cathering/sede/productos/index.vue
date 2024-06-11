@@ -237,6 +237,7 @@
             hint="Tamaño máximo de imagen 540KB"
             clearable
             dense
+            required
           >
             <template v-slot:prepend>
               <q-icon name="cloud_upload" @click.stop.prevent />

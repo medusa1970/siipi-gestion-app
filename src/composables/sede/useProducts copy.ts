@@ -185,11 +185,11 @@ export const useProducts = () => {
 
   // AGREGAR PRODUCTO
   const agregarProducto = async () => {
-    console.log('first');
+    // console.log('first');
     delete estado.producto._id; //@ts-ignore
     delete estado.producto.categoria.productos;
     const imagenCvt = await fileToBase64(selectedFile.value);
-    console.log(imagenCvt);
+    // console.log(imagenCvt);
 
     productoService
       .agregarProducto({
@@ -211,7 +211,7 @@ export const useProducts = () => {
     //@ts-ignore
     const { presentaciones, _creado, _id, nombre, imagen, ...productoData } =
       estado.producto;
-    console.log(selectedFile.value);
+    // console.log(selectedFile.value);
 
     if (useProduct.product._id) {
       if (selectedFile.value === '') {
@@ -411,9 +411,9 @@ export const useProducts = () => {
   };
 
   const editarDatosBasicos = async () => {
-    console.log(producto.datosBasicos);
+    // console.log(producto.datosBasicos);
     const imagenCvt = await fileToBase64(selectedFile.value);
-    console.log(imagenCvt);
+    // console.log(imagenCvt);
   };
 
   // NUEVO
@@ -431,7 +431,7 @@ export const useProducts = () => {
         mimetype: 'image/png',
       },
     });
-    console.log(producto);
+    // console.log(producto);
     if (productoCreado) {
       NotifySucessCenter('Producto agregado correctamente');
       getAllProductos();
@@ -480,8 +480,8 @@ export const useProducts = () => {
 
   const editarProductoMarca = async () => {
     const imagenCvt = await fileToBase64(selectedFileMarca.value);
-    console.log(imagenCvt);
-    console.log(estado.marcaProducto);
+    // console.log(imagenCvt);
+    // console.log(estado.marcaProducto);
 
     const productoModificado = await productoService.agregarProductosMarca(
       //@ts-expect-error
@@ -506,7 +506,7 @@ export const useProducts = () => {
   };
 
   const editarProductoMedidaEmpaque = async () => {
-    console.log(estado.medidaProducto);
+    // console.log(estado.medidaProducto);
     const productoModificado =
       await productoService.agregarProductosMedidaEmpaque(
         //@ts-expect-errors
@@ -522,8 +522,8 @@ export const useProducts = () => {
     if (productoModificado) {
       NotifySucessCenter('Medida&Empaque creado correctamente');
 
-      const nuevaMedida = productoModificado.empaques.pop();
-      useProduct.producto.empaques.push(nuevaMedida);
+      const nuevoEmpaque = productoModificado.empaques.pop();
+      useProduct.producto.empaques.push(nuevoEmpaque);
     }
     estado.modal.isAddEmpaque = false;
   };
@@ -532,11 +532,11 @@ export const useProducts = () => {
    * REDIRECCIONAR DESDE TABLA
    */
   const esEditarProducto = (row: any) => {
-    console.log(row);
+    // console.log(row);
     const { _creado, _modificado, medida, ...nuevoDato } = row;
     useProduct.producto = { ...nuevoDato, categoria: nuevoDato.categoria };
 
-    console.log(useProduct.producto);
+    // console.log(useProduct.producto);
     router.push('productos/detailProduct');
   };
 
@@ -628,7 +628,7 @@ export const useProducts = () => {
   watch(
     () => estado.medidaProducto.medida,
     (newVal, oldVal) => {
-      console.log('El valor ha cambiado a: ', newVal);
+      // console.log('El valor ha cambiado a: ', newVal);
     },
   );
 

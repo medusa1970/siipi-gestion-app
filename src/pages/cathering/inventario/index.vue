@@ -238,33 +238,34 @@ const terminarInventario = async (producto) => {
       false,
     )
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.entidadHacerInventario.diferencias?.length > 0) {
         estado.diferencias = res.entidadHacerInventario.diferencias;
-        console.log(estado.diferencias);
+        // console.log(estado.diferencias);
         // console.log('first');
         estado.countRetry++;
         if (estado.countRetry > 1) {
           if (estado.diferencias == res.entidadHacerInventario.diferencias)
-            console.log('first');
-          inventarioService
-            .realizarInventario(
-              useAuth.negocioElegido._id, //@ts-ignore
-              producto._id,
-              estado.inventario.lotes,
-              true,
-            )
-            .then(() => {
-              NotifySucess('Inventario guardado');
-              estado.productosBloquesNull = estado.productosBloquesNull.filter(
-                //@ts-ignore
-                (item) => item._id !== producto._id,
-              );
-              limpiarInputs();
-            })
-            .finally(() => {
-              hideLoading();
-            });
+            // console.log('first');
+            inventarioService
+              .realizarInventario(
+                useAuth.negocioElegido._id, //@ts-ignore
+                producto._id,
+                estado.inventario.lotes,
+                true,
+              )
+              .then(() => {
+                NotifySucess('Inventario guardado');
+                estado.productosBloquesNull =
+                  estado.productosBloquesNull.filter(
+                    //@ts-ignore
+                    (item) => item._id !== producto._id,
+                  );
+                limpiarInputs();
+              })
+              .finally(() => {
+                hideLoading();
+              });
         } else {
           NotifyError('Hay diferencias, vuelva a hacer el inventario');
         }

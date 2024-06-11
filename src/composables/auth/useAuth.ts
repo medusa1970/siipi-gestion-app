@@ -50,7 +50,7 @@ export const useAuth = () => {
   };
 
   const elegirNegocio = async (negocio: Negocio) => {
-    console.log(negocio);
+    // console.log(negocio);
     useAuth.negocioElegido = negocio;
     router.push(negocio.tipo.toLowerCase());
     interface DataProps {
@@ -58,7 +58,7 @@ export const useAuth = () => {
       contrasena: string;
     } //@ts-ignore
     const data: DataProps = LocalStorage.getItem('prohibido');
-    console.log(data);
+    // console.log(data);
 
     if (data) {
       const loginResponse = await authService.login(

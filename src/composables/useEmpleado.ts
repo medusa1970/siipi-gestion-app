@@ -46,7 +46,7 @@ export const useEmpleado = () => {
             : empleado.persona.imagen.cloudinaryUrl,
       };
     });
-    console.log(estado.rows);
+    // console.log(estado.rows);
   };
 
   const buscarPersonas = async () => {

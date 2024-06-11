@@ -799,7 +799,7 @@ const modificarPersona = async () => {
         correo: persona.value.correo,
       },
     );
-    console.log(personaModificada);
+    // console.log(personaModificada);
     storeAuth.user.nombre = personaModificada.nombre;
     storeAuth.user.apellido = personaModificada.apellido;
 

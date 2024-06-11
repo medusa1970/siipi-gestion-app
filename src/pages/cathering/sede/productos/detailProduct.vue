@@ -8,13 +8,13 @@
 
   <!--
       TITLE
-      -->
+      -- >
 
   <h1 class="text-lg font-extrabold uppercase text-center">
     {{ producto.datosBasicos.nombre }}
   </h1>
 
-  <!--
+  < !--
     TABS
     -->
 
@@ -27,10 +27,12 @@
     align="justify"
     no-caps
   >
+    <!-- 
     <div class="!flex h-full">
       <q-btn icon="arrow_back" flat />
-      <!-- <q-btn icon="apps_outage" flat /> -->
+        <q-btn icon="apps_outage" flat /> 
     </div>
+        -->
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
     <q-tab name="marcas" icon="group" label="Marcas Existentes" />
     <q-tab name="medidas" icon="folder_copy" label="Medidas & Empaques" />
@@ -41,109 +43,112 @@
     animated
     style="height: calc(100vh - 115px)"
   >
+    <!-- 
+    DATOS BASICOS 
+  -->
+
     <q-tab-panel name="datosBasicos" animated>
-      <div class="grid grid-cols-2">
-        <div class="flex flex-col">
-          <!-- nombre -->
-          <h1 class="font-bold text-xs" style="margin-top: 10px">NOMBRE:</h1>
-          <div class="flex">
-            <q-input
-              style="width: 85%"
-              v-model="producto.datosBasicos.nombre"
-              type="text"
-              filled
-              required
-              clearable
-            />
-            <BotonDetalle
-              mensaje="SOLO modifiquen el nombre en caso de deber corrigir su ortografia."
-            />
-          </div>
-
-          <!-- Categoria -->
-          <h1 class="font-bold text-xs" style="margin-top: 10px">CATEGORIA:</h1>
-          <div class="flex">
-            <div class="select-container" style="width: 85%">
-              <select
-                id="two-level-select"
-                class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                v-model="producto.datosBasicos.categoria"
-              >
-                <option value="" disabled selected>
-                  Selecciona una categoria
-                </option>
-                <optgroup
-                  v-for="categoria in estado.categorias.hijas"
-                  :key="categoria"
-                  :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
-                >
-                  <option
-                    v-for="subCategoria in categoria.hijas"
-                    :key="subCategoria"
-                    :value="subCategoria"
-                  >
-                    {{ subCategoria.nombre }}
-                  </option>
-                </optgroup>
-              </select>
-            </div>
-            <BotonDetalle
-              mensaje="La categoría sirve solo a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-            />
-          </div>
-
-          <!-- Comentario -->
-          <h1 class="font-bold text-xs" style="margin-top: 10px">
-            COMENTARIO:
-          </h1>
-          <div class="flex">
-            <q-input
-              style="width: 85%"
-              v-model="producto.datosBasicos.comentario"
-              type="text"
-              filled
-            />
-            <BotonDetalle
-              mensaje="Entre cualquier información adicional que sea útil registrar junto con el producto."
-            />
-          </div>
-
-          <!-- Imagen -->
-          <h1 class="font-bold text-xs" style="margin-top: 10px">IMAGEN:</h1>
-          <div class="flex">
-            <q-file
-              style="width: 85%"
-              v-model="imagen"
-              label="Seleccionar imagen"
-              accept=".jpg, .png, .jpge"
-              max-total-size="560000"
-              @rejected="onRejected"
-              counter
-              filled
-              hint="Tamaño máximo de imagen 540KB"
-              clearable
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="cloud_upload" @click.stop.prevent />
-              </template>
-            </q-file>
-            <BotonDetalle mensaje="" />
-          </div>
+      <p>Entre los datos basicos del producto:</p>
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="producto.datosBasicos.nombre"
+            type="text"
+            label="Nombre"
+            filled
+            required
+          />
         </div>
-
-        <div class="col-span-1 !p-0">
-          <q-card style="width: 100%; height: 400px; margin: auto">
-            <q-img
-              style="width: 100%; height: 100%; object-fit: cover"
-              :src="imagePreview"
-              ><div class="absolute-bottom">
-                <div class="text-h6 text-center">IMAGEN</div>
-              </div></q-img
-            >
-          </q-card>
+        <div>
+          <BotonDetalle
+            mensaje="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
+          />
         </div>
       </div>
+
+      <!-- Categoria -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            filled
+            required
+            label="Categoria"
+            id="two-level-select"
+            class="w-full"
+            v-model="producto.datosBasicos.categoria"
+            :options="options"
+            map-options
+          >
+            <template v-slot:option="scope">
+              <q-item
+                v-bind="scope.itemProps"
+                v-on="scope.itemEvents"
+                :class="scope.opt.class"
+              >
+                <q-item-section>{{ scope.opt.label }}</q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          />
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <q-img
+          style="width: 150px; height: 150px; object-fit: cover"
+          v-if="imagePreview"
+          :src="imagePreview"
+        ></q-img>
+        <div style="flex-grow: 1">
+          <q-file
+            class="w-full"
+            v-model="imagen"
+            label="Seleccionar imagen"
+            accept=".jpg, .png, .jpge"
+            max-total-size="560000"
+            @rejected="onRejected"
+            counter
+            filled
+            hint="Tamaño máximo de imagen 540KB"
+            clearable
+          >
+            <template v-slot:prepend>
+              <q-icon name="cloud_upload" @click.stop.prevent />
+            </template>
+          </q-file>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Por favor elija una foto donde el producto este solo y se distingue claramente ante un fondo claro unido. Prefiera un formato cuadrado."
+          />
+        </div>
+      </div>
+
+      <!-- Comentario -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="producto.datosBasicos.comentario"
+            type="textarea"
+            label="Comentario"
+            filled
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+          />
+        </div>
+      </div>
+
       <q-btn
         color="primary"
         label="Editar informacion"
@@ -152,20 +157,25 @@
         @click="editarProductoBasico"
       />
     </q-tab-panel>
+
+    <!-- 
+    NARCAS 
+  -->
     <q-tab-panel name="marcas" animated>
+      <p>Seleccione las diferentes marcas con que viene el producto.</p>
       <!-- <code>{{ useProduct.producto.variedades }}</code> -->
-      <h1 class="font-extrabold text-xs">MARCAS:</h1>
+
       <Table
         :rows="useProduct.producto.variedades"
         :columns="marcas"
-        style="border: 1px solid gray"
+        style="padding: 0"
         badge
       >
         <template #dropdown>
           <q-btn
             color="primary"
             icon="add"
-            label="Agregar marca"
+            label="Registrar una marca"
             no-caps
             @click="estado.modal.esCrearMarcaProducto = true"
           />
@@ -223,6 +233,11 @@
         </template>
       </Table>
     </q-tab-panel>
+
+    <!-- 
+    MEDIDAS 
+  -->
+
     <q-tab-panel name="medidas" animated>
       <div class="flex flex-col mt-3 mb-3">
         <h1 class="font-extrabold text-xs">MEDIDAS BASICAS:</h1>
@@ -299,6 +314,10 @@
       </Table>
     </q-tab-panel>
 
+    <!-- 
+    PROVEEDORES 
+  -->
+
     <q-tab-panel name="proveedores" animated>
       <h1 class="font-extrabold text-xs">PROVEEDORES:</h1>
 
@@ -353,96 +372,131 @@
   <!-- PRODUCTO MARCA -->
   <Dialog2
     v-model="estado.modal.esCrearMarcaProducto"
-    title="Agregar marca"
+    title="Registrar una marca"
     label-btn="Crear"
     :handle-submit="editarProductoMarca"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCA</h1>
+      <p>Se va registrar una marca para este producto.</p>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <div class="!flex flex-row w-full gap-3 items-center">
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
           <q-select
-            color="primary"
+            filled
+            required
+            label="Seleccionar marca"
+            class="w-full"
             v-model="estado.marcaProducto.marca"
             :options="estado.marcas"
-            label="Seleccionar marca"
+            map-options
             option-label="nombre"
+            dense
+          >
+            <!--  
+            fill-input
             emit-value
             use-input
             outlined
-            dense
             input-debounce="0"
             hide-selected
-            fill-input
-            onfocus="this.select()"
-            class="w-full"
-            clearable
-          >
-            <template v-slot:prepend>
-              <q-icon name="branding_watermark" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
+            onfocus="this.select()" -->
+
+            <template v-slot:option="scope">
+              <q-item
+                v-bind="scope.itemProps"
+                v-on="scope.itemEvents"
+                :class="scope.opt.class"
+              >
+                <q-item-section>{{ scope.opt.nombre }}</q-item-section>
               </q-item>
             </template>
           </q-select>
-          <q-btn
-            size="12px"
-            icon="add"
-            color="primary"
-            round
-            style="height: 16px"
-            @click="estado.modal.esCrearMarca = true"
-          ></q-btn>
         </div>
-        <div class="grid grid-cols-2 gap-2">
+        <q-btn
+          size="12px"
+          icon="add"
+          color="primary"
+          round
+          style="height: 16px"
+          @click="estado.modal.esCrearMarca = true"
+        ></q-btn>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+          />
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <q-img
+          style="width: 150px; height: 150px; object-fit: cover"
+          v-if="imagePreviewMarca"
+          :src="imagePreviewMarca"
+        ></q-img>
+        <div style="flex-grow: 1">
+          <q-file
+            class="w-full"
+            v-model="imagenMarca"
+            label="Seleccionar imagen"
+            accept=".jpg, .png, .jpge"
+            max-total-size="560000"
+            @rejected="onRejected"
+            counter
+            filled
+            hint="Tamaño máximo de imagen 540KB"
+            clearable
+            dense
+          >
+            <template v-slot:prepend>
+              <q-icon name="cloud_upload" @click.stop.prevent />
+            </template>
+          </q-file>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. La marca debe ser legible. Prefiera un formato cuadrado."
+          />
+        </div>
+      </div>
+
+      <!-- cantidadMin -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
           <q-input
+            class="w-full"
             v-model="estado.marcaProducto.minimo"
             type="text"
-            label="Minimo"
-            outlined
-            dense
-            clearable
+            label="Stock critico en almacen"
+            filled
             required
-          />
-          <q-input
-            v-model="estado.marcaProducto.maximo"
-            type="text"
-            label="Maximo"
-            outlined
             dense
-            clearable
-            required
           />
         </div>
-        <q-file
-          v-model="imagenMarca"
-          label="Seleccionar imagen"
-          accept=".jpg, .png, .jpge"
-          max-total-size="560000"
-          @rejected="onRejected"
-          counter
-          outlined
-          dense
-          hint="Tamaño máximo de imagen 540KB"
-          clearable
-        >
-          <template v-slot:prepend>
-            <q-icon name="cloud_upload" @click.stop.prevent />
-          </template>
-        </q-file>
-        <div
-          v-if="imagePreviewMarca"
-          style="width: 200px; height: 200px; margin: auto"
-        >
-          <q-img
-            style="width: 100%; height: 100%; object-fit: cover"
-            :src="imagePreviewMarca"
-          ></q-img>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+          />
+        </div>
+      </div>
+
+      <!-- cantidadMax -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.marcaProducto.maximo"
+            type="text"
+            label="Pedido Maximo"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+          />
         </div>
       </div>
     </template>
@@ -749,23 +803,34 @@
   <!-- CREAR MARCA -->
   <Dialog2
     v-model="estado.modal.esCrearMarca"
-    title="Crear Marca"
+    title="Crear una marca"
     label-btn="Crear"
     :handle-submit="crearMarca"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">CREAR MARCA</h1>
+      <p>
+        La marca se creará al nivel global,
+        <b>asegúrese que todavía no existe</b>.
+      </p>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          v-model="estado.marcaProducto.marca.nombre"
-          type="text"
-          label="Nombre marca"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.marcaProducto.marca.nombre"
+            type="text"
+            label="Nombre "
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+          />
+        </div>
       </div>
     </template>
   </Dialog2>
@@ -948,11 +1013,14 @@ definePageMeta({
   layout: 'cathering',
 });
 
+const options = ref([]);
+
 if (useProduct.producto) {
   producto.productoID = useProduct.producto._id;
   // Object.assign(producto.datosBasicos, useProduct.producto);
   producto.datosBasicos = useProduct.producto;
   imagePreview.value = useProduct.producto.imagen?.cloudinaryUrl;
+  console.log(producto.datosBasicos);
 }
 
 const imageSrc = ref(
@@ -968,14 +1036,33 @@ const onAdded = (files) => {
   console.log(files);
   const reader = new FileReader();
   reader.onload = (e) => {
-    console.log(reader);
+    // console.log(reader);
     imageSrc.value = e.target.result;
   };
   reader.readAsDataURL(files[0]);
 };
 
-onMounted(() => {
-  getCategoria();
+onMounted(async () => {
+  console.log(estado.categorias);
+  await getCategoria();
+
+  options.value = [];
+  for (const cat of estado.categorias.hijas) {
+    options.value.push({
+      label: `${cat.nombre} (${cat.hijas.length})`,
+      value: cat._id,
+      disable: true,
+      class: 'title',
+    });
+    for (const subcat of cat.hijas) {
+      options.value.push({
+        label: subcat.nombre,
+        value: subcat,
+        class: 'option',
+      });
+    }
+  }
+
   buscarMarcas();
   buscarMedidas();
   buscarProveedores();

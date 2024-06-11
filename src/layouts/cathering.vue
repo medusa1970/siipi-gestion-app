@@ -75,7 +75,7 @@ const realizarPedido = async () => {
         storePedido.listaPedido = [];
       } else NotifyError('Error al realizar el pedido');
 
-      console.log(storePedido.listaPedido);
+      // console.log(storePedido.listaPedido);
     } else {
       // SE DESPACHA PRODUCTO
       const pedido = await pedidoService.pedidoIniciar(
@@ -84,7 +84,7 @@ const realizarPedido = async () => {
         items,
         useGqlToken(storeAuth.token),
       );
-      console.log(pedido);
+      // console.log(pedido);
       if (pedido) {
         await pedidoService.pedidoConfirmarItems(pedido._id);
         await pedidoService.pedidoAceptarItems(pedido._id);

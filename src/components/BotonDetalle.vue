@@ -5,6 +5,7 @@
       anchor="bottom right"
       self="top right"
       class="px-2 py-1"
+      style="height: auto"
     >
       <div class="max-w-[200px]">
         <h1>{{ mensaje }}</h1>

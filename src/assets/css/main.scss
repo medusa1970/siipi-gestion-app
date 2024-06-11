@@ -123,6 +123,45 @@ h6 {
   color: rgb(251, 255, 0);
 }
 
+.q-tab {
+  padding: 0 16px;
+  margin-bottom: 12px;
+}
+
+// DIALOG MESSAGE
+.q-dialog__message {
+  // border: 1px solid red;
+  line-height: 1;
+  // font-size: 13px;
+}
+
+.custom-option.option-content {
+  padding: 0 4px; /* Apply padding to a wrapper inside the section */
+}
+.custom-option.q-item__section {
+  padding: 0 4px !important; /* Forces the padding style */
+}
+
+// q-select
+
+.q-menu {
+  height: 150px;
+}
+.q-item {
+  min-height: 20px;
+  padding: 3px 12px;
+  transition: color 0.3s, background-color 0.3s;
+}
+.q-item.first {
+  color: gray;
+}
+.q-item.title {
+  font-weight: bold;
+}
+.q-item.option {
+  padding-left: 30px;
+}
+
 // // TABLAAAAA EXPANSIVA
 // .q-item {
 //   min-height: 48px;
@@ -142,23 +181,3 @@ h6 {
 //   min-width: 0;
 //   max-width: 100%;
 // }
-
-.q-item__section--side {
-  // color: white;
-  // color: #757575;
-  align-items: flex-start;
-  padding-right: 8px;
-  width: auto;
-  min-width: 0;
-}
-.q-tab {
-  padding: 0 16px;
-  margin-bottom: 12px;
-}
-
-// DIALOG MESSAGE
-.q-dialog__message {
-  // border: 1px solid red;
-  line-height: 1;
-  // font-size: 13px;
-}

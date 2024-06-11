@@ -1,0 +1,27 @@
+-- REUNION CON LOS ADMINS HOY --
+
+Todo:
+  - textos informacion
+  - TODO sin marca en el dataset
+  - main
+
+Registrar marca:
+  - imagen required no avisa
+  - config select para escribir
+  - bug modal2 no cierra + no se guarda en la db
+  - campos persistentes despues de un exito
+
+Crear producto:
+  - imagen required no avisa
+  - categoria required no avisa
+  - boton X sobre imagen solo vacia el campo pero no quita la imagen
+
+Datos basicos:
+  - imagen required no avisa
+  - confirmacion tras hacer click en el boton
+
+
+-- GLOBAL --
+
+- refactor consultas
+- refactor pages/cathering/sede

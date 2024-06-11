@@ -11,7 +11,7 @@ const postDataGql = async (gql: any) => {
     // { [nombre_consulta]: data }
     return extraer(data);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     ApiError(error);
   }
 };

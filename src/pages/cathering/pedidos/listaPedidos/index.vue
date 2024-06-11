@@ -1133,7 +1133,7 @@ const imprimir = (pedido) => {
       );
 
       ventanaImpresion.document.write(divParaImprimir.outerHTML);
-      console.log(ventanaImpresion.document);
+      // console.log(ventanaImpresion.document);
       ventanaImpresion.document.close();
       ventanaImpresion.print();
       ventanaImpresion.close();

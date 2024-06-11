@@ -17,7 +17,7 @@ export const filterEmpleados = (
 ) => {
   update(() => {
     const needle = val.toLowerCase();
-    console.log(needle);
+    // console.log(needle);
     dataOpcion = data.filter((item: any) =>
       item.nombre.toLowerCase().includes(needle),
     );

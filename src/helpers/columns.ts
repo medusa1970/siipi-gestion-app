@@ -110,12 +110,6 @@ export const columnsOfertas = [
 ];
 
 export const columnsProductos = [
-  // {
-  //   name: 'creado',
-  //   label: 'Creado',
-  //   align: 'left',
-  //   field: (row: any) => row._creado,
-  // },
   {
     name: 'imagen',
     label: 'Imagen',
@@ -150,7 +144,7 @@ export const columnsProductos = [
     required: true,
     label: 'categoria',
     align: 'left',
-    field: (row: any) => row.categoria,
+    field: (row: any) => row.categoria.nombre,
     sortable: true,
   },
   {

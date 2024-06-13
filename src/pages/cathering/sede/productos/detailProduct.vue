@@ -165,13 +165,20 @@
         </div>
       </div>
 
-      <q-btn
-        color="primary"
-        label="Editar informacion"
-        no-caps
-        class="block mx-auto mt-5"
-        @click="editarProductoBasico"
-      />
+      <div class="flex gap-4 justify-center">
+        <q-btn
+          color="secondary"
+          label="Cancelar"
+          no-caps
+          @click="cancelarEdicionProductoBasico"
+        />
+        <q-btn
+          color="primary"
+          label="Editar informacion"
+          no-caps
+          @click="editarProductoBasico"
+        />
+      </div>
     </q-tab-panel>
 
     <!-- 
@@ -1060,7 +1067,7 @@
         <q-input
           v-model="estado.dataMedida.nombre"
           type="text"
-          label="Nombre marca"
+          label="Nombre medida"
           outlined
           dense
           clearable
@@ -1231,6 +1238,8 @@ const {
   agregarProductoProveedor,
   buscarProveedoresProducto,
   guardarMedidaBasica,
+  cancelarEdicionProductoBasico,
+  estadoInicial,
 } = useProducts();
 
 definePageMeta({
@@ -1278,6 +1287,10 @@ onMounted(async () => {
   buscarProveedores();
   buscarProveedoresProducto();
   // getAllProductos();
+
+  estadoInicial.datosBasicos.nombre = producto.datosBasicos.nombre;
+  estadoInicial.datosBasicos.categoria = producto.datosBasicos.categoria;
+  estadoInicial.datosBasicos.comentario = producto.datosBasicos.comentario;
 });
 </script>
 

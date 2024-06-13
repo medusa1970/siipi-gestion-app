@@ -163,6 +163,15 @@ export const useProducts = () => {
     informacion: [],
     imagenSrc: '',
   });
+  const estadoInicial = reactive({
+    datosBasicos: {
+      nombre: '',
+      categoria: { _id: '', nombre: '' },
+      comentario: '',
+      tiempoVida: '',
+      imagen: '',
+    },
+  });
   const imagen = ref(null);
   const selectedFile = ref('');
   const imagePreview = ref('');
@@ -526,8 +535,6 @@ export const useProducts = () => {
 
   const editarProductoMarca = async () => {
     const imagenCvt = await fileToBase64(selectedFileMarca.value);
-    // console.log(imagenCvt);
-    // console.log(estado.marcaProducto);
 
     const productoModificado = await productoService.agregarProductosMarca(
       //@ts-expect-error
@@ -549,6 +556,12 @@ export const useProducts = () => {
     }
 
     estado.modal.esCrearMarcaProducto = false;
+    estado.marcaProducto.marca = { _id: '', nombre: '' };
+    estado.marcaProducto.minimo = '';
+    estado.marcaProducto.maximo = '';
+    imagenMarca.value = null;
+    selectedFileMarca.value = '';
+    imagePreviewMarca.value = '';
   };
 
   const editarProductoMedidaEmpaque = async () => {
@@ -602,6 +615,7 @@ export const useProducts = () => {
   const buscarMedidas = async () => {
     const medidas = await productoService.buscarMedidas();
     estado.medidas = medidas;
+    console.log(estado.medidas);
   };
   const crearMedida = async () => {
     const medidaNueva = await productoService.crearMedida({
@@ -676,7 +690,13 @@ export const useProducts = () => {
       NotifySucessCenter('Proveedor creado correctamente'); //@ts-expect-error
       estado.proveedoresProducto.push(nuevoProveedor);
     }
-    estado.modal.isAddProveedor = false;
+    estado.modal.isAddProveedor = false; //@ts-expect-error
+    estado.productoProveedor.marca = null;
+    estado.productoProveedor.proveedor = { _id: '', nombre: '' };
+    estado.productoProveedor.identificativo = '';
+    estado.productoProveedor.precioConFactura = null;
+    estado.productoProveedor.precioSinFactura = null;
+    estado.productoProveedor.precios = [];
   };
 
   const buscarProveedoresProducto = async () => {
@@ -711,6 +731,12 @@ export const useProducts = () => {
     if (res) {
       NotifySucess('Medida guardada correctamente');
     }
+  };
+
+  const cancelarEdicionProductoBasico = () => {
+    producto.datosBasicos.nombre = estadoInicial.datosBasicos.nombre;
+    producto.datosBasicos.categoria = estadoInicial.datosBasicos.categoria;
+    producto.datosBasicos.comentario = estadoInicial.datosBasicos.comentario;
   };
 
   //WATCH
@@ -797,5 +823,7 @@ export const useProducts = () => {
     agregarProductoProveedor,
     buscarProveedoresProducto,
     guardarMedidaBasica,
+    cancelarEdicionProductoBasico,
+    estadoInicial,
   };
 };

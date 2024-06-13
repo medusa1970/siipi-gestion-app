@@ -136,7 +136,7 @@ export const columnsProductos = [
     required: true,
     label: 'Unidad Medida',
     align: 'left',
-    field: (row: any) => row.medida,
+    field: (row: any) => row.medida.nombre,
     sortable: true,
   },
   {

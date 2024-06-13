@@ -288,11 +288,11 @@
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
       <span class="flex gap-2 items-center"
         ><h1 class="font-bold text-xs">NOMBRE:</h1>
-        <p>{{ producto.informacion.nombre }}</p></span
+        <p>{{ producto.informacion?.nombre }}</p></span
       >
       <span class="flex gap-2 items-center"
         ><h1 class="font-bold text-xs">COMENTARIO:</h1>
-        <p>{{ producto.informacion.comentario }}</p></span
+        <p>{{ producto.informacion?.comentario }}</p></span
       >
       <span class="flex gap-2 items-center"
         ><h1 class="font-bold text-xs">CATEGORIA:</h1>
@@ -327,8 +327,11 @@
       </h1>
       <span class="flex gap-2 items-center"
         ><h1 class="font-bold text-xs">MEDIDA:</h1>
-        <p>{{ producto.informacion.medida.nombre }}</p></span
-      >
+        <p v-if="producto.informacion?.medida">
+          {{ producto.informacion?.medida?.nombre }}
+        </p>
+        <p v-else>sin medida basica...</p>
+      </span>
       <div
         v-for="empaque in producto.informacion.empaques"
         :key="empaque"

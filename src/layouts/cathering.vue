@@ -1,6 +1,6 @@
 <template>
   <Layout
-    :menuList="menuListComputed"
+    :menuList="menuListCathering"
     :portada-img="PortadaCathering"
     cathering
   >
@@ -99,22 +99,22 @@ const realizarPedido = async () => {
   });
 };
 
-const menuListComputed = computed(() => {
-  // FILTRO ALMACEN
-  if (storeAuth.negocioElegido.permisos.includes('almacen')) {
-    return menuListCathering.filter(
-      (item) => item.label === 'Stock' || item.label === 'Pedidos',
-    );
-  }
+// const menuListComputed = computed(() => {
+//   // FILTRO ALMACEN
+//   if (storeAuth.negocioElegido.permisos.includes('almacen')) {
+//     return menuListCathering.filter(
+//       (item) => item.label === 'Stock' || item.label === 'Pedidos',
+//     );
+//   }
 
-  // FILTRO ADQUISICION
-  if (storeAuth.negocioElegido.permisos.includes('almacen')) {
-    return menuListCathering.filter(
-      (item) => item.label === 'Stock' || item.label === 'Pedidos',
-    );
-  }
+//   // FILTRO ADQUISICION
+//   if (storeAuth.negocioElegido.permisos.includes('almacen')) {
+//     return menuListCathering.filter(
+//       (item) => item.label === 'Stock' || item.label === 'Pedidos',
+//     );
+//   }
 
-  // RETURN
-  return menuListCathering;
-});
+//   // RETURN
+//   return menuListCathering;
+// });
 </script>

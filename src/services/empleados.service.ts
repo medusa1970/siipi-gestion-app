@@ -11,7 +11,7 @@ export const empleadoService = {
     const [entidad] = await postDataGql(
       GqlBuscarEntidades_empleados({
         busqueda: { _id: [entidadID] },
-        opciones: { limit: 1, errorSiVacio: true },
+        opciones: { limit: 1, errorSiVacio: true, populate: true },
       }),
     );
     return entidad.empleados;

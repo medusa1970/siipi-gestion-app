@@ -379,7 +379,7 @@
           </div>
         </div>
 
-        <div v-if="showTable">
+        <div v-if="estado.medidaProducto.medida">
           <br />
 
           <div v-if="useProduct.producto.variedades?.length === 0">
@@ -409,7 +409,6 @@
             </template>
           </Table>
         </div>
-        <div v-else></div>
       </div>
     </q-tab-panel>
 

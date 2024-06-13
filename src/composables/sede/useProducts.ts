@@ -565,7 +565,6 @@ export const useProducts = () => {
   };
 
   const editarProductoMedidaEmpaque = async () => {
-    console.log(estado.medidaProducto);
     const productoModificado =
       await productoService.agregarProductosMedidaEmpaque(
         //@ts-expect-errors
@@ -584,6 +583,9 @@ export const useProducts = () => {
       useProduct.producto.empaques.push(nuevaMedida);
     }
     estado.modal.isAddEmpaque = false;
+    estado.medidaProducto.marca = { _id: '', nombre: '' };
+    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
+    estado.medidaProducto.cantidad = 0;
   };
 
   /**
@@ -615,7 +617,6 @@ export const useProducts = () => {
   const buscarMedidas = async () => {
     const medidas = await productoService.buscarMedidas();
     estado.medidas = medidas;
-    console.log(estado.medidas);
   };
   const crearMedida = async () => {
     const medidaNueva = await productoService.crearMedida({
@@ -623,7 +624,7 @@ export const useProducts = () => {
     });
     if (medidaNueva) NotifySucessCenter('Medida creado correctamente');
     estado.modal.esCrearMedida = false;
-    estado.medidaProducto.medida.nombre = '';
+    estado.dataMedida.nombre = '';
     buscarMedidas();
   };
   const crearEmpaque = async () => {
@@ -640,8 +641,8 @@ export const useProducts = () => {
     }
 
     estado.modal.esCrearEmpaque = false;
-    estado.medidaProducto.empaque.nombre = '';
-    estado.medidaProducto.empaque.abreviacion = '';
+    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
+    estado.dataEmpaque = { nombre: '', abreviacion: '' };
   };
   // PROVEEDORES
   const buscarProveedores = async () => {

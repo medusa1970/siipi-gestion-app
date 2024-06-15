@@ -662,7 +662,7 @@ import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
 import { pedidoStore } from '@/stores/pedido.store';
-import { pedidoService } from '~/services/punto/pedido.service';
+import { pedidoService } from '~/services/pedido.service';
 import {
   ApiError,
   showLoading,

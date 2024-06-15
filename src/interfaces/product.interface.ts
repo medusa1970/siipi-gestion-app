@@ -15,14 +15,14 @@ export interface Cargo {
   nombre: string;
 }
 export interface Negocio {
-  _id?: string;
+  _id?: string; // ? porque no esta requerido ?
   nombre: string;
   tipo: string;
   permisos?: string[];
   cargos?: Cargo[];
 }
 export interface PersonaProps {
-  _id?: string;
+  _id?: string; // ? porque no esta requerido ?
   usuario: string;
   nombre: string;
   apellido: string;

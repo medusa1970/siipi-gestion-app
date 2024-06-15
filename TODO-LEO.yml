@@ -26,3 +26,20 @@ Datos basicos:
 - refactor consultas
 - refactor pages/cathering/sede
 - refactor "prohibido"
+
+
+
+eliminar producto > motivo
+editar min y max, o bien autocompletar 13%tva
+el buscador de productos no responde "CAF"
+no se acepta creacion de proveedor
+no permite subir imagen ?
+imagen del producto con su marca
+
+
+CSS para productos incompletos
+Categoria sale como "object Object" al reinicializar
+averiguar si la foto vuelve a subir o no al editar
+permisos borrar
+agregar marca acepta letras en vez de numeros
+required on selects no funcionan due to estado default state

@@ -3,9 +3,9 @@ import { reactive, onMounted } from 'vue';
 import { NotifySucess, NotifyError } from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { productStore } from '@/stores/producto.store';
-import { stockService } from '~/services/punto/stock.service';
+import { stockService } from '~/services/stock.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
-import { menuService } from '~/services/punto/menu.service';
+import { menuService } from '~/services/menu.service';
 
 type ProductoEnAlerta = {
   foto: string;

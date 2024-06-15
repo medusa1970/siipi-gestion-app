@@ -84,7 +84,7 @@ definePageMeta({
 });
 import { useMenu } from '@/composables/punto/useMenu';
 import { onMounted, ref } from 'vue';
-import { ofertaService } from '~/services/marca/ofertas.service';
+import { ofertaService } from '~/services/ofertas.service';
 
 const { obtenerMenus, estado, obtenerCatalogos, crearMenu } = useMenu();
 const exepciones = ref([]);

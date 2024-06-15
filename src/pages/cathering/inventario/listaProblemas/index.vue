@@ -42,7 +42,7 @@ import {
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'vue-router';
-import { inventarioService } from '../../../../services/punto/inventary.service';
+import { inventarioService } from '../../../../services/inventary.service';
 definePageMeta({
   layout: 'cathering',
 });

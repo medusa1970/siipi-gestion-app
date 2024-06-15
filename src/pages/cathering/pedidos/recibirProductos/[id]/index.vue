@@ -87,7 +87,7 @@ import { ref, onMounted, watch } from 'vue';
 import { usePedido } from '~/composables/punto/usePedido';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRoute } from 'vue-router';
-import { ofertaService } from '~/services/marca/ofertas.service';
+import { ofertaService } from '~/services/ofertas.service';
 const route = useRoute();
 
 const usePedidoStore = pedidoStore();

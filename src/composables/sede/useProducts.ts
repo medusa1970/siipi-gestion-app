@@ -8,13 +8,14 @@ import {
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { productStore } from '@/stores/producto.store';
-import { productoService } from '~/services/sede/producto.service';
+import { productoService } from '~/services/producto.service';
 import type { Presentacion, Product } from '@/interfaces/product.interface';
 import { ofertaStore } from '@/stores/oferta.store';
 import { fileToBase64 } from '@/helpers/helpers';
 import { proveedores } from '~/helpers/columns';
 
 export const useProducts = () => {
+  const useAuth = authStore();
   const useProduct = productStore();
   const router = useRouter();
   const $q = useQuasar();
@@ -38,6 +39,7 @@ export const useProducts = () => {
       // NEW
       isAddProduct: false,
       esCrearMarcaProducto: false,
+      esEditarMarca: false,
       esCrearMedidaProducto: false,
       isAddProveedor: false,
       isDetailProduct: false,
@@ -93,6 +95,7 @@ export const useProducts = () => {
       },
       minimo: '',
       maximo: '',
+      variedadID: '',
     },
     medidas: [],
     medidaProducto: {
@@ -162,6 +165,7 @@ export const useProducts = () => {
     },
     informacion: [],
     imagenSrc: '',
+    motivoEliminacion: '',
   });
   const estadoInicial = reactive({
     datosBasicos: {
@@ -195,16 +199,25 @@ export const useProducts = () => {
     return categoriaArbol;
   };
 
-  const borrarProducto = (row: { _id: string; nombre: string }) => {
+  const borrarProducto = () => {
     $q.dialog({
-      title: `Eliminar ${row.nombre}`,
-      message: '¿Está seguro de eliminar este producto?',
+      title: `Eliminar ${producto.datosBasicos.nombre}`,
+      message: 'No se puede deshacer.',
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      await productoService.borrarProducto(row._id);
-      NotifySucess('Producto eliminado correctamente');
+      productoService
+        .borrarProducto(
+          producto.productoID,
+          producto.motivoEliminacion,
+          useGqlToken(useAuth.token),
+        )
+        .then(() => {
+          producto.motivoEliminacion = '';
+          NotifySucess('Producto eliminado correctamente');
+        });
       getAllProductos();
+      router.push('/cathering/sede/productos');
     });
   };
 
@@ -508,7 +521,7 @@ export const useProducts = () => {
         useProduct.producto._id,
         {
           nombre: producto.datosBasicos.nombre, //@ts-ignore
-          categoria: producto.datosBasicos.categoria._id,
+          categoria: producto.datosBasicos.categoria.value._id,
           comentario: producto.datosBasicos.comentario,
         },
       );
@@ -533,7 +546,7 @@ export const useProducts = () => {
     }
   };
 
-  const editarProductoMarca = async () => {
+  const agregarProductoMarca = async () => {
     const imagenCvt = await fileToBase64(selectedFileMarca.value);
 
     const productoModificado = await productoService.agregarProductosMarca(
@@ -562,6 +575,26 @@ export const useProducts = () => {
     imagenMarca.value = null;
     selectedFileMarca.value = '';
     imagePreviewMarca.value = '';
+  };
+
+  const editarProductoMarca = async () => {
+    const productoModificado = productoService
+      .modificarProductosMarca(
+        useProduct.producto._id,
+        estado.marcaProducto.variedadID,
+        {
+          cantidadMin: parseInt(estado.marcaProducto.minimo),
+          cantidadMax: parseInt(estado.marcaProducto.maximo),
+        },
+      )
+      .then((res) => {
+        NotifySucessCenter('Marca creado correctamente');
+
+        estado.marcaProducto.variedadID = '';
+        estado.marcaProducto.minimo = '';
+        estado.marcaProducto.maximo = '';
+        estado.modal.esEditarMarca = false;
+      });
   };
 
   const editarProductoMedidaEmpaque = async () => {
@@ -610,7 +643,10 @@ export const useProducts = () => {
     });
     if (marcaNueva) NotifySucessCenter('Marca creado correctamente');
     estado.modal.esCrearMarca = false;
-    estado.marcaProducto.marca.nombre = '';
+    estado.marcaProducto.marca = {
+      _id: marcaNueva._id,
+      nombre: marcaNueva.nombre,
+    };
     buscarMarcas();
   };
   // MEDIDAS
@@ -679,11 +715,11 @@ export const useProducts = () => {
       estado.productoProveedor.proveedor._id,
       {
         //@ts-expect-error
-        marca: estado.productoProveedor.marca.marca._id, //@ts-expect-error
+        marca: estado.productoProveedor.marca.marca._id,
         producto: useProduct.producto._id,
-        identificativo: estado.productoProveedor.identificativo, //@ts-expect-error
-        precioConFactura: estado.productoProveedor.precioConFactura, //@ts-expect-error
-        precioSinFactura: estado.productoProveedor.precioSinFactura, //@ts-expect-error
+        identificativo: estado.productoProveedor.identificativo,
+        precioConFactura: Number(estado.productoProveedor.precioConFactura),
+        precioSinFactura: Number(estado.productoProveedor.precioSinFactura),
         preciosPorMayor: estado.productoProveedor.precios,
       },
     );
@@ -811,6 +847,7 @@ export const useProducts = () => {
     imagenMarca,
     selectedFileMarca,
     imagePreviewMarca,
+    agregarProductoMarca,
     editarProductoMarca,
     buscarMedidas,
     crearMedida,

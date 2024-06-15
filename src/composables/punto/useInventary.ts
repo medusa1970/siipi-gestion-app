@@ -12,7 +12,7 @@ import {
 } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { authStore } from '~/stores/auth.store';
-import { inventarioService } from '~/services/punto/inventary.service';
+import { inventarioService } from '~/services/inventary.service';
 /**
  * LOGICA
  */

@@ -108,7 +108,7 @@
         <q-select
           v-model="estado.personaSelect.nombre"
           :options="optionsPersona"
-          label="Seleccionar persona"
+          label="Persona"
           option-label="nombre"
           style="width: 100%; flex: 1 0 auto"
           @filter="filterEmpleados"
@@ -117,6 +117,7 @@
           fill-input
           dense
           clearable
+          required
         >
           <template v-slot:prepend>
             <q-icon name="group" />
@@ -130,6 +131,48 @@
           </template>
         </q-select>
       </div>
+
+      <q-input type="text" v-model="estado.cargo" label="Cargo" dense required>
+        <template v-slot:prepend>
+          <q-icon name="work" />
+        </template>
+      </q-input>
+
+      <q-select
+        v-model="estado.permisos"
+        :options="[
+          {
+            label: 'Adquisicion',
+            value: 'ADQUISICION',
+          },
+          {
+            label: 'Almacen',
+            value: 'ALMACEN',
+          },
+        ]"
+        label="Permisos"
+        emit-value
+        multiple
+        dense
+      >
+        <template v-slot:prepend>
+          <q-icon name="key" />
+        </template>
+        <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+          <q-item v-bind="itemProps">
+            <q-item-section>
+              {{ opt.label }}
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle
+                :model-value="selected"
+                @update:model-value="toggleOption(opt)"
+              ></q-toggle>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+      <!--
       <q-select
         v-model="estado.cargo"
         :options="cargos"
@@ -149,6 +192,7 @@
           </q-item>
         </template>
       </q-select>
+      -->
     </template>
   </Dialog>
 </template>
@@ -170,10 +214,10 @@ const {
   optionsPersona,
 } = useEmpleado();
 
-let cargos: string[] = [];
-route.meta.layout === 'sede'
-  ? (cargos = ['administrador', 'supervisor'])
-  : (cargos = ['almacen', 'repartidor']);
+// let cargos: string[] = [];
+// route.meta.layout === 'sede'
+//   ? (cargos = ['administrador', 'supervisor'])
+//   : (cargos = ['almacen', 'repartidor']);
 
 // const cargos = ['almacen', 'repartidor'];
 </script>

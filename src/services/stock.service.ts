@@ -1,4 +1,4 @@
-import { postDataGql } from '../../services/service.config';
+import { postDataGql } from './service.config';
 
 export const stockService = {
   /**

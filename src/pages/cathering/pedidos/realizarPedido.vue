@@ -92,7 +92,7 @@
 import { useProducts } from '@/composables/sede/useProducts';
 import { usePedido } from '@/composables/punto/usePedido';
 import { ref } from 'vue';
-import { pedidoService } from '~/services/punto/pedido.service';
+import { pedidoService } from '~/services/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';

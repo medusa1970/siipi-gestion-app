@@ -7,13 +7,13 @@ import {
   showLoading,
 } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
-import { pedidoService } from '@/services/punto/pedido.service';
+import { pedidoService } from '~/services/pedido.service';
 import { authStore } from '@/stores/auth.store';
 import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
-import { menuService } from '~/services/punto/menu.service';
+import { menuService } from '~/services/menu.service';
 import { ofertaService } from '~/services/marca/ofertas.service';
-import { stockService } from '~/services/punto/stock.service';
+import { stockService } from '~/services/stock.service';
 import { authService } from '~/services/auth.service';
 import { extraer } from '../../helpers/leo';
 

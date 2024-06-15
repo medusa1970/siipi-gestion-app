@@ -25,25 +25,30 @@ export const empleadoService = {
     _id: string,
     personaID: string,
     personaCargo: string,
+    permisos: string[] = [],
   ) => {
+    const empleado = {
+      persona: personaID,
+      cargos: [
+        {
+          nombre: personaCargo,
+        },
+      ],
+      permisos: permisos.map((permiso) => {
+        return {
+          permiso,
+        };
+      }),
+    };
     const [entidad] = await postDataGql(
       GqlModificarEntidades_empleados({
         busqueda: { _id: [_id] },
         datos: {
           empleados: {
-            agregar: [
-              {
-                persona: personaID,
-                cargos: [
-                  {
-                    nombre: personaCargo,
-                  },
-                ],
-              },
-            ],
+            agregar: [empleado],
           },
         },
-        opciones: { limit: 1, errorSiVacio: true },
+        opciones: { populate: true, limit: 1, errorSiVacio: true },
       }),
     );
     return entidad.empleados[entidad.empleados.length - 1];
@@ -115,90 +120,104 @@ export const empleadoService = {
     );
     return personas[0];
   },
-
-  /**
-   * agregarRolEmpleado
-   * @returns Empleado
-   */
-  agregarRolEmpleado: async (
-    negocioID: string,
-    empleadoID: string,
-    rol: string,
-  ) => {
-    const rolPermisos = Object.keys(definicionRoles).includes(rol)
-      ? // @ts-expect-error estructura en backend
-        [definicionRoles[rol]]
-      : [];
-    const [entidad] = await postDataGql(
-      GqlModificarEntidades_empleados({
-        busqueda: { _id: [negocioID] },
-        datos: {
-          empleados: {
-            buscar: {
-              _id: [empleadoID],
-            },
-            modificar: {
-              permisos: {
-                agregar: rolPermisos.map((permiso) => {
-                  return {
-                    permiso,
-                    vencimiento: null,
-                  };
-                }),
-              },
-            },
-          },
-        },
-        opciones: { limit: 1, errorSiVacio: true },
-      }),
-    );
-    return entidad.empleados.find(
-      // @ts-expect-error estructura en backend
-      (empleados) => empleados._id.toString() === empleadoID,
-    );
-  },
-
-  /**
-   * eliminarRolEmpleado
-   * @returns Empleado
-   */
-  eliminarRolEmpleado: async (
-    negocioID: string,
-    empleadoID: string,
-    rol: string,
-  ) => {
-    const RolPermisos = Object.keys(definicionRoles).includes(rol)
-      ? // @ts-expect-error estructura en backend
-        definicionRoles[rol]
-      : [];
-    const [entidad] = await postDataGql(
-      GqlModificarEntidades_empleados({
-        busqueda: { _id: [negocioID] },
-        datos: {
-          empleados: {
-            buscar: {
-              _id: [empleadoID],
-            },
-            modificar: {
-              permisos: {
-                borrar: {
-                  // TODO en backend, buscar por array
-                  permiso:
-                    '/' +
-                    // @ts-expect-error estructura en backend
-                    RolPermisos.map((permiso) => `^${permiso}$`).join('|') +
-                    '/',
-                },
-              },
-            },
-          },
-        },
-        opciones: { limit: 1, errorSiVacio: true },
-      }),
-    );
-    return entidad.empleados.find(
-      // @ts-expect-error estructura en backend
-      (empleados) => empleados._id.toString() === empleadoID,
-    );
-  },
 };
+
+//
+//
+//
+//
+//
+//
+
+//
+//
+//
+//
+//
+//
+
+//   /**
+//    * agregarRolEmpleado
+//    * @returns Empleado
+//    */
+//   agregarRolEmpleado: async (
+//     negocioID: string,
+//     empleadoID: string,
+//     rol: string,
+//   ) => {
+//     const rolPermisos = Object.keys(definicionRoles).includes(rol)
+//       ? // @ts-expect-error estructura en backend
+//         [definicionRoles[rol]]
+//       : [];
+//     const [entidad] = await postDataGql(
+//       GqlModificarEntidades_empleados({
+//         busqueda: { _id: [negocioID] },
+//         datos: {
+//           empleados: {
+//             buscar: {
+//               _id: [empleadoID],
+//             },
+//             modificar: {
+//               permisos: {
+//                 agregar: rolPermisos.map((permiso) => {
+//                   return {
+//                     permiso,
+//                     vencimiento: null,
+//                   };
+//                 }),
+//               },
+//             },
+//           },
+//         },
+//         opciones: { limit: 1, errorSiVacio: true },
+//       }),
+//     );
+//     return entidad.empleados.find(
+//       // @ts-expect-error estructura en backend
+//       (empleados) => empleados._id.toString() === empleadoID,
+//     );
+//   },
+
+//   /**
+//    * eliminarRolEmpleado
+//    * @returns Empleado
+//    */
+//   eliminarRolEmpleado: async (
+//     negocioID: string,
+//     empleadoID: string,
+//     rol: string,
+//   ) => {
+//     const RolPermisos = Object.keys(definicionRoles).includes(rol)
+//       ? // @ts-expect-error estructura en backend
+//         definicionRoles[rol]
+//       : [];
+//     const [entidad] = await postDataGql(
+//       GqlModificarEntidades_empleados({
+//         busqueda: { _id: [negocioID] },
+//         datos: {
+//           empleados: {
+//             buscar: {
+//               _id: [empleadoID],
+//             },
+//             modificar: {
+//               permisos: {
+//                 borrar: {
+//                   // TODO en backend, buscar por array
+//                   permiso:
+//                     '/' +
+//                     // @ts-expect-error estructura en backend
+//                     RolPermisos.map((permiso) => `^${permiso}$`).join('|') +
+//                     '/',
+//                 },
+//               },
+//             },
+//           },
+//         },
+//         opciones: { limit: 1, errorSiVacio: true },
+//       }),
+//     );
+//     return entidad.empleados.find(
+//       // @ts-expect-error estructura en backend
+//       (empleados) => empleados._id.toString() === empleadoID,
+//     );
+//   },

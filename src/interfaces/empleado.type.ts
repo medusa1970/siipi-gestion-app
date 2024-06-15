@@ -1,7 +1,19 @@
 export interface Empleado {
   _id: string;
-  cargo: string;
   persona: Persona;
+  cargos: Cargo[];
+  permisos: Permiso[];
+}
+
+export interface Permiso {
+  _id: string;
+  permiso: String;
+  vencimiento: Date | null;
+}
+
+export interface Cargo {
+  _id: string;
+  nombre: String;
 }
 
 export interface Persona {

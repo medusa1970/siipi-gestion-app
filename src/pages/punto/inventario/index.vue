@@ -156,9 +156,9 @@
 import { useInventary } from '@/composables/punto/useInventary';
 // import { useStock } from '@/composables/punto/useStock';
 import { onMounted, reactive, nextTick } from 'vue';
-import { stockService } from '~/services/punto/stock.service';
+import { stockService } from '~/services/stock.service';
 import { authStore } from '@/stores/auth.store';
-import { inventarioService } from '~/services/punto/inventary.service';
+import { inventarioService } from '~/services/inventary.service';
 import {
   NotifyError,
   NotifySucess,

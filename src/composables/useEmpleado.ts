@@ -12,12 +12,13 @@ export const useEmpleado = () => {
   const useAuth = authStore();
   const $q = useQuasar();
 
-  // STADO REACTIVO DE EMPLEADOS
+  // ESTADO REACTIVO DE EMPLEADOS
   const estado = reactive({
     test: false,
     personaSelect: { id: '', nombre: '' },
     personas: [{ id: '', nombre: '' }],
     cargo: '',
+    permisos: [],
     rows: [],
   });
 
@@ -31,6 +32,7 @@ export const useEmpleado = () => {
     const listaEmpleados = await empleadoService.obtenerTodosEmpleados(
       useAuth.negocioElegido._id,
     );
+
     estado.rows = listaEmpleados.map((empleado: Empleado) => {
       // console.log(empleado);
       // if (empleado.penegocioElegidorsona.imagen?.cloudinaryUrl) {
@@ -39,7 +41,8 @@ export const useEmpleado = () => {
       return {
         id: empleado._id,
         personaID: empleado.persona._id,
-        cargo: empleado.cargo,
+        cargo: empleado.cargos[0].nombre,
+        permisos: empleado.permisos.map((p) => p.permiso),
         nombre: empleado.persona.nombre + ' ' + empleado.persona.apellido,
         correo: empleado.persona.correo,
         telefono: empleado.persona.telefono,
@@ -81,14 +84,10 @@ export const useEmpleado = () => {
    */
   const agregarEmpleado = async () => {
     const nuevoEmpleado = await empleadoService.agregarEmpleado(
-      useAuth.negocioElegido._id, //@ts-ignore
+      useAuth.negocioElegido._id,
       estado.personaSelect.nombre.id,
       estado.cargo,
-    );
-    await empleadoService.agregarRolEmpleado(
-      useAuth.negocioElegido._id,
-      nuevoEmpleado.persona._id,
-      estado.cargo,
+      estado.permisos,
     );
     NotifySucessCenter('Empleado agregado correctamente');
     obtenerTodosEmpleados();
@@ -107,20 +106,26 @@ export const useEmpleado = () => {
     cargo: string;
     personaID: string;
   }) => {
+    /**
+     * NO SE BORRA UN EMPLEADO - SE LE VENCE SUS PERMISOS Y LE BORRA CARGOS
+     */
     $q.dialog({
       title: `Eliminar ${row.nombre}`,
       message: '¿Está seguro de eliminar este empleado?',
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
-      await empleadoService.eliminarRolEmpleado(
-        useAuth.negocioElegido._id,
-        row.personaID,
-        row.cargo,
+      console.log(
+        'no se borra un empleado - se le vencen sus permisos y se borra sus cargos',
       );
-      NotifySucessCenter('Empleado eliminado');
-      obtenerTodosEmpleados();
+      // await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
+      // await empleadoService.eliminarRolEmpleado(
+      //   useAuth.negocioElegido._id,
+      //   row.personaID,
+      //   row.cargo,
+      // );
+      // NotifySucessCenter('Empleado eliminado');
+      // obtenerTodosEmpleados();
     });
   };
 

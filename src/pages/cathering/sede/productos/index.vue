@@ -77,11 +77,10 @@
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
-              color="orange"
+              color="primary"
               icon="visibility"
               round
               dense
-              flat
               padding="1px"
               size="11px"
               @click="mostrarInformacionProducto(props.row)"
@@ -90,27 +89,16 @@
             </q-btn>
 
             <q-btn
-              color="primary"
+              color="orange"
               icon="edit"
               round
               dense
-              flat
               padding="1px"
               size="10px"
               @click="esEditarProducto(props.row)"
             >
               <q-tooltip> Editar producto </q-tooltip></q-btn
             >
-            <q-btn
-              color="red"
-              icon="delete"
-              round
-              dense
-              flat
-              padding="3px"
-              size="10px"
-              @click="borrarProducto(props.row)"
-            />
           </q-td>
         </q-tr>
       </template>
@@ -118,8 +106,8 @@
   </div>
 
   <!--
-      DIALOG DOUBLECLICK
-      -->
+  DIALOG DOUBLECLICK
+  -->
 
   <q-dialog persistent>
     <q-card style="width: 200px" class="px-3 py-1">
@@ -137,21 +125,13 @@
           padding="4px 10px"
           @click="navegarDetalleProducto(row)"
         />
-        <q-btn
-          color="red"
-          label="Eliminar"
-          no-caps
-          style="font-size: 14px; width: 70px"
-          padding="4px 10px"
-          @click="borrarProducto(row)"
-        />
       </div>
     </q-card>
   </q-dialog>
 
   <!--
-      CREAR PRODUCTO BASICO
-      -->
+  CREAR PRODUCTO BASICO
+  -->
 
   <Dialog2
     v-model="estado.modal.isAddProduct"
@@ -170,10 +150,10 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
+            label="Nombre *"
             v-model="producto.datosBasicos.nombre"
+            class="w-full"
             type="text"
-            label="Nombre"
             filled
             required
             dense
@@ -190,10 +170,10 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-select
-            class="w-full"
-            label="Categoria"
+            label="Categoria *"
             v-model="producto.datosBasicos.categoria"
             :options="options"
+            class="w-full"
             map-options
             dense
             filled
@@ -228,7 +208,7 @@
           <q-file
             class="w-full"
             v-model="imagen"
-            label="Seleccionar imagen"
+            label="Imagen *"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -240,7 +220,7 @@
             required
           >
             <template v-slot:prepend>
-              <q-icon name="cloud_upload" @click.stop.prevent />
+              <q-icon name="photo_camera" @click.stop.prevent />
             </template>
           </q-file>
         </div>
@@ -273,8 +253,8 @@
   </Dialog2>
 
   <!-- 
-    VER INFORMACION PRODUCTO
-    -->
+  VER INFORMACION PRODUCTO
+  -->
 
   <Dialog2
     v-model="estado.modal.esMostrarInformacionProducto"
@@ -359,8 +339,8 @@
   </Dialog2>
 
   <!--
-     VER IMAGEN PRODUCTO
-   -->
+  VER IMAGEN PRODUCTO
+  -->
 
   <Dialog2 v-model="estado.modal.mostrarImagen" title="Imagen producto" no-btn>
     <template #inputsDialog>
@@ -375,15 +355,28 @@
 </template>
 
 <script setup>
+/**
+ * Layout
+ */
+
 definePageMeta({
   layout: 'cathering',
 });
+
+/**
+ * Imports
+ */
+
 import { ref, onMounted } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
 import { fechaMes } from '@/helpers/fecha';
 import { fechaHora } from '@/helpers/fecha';
 import Producto from '@/assets/img/producto.png';
+
+/**
+ * Refs
+ */
 
 // const isDoubleClick = ref(false);
 const row = ref('');
@@ -394,12 +387,15 @@ const options = ref([]);
 //   isDoubleClick.value = true;
 // };
 
+/**
+ * Services
+ */
+
 const {
   estado,
   getAllProductos,
   navegarDetalleProducto,
   modalAgregarProducto,
-  borrarProducto,
   navegarCrearOferta,
   getCategoria,
   producto,
@@ -410,6 +406,10 @@ const {
   mostrarInformacionProducto,
   verImagen,
 } = useProducts();
+
+/**
+ * Hooks
+ */
 
 onMounted(async () => {
   getAllProductos();

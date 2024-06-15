@@ -28,7 +28,7 @@
 import { menuListPunto } from '@/helpers/menuList';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
-import { pedidoService } from '~/services/punto/pedido.service';
+import { pedidoService } from '~/services/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';

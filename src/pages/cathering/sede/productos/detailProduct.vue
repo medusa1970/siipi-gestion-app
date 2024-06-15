@@ -52,6 +52,7 @@
       icon="query_stats"
       label="Proveedores"
     />
+    <q-tab name="acciones" icon="delete" label="Borrar" />
   </q-tabs>
 
   <q-tab-panels
@@ -88,13 +89,14 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
-            required
             label="Categoria"
-            id="two-level-select"
-            class="w-full"
             v-model="producto.datosBasicos.categoria"
             :options="options"
+            filled
+            required
+            options-cover
+            id="two-level-select"
+            class="w-full"
             map-options
           >
             <template v-slot:option="scope">
@@ -165,20 +167,19 @@
         </div>
       </div>
 
-      <div class="flex gap-4 justify-center">
+      <!--div class="flex gap-4 justify-center">
         <q-btn
           color="secondary"
           label="Cancelar"
           no-caps
           @click="cancelarEdicionProductoBasico"
-        />
-        <q-btn
-          color="primary"
-          label="Editar informacion"
-          no-caps
-          @click="editarProductoBasico"
-        />
-      </div>
+        /-->
+      <q-btn
+        color="primary"
+        label="Guardar"
+        no-caps
+        @click="editarProductoBasico"
+      />
     </q-tab-panel>
 
     <!-- 
@@ -232,10 +233,23 @@
             <q-td key="max" :props="props">
               {{ props.row.cantidadMax }}
             </q-td>
-            <q-td key="actions" :props="props" class="font-bold text-red-500">
-              <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
-            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
-              En desarrollo...
+            <q-td key="actions" :props="props">
+              <q-btn
+                color="orange"
+                icon="edit"
+                round
+                dense
+                padding="1px"
+                size="10px"
+                @click="
+                  estado.marcaProducto.variedadID = props.row._id;
+                  estado.marcaProducto.cantidadMin = props.row.cantidadMin;
+                  estado.marcaProducto.cantidadMax = props.row.cantidadMax;
+                  estado.modal.esEditarMarca = true;
+                "
+              >
+                <q-tooltip> Editar marca </q-tooltip></q-btn
+              >
             </q-td>
           </q-tr>
         </template>
@@ -268,10 +282,9 @@
           >
             <div style="flex-grow: 1">
               <q-select
-                color="primary"
+                label="Medida basica"
                 v-model="estado.medidaProducto.medida"
                 :options="estado.medidas"
-                label="Seleccionar medida basica"
                 option-label="nombre"
                 emit-value
                 use-input
@@ -341,10 +354,9 @@
         <div v-else>
           <div style="flex-grow: 1">
             <q-select
-              color="primary"
+              label="Medida basica"
               v-model="estado.medidaProducto.medida"
               :options="estado.medidas"
-              label="Seleccionar medida basica"
               option-label="nombre"
               emit-value
               use-input
@@ -417,13 +429,9 @@
   -->
 
     <q-tab-panel name="proveedores" animated>
-      <h1 class="font-extrabold text-xs">PROVEEDORES:</h1>
+      <p>Proveedores</p>
 
-      <Table
-        :rows="estado.proveedoresProducto"
-        :columns="proveedores"
-        style="border: 1px solid gray"
-      >
+      <Table :rows="estado.proveedoresProducto" :columns="proveedores">
         <template #dropdown>
           <q-btn
             color="primary"
@@ -441,6 +449,37 @@
           </q-td>
         </template>
       </Table>
+    </q-tab-panel>
+
+    <!-- 
+    PROVEEDORES 
+  -->
+
+    <q-tab-panel name="acciones" animated>
+      <p>Indica el motivo por cual desea borrar este producto:</p>
+
+      <!-- Comentario -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="producto.motivoEliminacion"
+            type="textarea"
+            label="Motivo"
+            filled
+          />
+        </div>
+        <div>
+          <BotonDetalle mensaje="Se avisará el jefe de logistica." />
+        </div>
+      </div>
+      <q-btn
+        color="primary"
+        label="Confirmar"
+        :disable="producto.motivoEliminacion === ''"
+        no-caps
+        @click="borrarProducto()"
+      />
     </q-tab-panel>
   </q-tab-panels>
 
@@ -483,7 +522,7 @@
     v-model="estado.modal.esCrearMarcaProducto"
     title="Registrar una marca"
     label-btn="Crear"
-    :handle-submit="editarProductoMarca"
+    :handle-submit="agregarProductoMarca"
   >
     <template #inputsDialog>
       <p>Se va registrar una marca para este producto.</p>
@@ -492,15 +531,16 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
-            required
             label="Seleccionar marca"
-            class="w-full"
             v-model="estado.marcaProducto.marca"
             :options="estado.marcas"
-            map-options
             option-label="nombre"
+            class="w-full"
+            map-options
+            options-cover
             dense
+            filled
+            required
           >
             <!--  
             fill-input
@@ -596,6 +636,56 @@
           <q-input
             class="w-full"
             v-model="estado.marcaProducto.maximo"
+            type="text"
+            label="Pedido Maximo"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+          />
+        </div>
+      </div>
+    </template>
+  </Dialog2>
+
+  <!-- PRODUCTO MARCA -->
+  <Dialog2
+    v-model="estado.modal.esEditarMarca"
+    title="Modificar una marca"
+    label-btn="Guardar"
+    :handle-submit="editarProductoMarca"
+  >
+    <template #inputsDialog>
+      <!-- input cantidadMin -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.marcaProducto.cantidadMin"
+            type="text"
+            label="Stock critico en almacen"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+          />
+        </div>
+      </div>
+
+      <!-- input cantidadMax -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.marcaProducto.cantidadMax"
             type="text"
             label="Pedido Maximo"
             filled
@@ -844,82 +934,61 @@
     :handle-submit="agregarProductoProveedor"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">PROVEEDORES</h1>
+      <p>Se va registrar un proveedor para este producto.</p>
 
-      <h1 class="font-bold text-xs mt-2">MARCA:</h1>
-      <q-select
-        color="primary"
-        v-model="estado.productoProveedor.marca"
-        :options="useProduct.producto.variedades"
-        label="Seleccionar marca"
-        :option-label="(option) => option.marca?.nombre"
-        emit-value
-        use-input
-        outlined
-        dense
-        input-debounce="0"
-        hide-selected
-        fill-input
-        onfocus="this.select()"
-        class="w-full"
-      >
-        <template v-slot:append>
-          <q-icon
-            style="margin: 0"
-            name="close"
-            @click.stop.prevent="brandSelected = ''"
-            class="cursor-pointer q-mr-md"
+      <!-- marca -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            class="w-full"
+            label="Seleccionar marca *"
+            v-model="estado.productoProveedor.marca"
+            :options="useProduct.producto.variedades"
+            :option-label="(option) => option.marca?.nombre"
+            emit-value
+            dense
+            filled
+            required
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No hay resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
           />
-        </template>
-        <template v-slot:prepend>
-          <q-icon name="branding_watermark" />
-        </template>
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No hay resultados
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
+        </div>
+      </div>
 
-      <h1 class="font-bold text-xs mt-2">PROVEEDOR:</h1>
-      <div class="!flex flex-row w-full gap-3 items-center">
-        <q-select
-          color="primary"
-          v-model="estado.productoProveedor.proveedor"
-          :options="estado.proveedores"
-          label="Seleccionar proveedor"
-          option-label="nombre"
-          emit-value
-          use-input
-          outlined
-          dense
-          input-debounce="0"
-          hide-selected
-          fill-input
-          onfocus="this.select()"
-          class="w-full"
-        >
-          <template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="brandSelected = ''"
-              class="cursor-pointer q-mr-md"
-            />
-          </template>
-          <template v-slot:prepend>
-            <q-icon name="branding_watermark" />
-          </template>
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">
-                No hay resultados
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
+      <!-- proveedor -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            label="Seleccionar proveedor *"
+            v-model="estado.productoProveedor.proveedor"
+            :options="estado.proveedores"
+            option-label="nombre"
+            class="w-full"
+            emit-value
+            dense
+            filled
+            required
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No hay resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
         <q-btn
           size="12px"
           icon="add"
@@ -928,41 +997,71 @@
           style="height: 16px"
           @click="estado.modal.esCrearProveedor = true"
         ></q-btn>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+          />
+        </div>
       </div>
 
-      <h1 class="font-bold text-xs mt-2">IDENTIFICATIVO:</h1>
-      <q-input
-        v-model="estado.productoProveedor.identificativo"
-        type="text"
-        label="Identificativo"
-        outlined
-        dense
-        clearable
-        required
-      />
-
-      <h1 class="font-bold text-xs mt-2">PRECIO BASE:</h1>
-      <div class="grid grid-cols-2 gap-2">
-        <q-input
-          v-model.number="estado.productoProveedor.precioConFactura"
-          type="text"
-          label="Precio con factura"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model.number="estado.productoProveedor.precioSinFactura"
-          type="text"
-          label="Precio sin factura"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- input Identificativo -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Identificativo"
+            v-model="estado.productoProveedor.identificativo"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+          />
+        </div>
       </div>
 
+      <!-- Sin factura -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Precio sin factura *"
+            v-model="estado.productoProveedor.precioSinFactura"
+            type="text"
+            class="w-full"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+          />
+        </div>
+      </div>
+
+      <!-- Con factura -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Precio con factura"
+            v-model="estado.productoProveedor.precioConFactura"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+          />
+        </div>
+      </div>
+      <!-- 
       <div class="flex justify-between items-center mt-2 mb-1">
         <h1 class="font-bold text-xs">PRECIOS POR MAYOR:</h1>
         <q-btn
@@ -1014,6 +1113,7 @@
           </tr>
         </tbody>
       </table>
+       -->
     </template>
   </Dialog2>
 
@@ -1225,7 +1325,7 @@ const {
   crearMarca,
   imagenMarca,
   imagePreviewMarca,
-  editarProductoMarca,
+  agregarProductoMarca,
   getAllProductos,
   buscarMedidas,
   crearMedida,
@@ -1239,6 +1339,7 @@ const {
   guardarMedidaBasica,
   cancelarEdicionProductoBasico,
   estadoInicial,
+  borrarProducto,
 } = useProducts();
 
 definePageMeta({

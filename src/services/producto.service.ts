@@ -1,4 +1,4 @@
-import { postDataGql } from '../../services/service.config';
+import { postDataGql } from './service.config';
 import gql from 'nuxt-graphql-client';
 import useClient from 'nuxt-graphql-client';
 
@@ -16,12 +16,40 @@ export const productoService = {
    * Borrar un producto
    * @returns Producto
    */
-  borrarProducto: async (productoID: string) => {
+  borrarProducto: async (
+    productoID: string,
+    comentario: string = 'test comentario borrar',
+    token: any,
+  ) => {
+    // borramos el producto
     const [producto] = await postDataGql(
       GqlBorrarProductos({
         busqueda: { _id: [productoID] },
       }),
     );
+    // en caso de que no se borró nada
+    if (!producto) {
+      console.log('no se elimino el producto', productoID);
+      return false;
+    }
+    // creamos la accion
+    const accion = await postDataGql(
+      GqlCrearAccion(
+        {
+          datos: {
+            // persona: va con el token
+            comentario: comentario,
+            producto: producto._id,
+            accion: 'borrado',
+          },
+          opciones: {
+            aceptarInexistentes: true,
+          },
+        },
+        token,
+      ),
+    );
+    // retornamos el producto
     return producto;
   },
 
@@ -251,6 +279,33 @@ export const productoService = {
   },
 
   /**
+   * Modificar un producto : agregar una marca
+   * @returns Producto
+   */
+  modificarProductosMarca: async (
+    productoID: string,
+    variedadID: string,
+    productoMarca: {
+      cantidadMax: number;
+      cantidadMin: number;
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosMarca({
+        busqueda: { _id: [productoID] },
+        datos: {
+          variedades: {
+            buscar: { _id: [variedadID] },
+            modificar: productoMarca,
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+
+  /**
    * Modificar un producto : agregar empaque
    * @returns Producto
    */
@@ -291,7 +346,11 @@ export const productoService = {
    * @returns Marca
    */
   buscarMarcas: async () => {
-    const marcas = postDataGql(GqlBuscarMarcas());
+    const marcas = postDataGql(
+      GqlBuscarMarcas({
+        opciones: { sort: 'nombre' },
+      }),
+    );
     return marcas;
   },
 

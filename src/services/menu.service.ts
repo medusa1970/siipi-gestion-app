@@ -1,4 +1,4 @@
-import { postDataGql } from '../../services/service.config';
+import { postDataGql } from './service.config';
 
 export const menuService = {
   /**
@@ -51,7 +51,7 @@ export const menuService = {
   obtenerCatalogos: async () => {
     const catalogoArbol = await postDataGql(
       GqlCatalogoArbol2({
-        busqueda: { nombre: 'CATALOGO RAIZ' },
+        busqueda: { nombre: ['CATALOGO RAIZ'] },
       }),
     );
     return catalogoArbol;

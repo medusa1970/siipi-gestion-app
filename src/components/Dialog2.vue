@@ -13,7 +13,7 @@
         />
       </div>
       <!-- <q-space /> -->
-      <q-form @submit="handleSubmit">
+      <q-form @submit.prevent="handleSubmit">
         <div class="my-1">
           <slot name="inputsDialog"></slot>
         </div>

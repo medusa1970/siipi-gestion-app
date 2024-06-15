@@ -1,5 +1,5 @@
 // import type { GqlPedidoIniciar } from '#gql';
-import { postDataGql } from '../../services/service.config';
+import { postDataGql } from './service.config';
 // import { authStore } from '@/stores/auth.store';
 
 // const useAuth = authStore();

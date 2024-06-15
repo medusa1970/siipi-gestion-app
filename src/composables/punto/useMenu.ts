@@ -1,5 +1,5 @@
 import { ref, reactive } from 'vue';
-import { menuService } from '@/services/punto/menu.service';
+import { menuService } from '~/services/menu.service';
 import { authStore } from '@/stores/auth.store';
 import { NotifySucessCenter } from '~/helpers/message.service';
 

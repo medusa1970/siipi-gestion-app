@@ -393,6 +393,34 @@ export const productoService = {
     return medida;
   },
   /**
+   * Modifica un empaque del producto
+   * @returns PRODUCTO
+   */
+  modificarEmpaqueProducto: async (
+    productoID: string,
+    empaqueID: string,
+    productoEmpaque: {
+      marca: string;
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosMedidaEmpaque({
+        busqueda: { _id: [productoID] },
+        datos: {
+          empaques: {
+            buscar: { _id: [empaqueID] },
+            modificar: productoEmpaque,
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+  /**
    * PROVEEDORES PRODUCTO
    */
   buscarEntidadesProveedor: async () =>
@@ -434,6 +462,30 @@ export const productoService = {
         datos: {
           servicios: {
             agregar: [servicio],
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return proveedor;
+  },
+  modificarProveedorProducto: async (
+    proveedorId: string,
+    servicioId: string,
+    servicio: {
+      marca: string;
+      identificativo: string;
+      precioConFactura: number;
+      precioSinFactura: number;
+    },
+  ) => {
+    const [proveedor] = await postDataGql(
+      GqlModificarProveedorServicio({
+        busqueda: { _id: [proveedorId] },
+        datos: {
+          servicios: {
+            buscar: { _id: [servicioId] },
+            modificar: servicio,
           },
         },
         opciones: { populate: true },

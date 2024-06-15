@@ -44,12 +44,14 @@ export const useProducts = () => {
       isAddProveedor: false,
       isDetailProduct: false,
       isAddEmpaque: false,
+      esEditarEmpaque: false,
       esCrearMarca: false,
       esCrearMedida: false,
       esCrearEmpaque: false,
       esMostrarInformacionProducto: false,
       mostrarImagen: false,
       esCrearProveedor: false,
+      esEditarProveedor: false,
       esCrearPrecio: false,
     },
     productos: [],
@@ -110,6 +112,7 @@ export const useProducts = () => {
         ],
       },
       empaque: {
+        _id: '',
         nombre: '',
         abreviacion: '',
       },
@@ -134,6 +137,7 @@ export const useProducts = () => {
     },
     proveedores: [],
     productoProveedor: {
+      servicioID: '',
       marca: {
         _id: '',
         nombre: '',
@@ -143,14 +147,14 @@ export const useProducts = () => {
         nombre: '',
       },
       identificativo: '',
-      precioConFactura: null,
-      precioSinFactura: null,
+      precioConFactura: 0,
+      precioSinFactura: 0,
       precios: [],
     },
     dataPrecio: {
       cantidadMin: null,
-      precioConFactura: null,
-      precioSinFactura: null,
+      precioConFactura: 0,
+      precioSinFactura: 0,
     },
     proveedoresProducto: [],
   });
@@ -576,25 +580,35 @@ export const useProducts = () => {
     selectedFileMarca.value = '';
     imagePreviewMarca.value = '';
   };
-
   const editarProductoMarca = async () => {
-    const productoModificado = productoService
-      .modificarProductosMarca(
-        useProduct.producto._id,
-        estado.marcaProducto.variedadID,
-        {
-          cantidadMin: parseInt(estado.marcaProducto.minimo),
-          cantidadMax: parseInt(estado.marcaProducto.maximo),
-        },
-      )
-      .then((res) => {
-        NotifySucessCenter('Marca creado correctamente');
-
-        estado.marcaProducto.variedadID = '';
-        estado.marcaProducto.minimo = '';
-        estado.marcaProducto.maximo = '';
-        estado.modal.esEditarMarca = false;
-      });
+    const marcaModificada = await productoService.modificarProductosMarca(
+      //@ts-expect-error
+      useProduct.producto._id,
+      estado.marcaProducto.variedadID,
+      {
+        cantidadMax: estado.marcaProducto.maximo,
+        cantidadMin: estado.marcaProducto.minimo,
+      },
+    );
+    if (marcaModificada) {
+      NotifySucessCenter('Marca modificado correctamente');
+      // encontrar index de la variedad modificada
+      const index = useProduct.producto.variedades.findIndex(
+        (v) => v._id === estado.marcaProducto.variedadID,
+      );
+      if (index !== -1) {
+        // encontrar objeto variedad modificada
+        const variedadModificada = marcaModificada.variedades.find(
+          (v: any) => v._id === estado.marcaProducto.variedadID,
+        );
+        // Si se encontró la variedad modificada, actualiza la variedad en el array con la variedad modificada
+        if (variedadModificada) {
+          useProduct.producto.variedades[index] = variedadModificada;
+        }
+      }
+      estado.modal.esEditarMarca = false;
+      estado.modal.esCrearMarcaProducto = false;
+    }
   };
 
   const editarProductoMedidaEmpaque = async () => {
@@ -705,8 +719,8 @@ export const useProducts = () => {
     estado.modal.esCrearPrecio = false;
     estado.dataPrecio = {
       cantidadMin: null,
-      precioConFactura: null,
-      precioSinFactura: null,
+      precioConFactura: 0,
+      precioSinFactura: 0,
     };
   };
 
@@ -718,8 +732,8 @@ export const useProducts = () => {
         marca: estado.productoProveedor.marca.marca._id,
         producto: useProduct.producto._id,
         identificativo: estado.productoProveedor.identificativo,
-        precioConFactura: Number(estado.productoProveedor.precioConFactura),
-        precioSinFactura: Number(estado.productoProveedor.precioSinFactura),
+        precioConFactura: estado.productoProveedor.precioConFactura,
+        precioSinFactura: estado.productoProveedor.precioSinFactura,
         preciosPorMayor: estado.productoProveedor.precios,
       },
     );
@@ -731,8 +745,8 @@ export const useProducts = () => {
     estado.productoProveedor.marca = null;
     estado.productoProveedor.proveedor = { _id: '', nombre: '' };
     estado.productoProveedor.identificativo = '';
-    estado.productoProveedor.precioConFactura = null;
-    estado.productoProveedor.precioSinFactura = null;
+    estado.productoProveedor.precioConFactura = 0;
+    estado.productoProveedor.precioSinFactura = 0;
     estado.productoProveedor.precios = [];
   };
 
@@ -774,6 +788,135 @@ export const useProducts = () => {
     producto.datosBasicos.nombre = estadoInicial.datosBasicos.nombre;
     producto.datosBasicos.categoria = estadoInicial.datosBasicos.categoria;
     producto.datosBasicos.comentario = estadoInicial.datosBasicos.comentario;
+  };
+
+  const limpiarCamposMarca = () => {
+    estado.marcaProducto.marca = { _id: '', nombre: '' };
+    estado.marcaProducto.minimo = '';
+    estado.marcaProducto.maximo = '';
+    imagenMarca.value = null;
+    selectedFileMarca.value = '';
+    imagePreviewMarca.value = '';
+  };
+
+  const abrirModalEditarMarca = (fila: any) => {
+    estado.modal.esEditarMarca = true;
+    estado.modal.esCrearMarcaProducto = true;
+    // Escribiendo valores en el reactivo
+    estado.marcaProducto.marca = fila.marca;
+    imagePreviewMarca.value = fila.imagen.cloudinaryUrl;
+    estado.marcaProducto.minimo = fila.cantidadMin;
+    estado.marcaProducto.maximo = fila.cantidadMax;
+    estado.marcaProducto.variedadID = fila._id;
+  };
+
+  const limpiarCamposEmpaque = () => {
+    estado.medidaProducto.marca = { _id: '', nombre: '' };
+    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
+    estado.medidaProducto.cantidad = 0;
+    estado.dataEmpaque = { nombre: '', abreviacion: '' };
+  };
+  const abrirModalEditarEmpaque = (fila: any) => {
+    console.log(fila);
+    estado.modal.esEditarEmpaque = true;
+    estado.modal.isAddEmpaque = true;
+
+    console.log(estado.medidaProducto);
+    estado.medidaProducto.marca = fila.marca;
+    estado.medidaProducto.cantidad = fila.cantidad;
+    estado.medidaProducto.empaque = {
+      _id: fila._id,
+      nombre: fila.nombre,
+      abreviacion: fila.abreviacion,
+    };
+  };
+  const editarEmpaqueProducto = async () => {
+    const productoEmpaque = await productoService.modificarEmpaqueProducto(
+      //@ts-expect-error
+      useProduct.producto._id,
+      estado.medidaProducto.empaque._id,
+      {
+        marca: estado.medidaProducto.marca._id,
+        cantidad: estado.medidaProducto.cantidad,
+        nombre: estado.medidaProducto.empaque.nombre,
+        abreviacion: estado.medidaProducto.empaque.abreviacion,
+      },
+    );
+    if (productoEmpaque) {
+      NotifySucessCenter('Marca modificado correctamente');
+      // encontrar index de la variedad modificada
+      const index = useProduct.producto.empaques.findIndex(
+        (e: any) => e._id === estado.medidaProducto.empaque._id,
+      );
+      console.log(index);
+      if (index !== -1) {
+        // encontrar objeto variedad modificada
+        const empaqueModificada = productoEmpaque.empaques.find(
+          (v: any) => v._id === estado.medidaProducto.empaque._id,
+        );
+        console.log(empaqueModificada);
+        // Si se encontró la variedad modificada, actualiza la variedad en el array con la variedad modificada
+        if (empaqueModificada) {
+          useProduct.producto.empaques[index] = empaqueModificada;
+        }
+      }
+      estado.modal.esEditarEmpaque = false;
+      estado.modal.isAddEmpaque = false;
+    }
+  };
+
+  const abrirModalEditarProveedor = (fila: any) => {
+    estado.modal.esEditarProveedor = true;
+    estado.modal.isAddProveedor = true;
+
+    //@ts-expect-error
+    estado.productoProveedor.marca.marca = fila.servicios[0]?.marca;
+    estado.productoProveedor.identificativo = fila.servicios[0]?.identificativo;
+    estado.productoProveedor.proveedor = {
+      _id: fila._id,
+      nombre: fila.nombre,
+    };
+    estado.productoProveedor.precioConFactura =
+      fila.servicios[0]?.precioConFactura;
+    estado.productoProveedor.precioSinFactura =
+      fila.servicios[0]?.precioSinFactura;
+    estado.productoProveedor.servicioID = fila.servicios[0]?._id;
+  };
+  const editarProveedorProducto = async () => {
+    const servicioProveedor = await productoService.modificarProveedorProducto(
+      estado.productoProveedor.proveedor._id,
+      estado.productoProveedor.servicioID,
+      {
+        //@ts-expect-error
+        marca: estado.productoProveedor.marca.marca._id,
+        identificativo: estado.productoProveedor.identificativo,
+        precioConFactura: estado.productoProveedor.precioConFactura,
+        precioSinFactura: estado.productoProveedor.precioSinFactura,
+      },
+    );
+    if (servicioProveedor) {
+      NotifySucessCenter('Marca modificado correctamente');
+      estado.proveedoresProducto.forEach((proveedor) => {
+        if (proveedor._id === servicioProveedor._id) {
+          console.log(proveedor);
+          proveedor.servicios.forEach((servicio, index) => {
+            if (servicio._id === servicioProveedor.servicios[0]._id) {
+              proveedor.servicios[index] = servicioProveedor.servicios[0];
+            }
+          });
+        }
+      });
+    }
+    estado.modal.esEditarProveedor = false;
+    estado.modal.isAddProveedor = false;
+  };
+  const limpiarCamposProveedor = () => {
+    estado.productoProveedor.marca = { _id: '', nombre: '' };
+    estado.productoProveedor.proveedor = { _id: '', nombre: '' };
+    estado.productoProveedor.identificativo = '';
+    estado.productoProveedor.precioConFactura = 0;
+    estado.productoProveedor.precioSinFactura = 0;
+    estado.productoProveedor.precios = [];
   };
 
   //WATCH
@@ -863,5 +1006,13 @@ export const useProducts = () => {
     guardarMedidaBasica,
     cancelarEdicionProductoBasico,
     estadoInicial,
+    abrirModalEditarMarca,
+    limpiarCamposMarca,
+    abrirModalEditarEmpaque,
+    editarEmpaqueProducto,
+    limpiarCamposEmpaque,
+    abrirModalEditarProveedor,
+    editarProveedorProducto,
+    limpiarCamposProveedor,
   };
 };

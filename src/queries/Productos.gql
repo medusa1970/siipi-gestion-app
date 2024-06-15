@@ -36,6 +36,7 @@ query buscarProductos(
       }
     }
     empaques {
+      _id
       nombre
       abreviacion
       marca {

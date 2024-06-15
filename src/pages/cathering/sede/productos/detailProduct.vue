@@ -201,7 +201,13 @@
             icon="add"
             label="Registrar una marca"
             no-caps
-            @click="estado.modal.esCrearMarcaProducto = true"
+            @click="
+              () => {
+                limpiarCamposMarca();
+                estado.modal.esCrearMarcaProducto = true;
+                estado.modal.esEditarMarca = false;
+              }
+            "
           />
         </template>
         <template #rows-badge="{ props }">
@@ -241,12 +247,7 @@
                 dense
                 padding="1px"
                 size="10px"
-                @click="
-                  estado.marcaProducto.variedadID = props.row._id;
-                  estado.marcaProducto.cantidadMin = props.row.cantidadMin;
-                  estado.marcaProducto.cantidadMax = props.row.cantidadMax;
-                  estado.modal.esEditarMarca = true;
-                "
+                @click="abrirModalEditarMarca(props.row)"
               >
                 <q-tooltip> Editar marca </q-tooltip></q-btn
               >
@@ -408,15 +409,29 @@
                 label="Agregar empaques"
                 no-caps
                 :disable="useProduct.producto.variedades?.length === 0"
-                @click="estado.modal.isAddEmpaque = true"
+                @click="
+                  () => {
+                    limpiarCamposEmpaque();
+                    estado.modal.esEditarEmpaque = false;
+                    estado.modal.isAddEmpaque = true;
+                  }
+                "
               />
             </template>
 
             <template #body-cell-actions="{ props }">
               <q-td :props="props" class="font-bold text-red-500">
-                <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
-            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
-                En desarrollo...
+                <q-btn
+                  color="orange"
+                  icon="edit"
+                  round
+                  dense
+                  padding="1px"
+                  size="10px"
+                  @click="abrirModalEditarEmpaque(props.row)"
+                >
+                  <q-tooltip> Editar empaque </q-tooltip></q-btn
+                >
               </q-td>
             </template>
           </Table>
@@ -438,14 +453,28 @@
             icon="add"
             label="Agregar proveedores"
             no-caps
-            @click="estado.modal.isAddProveedor = true"
+            @click="
+              () => {
+                limpiarCamposProveedor();
+                estado.modal.esEditarProveedor = false;
+                estado.modal.isAddProveedor = true;
+              }
+            "
           />
         </template>
         <template #body-cell-actions="{ props }">
           <q-td :props="props" class="font-bold text-red-500">
-            <!-- <q-btn color="primary" icon="edit" dense flat round size="13px" />
-            <q-btn color="red" icon="delete" dense flat round size="13px" /> -->
-            En desarrollo...
+            <q-btn
+              color="orange"
+              icon="edit"
+              round
+              dense
+              padding="1px"
+              size="10px"
+              @click="abrirModalEditarProveedor(props.row)"
+            >
+              <q-tooltip> Editar proveedor </q-tooltip></q-btn
+            >
           </q-td>
         </template>
       </Table>
@@ -520,9 +549,11 @@
   <!-- PRODUCTO MARCA -->
   <Dialog2
     v-model="estado.modal.esCrearMarcaProducto"
-    title="Registrar una marca"
-    label-btn="Crear"
-    :handle-submit="agregarProductoMarca"
+    :title="estado.modal.esEditarMarca ? 'Modificar marca' : 'Registrar marca'"
+    :label-btn="estado.modal.esEditarMarca ? 'Modificar' : 'Crear'"
+    :handle-submit="
+      estado.modal.esEditarMarca ? editarProductoMarca : agregarProductoMarca
+    "
   >
     <template #inputsDialog>
       <p>Se va registrar una marca para este producto.</p>
@@ -541,6 +572,7 @@
             dense
             filled
             required
+            :disable="estado.modal.esEditarMarca"
           >
             <!--  
             fill-input
@@ -597,6 +629,7 @@
             hint="Tamaño máximo de imagen 540KB"
             clearable
             dense
+            :disable="estado.modal.esEditarMarca"
           >
             <template v-slot:prepend>
               <q-icon name="cloud_upload" @click.stop.prevent />
@@ -615,7 +648,7 @@
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
-            v-model="estado.marcaProducto.minimo"
+            v-model.number="estado.marcaProducto.minimo"
             type="text"
             label="Stock critico en almacen"
             filled
@@ -635,7 +668,7 @@
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
-            v-model="estado.marcaProducto.maximo"
+            v-model.number="estado.marcaProducto.maximo"
             type="text"
             label="Pedido Maximo"
             filled
@@ -653,14 +686,13 @@
   </Dialog2>
 
   <!-- PRODUCTO MARCA -->
-  <Dialog2
+  <!-- <Dialog2
     v-model="estado.modal.esEditarMarca"
     title="Modificar una marca"
     label-btn="Guardar"
     :handle-submit="editarProductoMarca"
   >
     <template #inputsDialog>
-      <!-- input cantidadMin -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
@@ -680,7 +712,6 @@
         </div>
       </div>
 
-      <!-- input cantidadMax -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
@@ -700,7 +731,7 @@
         </div>
       </div>
     </template>
-  </Dialog2>
+  </Dialog2> -->
 
   <!-- 
     MEDIDA & EMPAQUE 
@@ -708,9 +739,15 @@
 
   <Dialog2
     v-model="estado.modal.isAddEmpaque"
-    title="Agregar empaque"
-    label-btn="Crear"
-    :handle-submit="editarProductoMedidaEmpaque"
+    :title="
+      estado.modal.esEditarEmpaque ? 'Modificar empaque' : 'Agregar empaque'
+    "
+    :label-btn="estado.modal.esEditarEmpaque ? 'Modificar' : 'Crear'"
+    :handle-submit="
+      estado.modal.esEditarEmpaque
+        ? editarEmpaqueProducto
+        : editarProductoMedidaEmpaque
+    "
   >
     <template #inputsDialog>
       <!--   <h1 class="font-bold text-xs mt-2">MARCA:</h1>
@@ -856,7 +893,10 @@
             option-label="nombre"
             map-options
             dense
-            :disable="estado.medidaProducto.medida.nombre === ''"
+            :disable="
+              estado.medidaProducto.medida.nombre === '' ||
+              estado.modal.esEditarEmpaque
+            "
           >
             <template v-slot:option="scope">
               <q-item
@@ -909,7 +949,7 @@
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
-            v-model="estado.medidaProducto.cantidad"
+            v-model.number="estado.medidaProducto.cantidad"
             type="text"
             label="Cantidad en unidades básicas"
             filled
@@ -929,9 +969,17 @@
   <!-- PRODUCTO PROVEEDOR -->
   <Dialog2
     v-model="estado.modal.isAddProveedor"
-    title="Agregar proveedores"
-    label-btn="Crear"
-    :handle-submit="agregarProductoProveedor"
+    :title="
+      estado.modal.esEditarProveedor
+        ? 'Modificar proveedor'
+        : 'Agregar proveedor'
+    "
+    :label-btn="estado.modal.esEditarProveedor ? 'Modificar' : 'Crear'"
+    :handle-submit="
+      estado.modal.esEditarProveedor
+        ? editarProveedorProducto
+        : agregarProductoProveedor
+    "
   >
     <template #inputsDialog>
       <p>Se va registrar un proveedor para este producto.</p>
@@ -979,6 +1027,7 @@
             dense
             filled
             required
+            :disable="estado.modal.esEditarProveedor"
           >
             <template v-slot:no-option>
               <q-item>
@@ -1028,7 +1077,7 @@
         <div style="flex-grow: 1">
           <q-input
             label="Precio sin factura *"
-            v-model="estado.productoProveedor.precioSinFactura"
+            v-model.number="estado.productoProveedor.precioSinFactura"
             type="text"
             class="w-full"
             filled
@@ -1048,7 +1097,7 @@
         <div style="flex-grow: 1">
           <q-input
             label="Precio con factura"
-            v-model="estado.productoProveedor.precioConFactura"
+            v-model.number="estado.productoProveedor.precioConFactura"
             type="text"
             class="w-full"
             filled
@@ -1340,6 +1389,15 @@ const {
   cancelarEdicionProductoBasico,
   estadoInicial,
   borrarProducto,
+  abrirModalEditarMarca,
+  limpiarCamposMarca,
+  editarEmpaqueProducto,
+  abrirModalEditarEmpaque,
+  limpiarCamposEmpaque,
+  abrirModalEditarProveedor,
+  editarProveedorProducto,
+  limpiarCamposProveedor,
+  editarProductoMarca,
 } = useProducts();
 
 definePageMeta({

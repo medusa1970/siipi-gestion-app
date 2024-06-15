@@ -575,7 +575,6 @@
             options-cover
             dense
             filled
-            required
             :disable="estado.modal.esEditarMarca"
           >
             <!--  
@@ -656,7 +655,6 @@
             class="w-full"
             v-model.number="estado.marcaProducto.minimo"
             type="text"
-            label="Stock critico en almacen"
             filled
             dense
           />
@@ -677,7 +675,6 @@
             class="w-full"
             v-model.number="estado.marcaProducto.maximo"
             type="text"
-            label="Pedido Maximo"
             filled
             dense
           />
@@ -960,7 +957,6 @@
             class="w-full"
             v-model.number="estado.medidaProducto.cantidad"
             type="text"
-            label="Cantidad en unidades básicas"
             filled
             dense
           />
@@ -1043,7 +1039,6 @@
             class="w-full"
             dense
             filled
-            required
             :disable="estado.modal.esEditarProveedor"
           >
             <template v-slot:no-option>

@@ -1,6 +1,6 @@
 import { reactive, onMounted, ref, watch } from 'vue';
 import { NotifySucessCenter } from '~/helpers/message.service';
-import { ofertaService } from '~/services/marca/ofertas.service';
+import { ofertaService } from '~/services/ofertas.service';
 import { ofertaStore } from '@/stores/oferta.store';
 import { useRouter } from 'vue-router';
 import { ca, da, es, id } from 'date-fns/locale';

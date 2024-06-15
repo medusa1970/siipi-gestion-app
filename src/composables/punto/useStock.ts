@@ -4,7 +4,7 @@ import { NotifySucess, NotifyError } from '@/helpers/message.service';
 import { authStore } from '@/stores/auth.store';
 import { productStore } from '@/stores/producto.store';
 import { stockService } from '~/services/stock.service';
-import { ofertaService } from '~/services/marca/ofertas.service';
+import { ofertaService } from '~/services/ofertas.service';
 import { menuService } from '~/services/menu.service';
 
 type ProductoEnAlerta = {

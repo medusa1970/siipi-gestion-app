@@ -12,7 +12,7 @@ import { authStore } from '@/stores/auth.store';
 import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/menu.service';
-import { ofertaService } from '~/services/marca/ofertas.service';
+import { ofertaService } from '~/services/ofertas.service';
 import { stockService } from '~/services/stock.service';
 import { authService } from '~/services/auth.service';
 import { extraer } from '../../helpers/leo';

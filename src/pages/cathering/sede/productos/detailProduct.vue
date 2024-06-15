@@ -955,7 +955,7 @@
             label="Cantidad en unidades básicas *"
             required
             class="w-full"
-            v-model.number="estado.medidaProducto.cantidad"
+            v-model.number="estado.medidaProducto.empaque.cantidad"
             type="text"
             filled
             dense

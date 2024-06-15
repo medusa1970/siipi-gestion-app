@@ -318,6 +318,7 @@ export const productoService = {
       cantidad: number;
     },
   ) => {
+    console.log(productoID, empaque);
     const [producto] = await postDataGql(
       GqlModificarProductosMedidaEmpaque({
         busqueda: { _id: [productoID] },

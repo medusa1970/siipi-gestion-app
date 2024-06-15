@@ -1,48 +1,9 @@
--- REUNION CON LOS ADMINS HOY --
-
-Todo:
-  - textos informacion
-  - TODO sin marca en el dataset
-  - main
-
-Registrar marca:
-  - imagen required no avisa
-  - config select para escribir
-  - bug modal2 no cierra + no se guarda en la db
-  - campos persistentes despues de un exito
-
-Crear producto:
-  - imagen required no avisa
-  - categoria required no avisa
-  - boton X sobre imagen solo vacia el campo pero no quita la imagen
-
-Datos basicos:
-  - imagen required no avisa
-  - confirmacion tras hacer click en el boton
-
-
--- GLOBAL --
-
-- refactor consultas
-- refactor pages/cathering/sede
-- refactor "prohibido"
-
-
-
-eliminar producto > motivo
-editar min y max, o bien autocompletar 13%tva
-el buscador de productos no responde "CAF"
-no se acepta creacion de proveedor
-no permite subir imagen ?
-imagen del producto con su marca
-
-
 CSS para productos incompletos
 Categoria sale como "object Object" al reinicializar
 averiguar si la foto vuelve a subir o no al editar
 permisos borrar
-agregar marca acepta letras en vez de numeros
 required on selects no funcionan due to estado default state
-boton + seleccion por defecto para todos
-empaque kilo no pone 1000
 poder agregar empaques sin tipo de empaque
+empleado editar
+accion producto
+quitar la consulta buscarMarcas al crear marca, igual empaque proveedor etc

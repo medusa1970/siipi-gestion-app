@@ -65,12 +65,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
+            label="Nombre *"
+            required
             v-model="producto.datosBasicos.nombre"
             type="text"
-            label="Nombre"
+            class="w-full"
             filled
-            required
           />
         </div>
         <div>
@@ -84,11 +84,11 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Categoria"
+            label="Categoria*"
+            required
             v-model="producto.datosBasicos.categoria"
             :options="options"
             filled
-            required
             options-cover
             id="two-level-select"
             class="w-full"
@@ -123,7 +123,7 @@
           <q-file
             class="w-full"
             v-model="imagen"
-            label="Seleccionar imagen"
+            label="Imagen"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -534,7 +534,8 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Seleccionar marca"
+            label="Marca *"
+            required
             v-model="estado.marcaProducto.marca"
             :options="estado.marcas"
             option-label="nombre"
@@ -543,7 +544,6 @@
             options-cover
             dense
             filled
-            required
           >
             <!--  
             fill-input
@@ -591,7 +591,7 @@
           <q-file
             class="w-full"
             v-model="imagenMarca"
-            label="Seleccionar imagen"
+            label="Imagen"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -617,12 +617,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.minimo"
-            type="text"
-            label="Stock minimo antes de hacer pedido"
-            filled
+            label="Stock minimo antes de hacer pedido *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.minimo"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -637,12 +637,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.maximo"
-            type="text"
-            label="Cantidad max en un pedido"
-            filled
+            label="Cantidad max en un pedido *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.maximo"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -667,12 +667,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.cantidadMin"
-            type="text"
-            label="Stock critico en almacen"
-            filled
+            label="Stock minimo antes de hacer pedido *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.cantidadMin"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -687,12 +687,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.cantidadMax"
-            type="text"
-            label="Pedido Maximo"
-            filled
+            label="Pedido Maximo *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.cantidadMax"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -808,9 +808,9 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
+            label="Marca *"
             required
-            label="Seleccionar marca"
+            filled
             class="w-full"
             v-model="estado.medidaProducto.marca"
             :options="
@@ -851,9 +851,9 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
+            label="Empaque *"
             required
-            label="Seleccionar empaque"
+            filled
             class="w-full"
             v-model="estado.medidaProducto.empaque"
             :options="estado.medidaProducto.medida.tipoEmpaques"
@@ -892,12 +892,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Abreviacion *"
+            required
             class="w-full"
             v-model="estado.medidaProducto.empaque.abreviacion"
             type="text"
-            label="Abreviacion"
             filled
-            required
             dense
           />
         </div>
@@ -912,12 +912,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model.number="estado.medidaProducto.empaque.cantidad"
-            type="text"
-            label="Cantidad en unidades básicas"
-            filled
+            label="Cantidad en unidades básicas *"
             required
+            class="w-full"
+            v-model.number="estado.medidaProducto.cantidad"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -934,47 +934,18 @@
   <Dialog2
     v-model="estado.modal.isAddProveedor"
     title="Agregar proveedores"
-    label-btn="Crear"
+    label-btn="Agregar"
     :handle-submit="agregarProductoProveedor"
   >
     <template #inputsDialog>
       <p>Se va registrar un proveedor para este producto.</p>
 
-      <!-- marca -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-select
-            class="w-full"
-            label="Seleccionar marca *"
-            v-model="estado.productoProveedor.marca"
-            :options="useProduct.producto.variedades"
-            :option-label="(option) => option.marca?.nombre"
-            emit-value
-            dense
-            filled
-            required
-          >
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
-          />
-        </div>
-      </div>
-
       <!-- proveedor -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Seleccionar proveedor *"
+            label="Proveedor *"
+            required
             v-model="estado.productoProveedor.proveedor"
             :options="estado.proveedores"
             option-label="nombre"
@@ -982,7 +953,6 @@
             emit-value
             dense
             filled
-            required
           >
             <template v-slot:no-option>
               <q-item>
@@ -1003,7 +973,37 @@
         ></q-btn>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="Elija un proveedor o crealo si no existe con el boton [+]"
+          />
+        </div>
+      </div>
+
+      <!-- marca -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            label="Marca *"
+            required
+            v-model="estado.productoProveedor.marca"
+            :options="useProduct.producto.variedades"
+            :option-label="(option) => option.marca?.nombre"
+            emit-value
+            class="w-full"
+            dense
+            filled
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No hay resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione la marca que vende este proveedor. Si la marca no existe, agregue la en la zona MARCAS."
           />
         </div>
       </div>
@@ -1022,7 +1022,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="La referencia del producto en el catalogo y las facturas del proveedor."
           />
         </div>
       </div>
@@ -1032,17 +1032,17 @@
         <div style="flex-grow: 1">
           <q-input
             label="Precio sin factura *"
-            v-model="estado.productoProveedor.precioSinFactura"
-            type="text"
+            required
+            v-model.number="estado.productoProveedor.precioSinFactura"
+            type="number"
             class="w-full"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Use el punto '.' como separador de decimales."
           />
         </div>
       </div>
@@ -1052,8 +1052,8 @@
         <div style="flex-grow: 1">
           <q-input
             label="Precio con factura"
-            v-model="estado.productoProveedor.precioConFactura"
-            type="text"
+            v-model.number="estado.productoProveedor.precioConFactura"
+            type="number"
             class="w-full"
             filled
             dense
@@ -1061,7 +1061,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Use el punto '.' como separador de decimales."
           />
         </div>
       </div>
@@ -1138,12 +1138,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Nombre *"
+            required
             class="w-full"
             v-model="estado.marcaProducto.marca.nombre"
             type="text"
-            label="Nombre"
             filled
-            required
             dense
           />
         </div>
@@ -1170,13 +1170,13 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
+          label="Nombre *"
+          required
           v-model="estado.dataMedida.nombre"
           type="text"
-          label="Nombre medida"
           outlined
           dense
           clearable
-          required
         />
       </div>
     </template>
@@ -1199,12 +1199,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Nombre *"
+            required
             class="w-full"
             v-model="estado.dataEmpaque.nombre"
             type="text"
-            label="Nombre"
             filled
-            required
             dense
           />
         </div>
@@ -1214,12 +1214,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Abreviacion *"
+            required
             class="w-full"
             v-model="estado.dataEmpaque.abreviacion"
             type="text"
-            label="Abreviacion"
             filled
-            required
             dense
           />
         </div>
@@ -1236,7 +1236,7 @@
           <q-input
             class="w-full"
             v-model.number="estado.dataEmpaque.cantidad"
-            type="text"
+            type="number"
             label="cantidad en unidades basicas"
             filled
             dense
@@ -1259,29 +1259,40 @@
     :handle-submit="crearProveedor"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-        CREAR PROVEEDOR
-      </h1>
+      <p>Se agregará un proveedor a la lista global de proveedores.</p>
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Nombre *"
+            required
+            v-model="estado.dataProveedor.nombre"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+      </div>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          v-model="estado.dataProveedor.nombre"
-          type="text"
-          label="Nombre proveedor"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model="estado.dataProveedor.descripcion"
-          type="text"
-          label="Descripcion"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- descripcion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Descripcion *"
+            required
+            v-model="estado.dataProveedor.descripcion"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          />
+        </div>
       </div>
     </template>
   </Dialog2>
@@ -1298,31 +1309,30 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
+          label="Cantidad *"
+          required
           v-model.number="estado.dataPrecio.cantidadMin"
-          type="text"
-          label="Cantidad"
+          type="number"
           outlined
           dense
           clearable
+        />
+        <q-input
+          label="Precio sin factura *"
           required
+          v-model.number="estado.dataPrecio.precioSinFactura"
+          type="number"
+          outlined
+          dense
+          clearable
         />
         <q-input
           v-model.number="estado.dataPrecio.precioConFactura"
-          type="text"
+          type="number"
           label="Precio con factura"
           outlined
           dense
           clearable
-          required
-        />
-        <q-input
-          v-model.number="estado.dataPrecio.precioSinFactura"
-          type="text"
-          label="Precio sin factura"
-          outlined
-          dense
-          clearable
-          required
         />
       </div>
     </template>

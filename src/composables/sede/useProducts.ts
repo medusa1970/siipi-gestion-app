@@ -93,8 +93,8 @@ export const useProducts = () => {
         _id: '',
         nombre: '',
       },
-      minimo: '',
-      maximo: '',
+      minimo: 0,
+      maximo: 0,
       variedadID: '',
     },
     medidas: [],
@@ -557,8 +557,8 @@ export const useProducts = () => {
       useProduct.producto._id,
       {
         marca: estado.marcaProducto.marca._id,
-        cantidadMin: parseInt(estado.marcaProducto.minimo),
-        cantidadMax: parseInt(estado.marcaProducto.maximo),
+        cantidadMin: estado.marcaProducto.minimo,
+        cantidadMax: estado.marcaProducto.maximo,
         imagen: {
           data: imagenCvt,
           mimetype: 'image/png',
@@ -573,8 +573,8 @@ export const useProducts = () => {
 
     estado.modal.esCrearMarcaProducto = false;
     estado.marcaProducto.marca = { _id: '', nombre: '' };
-    estado.marcaProducto.minimo = '';
-    estado.marcaProducto.maximo = '';
+    estado.marcaProducto.minimo = 0;
+    estado.marcaProducto.maximo = 0;
     imagenMarca.value = null;
     selectedFileMarca.value = '';
     imagePreviewMarca.value = '';
@@ -586,16 +586,16 @@ export const useProducts = () => {
         useProduct.producto._id,
         estado.marcaProducto.variedadID,
         {
-          cantidadMin: parseInt(estado.marcaProducto.minimo),
-          cantidadMax: parseInt(estado.marcaProducto.maximo),
+          cantidadMin: estado.marcaProducto.minimo,
+          cantidadMax: estado.marcaProducto.maximo,
         },
       )
       .then((res) => {
         NotifySucessCenter('Marca creado correctamente');
 
         estado.marcaProducto.variedadID = '';
-        estado.marcaProducto.minimo = '';
-        estado.marcaProducto.maximo = '';
+        estado.marcaProducto.minimo = 0;
+        estado.marcaProducto.maximo = 0;
         estado.modal.esEditarMarca = false;
       });
   };
@@ -675,6 +675,10 @@ export const useProducts = () => {
       estado.medidaProducto.medida._id,
       estado.dataEmpaque,
     );
+    const empaque =
+      medidaConEmpaqueNuevo.tipoEmpaques[
+        medidaConEmpaqueNuevo.tipoEmpaques.length - 1
+      ];
 
     if (medidaConEmpaqueNuevo) {
       NotifySucessCenter('Empaque creado correctamente');
@@ -683,13 +687,13 @@ export const useProducts = () => {
       estado.medidaProducto.medida.tipoEmpaques.push(nuevoEmpaque);
     }
 
-    estado.modal.esCrearEmpaque = false;
     estado.medidaProducto.empaque = {
-      nombre: '',
-      abreviacion: '',
-      cantidad: '',
+      nombre: empaque.nombre,
+      abreviacion: empaque.abreviacion,
+      cantidad: empaque.cantidad,
     };
-    estado.dataEmpaque = { nombre: '', abreviacion: '', cantidad: '' };
+    estado.dataEmpaque = { nombre: '', abreviacion: '', cantidad: 0 };
+    estado.modal.esCrearEmpaque = false;
   };
   // PROVEEDORES
   const buscarProveedores = async () => {
@@ -697,16 +701,18 @@ export const useProducts = () => {
     estado.proveedores = proveedores;
   };
   const crearProveedor = async () => {
-    const res = await productoService.crearEntidadProveedor({
+    const [proveedorCreado] = await productoService.crearEntidadProveedor({
       nombre: estado.dataProveedor.nombre,
       descripcion: estado.dataProveedor.descripcion,
     });
-    if (res) {
+    if (proveedorCreado) {
       NotifySucessCenter('Proveedor creado correctamente');
       estado.dataProveedor.nombre = '';
       estado.dataProveedor.descripcion = ''; //@ts-ignore
-      estado.proveedores.push(res[0]);
+      estado.proveedores.push(proveedorCreado);
     }
+    console.log(proveedorCreado);
+    estado.productoProveedor.proveedor = proveedorCreado;
     estado.modal.esCrearProveedor = false;
   };
 

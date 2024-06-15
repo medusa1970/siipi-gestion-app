@@ -34,12 +34,7 @@
     </div>
         -->
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
-    <q-tab
-      v-if="soloAlmacen"
-      name="marcas"
-      icon="group"
-      label="Marcas Existentes"
-    />
+    <q-tab v-if="soloAlmacen" name="marcas" icon="group" label="Marcas" />
     <q-tab
       v-if="soloAlmacenAdquisicion"
       name="medidas"
@@ -261,7 +256,10 @@
   -->
 
     <q-tab-panel name="medidas" animated>
-      <p>Medida básica:</p>
+      <p>
+        La medida básica es la forma en que se maneja el producto (por peso,
+        unidad, etc).
+      </p>
       <div class="flex flex-col mt-3 mb-3">
         <div
           v-if="
@@ -276,6 +274,7 @@
               basica.
             </p>
           </div>
+
           <div
             class="flex"
             style="justify-content: space-between; margin: 10px 0"
@@ -330,7 +329,7 @@
 
             <div>
               <BotonDetalle
-                mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+                mensaje="Seleccione una marca entre todas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
               />
             </div>
 
@@ -394,6 +393,10 @@
         <div v-if="estado.medidaProducto.medida">
           <br />
 
+          <p>
+            Los empaques son la formas que llegan en producto en el almacén, por
+            ejemplo en tira o paquete de tal o tal marca.
+          </p>
           <div v-if="useProduct.producto.variedades?.length === 0">
             <p>
               Para poder agregar empaques, primero debes agregar por lo menos
@@ -405,7 +408,7 @@
               <q-btn
                 color="primary"
                 icon="add"
-                label="Agregar empaques"
+                label="Agregar empaque"
                 no-caps
                 :disable="useProduct.producto.variedades?.length === 0"
                 @click="estado.modal.isAddEmpaque = true"
@@ -617,7 +620,7 @@
             class="w-full"
             v-model="estado.marcaProducto.minimo"
             type="text"
-            label="Stock critico en almacen"
+            label="Stock minimo antes de hacer pedido"
             filled
             required
             dense
@@ -625,7 +628,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
           />
         </div>
       </div>
@@ -637,7 +640,7 @@
             class="w-full"
             v-model="estado.marcaProducto.maximo"
             type="text"
-            label="Pedido Maximo"
+            label="Cantidad max en un pedido"
             filled
             required
             dense
@@ -645,7 +648,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+            mensaje="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
           />
         </div>
       </div>
@@ -713,6 +716,7 @@
     :handle-submit="editarProductoMedidaEmpaque"
   >
     <template #inputsDialog>
+      <p>Registren las diferentes presentaciones</p>
       <!--   <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
@@ -756,7 +760,7 @@
           color="primary"
           v-model="estado.medidaProducto.empaque"
           :options="estado.medidaProducto.medida.tipoEmpaques"
-          label="Seleccionar empaque"
+          label=""
           option-label="nombre"
           emit-value
           use-input
@@ -838,7 +842,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="Seleccione una marca entre las que ya se registraron para este producto. Si la marca que desea ingresar no existe, agregue la primero en la zona MARCAS."
           />
         </div>
       </div>
@@ -879,7 +883,7 @@
         ></q-btn>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
           />
         </div>
       </div>
@@ -899,7 +903,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+            mensaje="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
           />
         </div>
       </div>
@@ -909,7 +913,7 @@
         <div style="flex-grow: 1">
           <q-input
             class="w-full"
-            v-model="estado.medidaProducto.cantidad"
+            v-model.number="estado.medidaProducto.empaque.cantidad"
             type="text"
             label="Cantidad en unidades básicas"
             filled
@@ -919,7 +923,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+            mensaje="Es la cantidad de unidades básicas que entran en este empaque, dependiendo de lo que se configuró : cantidades de unidades en una caja, o de mililitros/gramos en una bolsa, etc..."
           />
         </div>
       </div>
@@ -1145,7 +1149,9 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+            mensaje="Entre el nombre de la marca que aparece en la
+          etiqueta del producto. Si es un producto generico y sin marca, YA
+          EXISTE una marca generica llamada 'sin marca'."
           />
         </div>
       </div>
@@ -1179,32 +1185,68 @@
   <!-- CREAR EMPAQUE -->
   <Dialog2
     v-model="estado.modal.esCrearEmpaque"
-    title="Crear Empaque"
+    title="Crear nombre de empaque"
     label-btn="Crear"
     :handle-submit="crearEmpaque"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">CREAR EMPAQUE</h1>
+      <p>
+        Registra un nombre de empaque que se podrá reutilizar para registrar
+        empaques de productos.
+      </p>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          v-model="estado.dataEmpaque.nombre"
-          type="text"
-          label="Nombre empaque"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model="estado.dataEmpaque.abreviacion"
-          type="text"
-          label="Abreviacion"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.dataEmpaque.nombre"
+            type="text"
+            label="Nombre"
+            filled
+            required
+            dense
+          />
+        </div>
+      </div>
+
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="estado.dataEmpaque.abreviacion"
+            type="text"
+            label="Abreviacion"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
+          />
+        </div>
+      </div>
+
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model.number="estado.dataEmpaque.cantidad"
+            type="text"
+            label="cantidad en unidades basicas"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La cantidad de unidades básicas del tipo de empaque (opcional) ; solo sirve para prellenar el formulario al crear un empaque del producto."
+          />
+        </div>
       </div>
     </template>
   </Dialog2>

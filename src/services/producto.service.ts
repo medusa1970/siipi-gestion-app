@@ -378,7 +378,7 @@ export const productoService = {
    */
   agregarEmpaqueMedida: async (
     medidaID: string,
-    empaque: { nombre: string; abreviacion: string },
+    empaque: { nombre: string; abreviacion: string; cantidad: number },
   ) => {
     const [medida] = await postDataGql(
       GqlModificarMedidas({

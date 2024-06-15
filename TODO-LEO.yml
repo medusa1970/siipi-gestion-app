@@ -43,3 +43,6 @@ averiguar si la foto vuelve a subir o no al editar
 permisos borrar
 agregar marca acepta letras en vez de numeros
 required on selects no funcionan due to estado default state
+boton + seleccion por defecto para todos
+empaque kilo no pone 1000
+poder agregar empaques sin tipo de empaque

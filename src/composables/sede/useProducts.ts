@@ -106,12 +106,14 @@ export const useProducts = () => {
           {
             nombre: '',
             abreviacion: '',
+            cantidad: 0,
           },
         ],
       },
       empaque: {
         nombre: '',
         abreviacion: '',
+        cantidad: 0,
       },
       marca: {
         _id: '',
@@ -122,6 +124,7 @@ export const useProducts = () => {
     dataEmpaque: {
       nombre: '',
       abreviacion: '',
+      cantidad: 0,
     },
     dataMedida: {
       _id: '',
@@ -606,7 +609,7 @@ export const useProducts = () => {
           marca: estado.medidaProducto.marca._id,
           nombre: estado.medidaProducto.empaque.nombre,
           abreviacion: estado.medidaProducto.empaque.abreviacion,
-          cantidad: Number(estado.medidaProducto.cantidad),
+          cantidad: estado.medidaProducto.empaque.cantidad,
         },
       );
     if (productoModificado) {
@@ -617,7 +620,11 @@ export const useProducts = () => {
     }
     estado.modal.isAddEmpaque = false;
     estado.medidaProducto.marca = { _id: '', nombre: '' };
-    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
+    estado.medidaProducto.empaque = {
+      nombre: '',
+      abreviacion: '',
+      cantidad: null,
+    };
     estado.medidaProducto.cantidad = 0;
   };
 
@@ -677,8 +684,12 @@ export const useProducts = () => {
     }
 
     estado.modal.esCrearEmpaque = false;
-    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
-    estado.dataEmpaque = { nombre: '', abreviacion: '' };
+    estado.medidaProducto.empaque = {
+      nombre: '',
+      abreviacion: '',
+      cantidad: '',
+    };
+    estado.dataEmpaque = { nombre: '', abreviacion: '', cantidad: '' };
   };
   // PROVEEDORES
   const buscarProveedores = async () => {

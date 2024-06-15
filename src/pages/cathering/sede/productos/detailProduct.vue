@@ -34,12 +34,7 @@
     </div>
         -->
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
-    <q-tab
-      v-if="soloAlmacen"
-      name="marcas"
-      icon="group"
-      label="Marcas Existentes"
-    />
+    <q-tab v-if="soloAlmacen" name="marcas" icon="group" label="Marcas" />
     <q-tab
       v-if="soloAlmacenAdquisicion"
       name="medidas"
@@ -70,12 +65,12 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
+            label="Nombre *"
+            required
             v-model="producto.datosBasicos.nombre"
             type="text"
-            label="Nombre"
+            class="w-full"
             filled
-            required
           />
         </div>
         <div>
@@ -89,11 +84,11 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Categoria"
+            label="Categoria*"
+            required
             v-model="producto.datosBasicos.categoria"
             :options="options"
             filled
-            required
             options-cover
             id="two-level-select"
             class="w-full"
@@ -128,7 +123,7 @@
           <q-file
             class="w-full"
             v-model="imagen"
-            label="Seleccionar imagen"
+            label="Imagen"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -262,7 +257,10 @@
   -->
 
     <q-tab-panel name="medidas" animated>
-      <p>Medida básica:</p>
+      <p>
+        La medida básica es la forma en que se maneja el producto (por peso,
+        unidad, etc).
+      </p>
       <div class="flex flex-col mt-3 mb-3">
         <div
           v-if="
@@ -277,6 +275,7 @@
               basica.
             </p>
           </div>
+
           <div
             class="flex"
             style="justify-content: space-between; margin: 10px 0"
@@ -331,7 +330,7 @@
 
             <div>
               <BotonDetalle
-                mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+                mensaje="Seleccione una marca entre todas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
               />
             </div>
 
@@ -395,6 +394,10 @@
         <div v-if="estado.medidaProducto.medida">
           <br />
 
+          <p>
+            Los empaques son la formas que llegan en producto en el almacén, por
+            ejemplo en tira o paquete de tal o tal marca.
+          </p>
           <div v-if="useProduct.producto.variedades?.length === 0">
             <p>
               Para poder agregar empaques, primero debes agregar por lo menos
@@ -406,7 +409,7 @@
               <q-btn
                 color="primary"
                 icon="add"
-                label="Agregar empaques"
+                label="Agregar empaque"
                 no-caps
                 :disable="useProduct.producto.variedades?.length === 0"
                 @click="
@@ -562,7 +565,8 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Seleccionar marca"
+            label="Marca *"
+            required
             v-model="estado.marcaProducto.marca"
             :options="estado.marcas"
             option-label="nombre"
@@ -620,7 +624,7 @@
           <q-file
             class="w-full"
             v-model="imagenMarca"
-            label="Seleccionar imagen"
+            label="Imagen"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -647,18 +651,19 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Stock minimo antes de hacer pedido *"
+            required
             class="w-full"
             v-model.number="estado.marcaProducto.minimo"
             type="text"
             label="Stock critico en almacen"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
           />
         </div>
       </div>
@@ -667,18 +672,19 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Cantidad max en un pedido *"
+            required
             class="w-full"
             v-model.number="estado.marcaProducto.maximo"
             type="text"
             label="Pedido Maximo"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+            mensaje="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
           />
         </div>
       </div>
@@ -696,12 +702,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.cantidadMin"
-            type="text"
-            label="Stock critico en almacen"
-            filled
+            label="Stock minimo antes de hacer pedido *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.cantidadMin"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -715,12 +721,12 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
-            class="w-full"
-            v-model="estado.marcaProducto.cantidadMax"
-            type="text"
-            label="Pedido Maximo"
-            filled
+            label="Pedido Maximo *"
             required
+            class="w-full"
+            v-model.number="estado.marcaProducto.cantidadMax"
+            type="number"
+            filled
             dense
           />
         </div>
@@ -750,6 +756,7 @@
     "
   >
     <template #inputsDialog>
+      <p>Registren las diferentes presentaciones</p>
       <!--   <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
@@ -793,7 +800,7 @@
           color="primary"
           v-model="estado.medidaProducto.empaque"
           :options="estado.medidaProducto.medida.tipoEmpaques"
-          label="Seleccionar empaque"
+          label=""
           option-label="nombre"
           emit-value
           use-input
@@ -841,9 +848,9 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
+            label="Marca *"
             required
-            label="Seleccionar marca"
+            filled
             class="w-full"
             v-model="estado.medidaProducto.marca"
             :options="
@@ -875,7 +882,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="Seleccione una marca entre las que ya se registraron para este producto. Si la marca que desea ingresar no existe, agregue la primero en la zona MARCAS."
           />
         </div>
       </div>
@@ -884,9 +891,9 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            filled
+            label="Empaque *"
             required
-            label="Seleccionar empaque"
+            filled
             class="w-full"
             v-model="estado.medidaProducto.empaque"
             :options="estado.medidaProducto.medida.tipoEmpaques"
@@ -919,7 +926,7 @@
         ></q-btn>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
           />
         </div>
       </div>
@@ -928,18 +935,18 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Abreviacion *"
+            required
             class="w-full"
             v-model="estado.medidaProducto.empaque.abreviacion"
             type="text"
-            label="Abreviacion"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+            mensaje="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
           />
         </div>
       </div>
@@ -948,18 +955,19 @@
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Cantidad en unidades básicas *"
+            required
             class="w-full"
             v-model.number="estado.medidaProducto.cantidad"
             type="text"
             label="Cantidad en unidades básicas"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad maxima que se puede pedir a produccion, su utilidad es de disminuir el riesgo de error cuando un punto hace un pedidos."
+            mensaje="Es la cantidad de unidades básicas que entran en este empaque, dependiendo de lo que se configuró : cantidades de unidades en una caja, o de mililitros/gramos en una bolsa, etc..."
           />
         </div>
       </div>
@@ -984,41 +992,12 @@
     <template #inputsDialog>
       <p>Se va registrar un proveedor para este producto.</p>
 
-      <!-- marca -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-select
-            class="w-full"
-            label="Seleccionar marca *"
-            v-model="estado.productoProveedor.marca"
-            :options="useProduct.producto.variedades"
-            :option-label="(option) => option.marca?.nombre"
-            emit-value
-            dense
-            filled
-            required
-          >
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
-          />
-        </div>
-      </div>
-
       <!-- proveedor -->
       <div class="flex" style="justify-content: space-between; margin: 10px 0">
         <div style="flex-grow: 1">
           <q-select
-            label="Seleccionar proveedor *"
+            label="Proveedor *"
+            required
             v-model="estado.productoProveedor.proveedor"
             :options="estado.proveedores"
             option-label="nombre"
@@ -1026,8 +1005,6 @@
             emit-value
             dense
             filled
-            required
-            :disable="estado.modal.esEditarProveedor"
           >
             <template v-slot:no-option>
               <q-item>
@@ -1048,7 +1025,39 @@
         ></q-btn>
         <div>
           <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+            mensaje="Elija un proveedor o crealo si no existe con el boton [+]"
+          />
+        </div>
+      </div>
+
+      <!-- marca -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            label="Marca *"
+            required
+            v-model="estado.productoProveedor.marca"
+            :options="useProduct.producto.variedades"
+            :option-label="(option) => option.marca?.nombre"
+            emit-value
+            class="w-full"
+            dense
+            filled
+            required
+            :disable="estado.modal.esEditarProveedor"
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No hay resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Seleccione la marca que vende este proveedor. Si la marca no existe, agregue la en la zona MARCAS."
           />
         </div>
       </div>
@@ -1067,7 +1076,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="La referencia del producto en el catalogo y las facturas del proveedor."
           />
         </div>
       </div>
@@ -1081,13 +1090,12 @@
             type="text"
             class="w-full"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Use el punto '.' como separador de decimales."
           />
         </div>
       </div>
@@ -1106,7 +1114,7 @@
         </div>
         <div>
           <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual una alerta será generada para avisar que se necesita hacer un nuevo pedido al proveedor."
+            mensaje="Use el punto '.' como separador de decimales."
           />
         </div>
       </div>
@@ -1183,18 +1191,20 @@
       <div class="flex" style="justify-content: space-between; margin: 15px 0">
         <div style="flex-grow: 1">
           <q-input
+            label="Nombre *"
+            required
             class="w-full"
             v-model="estado.marcaProducto.marca.nombre"
             type="text"
-            label="Nombre"
             filled
-            required
             dense
           />
         </div>
         <div>
           <BotonDetalle
-            mensaje="SOLO modifiquen el xnombre en caso de deber corrigir su ortografia, sino toca crear un nuevo producto."
+            mensaje="Entre el nombre de la marca que aparece en la
+          etiqueta del producto. Si es un producto generico y sin marca, YA
+          EXISTE una marca generica llamada 'sin marca'."
           />
         </div>
       </div>
@@ -1213,13 +1223,13 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
+          label="Nombre *"
+          required
           v-model="estado.dataMedida.nombre"
           type="text"
-          label="Nombre medida"
           outlined
           dense
           clearable
-          required
         />
       </div>
     </template>
@@ -1228,32 +1238,68 @@
   <!-- CREAR EMPAQUE -->
   <Dialog2
     v-model="estado.modal.esCrearEmpaque"
-    title="Crear Empaque"
+    title="Crear nombre de empaque"
     label-btn="Crear"
     :handle-submit="crearEmpaque"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">CREAR EMPAQUE</h1>
+      <p>
+        Registra un nombre de empaque que se podrá reutilizar para registrar
+        empaques de productos.
+      </p>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          v-model="estado.dataEmpaque.nombre"
-          type="text"
-          label="Nombre empaque"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model="estado.dataEmpaque.abreviacion"
-          type="text"
-          label="Abreviacion"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Nombre *"
+            required
+            class="w-full"
+            v-model="estado.dataEmpaque.nombre"
+            type="text"
+            filled
+            dense
+          />
+        </div>
+      </div>
+
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Abreviacion *"
+            required
+            class="w-full"
+            v-model="estado.dataEmpaque.abreviacion"
+            type="text"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
+          />
+        </div>
+      </div>
+
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model.number="estado.dataEmpaque.cantidad"
+            type="number"
+            label="cantidad en unidades basicas"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La cantidad de unidades básicas del tipo de empaque (opcional) ; solo sirve para prellenar el formulario al crear un empaque del producto."
+          />
+        </div>
       </div>
     </template>
   </Dialog2>
@@ -1266,29 +1312,40 @@
     :handle-submit="crearProveedor"
   >
     <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-        CREAR PROVEEDOR
-      </h1>
+      <p>Se agregará un proveedor a la lista global de proveedores.</p>
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Nombre *"
+            required
+            v-model="estado.dataProveedor.nombre"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+      </div>
 
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          v-model="estado.dataProveedor.nombre"
-          type="text"
-          label="Nombre proveedor"
-          outlined
-          dense
-          clearable
-          required
-        />
-        <q-input
-          v-model="estado.dataProveedor.descripcion"
-          type="text"
-          label="Descripcion"
-          outlined
-          dense
-          clearable
-          required
-        />
+      <!-- descripcion -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Descripcion *"
+            required
+            v-model="estado.dataProveedor.descripcion"
+            type="text"
+            class="w-full"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          />
+        </div>
       </div>
     </template>
   </Dialog2>
@@ -1305,31 +1362,30 @@
 
       <div class="flex flex-col gap-2 mt-3">
         <q-input
+          label="Cantidad *"
+          required
           v-model.number="estado.dataPrecio.cantidadMin"
-          type="text"
-          label="Cantidad"
+          type="number"
           outlined
           dense
           clearable
+        />
+        <q-input
+          label="Precio sin factura *"
           required
+          v-model.number="estado.dataPrecio.precioSinFactura"
+          type="number"
+          outlined
+          dense
+          clearable
         />
         <q-input
           v-model.number="estado.dataPrecio.precioConFactura"
-          type="text"
+          type="number"
           label="Precio con factura"
           outlined
           dense
           clearable
-          required
-        />
-        <q-input
-          v-model.number="estado.dataPrecio.precioSinFactura"
-          type="text"
-          label="Precio sin factura"
-          outlined
-          dense
-          clearable
-          required
         />
       </div>
     </template>

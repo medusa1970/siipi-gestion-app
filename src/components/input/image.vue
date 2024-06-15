@@ -16,11 +16,11 @@
     @clear="handleClear"
     @blur="handleBlur"
   >
-    <template #prepend>
-      <q-icon name="photo_camera" @click.stop.prevent />
+    <template #prepend v-if="icono">
+      <q-icon :name="icono" @click.stop.prevent />
     </template>
     <template #after>
-      <BotonDetalle v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
     </template>
     <template #file>
       <q-img v-if="preview" :src="preview"></q-img>
@@ -79,6 +79,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // el icono en prepend
+  icono: {
+    type: String,
+    default: '',
+  },
 });
 
 /**
@@ -89,6 +94,8 @@ const emits = defineEmits(['update, reject, clear']);
 // el valor cambió
 const handleChange = (newValue, oldValue) => {
   errorEstado.value = false;
+
+  // hemos recibido una imagen ?
   if (newValue instanceof Blob) {
     const lector = new FileReader();
     lector.addEventListener('load', () => {
@@ -102,9 +109,15 @@ const handleChange = (newValue, oldValue) => {
       preview.value = null;
     });
     lector.readAsDataURL(localModel.value);
-  } else if (props.requerido) {
-    errorEstado.value = true;
-    errorMessage.value = obligatorio(null);
+  }
+
+  // sino
+  else {
+    if (props.requerido) {
+      errorEstado.value = true;
+      errorMessage.value = obligatorio(null);
+    }
+    emits('update', null);
   }
 };
 

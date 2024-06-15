@@ -11,7 +11,12 @@
     :options="options"
     :option-label="(option) => option.label"
     bottom-slots
+    options-cover
+    options-dense
   >
+    <template #prepend v-if="icono">
+      <q-icon :name="icono" @click.stop.prevent />
+    </template>
     <template v-slot:option="scope">
       <q-item
         v-bind="scope.itemProps"
@@ -22,7 +27,7 @@
       </q-item>
     </template>
     <template #after>
-      <BotonDetalle v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
     </template>
   </q-select>
 </template>
@@ -73,6 +78,11 @@ const props = defineProps({
   requerido: {
     type: Boolean,
     default: false,
+  },
+  // el icono en prepend
+  icono: {
+    type: String,
+    default: '',
   },
 });
 

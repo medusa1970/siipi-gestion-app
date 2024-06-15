@@ -10,8 +10,11 @@
     filled
     @update:model-value="handleChange"
   >
+    <template #prepend v-if="icono">
+      <q-icon :name="icono" @click.stop.prevent />
+    </template>
     <template #after>
-      <BotonDetalle v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
     </template>
   </q-input>
 </template>
@@ -52,6 +55,11 @@ defineProps({
   requerido: {
     type: Boolean,
     default: false,
+  },
+  // el icono en prepend
+  icono: {
+    type: String,
+    default: '',
   },
 });
 

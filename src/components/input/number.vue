@@ -1,6 +1,6 @@
 <template>
   <q-input
-    type="text"
+    type="number"
     class="w-full"
     v-model="localModel"
     :label="label + (requerido ? '*' : '')"

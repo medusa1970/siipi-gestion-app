@@ -1,5 +1,5 @@
 import types from 'nuxt-quasar-ui';
-import { postDataGql } from '../service.config';
+import { postDataGql } from './service.config';
 
 export const ofertaService = {
   /**

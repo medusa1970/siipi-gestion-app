@@ -623,7 +623,7 @@
           <q-file
             class="w-full"
             v-model="imagenMarca"
-            label="Imagen"
+            label="Imagen*"
             accept=".jpg, .png, .jpge"
             max-total-size="560000"
             @rejected="onRejected"
@@ -633,6 +633,7 @@
             clearable
             dense
             :disable="estado.modal.esEditarMarca"
+            required
           >
             <template v-slot:prepend>
               <q-icon name="cloud_upload" @click.stop.prevent />

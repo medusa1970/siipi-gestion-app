@@ -636,6 +636,8 @@ export const useProducts = () => {
     imagePreviewMarca.value = '';
   };
   const editarProductoMarca = async () => {
+    console.log(useProduct.producto._id);
+    console.log(estado.marcaProducto);
     const marcaModificada = await productoService.modificarProductosMarca(
       //@ts-expect-error
       useProduct.producto._id,
@@ -689,7 +691,7 @@ export const useProducts = () => {
     estado.medidaProducto.empaque = {
       nombre: '',
       abreviacion: '',
-      cantidad: null,
+      cantidad: 0,
     };
     estado.medidaProducto.cantidad = 0;
   };
@@ -707,7 +709,6 @@ export const useProducts = () => {
   // MARCAS
   const buscarMarcas = async () => {
     const marcas = await productoService.buscarMarcas();
-    // console.log(marcas);
     estado.marcas = marcas;
   };
   const crearMarca = async () => {
@@ -861,8 +862,8 @@ export const useProducts = () => {
 
   const limpiarCamposMarca = () => {
     estado.marcaProducto.marca = { _id: '', nombre: '' };
-    estado.marcaProducto.minimo = '';
-    estado.marcaProducto.maximo = '';
+    estado.marcaProducto.minimo = 0;
+    estado.marcaProducto.maximo = 0;
     imagenMarca.value = null;
     selectedFileMarca.value = '';
     imagePreviewMarca.value = '';
@@ -873,10 +874,11 @@ export const useProducts = () => {
     estado.modal.esCrearMarcaProducto = true;
     // Escribiendo valores en el reactivo
     estado.marcaProducto.marca = fila.marca;
-    imagePreviewMarca.value = fila.imagen.cloudinaryUrl;
+    imagePreviewMarca.value = fila.imagen?.cloudinaryUrl;
     estado.marcaProducto.minimo = fila.cantidadMin;
     estado.marcaProducto.maximo = fila.cantidadMax;
     estado.marcaProducto.variedadID = fila._id;
+    console.log(estado.marcaProducto.variedadID);
   };
 
   const limpiarCamposEmpaque = () => {

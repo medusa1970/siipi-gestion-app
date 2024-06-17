@@ -203,7 +203,6 @@ export const useProducts = () => {
   const getCategoria = async () => {
     const categoriaArbol = await productoService.obtenerTodasCategorias();
     estado.categorias = categoriaArbol;
-    console.log(categoriaArbol);
     return categoriaArbol;
   };
 

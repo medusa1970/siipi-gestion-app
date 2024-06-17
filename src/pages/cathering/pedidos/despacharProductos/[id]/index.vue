@@ -107,8 +107,7 @@ import { ofertaService } from '~/services/ofertas.service';
 const route = useRoute();
 
 const usePedidoStore = pedidoStore();
-const { estado, useAuth, filter, obtenerListaOfertas, filteredCatalogos } =
-  usePedido();
+const { estado, filter, obtenerListaOfertas, filteredCatalogos } = usePedido();
 
 const catalogosOfertas = ref([]);
 const catalogoSeleccionado = ref([]);

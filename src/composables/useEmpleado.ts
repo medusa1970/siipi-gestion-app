@@ -1,5 +1,4 @@
 import { reactive } from 'vue';
-import { authStore } from '@/stores/auth.store';
 import { useRouter } from 'vue-router';
 import { NotifySucessCenter } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
@@ -9,7 +8,7 @@ import type { Empleado, Persona } from '~/interfaces/empleado.type';
 export const useEmpleado = () => {
   // CONFIGURACION INCIAL
   const router = useRouter();
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const $q = useQuasar();
 
   // ESTADO REACTIVO DE EMPLEADOS
@@ -29,8 +28,12 @@ export const useEmpleado = () => {
    * obtenerTodosEmpleados
    */
   const obtenerTodosEmpleados = async () => {
+    if (!authStore.negocio) {
+      return null;
+    }
+
     const listaEmpleados = await empleadoService.obtenerTodosEmpleados(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
     );
 
     estado.rows = listaEmpleados.map((empleado: Empleado) => {
@@ -83,8 +86,12 @@ export const useEmpleado = () => {
    * agregarEmpleado
    */
   const agregarEmpleado = async () => {
+    if (!authStore.negocio) {
+      return null;
+    }
+
     const nuevoEmpleado = await empleadoService.agregarEmpleado(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
       estado.personaSelect.nombre.id,
       estado.cargo,
       estado.permisos,
@@ -118,9 +125,9 @@ export const useEmpleado = () => {
       console.log(
         'no se borra un empleado - se le vencen sus permisos y se borra sus cargos',
       );
-      // await empleadoService.borrarEmpleado(useAuth.negocioElegido._id, row.id);
+      // await empleadoService.borrarEmpleado(authStore.negocio._id, row.id);
       // await empleadoService.eliminarRolEmpleado(
-      //   useAuth.negocioElegido._id,
+      //   authStore.negocio._id,
       //   row.personaID,
       //   row.cargo,
       // );

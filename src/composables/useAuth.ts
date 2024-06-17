@@ -1,8 +1,8 @@
 import { NotifySucess } from '~/helpers/message.service';
 import type { PersonaProps } from '../interfaces/product.interface';
-import { postDataGql } from './service.config';
+import { postDataGql } from '../services/service.config';
 
-export const authService = {
+export const useAuth = {
   /**
    * Efectua un pedido de conexion por token jwt
    * @returns { persona, entidad, permisos, cargos }
@@ -16,6 +16,7 @@ export const authService = {
           entidad,
         },
       }),
+      false,
     );
     return response;
   },
@@ -50,6 +51,7 @@ export const authService = {
    * Busca el nombre y el tipo de todas las entidades
    * @returns Entidad[]
    */
+  // TODO No pertenece aqui
   buscarTodasEntidades: async () => {
     const entidades = await postDataGql(GqlBuscarEntidades_tipo({}));
     return entidades;

@@ -100,8 +100,7 @@ definePageMeta({
   layout: 'cathering',
 });
 
-const { estado, obtenerCatalogosProductos, useAuth, obtenerListaOfertas } =
-  usePedido();
+const { estado, obtenerCatalogosProductos, obtenerListaOfertas } = usePedido();
 const usePedidoStore = pedidoStore();
 const router = useRouter();
 const test = ref(null);
@@ -202,10 +201,10 @@ const realizarPedido = async () => {
   });
   // console.log(items)
   const pedido = await pedidoService.pedidoIniciar(
-    useAuth.negocioElegido._id,
+    authStore.negocio._id,
     '65a5a9af08c1a906d83522d0',
     items,
-    useGqlToken(useAuth.token),
+    useGqlToken(authStore.token),
   );
   if (pedido) {
     await pedidoService.pedidoConfirmarItems(pedido._id);

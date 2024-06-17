@@ -11,13 +11,12 @@ import {
   showLoading,
 } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
-import { authStore } from '~/stores/auth.store';
 import { inventarioService } from '~/services/inventary.service';
 /**
  * LOGICA
  */
 export const useInventary = () => {
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const $q = useQuasar();
   const useProduct = productStore();
 
@@ -58,7 +57,7 @@ export const useInventary = () => {
     //   });
     // }
     const productosMenu = await inventarioService.inventarioProductosMenu(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
     );
     // console.log(entidadProductosMenu);
     //ARREGLAR NO ESTA FUNCIONANDO
@@ -96,7 +95,7 @@ export const useInventary = () => {
     // estado.productoElegido = '';
     // estado.countInventary++;
     // @ts-ignore
-    // console.log(useAuth.negocioElegido._id);
+    // console.log(authStore.negocio._id);
     // console.log(estado.productoElegido);
     // console.log(estado.inventario.lotes);
     // NotifySucess('Inventario guardado');
@@ -108,7 +107,7 @@ export const useInventary = () => {
       showLoading();
       inventarioService
         .realizarInventario(
-          useAuth.negocioElegido._id,
+          authStore.negocio._id,
           //@ts-expect-error Wilder deve saber lo que hace
           estado.productoElegido.id,
           estado.inventario.lotes,
@@ -124,7 +123,7 @@ export const useInventary = () => {
             if (estado.countRetry > 1) {
               // console.log('first');
               showLoading();
-              // console.log(useAuth.negocioElegido._id);
+              // console.log(authStore.negocio._id);
               // console.log(
               //   useProduct.ListInventario[estado.currentIndex].producto._id
               // );
@@ -137,7 +136,7 @@ export const useInventary = () => {
 
               inventarioService
                 .realizarInventario(
-                  useAuth.negocioElegido._id,
+                  authStore.negocio._id,
                   //@ts-expect-error Wilder deve saber lo que hace
                   estado.productoElegido.id,
                   estado.inventario.lotes,
@@ -156,7 +155,7 @@ export const useInventary = () => {
           } else {
             inventarioService
               .realizarInventario(
-                useAuth.negocioElegido._id, //@ts-ignore
+                authStore.negocio._id, //@ts-ignore
                 estado.productoElegido.id,
                 estado.inventario.lotes,
                 true,

@@ -1391,13 +1391,13 @@
 import { onMounted, ref } from 'vue';
 import { useProducts } from '@/composables/sede/useProducts';
 import { marcas, proveedores, empaques } from '~/helpers/columns';
-import { useAuth } from '~/composables/auth/useAuth';
 
 // Verificacion de permisos
-const { checkPermisos } = useAuth();
-if (!checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
+const authStore = useAuthStore();
+if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
   console.log('No tiene el acceso para esta pagina');
 }
+
 const soloAlmacen = ref(checkPermisos(['ALMACEN']));
 const soloAdquisicion = ref(checkPermisos(['ADQUISICION']));
 const soloAlmacenAdquisicion = ref(checkPermisos(['ADQUISICION', 'ALMACEN']));

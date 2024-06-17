@@ -30,7 +30,6 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { authStore } from '@/stores/auth.store';
 import {
   ApiError,
   hideLoading,
@@ -48,7 +47,7 @@ definePageMeta({
 });
 
 const router = useRouter();
-const useAuth = authStore();
+const authStore = useAuthStore();
 const listProblems = ref([]);
 
 const formatDate = (date) => {
@@ -59,7 +58,7 @@ const getAllProblem = async () => {
   try {
     showLoading();
     const listaProblemas = await inventarioService.buscarProblemasNoResueltos(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
     );
 
     // console.log(res);

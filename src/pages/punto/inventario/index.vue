@@ -157,7 +157,6 @@ import { useInventary } from '@/composables/punto/useInventary';
 // import { useStock } from '@/composables/punto/useStock';
 import { onMounted, reactive, nextTick } from 'vue';
 import { stockService } from '~/services/stock.service';
-import { authStore } from '@/stores/auth.store';
 import { inventarioService } from '~/services/inventary.service';
 import {
   NotifyError,
@@ -171,7 +170,7 @@ definePageMeta({
 });
 const { useProduct, printInventory, elegirProductoInventario } = useInventary();
 
-const useAuth = authStore();
+const authStore = useAuthStore();
 
 const estado = reactive({
   productosBloquesNull: [],
@@ -191,9 +190,7 @@ const estado = reactive({
 const expanded = ref(false);
 
 const obtenerProductosInventariar = async () => {
-  const fila = await inventarioService.filaInventario(
-    useAuth.negocioElegido._id,
-  );
+  const fila = await inventarioService.filaInventario(authStore.negocio._id);
   estado.productosBloquesNull = fila;
 };
 
@@ -211,7 +208,7 @@ const terminarInventario = async (producto) => {
   /**LOGICA */
   inventarioService
     .realizarInventario(
-      useAuth.negocioElegido._id, //@ts-ignore
+      authStore.negocio._id, //@ts-ignore
       producto._id,
       estado.inventario.lotes,
       false,
@@ -222,7 +219,7 @@ const terminarInventario = async (producto) => {
         if (estado.countRetry > 1) {
           inventarioService
             .realizarInventario(
-              useAuth.negocioElegido._id, //@ts-ignore
+              authStore.negocio._id, //@ts-ignore
               producto._id,
               estado.inventario.lotes,
               true,
@@ -245,7 +242,7 @@ const terminarInventario = async (producto) => {
         showLoading();
         inventarioService
           .realizarInventario(
-            useAuth.negocioElegido._id, //@ts-ignore
+            authStore.negocio._id, //@ts-ignore
             producto._id,
             estado.inventario.lotes,
             true,

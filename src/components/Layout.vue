@@ -18,15 +18,11 @@
         <q-toolbar-title class="navBar">
           <div>
             <h1 class="font-bold uppercase">
-              {{
-                storeAuth.negocioElegido
-                  ? storeAuth.negocioElegido.nombre
-                  : 'Cliente'
-              }}
+              {{ authStore.getNegocio?.nombre }}
             </h1>
             <p class="text-sm capitalize">
               {{
-                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0]?.nombre})`
+                `${authStore.getUserNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
               }}
             </p>
           </div>
@@ -40,10 +36,10 @@
               style="width: 40px; height: 40px"
             >
               <img
-                v-if="storeAuth.user.imagen"
+                v-if="authStore.getUser?.cloudinaryUrl"
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                :src="storeAuth.user.imagen"
+                :src="authStore.getUser?.cloudinaryUrl"
               />
               <img
                 v-else
@@ -62,10 +58,10 @@
                     <q-item-section avatar>
                       <q-avatar>
                         <img
-                          v-if="storeAuth.user.imagen"
+                          v-if="authStore.getUser?.cloudinaryUrl"
                           class="rounded-full object-cover"
                           style="width: 40px; height: 40px"
-                          :src="storeAuth.user.imagen"
+                          :src="authStore.getUser?.cloudinaryUrl"
                         />
                         <img
                           v-else
@@ -79,7 +75,7 @@
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
                       <q-item-label caption lines="1">{{
-                        storeAuth.user.correo
+                        authStore.getUser?.correo
                       }}</q-item-label>
                     </q-item-section>
                   </q-item>
@@ -104,12 +100,13 @@
                       <q-item
                         clickable
                         @click="sede"
-                        v-for="negocio in storeAuth.user.negocios"
+                        v-for="(negocio, index) in authStore.getUser?.negocios"
                         :key="negocio.nombre"
                       >
-                        <q-item-section @click="prueba(negocio)">{{
-                          negocio.nombre
-                        }}</q-item-section>
+                        <q-item-section
+                          @click="elegirNegocio(index, negocio.nombre)"
+                          >{{ negocio.nombre }}</q-item-section
+                        >
                       </q-item>
                     </q-list>
                   </q-expansion-item>
@@ -170,16 +167,16 @@
               style="height: 40px; padding: 9px; z-index: 100"
             >
               {{
-                `${storeAuth.user.nombre} ${storeAuth.user.apellido} (${storeAuth.negocioElegido.cargos[0]?.nombre})`
+                `${authStore.getUserNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
               }}
             </div>
           </q-img>
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
               <img
-                v-if="storeAuth.user.imagen"
+                v-if="authStore.getUser?.cloudinaryUrl"
                 style="object-fit: cover"
-                :src="storeAuth.user.imagen"
+                :src="authStore.getUser?.cloudinaryUrl"
               />
               <img
                 v-else
@@ -306,11 +303,7 @@
 
         <q-toolbar-title class="navBar">
           <h1 class="font-bold uppercase">
-            {{
-              storeAuth.negocioElegido
-                ? storeAuth.negocioElegido.nombre
-                : 'Cliente'
-            }}
+            {{ authStore.getNegocio.nombre }}
           </h1>
           <!-- NAV END -->
           <nav class="flex flex-grow justify-end basis-0 items-center">
@@ -322,10 +315,10 @@
               style="width: 40px; height: 40px"
             >
               <img
-                v-if="storeAuth.user.imagen"
+                v-if="authStore.getUser?.cloudinaryUrl"
                 class="rounded-full object-cover"
                 style="width: 40px; height: 40px"
-                :src="storeAuth.user.imagen"
+                :src="authStore.getUser?.cloudinaryUrl"
               />
               <img
                 v-else
@@ -344,10 +337,10 @@
                     <q-item-section avatar>
                       <q-avatar>
                         <img
-                          v-if="storeAuth.user.imagen"
+                          v-if="authStore.getUser?.cloudinaryUrl"
                           class="rounded-full object-cover"
                           style="width: 38px; height: 38px"
-                          :src="storeAuth.user.imagen"
+                          :src="authStore.getUser?.cloudinaryUrl"
                         />
                         <img
                           v-else
@@ -361,7 +354,7 @@
                     <q-item-section>
                       <q-item-label>Perfil</q-item-label>
                       <q-item-label caption lines="1">{{
-                        storeAuth.user.correo
+                        authStore.getUser?.correo
                       }}</q-item-label>
                     </q-item-section>
                   </q-item>
@@ -386,10 +379,10 @@
                       <q-item
                         clickable
                         @click="sede"
-                        v-for="negocio in storeAuth.user.negocios"
+                        v-for="(negocio, index) in authStore.getUser?.negocios"
                         :key="negocio.nombre"
                       >
-                        <q-item-section @click="prueba(negocio)">{{
+                        <q-item-section @click="elegirNegocio(index)">{{
                           negocio.nombre
                         }}</q-item-section>
                       </q-item>
@@ -437,17 +430,18 @@
               <h1
                 class="inline-block px-4 rounded-lg bg-white text-black uppercase font-bold"
               >
-                <!-- {{ user2.name + ' ' + user2.lastname }} -->
-                {{ `${storeAuth.user.nombre} ${storeAuth.user.apellido}` }}
+                {{
+                  `${authStore.getUser?.nombre} ${authStore.getUser?.apellido}`
+                }}
               </h1>
             </div>
           </q-img>
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
               <img
-                v-if="storeAuth.user.imagen"
+                v-if="authStore.getUser?.cloudinaryUrl"
                 style="object-fit: cover"
-                :src="storeAuth.user.imagen"
+                :src="authStore.getUser?.cloudinaryUrl"
               />
               <img
                 v-else
@@ -654,9 +648,7 @@ defineProps({
 
 // IMPORTS
 import { ref, watch, reactive } from 'vue';
-import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
-import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
@@ -668,15 +660,19 @@ import {
   showLoading,
   hideLoading,
   NotifySucess,
+  NotifyError,
   NotifySucessCenter,
 } from '~/helpers/message.service';
-import { authService } from '~/services/auth.service';
 import { empleadoService } from '~/services/empleados.service';
 
-// storeAuth
-const storeAuth = authStore();
-const storePedido = pedidoStore();
 const router = useRouter();
+const authStore = useAuthStore();
+if (!authStore.user) {
+  router.push('/');
+}
+console.log(authStore.getUser);
+
+const storePedido = pedidoStore();
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
@@ -702,12 +698,10 @@ function toggleRightDrawer() {
 }
 
 const logout = () => {
-  LocalStorage.remove('token');
-  storeAuth.user.nombre = '';
-  storeAuth.user.negocios = [];
-  storeAuth.token = '';
+  const username = authStore.getUser?.nombre;
+  authStore.logout();
+  NotifySucess(`Hasta pronto ${username}!`);
   router.push('/');
-  storeAuth.negocioElegido = null;
 };
 
 // Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
@@ -720,10 +714,10 @@ const logout = () => {
 //   }, 10000);
 // };
 
-const prueba = (negocio) => {
+const elegirNegocio = (index, nombre) => {
   // playSound();
   $q.dialog({
-    title: `<strong>Entrar a ${negocio.nombre}</strong>`,
+    title: `<strong>Entrar a ${nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',
     cancel: true,
     persistent: true,
@@ -741,23 +735,18 @@ const prueba = (negocio) => {
       dense: true,
     },
   }).onOk(async () => {
-    const loginResponse = await authService.login(
-      storeAuth.user.usuario,
+    const loginResponse = await useAuth.login(
+      authStore.getUser?.usuario,
       contrasena.value,
-      negocio._id,
     );
-    storeAuth.token = loginResponse.token;
-    if (loginResponse.token) {
-      router.push(`/${negocio.tipo.toLowerCase()}`);
-      storeAuth.negocioElegido = negocio; //solucion
-      $q.notify({
-        type: 'positive',
-        position: 'center',
-        message: `Bienvenido a ${negocio.nombre}`,
-        progress: true,
-        timeout: 1000,
-      });
+    if (!loginResponse) {
+      NotifyError(`contraseña incorrecta`);
     }
+    // TODO averiguar suscripcion, etc
+    // TODO BUGs de irala a iralita + cliente
+    authStore.elegirNegocio(index);
+    NotifySucess(`Negocio elegido: ${authStore.getNegocio.nombre}`);
+    router.push(`/${authStore.getNegocio.tipo.toLowerCase()}`);
     contrasena.value = '';
   });
 };
@@ -790,40 +779,33 @@ const modificarPersona = async () => {
   console.log('first');
   console.log(selectedFileProfile.value);
 
+  const datos = {
+    nombre: persona.value.nombre,
+    apellido: persona.value.apellido,
+    correo: persona.value.correo,
+  };
   if (selectedFileProfile.value === '') {
-    const personaModificada = await empleadoService.modificarPersona(
-      storeAuth.user._id,
-      {
-        nombre: persona.value.nombre,
-        apellido: persona.value.apellido,
-        correo: persona.value.correo,
+    Object.assign(datos, {
+      imagen: {
+        mimetype: 'image/png',
+        data: fileToBase64(selectedFileProfile.value),
       },
-    );
-    // console.log(personaModificada);
-    storeAuth.user.nombre = personaModificada.nombre;
-    storeAuth.user.apellido = personaModificada.apellido;
-
-    if (personaModificada) {
-      NotifySucess('Persona modificada correctamente');
-    }
-  } else {
-    const imagen = await fileToBase64(selectedFileProfile.value);
-    const personaModificada = await empleadoService.modificarPersona(
-      storeAuth.user._id,
-      {
-        nombre: persona.value.nombre,
-        apellido: persona.value.apellido,
-        correo: persona.value.correo,
-        imagen: { mimetype: 'image/png', data: imagen },
-      },
-    );
-    if (personaModificada) {
-      NotifySucess('Persona modificada correctamente');
-      storeAuth.user.imagen = personaModificada.imagen.cloudinaryUrl;
-      storeAuth.user.nombre = personaModificada.nombre;
-      storeAuth.user.apellido = personaModificada.apellido;
-    }
+    });
   }
+
+  await empleadoService
+    .modificarPersona(authStore.getUser?._id)
+    .then((persona) => {
+      // console.log(personaModificada);
+      authStore.value.user.nombre = personaModificada.nombre;
+      authStore.value.user.apellido = personaModificada.apellido;
+      authStore.value.user.correo = personaModificada.correo;
+      NotifySucess('Persona modificada correctamente');
+    })
+    .catch(() => {
+      NotifyError(`error al modificar la persona`);
+    });
+
   isEditProfile.value = false;
 };
 
@@ -831,7 +813,7 @@ const getPersona = async () => {
   try {
     showLoading();
     const personaEncontrada = await empleadoService.buscarPersona(
-      storeAuth.user._id,
+      authStore.getUser?._id,
     );
     persona.value = personaEncontrada;
     imagePreview.value = personaEncontrada.imagen.cloudinaryUrl;

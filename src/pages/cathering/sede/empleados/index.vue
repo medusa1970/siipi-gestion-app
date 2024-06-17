@@ -5,5 +5,5 @@
 definePageMeta({
   layout: 'cathering',
 });
-import Empleado from '@/components/empleados/Empleado.vue';
+import Empleado from '~/components/Empleado.vue';
 </script>

@@ -15,7 +15,7 @@ import { fileToBase64 } from '@/helpers/helpers';
 import { proveedores } from '~/helpers/columns';
 
 export const useProducts = () => {
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const useProduct = productStore();
   const router = useRouter();
   const $q = useQuasar();
@@ -217,7 +217,7 @@ export const useProducts = () => {
         .borrarProducto(
           producto.productoID,
           producto.motivoEliminacion,
-          useGqlToken(useAuth.token),
+          useGqlToken(authStore.token),
         )
         .then(() => {
           producto.motivoEliminacion = '';

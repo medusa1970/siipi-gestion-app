@@ -30,13 +30,12 @@ import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
 import { pedidoService } from '~/services/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
-import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import PortadaPunto from '@/assets/img/backPunto.png';
 
 const $q = useQuasar();
 
-const storeAuth = authStore();
+const authStore = useAuthStore();
 const storePedido = pedidoStore();
 const router = useRouter();
 
@@ -52,10 +51,10 @@ const realizarPedido = async () => {
     persistent: true,
   }).onOk(async () => {
     const pedido = await pedidoService.pedidoIniciar(
-      storeAuth.negocioElegido._id,
+      authStore.negocioElegido._id,
       '65a5a9af08c1a906d83522d0',
       items,
-      useGqlToken(storeAuth.token),
+      useGqlToken(authStore.token),
     );
     if (pedido) {
       await pedidoService.pedidoConfirmarItems(pedido._id);

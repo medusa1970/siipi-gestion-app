@@ -1,8 +1,7 @@
 // import type { GqlPedidoIniciar } from '#gql';
 import { postDataGql } from './service.config';
-// import { authStore } from '@/stores/auth.store';
-
-// const useAuth = authStore();
+//
+// const authStore = useAuthStore();
 interface Item {
   cantidad: number;
   oferta: string;

@@ -210,11 +210,11 @@
       <div class="flex gap-2 my-2">
         <div class="p-1">
           <h1 class="uppercase font-bold">
-            {{ storeAuth.negocioElegido.nombre }}
+            {{ authStore.negocioElegido.nombre }}
           </h1>
           <div class="grid grid-cols-[1fr,1fr,auto] place-items-center gap-2">
             <q-input
-              v-model="storeAuth.user.usuario"
+              v-model="authStore.user.usuario"
               type="text"
               label="Usuario"
               dense
@@ -289,9 +289,8 @@ import { tesoreriaCobrar } from '~/helpers/columns';
 import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { NotifySucessCenter } from '~/helpers/message.service';
-import { authStore } from '~/stores/auth.store';
 
-const storeAuth = authStore();
+const authStore = useAuthStore();
 const $q = useQuasar();
 // console.log(caja);
 const pedidosCaja = ref([]);

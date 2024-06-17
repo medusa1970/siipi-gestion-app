@@ -8,20 +8,18 @@ import {
 } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { pedidoService } from '~/services/pedido.service';
-import { authStore } from '@/stores/auth.store';
 import { useRouter } from 'vue-router';
 import { pedidoStore } from '@/stores/pedido.store';
 import { menuService } from '~/services/menu.service';
 import { ofertaService } from '~/services/ofertas.service';
 import { stockService } from '~/services/stock.service';
-import { authService } from '~/services/auth.service';
 import { extraer } from '../../helpers/leo';
 
 /**
  * LOGICA
  */
 export const usePedido = () => {
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const $q = useQuasar();
   const router = useRouter();
   const storePedido = pedidoStore();
@@ -80,7 +78,7 @@ export const usePedido = () => {
 
   const obtenerCatalogosProductos = async () => {
     const catalogoArbol = await pedidoService.leerCatalogoConOfertas(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
     );
     estado.catalogosOfertas = catalogoArbol.hijas;
     estado.catalogoSeleccionado = catalogoArbol.hijas[0];
@@ -92,9 +90,9 @@ export const usePedido = () => {
   const buscarPedidos = async () => {
     showLoading();
     const listaPedidos = await pedidoService.pedidoBuscar(
-      { comprador: [useAuth.negocioElegido._id] },
+      { comprador: [authStore.negocio._id] },
       // @ts-expect-error (creado dinamicamente)
-      useGqlToken(useAuth.token),
+      useGqlToken(authStore.token),
     );
     // console.log(listaPedidos);
     //@ts-ignore
@@ -131,9 +129,9 @@ export const usePedido = () => {
   const buscarPedidos2 = async () => {
     showLoading();
     const listaPedidos = await pedidoService.pedidoBuscar(
-      { vendedor: [useAuth.negocioElegido._id] },
+      { vendedor: [authStore.negocio._id] },
       // @ts-expect-error (creado dinamicamente)
-      useGqlToken(useAuth.token),
+      useGqlToken(authStore.token),
     );
     // console.log(listaPedidos);
 
@@ -303,7 +301,7 @@ export const usePedido = () => {
     const [pedido] = await pedidoService.pedidoBuscar(
       { _id: [pedidoID] },
       // @ts-expect-error (creado dinamicamente)
-      useGqlToken(useAuth.token),
+      useGqlToken(authStore.token),
     );
     estado.pedidoDetalle = pedido;
     estado.precioGeneral = pedido.items.reduce((total, item) => {
@@ -399,7 +397,7 @@ export const usePedido = () => {
   };
 
   const obtenerListaOfertas = async () => {
-    const menus = await menuService.listarMenus(useAuth.negocioElegido._id);
+    const menus = await menuService.listarMenus(authStore.negocio._id);
     // console.log(menus);
 
     const ofertas = await ofertaService.catalogoRecursivo(
@@ -853,7 +851,7 @@ export const usePedido = () => {
 
   const mostrarEntidadSinPedidos = async () => {
     estado.modal.isShowEntidad = true;
-    const listaEntidades = await authService.buscarTodasEntidades();
+    const listaEntidades = await useAuth.buscarTodasEntidades();
 
     estado.entidadesSinPedidos = listaEntidades.filter((entidad: any) => {
       if (entidad.tipo !== 'PUNTO') return false;
@@ -884,9 +882,7 @@ export const usePedido = () => {
   };
 
   onMounted(async () => {
-    const almacen = await stockService.obtenerTodoStock(
-      useAuth.negocioElegido._id,
-    );
+    const almacen = await stockService.obtenerTodoStock(authStore.negocio._id);
 
     // console.log(entidadBuscar);
     estado.stocks = almacen.map((stock: any) => {
@@ -939,7 +935,6 @@ export const usePedido = () => {
   });
 
   return {
-    useAuth,
     estado,
     obtenerCatalogosProductos,
     buscarPedidos,

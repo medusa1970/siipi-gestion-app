@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { authStore } from '@/stores/auth.store';
 defineProps({
   label: String,
   icon: String,
@@ -18,11 +17,9 @@ defineProps({
   href2: String,
 });
 
-const useAuth = authStore();
 // const route = useRoute();
-// console.log(useAuth.negocioTipoSelected.toLowerCase());
 // const path = route.path.substring(0, route.path.lastIndexOf('/'));
-const path = `/${useAuth.negocioElegido.tipo.toLowerCase()}`;
-// console.log(route.path);
-// console.log(path);
+
+const authStore = useAuthStore();
+const path = `/${authStore.negocio?.tipo.toLowerCase()}`;
 </script>

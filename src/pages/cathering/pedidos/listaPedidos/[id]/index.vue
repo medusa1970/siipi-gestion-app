@@ -57,11 +57,11 @@
     </div>
     <div v-else>Cargando datos...</div>
 
-    <!-- <h1 v-if="useAuth.user.cargo != 'almacen'" class="text-red-500 text-xl">
+    <!-- <h1 v-if="authStore.user.cargo != 'almacen'" class="text-red-500 text-xl">
       hola
     </h1> -->
     <Table
-      v-if="useAuth.user.cargo != 'almacen'"
+      v-if="authStore.user.cargo != 'almacen'"
       :rows="estado.pedidoDetalle.items"
       :columns="
         estado.pedidoItemsEstado.estado === 'preparado'
@@ -211,7 +211,6 @@ const {
   estado,
   ajustarItem,
   ajustarItemGuardar,
-  useAuth,
   obtenerItemsEstado,
 } = usePedido();
 

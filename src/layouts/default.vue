@@ -5,9 +5,7 @@
     >
       <nav class="flex flex-grow basis-0 gap-2 items-center">
         <h1 class="font-bold text-lg uppercase">
-          {{
-            useAuth.negocioElegido ? useAuth.negocioElegido.nombre : 'Cliente'
-          }}
+          {{ authStore.negocio ? authStore.negocio.nombre : 'Cliente' }}
         </h1>
       </nav>
       <nav class="flex flex-grow justify-end basis-0 items-center gap-2">
@@ -36,7 +34,7 @@
                 <q-item-section>
                   <q-item-label>Perfil</q-item-label>
                   <q-item-label caption lines="1"
-                    >{{ useAuth.user.nombre }}@gmail.com</q-item-label
+                    >{{ authStore.user.nombre }}@gmail.com</q-item-label
                   >
                 </q-item-section>
               </q-item>
@@ -57,7 +55,7 @@
                   <q-item
                     clickable
                     @click="sede"
-                    v-for="negocio in useAuth.user.negocios"
+                    v-for="negocio in authStore.user.negocios"
                     :key="negocio.nombre"
                   >
                     <q-item-section @click="prueba(negocio)">{{
@@ -90,20 +88,19 @@
 <script setup>
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
-import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 
-const useAuth = authStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const $q = useQuasar();
 
 const logout = () => {
   LocalStorage.remove('token');
-  useAuth.user.nombre = '';
-  useAuth.user.negocios = [];
-  useAuth.token = '';
+  authStore.user.nombre = '';
+  authStore.user.negocios = [];
+  authStore.token = '';
   router.push('/');
-  useAuth.negocioElegido = '';
+  authStore.negocio = '';
 };
 
 const prueba = (negocio) => {
@@ -115,7 +112,7 @@ const prueba = (negocio) => {
     html: true,
   }).onOk(async () => {
     router.push(`/${negocio.tipo.toLowerCase()}`);
-    useAuth.negocioElegido = negocio; //solucion
+    authStore.negocio = negocio; //solucion
     $q.notify({
       type: 'positive',
       position: 'center',

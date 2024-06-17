@@ -50,13 +50,15 @@
 
 <script setup lang="ts">
 import Logo from '@/assets/img/logo.png';
+import { NotifySucess } from '~/helpers/message.service';
 definePageMeta({
   layout: false,
 });
-import { password, phone, string } from '@/helpers/validate.form';
-import { useAuth } from '@/composables/auth/useAuth';
 
-const { authPersona, register } = useAuth();
+const register = async (datos: PersonaProps) => {
+  const nuevaPersona = await useAuth.registrar(datos);
+  NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
+};
 </script>
 
 <style lang="scss" scoped></style>

@@ -102,7 +102,6 @@ const usePedidoStore = pedidoStore();
 const {
   estado,
   obtenerCatalogosProductos,
-  useAuth,
   filter,
   obtenerListaOfertas,
   filteredCatalogos,

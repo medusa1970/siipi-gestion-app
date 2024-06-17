@@ -1,7 +1,6 @@
 // LOGICA STOCK
 import { reactive, onMounted } from 'vue';
 import { NotifySucess, NotifyError } from '@/helpers/message.service';
-import { authStore } from '@/stores/auth.store';
 import { productStore } from '@/stores/producto.store';
 import { stockService } from '~/services/stock.service';
 import { ofertaService } from '~/services/ofertas.service';
@@ -19,7 +18,7 @@ type ProductoEnAlerta = {
 
 export const useStock = () => {
   // config
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const useProduct = productStore();
   // reactive
   const estado = reactive({
@@ -40,9 +39,7 @@ export const useStock = () => {
   });
 
   const obtenerTodoStock = async () => {
-    const almacen = await stockService.obtenerTodoStock(
-      useAuth.negocioElegido._id,
-    );
+    const almacen = await stockService.obtenerTodoStock(authStore.negocio._id);
     // console.log(almacen);
 
     // console.log(entidadBuscar);
@@ -150,7 +147,7 @@ export const useStock = () => {
 
   const guardarCantidad = async () => {
     await stockService.modificarCantidad(
-      useAuth.negocioElegido._id,
+      authStore.negocio._id,
       estado.producto.id,
       estado.producto.cantidadMinima,
     );

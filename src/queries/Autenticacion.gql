@@ -27,6 +27,18 @@ query entidadesUsuarioConectado($opciones: BuscarOpciones = {}) {
     _id
     nombre
     tipo
+    empleados {
+      persona {
+        _id
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        permiso
+        vencimiento
+      }
+    }
   }
 }
 

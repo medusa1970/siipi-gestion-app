@@ -2,7 +2,7 @@
   <Empleado />
 </template>
 <script setup>
-import Empleado from '@/components/empleados/Empleado.vue';
+import Empleado from '~/components/Empleado.vue';
 definePageMeta({
   layout: 'punto',
 });

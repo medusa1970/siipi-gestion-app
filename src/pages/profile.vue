@@ -65,7 +65,6 @@ definePageMeta({
   layout: false,
 });
 import { ref, onMounted } from 'vue';
-import { authStore } from '@/stores/auth.store';
 import {
   ApiError,
   NotifyError,
@@ -74,7 +73,7 @@ import {
   showLoading,
 } from '@/helpers/message.service';
 
-const useAuth = authStore();
+const authStore = useAuthStore();
 const profile = ref({
   _id: '',
   nombre: '',
@@ -87,7 +86,7 @@ const modificarPersona = async () => {
   try {
     showLoading();
     const personaModificada = await personaModificar({
-      busqueda: { _id: [useAuth.user._id] },
+      busqueda: { _id: [authStore.user._id] },
       datos: profile.value,
     });
     NotifySucess('Persona modificada correctamente');
@@ -100,7 +99,7 @@ const getPersona = async () => {
   try {
     showLoading();
     const persona = await buscarModificar({
-      busqueda: { _id: [useAuth.user._id] },
+      busqueda: { _id: [authStore.user._id] },
       datos: profile.value,
     });
     profile.value = persona;

@@ -162,7 +162,6 @@ import { useInventary } from '@/composables/punto/useInventary';
 // import { useStock } from '@/composables/punto/useStock';
 import { onMounted, reactive } from 'vue';
 import { stockService } from '~/services/stock.service';
-import { authStore } from '@/stores/auth.store';
 import { inventarioService } from '~/services/inventary.service';
 import {
   NotifyError,
@@ -176,7 +175,7 @@ definePageMeta({
 });
 const { useProduct, printInventory, elegirProductoInventario } = useInventary();
 
-const useAuth = authStore();
+const authStore = useAuthStore();
 
 const estado = reactive({
   productosBloquesNull: [],
@@ -197,7 +196,7 @@ const estado = reactive({
 
 // const obtenerTodoStock = async () => {
 //   const almacen = await stockService.obtenerTodoStock(
-//     useAuth.negocioElegido._id,
+//     authStore.negocio._id,
 //   );
 
 //   estado.productosBloquesNull = almacen.filter((producto) => {
@@ -206,9 +205,7 @@ const estado = reactive({
 //   });
 // };
 const obtenerProductosInventariar = async () => {
-  const fila = await inventarioService.filaInventario(
-    useAuth.negocioElegido._id,
-  );
+  const fila = await inventarioService.filaInventario(authStore.negocio._id);
   estado.productosBloquesNull = fila;
   console.log(fila);
 };
@@ -226,13 +223,13 @@ const terminarInventario = async (producto) => {
     if (lote.vencimiento === '') lote.vencimiento = null;
   });
 
-  console.log(useAuth.negocioElegido._id);
+  console.log(authStore.negocio._id);
   console.log(producto._id);
   console.log(estado.inventario.lotes);
   /**LOGICA */
   inventarioService
     .realizarInventario(
-      useAuth.negocioElegido._id, //@ts-ignore
+      authStore.negocio._id, //@ts-ignore
       producto._id,
       estado.inventario.lotes,
       false,
@@ -249,7 +246,7 @@ const terminarInventario = async (producto) => {
             // console.log('first');
             inventarioService
               .realizarInventario(
-                useAuth.negocioElegido._id, //@ts-ignore
+                authStore.negocio._id, //@ts-ignore
                 producto._id,
                 estado.inventario.lotes,
                 true,
@@ -274,7 +271,7 @@ const terminarInventario = async (producto) => {
         // console.log('first');
         inventarioService
           .realizarInventario(
-            useAuth.negocioElegido._id, //@ts-ignore
+            authStore.negocio._id, //@ts-ignore
             producto._id,
             estado.inventario.lotes,
             true,

@@ -1,10 +1,9 @@
 import { ref, reactive } from 'vue';
 import { menuService } from '~/services/menu.service';
-import { authStore } from '@/stores/auth.store';
 import { NotifySucessCenter } from '~/helpers/message.service';
 
 export const useMenu = () => {
-  const useAuth = authStore();
+  const authStore = useAuthStore();
   const estado = reactive({
     menus: [],
     modal: {
@@ -18,8 +17,8 @@ export const useMenu = () => {
   });
 
   const obtenerMenus = async () => {
-    // console.log(useAuth.negocioElegido._id);
-    const menus = await menuService.listarMenus(useAuth.negocioElegido._id);
+    // console.log(authStore.negocio._id);
+    const menus = await menuService.listarMenus(authStore.negocio._id);
     // console.log(menus);
     estado.menus = menus;
   };
@@ -30,7 +29,7 @@ export const useMenu = () => {
 
   const crearMenu = async () => {
     await menuService.crearMenu(
-      useAuth.negocioElegido._id, //@ts-ignore
+      authStore.negocio._id, //@ts-ignore
       estado.menu.catalogo._id,
       estado.menu.exepciones,
     );

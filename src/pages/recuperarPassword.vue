@@ -59,7 +59,6 @@ definePageMeta({
   layout: false,
 });
 import Logo from '@/assets/img/logo.png';
-import { authService } from '../services/auth.service';
 
 const router = useRouter();
 const correo = ref('');
@@ -70,7 +69,7 @@ const isOtp = ref(false);
 const sendOTP = async () => {
   try {
     showLoading();
-    const res = await authService.pedirRDC(correo.value);
+    const res = await useAuth.pedirRDC(correo.value);
     if (res) isOtp.value = true;
     NotifySucess('Se ha enviado un codigo a tu correo');
     hideLoading();
@@ -81,7 +80,7 @@ const sendOTP = async () => {
 const actualizarContraseña = async () => {
   try {
     showLoading();
-    const res = await authService.actuarRDC(otp.value, contrasena.value);
+    const res = await useAuth.actuarRDC(otp.value, contrasena.value);
     if (res) {
       NotifySucess('Se ha actualizado tu contraseña');
       isOtp.value = false;

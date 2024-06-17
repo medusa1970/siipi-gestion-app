@@ -35,12 +35,11 @@ import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { pedidoService } from '~/services/pedido.service';
 import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
-import { authStore } from '@/stores/auth.store';
 import { useQuasar } from 'quasar';
 import PortadaCathering from '@/assets/img/cookies.png';
-import { useAuth } from '~/composables/auth/useAuth';
 
-const storeAuth = authStore();
+const authStore = useAuthStore();
+console.log(authStore.getUser);
 const $q = useQuasar();
 
 const storePedido = pedidoStore();
@@ -61,10 +60,10 @@ const realizarPedido = async () => {
     if (storePedido.isDespachar == false) {
       // RECIBE PEDIDO
       const pedido = await pedidoService.pedidoIniciar(
-        storeAuth.negocioElegido._id,
+        authStore.getNegocio?._id,
         storePedido.areaPedidoID,
         items,
-        useGqlToken(storeAuth.token),
+        useGqlToken(authStore.token),
       );
       if (pedido) {
         await pedidoService.pedidoConfirmarItems(pedido._id);
@@ -81,9 +80,9 @@ const realizarPedido = async () => {
       // SE DESPACHA PRODUCTO
       const pedido = await pedidoService.pedidoIniciar(
         storePedido.areaPedidoID,
-        storeAuth.negocioElegido._id,
+        authStore.getNegocio._id,
         items,
-        useGqlToken(storeAuth.token),
+        useGqlToken(authStore.token),
       );
       // console.log(pedido);
       if (pedido) {
@@ -101,14 +100,14 @@ const realizarPedido = async () => {
 
 // const menuListComputed = computed(() => {
 //   // FILTRO ALMACEN
-//   if (storeAuth.negocioElegido.permisos.includes('almacen')) {
+//   if (authStore.negocioElegido.permisos.includes('almacen')) {
 //     return menuListCathering.filter(
 //       (item) => item.label === 'Stock' || item.label === 'Pedidos',
 //     );
 //   }
 
 //   // FILTRO ADQUISICION
-//   if (storeAuth.negocioElegido.permisos.includes('almacen')) {
+//   if (authStore.negocioElegido.permisos.includes('almacen')) {
 //     return menuListCathering.filter(
 //       (item) => item.label === 'Stock' || item.label === 'Pedidos',
 //     );

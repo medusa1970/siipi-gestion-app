@@ -1,11 +1,11 @@
 import { extraer } from '../helpers/leo';
 import { ApiError, hideLoading, showLoading } from '../helpers/message.service';
 
-const postDataGql = async (gql: any) => {
+const postDataGql = async (gql: any, loading = true) => {
   try {
-    showLoading();
+    if (loading) showLoading();
     const data = await gql;
-    hideLoading();
+    if (loading) hideLoading();
     // solo retorna el primer valor
     // ya que el resultado de la consulta siempre es
     // { [nombre_consulta]: data }

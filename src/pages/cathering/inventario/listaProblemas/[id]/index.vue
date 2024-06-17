@@ -95,7 +95,6 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { authStore } from '@/stores/auth.store';
 import {
   ApiError,
   hideLoading,
@@ -114,7 +113,7 @@ definePageMeta({
 
 const { params } = useRoute();
 const router = useRouter();
-const useAuth = authStore();
+const authStore = useAuthStore();
 const texto = ref('');
 const qeditor = ref(texto);
 const problem = ref({});
@@ -127,10 +126,7 @@ const getProblem = async () => {
   console.log('first');
   try {
     showLoading();
-    const problema = await buscarProblema(
-      useAuth.negocioElegido._id,
-      params.id,
-    );
+    const problema = await buscarProblema(authStore.negocio._id, params.id);
     problem.value = problema;
     const text = problem.value.diferencias.map((item) => {
       return `<ol>
@@ -156,7 +152,7 @@ const resolverProblema = async () => {
   try {
     showLoading();
     const problemaResuelto = awaitresolverProblema(
-      useAuth.negocioIDSelected,
+      authStore.negocioIDSelected,
       params.id,
       {
         reporte: qeditor.value,

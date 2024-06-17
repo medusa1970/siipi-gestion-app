@@ -7,4 +7,3 @@ mutation crearAccion($datos: CrearAccionDto!, $opciones: CrearOpciones = {}) {
     _id
   }
 }
-      

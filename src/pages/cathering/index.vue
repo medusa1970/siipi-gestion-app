@@ -4,15 +4,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useAuth } from '~/composables/auth/useAuth';
 definePageMeta({
   middleware: ['auth'],
   layout: 'cathering',
 });
+const authStore = useAuthStore();
+console.log(authStore.getUser);
 
-const { checkPermisos } = useAuth();
-
-if (!checkPermisos(['HACER_INVENTARIO'])) {
-  console.log('no autorizado');
-}
+// if (!authStore.checkPermisos(['HACER_INVENTARIO'])) {
+//   console.log('no autorizado');
+// }
 </script>

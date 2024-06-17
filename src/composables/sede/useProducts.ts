@@ -495,9 +495,7 @@ export const useProducts = () => {
     $q.dialog({
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar esta categoria${
-        row.hijas?.length > 0
-          ? ', tiene ' + row.hijas.length + ' subcategorias'
-          : ''
+        row.hijas?.length > 0 ? `, tiene ${row.hijas.length} subcategorias` : ''
       }?`,
       cancel: true,
       persistent: true,

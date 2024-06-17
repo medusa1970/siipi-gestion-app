@@ -35,6 +35,7 @@ export const useProducts = () => {
       isAddPresentation: false,
       isAddCategory: false,
       isAddCategoryArbol: false,
+      esEditarCategoria: false,
       isAddProducts: false,
       // NEW
       isAddProduct: false,
@@ -463,14 +464,66 @@ export const useProducts = () => {
       estado.categoria.pariente,
       estado.categoria.nombre,
     );
-    NotifySucessCenter('Categoria agregada correctamente');
+    if (nuevaCategoria) {
+      NotifySucessCenter('Categoria agregada correctamente');
+      obtenerTodasCategorias();
+
+      //limpiar campos
+      estado.categoria.pariente = '';
+      estado.categoria.nombre = '';
+    }
     estado.modal.isAddCategoryArbol = false;
-    obtenerTodasCategorias();
   };
+  const modificarCategoriaArbol = async () => {
+    const categoriaModificada = await productoService.modificarCategoria(
+      estado.categoria.pariente,
+      estado.categoria.nombre,
+    );
+    if (categoriaModificada) {
+      NotifySucessCenter('Categoria modificada correctamente');
+      obtenerTodasCategorias();
+
+      //limpiar campos
+      estado.categoria.pariente = '';
+      estado.categoria.nombre = '';
+    }
+    estado.modal.isAddCategoryArbol = false;
+    estado.modal.esEditarCategoria = false;
+  };
+
+  const borrarCategoriaArbol = async (row: any) => {
+    $q.dialog({
+      title: `Eliminar ${row.nombre}`,
+      message: `¿Está seguro de eliminar esta categoria${
+        row.hijas?.length > 0
+          ? ', tiene ' + row.hijas.length + ' subcategorias'
+          : ''
+      }?`,
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      const categoriaBorrada = await productoService.borrarCategoria(row._id);
+      if (categoriaBorrada) {
+        NotifySucessCenter('Categoria eliminada correctamente');
+        obtenerTodasCategorias();
+      }
+    });
+  };
+
   const modalAgregarCategoria = (data: { _id: string }) => {
+    estado.categoria = { nombre: '', pariente: '' };
+    estado.modal.esEditarCategoria = false;
     estado.modal.isAddCategoryArbol = true;
     estado.categoria.pariente = data._id;
   };
+  const modalEditarCategoria = (data: any) => {
+    console.log(data);
+    estado.modal.esEditarCategoria = true;
+    estado.modal.isAddCategoryArbol = true;
+    estado.categoria.pariente = data._id;
+    estado.categoria.nombre = data.nombre;
+  };
+
   const navegarCrearOferta = (producto: any) => {
     storeOferta.oferta._id = '';
     storeOferta.oferta.nombre = '';
@@ -1031,5 +1084,8 @@ export const useProducts = () => {
     abrirModalEditarProveedor,
     editarProveedorProducto,
     limpiarCamposProveedor,
+    modalEditarCategoria,
+    modificarCategoriaArbol,
+    borrarCategoriaArbol,
   };
 };

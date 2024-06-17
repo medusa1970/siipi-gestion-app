@@ -162,9 +162,27 @@ mutation crearCategorias(
   crearCategorias(datos: $datos, opciones: $opciones) {
     _id
     nombre
-    pariente {
-      nombre
-    }
+  }
+}
+
+mutation modificarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $datos: ModificarCategoriaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarCategorias(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+mutation borrarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarCategorias(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
   }
 }
 

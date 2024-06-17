@@ -197,7 +197,8 @@ export const productoService = {
    * @returns Categoria
    */
   crearCategoria: async (categoriaID: string, nombre: string) => {
-    const categoria = await postDataGql(
+    console.log(categoriaID, nombre);
+    const [categoria] = await postDataGql(
       GqlCrearCategorias({
         datos: [
           {
@@ -205,6 +206,35 @@ export const productoService = {
             pariente: categoriaID,
           },
         ],
+        opciones: { populate: true },
+      }),
+    );
+    return categoria;
+  },
+  /**
+   * Editar una categoria
+   * @returns Categoria
+   */
+  modificarCategoria: async (categoriaID: string, nombre: string) => {
+    console.log(categoriaID, nombre);
+    const [categoria] = await postDataGql(
+      GqlModificarCategorias({
+        busqueda: { _id: [categoriaID] },
+        datos: { nombre },
+        opciones: { populate: true },
+      }),
+    );
+    return categoria;
+  },
+  /**
+   * Borrar una categoria
+   * @returns Categoria
+   */
+  borrarCategoria: async (categoriaID: string) => {
+    console.log(categoriaID);
+    const [categoria] = await postDataGql(
+      GqlBorrarCategorias({
+        busqueda: { _id: [categoriaID] },
       }),
     );
     return categoria;

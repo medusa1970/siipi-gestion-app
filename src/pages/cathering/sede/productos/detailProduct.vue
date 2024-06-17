@@ -1113,7 +1113,7 @@
           />
         </div>
       </div>
-      <!-- 
+
       <div class="flex justify-between items-center mt-2 mb-1">
         <h1 class="font-bold text-xs">PRECIOS POR MAYOR:</h1>
         <q-btn
@@ -1165,7 +1165,6 @@
           </tr>
         </tbody>
       </table>
-       -->
     </template>
   </Dialog2>
 

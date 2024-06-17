@@ -65,6 +65,7 @@
                     @click.stop="modalEditarCategoria(item)"
                   />
                   <q-icon
+                    v-if="!item.hijas.some((hija) => hija.productos.length > 0)"
                     name="delete"
                     color="red"
                     size="17px"
@@ -108,6 +109,7 @@
                         @click.stop="modalEditarCategoria(item2)"
                       />
                       <q-icon
+                        v-if="item2.productos.length === 0"
                         name="delete"
                         color="red"
                         size="17px"

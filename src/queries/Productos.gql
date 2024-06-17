@@ -146,10 +146,9 @@ query categoriaArbol(
       hijas {
         _id
         nombre
-        # productos {
-        #   _id
-        #   nombre
-        # }
+        productos {
+          _id
+        }
       }
     }
   }

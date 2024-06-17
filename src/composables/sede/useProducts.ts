@@ -766,6 +766,7 @@ export const useProducts = () => {
   const buscarProveedores = async () => {
     const proveedores = await productoService.buscarEntidadesProveedor();
     estado.proveedores = proveedores;
+    console.log(proveedores);
   };
   const crearProveedor = async () => {
     const [proveedorCreado] = await productoService.crearEntidadProveedor({
@@ -820,13 +821,29 @@ export const useProducts = () => {
     estado.productoProveedor.precios = [];
   };
 
+  // BUSCAR PROVEEDORES DE PRODUCTO BUG - falta filtrar
   const buscarProveedoresProducto = async () => {
-    estado.proveedoresProducto =
-      await productoService.buscarProveedoresProducto(
-        //@ts-expect-error
-        useProduct.producto._id,
+    console.log(useProduct.producto._id);
+    const proveedorProducto = await productoService.buscarProveedoresProducto(
+      //@ts-expect-error
+      useProduct.producto._id,
+    );
+    console.log(proveedorProducto);
+
+    const resultado = proveedorProducto.reduce((acc: any, proveedor: any) => {
+      const serviciosFiltrados = proveedor.servicios.filter(
+        (servicio: any) => servicio.producto._id === useProduct.producto._id,
       );
-    console.log(estado.proveedoresProducto);
+      if (serviciosFiltrados.length > 0) {
+        acc.push({
+          ...proveedor,
+          servicios: serviciosFiltrados,
+        });
+      }
+      return acc;
+    }, []);
+
+    estado.proveedoresProducto = resultado;
   };
 
   // EXTRAS
@@ -937,6 +954,7 @@ export const useProducts = () => {
   };
 
   const abrirModalEditarProveedor = (fila: any) => {
+    console.log(fila);
     estado.modal.esEditarProveedor = true;
     estado.modal.isAddProveedor = true;
 
@@ -967,16 +985,17 @@ export const useProducts = () => {
     );
     if (servicioProveedor) {
       NotifySucessCenter('Marca modificado correctamente');
-      estado.proveedoresProducto.forEach((proveedor) => {
-        if (proveedor._id === servicioProveedor._id) {
-          console.log(proveedor);
-          proveedor.servicios.forEach((servicio, index) => {
-            if (servicio._id === servicioProveedor.servicios[0]._id) {
-              proveedor.servicios[index] = servicioProveedor.servicios[0];
-            }
-          });
-        }
-      });
+      buscarProveedoresProducto();
+      // estado.proveedoresProducto.forEach((proveedor) => {
+      //   if (proveedor._id === servicioProveedor._id) {
+      //     console.log(proveedor);
+      //     proveedor.servicios.forEach((servicio, index) => {
+      //       if (servicio._id === servicioProveedor.servicios[0]._id) {
+      //         proveedor.servicios[index] = servicioProveedor.servicios[0];
+      //       }
+      //     });
+      //   }
+      // });
     }
     estado.modal.esEditarProveedor = false;
     estado.modal.isAddProveedor = false;

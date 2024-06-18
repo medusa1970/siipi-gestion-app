@@ -30,8 +30,6 @@
 </template>
 
 <script setup>
-import { obligatorio } from '@/helpers/validate.form';
-
 /**
  * Refs
  */
@@ -115,7 +113,7 @@ const handleChange = (newValue, oldValue) => {
   else {
     if (props.requerido) {
       errorEstado.value = true;
-      errorMessage.value = obligatorio(null);
+      errorMessage.value = requerido(null);
     }
     emits('update', null);
   }
@@ -142,7 +140,7 @@ const handleClear = (event) => {
 const handleBlur = (event) => {
   if (!preview.value) {
     errorEstado.value = true;
-    errorMessage.value = obligatorio(null);
+    errorMessage.value = requerido(null);
   }
 };
 </script>

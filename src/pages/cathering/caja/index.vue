@@ -288,7 +288,6 @@ import caja from '@/mocks/caja.json';
 import { tesoreriaCobrar } from '~/helpers/columns';
 import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import { NotifySucessCenter } from '~/helpers/message.service';
 
 const authStore = useAuthStore();
 const $q = useQuasar();

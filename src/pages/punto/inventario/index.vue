@@ -153,22 +153,15 @@
 </template>
 
 <script setup>
-import { useInventary } from '@/composables/punto/useInventary';
+import { useInventary } from '~/composables/empleados/useInventary';
 // import { useStock } from '@/composables/punto/useStock';
 import { onMounted, reactive, nextTick } from 'vue';
 import { stockService } from '~/services/stock.service';
 import { inventarioService } from '~/services/inventary.service';
-import {
-  NotifyError,
-  NotifySucess,
-  hideLoading,
-  showLoading,
-} from '~/helpers/message.service';
 
 definePageMeta({
   layout: 'punto',
 });
-const { useProduct, printInventory, elegirProductoInventario } = useInventary();
 
 const authStore = useAuthStore();
 

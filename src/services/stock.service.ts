@@ -1,5 +1,3 @@
-import { postDataGql } from './service.config';
-
 export const stockService = {
   /**
    * Busca el almacen de una entidad

@@ -210,9 +210,8 @@
 
 <script setup>
 import { stockProducts } from '@/helpers/columns';
-import { useStock } from '@/composables/punto/useStock';
+import { useStock } from '~/composables/empleados/useStock';
 import { ref, onMounted, computed } from 'vue';
-import { fechaDiaMes } from '@/helpers/fecha';
 definePageMeta({
   layout: 'punto',
 });

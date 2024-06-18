@@ -201,7 +201,6 @@
 import { columnsEmpleados } from '@/helpers/columns';
 import { useEmpleado } from '@/composables/useEmpleado';
 import { useRoute } from 'vue-router';
-import { string } from '~/helpers/validate.form';
 
 const route = useRoute();
 const {

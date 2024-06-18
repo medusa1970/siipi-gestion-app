@@ -1,6 +1,5 @@
 import { ref, reactive } from 'vue';
 import { menuService } from '~/services/menu.service';
-import { NotifySucessCenter } from '~/helpers/message.service';
 
 export const useMenu = () => {
   const authStore = useAuthStore();

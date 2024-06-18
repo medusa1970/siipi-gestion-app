@@ -196,14 +196,12 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { usePedido } from '@/composables/punto/usePedido';
-import { formateadorFecha, plazo24hrs } from '~/helpers/fecha';
+import { usePedido } from '~/composables/empleados/usePedido';
 import {
   detallePedido,
   detallePedidoAccion,
   detallePedidoAlmacen,
 } from '@/helpers/columns';
-import { hideLoading, showLoading } from '~/helpers/message.service';
 
 const { params } = useRoute();
 const {

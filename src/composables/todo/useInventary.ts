@@ -1,24 +1,18 @@
 /**
  * IMPORTS
  */
-import { ref, reactive, onMounted } from 'vue';
-import { Inventarios } from '@/mocks/data.json';
-import { productStore, type InventarioProps } from '@/stores/producto.store';
-import {
-  NotifyError,
-  NotifySucess,
-  hideLoading,
-  showLoading,
-} from '~/helpers/message.service';
+import { reactive, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { inventarioService } from '~/services/inventary.service';
+import { useProductoStore } from '../producto/useProductoStore';
+
 /**
  * LOGICA
  */
 export const useInventary = () => {
-  const authStore = useAuthStore();
   const $q = useQuasar();
-  const useProduct = productStore();
+  const authStore = useAuthStore();
+  const productoStore = useProductoStore();
 
   const estado = reactive({
     inventario: {
@@ -47,7 +41,7 @@ export const useInventary = () => {
     window.print();
   };
   const existInventary = async () => {
-    // if (useProduct.ListInventario.length > 0) {
+    // if (productoStore.ListInventario.length > 0) {
     //   $q.notify({
     //     type: 'positive',
     //     position: 'center',
@@ -64,29 +58,32 @@ export const useInventary = () => {
     if (productosMenu)
       productosMenu.forEach((item: any) => {
         if (
-          !useProduct.ListInventario.some(
+          !productoStore.ListInventario.some(
             (inventario) => inventario.id === item._id,
           )
         ) {
-          useProduct.ListInventario.push({ id: item._id, nombre: item.nombre });
+          productoStore.ListInventario.push({
+            id: item._id,
+            nombre: item.nombre,
+          });
         }
       });
-    // console.log(useProduct.ListInventario);
+    // console.log(productoStore.ListInventario);
     // console.log('first');
     // entidadProductosMenu.forEach((item: any) =>
-    //   useProduct.ListInventario.push(item),
+    //   productoStore.ListInventario.push(item),
     // );
-    // useProduct.ListInventario = [
-    //   ...useProduct.ListInventario,
+    // productoStore.ListInventario = [
+    //   ...productoStore.ListInventario,
     //   ...entidadProductosMenu,
     // ];
   };
   const terminarInventario = async () => {
-    useProduct.ListInventario = useProduct.ListInventario.filter(
+    productoStore.ListInventario = productoStore.ListInventario.filter(
       //@ts-ignore
       (item) => item.id !== estado.productoElegido.id,
     );
-    // console.log(useProduct.ListInventario);
+    // console.log(productoStore.ListInventario);
     // console.log(estado.productoElegido);
 
     // estado.inventario.producto = estado.productoElegido;
@@ -99,10 +96,10 @@ export const useInventary = () => {
     // console.log(estado.productoElegido);
     // console.log(estado.inventario.lotes);
     // NotifySucess('Inventario guardado');
-    // console.log(useProduct.ListInventario[currentIndex.value].producto._id);
+    // console.log(productoStore.ListInventario[currentIndex.value].producto._id);
     // console.log(estado.inventario.lotes);
 
-    if (useProduct.ListInventario.length > 0) {
+    if (productoStore.ListInventario.length > 0) {
       /**LOGICA */
       showLoading();
       inventarioService
@@ -125,7 +122,7 @@ export const useInventary = () => {
               showLoading();
               // console.log(authStore.negocio._id);
               // console.log(
-              //   useProduct.ListInventario[estado.currentIndex].producto._id
+              //   productoStore.ListInventario[estado.currentIndex].producto._id
               // );
               // console.log(estado.inventario.lotes);
 
@@ -173,16 +170,16 @@ export const useInventary = () => {
           hideLoading();
         });
     }
-    // console.log(useProduct.ListInventarioPDF);
+    // console.log(productoStore.ListInventarioPDF);
   };
   const logica = () => {
     estado.inventario.producto =
       //@ts-ignore
-      useProduct.ListInventario[estado.currentIndex].producto.nombre;
+      productoStore.ListInventario[estado.currentIndex].producto.nombre;
     //@ts-ignore
-    useProduct.ListInventarioPDF.push({ ...estado.inventario });
+    productoStore.ListInventarioPDF.push({ ...estado.inventario });
     // Eliminar el inventario actual de la lista
-    useProduct.ListInventario.splice(estado.currentIndex, 1);
+    productoStore.ListInventario.splice(estado.currentIndex, 1);
     estado.inventario.producto = '';
     estado.inventario.presentacion = '';
 
@@ -190,7 +187,7 @@ export const useInventary = () => {
     estado.currentIndex++;
 
     // Notificar cuando todos los inventarios han sido completados
-    if (useProduct.ListInventario.length === 0) {
+    if (productoStore.ListInventario.length === 0) {
       $q.notify({
         type: 'positive',
         position: 'center',
@@ -218,7 +215,7 @@ export const useInventary = () => {
     // existInventary();
     // Obtener la longitud de lotes del primer producto
     // const firstProductLotesLength = //@ts-ignore
-    //   useProduct.ListInventario[0]?.lotes?.length || 0;
+    //   productoStore.ListInventario[0]?.lotes?.length || 0;
     // // Inicializar table.value con la longitud correspondiente
     // estado.inventario.lotes = Array.from(
     //   { length: firstProductLotesLength },
@@ -235,7 +232,6 @@ export const useInventary = () => {
     printInventory,
     terminarInventario,
     agregarFila,
-    useProduct,
     elegirProductoInventario,
   };
 };

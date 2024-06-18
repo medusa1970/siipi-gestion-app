@@ -11,7 +11,7 @@
           label="Nombre"
           outlined
           dense
-          :rules="[string]"
+          :rules="[useRules.requerido]"
         />
         <q-input
           v-model="authPersona.apellido"
@@ -26,7 +26,7 @@
           label="Telefono"
           outlined
           dense
-          :rules="[phone]"
+          :rules="[useRules.phone]"
         />
         <q-input
           v-model="authPersona.correo"
@@ -41,7 +41,7 @@
           label="Contraseña"
           outlined
           dense
-          :rules="[password]"
+          :rules="[useRules.password]"
         />
       </template>
     </Formulario>
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import Logo from '@/assets/img/logo.png';
-import { NotifySucess } from '~/helpers/message.service';
+import { PersonaProps } from '~/composables/useAuth';
 definePageMeta({
   layout: false,
 });

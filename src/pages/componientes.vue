@@ -45,7 +45,7 @@
   <div>
     <p>Input textarea, value = {{ log(refTextarea) }}</p>
     <input-textarea
-      label="Textarea"
+      labeproductoServicel="Textarea"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refTextarea = v)"
       requerido
@@ -54,13 +54,14 @@
 </template>
 
 <script setup>
-import { obligatorio, password, phone, string } from '@/helpers/validate.form';
 import { ref, onMounted } from 'vue';
-import { useProducts } from '@/composables/sede/useProducts';
 import { columnsProductos } from '~/helpers/columns';
-import { fechaMes } from '@/helpers/fecha';
-import { fechaHora } from '@/helpers/fecha';
 import Producto from '@/assets/img/producto.png';
+import { useProducto } from '~/composables/producto/useProducto';
+import { useProductoStore } from '~/composables/producto/useProductoStore';
+
+const productoService = useProducto();
+const productoStore = useProductoStore();
 
 definePageMeta({
   layout: 'cathering',
@@ -87,45 +88,12 @@ const updateCategoria = (v) => {
   }
 };
 
-const {
-  estado,
-  getAllProductos,
-  navegarDetalleProducto,
-  modalAgregarProducto,
-  borrarProducto,
-  navegarCrearOferta,
-  getCategoria,
-  producto,
-  imagen,
-  imagePreview,
-  crearProductoBasico,
-  esEditarProducto,
-  mostrarInformacionProducto,
-  verImagen,
-} = useProducts();
-
 /*
 Use onMounted for components that do not rely on the fetched data for their initial render.
 Consider onBeforeMount if the fetched data is essential for the initial render.
 Use onServerPrefetch, asyncData, or fetch in Nuxt.js for server-side rendered or statically generated pages to improve performance and SEO.
 */
 onMounted(async () => {
-  getAllProductos();
-  await getCategoria();
-  categoriaOptions.value = [];
-  for (const cat of estado.categorias.hijas) {
-    categoriaOptions.value.push({
-      label: `${cat.nombre} (${cat.hijas.length})`,
-      disable: true,
-      class: 'title',
-    });
-    for (const subcat of cat.hijas) {
-      categoriaOptions.value.push({
-        label: subcat.nombre,
-        value: subcat._id,
-        class: 'option',
-      });
-    }
-  }
+  categoriaOptions.value = await productoService.categoriaSelectOptions();
 });
 </script>

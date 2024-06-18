@@ -125,7 +125,7 @@
 definePageMeta({
   layout: 'cathering',
 });
-import { useOferta } from '@/composables/marca/useOferta';
+import { useOferta } from '~/composables/empleados/useOferta';
 import Dialog from '@/components/Dialog.vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';

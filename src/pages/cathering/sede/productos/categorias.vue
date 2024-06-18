@@ -80,14 +80,13 @@
 definePageMeta({
   layout: 'cathering',
 });
-import { useProducts } from '@/composables/sede/useProducts';
 
 const {
   obtenerTodasCategorias,
   estado,
   agregarCategoriaArbol,
   modalAgregarCategoria,
-} = useProducts();
+} = useProducto();
 
 const expanded = ref(['Todas las categorias', 'Diversos', 'Consumibles']);
 const selectedCategory = ref('');

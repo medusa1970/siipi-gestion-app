@@ -18,7 +18,7 @@
       TABLE
       -->
 
-    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
+    <Table badge :rows="productos" :columns="columnsProductos" dense>
       <!-- BADGE -->
       <template #dropdown>
         <q-btn
@@ -28,7 +28,7 @@
           no-caps
           style="font-size: 14.5px"
           padding="4px 10px"
-          @click="estado.modal.isAddProduct = true"
+          @click="show_crearProductoBasico = true"
         />
       </template>
 
@@ -51,7 +51,7 @@
             />
             <q-img
               v-else
-              :src="Producto"
+              :src="ProductoImage"
               spinner-color="black"
               class="cell-image"
               width="40px"
@@ -59,11 +59,8 @@
             />
           </q-td>
           <q-td key="modificado" :props="props">
-            <h1 v-if="props.row._modificado == null" class="text-green-800">
-              Nuevo
-            </h1>
-            <h1 v-else>
-              {{ fechaHora(props.row._modificado) }}
+            <h1 :class="props.row._modificado ? '' : 'text-green-800'">
+              {{ fechaHora(props.row._modificado ?? props.row._creado) }}
             </h1>
           </q-td>
           <q-td key="nombre" :props="props">
@@ -105,36 +102,13 @@
     </Table>
   </div>
 
-  <!--
-  DIALOG DOUBLECLICK
-  -->
-
-  <q-dialog persistent>
-    <q-card style="width: 200px" class="px-3 py-1">
-      <div class="flex justify-between items-center">
-        <h1 class="text-md font-bold truncate-7">{{ row.nombre }}</h1>
-        <q-btn icon="close" flat round dense v-close-popup />
-      </div>
-
-      <div class="flex gap-2 mb-3 mt-2 justify-center">
-        <q-btn
-          color="primary"
-          label="Editar"
-          no-caps
-          style="font-size: 14px; width: 70px"
-          padding="4px 10px"
-          @click="navegarDetalleProducto(row)"
-        />
-      </div>
-    </q-card>
-  </q-dialog>
-
-  <!--
-  CREAR PRODUCTO BASICO
+  <!-- 
+    MODAL
+    crearProductoBasico 
   -->
 
   <Dialog2
-    v-model="estado.modal.isAddProduct"
+    v-model="show_crearProductoBasico"
     title="Crear producto"
     label-btn="Crear"
     :handle-submit="crearProductoBasico"
@@ -147,292 +121,105 @@
       </p>
 
       <!-- nombre -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Nombre *"
-            v-model="producto.datosBasicos.nombre"
-            class="w-full"
-            type="text"
-            filled
-            required
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
-          />
-        </div>
+      <div>
+        <input-text
+          label="Texto"
+          info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+          @update="(v) => (datos_crearProductoBasico.nombre = v)"
+          requerido
+        />
       </div>
 
       <!-- Categoria -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-select
-            label="Categoria *"
-            v-model="producto.datosBasicos.categoria"
-            :options="options"
-            class="w-full"
-            map-options
-            dense
-            filled
-            required
-          >
-            <template v-slot:option="scope">
-              <q-item
-                v-bind="scope.itemProps"
-                v-on="scope.itemEvents"
-                :class="scope.opt.class"
-              >
-                <q-item-section>{{ scope.opt.label }}</q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          />
-        </div>
+      <div>
+        <input-dropdown
+          label="Categoria"
+          :options="categoriaOptions"
+          info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          @update="(v) => (datos_crearProductoBasico.categoria = v)"
+          requerido
+        />
       </div>
 
       <!-- Imagen -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <q-img
-          style="width: 150px; height: 150px; object-fit: cover"
-          v-if="imagePreview"
-          :src="imagePreview"
-        ></q-img>
-        <div style="flex-grow: 1">
-          <q-file
-            class="w-full"
-            v-model="imagen"
-            label="Imagen *"
-            accept=".jpg, .png, .jpge"
-            max-total-size="560000"
-            @rejected="onRejected"
-            counter
-            filled
-            hint="Tamaño máximo de imagen 540KB"
-            clearable
-            dense
-            required
-          >
-            <template v-slot:prepend>
-              <q-icon name="photo_camera" @click.stop.prevent />
-            </template>
-          </q-file>
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
-          />
-        </div>
+      <div>
+        <input-image
+          label="Imagen"
+          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+          @update="
+            (v) =>
+              (datos_crearProductoBasico.imagen = {
+                data: v,
+                mimetype: 'image/png',
+              })
+          "
+          icono="photo_camera"
+        />
       </div>
 
       <!-- Comentario -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            class="w-full"
-            v-model="producto.datosBasicos.comentario"
-            type="textarea"
-            label="Comentario"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-          />
-        </div>
+      <div>
+        <input-textarea
+          labeproductoServicel="Textarea"
+          info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+          @update="(v) => (datos_crearProductoBasico.comentario = v)"
+        />
       </div>
     </template>
   </Dialog2>
 
-  <!-- 
-  VER INFORMACION PRODUCTO
-  -->
-
-  <Dialog2
-    v-model="estado.modal.esMostrarInformacionProducto"
-    title="Informacion producto"
-    no-btn
-  >
-    <template #inputsDialog>
-      <!-- <h1 class="font-bold uppercase text-center mb-2 text-blue-800">
-        {{ producto.informacion.nombre }}
-      </h1> -->
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
-      <span class="flex gap-2 items-center"
-        ><h1 class="font-bold text-xs">NOMBRE:</h1>
-        <p>{{ producto.informacion?.nombre }}</p></span
-      >
-      <span class="flex gap-2 items-center"
-        ><h1 class="font-bold text-xs">COMENTARIO:</h1>
-        <p>{{ producto.informacion?.comentario }}</p></span
-      >
-      <span class="flex gap-2 items-center"
-        ><h1 class="font-bold text-xs">CATEGORIA:</h1>
-        <p>{{ producto.informacion.categoria?.nombre }}</p></span
-      >
-
-      <!-- MARCAS -->
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCAS</h1>
-      <div
-        v-for="variedad in producto.informacion.variedades"
-        :key="variedad._id"
-        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-      >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">MARCA:</h1>
-          <p>{{ variedad.marca.nombre }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-          <p>{{ variedad.cantidadMin }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
-          <p>{{ variedad.cantidadMax }}</p></span
-        >
-      </div>
-      <h1 v-if="producto.informacion.variedades.length == 0">Sin marcas ...</h1>
-
-      <!-- MEDIDAS -->
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-        MEDIDA & EMPAQUES
-      </h1>
-      <span class="flex gap-2 items-center"
-        ><h1 class="font-bold text-xs">MEDIDA:</h1>
-        <p v-if="producto.informacion?.medida">
-          {{ producto.informacion?.medida?.nombre }}
-        </p>
-        <p v-else>sin medida basica...</p>
-      </span>
-      <div
-        v-for="empaque in producto.informacion.empaques"
-        :key="empaque"
-        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-      >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">NOMBRE:</h1>
-          <p>{{ empaque.nombre }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">ABREVIACION:</h1>
-          <p>{{ empaque.abreviacion }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">CANTIDAD:</h1>
-          <p>{{ empaque.cantidad }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">MARCA:</h1>
-          <p>{{ empaque.marca.nombre }}</p></span
-        >
-      </div>
-      <h1 v-if="producto.informacion.empaques.length == 0">Sin empaques ...</h1>
-    </template>
-  </Dialog2>
-
-  <!--
-  VER IMAGEN PRODUCTO
-  -->
-
-  <Dialog2 v-model="estado.modal.mostrarImagen" title="Imagen producto" no-btn>
-    <template #inputsDialog>
-      <q-img
-        v-if="producto.imagenSrc"
-        style="width: 100%; height: 100%; object-fit: cover"
-        :src="producto.imagenSrc"
-      ></q-img>
-      <h1 v-else>No hay imagen...</h1>
-    </template>
-  </Dialog2>
+  {{ crearProducto }}
 </template>
 
-<script setup>
-/**
- * Layout
- */
+<script setup lang="ts">
+import ProductoImage from '@/assets/img/producto.png';
+import { columnsProductos } from '~/helpers/columns';
+import { useProducto } from '~/composables/producto/useProducto';
+import { useProductoStore } from '~/composables/producto/useProductoStore';
 
+// types
+import type {
+  CrearProductoBasico,
+  Producto,
+} from '~/composables/producto/producto.interface';
+
+// composables
+const productoService = useProducto();
+const productoStore = useProductoStore();
+
+// layout
 definePageMeta({
   layout: 'cathering',
 });
 
-/**
- * Imports
- */
-
-import { ref, onMounted } from 'vue';
-import { useProducts } from '@/composables/sede/useProducts';
-import { columnsProductos } from '~/helpers/columns';
-import { fechaMes } from '@/helpers/fecha';
-import { fechaHora } from '@/helpers/fecha';
-import Producto from '@/assets/img/producto.png';
-
-/**
- * Refs
- */
-
-// const isDoubleClick = ref(false);
+// Refs y reactives
 const row = ref('');
 const options = ref([]);
+const productos = ref(await productoStore.getProductos());
+// productos.value = await productoStore.getProductos();
+const categoriaOptions = ref(await productoService.categoriaSelectOptions());
 
-// const ControladorFila = (props) => {
-//   row.value = props.row;
-//   isDoubleClick.value = true;
-// };
+// MODAL crearProductoBasico
+const show_crearProductoBasico = ref(false);
+const init_crearProductoBasico = {
+  nombre: null,
+  categoria: null,
+  comentario: null,
+  imagen: null,
+} as CrearProductoBasico;
+const datos_crearProductoBasico = ref(init_crearProductoBasico);
+const crearProductoBasico = async () => {
+  productoService.crearProductoBasico(datos_crearProductoBasico.value);
+  Object.assign(datos_crearProductoBasico, init_crearProductoBasico);
+  show_crearProductoBasico.value = false;
+};
 
-/**
- * Services
- */
-
-const {
-  estado,
-  getAllProductos,
-  navegarDetalleProducto,
-  modalAgregarProducto,
-  navegarCrearOferta,
-  getCategoria,
-  producto,
-  imagen,
-  imagePreview,
-  crearProductoBasico,
-  esEditarProducto,
-  mostrarInformacionProducto,
-  verImagen,
-} = useProducts();
-
-/**
- * Hooks
- */
-
-onMounted(async () => {
-  getAllProductos();
-  await getCategoria();
-
-  options.value = [];
-  for (const cat of estado.categorias.hijas) {
-    options.value.push({
-      label: `${cat.nombre} (${cat.hijas.length})`,
-      value: cat._id,
-      disable: true,
-      class: 'title',
-    });
-    for (const subcat of cat.hijas) {
-      options.value.push({
-        label: subcat.nombre,
-        value: subcat,
-        class: 'option',
-      });
-    }
-  }
-  producto.datosBasicos.categoria = null;
-});
+// subscriptions
+// productoStore.$subscribe((mutation, state) => {
+//   if (mutation.payload.productos) {
+//     productos.value = state.productos;
+//   }
+// });
 </script>
 
 <style scoped>

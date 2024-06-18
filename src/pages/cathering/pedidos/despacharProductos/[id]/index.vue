@@ -100,7 +100,7 @@ definePageMeta({
   layout: 'cathering',
 });
 import { ref, onMounted, watch } from 'vue';
-import { usePedido } from '~/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRoute } from 'vue-router';
 import { ofertaService } from '~/services/ofertas.service';

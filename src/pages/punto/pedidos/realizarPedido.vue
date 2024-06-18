@@ -74,7 +74,7 @@
   </div>
 </template>
 <script setup>
-import { usePedido } from '@/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 import { watch } from 'vue';
 import { pedidoStore } from '@/stores/pedido.store';
 definePageMeta({

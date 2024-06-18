@@ -55,12 +55,13 @@ query buscarProductos(
   }
 }
 
-mutation crearProductos(
+mutation crearProductosBasico(
   $datos: [CrearProductoDto!]!
   $opciones: CrearOpciones = {}
 ) {
   crearProductos(datos: $datos, opciones: $opciones) {
     _id
+    _creado
     nombre
     comentario
     categoria {
@@ -72,6 +73,120 @@ mutation crearProductos(
     }
   }
 }
+
+query categoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    # productos {
+    #   nombre
+    # }
+    hijas {
+      _id
+      nombre
+      # productos {
+      #   _id
+      #   nombre
+      # }
+      hijas {
+        _id
+        nombre
+        # productos {
+        #   _id
+        #   nombre
+        # }
+      }
+    }
+  }
+}
+
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+###
+
+#
+# PRODUCTOS
+#
 
 mutation modificarProductos(
   $busqueda: BuscarProductoDto!
@@ -126,35 +241,6 @@ mutation borrarProductos(
   }
 }
 
-query categoriaArbol(
-  $busqueda: BuscarCategoriaDto!
-  $opciones: BuscarOpciones = {}
-) {
-  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
-    _id
-    nombre
-    # productos {
-    #   nombre
-    # }
-    hijas {
-      _id
-      nombre
-      # productos {
-      #   _id
-      #   nombre
-      # }
-      hijas {
-        _id
-        nombre
-        # productos {
-        #   _id
-        #   nombre
-        # }
-      }
-    }
-  }
-}
-
 mutation crearCategorias(
   $datos: [CrearCategoriaDto!]!
   $opciones: CrearOpciones = {}
@@ -169,23 +255,6 @@ mutation crearCategorias(
 }
 
 # NUEVO
-mutation crearProductosBasicos(
-  $datos: [CrearProductoDto!]!
-  $opciones: CrearOpciones = {}
-) {
-  crearProductos(datos: $datos, opciones: $opciones) {
-    _id
-    nombre
-    comentario
-    imagen {
-      archivoLocal
-      cloudinaryUrl
-    }
-    categoria {
-      _id
-    }
-  }
-}
 
 mutation modificarProductosBasicos(
   $busqueda: BuscarProductoDto!

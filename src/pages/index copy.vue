@@ -17,7 +17,7 @@
             label="Contraseña"
             outlined
             dense
-            :rules="[password]"
+            :rules="[useRules.password]"
             clearable
             :type="isPwd ? 'password' : password"
           >
@@ -127,7 +127,6 @@ definePageMeta({
   layout: false,
   middleware: ['auth'],
 });
-import { password } from '@/helpers/validate.form';
 import { LocalStorage } from 'quasar';
 
 const hacerAtras = () => {

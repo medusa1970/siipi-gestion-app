@@ -82,7 +82,7 @@
 definePageMeta({
   layout: 'punto',
 });
-import { useMenu } from '@/composables/punto/useMenu';
+import { useMenu } from '~/composables/empleados/useMenu';
 import { onMounted, ref } from 'vue';
 import { ofertaService } from '~/services/ofertas.service';
 

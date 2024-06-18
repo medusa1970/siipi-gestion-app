@@ -1,15 +1,8 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue';
-import {
-  NotifyError,
-  NotifySucess,
-  NotifySucessCenter,
-  hideLoading,
-  showLoading,
-} from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { pedidoService } from '~/services/pedido.service';
 import { useRouter } from 'vue-router';
-import { pedidoStore } from '@/stores/pedido.store';
+import { pedidoStore } from '~/composables/stores/pedido.store';
 import { menuService } from '~/services/menu.service';
 import { ofertaService } from '~/services/ofertas.service';
 import { stockService } from '~/services/stock.service';
@@ -91,7 +84,6 @@ export const usePedido = () => {
     showLoading();
     const listaPedidos = await pedidoService.pedidoBuscar(
       { comprador: [authStore.negocio._id] },
-      // @ts-expect-error (creado dinamicamente)
       useGqlToken(authStore.token),
     );
     // console.log(listaPedidos);
@@ -130,7 +122,6 @@ export const usePedido = () => {
     showLoading();
     const listaPedidos = await pedidoService.pedidoBuscar(
       { vendedor: [authStore.negocio._id] },
-      // @ts-expect-error (creado dinamicamente)
       useGqlToken(authStore.token),
     );
     // console.log(listaPedidos);
@@ -300,7 +291,6 @@ export const usePedido = () => {
   const buscarPedidoID = async (pedidoID: string) => {
     const [pedido] = await pedidoService.pedidoBuscar(
       { _id: [pedidoID] },
-      // @ts-expect-error (creado dinamicamente)
       useGqlToken(authStore.token),
     );
     estado.pedidoDetalle = pedido;
@@ -851,7 +841,7 @@ export const usePedido = () => {
 
   const mostrarEntidadSinPedidos = async () => {
     estado.modal.isShowEntidad = true;
-    const listaEntidades = await useAuth.buscarTodasEntidades();
+    const listaEntidades = await useEntidad.buscarTodasEntidades();
 
     estado.entidadesSinPedidos = listaEntidades.filter((entidad: any) => {
       if (entidad.tipo !== 'PUNTO') return false;

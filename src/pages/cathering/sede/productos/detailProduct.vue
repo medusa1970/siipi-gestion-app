@@ -182,10 +182,10 @@
   -->
     <q-tab-panel name="marcas" animated>
       <p>Seleccione las diferentes marcas con que viene el producto.</p>
-      <!-- <code>{{ useProduct.producto.variedades }}</code> -->
+      <!-- <code>{{ useProducto.producto.variedades }}</code> -->
 
       <Table
-        :rows="useProduct.producto.variedades"
+        :rows="useProducto.producto.variedades"
         :columns="marcas"
         style="padding: 0"
         badge
@@ -264,9 +264,9 @@
       <div class="flex flex-col mt-3 mb-3">
         <div
           v-if="
-            !useProduct.producto.empaques ||
-            (useProduct.producto.empaques &&
-              useProduct.producto.empaques.length === 0)
+            !useProducto.producto.empaques ||
+            (useProducto.producto.empaques &&
+              useProducto.producto.empaques.length === 0)
           "
         >
           <div v-if="!estado.medidaProducto.medida">
@@ -337,8 +337,8 @@
             <div class="!flex flex-row w-full gap-3 items-center">
               <q-btn
                 v-if="
-                  useProduct.producto.empaques &&
-                  useProduct.producto.empaques.length === 0
+                  useProducto.producto.empaques &&
+                  useProducto.producto.empaques.length === 0
                 "
                 class="display-block mx-auto mt-1"
                 color="primary"
@@ -398,20 +398,20 @@
             Los empaques son la formas que llegan en producto en el almacén, por
             ejemplo en tira o paquete de tal o tal marca.
           </p>
-          <div v-if="useProduct.producto.variedades?.length === 0">
+          <div v-if="useProducto.producto.variedades?.length === 0">
             <p>
               Para poder agregar empaques, primero debes agregar por lo menos
               una marca al producto.
             </p>
           </div>
-          <Table :rows="useProduct.producto.empaques" :columns="empaques">
+          <Table :rows="useProducto.producto.empaques" :columns="empaques">
             <template #dropdown>
               <q-btn
                 color="primary"
                 icon="add"
                 label="Agregar empaque"
                 no-caps
-                :disable="useProduct.producto.variedades?.length === 0"
+                :disable="useProducto.producto.variedades?.length === 0"
                 @click="
                   () => {
                     limpiarCamposEmpaque();
@@ -514,40 +514,6 @@
       />
     </q-tab-panel>
   </q-tab-panels>
-
-  <!-- DIALOG -->
-  <Dialog
-    v-model="estado.dialog.isAddPresentation"
-    :title="
-      estado.dialog.isEditPresentation
-        ? 'Editar presentacion'
-        : 'Agregar presentacion'
-    "
-    :handle-submit="
-      estado.dialog.isEditPresentation
-        ? modificarPresentacion
-        : agregarPresentacion
-    "
-  >
-    <template #inputsDialog>
-      <div class="flex flex-col gap-2">
-        <q-input
-          v-model="estado.presentacion.nombre"
-          type="text"
-          label="Nombre"
-          outlined
-          dense
-        />
-        <q-input
-          v-model.number="estado.presentacion.cantidad"
-          type="number"
-          label="cantidad"
-          outlined
-          dense
-        />
-      </div>
-    </template>
-  </Dialog>
 
   <!-- PRODUCTO MARCA -->
   <Dialog2
@@ -758,7 +724,7 @@
       <q-select
         color="primary"
         v-model="estado.medidaProducto.marca"
-        :options="useProduct.producto.variedades"
+        :options="useProducto.producto.variedades"
         label="Seleccionar marca"
         :option-label="(option) => option.marca?.nombre"
         emit-value
@@ -851,7 +817,7 @@
             class="w-full"
             v-model="estado.medidaProducto.marca"
             :options="
-              useProduct.producto.variedades.map((variedad) => variedad.marca)
+              useProducto.producto.variedades.map((variedad) => variedad.marca)
             "
             option-label="nombre"
             map-options
@@ -1033,7 +999,7 @@
             label="Marca *"
             required
             v-model="estado.productoProveedor.marca"
-            :options="useProduct.producto.variedades"
+            :options="useProducto.producto.variedades"
             :option-label="(option) => option.marca?.nombre"
             emit-value
             class="w-full"
@@ -1389,7 +1355,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useProducts } from '@/composables/sede/useProducts';
+import { useProducts } from '~/composables/empleados/useProducto';
 import { marcas, proveedores, empaques } from '~/helpers/columns';
 
 // Verificacion de permisos
@@ -1404,15 +1370,9 @@ const soloAlmacenAdquisicion = ref(checkPermisos(['ADQUISICION', 'ALMACEN']));
 
 const {
   tags,
-  agregarProducto,
   editProductBasicInfo,
   estado,
-  useProduct,
-  modalAgregarPresentacion,
-  agregarPresentacion,
-  modalEditarPresentacion,
-  modificarPresentacion,
-  borrarPresentacion,
+  useProducto,
   getCategoria,
   imagen,
   imagePreview,
@@ -1463,11 +1423,11 @@ const fnGuardarMedidaBasica = () => {
   showTable.value = true;
 };
 
-if (useProduct.producto) {
-  producto.productoID = useProduct.producto._id;
-  producto.datosBasicos = useProduct.producto;
-  estado.medidaProducto.medida = useProduct.producto.medida;
-  imagePreview.value = useProduct.producto.imagen?.cloudinaryUrl;
+if (useProducto.producto) {
+  producto.productoID = useProducto.producto._id;
+  producto.datosBasicos = useProducto.producto;
+  estado.medidaProducto.medida = useProducto.producto.medida;
+  imagePreview.value = useProducto.producto.imagen?.cloudinaryUrl;
   // console.log(producto.datosBasicos);
 }
 

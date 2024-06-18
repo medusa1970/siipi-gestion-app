@@ -1088,9 +1088,8 @@ definePageMeta({
 });
 import { ref, onMounted, watch, nextTick } from 'vue';
 import { aceptados, porAceptar } from '@/mocks/puntos.json';
-import { usePedido } from '@/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 import { pedidoGlobal } from '~/helpers/columns';
-import { formateadorFecha } from '@/helpers/fecha';
 import Logo from '@/assets/img/logo.png';
 
 const {

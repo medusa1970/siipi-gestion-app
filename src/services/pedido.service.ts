@@ -1,5 +1,4 @@
 // import type { GqlPedidoIniciar } from '#gql';
-import { postDataGql } from './service.config';
 //
 // const authStore = useAuthStore();
 interface Item {

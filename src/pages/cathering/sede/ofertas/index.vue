@@ -338,9 +338,8 @@ definePageMeta({
   layout: 'cathering',
 });
 import { columnsOfertas } from '@/helpers/columns';
-import { useOferta } from '@/composables/marca/useOferta';
+import { useOferta } from '~/composables/empleados/useOferta';
 import { onMounted, ref } from 'vue';
-import { fechaMes } from '@/helpers/fecha';
 // import {} from "@/as"
 import Oferta from '@/assets/img/oferta.png';
 

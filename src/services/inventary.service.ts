@@ -1,5 +1,3 @@
-import { postDataGql } from './service.config';
-
 export const inventarioService = {
   /**
    * Realiza un inventario

@@ -1,7 +1,4 @@
-import { extraer } from '../helpers/leo';
-import { ApiError, hideLoading, showLoading } from '../helpers/message.service';
-
-const postDataGql = async (gql: any, loading = true) => {
+export default async (gql: any, loading = true) => {
   try {
     if (loading) showLoading();
     const data = await gql;
@@ -15,5 +12,3 @@ const postDataGql = async (gql: any, loading = true) => {
     ApiError(error);
   }
 };
-
-export { postDataGql };

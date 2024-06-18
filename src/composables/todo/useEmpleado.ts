@@ -1,9 +1,36 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { NotifySucessCenter } from '@/helpers/message.service';
 import { useQuasar } from 'quasar';
 import { empleadoService } from '@/services/empleados.service';
-import type { Empleado, Persona } from '~/interfaces/empleado.type';
+
+export interface Empleado {
+  _id: string;
+  persona: Persona;
+  cargos: Cargo[];
+  permisos: Permiso[];
+}
+
+export interface Permiso {
+  _id: string;
+  permiso: String;
+  vencimiento: Date | null;
+}
+
+export interface Cargo {
+  _id: string;
+  nombre: String;
+}
+
+export interface Persona {
+  _id?: string | null | undefined;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  telefono: string;
+  imagen: {
+    cloudinaryUrl: string;
+  };
+}
 
 export const useEmpleado = () => {
   // CONFIGURACION INCIAL

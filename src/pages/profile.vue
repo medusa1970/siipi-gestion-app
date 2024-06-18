@@ -65,13 +65,6 @@ definePageMeta({
   layout: false,
 });
 import { ref, onMounted } from 'vue';
-import {
-  ApiError,
-  NotifyError,
-  NotifySucess,
-  hideLoading,
-  showLoading,
-} from '@/helpers/message.service';
 
 const authStore = useAuthStore();
 const profile = ref({

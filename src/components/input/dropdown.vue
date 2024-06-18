@@ -4,7 +4,7 @@
     :label="label + (requerido ? '*' : '')"
     v-model="selected"
     @update:model-value="handleChange"
-    :rules="requerido ? [obligatorio, ...rules] : rules"
+    :rules="requerido ? [useRules.requerido, ...rules] : rules"
     :dense="!notDense"
     :required="requerido"
     filled
@@ -33,8 +33,6 @@
 </template>
 
 <script setup>
-import { obligatorio } from '@/helpers/validate.form';
-
 /**
  * Refs
  */

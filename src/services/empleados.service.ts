@@ -1,5 +1,3 @@
-import { postDataGql } from './service.config';
-
 export const empleadoService = {
   /**
    * Busca todos los empleados de una entidad

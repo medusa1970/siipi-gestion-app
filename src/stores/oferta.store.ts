@@ -1,5 +1,3 @@
-// import type { Product } from '~/interfaces/product.interface';
-
 interface ofertaState {
   isEdit: boolean;
   isEditIngrediente: boolean;

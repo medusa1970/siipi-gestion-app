@@ -1,11 +1,8 @@
 import { reactive, onMounted, ref, watch } from 'vue';
-import { NotifySucessCenter } from '~/helpers/message.service';
 import { ofertaService } from '~/services/ofertas.service';
-import { ofertaStore } from '@/stores/oferta.store';
+import { ofertaStore } from '~/stores/oferta.store';
 import { useRouter } from 'vue-router';
-import { ca, da, es, id } from 'date-fns/locale';
 import { useQuasar } from 'quasar';
-import { fileToBase64 } from '~/helpers/helpers';
 
 export const useOferta = () => {
   const storeOferta = ofertaStore();

@@ -1,5 +1,3 @@
-import { NotifyError, NotifySucess } from '@/helpers/message.service';
-
 /**
  * AuthStore: Almacén de estado para la autenticación
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
@@ -138,9 +136,10 @@ export const useAuthStore = defineStore('auth', {
         );
       } else {
         // ??
-        return true;
+        return false;
       }
     },
   },
+
   persist: true,
 });

@@ -34,7 +34,6 @@ import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { pedidoService } from '~/services/pedido.service';
-import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
 import PortadaCathering from '@/assets/img/cookies.png';
 

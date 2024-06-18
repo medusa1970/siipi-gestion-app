@@ -4,7 +4,7 @@
     class="w-full"
     v-model="localModel"
     :label="label + (requerido ? '*' : '')"
-    :rules="requerido ? [obligatorio, ...rules] : rules"
+    :rules="requerido ? [useRules.requerido, ...rules] : rules"
     :dense="!notDense"
     :required="requerido"
     filled
@@ -20,8 +20,6 @@
 </template>
 
 <script setup>
-import { obligatorio } from '@/helpers/validate.form';
-
 /**
  * Refs
  */

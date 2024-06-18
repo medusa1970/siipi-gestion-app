@@ -6,7 +6,7 @@
 type ValidationRule = (val: any) => string | undefined;
 
 // campo required
-export function obligatorio(val: any): string | true {
+export function requerido(val: any): string | true {
   if (val === null || val === '') {
     return 'Campo requerido';
   }

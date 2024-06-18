@@ -58,7 +58,7 @@ definePageMeta({
   layout: 'cathering',
 });
 import { onMounted } from 'vue';
-import { useOferta } from '@/composables/marca/useOferta';
+import { useOferta } from '~/composables/empleados/useOferta';
 const {
   obtenerTodoCatalagos,
   estado,

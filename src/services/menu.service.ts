@@ -1,5 +1,3 @@
-import { postDataGql } from './service.config';
-
 export const menuService = {
   /**
    * Lista de los menus de una entidad

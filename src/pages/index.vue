@@ -79,7 +79,6 @@
 <script setup>
 import Logo from '@/assets/img/logo.png';
 import { nextTick } from 'vue';
-import { NotifySucess, NotifyError } from '~/helpers/message.service';
 import { MutationType } from 'pinia';
 
 definePageMeta({

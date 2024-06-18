@@ -3,7 +3,7 @@
     type="textarea"
     class="w-full"
     v-model="localModel"
-    :rules="requerido ? [obligatorio, ...rules] : rules"
+    :rules="requerido ? [useRules.requerido, ...rules] : rules"
     :label="label + (requerido ? '*' : '')"
     :dense="!notDense"
     :required="requerido"
@@ -20,8 +20,6 @@
 </template>
 
 <script setup>
-import { obligatorio } from '@/helpers/validate.form';
-
 /**
  * Refs
  */

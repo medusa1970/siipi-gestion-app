@@ -655,14 +655,6 @@ import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
 import { pedidoStore } from '@/stores/pedido.store';
 import { pedidoService } from '~/services/pedido.service';
-import {
-  ApiError,
-  showLoading,
-  hideLoading,
-  NotifySucess,
-  NotifyError,
-  NotifySucessCenter,
-} from '~/helpers/message.service';
 import { empleadoService } from '~/services/empleados.service';
 
 const router = useRouter();
@@ -742,6 +734,10 @@ const elegirNegocio = (index, nombre) => {
     if (!loginResponse) {
       NotifyError(`contraseña incorrecta`);
     }
+
+    // login respone ya tiene el nuevo token
+    // authStore.setToken()
+
     // TODO averiguar suscripcion, etc
     // TODO BUGs de irala a iralita + cliente
     authStore.elegirNegocio(index);
@@ -767,14 +763,6 @@ const onRejected = (rejectedEntries) => {
     message: `${men}`,
   });
 };
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 const modificarPersona = async () => {
   console.log('first');
   console.log(selectedFileProfile.value);

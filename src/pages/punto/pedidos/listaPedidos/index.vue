@@ -121,10 +121,9 @@ definePageMeta({
   layout: 'punto',
 });
 import { ref, onMounted } from 'vue';
-import { usePedido } from '@/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 // import { format } from 'date-fns';
 // import { es } from 'date-fns/locale';
-import { formateadorFecha } from '@/helpers/fecha';
 // import { pedidoStore } from '@/stores/pedido.store';
 
 // const storePedido = pedidoStore();

@@ -75,8 +75,6 @@ import cajaPendiente from '@/mocks/cajaPendiente.json';
 import { tesoreriaPendiente } from '~/helpers/columns';
 import { onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
-import { NotifySucessCenter } from '~/helpers/message.service';
-import { formateadorFecha } from '~/helpers/fecha';
 const $q = useQuasar();
 
 console.log(cajaPendiente);

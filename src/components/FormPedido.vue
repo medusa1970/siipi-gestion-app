@@ -95,7 +95,7 @@
 <script setup>
 defineProps(() => {});
 import { ref, onMounted, watch } from 'vue';
-import { usePedido } from '~/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 import { pedidoStore } from '@/stores/pedido.store';
 const usePedidoStore = pedidoStore();
 

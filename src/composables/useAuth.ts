@@ -1,6 +1,12 @@
-import { NotifySucess } from '~/helpers/message.service';
-import type { PersonaProps } from '../interfaces/product.interface';
-import { postDataGql } from '../services/service.config';
+export interface PersonaProps {
+  _id?: string;
+  usuario: string;
+  nombre: string;
+  apellido: string;
+  telefono: string;
+  correo: string;
+  contrasena: string;
+}
 
 export const useAuth = {
   /**
@@ -45,16 +51,6 @@ export const useAuth = {
       }),
     );
     return nuevaPersona;
-  },
-
-  /**
-   * Busca el nombre y el tipo de todas las entidades
-   * @returns Entidad[]
-   */
-  // TODO No pertenece aqui
-  buscarTodasEntidades: async () => {
-    const entidades = await postDataGql(GqlBuscarEntidades_tipo({}));
-    return entidades;
   },
 
   /**

@@ -332,7 +332,7 @@ definePageMeta({
 });
 import { ref, onMounted } from 'vue';
 import DragDrop from '@/components/DrogDrop.vue';
-import { useOferta } from '@/composables/marca/useOferta';
+import { useOferta } from '~/composables/empleados/useOferta';
 import { ofertaService } from '~/services/ofertas.service';
 
 const {

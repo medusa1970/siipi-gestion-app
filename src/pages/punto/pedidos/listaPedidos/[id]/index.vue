@@ -140,9 +140,8 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { usePedido } from '@/composables/punto/usePedido';
+import { usePedido } from '~/composables/empleados/usePedido';
 import { detallePedidoPunto } from '@/helpers/columns';
-import { formateadorFecha } from '~/helpers/fecha';
 import realizarPedido from '../../realizarPedido.vue';
 
 const { params } = useRoute();

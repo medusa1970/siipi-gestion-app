@@ -1,15 +1,17 @@
 import { Notify, Loading } from 'quasar';
 
 /**LOADING */
-const showLoading = () => Loading.show();
-const hideLoading = () => Loading.hide();
+export const showLoading = () => Loading.show();
+export const hideLoading = () => Loading.hide();
 
 /**NOTIFY */
-const NotifySucess = (message: string) =>
+export const NotifySucess = (message: string) =>
   Notify.create({ message, color: 'positive', icon: 'check' });
-const NotifyError = (message: string) =>
+
+export const NotifyError = (message: string) =>
   Notify.create({ message, color: 'negative', icon: 'report_problem' });
-const NotifyWarning = (message: string) =>
+
+export const NotifyWarning = (message: string) =>
   Notify.create({
     message,
     color: 'orange',
@@ -18,7 +20,8 @@ const NotifyWarning = (message: string) =>
     progress: true,
     timeout: 1500,
   });
-const NotifySucessCenter = (message: string) =>
+
+export const NotifySucessCenter = (message: string) =>
   Notify.create({
     message,
     color: 'positive',
@@ -29,20 +32,10 @@ const NotifySucessCenter = (message: string) =>
   });
 
 /**API ERROR */
-const ApiError = (error: any) => {
+export const ApiError = (error: any) => {
   console.log(error);
   hideLoading();
   error.gqlErrors[0].message
     ? NotifyError(error.gqlErrors[0].message)
     : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
-};
-
-export {
-  showLoading,
-  hideLoading,
-  NotifySucess,
-  NotifyError,
-  ApiError,
-  NotifyWarning,
-  NotifySucessCenter,
 };

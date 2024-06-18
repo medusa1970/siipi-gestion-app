@@ -1,10 +1,6 @@
 // LOGICA STOCK
 import { reactive, onMounted } from 'vue';
-import { NotifySucess, NotifyError } from '@/helpers/message.service';
-import { productStore } from '@/stores/producto.store';
 import { stockService } from '~/services/stock.service';
-import { ofertaService } from '~/services/ofertas.service';
-import { menuService } from '~/services/menu.service';
 
 type ProductoEnAlerta = {
   foto: string;
@@ -19,7 +15,7 @@ type ProductoEnAlerta = {
 export const useStock = () => {
   // config
   const authStore = useAuthStore();
-  const useProduct = productStore();
+  const useProduct = useProductoStore();
   // reactive
   const estado = reactive({
     stocks: [],

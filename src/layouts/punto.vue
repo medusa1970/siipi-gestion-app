@@ -29,7 +29,6 @@ import { menuListPunto } from '@/helpers/menuList';
 import { pedidoStore } from '@/stores/pedido.store';
 import { useRouter } from 'vue-router';
 import { pedidoService } from '~/services/pedido.service';
-import { NotifyError, NotifySucessCenter } from '~/helpers/message.service';
 import { useQuasar } from 'quasar';
 import PortadaPunto from '@/assets/img/backPunto.png';
 

@@ -30,8 +30,6 @@
 </template>
 
 <script setup>
-import { obligatorio } from '@/helpers/validate.form';
-
 /**
  * Refs
  */
@@ -67,7 +65,7 @@ const props = defineProps({
   // texto de ayuda debajo del input
   hint: {
     type: String,
-    default: '',
+    default: 'Tamaño máximo {maxSizeKb}Kb',
   },
   // si el input es dense o no
   notDense: {
@@ -115,7 +113,7 @@ const handleChange = (newValue, oldValue) => {
   else {
     if (props.requerido) {
       errorEstado.value = true;
-      errorMessage.value = obligatorio(null);
+      errorMessage.value = requerido(null);
     }
     emits('update', null);
   }
@@ -142,7 +140,7 @@ const handleClear = (event) => {
 const handleBlur = (event) => {
   if (!preview.value) {
     errorEstado.value = true;
-    errorMessage.value = obligatorio(null);
+    errorMessage.value = requerido(null);
   }
 };
 </script>

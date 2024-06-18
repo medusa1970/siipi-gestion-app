@@ -1,4 +1,3 @@
-// import type { Product } from '~/interfaces/product.interface';
 interface Producto {
   id: string;
   nombre: string;

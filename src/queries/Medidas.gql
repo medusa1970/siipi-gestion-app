@@ -37,6 +37,7 @@ mutation modificarMedidas(
       _id
       nombre
       abreviacion
+      cantidad
     }
   }
 }

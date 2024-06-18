@@ -87,6 +87,7 @@
             label="Categoria*"
             required
             v-model="producto.datosBasicos.categoria"
+            option-label="nombre"
             :options="options"
             filled
             options-cover
@@ -1002,6 +1003,7 @@
             emit-value
             dense
             filled
+            :disable="estado.modal.esEditarProveedor"
           >
             <template v-slot:no-option>
               <q-item>
@@ -1013,6 +1015,7 @@
           </q-select>
         </div>
         <q-btn
+          v-if="!estado.modal.esEditarProveedor"
           size="12px"
           icon="add"
           color="primary"
@@ -1034,8 +1037,13 @@
             label="Marca *"
             required
             v-model="estado.productoProveedor.marca"
-            :options="useProduct.producto.variedades"
-            :option-label="(option) => option.marca?.nombre"
+            :options="
+              useProduct.producto.variedades.map((variedad) => ({
+                _id: variedad.marca._id,
+                nombre: variedad.marca.nombre,
+              }))
+            "
+            :option-label="(option) => option.nombre"
             emit-value
             class="w-full"
             dense

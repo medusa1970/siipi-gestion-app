@@ -580,7 +580,7 @@ export const useProducts = () => {
         useProduct.producto._id,
         {
           nombre: producto.datosBasicos.nombre, //@ts-ignore
-          categoria: producto.datosBasicos.categoria.value._id,
+          categoria: producto.datosBasicos.categoria._id,
           comentario: producto.datosBasicos.comentario,
         },
       );
@@ -689,6 +689,7 @@ export const useProducts = () => {
     estado.modal.isAddEmpaque = false;
     estado.medidaProducto.marca = { _id: '', nombre: '' };
     estado.medidaProducto.empaque = {
+      _id: '',
       nombre: '',
       abreviacion: '',
       cantidad: 0,
@@ -738,27 +739,27 @@ export const useProducts = () => {
     buscarMedidas();
   };
   const crearEmpaque = async () => {
+    console.log(estado.dataEmpaque);
     const medidaConEmpaqueNuevo = await productoService.agregarEmpaqueMedida(
       estado.medidaProducto.medida._id,
       estado.dataEmpaque,
     );
+    console.log(medidaConEmpaqueNuevo);
     const empaque =
       medidaConEmpaqueNuevo.tipoEmpaques[
         medidaConEmpaqueNuevo.tipoEmpaques.length - 1
       ];
+    console.log(empaque);
 
     if (medidaConEmpaqueNuevo) {
       NotifySucessCenter('Empaque creado correctamente');
       const nuevoEmpaque = medidaConEmpaqueNuevo.tipoEmpaques.pop();
+      estado.medidaProducto.empaque = nuevoEmpaque;
       delete nuevoEmpaque._id;
+      console.log(nuevoEmpaque);
       estado.medidaProducto.medida.tipoEmpaques.push(nuevoEmpaque);
     }
 
-    estado.medidaProducto.empaque = {
-      nombre: empaque.nombre,
-      abreviacion: empaque.abreviacion,
-      cantidad: empaque.cantidad,
-    };
     estado.dataEmpaque = { nombre: '', abreviacion: '', cantidad: 0 };
     estado.modal.esCrearEmpaque = false;
   };
@@ -796,20 +797,21 @@ export const useProducts = () => {
   };
 
   const agregarProductoProveedor = async () => {
-    const [nuevoProveedor] = await productoService.agregarProveedorProducto(
+    const nuevoProveedor = await productoService.agregarProveedorProducto(
       estado.productoProveedor.proveedor._id,
       {
-        //@ts-expect-error
-        marca: estado.productoProveedor.marca.marca._id,
+        marca: estado.productoProveedor.marca._id, //@ts-expect-error
         producto: useProduct.producto._id,
         identificativo: estado.productoProveedor.identificativo,
         precioConFactura: estado.productoProveedor.precioConFactura,
-        precioSinFactura: estado.productoProveedor.precioSinFactura,
+        precioSinFactura: estado.productoProveedor.precioSinFactura, //@ts-expect-error
         preciosPorMayor: estado.productoProveedor.precios,
       },
     );
+    nuevoProveedor.servicios = [nuevoProveedor.servicios.pop()];
     if (nuevoProveedor) {
-      NotifySucessCenter('Proveedor creado correctamente'); //@ts-expect-error
+      NotifySucessCenter('Proveedor creado correctamente');
+      console.log(nuevoProveedor); //@ts-expect-error
       estado.proveedoresProducto.push(nuevoProveedor);
     }
     estado.modal.isAddProveedor = false; //@ts-expect-error
@@ -900,22 +902,25 @@ export const useProducts = () => {
 
   const limpiarCamposEmpaque = () => {
     estado.medidaProducto.marca = { _id: '', nombre: '' };
-    estado.medidaProducto.empaque = { nombre: '', abreviacion: '' };
-    estado.medidaProducto.cantidad = 0;
-    estado.dataEmpaque = { nombre: '', abreviacion: '' };
+    estado.medidaProducto.empaque = {
+      nombre: '',
+      abreviacion: '',
+      cantidad: 0,
+      _id: '',
+    };
+    estado.dataEmpaque = { nombre: '', abreviacion: '', cantidad: 0 };
   };
   const abrirModalEditarEmpaque = (fila: any) => {
-    console.log(fila);
     estado.modal.esEditarEmpaque = true;
     estado.modal.isAddEmpaque = true;
 
-    console.log(estado.medidaProducto);
     estado.medidaProducto.marca = fila.marca;
     estado.medidaProducto.cantidad = fila.cantidad;
     estado.medidaProducto.empaque = {
       _id: fila._id,
       nombre: fila.nombre,
       abreviacion: fila.abreviacion,
+      cantidad: fila.cantidad,
     };
   };
   const editarEmpaqueProducto = async () => {
@@ -925,7 +930,7 @@ export const useProducts = () => {
       estado.medidaProducto.empaque._id,
       {
         marca: estado.medidaProducto.marca._id,
-        cantidad: estado.medidaProducto.cantidad,
+        cantidad: estado.medidaProducto.empaque.cantidad,
         nombre: estado.medidaProducto.empaque.nombre,
         abreviacion: estado.medidaProducto.empaque.abreviacion,
       },
@@ -936,13 +941,11 @@ export const useProducts = () => {
       const index = useProduct.producto.empaques.findIndex(
         (e: any) => e._id === estado.medidaProducto.empaque._id,
       );
-      console.log(index);
       if (index !== -1) {
         // encontrar objeto variedad modificada
         const empaqueModificada = productoEmpaque.empaques.find(
           (v: any) => v._id === estado.medidaProducto.empaque._id,
         );
-        console.log(empaqueModificada);
         // Si se encontró la variedad modificada, actualiza la variedad en el array con la variedad modificada
         if (empaqueModificada) {
           useProduct.producto.empaques[index] = empaqueModificada;
@@ -955,36 +958,42 @@ export const useProducts = () => {
 
   const abrirModalEditarProveedor = (fila: any) => {
     console.log(fila);
+    console.log(fila.servicios[0]?.precioSinFactura);
+    console.log(estado.productoProveedor.precioSinFactura);
     estado.modal.esEditarProveedor = true;
     estado.modal.isAddProveedor = true;
-
-    //@ts-expect-error
-    estado.productoProveedor.marca.marca = fila.servicios[0]?.marca;
-    estado.productoProveedor.identificativo = fila.servicios[0]?.identificativo;
     estado.productoProveedor.proveedor = {
       _id: fila._id,
       nombre: fila.nombre,
     };
-    estado.productoProveedor.precioConFactura =
-      fila.servicios[0]?.precioConFactura;
+    estado.productoProveedor.marca = fila.servicios?.[0]?.marca;
+    estado.productoProveedor.identificativo =
+      fila.servicios?.[0]?.identificativo;
     estado.productoProveedor.precioSinFactura =
-      fila.servicios[0]?.precioSinFactura;
-    estado.productoProveedor.servicioID = fila.servicios[0]?._id;
+      fila.servicios?.[0]?.precioSinFactura;
+    estado.productoProveedor.precioConFactura =
+      fila.servicios?.[0]?.precioConFactura;
+    estado.productoProveedor.servicioID = fila.servicios?.[0]?._id;
+    estado.productoProveedor.precios = fila.servicios?.[0]?.preciosPorMayor;
   };
   const editarProveedorProducto = async () => {
+    console.log(estado.productoProveedor.servicioID);
+    console.log(estado.productoProveedor.proveedor._id);
+    console.log(estado.productoProveedor);
     const servicioProveedor = await productoService.modificarProveedorProducto(
       estado.productoProveedor.proveedor._id,
       estado.productoProveedor.servicioID,
       {
-        //@ts-expect-error
-        marca: estado.productoProveedor.marca.marca._id,
+        marca: estado.productoProveedor.marca._id,
         identificativo: estado.productoProveedor.identificativo,
         precioConFactura: estado.productoProveedor.precioConFactura,
         precioSinFactura: estado.productoProveedor.precioSinFactura,
       },
     );
+    console.log(servicioProveedor);
     if (servicioProveedor) {
-      NotifySucessCenter('Marca modificado correctamente');
+      NotifySucessCenter('Proveedor modificado correctamente');
+      // limpiarCamposProveedor();
       buscarProveedoresProducto();
       // estado.proveedoresProducto.forEach((proveedor) => {
       //   if (proveedor._id === servicioProveedor._id) {

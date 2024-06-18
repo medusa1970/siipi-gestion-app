@@ -487,7 +487,7 @@ export const productoService = {
       ];
     },
   ) => {
-    const proveedor = await postDataGql(
+    const [proveedor] = await postDataGql(
       GqlModificarProveedorServicio({
         busqueda: { _id: [proveedorId] },
         datos: {
@@ -522,6 +522,7 @@ export const productoService = {
         opciones: { populate: true },
       }),
     );
+    console.log(proveedor);
     return proveedor;
   },
   buscarProveedoresProducto: async (productoID: string) => {

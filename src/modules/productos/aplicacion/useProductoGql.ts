@@ -1,4 +1,4 @@
-import type { CrearProductoBasico } from './producto.interface';
+import type { CrearProductoBasico } from '../negocio/producto.interface';
 
 export const useProductoGql = {
   /**

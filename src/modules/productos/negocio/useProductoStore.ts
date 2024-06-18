@@ -3,8 +3,8 @@
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
-import { useProductoGql } from '../producto/useProductoGql';
-import type { Categoria, Producto } from './producto.interface';
+import { useProductoGql } from '../aplicacion/useProductoGql';
+import type { Producto, Categoria } from '../aplicacion/productoApi.interface';
 
 interface ProductoStoreProps {
   // producto que se esta editando en el formulario detalle

@@ -1,5 +1,5 @@
 import type { CrearProductoBasico } from './producto.interface';
-import { useProductoGql } from './useProductoGql';
+import { useProductoGql } from '../aplicacion/useProductoGql';
 import { useProductoStore } from './useProductoStore';
 
 export const useProducto = () => {

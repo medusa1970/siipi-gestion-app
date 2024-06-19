@@ -1,5 +1,5 @@
 <template>
-  <Layout
+  <layout-common
     :menuList="menuListCathering"
     :portada-img="PortadaCathering"
     cathering
@@ -25,17 +25,18 @@
     <template #slot>
       <slot />
     </template>
-  </Layout>
+  </layout-common>
 </template>
 
 <script setup>
-import { menuListCathering } from '@/helpers/menuList';
-import { pedidoStore } from '@/stores/pedido.store';
+import { menuListCathering } from '~/layouts/menuList/menuList';
+import { pedidoStore } from '@/ANTIGUO/stores/pedido.store';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
-import { pedidoService } from '~/services/pedido.service';
+import { pedidoService } from '~/ANTIGUO/services/pedido.service';
 import { useQuasar } from 'quasar';
 import PortadaCathering from '@/assets/img/cookies.png';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
 const authStore = useAuthStore();
 console.log(authStore.getUser);

@@ -1355,8 +1355,13 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useProducts } from '~/composables/empleados/useProducto';
-import { marcas, proveedores, empaques } from '~/helpers/columns';
+import { useProducts } from '~/modulos/productos/negocio/useProductoService';
+// import {
+//   marcas,
+//   proveedores,
+//   empaques,
+// } from '~/modulos/productos/infraestructura/utils/columns';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
 // Verificacion de permisos
 const authStore = useAuthStore();

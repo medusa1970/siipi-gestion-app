@@ -89,6 +89,7 @@
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
 const authStore = useAuthStore();
 const router = useRouter();

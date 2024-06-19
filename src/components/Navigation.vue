@@ -8,6 +8,8 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+
 defineProps({
   label: String,
   icon: String,

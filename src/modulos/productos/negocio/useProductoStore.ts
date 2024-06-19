@@ -3,8 +3,8 @@
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
-import { useProductoGql } from '../aplicacion/useProductoGql';
-import type { Producto, Categoria } from '../aplicacion/productoApi.interface';
+import { productoApiService } from '../API/productoApiService';
+import type { Producto, Categoria } from '../API/producto.interfaceApi';
 
 interface ProductoStoreProps {
   // producto que se esta editando en el formulario detalle
@@ -33,7 +33,8 @@ export const useProductoStore = defineStore('producto', {
     getCategoriaArbol: (state) => {
       return async (refresh: boolean = false): Promise<Categoria> => {
         if (state.categoriaArbol === null || refresh) {
-          state.categoriaArbol = await useProductoGql.obtenerTodasCategorias();
+          state.categoriaArbol =
+            await productoApiService.obtenerTodasCategorias();
         }
         if (!state.categoriaArbol) {
           // Lanzar un error
@@ -50,7 +51,7 @@ export const useProductoStore = defineStore('producto', {
     getProductos: (state) => {
       return async (refresh: boolean = false): Promise<Producto[]> => {
         if (state.productos === null || refresh) {
-          state.productos = await useProductoGql.buscarProductos();
+          state.productos = await productoApiService.buscarProductos();
         }
         if (!state.productos) {
           // Lanzar un error

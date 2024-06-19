@@ -64,6 +64,7 @@ export default defineNuxtConfig({
             '/infraestructura/rutas.ts',
           );
           if (fs.existsSync(fullPath)) {
+            console.log('creating routes for module', file);
             const routes = await import(fullPath);
             for (const route of routes.default || []) {
               pages.push(route);

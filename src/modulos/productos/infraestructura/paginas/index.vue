@@ -160,7 +160,7 @@
       <!-- Comentario -->
       <div>
         <input-textarea
-          labeproductoServicel="Textarea"
+          labeproductoApiServicel="Textarea"
           info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
           @update="(v) => (datos_crearProductoBasico.comentario = v)"
         />
@@ -173,16 +173,16 @@
 
 <script setup lang="ts">
 import ProductoImage from '@/assets/img/producto.png';
-import { columnsProductos } from '~/helpers/columns';
-import { useProducto } from '~/modulos/productos/negocio/useProducto';
+import { columnsProductos } from '~/modulos/productos/infraestructura/utils/columns';
+import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
 import { useProductoStore } from '~/modulos/productos/negocio/useProductoStore';
 
 // types
 import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type { Producto } from '~/modulos/productos/aplicacion/productoApi.interface';
+import type { Producto } from '~/modulos/productos/aplicacion/producto.api.interface';
 
 // composables
-const productoService = useProducto();
+const productoService = useProductoService();
 const productoStore = useProductoStore();
 
 // layout
@@ -207,9 +207,16 @@ const init_crearProductoBasico = {
 } as CrearProductoBasico;
 const datos_crearProductoBasico = ref(init_crearProductoBasico);
 const crearProductoBasico = async () => {
-  productoService.crearProductoBasico(datos_crearProductoBasico.value);
-  show_crearProductoBasico.value = false;
-  Object.assign(datos_crearProductoBasico, init_crearProductoBasico);
+  const productoCreado = await productoService.crearProductoBasico(
+    datos_crearProductoBasico.value,
+  );
+  if (productoCreado !== null) {
+    NotifySucessCenter('Producto agregado correctamente');
+    show_crearProductoBasico.value = false;
+    Object.assign(datos_crearProductoBasico, init_crearProductoBasico);
+  } else {
+    NotifyError('Problema al agregar el producto');
+  }
 };
 
 // subscriptions

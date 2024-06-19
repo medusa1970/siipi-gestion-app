@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   srcDir: 'src',
@@ -45,5 +48,29 @@ export default defineNuxtConfig({
   devServer: {
     // host: '0.0.0.0',
     port: Number(process.env.PORT),
+  },
+  hooks: {
+    'pages:extend': async (pages: any) => {
+      const modulosPath = './src/modulos/';
+      const files = await fs.promises.readdir(modulosPath);
+      for (const file of files) {
+        const filePath = path.join(modulosPath, file);
+        const stats = await fs.promises.stat(filePath);
+        if (stats.isDirectory()) {
+          const fullPath = path.join(
+            __dirname,
+            '/',
+            filePath,
+            '/infraestructura/rutas.ts',
+          );
+          if (fs.existsSync(fullPath)) {
+            const routes = await import(fullPath);
+            for (const route of routes.default || []) {
+              pages.push(route);
+            }
+          }
+        }
+      }
+    },
   },
 });

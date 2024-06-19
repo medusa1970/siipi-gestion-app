@@ -174,12 +174,12 @@
 <script setup lang="ts">
 import ProductoImage from '@/assets/img/producto.png';
 import { columnsProductos } from '~/helpers/columns';
-import { useProducto } from '~/modules/productos/controladores/useProducto';
-import { useProductoStore } from '~/modules/productos/controladores/useProductoStore';
+import { useProducto } from '~/modulos/productos/negocio/useProducto';
+import { useProductoStore } from '~/modulos/productos/negocio/useProductoStore';
 
 // types
-import type { CrearProductoBasico } from '~/modules/productos/modelo/tipos/producto.interface';
-import type { Producto } from '~/modules/productos/modelo/tipos/productoApi.interface';
+import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
+import type { Producto } from '~/modulos/productos/aplicacion/productoApi.interface';
 
 // composables
 const productoService = useProducto();

@@ -4,7 +4,7 @@
 import { reactive, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { inventarioService } from '~/services/inventary.service';
-import { useProductoStore } from '../../modules/productos/composables/useProductoStore';
+import { useProductoStore } from '../../modulos/productos/composables/useProductoStore';
 
 /**
  * LOGICA

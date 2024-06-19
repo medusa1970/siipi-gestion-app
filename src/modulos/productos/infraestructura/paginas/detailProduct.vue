@@ -3,7 +3,7 @@
     label="Productos"
     icon="list_alt"
     :label2="producto.datosBasicos.nombre"
-    href="/cathering/sede/productos"
+    href="/cathering/productos"
   />
 
   <!--

@@ -203,7 +203,7 @@ export const useProducto = () => {
           NotifySucess('Producto eliminado correctamente');
         });
       getAllProductos();
-      router.push('/cathering/sede/productos');
+      router.push('/cathering/productos');
     });
   };
 
@@ -254,7 +254,7 @@ export const useProducto = () => {
       })
       .then((res) => {
         NotifySucessCenter('Producto agregado correctamente');
-        router.push('/cathering/sede/productos');
+        router.push('/cathering/productos');
       });
   };
   const editProductBasicInfo = async () => {

@@ -5,11 +5,11 @@ export const menuListCathering = [
     subMenu: [
       {
         label: 'Productos',
-        to: '/cathering/sede/productos',
+        to: '/cathering/productos',
       },
       {
         label: 'Categorias de productos ',
-        to: '/cathering/sede/productos/categorias',
+        to: '/cathering/productos/categorias',
       },
       // {
       //   label: 'Proveedores',
@@ -179,11 +179,11 @@ export const menuListSede = [
     subMenu: [
       {
         label: 'Gestion de categorias',
-        to: '/cathering/sede/productos/categorias',
+        to: '/cathering/productos/categorias',
       },
       {
         label: 'Productos',
-        to: '/cathering/sede/productos',
+        to: '/cathering/productos',
       },
     ],
   },

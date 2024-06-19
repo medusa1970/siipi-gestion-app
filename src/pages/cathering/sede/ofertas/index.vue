@@ -125,35 +125,27 @@
             <q-btn
               color="primary"
               icon="visibility"
-              dense
-              flat
               round
-              size="12px"
-              padding="2px"
+              dense
+              padding="3px"
+              size="9px"
               @click="estado.modal.esDetalleOferta = true"
             >
-              <q-tooltip> Ver informacion de oferta </q-tooltip>
+              <q-tooltip> Ver informacion producto </q-tooltip>
             </q-btn>
+
             <q-btn
-              color="primary"
+              color="orange"
               icon="edit"
-              dense
-              flat
               round
-              size="12px"
-              padding="2px"
-              @click="estado.modal.esOfertaProductos = true"
-            />
+              dense
+              padding="3px"
+              size="9px"
+              @click="irEditarProducto(props.row)"
+            >
+              <q-tooltip> Editar producto </q-tooltip></q-btn
+            >
             <!-- <q-btn
-              color="primary"
-              icon="edit"
-              dense
-              flat
-              round
-              size="13px"
-              @click="abrirEditarOferta(props.row)"
-            /> -->
-            <q-btn
               color="red"
               icon="delete"
               dense
@@ -162,7 +154,7 @@
               size="12px"
               padding="2px"
               @click="borrarOferta(props.row)"
-            />
+            /> -->
           </q-td>
         </q-tr>
       </template>
@@ -176,6 +168,138 @@
     label-btn="Crear"
   >
     <template #inputsDialog>
+      <!--h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1-->
+      <p>
+        <b>Por favor asegúrese que la oferta todavía no existe</b> ayudándose
+        del buscador.
+      </p>
+
+      <!-- nombre -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Nombre *"
+            v-model="text"
+            class="w-full"
+            type="text"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+          />
+        </div>
+      </div>
+
+      <!-- abreviacion -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            label="Abreviacion *"
+            v-model="text"
+            class="w-full"
+            type="text"
+            filled
+            required
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+          />
+        </div>
+      </div>
+
+      <!-- Categoria -->
+      <!-- <code>{{ estado.catalogoSeleccionado.hijas }}</code> -->
+      <div class="flex" style="justify-content: space-between; margin: 15px 0">
+        <div style="flex-grow: 1">
+          <q-select
+            label="Categoria *"
+            v-model="text"
+            :options="estado.optionsCategoria"
+            class="w-full"
+            map-options
+            dense
+            filled
+            required
+          >
+            <template v-slot:option="scope">
+              <q-item
+                v-bind="scope.itemProps"
+                v-on="scope.itemEvents"
+                :class="scope.opt.class"
+              >
+                <q-item-section>{{ scope.opt.label }}</q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          />
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <q-img
+          style="width: 150px; height: 150px; object-fit: cover"
+          v-if="imagePreview"
+          :src="imagePreview"
+        ></q-img>
+        <div style="flex-grow: 1">
+          <q-file
+            class="w-full"
+            v-model="imagen"
+            label="Imagen *"
+            accept=".jpg, .png, .jpge"
+            max-total-size="560000"
+            @rejected="onRejected"
+            counter
+            filled
+            hint="Tamaño máximo de imagen 540KB"
+            clearable
+            dense
+            required
+          >
+            <template v-slot:prepend>
+              <q-icon name="photo_camera" @click.stop.prevent />
+            </template>
+          </q-file>
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+          />
+        </div>
+      </div>
+
+      <!-- Comentario -->
+      <div class="flex" style="justify-content: space-between; margin: 10px 0">
+        <div style="flex-grow: 1">
+          <q-input
+            class="w-full"
+            v-model="text"
+            type="textarea"
+            label="Comentario"
+            filled
+            dense
+          />
+        </div>
+        <div>
+          <BotonDetalle
+            mensaje="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+          />
+        </div>
+      </div>
+    </template>
+    <!-- <template #inputsDialog>
       <h1 class="text-center bg-gray-300 font-bold py-[2px]">
         DATOS GENERALES
       </h1>
@@ -249,7 +373,6 @@
           </q-item>
         </template>
       </q-select>
-      <!-- <code>{{ estado.oferta.catalogo.hijas }}</code> -->
       <div class="select-container">
         <select
           id="two-level-select"
@@ -271,7 +394,7 @@
           </optgroup>
         </select>
       </div>
-    </template>
+    </template> -->
   </Dialog2>
 
   <!-- OFERTA DATOS BASICOS -->
@@ -355,12 +478,30 @@ const {
   obtenerTodoCatalagosIdNombre,
   handleSelectionChange,
   obtenerTodoCatalagos,
+  mapeoCatalogos,
+  irEditarProducto,
 } = useOferta();
 
 onMounted(() => {
   // obtenerTodasOfertas();
   // obtenerTodoCatalagosIdNombre();
   obtenerTodoCatalagos();
+  mapeoCatalogos();
+  // for (const cat of estado.catalogoSeleccionado.hijas) {
+  //   optionsCategoria.value.push({
+  //     label: `${cat.nombre} (${cat.hijas.length})`,
+  //     value: cat._id,
+  //     disable: true,
+  //     class: 'title',
+  //   });
+  //   for (const subcat of cat.hijas) {
+  //     optionsCategoria.value.push({
+  //       label: subcat.nombre,
+  //       value: subcat,
+  //       class: 'option',
+  //     });
+  //   }
+  // }
 });
 </script>
 <style scoped>

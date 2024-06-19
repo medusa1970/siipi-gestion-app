@@ -1,230 +1,133 @@
 <template>
-  <div>
-    <Navigation
-      label="Ofertas"
-      icon="list_alt"
-      href="/cathering/sede/ofertas"
-      label2="DetailOferta"
-    />
-    <div class="p-2">
-      <h1 class="font-semibold text-base mb-3">Información basicaa:</h1>
-      <!-- INPUTS -->
-      <form
-        @submit.prevent="
-          storeOferta.isEdit === false ? crearOferta() : editarOferta()
-        "
-      >
-        <h1 class="text-lg font-extrabold uppercase text-center mb-3">
-          {{ storeOferta.isEdit === true ? 'Editar Oferta' : 'Agregar Oferta' }}
-        </h1>
-        <q-file
-          v-model="imagen"
-          label="Seleccionar imagen"
-          accept=".jpg, .png, .jpge"
-          max-total-size="560000"
-          @rejected="onRejected"
-          counter
-          outlined
-          dense
-          hint="Tamaño máximo de imagen 540KB"
-          clearable
-        >
-          <template v-slot:prepend>
-            <q-icon name="cloud_upload" @click.stop.prevent />
-          </template>
-        </q-file>
-        <div
-          v-if="imagePreview"
-          style="width: 200px; height: 200px; margin: auto"
-        >
-          <q-img
-            style="width: 100%; height: 100%; object-fit: cover"
-            :src="imagePreview"
-          ></q-img>
-        </div>
-        <div class="w-full grid grid-cols-6 gap-2 my-4">
-          <q-input
-            class="col-span-2"
-            v-model="estado.oferta.nombre"
-            type="text"
-            label="Nombre*"
-            outlined
-            dense
-            clearable
-            required
-          />
-          <q-input
-            class="col-span-2"
-            v-model="estado.oferta.abreviacion"
-            label="Abreviacion"
-            outlined
-            dense
-            clearable
-          />
-          <q-input
-            class="col-span-2"
-            v-model.number="estado.oferta.precio"
-            type="number"
-            label="Precio*"
-            outlined
-            dense
-            clearable
-            required
-          />
-
-          <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
-            <h1 class="font-bold">Seleccionar catalogo:</h1>
-            <div class="flex gap-2 flex-wrap">
-              <div v-for="catalogo in estado.catalogos.hijas" :key="catalogo">
-                <q-btn
-                  color="primary"
-                  :label="catalogo.nombre"
-                  no-caps
-                  padding="0 10px"
-                  size="13px"
-                  @click="abrirModalCatalogo(catalogo)"
-                />
-              </div>
-            </div>
-          </div>
-          <q-input
-            class="col-span-3"
-            v-model="estado.oferta.catalogoNombre"
-            label="Catalogo*"
-            outlined
-            dense
-            clearable
-            disable
-            required
-          />
-          <q-input
-            class="col-span-3"
-            v-model="estado.oferta.descripcion"
-            type="textarea"
-            label="Descripcion"
-            outlined
-            dense
-          />
-          <q-select
-            class="col-span-3"
-            v-model="estado.productoFijo.producto"
-            :options="optionsProducts"
-            label="Seleccionar producto"
-            option-label="nombre"
-            style="width: 100%; flex: 1 0 auto"
-            outlined
-            @filter="filterProductos"
-            onfocus="this.select()"
-            use-input
-            hide-selected
-            fill-input
-            dense
-            clearable
-          >
-            <template v-slot:prepend>
-              <q-icon name="bi-cart-plus" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No hay resultados
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-
-          <q-btn
-            v-if="estado.productoFijo.producto"
-            color="primary"
-            label="Imp. prest."
-            no-caps=""
-            @click="estado.modal.isImportPresentation = true"
-          />
-          <q-input
-            class="col-span-2"
-            v-model.number="estado.productoFijo.presentacion"
-            type="number"
-            label="Cantidad"
-            dense
-            clearable
-            onfocus="this.select()"
-            outlined
-          ></q-input>
-        </div>
-        <q-btn
-          color="secondary"
-          :label="
-            storeOferta.isEdit === false ? 'Crear oferta' : 'Editar información'
-          "
-          no-caps
-          type="submit"
-        />
-      </form>
-    </div>
-
-    <br />
-  </div>
-
-  <!-- MODAL ELEGIR INGREDIENTE-->
-  <q-dialog v-model="estado.modal.isAddIngredient" persistent>
-    <q-card class="w-[370px]">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-lg font-semibold">Agregar ingredienets</div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-      <q-card-section>
-        <div class="flex flex-col gap-2">
-          <q-btn color="primary" label="Productos Fijos" dense @click="test" />
-          <q-btn color="secondary" label="Productos Eleccion" dense />
-          <q-btn color="orange" label="Productos en " dense />
-        </div>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
-
-  <!-- AGREGAR PRODUCTO FIJO -->
-  <Dialog
-    v-model="estado.modal.isAddIngredientProduct"
-    :title="
-      storeOferta.isEdit === false
-        ? 'Agregar producto fijo'
-        : 'Editar producto fijo'
-    "
-    :handle-submit="
-      storeOferta.isEdit === false
-        ? crearIngredienteProducto
-        : editarIngredienteProducto
-    "
-  >
-    <template #inputsDialog>
-      <q-select
-        v-model="estado.productoFijo.producto"
-        :options="optionsProducts"
-        label="Seleccionar producto"
-        option-label="nombre"
-        style="width: 100%; flex: 1 0 auto"
-        @filter="filterProductos"
-        onfocus="this.select()"
-        use-input
-        hide-selected
-        fill-input
+  <!-- <div class="p-2">
+    <h1 class="font-semibold text-base mb-3">Información basicaa:</h1>
+    <! -- INPUTS -- >
+    <form
+      @submit.prevent="
+        storeOferta.isEdit === false ? crearOferta() : editarOferta()
+      "
+    >
+      <h1 class="text-lg font-extrabold uppercase text-center mb-3">
+        {{ storeOferta.isEdit === true ? 'Editar Oferta' : 'Agregar Oferta' }}
+      </h1>
+      <q-file
+        v-model="imagen"
+        label="Seleccionar imagen"
+        accept=".jpg, .png, .jpge"
+        max-total-size="560000"
+        @rejected="onRejected"
+        counter
+        outlined
         dense
+        hint="Tamaño máximo de imagen 540KB"
         clearable
       >
         <template v-slot:prepend>
-          <q-icon name="group" />
+          <q-icon name="cloud_upload" @click.stop.prevent />
         </template>
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No hay resultados
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-      <span class="grid grid-cols-3 gap-2 mt-2">
+      </q-file>
+      <div
+        v-if="imagePreview"
+        style="width: 200px; height: 200px; margin: auto"
+      >
+        <q-img
+          style="width: 100%; height: 100%; object-fit: cover"
+          :src="imagePreview"
+        ></q-img>
+      </div>
+      <div class="w-full grid grid-cols-6 gap-2 my-4">
+        <q-input
+          class="col-span-2"
+          v-model="estado.oferta.nombre"
+          type="text"
+          label="Nombre*"
+          outlined
+          dense
+          clearable
+          required
+        />
+        <q-input
+          class="col-span-2"
+          v-model="estado.oferta.abreviacion"
+          label="Abreviacion"
+          outlined
+          dense
+          clearable
+        />
+        <q-input
+          class="col-span-2"
+          v-model.number="estado.oferta.precio"
+          type="number"
+          label="Precio*"
+          outlined
+          dense
+          clearable
+          required
+        />
+
+        <div v-if="estado.catalogos" class="col-span-6 flex flex-col">
+          <h1 class="font-bold">Seleccionar catalogo:</h1>
+          <div class="flex gap-2 flex-wrap">
+            <div v-for="catalogo in estado.catalogos.hijas" :key="catalogo">
+              <q-btn
+                color="primary"
+                :label="catalogo.nombre"
+                no-caps
+                padding="0 10px"
+                size="13px"
+                @click="abrirModalCatalogo(catalogo)"
+              />
+            </div>
+          </div>
+        </div>
+        <q-input
+          class="col-span-3"
+          v-model="estado.oferta.catalogoNombre"
+          label="Catalogo*"
+          outlined
+          dense
+          clearable
+          disable
+          required
+        />
+        <q-input
+          class="col-span-3"
+          v-model="estado.oferta.descripcion"
+          type="textarea"
+          label="Descripcion"
+          outlined
+          dense
+        />
+        <q-select
+          class="col-span-3"
+          v-model="estado.productoFijo.producto"
+          :options="optionsProducts"
+          label="Seleccionar producto"
+          option-label="nombre"
+          style="width: 100%; flex: 1 0 auto"
+          outlined
+          @filter="filterProductos"
+          onfocus="this.select()"
+          use-input
+          hide-selected
+          fill-input
+          dense
+          clearable
+        >
+          <template v-slot:prepend>
+            <q-icon name="bi-cart-plus" />
+          </template>
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No hay resultados
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
         <q-btn
+          v-if="estado.productoFijo.producto"
           color="primary"
           label="Imp. prest."
           no-caps=""
@@ -236,94 +139,52 @@
           type="number"
           label="Cantidad"
           dense
-          filled
+          clearable
           onfocus="this.select()"
-          ><template v-slot:append>
-            <q-icon
-              style="margin: 0"
-              name="close"
-              @click.stop.prevent="estado.productoFijo.presentacion = ''"
-              class="cursor-pointer q-mr-md"
-            /> </template
+          outlined
         ></q-input>
-      </span>
-    </template>
-  </Dialog>
+      </div>
+      <q-btn
+        color="secondary"
+        :label="
+          storeOferta.isEdit === false ? 'Crear oferta' : 'Editar información'
+        "
+        no-caps
+        type="submit"
+      />
+    </form>
+  </div> -->
 
-  <!-- IMPORTAR PRESENTACION -->
-  <Dialog
-    v-model="estado.modal.isImportPresentation"
-    title="Importar presentacion"
-    :handle-submit="importarPresentacion"
-    close-manual
-  >
-    <template #inputsDialog>
-      <q-select
-        v-model="estado.productoFijo.import"
-        :options="estado.productoFijo.producto.presentaciones"
-        label="Seleccionar presentacion"
-        option-label="nombre"
-        style="width: 100%; flex: 1 0 auto; margin-top: 10px"
-        dense
-        onfocus="this.select()"
-        filled
-      >
-        <template v-slot:append>
-          <q-icon
-            style="margin: 0"
-            name="close"
-            @click.stop.prevent="estado.productoFijo.import = ''"
-            class="cursor-pointer q-mr-md"
-          />
-        </template>
-        <template v-slot:prepend>
-          <q-icon name="bi-box-seam" />
-        </template>
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No hay resultados
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </template>
-  </Dialog>
+  <Navigation
+    label="Productos"
+    icon="list_alt"
+    label2="producto.datosBasicos.nombre"
+    href="/cathering/sede/ofertas"
+  />
 
-  <!-- SELECCIONAR CATALOGO -->
-  <Dialog2
-    v-model="estado.modal.isShowCatalogo"
-    title="Seleccionar catalogo"
-    close-manual
-    no-btn
+  <!--
+    TABS
+    -->
+
+  <q-tabs
+    v-model="estado.tab"
+    inline-label
+    outside-arrows
+    mobile-arrows
+    class="bg-grey-7 text-white shadow-2"
+    align="justify"
+    no-caps
   >
-    <template #inputsDialog>
-      <q-list
-        class="rounded-borders w-[350px]"
-        v-for="categoria in estado.catalogoSeleccionado.hijas"
-        :key="categoria.nombre"
-      >
-        <q-expansion-item
-          expand-separator
-          icon="category"
-          :label="categoria.nombre"
-          dense
-        >
-          <q-list
-            v-for="(item, index) in categoria.hijas"
-            :key="index"
-            class=""
-          >
-            <q-item clickable dense>
-              <q-item-section side @click="elegirCatalogo(item)">
-                <h1 class="ml-11">{{ item.nombre }}</h1>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
-      </q-list>
-    </template>
-  </Dialog2>
+    <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
+    <q-tab v-if="soloAlmacen" name="productos" icon="group" label="Productos" />
+    <q-tab
+      v-if="soloAlmacenAdquisicion"
+      name="precios"
+      icon="folder_copy"
+      label="Precios"
+    />
+    <q-tab name="acciones" icon="delete" label="Borrar" />
+  </q-tabs>
 </template>
 
 <script setup>
@@ -334,6 +195,16 @@ import { ref, onMounted } from 'vue';
 import DragDrop from '@/components/DrogDrop.vue';
 import { useOferta } from '@/composables/marca/useOferta';
 import { ofertaService } from '~/services/ofertas.service';
+import { useAuth } from '~/composables/auth/useAuth';
+
+// Verificacion de permisos
+const { checkPermisos } = useAuth();
+if (!checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
+  console.log('No tiene el acceso para esta pagina');
+}
+const soloAlmacen = ref(checkPermisos(['ALMACEN']));
+const soloAdquisicion = ref(checkPermisos(['ADQUISICION']));
+const soloAlmacenAdquisicion = ref(checkPermisos(['ADQUISICION', 'ALMACEN']));
 
 const {
   estado,
@@ -399,3 +270,11 @@ onMounted(async () => {
   // });
 });
 </script>
+
+<style scoped>
+.q-tab {
+  padding: 0 10px;
+  margin-bottom: 0px;
+  /* border: 2px solid red; */
+}
+</style>

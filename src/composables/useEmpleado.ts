@@ -30,18 +30,16 @@ export const useEmpleado = () => {
    */
   const obtenerTodosEmpleados = async () => {
     const listaEmpleados = await empleadoService.obtenerTodosEmpleados(
+      //@ts-expect-error
       useAuth.negocioElegido._id,
     );
+    // console.log(listaEmpleados);
 
     estado.rows = listaEmpleados.map((empleado: Empleado) => {
-      // console.log(empleado);
-      // if (empleado.penegocioElegidorsona.imagen?.cloudinaryUrl) {
-      //   console.log(empleado);
-      // }
       return {
         id: empleado._id,
         personaID: empleado.persona._id,
-        cargo: empleado.cargos[0].nombre,
+        cargo: empleado.cargos?.[0]?.nombre,
         permisos: empleado.permisos.map((p) => p.permiso),
         nombre: empleado.persona.nombre + ' ' + empleado.persona.apellido,
         correo: empleado.persona.correo,

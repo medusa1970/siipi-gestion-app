@@ -179,6 +179,31 @@ export const ofertaService = {
     );
     return nuevoCatalogo;
   },
+  /**
+   * Modificar un catalogo
+   * @returns Catalogo
+   */
+  modificarCatalogo: async (catalogoID: string, nombre: string) => {
+    const [catalogoModificado] = await postDataGql(
+      GqlModificarCatalogos({
+        busqueda: { _id: [catalogoID] },
+        datos: { nombre },
+      }),
+    );
+    return catalogoModificado;
+  },
+  /**
+   * borrar un catalogo
+   * @returns Catalogo
+   */
+  borrarCatalogo: async (catalogoID: string) => {
+    const [catalogoBorrado] = await postDataGql(
+      GqlBorrarCatalogos({
+        busqueda: { _id: [catalogoID] },
+      }),
+    );
+    return catalogoBorrado;
+  },
 
   /**
    * Buscar todas las ofertas de un arbol de catalogos

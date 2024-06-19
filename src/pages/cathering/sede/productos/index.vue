@@ -81,8 +81,8 @@
               icon="visibility"
               round
               dense
-              padding="1px"
-              size="11px"
+              padding="3px"
+              size="9px"
               @click="mostrarInformacionProducto(props.row)"
             >
               <q-tooltip> Ver informacion producto </q-tooltip>
@@ -93,8 +93,8 @@
               icon="edit"
               round
               dense
-              padding="1px"
-              size="10px"
+              padding="3px"
+              size="9px"
               @click="esEditarProducto(props.row)"
             >
               <q-tooltip> Editar producto </q-tooltip></q-btn

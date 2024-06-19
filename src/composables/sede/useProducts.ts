@@ -474,6 +474,7 @@ export const useProducts = () => {
     estado.modal.isAddCategoryArbol = false;
   };
   const modificarCategoriaArbol = async () => {
+    console.log(estado.categoria);
     const categoriaModificada = await productoService.modificarCategoria(
       estado.categoria.pariente,
       estado.categoria.nombre,
@@ -701,7 +702,6 @@ export const useProducts = () => {
    * REDIRECCIONAR DESDE TABLA
    */
   const esEditarProducto = (row: any) => {
-    console.log(row);
     const { _creado, _modificado, ...nuevoDato } = row;
     useProduct.producto = { ...nuevoDato, categoria: nuevoDato.categoria };
     router.push('productos/detailProduct');
@@ -1018,6 +1018,34 @@ export const useProducts = () => {
     estado.productoProveedor.precios = [];
   };
 
+  const boorarProductoEmpaque = (fila: any) => {
+    console.log(fila);
+    $q.dialog({
+      title: `Eliminar ${fila.nombre}`,
+      message: '¿Está seguro de eliminar este empaque?',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      // await ofertaService.borrarOferta(oferta._id);
+      NotifySucessCenter('Empaque eliminado correctamente');
+      // obtenerTodasOfertas();
+    });
+  };
+
+  const borrarProductoProveedor = (fila: any) => {
+    console.log(fila);
+    $q.dialog({
+      title: `Eliminar ${fila.nombre}`,
+      message: '¿Está seguro de eliminar este proveedor?',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      // await ofertaService.borrarOferta(oferta._id);
+      NotifySucessCenter('Proveedor eliminado correctamente');
+      // obtenerTodasOfertas();
+    });
+  };
+
   //WATCH
   watch(imagen, () => {
     //@ts-ignore
@@ -1116,5 +1144,7 @@ export const useProducts = () => {
     modalEditarCategoria,
     modificarCategoriaArbol,
     borrarCategoriaArbol,
+    boorarProductoEmpaque,
+    borrarProductoProveedor,
   };
 };

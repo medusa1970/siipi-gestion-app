@@ -40,6 +40,8 @@ export const useOferta = () => {
       esOfertaBasicas: false,
       esOfertaProductos: false,
       esDetalleOferta: false,
+
+      esEditarCatalogo: false,
     },
     toogle: false,
     productoFijo: {
@@ -60,6 +62,8 @@ export const useOferta = () => {
       id: '',
     },
     catalogoSeleccionado: [],
+    optionsCategoria: [],
+    tab: 'datosBasicos',
   });
   const imagen = ref(null);
   const selectedFile = ref('');
@@ -190,11 +194,45 @@ export const useOferta = () => {
 
   const obtenerTodoCatalagos = async () => {
     const catalogoArbol = await ofertaService.buscarCatalogos();
+    console.log(catalogoArbol);
     estado.catalogos = catalogoArbol;
     // console.log(estado.catalogos);
     // console.log(catalogoArbol);
     estado.catalogoSeleccionado = catalogoArbol?.hijas[0];
+    console.log(estado.catalogoSeleccionado);
     estado.oferta.catalogo = catalogoArbol?.hijas[0];
+    //@ts-ignore
+    if (estado.catalogoSeleccionado?._id) {
+      const ofertas = await ofertaService.catalogoRecursivo(
+        //@ts-ignore
+        estado.catalogoSeleccionado._id,
+      );
+      if (ofertas) {
+        estado.ofertas = ofertas; //@ts-expect-error
+        if (estado.catalogoSeleccionado.hijas.length > 0) {
+          //@ts-expect-error
+          for (const cat of estado.catalogoSeleccionado.hijas) {
+            //@ts-expect-error
+            estado.optionsCategoria.push({
+              label: `${cat.nombre} (${cat.hijas.length})`,
+              value: cat._id,
+              disable: true,
+              class: 'title',
+            });
+            for (const subcat of cat.hijas) {
+              //@ts-expect-error
+              estado.optionsCategoria.push({
+                label: subcat.nombre,
+                value: subcat,
+                class: 'option',
+              });
+            }
+          }
+        } else {
+          estado.optionsCategoria = [];
+        }
+      }
+    }
   };
   const obtenerTodoCatalagosIdNombre = async () => {
     const catalogoArbol = await ofertaService.buscarCatalogosIdNombre();
@@ -213,16 +251,43 @@ export const useOferta = () => {
     }
   };
   const handleSelectionChange = async (catalogo: any) => {
-    // console.log(catalogo);
+    console.log(catalogo);
+    console.log(estado.catalogoSeleccionado);
     const ofertas = await ofertaService.catalogoRecursivo(
       //@ts-ignore
       catalogo._id,
     );
-    if (ofertas) estado.ofertas = ofertas;
+    console.log(ofertas);
+    if (ofertas) {
+      estado.ofertas = ofertas; //@ts-expect-error
+      if (estado.catalogoSeleccionado.hijas.length > 0) {
+        //@ts-expect-error
+        for (const cat of estado.catalogoSeleccionado.hijas) {
+          //@ts-expect-error
+          estado.optionsCategoria.push({
+            label: `${cat.nombre} (${cat.hijas.length})`,
+            value: cat._id,
+            disable: true,
+            class: 'title',
+          });
+          for (const subcat of cat.hijas) {
+            //@ts-expect-error
+            estado.optionsCategoria.push({
+              label: subcat.nombre,
+              value: subcat,
+              class: 'option',
+            });
+          }
+        }
+      } else {
+        estado.optionsCategoria = [];
+      }
+    }
   };
 
   const obtenerCatalogoId = async (catalogoId: string) => {
     const catalogoArbol = await ofertaService.buscarCatalogoID(catalogoId);
+    console.log(catalogoArbol);
     //@ts-ignore
     if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
   };
@@ -244,7 +309,8 @@ export const useOferta = () => {
     obtenerTodoCatalagos();
   };
 
-  const modalCrearCategoriaArbol = (data: any) => {
+  const modalCrearCatalogo = (data: any) => {
+    estado.catalogo.nombre = '';
     estado.modal.isAddCatalogo = true;
     estado.catalogo.id = data._id;
   };
@@ -405,6 +471,44 @@ export const useOferta = () => {
     return total;
   }
 
+  const modalEditarCatalogo = (item: any) => {
+    console.log(item);
+    estado.modal.esEditarCatalogo = true;
+    estado.catalogo.id = item._id;
+    estado.catalogo.nombre = item.nombre;
+  };
+
+  const modificarCatalogoArbol = async (catalogoID: string) => {
+    const catalogoModificado = await ofertaService.modificarCatalogo(
+      estado.catalogo.id,
+      estado.catalogo.nombre,
+    );
+    if (catalogoModificado) {
+      NotifySucessCenter('Catalogo modificado correctamente');
+      obtenerCatalogoId(catalogoID);
+    }
+    estado.modal.esEditarCatalogo = false;
+  };
+  const borrarCatalogoArbol = async (row: any, catalogoID: string) => {
+    console.log(row, catalogoID);
+    $q.dialog({
+      title: `Eliminar ${row.nombre}`,
+      message: `¿Está seguro de eliminar este catalogo${
+        row.hijas?.length > 0
+          ? ', tiene ' + row.hijas.length + ' subcategorias'
+          : ''
+      }?`,
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      const catalogoBorrada = await ofertaService.borrarCatalogo(row._id);
+      if (catalogoBorrada) {
+        NotifySucessCenter('Catalogo eliminada correctamente');
+        obtenerCatalogoId(catalogoID);
+      }
+    });
+  };
+
   //WATCH
   watch(imagen, () => {
     //@ts-ignore
@@ -429,6 +533,16 @@ export const useOferta = () => {
     });
   };
 
+  const mapeoCatalogos = () => {
+    console.log(estado.catalogoSeleccionado);
+  };
+
+  const irEditarProducto = (producto: any) => {
+    console.log(producto);
+    // router.push('/cathering/sede/ofertas/detailOferta');
+    router.push('ofertas/detailOferta');
+  };
+
   return {
     estado,
     crearOferta,
@@ -444,7 +558,7 @@ export const useOferta = () => {
     redirectCatalogoArbol,
     crearCatalogo,
     crearCatalogoArbol,
-    modalCrearCategoriaArbol,
+    modalCrearCatalogo,
     editarOferta,
     editarIngrediente,
     editarIngredienteProducto,
@@ -462,5 +576,10 @@ export const useOferta = () => {
     handleSelectionChange,
     optionsProducts,
     filterProductos,
+    modalEditarCatalogo,
+    modificarCatalogoArbol,
+    borrarCatalogoArbol,
+    mapeoCatalogos,
+    irEditarProducto,
   };
 };

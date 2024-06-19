@@ -7,14 +7,6 @@
   />
 
   <!--
-      TITLE
-      -- >
-
-  <h1 class="text-lg font-extrabold uppercase text-center">
-    {{ producto.datosBasicos.nombre }}
-  </h1>
-
-  < !--
     TABS
     -->
 
@@ -27,12 +19,6 @@
     align="justify"
     no-caps
   >
-    <!-- 
-    <div class="!flex h-full">
-      <q-btn icon="arrow_back" flat />
-        <q-btn icon="apps_outage" flat /> 
-    </div>
-        -->
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
     <q-tab v-if="soloAlmacen" name="marcas" icon="group" label="Marcas" />
     <q-tab
@@ -436,6 +422,17 @@
                 >
                   <q-tooltip> Editar empaque </q-tooltip></q-btn
                 >
+                <q-btn
+                  color="red"
+                  icon="delete"
+                  round
+                  dense
+                  padding="1px"
+                  size="10px"
+                  @click="boorarProductoEmpaque(props.row)"
+                >
+                  <q-tooltip> borrar empaque </q-tooltip></q-btn
+                >
               </q-td>
             </template>
           </Table>
@@ -478,6 +475,17 @@
               @click="abrirModalEditarProveedor(props.row)"
             >
               <q-tooltip> Editar proveedor </q-tooltip></q-btn
+            >
+            <q-btn
+              color="red"
+              icon="delete"
+              round
+              dense
+              padding="1px"
+              size="10px"
+              @click="borrarProductoProveedor(props.row)"
+            >
+              <q-tooltip> borrar proveedor </q-tooltip></q-btn
             >
           </q-td>
         </template>
@@ -904,8 +912,8 @@
             map-options
             dense
             :disable="
-              estado.medidaProducto.medida.nombre === ''
-              // || estado.modal.esEditarEmpaque
+              estado.medidaProducto.medida.nombre === '' ||
+              estado.modal.esEditarEmpaque
             "
           >
             <template v-slot:option="scope">
@@ -1461,6 +1469,8 @@ const {
   editarProveedorProducto,
   limpiarCamposProveedor,
   editarProductoMarca,
+  boorarProductoEmpaque,
+  borrarProductoProveedor,
 } = useProducts();
 
 definePageMeta({

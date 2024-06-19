@@ -1,13 +1,9 @@
 <template>
-  <q-menu
-    transition-show="rotate"
-    transition-hide="rotate"
-    anchor="bottom end"
-    self="top end"
-  >
+  [Usuario]
+  <q-menu>
     <q-list style="min-width: 100px">
       <!-- perfil -->
-      <q-item clickable @click="show_editarPerfil = true">
+      <q-item clickable @click="show_editarPerfil">
         <q-item-section avatar>
           <q-avatar>
             <img
@@ -64,24 +60,6 @@
       </q-item>
     </q-list>
   </q-menu>
-
-  <!-- MODAL -->
-  <Dialog
-    v-if="show_editarPerfil"
-    title="Editar perfil"
-    :handle-submit="modificarPersona"
-  >
-    <template #inputsDialog>
-      <input-image
-        label="Imagen"
-        @update="(v) => (refImage64 = v)"
-        maxSizeKb="500"
-      />
-      <input-text label="Nombre" @update="(v) => (refText = v)" />
-      <input-text label="Apellido" @update="(v) => (refText = v)" />
-      <input-text label="email" @update="(v) => (refText = v)" />
-    </template>
-  </Dialog>
 </template>
 
 <script setup lang="ts">

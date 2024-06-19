@@ -1,4 +1,6 @@
 <template>
+  <usuario />
+
   <div class="flex flex-col justify-center items-center h-[100vh]">
     <Transition name="fade">
       <div style="position: Absolute" v-if="!authStore.getUser">
@@ -104,7 +106,7 @@ const elegirNegocio = (index) => {
 
 const logout = () => {
   authStore.logout();
-  router.push('/');
+  router.push(inicio);
 };
 
 // mandamos un mensaje de confirmacio o de error cuando el

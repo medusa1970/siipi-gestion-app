@@ -53,7 +53,7 @@ definePageMeta({
   layout: false,
 });
 import Logo from '@/assets/img/logo.png';
-import { useAuth } from '~/modulos/main/aplicacion/useAuth';
+import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
 const router = useRouter();

@@ -67,6 +67,7 @@ export default defineNuxtConfig({
             console.log('creating routes for module', file);
             const routes = await import(fullPath);
             for (const route of routes.default || []) {
+              // console.log(route.name);
               pages.push(route);
             }
           }

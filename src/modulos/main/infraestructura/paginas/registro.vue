@@ -50,14 +50,13 @@
 
 <script setup lang="ts">
 import Logo from '@/assets/img/logo.png';
-import { PersonaProps } from '~/ANTIGUO/composables/useAuth';
 definePageMeta({
   layout: false,
 });
 
-const register = async (datos: PersonaProps) => {
-  const nuevaPersona = await registrar(datos);
-  NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
+const register = async (datos: any) => {
+  // const nuevaPersona = await registrar(datos);
+  // NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
 };
 </script>
 

@@ -1,16 +1,16 @@
 export default [
   {
-    name: 'index',
+    name: 'inicio',
     path: '/',
     file: '@/modulos/main/infraestructura/paginas/index.vue',
   },
   {
-    name: 'recuperarPassword',
+    name: 'recuperarPwd',
     path: '/recuperarPassword',
     file: '@/modulos/main/infraestructura/paginas/recuperarPassword.vue',
   },
   {
-    name: 'registro',
+    name: 'registracion',
     path: '/registro',
     file: '@/modulos/main/infraestructura/paginas/registro.vue',
   },

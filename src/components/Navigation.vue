@@ -1,7 +1,7 @@
 <template>
   <q-breadcrumbs style="font-size: 15px; margin-bottom: 5px">
     <q-breadcrumbs-el icon="home" :to="path" />
-    <q-breadcrumbs-el :label="label" :icon="icon" :to="href" />
+    <q-breadcrumbs-el v-if="label" :label="label" :icon="icon" :to="href" />
     <q-breadcrumbs-el v-if="label2" :label="label2" :icon="icon2" :to="href2" />
   </q-breadcrumbs>
 </template>

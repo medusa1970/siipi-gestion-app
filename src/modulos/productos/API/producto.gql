@@ -1,0 +1,104 @@
+#
+# PRODUCTOS
+#
+
+query productosBuscar(
+  $busqueda: BuscarProductoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarProductoDto = {}
+) {
+  buscarProductos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+      }
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation productosCrearBasico(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    nombre
+    comentario
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+query productosCategoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    # productos {
+    #   nombre
+    # }
+    hijas {
+      _id
+      nombre
+      # productos {
+      #   _id
+      #   nombre
+      # }
+      hijas {
+        _id
+        nombre
+        # productos {
+        #   _id
+        #   nombre
+        # }
+      }
+    }
+  }
+}

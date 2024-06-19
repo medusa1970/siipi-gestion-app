@@ -6,7 +6,7 @@
     <span v-if="login">
       <a
         class="border-b-[1px] border-gray-500 text-gray-500"
-        :href="getRoute('recuperarPwd')"
+        href="/recuperarPassword"
         >Recuperar mi contraseña</a
       >
     </span>
@@ -16,7 +16,7 @@
       <a
         v-if="login"
         class="border-b-[1px] border-gray-500 font-semibold"
-        :href="getRoute('registracion')"
+        href="/registro"
         >Registrate aquí</a
       >
       <a

@@ -77,3 +77,5 @@ export default defineNuxtConfig({
     },
   },
 });
+
+console.log('uri', process.env.GRAPH_URI);

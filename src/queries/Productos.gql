@@ -33,6 +33,7 @@ query buscarProductos(
         _id
         nombre
         abreviacion
+        cantidad
       }
     }
     empaques {

@@ -755,7 +755,11 @@
     "
   >
     <template #inputsDialog>
-      <p>Registren las diferentes presentaciones</p>
+      <p>
+        Registren las diferentes presentaciones. El formulario se prellena de
+        forma automatica al seleccionar un empaque pero puede cambiar los
+        valores.
+      </p>
       <!--   <h1 class="font-bold text-xs mt-2">MARCA:</h1>
       <q-select
         color="primary"
@@ -900,8 +904,8 @@
             map-options
             dense
             :disable="
-              estado.medidaProducto.medida.nombre === '' ||
-              estado.modal.esEditarEmpaque
+              estado.medidaProducto.medida.nombre === ''
+              // || estado.modal.esEditarEmpaque
             "
           >
             <template v-slot:option="scope">

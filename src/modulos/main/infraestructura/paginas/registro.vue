@@ -51,10 +51,13 @@
 <script setup>
 import Logo from '@/assets/img/logo.png';
 import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
+import second from 'first';
 
 definePageMeta({
   layout: false,
 });
+
+console.log(authPersona);
 
 const register = async (datos) => {
   // const nuevaPersona = await registrar(datos);

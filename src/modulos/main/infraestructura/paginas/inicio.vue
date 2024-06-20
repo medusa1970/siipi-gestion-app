@@ -1,71 +1,131 @@
 <template>
-  <Transition name="in-out">
-    <div v-if="!authStore.getUsuario">
-      <formularioLogin
-        style="width: 300px"
-        title-btn="Iniciar sesion"
-        login
-        :submit="login"
-      >
-        <template #inputs>
-          <q-input
-            v-model="usuarioInput"
-            type="text"
-            label="Usuario"
-            outlined
-            dense
-            clearable
-          />
-          <q-input
-            v-model="contrasenaInput"
-            label="Contraseña"
-            outlined
-            dense
-            clearable
-            type:password
-          >
-          </q-input>
-        </template>
-      </formularioLogin>
-    </div>
-  </Transition>
-
-  <!-- eslint-disable-next-line -->
-  <Transition name="in-out">
-    <div class="w-full" v-if="authStore.getUsuario">
-      <div class="w-full">
-        <p class="font-bold text-xl text-center">
-          Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
-        </p>
-        <p class="text-xl text-center">Selecciona a que negocio ingresar.</p>
-      </div>
-      <div
-        v-for="(negocio, index) in authStore.getUsuario.negocios"
-        :key="negocio.nombre"
-        @click="elegirNegocio(index)"
-        class="text-center"
-      >
-        <q-btn
-          :color="getColor(negocio)"
-          :src="Logo"
-          class="w-full"
-          style="margin-top: 10px"
-        >
-          {{ negocio.nombre }}
-        </q-btn>
-      </div>
-      <div class="w-full text-center">
-        <q-btn
-          dense
-          no-caps
-          style="margin: 20px; padding: 5px 15px"
-          color="primary"
-          label="logout"
-          @click="logout"
-        />
+  <div class="">
+    <div class="block-wrapper">
+      <div class="block1">
+        <Transition name="fade">
+          <div class="w-full" v-if="!show3 && !show4 && !authStore.getUsuario">
+            <formularioLogin
+              style="width: 300px"
+              title-btn="Iniciar sesion"
+              login
+              :submit="login"
+            >
+              <template #inputs>
+                <q-input
+                  v-model="usuarioInput"
+                  type="text"
+                  label="Usuario"
+                  outlined
+                  dense
+                  clearable
+                />
+                <q-input
+                  v-model="contrasenaInput"
+                  label="Contraseña"
+                  outlined
+                  dense
+                  clearable
+                  type:password
+                >
+                </q-input>
+              </template>
+            </formularioLogin>
+          </div>
+        </Transition>
       </div>
     </div>
-  </Transition>
+    <div class="block-wrapper">
+      <div class="block2">
+        <Transition name="fade">
+          <div class="w-full" v-if="!show3 && !show4 && authStore.getUsuario">
+            <div class="w-full">
+              <p class="font-bold text-xl text-center">
+                Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
+              </p>
+              <p class="text-xl text-center">
+                Selecciona a que negocio ingresar.
+              </p>
+            </div>
+            <div
+              v-for="(negocio, index) in authStore.getUsuario.negocios"
+              :key="negocio.nombre"
+              @click="elegirNegocio(index)"
+              class="text-center"
+            >
+              <q-btn
+                :color="getColor(negocio)"
+                :src="Logo"
+                class="w-full"
+                style="margin-top: 10px"
+              >
+                {{ negocio.nombre }}
+              </q-btn>
+            </div>
+            <div class="w-full text-center">
+              <q-btn
+                dense
+                no-caps
+                style="margin: 20px; padding: 5px 15px"
+                color="primary"
+                label="logout"
+                @click="logout"
+              />
+              <q-btn
+                dense
+                no-caps
+                style="margin: 20px; padding: 5px 15px"
+                color="primary"
+                label="show 3"
+                @click="show(3)"
+              />
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </div>
+    <div class="block-wrapper">
+      <div class="block3">
+        <Transition name="fade">
+          <div class="w-full" v-if="show3">
+            <q-btn
+              dense
+              no-caps
+              style="margin: 20px; padding: 5px 15px"
+              color="primary"
+              label="show 4"
+              @click="show(4)"
+            />
+            <p>Lorem ipsum 3</p>
+          </div>
+        </Transition>
+      </div>
+    </div>
+    <div class="block-wrapper">
+      <div class="block4">
+        <Transition name="fade">
+          <div class="w-full" v-if="show4">
+            <p>Lorem ipsum 4</p>
+            <q-btn
+              dense
+              no-caps
+              style="margin: 20px; padding: 5px 15px"
+              color="primary"
+              label="show 3"
+              @click="show(3)"
+            />
+            <q-btn
+              dense
+              no-caps
+              style="margin: 20px; padding: 5px 15px"
+              color="primary"
+              label="hide"
+              @click="show()"
+            />
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -84,7 +144,21 @@ const authStore = useAuthStore();
 
 const usuarioInput = ref('');
 const contrasenaInput = ref('');
-
+const show3 = ref(false);
+const show4 = ref(true);
+const show = (num) => {
+  show3.value = false;
+  show4.value = false;
+  console.log(num);
+  if (num === 3) {
+    show3.value = true;
+    show4.value = false;
+  }
+  if (num === 4) {
+    show3.value = false;
+    show4.value = true;
+  }
+};
 const login = async () => {
   authStore.login('lionel', 'Siipi123');
   // authStore.login(usuarioInput.value, contrasenaInput.value);
@@ -131,25 +205,32 @@ const getColor = (negocio) => {
 </script>
 
 <style scoped>
-/* .fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s ease;
-  transition-delay: 1s;
+.block1 {
+  float: left;
+  width: 300px;
+}
+.block2 {
+  float: left;
+  position: absolute;
+  width: 300px;
+}
+.block3 {
+  float: left;
+  position: absolute;
+  width: 300px;
+}
+.block4 {
+  float: left;
+  position: absolute;
+  width: 300px;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
-
-.fade2-enter-active,
-.fade2-leave-active {
-  transition: opacity 1s ease;
-}
-
-.fade2-enter-from,
-.fade2-leave-to {
-  opacity: 0;
-  transition-delay: 1s;
-} */
 </style>

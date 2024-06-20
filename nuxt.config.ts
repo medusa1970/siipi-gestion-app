@@ -33,6 +33,24 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       GQL_HOST: process.env.GRAPH_URI,
+      'graphql-client': {
+        codegen: {
+          silent: false,
+          skipTypename: false,
+          useTypeImports: true,
+          dedupeFragments: true,
+          onlyOperationTypes: false,
+          avoidOptionals: false,
+          disableOnBuild: false,
+          maybeValue: 'T | null',
+        },
+        default: {
+          clients: {
+            host: process.env.GRAPH_URI,
+            schema: 'schema/schema.gql',
+          },
+        },
+      },
     },
   },
   piniaPersistedstate: {

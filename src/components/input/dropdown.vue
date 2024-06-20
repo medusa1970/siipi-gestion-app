@@ -2,7 +2,7 @@
   <q-select
     class="w-full"
     :label="label + (requerido ? '*' : '')"
-    v-model="selected"
+    v-model="localModel"
     @update:model-value="handleChange"
     :rules="requerido ? [useRules.requerido, ...rules] : rules"
     :dense="!notDense"
@@ -27,17 +27,12 @@
       </q-item>
     </template>
     <template #after>
-      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
     </template>
   </q-select>
 </template>
 
 <script setup>
-/**
- * Refs
- */
-const selected = ref('');
-
 /**
  * Props
  */
@@ -52,6 +47,11 @@ const props = defineProps({
   //   disable: Boolean;
   // }
 
+  // valor inicial
+  default: {
+    type: String,
+    default: '',
+  },
   // label del input
   label: {
     type: String,
@@ -83,6 +83,14 @@ const props = defineProps({
     default: '',
   },
 });
+
+/**
+ * Refs
+ */
+const defaultOption = props.options.find(
+  (option) => option.value === props.default,
+);
+const localModel = ref(defaultOption);
 
 /**
  * Eventos

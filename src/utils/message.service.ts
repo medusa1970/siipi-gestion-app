@@ -35,7 +35,7 @@ export const NotifySucessCenter = (message: string) =>
 export const ApiError = (error: any) => {
   console.log(error);
   hideLoading();
-  error.gqlErrors[0].message
+  error.gqlErrors?.[0].message
     ? NotifyError(error.gqlErrors[0].message)
     : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
 };

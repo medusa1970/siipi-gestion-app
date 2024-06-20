@@ -1,12 +1,12 @@
-export default async (gql: any, loading = true) => {
+import type { GqlOps } from '#gql';
+
+export default async (consulta: any, params: any, loading = true) => {
   try {
     if (loading) showLoading();
-    const data = await gql;
+    const GqlInstance = useGql();
+    const result = await GqlInstance(consulta as GqlOps, params);
     if (loading) hideLoading();
-    // solo retorna el primer valor
-    // ya que el resultado de la consulta siempre es
-    // { [nombre_consulta]: data }
-    return extraer(data);
+    return extraer(result);
   } catch (error) {
     console.log('Error API Gql:', error);
     ApiError(

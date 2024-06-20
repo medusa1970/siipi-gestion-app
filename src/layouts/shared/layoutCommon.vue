@@ -19,12 +19,12 @@
             </h1>
             <p class="text-sm capitalize">
               {{
-                `${authStore.getUserNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
+                `${authStore.getUsuarioNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
               }}
             </p>
           </div>
         </q-toolbar-title>
-        <usuario />
+        <usuarioMenu />
       </q-toolbar>
     </q-header>
 
@@ -59,16 +59,16 @@
               style="height: 40px; padding: 9px; z-index: 100"
             >
               {{
-                `${authStore.getUserNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
+                `${authStore.getUsuarioNombreCompleto} (${authStore.getCargo})`
               }}
             </div>
           </q-img>
           <div class="w-full h-full flex justify-center items-center">
             <q-avatar size="100px">
               <img
-                v-if="authStore.getUser?.cloudinaryUrl"
+                v-if="authStore.getUsuario?.cloudinaryUrl"
                 style="object-fit: cover"
-                :src="authStore.getUser?.cloudinaryUrl"
+                :src="authStore.getUsuario?.cloudinaryUrl"
               />
               <img
                 v-else
@@ -115,81 +115,6 @@
       </div>
     </q-page-container>
   </q-layout>
-
-  <!-- MODAL -->
-  <Dialog
-    v-model="isEditProfile"
-    title="Editar perfil"
-    :handle-submit="modificarPersona"
-  >
-    <template #inputsDialog>
-      <div class="flex flex-col gap-2">
-        <!-- IMAGE -->
-        <q-file
-          v-model="imagen"
-          label="Seleccionar imagen"
-          accept=".jpg, .png, .jpge"
-          max-total-size="560000"
-          @rejected="onRejected"
-          counter
-          outlined
-          dense
-          hint="Tamaño máximo de imagen 540KB"
-          clearable
-        >
-          <template v-slot:prepend>
-            <q-icon name="cloud_upload" @click.stop.prevent />
-          </template>
-        </q-file>
-        <div
-          v-if="imagePreview"
-          style="width: 200px; height: 200px; margin: auto"
-        >
-          <q-img
-            style="width: 100%; height: 100%; object-fit: cover"
-            :src="imagePreview"
-          ></q-img>
-        </div>
-        <!-- <q-file
-          v-model="imagen"
-          label="Seleccionar imagen"
-          accept=".jpg, .png, .jpge"
-          max-total-size="560000"
-          counter
-          outlined
-          dense
-          hint="Tamaño máximo de imagen 540KB"
-          clearable
-        >
-          <img :src="persona.imagen" alt="" />
-        </q-file> -->
-        <q-input
-          v-model="persona.nombre"
-          type="text"
-          label="Nombre"
-          outlined
-          dense
-          clearable
-        />
-        <q-input
-          v-model="persona.apellido"
-          type="text"
-          label="Apellido"
-          outlined
-          dense
-          clearable
-        />
-        <q-input
-          v-model="persona.correo"
-          type="email"
-          label="Correo"
-          outlined
-          dense
-          clearable
-        />
-      </div>
-    </template>
-  </Dialog>
 </template>
 
 <script setup>
@@ -211,45 +136,21 @@ import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
 import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-import usuario from '@/modulos/main/infraestructura/componientes/usuario.vue';
+import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
-if (!authStore.user) {
+if (!authStore.getUsuario) {
   router.push('/');
 }
-console.log(authStore.getUser);
+console.log(authStore.getUsuario);
 
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
-const rightDrawerOpen = ref(false);
-const isEditProfile = ref(false);
-const persona = ref({
-  nombre: '',
-  apellido: '',
-  correo: '',
-  telefono: '',
-  imagen: null,
-  _id: '',
-});
-const imagen = ref(null);
-const selectedFileProfile = ref('');
-const imagePreview = ref('');
-const contrasena = ref('');
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
-function toggleRightDrawer() {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-}
-
-const logout = () => {
-  const username = authStore.getUser?.nombre;
-  authStore.logout();
-  NotifySucess(`Hasta pronto ${username}!`);
-  router.push('/');
-};
 
 // Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
 // Función para reproducir el sonido
@@ -283,14 +184,14 @@ const elegirNegocio = (index, nombre) => {
     },
   }).onOk(async () => {
     const loginResponse = await useAuth.login(
-      authStore.getUser?.usuario,
+      authStore.getUsuario?.usuario,
       contrasena.value,
     );
     if (!loginResponse) {
       NotifyError(`contraseña incorrecta`);
     }
 
-    // login respone ya tiene el nuevo token
+    // el login response ya tiene el nuevo token
     // authStore.setToken()
 
     // TODO averiguar suscripcion, etc
@@ -301,83 +202,6 @@ const elegirNegocio = (index, nombre) => {
     contrasena.value = '';
   });
 };
-
-const editProfile = () => {
-  isEditProfile.value = true;
-  getPersona();
-};
-
-/**IMAGE VALIDATE */
-const onRejected = (rejectedEntries) => {
-  const men =
-    rejectedEntries[0].failedPropValidation === 'max-total-size'
-      ? 'la imagen excede el tamaño maximo del formato'
-      : 'El tipo de formato no es correcto';
-  $q.notify({
-    type: 'negative',
-    message: `${men}`,
-  });
-};
-const modificarPersona = async () => {
-  console.log('first');
-  console.log(selectedFileProfile.value);
-
-  const datos = {
-    nombre: persona.value.nombre,
-    apellido: persona.value.apellido,
-    correo: persona.value.correo,
-  };
-  if (selectedFileProfile.value === '') {
-    Object.assign(datos, {
-      imagen: {
-        mimetype: 'image/png',
-        data: fileToBase64(selectedFileProfile.value),
-      },
-    });
-  }
-
-  await empleadoService
-    .modificarPersona(authStore.getUser?._id)
-    .then((persona) => {
-      // console.log(personaModificada);
-      authStore.value.user.nombre = personaModificada.nombre;
-      authStore.value.user.apellido = personaModificada.apellido;
-      authStore.value.user.correo = personaModificada.correo;
-      NotifySucess('Persona modificada correctamente');
-    })
-    .catch(() => {
-      NotifyError(`error al modificar la persona`);
-    });
-
-  isEditProfile.value = false;
-};
-
-const getPersona = async () => {
-  try {
-    showLoading();
-    const personaEncontrada = await empleadoService.buscarPersona(
-      authStore.getUser?._id,
-    );
-    persona.value = personaEncontrada;
-    imagePreview.value = personaEncontrada.imagen.cloudinaryUrl;
-    hideLoading();
-  } catch (error) {
-    ApiError(error);
-  }
-};
-
-//WATCH
-watch(imagen, () => {
-  if (imagen.value instanceof Blob) {
-    const lector = new FileReader();
-    selectedFileProfile.value = imagen.value;
-
-    lector.addEventListener('load', () => {
-      imagePreview.value = lector.result;
-    });
-    lector.readAsDataURL(selectedFileProfile.value);
-  }
-});
 </script>
 
 <style lang="scss">

@@ -1,3 +1,5 @@
+import type { ConexionResponse, CrearPersonaDto, Entidad, Persona } from '#gql';
+
 export interface PersonaProps {
   _id?: string;
   usuario: string;
@@ -13,15 +15,11 @@ export const useAuth = {
    * Efectua un pedido de conexion por token jwt
    * @returns { persona, entidad, permisos, cargos }
    */
-  login: async (usuario: string, contrasena: string, entidad?: string) => {
-    // const GqlInstance = useGql();
-    // const result = await GqlInstance('authConectar', {
-    //   datos: {
-    //     usuario,
-    //     contrasena,
-    //     entidad,
-    //   },
-    // });
+  login: async (
+    usuario: string,
+    contrasena: string,
+    entidad?: string,
+  ): Promise<ConexionResponse> => {
     const response = await postDataGql(
       GqlAuthConectar({
         datos: {
@@ -39,7 +37,7 @@ export const useAuth = {
    * Busca todas las entidades en cuales el usuario conectado tiene algun permiso
    * @returns Entidad[]
    */
-  buscarEntidadesDeUsuario: async (token?: any) => {
+  buscarEntidadesDeUsuario: async (token?: any): Promise<Entidad[]> => {
     const entidades = await postDataGql(
       //@ts-ignore
       GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
@@ -51,7 +49,7 @@ export const useAuth = {
    * Registra un nuevo usuario
    * @returns Persona
    */
-  registrar: async (datos: PersonaProps) => {
+  registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
     const { _id, usuario, ...nuevoDato } = datos;
     const [nuevaPersona] = await postDataGql(
       GqlAuthCrearPersonas({
@@ -65,7 +63,7 @@ export const useAuth = {
    * pedir cambio de contraseña
    * @returns true
    */
-  pedirRDC: async (correo: string) => {
+  pedirRDC: async (correo: string): Promise<boolean> => {
     const res = await postDataGql(GqlAuthPedirRDC({ correo }));
     return res;
   },
@@ -74,7 +72,7 @@ export const useAuth = {
    * cambiar la contraseña
    * @returns true
    */
-  actuarRDC: async (token: string, contrasena: string) => {
+  actuarRDC: async (token: string, contrasena: string): Promise<boolean> => {
     const res = await postDataGql(
       GqlAuthActuarRDC({
         token,

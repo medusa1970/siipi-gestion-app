@@ -1,0 +1,1793 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type FileUpload {
+  archivoLocal: String
+  cloudinaryUrl: String
+}
+
+type Ejemplo {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Persona {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  apellido: String!
+  correo: String!
+  telefono: String!
+  imagen: FileUpload
+  usuario: String
+  contrasena: String!
+  rdcToken: String
+  rdcVencimiento: DateTime
+}
+
+type Marca {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+}
+
+type Empaque {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  abreviacion: String!
+  marca: Marca
+  cantidad: Float!
+}
+
+type Categoria {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  pariente: Categoria
+  imagen: FileUpload
+  productos: [Producto!]
+  hijas: [Categoria!]
+}
+
+type TipoEmpaque {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  abreviacion: String!
+  cantidad: Float
+}
+
+type Medida {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  tipoEmpaques: [TipoEmpaque!]
+}
+
+type Variedad {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  marca: Marca!
+  cantidadMin: Float
+  cantidadMax: Float
+  imagen: FileUpload
+}
+
+type Producto {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  comentario: String
+  medida: Medida
+  imagen: FileUpload
+  empaques: [Empaque!]
+  variedades: [Variedad!]
+  categoria: Categoria!
+}
+
+type Bloque {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+}
+
+type InventarioLote {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  cantidad: Float!
+  vencimiento: DateTime
+  bloque: Bloque
+  presentacion: String
+  cantidadPresentacion: Float
+}
+
+type Diferencia {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  vencimiento: DateTime
+  diferencia: Float!
+}
+
+type Inventario {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  persona: Persona!
+  producto: Producto!
+  lotes: [InventarioLote!]
+  reporte: String
+  diferencias: [Diferencia!]
+}
+
+type Ingrediente {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  tipo: String!
+  producto: Producto
+  cantidad: Float
+}
+
+type Preparado {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  producto: Producto
+  cantidad: Float
+}
+
+type Precio {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  cantidadMin: Float!
+  precioConFactura: Float!
+  precioSinFactura: Float!
+}
+
+type Oferta {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  abreviacion: String
+  descripcion: String
+  comentario: String
+  ingredientes: [Ingrediente!]
+  preparados: [Preparado!]!
+  imagen: FileUpload
+  precioConFactura: Float!
+  precioSinFactura: Float!
+  preciosPorMayor: [Precio!]!
+  catalogo: Catalogo!
+}
+
+type Catalogo {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  marca: Entidad
+  pariente: Catalogo
+  imagen: FileUpload
+  ofertas: [Oferta!]
+  hijas: [Catalogo!]
+}
+
+type Menu {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  catalogo: Catalogo!
+  exepciones: [Oferta!]
+}
+
+type Problema {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  inventario: Inventario
+  producto: Producto!
+  diferencias: Diferencia
+  resuelto: Boolean
+  fechaResolucion: DateTime
+  reporte: String
+}
+
+type StockLote {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  vencimiento: DateTime
+  cantidad: Float!
+  bloque: Bloque
+}
+
+type Stock {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  producto: Producto!
+  lotes: [StockLote!]
+  cantidadLimite: Float
+  frequenciaInventario: Float
+  desactivado: Boolean
+}
+
+type Cargo {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+}
+
+type Permiso {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  permiso: String!
+  vencimiento: DateTime
+}
+
+type Empleado {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  persona: Persona!
+  cargos: [Cargo!]!
+  permisos: [Permiso!]!
+}
+
+type Servicio {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  producto: Producto!
+  marca: Marca
+  identificativo: String
+  entidades: [Entidad!]
+  oferta: Oferta
+  precioConFactura: Float!
+  precioSinFactura: Float!
+  preciosPorMayor: [Precio!]!
+}
+
+type Entidad {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  tipo: String!
+  nombre: String!
+  descripcion: String!
+  imagen: FileUpload
+  empleados: [Empleado!]!
+  almacen: [Stock!]
+  inventarios: [Inventario!]!
+  bloques: [Bloque!]
+  problemas: [Problema!]
+  saldo: Float
+  saldoActualizacion: DateTime
+  menus: [Menu!]
+  ruta: [Float!]
+  orden: [Float!]
+  servicios: [Servicio!]!
+}
+
+type Estado {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  estado: String!
+  persona: Persona!
+  entidad: Entidad
+  comentario: String
+  folder: String
+}
+
+type ItemEstado {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  estado: String!
+  persona: Persona!
+  entidad: Entidad
+  comentario: [String!]
+  valor: [Float!]
+}
+
+type Item {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  ofertaId: Oferta!
+  oferta: Oferta!
+  cantidad: Float!
+  estado: [ItemEstado!]!
+}
+
+type Transaccion {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+}
+
+type TransaccionMonto {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  total: Float!
+  transaccion: Transaccion
+}
+
+type Pedido {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  comprador: Entidad
+  vendedor: Entidad
+  estado: [Estado!]
+  items: [Item!]!
+  transacciones: [TransaccionMonto!]!
+  pagoCompleto: Boolean
+}
+
+type ConexionResponse {
+  personaId: ID!
+  usuario: String!
+  nombre: String!
+  apellido: String!
+  correo: String!
+  telefono: String!
+  cloudinaryUrl: String
+  entidadId: ID
+  entidadNombre: String
+  entidadTipo: String
+  cargos: [Cargo!]
+  permisos: [String!]
+  token: String!
+}
+
+type Rol {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  permisos: [String!]
+}
+
+type Tag {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  nombre: String!
+  ofertas: [Oferta!]
+}
+
+type Accion {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  persona: Persona!
+  accion: String!
+  producto: Producto
+  comentario: String!
+}
+
+type Query {
+  contarEjemplos(busqueda: BuscarEjemploDto!, opciones: ContarOpciones): Float!
+  buscarEjemplos(busqueda: BuscarEjemploDto!, opciones: BuscarOpciones, filtro: BuscarEjemploDto): [Ejemplo!]!
+  conectar(datos: ConexionDto!): ConexionResponse!
+  pedirReinicioDeContrasena(correo: String!): Boolean!
+  actuarReinicioDeContrasena(token: String!, contrasena: String!): Boolean!
+  personaUsuarioConectado(opciones: BuscarOpciones): Persona!
+  entidadesUsuarioConectado(opciones: BuscarOpciones): [Entidad!]!
+  testAut: String!
+  contarAcciones(busqueda: BuscarAccionDto!, opciones: ContarOpciones): Float!
+  buscarAcciones(busqueda: BuscarAccionDto!, opciones: BuscarOpciones, filtro: BuscarAccionDto): [Accion!]!
+  contarPersonas(busqueda: BuscarPersonaDto!, opciones: ContarOpciones): Float!
+  buscarPersonas(busqueda: BuscarPersonaDto!, opciones: BuscarOpciones, filtro: BuscarPersonaDto): [Persona!]!
+  contarProductos(busqueda: BuscarProductoDto!, opciones: ContarOpciones): Float!
+  buscarProductos(busqueda: BuscarProductoDto!, opciones: BuscarOpciones, filtro: BuscarProductoDto): [Producto!]!
+  contarCategorias(busqueda: BuscarCategoriaDto!, opciones: ContarOpciones): Float!
+  buscarCategorias(busqueda: BuscarCategoriaDto!, opciones: BuscarOpciones, filtro: BuscarCategoriaDto): [Categoria!]!
+  categoriaArbol(busqueda: BuscarCategoriaDto!, opciones: BuscarOpciones): Categoria!
+  contarEntidades(busqueda: BuscarEntidadDto!, opciones: ContarOpciones): Float!
+  buscarEntidades(busqueda: BuscarEntidadDto!, opciones: BuscarOpciones, filtro: BuscarEntidadDto): [Entidad!]!
+  entidadLeerMenu(busqueda: BuscarEntidadDto!, busquedaMenu: BuscarMenuDto!, opciones: BuscarOpciones): Catalogo!
+  entidadProductosMenu(busqueda: BuscarEntidadDto!, busquedaMenu: BuscarMenuDto!, opciones: BuscarOpciones): [Producto!]!
+  filaInventario(busqueda: BuscarEntidadDto!, opciones: BuscarOpciones): [Producto!]!
+  contarRoles(busqueda: BuscarRolDto!, opciones: ContarOpciones): Float!
+  buscarRoles(busqueda: BuscarRolDto!, opciones: BuscarOpciones, filtro: BuscarRolDto): [Rol!]!
+  contarOfertas(busqueda: BuscarOfertaDto!, opciones: ContarOpciones): Float!
+  buscarOfertas(busqueda: BuscarOfertaDto!, opciones: BuscarOpciones, filtro: BuscarOfertaDto): [Oferta!]!
+  ofertaBuscarProductos(busqueda: BuscarOfertaDto!, opciones: BuscarOpciones): [Producto!]!
+  contarPedidos(busqueda: BuscarPedidoDto!, opciones: ContarOpciones): Float!
+  buscarPedidos(busqueda: BuscarPedidoDto!, opciones: BuscarOpciones, filtro: BuscarPedidoDto): [Pedido!]!
+  leerEstadoPedido(busqueda: BuscarPedidoDto!, opciones: BuscarOpciones): String!
+  contarCatalogos(busqueda: BuscarCatalogoDto!, opciones: ContarOpciones): Float!
+  buscarCatalogos(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones, filtro: BuscarCatalogoDto): [Catalogo!]!
+  catalogoOfertasRecursivo(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones): [Oferta!]!
+  catalogoArbol(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones): Catalogo!
+  contarMedidas(busqueda: BuscarMedidaDto!, opciones: ContarOpciones): Float!
+  buscarMedidas(busqueda: BuscarMedidaDto!, opciones: BuscarOpciones, filtro: BuscarMedidaDto): [Medida!]!
+  contarMarcas(busqueda: BuscarMarcaDto!, opciones: ContarOpciones): Float!
+  buscarMarcas(busqueda: BuscarMarcaDto!, opciones: BuscarOpciones, filtro: BuscarMarcaDto): [Marca!]!
+  contarTags(busqueda: BuscarTagDto!, opciones: ContarOpciones): Float!
+  buscarTags(busqueda: BuscarTagDto!, opciones: BuscarOpciones, filtro: BuscarTagDto): [Tag!]!
+}
+
+input BuscarEjemploDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+}
+
+input BuscarFechaDto {
+  operador: String!
+  fecha: DateTime!
+  sensibilidad: String = "ms"
+}
+
+input ContarOpciones {
+  alaFecha: DateTime = null
+}
+
+input BuscarOpciones {
+  modificable: Boolean = false
+  limit: Float = 0
+  skip: Float = 0
+  sort: String = null
+  alaFecha: DateTime = null
+  noPopulate: [String!] = []
+  errorSiVacio: Boolean = false
+  buscarSinFiltrar: Boolean = false
+  populate: Boolean = true
+}
+
+input ConexionDto {
+  usuario: String!
+  contrasena: String!
+  entidad: ID
+}
+
+input BuscarAccionDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  persona: [ID!]
+  accion: [String!]
+  producto: [ID!]
+  comentario: [String!]
+}
+
+input BuscarPersonaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  apellido: [String!]
+  correo: [String!]
+  telefono: [String!]
+  imagen: FileUploadBuscar
+  usuario: [String!]
+  contrasena: [String!]
+  rdcToken: [String!]
+  rdcVencimiento: [BuscarFechaDto!]
+}
+
+input FileUploadBuscar {
+  archivoLocal: String
+  cloudinaryUrl: String
+}
+
+input BuscarProductoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  comentario: [String!]
+  medida: [ID!]
+  imagen: FileUploadBuscar
+  empaques: BuscarEmpaqueDto
+  variedades: BuscarVariedadDto
+  categoria: [ID!]
+}
+
+input BuscarEmpaqueDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  abreviacion: [String!]
+  marca: [ID!]
+  cantidad: [Float!]
+}
+
+input BuscarVariedadDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  marca: ID
+  cantidadMin: [Float!]
+  cantidadMax: [Float!]
+  imagen: FileUploadBuscar
+}
+
+input BuscarCategoriaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  pariente: [ID!]
+  imagen: FileUploadBuscar
+}
+
+input BuscarEntidadDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  tipo: [String!]
+  nombre: [String!]
+  descripcion: [String!]
+  imagen: FileUploadBuscar
+  ruta: [Float!]
+  orden: [Float!]
+  empleados: BuscarEmpleadoDto
+  almacen: BuscarStockDto
+  inventarios: BuscarInventarioDto
+  bloques: BuscarBloqueDto
+  problemas: BuscarProblemaDto
+  menus: BuscarMenuDto
+  saldo: [Float!]
+  saldoActualizacion: [BuscarFechaDto!]
+  servicios: BuscarServicioDto
+}
+
+input BuscarEmpleadoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  persona: [ID!]
+  cargos: BuscarCargoDto
+  permisos: BuscarPermisoDto
+}
+
+input BuscarCargoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+}
+
+input BuscarPermisoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  permiso: [String!]
+  vencimiento: [BuscarFechaDto!]
+}
+
+input BuscarStockDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  producto: [ID!]
+  lotes: BuscarStockLoteDto
+  cantidadLimite: [Float!]
+  frequenciaInventario: [Float!]
+  desactivado: Boolean
+}
+
+input BuscarStockLoteDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  vencimiento: [BuscarFechaDto!]
+  cantidad: [Float!]
+  bloque: [ID!]
+}
+
+input BuscarInventarioDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  persona: [ID!]
+  producto: [ID!]
+  lotes: BuscarInventarioLoteDto
+  reporte: [String!]
+  diferencias: BuscarDiferenciaDto
+}
+
+input BuscarInventarioLoteDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  cantidad: [Float!]
+  vencimiento: [BuscarFechaDto!]
+  bloque: [ID!]
+  presentacion: [String!]
+  cantidadPresentacion: [Float!]
+}
+
+input BuscarDiferenciaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  vencimiento: [BuscarFechaDto!]
+  diferencia: [Float!]
+}
+
+input BuscarBloqueDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+}
+
+input BuscarProblemaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  inventario: [ID!]
+  producto: [ID!]
+  diferencias: BuscarDiferenciaDto
+  resuelto: Boolean
+  fechaResolucion: [BuscarFechaDto!]
+  reporte: [String!]
+}
+
+input BuscarMenuDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  catalogo: [ID!]
+  exepciones: [ID!]
+}
+
+input BuscarServicioDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  producto: ID
+  marca: ID
+  identificativo: String
+  entidades: [ID!]
+  oferta: [ID!]
+  precioConFactura: Float
+  precioSinFactura: Float
+  preciosPorMayor: BuscarPrecioDto
+}
+
+input BuscarPrecioDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  cantidadMin: [Float!]
+  precioConFactura: [Float!]
+  precioSinFactura: [Float!]
+}
+
+input BuscarRolDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  permisos: [String!]
+}
+
+input BuscarOfertaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  abreviacion: [String!]
+  descripcion: [String!]
+  comentario: [String!]
+  preparados: BuscarPreparadoDto
+  ingredientes: BuscarIngredienteDto
+  imagen: FileUploadBuscar
+  precioConFactura: Float
+  precioSinFactura: Float
+  preciosPorMayor: BuscarPrecioDto
+  catalogo: [ID!]
+}
+
+input BuscarPreparadoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  producto: [ID!]
+  cantidad: [Float!]
+}
+
+input BuscarIngredienteDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  tipo: [String!]
+  producto: [ID!]
+  cantidad: [Float!]
+}
+
+input BuscarPedidoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  comprador: [ID!]
+  vendedor: [ID!]
+  estado: BuscarEstadoDto
+  items: BuscarItemDto
+  transacciones: BuscarTransaccionMontoDto
+  pagoCompleto: Boolean
+}
+
+input BuscarEstadoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  estado: [String!]
+  persona: [ID!]
+  entidad: [ID!]
+  comentario: [String!]
+  folder: [String!]
+}
+
+input BuscarItemDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  ofertaId: [ID!]
+  oferta: BuscarOfertaDto
+  cantidad: [Float!]
+  estado: BuscarEstadoDto
+}
+
+input BuscarTransaccionMontoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  total: [Float!]
+  transaccion: [ID!]
+}
+
+input BuscarCatalogoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  marca: [ID!]
+  pariente: [ID!]
+  imagen: FileUploadBuscar
+}
+
+input BuscarMedidaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  tipoEmpaques: BuscarTipoEmpaqueDto
+}
+
+input BuscarTipoEmpaqueDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  abreviacion: [String!]
+  cantidad: [Float!]
+}
+
+input BuscarMarcaDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+}
+
+input BuscarTagDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  nombre: [String!]
+  ofertas: [ID!]
+}
+
+type Mutation {
+  PopulateEjemplos(opciones: PopulateOpciones): [Ejemplo!]!
+  crearEjemplos(datos: [CrearEjemploDto!]!, opciones: CrearOpciones): [Ejemplo!]!
+  modificarEjemplos(busqueda: BuscarEjemploDto!, datos: ModificarEjemploDto!, opciones: ModificarOpciones): [Ejemplo!]!
+  borrarEjemplos(busqueda: BuscarEjemploDto!, opciones: BorrarOpciones): [Ejemplo!]!
+  eliminarEjemplos(busqueda: BuscarEjemploDto!, opciones: EliminarOpciones): Float!
+  moverEjemplos(busqueda: BuscarEjemploDto!, despuesDe: BuscarEjemploDto!, opciones: EliminarOpciones): Float!
+  PopulateAcciones(opciones: PopulateOpciones): [Accion!]!
+  crearAcciones(datos: [CrearAccionDto!]!, opciones: CrearOpciones): [Accion!]!
+  modificarAcciones(busqueda: BuscarAccionDto!, datos: ModificarAccionDto!, opciones: ModificarOpciones): [Accion!]!
+  borrarAcciones(busqueda: BuscarAccionDto!, opciones: BorrarOpciones): [Accion!]!
+  eliminarAcciones(busqueda: BuscarAccionDto!, opciones: EliminarOpciones): Float!
+  moverAcciones(busqueda: BuscarAccionDto!, despuesDe: BuscarAccionDto!, opciones: EliminarOpciones): Float!
+  PopulatePersonas(opciones: PopulateOpciones): [Persona!]!
+  crearPersonas(datos: [CrearPersonaDto!]!, opciones: CrearOpciones): [Persona!]!
+  modificarPersonas(busqueda: BuscarPersonaDto!, datos: ModificarPersonaDto!, opciones: ModificarOpciones): [Persona!]!
+  borrarPersonas(busqueda: BuscarPersonaDto!, opciones: BorrarOpciones): [Persona!]!
+  eliminarPersonas(busqueda: BuscarPersonaDto!, opciones: EliminarOpciones): Float!
+  moverPersonas(busqueda: BuscarPersonaDto!, despuesDe: BuscarPersonaDto, opciones: EliminarOpciones): Float!
+  PopulateProductos(opciones: PopulateOpciones): [Producto!]!
+  crearProductos(datos: [CrearProductoDto!]!, opciones: CrearOpciones): [Producto!]!
+  modificarProductos(busqueda: BuscarProductoDto!, datos: ModificarProductoDto!, opciones: ModificarOpciones): [Producto!]!
+  borrarProductos(busqueda: BuscarProductoDto!, opciones: BorrarOpciones): [Producto!]!
+  eliminarProductos(busqueda: BuscarProductoDto!, opciones: EliminarOpciones): Float!
+  moverProductos(busqueda: BuscarProductoDto!, despuesDe: BuscarProductoDto!, opciones: EliminarOpciones): Float!
+  PopulateCategorias(opciones: PopulateOpciones): [Categoria!]!
+  crearCategorias(datos: [CrearCategoriaDto!]!, opciones: CrearOpciones): [Categoria!]!
+  modificarCategorias(busqueda: BuscarCategoriaDto!, datos: ModificarCategoriaDto!, opciones: ModificarOpciones): [Categoria!]!
+  borrarCategorias(busqueda: BuscarCategoriaDto!, opciones: BorrarOpciones): [Categoria!]!
+  eliminarCategorias(busqueda: BuscarCategoriaDto!, opciones: EliminarOpciones): Float!
+  moverCategorias(busqueda: BuscarCategoriaDto!, despuesDe: BuscarCategoriaDto!, opciones: EliminarOpciones): Float!
+  PopulateEntidades(opciones: PopulateOpciones): [Entidad!]!
+  crearEntidades(datos: [CrearEntidadDto!]!, opciones: CrearOpciones): [Entidad!]!
+  modificarEntidades(busqueda: BuscarEntidadDto!, datos: ModificarEntidadDto!, opciones: ModificarOpciones): [Entidad!]!
+  borrarEntidades(busqueda: BuscarEntidadDto!, opciones: BorrarOpciones): [Entidad!]!
+  eliminarEntidades(busqueda: BuscarEntidadDto!, opciones: EliminarOpciones): Float!
+  moverEntidades(busqueda: BuscarEntidadDto!, despuesDe: BuscarEntidadDto!, opciones: EliminarOpciones): Float!
+  hacerInventario(busqueda: BuscarEntidadDto!, datos: CrearInventarioDto!, opciones: BuscarOpciones, guardar: Boolean): Inventario!
+  PopulateRoles(opciones: PopulateOpciones): [Rol!]!
+  crearRoles(datos: [CrearRolDto!]!, opciones: CrearOpciones): [Rol!]!
+  modificarRoles(busqueda: BuscarRolDto!, datos: ModificarRolDto!, opciones: ModificarOpciones): [Rol!]!
+  borrarRoles(busqueda: BuscarRolDto!, opciones: BorrarOpciones): [Rol!]!
+  eliminarRoles(busqueda: BuscarRolDto!, opciones: EliminarOpciones): Float!
+  moverRoles(busqueda: BuscarRolDto!, despuesDe: BuscarRolDto!, opciones: EliminarOpciones): Float!
+  PopulateOfertas(opciones: PopulateOpciones): [Oferta!]!
+  crearOfertas(datos: [CrearOfertaDto!]!, opciones: CrearOpciones): [Oferta!]!
+  modificarOfertas(busqueda: BuscarOfertaDto!, datos: ModificarOfertaDto!, opciones: ModificarOpciones): [Oferta!]!
+  borrarOfertas(busqueda: BuscarOfertaDto!, opciones: BorrarOpciones): [Oferta!]!
+  eliminarOfertas(busqueda: BuscarOfertaDto!, opciones: EliminarOpciones): Float!
+  moverOfertas(busqueda: BuscarOfertaDto!, despuesDe: BuscarOfertaDto!, opciones: EliminarOpciones): Float!
+  PopulatePedidos(opciones: PopulateOpciones): [Pedido!]!
+  crearPedidos(datos: [CrearPedidoDto!]!, opciones: CrearOpciones): [Pedido!]!
+  modificarPedidos(busqueda: BuscarPedidoDto!, datos: ModificarPedidoDto!, opciones: ModificarOpciones): [Pedido!]!
+  borrarPedidos(busqueda: BuscarPedidoDto!, opciones: BorrarOpciones): [Pedido!]!
+  eliminarPedidos(busqueda: BuscarPedidoDto!, opciones: EliminarOpciones): Float!
+  moverPedidos(busqueda: BuscarPedidoDto!, despuesDe: BuscarPedidoDto!, opciones: EliminarOpciones): Float!
+  iniciarPedido(datos: CrearPedidoDto!, opciones: CrearOpciones): Pedido!
+  agregarEstadoPedido(busqueda: BuscarPedidoDto!, datos: CrearEstadoDto!, opciones: BuscarOpciones): Pedido!
+  cambiarEstadoItems(busqueda: BuscarPedidoDto!, itemIds: [ID!], estado: CrearItemEstadoDto!, opciones: BuscarOpciones): Pedido!
+  ajustarItem(busqueda: BuscarPedidoDto!, itemId: ID!, nuevaCantidad: Float!, comentario: String, opciones: BuscarOpciones): Pedido!
+  cambiarEstadoItemsPorOfertas(busqueda: BuscarPedidoDto!, ofertaIds: [ID!], estado: CrearItemEstadoDto!, opciones: BuscarOpciones, tipo: String): [Pedido!]!
+  ajustarItemsPorOferta(busqueda: BuscarPedidoDto!, ofertaId: ID!, estado: CrearItemEstadoDto!, opciones: BuscarOpciones): [Pedido!]!
+  PopulateCatalogos(opciones: PopulateOpciones): [Catalogo!]!
+  crearCatalogos(datos: [CrearCatalogoDto!]!, opciones: CrearOpciones): [Catalogo!]!
+  modificarCatalogos(busqueda: BuscarCatalogoDto!, datos: ModificarCatalogoDto!, opciones: ModificarOpciones): [Catalogo!]!
+  borrarCatalogos(busqueda: BuscarCatalogoDto!, opciones: BorrarOpciones): [Catalogo!]!
+  eliminarCatalogos(busqueda: BuscarCatalogoDto!, opciones: EliminarOpciones): Float!
+  moverCatalogos(busqueda: BuscarCatalogoDto!, despuesDe: BuscarCatalogoDto!, opciones: EliminarOpciones): Float!
+  PopulateMedidas(opciones: PopulateOpciones): [Medida!]!
+  crearMedidas(datos: [CrearMedidaDto!]!, opciones: CrearOpciones): [Medida!]!
+  modificarMedidas(busqueda: BuscarMedidaDto!, datos: ModificarMedidaDto!, opciones: ModificarOpciones): [Medida!]!
+  borrarMedidas(busqueda: BuscarMedidaDto!, opciones: BorrarOpciones): [Medida!]!
+  eliminarMedidas(busqueda: BuscarMedidaDto!, opciones: EliminarOpciones): Float!
+  moverMedidas(busqueda: BuscarMedidaDto!, despuesDe: BuscarMedidaDto!, opciones: EliminarOpciones): Float!
+  PopulateMarcas(opciones: PopulateOpciones): [Marca!]!
+  crearMarcas(datos: [CrearMarcaDto!]!, opciones: CrearOpciones): [Marca!]!
+  modificarMarcas(busqueda: BuscarMarcaDto!, datos: ModificarMarcaDto!, opciones: ModificarOpciones): [Marca!]!
+  borrarMarcas(busqueda: BuscarMarcaDto!, opciones: BorrarOpciones): [Marca!]!
+  eliminarMarcas(busqueda: BuscarMarcaDto!, opciones: EliminarOpciones): Float!
+  moverMarcas(busqueda: BuscarMarcaDto!, despuesDe: BuscarMarcaDto!, opciones: EliminarOpciones): Float!
+  PopulateTags(opciones: PopulateOpciones): [Tag!]!
+  crearTags(datos: [CrearTagDto!]!, opciones: CrearOpciones): [Tag!]!
+  modificarTags(busqueda: BuscarTagDto!, datos: ModificarTagDto!, opciones: ModificarOpciones): [Tag!]!
+  borrarTags(busqueda: BuscarTagDto!, opciones: BorrarOpciones): [Tag!]!
+  eliminarTags(busqueda: BuscarTagDto!, opciones: EliminarOpciones): Float!
+  moverTags(busqueda: BuscarTagDto!, despuesDe: BuscarTagDto!, opciones: EliminarOpciones): Float!
+}
+
+input PopulateOpciones {
+  aceptarInexistentes: Boolean = false
+  noPopulate: [String!] = []
+}
+
+input CrearEjemploDto {
+  _id: ID
+}
+
+input CrearOpciones {
+  aceptarInexistentes: Boolean = false
+  noPopulate: [String!] = []
+  populate: Boolean = false
+}
+
+input ModificarEjemploDto {
+  paraEvitarErrorDeTypescript: String
+}
+
+input ModificarOpciones {
+  limit: Float = 0
+  skip: Float = 0
+  aceptarInexistentes: Boolean = false
+  noPopulate: [String!] = []
+  errorSiVacio: Boolean = false
+  populate: Boolean = false
+}
+
+input BorrarOpciones {
+  limit: Float = 0
+  skip: Float = 0
+  noPopulate: [String!] = []
+  errorSiVacio: Boolean = false
+}
+
+input EliminarOpciones {
+  limit: Float = 0
+  skip: Float = 0
+}
+
+input CrearAccionDto {
+  _id: ID
+  persona: ID
+  accion: String!
+  producto: ID
+  comentario: String!
+}
+
+input ModificarAccionDto {
+  paraEvitarErrorDeTypescript: String
+  persona: ID
+  accion: String
+  producto: ID
+  comentario: String
+}
+
+input CrearPersonaDto {
+  _id: ID
+  nombre: String!
+  apellido: String!
+  correo: String!
+  telefono: String!
+  imagen: FileUploadInput
+  usuario: String
+  contrasena: String!
+  rdcToken: String
+  rdcVencimiento: DateTime
+}
+
+input FileUploadInput {
+  data: String!
+  mimetype: String!
+}
+
+input ModificarPersonaDto {
+  nombre: String
+  apellido: String
+  correo: String
+  telefono: String
+  imagen: FileUploadInput
+  usuario: String
+  contrasena: String
+  rdcToken: String
+  rdcVencimiento: DateTime
+}
+
+input CrearProductoDto {
+  _id: ID
+  nombre: String!
+  comentario: String
+  medida: ID
+  imagen: FileUploadInput
+  empaques: [CrearEmpaqueDto!]
+  variedades: [CrearVariedadDto!]
+  categoria: ID!
+}
+
+input CrearEmpaqueDto {
+  _id: ID
+  nombre: String!
+  abreviacion: String!
+  marca: ID
+  cantidad: Float!
+}
+
+input CrearVariedadDto {
+  _id: ID
+  marca: ID!
+  cantidadMin: Float
+  cantidadMax: Float
+  imagen: FileUploadInput
+}
+
+input ModificarProductoDto {
+  nombre: String
+  comentario: String
+  medida: ID
+  imagen: FileUploadInput
+  empaques: EditarEmpaqueDto
+  variedades: EditarVariedadDto
+  categoria: ID
+}
+
+input EditarEmpaqueDto {
+  reemplazar: [CrearEmpaqueDto!]
+  buscar: BuscarEmpaqueDto
+  modificar: ModificarEmpaqueDto
+  borrar: BuscarEmpaqueDto
+  agregar: [CrearEmpaqueDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarEmpaqueDto {
+  nombre: String
+  abreviacion: String
+  marca: ID
+  cantidad: Float
+}
+
+input EditarVariedadDto {
+  reemplazar: [CrearVariedadDto!]
+  buscar: BuscarVariedadDto
+  modificar: ModificarVariedadDto
+  borrar: BuscarVariedadDto
+  agregar: [CrearVariedadDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarVariedadDto {
+  marca: ID
+  cantidadMin: Float
+  cantidadMax: Float
+  imagen: FileUploadInput
+}
+
+input CrearCategoriaDto {
+  _id: ID
+  nombre: String!
+  pariente: ID
+  imagen: FileUploadInput
+}
+
+input ModificarCategoriaDto {
+  nombre: String
+  pariente: ID
+  imagen: FileUploadInput
+}
+
+input CrearEntidadDto {
+  _id: ID
+  tipo: String!
+  nombre: String!
+  descripcion: String
+  imagen: FileUploadInput
+  ruta: [Float!]
+  orden: [Float!]
+  empleados: [CrearEmpleadoDto!]
+  almacen: [CrearStockDto!]
+  inventarios: [CrearInventarioDto!]
+  bloques: [CrearBloqueDto!]
+  problemas: [CrearProblemaDto!]
+  menus: [CrearMenuDto!]
+  saldo: Float = 0
+  saldoActualizacion: DateTime = "2024-06-20T01:32:56.875Z"
+  servicios: [CrearServicioDto!]
+}
+
+input CrearEmpleadoDto {
+  _id: ID
+  persona: ID!
+  cargos: [CrearCargoDto!]
+  permisos: [CrearPermisoDto!]
+}
+
+input CrearCargoDto {
+  _id: ID
+  nombre: String!
+}
+
+input CrearPermisoDto {
+  _id: ID
+  permiso: String!
+  vencimiento: DateTime
+}
+
+input CrearStockDto {
+  _id: ID
+  producto: ID!
+  lotes: [CrearStockLoteDto!]
+  cantidadLimite: Float
+  frequenciaInventario: Float
+  desactivado: Boolean
+}
+
+input CrearStockLoteDto {
+  _id: ID
+  vencimiento: DateTime!
+  cantidad: Float!
+  bloque: ID
+}
+
+input CrearInventarioDto {
+  _id: ID
+  persona: ID
+  producto: ID!
+  lotes: [CrearInventarioLoteDto!]
+  reporte: String
+  diferencias: [CrearDiferenciaDto!]
+}
+
+input CrearInventarioLoteDto {
+  _id: ID
+  cantidad: Float!
+  vencimiento: DateTime
+  bloque: ID
+  presentacion: String
+  cantidadPresentacion: Float
+}
+
+input CrearDiferenciaDto {
+  _id: ID
+  vencimiento: DateTime
+  diferencia: Float!
+}
+
+input CrearBloqueDto {
+  _id: ID
+  nombre: String!
+}
+
+input CrearProblemaDto {
+  _id: ID
+  inventario: ID
+  producto: ID!
+  diferencias: [CrearDiferenciaDto!]
+  resuelto: Boolean
+  fechaResolucion: DateTime
+  reporte: String
+}
+
+input CrearMenuDto {
+  _id: ID
+  catalogo: ID!
+  exepciones: [ID!]
+}
+
+input CrearServicioDto {
+  _id: ID
+  producto: ID!
+  marca: ID
+  identificativo: String
+  entidades: [ID!]
+  oferta: ID
+  precioConFactura: Float!
+  precioSinFactura: Float!
+  preciosPorMayor: [CrearPrecioDto!]
+}
+
+input CrearPrecioDto {
+  _id: ID
+  cantidadMin: Float!
+  precioConFactura: Float!
+  precioSinFactura: Float!
+}
+
+input ModificarEntidadDto {
+  tipo: String
+  nombre: String
+  descripcion: String
+  imagen: FileUploadInput
+  ruta: Float
+  orden: Float
+  empleados: EditarEmpleadoDto
+  almacen: EditarStockDto
+  inventarios: EditarInventarioDto
+  bloques: EditarBloqueDto
+  problemas: EditarProblemaDto
+  menus: EditarMenuDto
+  saldo: Float
+  saldoActualizacion: DateTime
+  servicios: EditarServicioDto
+}
+
+input EditarEmpleadoDto {
+  reemplazar: [CrearEmpleadoDto!]
+  buscar: BuscarEmpleadoDto
+  modificar: ModificarEmpleadoDto
+  borrar: BuscarEmpleadoDto
+  agregar: [CrearEmpleadoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarEmpleadoDto {
+  persona: ID
+  cargos: EditarCargoDto
+  permisos: EditarPermisoDto
+}
+
+input EditarCargoDto {
+  reemplazar: [CrearCargoDto!]
+  buscar: BuscarCargoDto
+  modificar: ModificarCargoDto
+  borrar: BuscarCargoDto
+  agregar: [CrearCargoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarCargoDto {
+  nombre: String
+}
+
+input EditarPermisoDto {
+  reemplazar: [CrearPermisoDto!]
+  buscar: BuscarPermisoDto
+  modificar: ModificarPermisoDto
+  borrar: BuscarPermisoDto
+  agregar: [CrearPermisoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarPermisoDto {
+  permiso: String
+  vencimiento: DateTime
+}
+
+input EditarStockDto {
+  reemplazar: [CrearStockDto!]
+  buscar: BuscarStockDto
+  modificar: ModificarStockDto
+  borrar: BuscarStockDto
+  agregar: [CrearStockDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarStockDto {
+  producto: ID
+  lotes: EditarStockLoteDto
+  cantidadLimite: Float
+  frequenciaInventario: Float
+  desactivado: Boolean
+}
+
+input EditarStockLoteDto {
+  reemplazar: [CrearStockLoteDto!]
+  buscar: BuscarStockLoteDto
+  modificar: ModificarStockLoteDto
+  borrar: BuscarStockLoteDto
+  agregar: [CrearStockLoteDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarStockLoteDto {
+  vencimiento: DateTime
+  cantidad: Float
+  bloque: ID
+}
+
+input EditarInventarioDto {
+  reemplazar: [CrearInventarioDto!]
+  buscar: BuscarInventarioDto
+  modificar: ModificarInventarioDto
+  borrar: BuscarInventarioDto
+  agregar: [CrearInventarioDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarInventarioDto {
+  persona: ID
+  producto: ID
+  lotes: EditarInventarioLoteDto
+  reporte: String
+  diferencias: EditarDiferenciaDto
+}
+
+input EditarInventarioLoteDto {
+  reemplazar: [CrearInventarioLoteDto!]
+  buscar: BuscarInventarioLoteDto
+  modificar: ModificarInventarioLoteDto
+  borrar: BuscarInventarioLoteDto
+  agregar: [CrearInventarioLoteDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarInventarioLoteDto {
+  cantidad: Float
+  vencimiento: DateTime
+  bloque: ID
+  presentacion: String
+  cantidadPresentacion: Float
+}
+
+input EditarDiferenciaDto {
+  reemplazar: [CrearDiferenciaDto!]
+  buscar: BuscarDiferenciaDto
+  modificar: ModificarDiferenciaDto
+  borrar: BuscarDiferenciaDto
+  agregar: [CrearDiferenciaDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarDiferenciaDto {
+  vencimiento: DateTime
+  diferencia: Float
+}
+
+input EditarBloqueDto {
+  reemplazar: [CrearBloqueDto!]
+  buscar: BuscarBloqueDto
+  modificar: ModificarBloqueDto
+  borrar: BuscarBloqueDto
+  agregar: [CrearBloqueDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarBloqueDto {
+  nombre: String
+}
+
+input EditarProblemaDto {
+  reemplazar: [CrearProblemaDto!]
+  buscar: BuscarProblemaDto
+  modificar: ModificarProblemaDto
+  borrar: BuscarProblemaDto
+  agregar: [CrearProblemaDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarProblemaDto {
+  inventario: ID
+  producto: ID
+  diferencias: EditarDiferenciaDto
+  resuelto: Boolean
+  fechaResolucion: DateTime
+  reporte: String
+}
+
+input EditarMenuDto {
+  reemplazar: [CrearMenuDto!]
+  buscar: BuscarMenuDto
+  modificar: ModificarMenuDto
+  borrar: BuscarMenuDto
+  agregar: [CrearMenuDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarMenuDto {
+  catalogo: ID
+  exepciones: EditarRefsDto
+}
+
+input EditarRefsDto {
+  reemplazar: [ID!]
+  borrar: [ID!]
+  agregar: [ID!]
+}
+
+input EditarServicioDto {
+  reemplazar: [CrearServicioDto!]
+  buscar: BuscarServicioDto
+  modificar: ModificarServicioDto
+  borrar: BuscarServicioDto
+  agregar: [CrearServicioDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarServicioDto {
+  producto: ID
+  marca: ID
+  identificativo: String
+  entidades: EditarRefsDto
+  oferta: ID
+  precioConFactura: Float
+  precioSinFactura: Float
+  preciosPorMayor: EditarPrecioDto
+}
+
+input EditarPrecioDto {
+  reemplazar: [CrearPrecioDto!]
+  buscar: BuscarPrecioDto
+  modificar: ModificarPrecioDto
+  borrar: BuscarPrecioDto
+  agregar: [CrearPrecioDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarPrecioDto {
+  cantidadMin: Float
+  precioConFactura: Float
+  precioSinFactura: Float
+}
+
+input CrearRolDto {
+  _id: ID
+  nombre: String!
+  permisos: [String!]
+}
+
+input ModificarRolDto {
+  nombre: String
+  permisos: EditarPermisosDto
+}
+
+input EditarPermisosDto {
+  reemplazar: [String!]
+  borrar: [String!]
+  permisos: [String!]
+}
+
+input CrearOfertaDto {
+  _id: ID
+  nombre: String!
+  abreviacion: String
+  descripcion: String
+  comentario: String
+  preparados: [CrearPreparadoDto!]
+  ingredientes: [CrearIngredienteDto!]
+  imagen: FileUploadInput
+  precioConFactura: Float!
+  precioSinFactura: Float!
+  preciosPorMayor: [CrearPrecioDto!]
+  catalogo: ID!
+}
+
+input CrearPreparadoDto {
+  _id: ID
+  producto: ID
+  cantidad: Float
+}
+
+input CrearIngredienteDto {
+  _id: ID
+  tipo: String!
+  producto: ID
+  cantidad: Float
+}
+
+input ModificarOfertaDto {
+  nombre: String
+  abreviacion: String
+  descripcion: String
+  comentario: String
+  preparados: EditarPreparadoDto
+  ingredientes: EditarIngredienteDto
+  imagen: FileUploadInput
+  precioConFactura: Float
+  precioSinFactura: Float
+  preciosPorMayor: EditarPrecioDto
+  catalogo: ID
+}
+
+input EditarPreparadoDto {
+  reemplazar: [CrearPreparadoDto!]
+  buscar: BuscarPreparadoDto
+  modificar: ModificarPreparadoDto
+  borrar: BuscarPreparadoDto
+  agregar: [CrearPreparadoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarPreparadoDto {
+  producto: ID
+  cantidad: Float
+}
+
+input EditarIngredienteDto {
+  reemplazar: [CrearIngredienteDto!]
+  buscar: BuscarIngredienteDto
+  modificar: ModificarIngredienteDto
+  borrar: BuscarIngredienteDto
+  agregar: [CrearIngredienteDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarIngredienteDto {
+  tipo: String
+  producto: ID
+  cantidad: Float
+}
+
+input CrearPedidoDto {
+  _id: ID
+  comprador: ID!
+  vendedor: ID!
+  estado: [CrearEstadoDto!]
+  items: [CrearItemDto!]
+  transacciones: [CrearTransaccionMontoDto!]
+  pagoCompleto: Boolean
+}
+
+input CrearEstadoDto {
+  _id: ID
+  estado: String!
+  persona: ID!
+  entidad: ID
+  comentario: String
+  folder: String
+}
+
+input CrearItemDto {
+  _id: ID
+  ofertaId: ID!
+  oferta: CrearOfertaDto
+  cantidad: Float!
+  estado: [CrearItemEstadoDto!]
+}
+
+input CrearItemEstadoDto {
+  _id: ID
+  estado: String!
+  persona: ID
+  entidad: ID
+  comentario: String
+  valor: [Float!] = []
+}
+
+input CrearTransaccionMontoDto {
+  _id: ID
+  total: Float!
+  transaccion: ID
+}
+
+input ModificarPedidoDto {
+  comprador: ID
+  vendedor: ID
+  estado: EditarEstadoDto
+  items: EditarItemDto
+  transacciones: EditarTransaccionMontoDto
+  pagoCompleto: Boolean
+}
+
+input EditarEstadoDto {
+  reemplazar: [CrearEstadoDto!]
+  buscar: BuscarEstadoDto
+  modificar: ModificarEstadoDto
+  borrar: BuscarEstadoDto
+  agregar: [CrearEstadoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarEstadoDto {
+  estado: String
+  persona: ID
+  entidad: ID
+  comentario: String
+  folder: String
+}
+
+input EditarItemDto {
+  reemplazar: [CrearItemDto!]
+  buscar: BuscarItemDto
+  modificar: ModificarItemDto
+  borrar: BuscarItemDto
+  agregar: [CrearItemDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarItemDto {
+  ofertaId: ID
+  oferta: ModificarOfertaDto
+  cantidad: Float
+  estado: EditarEstadoDto
+}
+
+input EditarTransaccionMontoDto {
+  reemplazar: [CrearTransaccionMontoDto!]
+  buscar: BuscarTransaccionMontoDto
+  modificar: ModificarTransaccionMontoDto
+  borrar: BuscarTransaccionMontoDto
+  agregar: [CrearTransaccionMontoDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarTransaccionMontoDto {
+  total: Float
+  transaccion: ID
+}
+
+input CrearCatalogoDto {
+  _id: ID
+  nombre: String!
+  marca: ID
+  pariente: ID
+  imagen: FileUploadInput
+}
+
+input ModificarCatalogoDto {
+  nombre: String
+  marca: ID
+  pariente: ID
+  imagen: FileUploadInput
+}
+
+input CrearMedidaDto {
+  _id: ID
+  nombre: String!
+  tipoEmpaques: [CrearTipoEmpaqueDto!]
+}
+
+input CrearTipoEmpaqueDto {
+  _id: ID
+  nombre: String!
+  abreviacion: String!
+  cantidad: Float
+}
+
+input ModificarMedidaDto {
+  nombre: String
+  tipoEmpaques: EditarTipoEmpaqueDto
+}
+
+input EditarTipoEmpaqueDto {
+  reemplazar: [CrearTipoEmpaqueDto!]
+  buscar: BuscarTipoEmpaqueDto
+  modificar: ModificarTipoEmpaqueDto
+  borrar: BuscarTipoEmpaqueDto
+  agregar: [CrearTipoEmpaqueDto!]
+  skip: Float
+  limit: Float
+}
+
+input ModificarTipoEmpaqueDto {
+  nombre: String
+  abreviacion: String
+  cantidad: Float
+}
+
+input CrearMarcaDto {
+  _id: ID
+  nombre: String!
+}
+
+input ModificarMarcaDto {
+  nombre: String
+}
+
+input CrearTagDto {
+  _id: ID
+  nombre: String!
+  ofertas: [ID!]
+}
+
+input ModificarTagDto {
+  paraEvitarErrorDeTypescript: String
+  nombre: String
+  ofertas: EditarRefsDto
+}

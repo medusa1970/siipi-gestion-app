@@ -26,6 +26,7 @@ query authEntidadesUsuarioConectado($opciones: BuscarOpciones = {}) {
     empleados {
       persona {
         _id
+        usuario
       }
       cargos {
         nombre

@@ -1,11 +1,11 @@
-import type { EditarPerfil } from '../negocio/usuario.interface';
+import type { ModificarPersonaDto, Persona } from '#gql';
 
 export const usuarioApiService = {
   /**
    * Busca una persona
    * @returns Persona[]
    */
-  buscarPersona: async (personaID: string) => {
+  buscarPersona: async (personaID: string): Promise<Persona> => {
     const [persona] = await postDataGql(
       GqlUsuarioBuscarPersonas({
         busqueda: { _id: [personaID] },
@@ -19,7 +19,7 @@ export const usuarioApiService = {
    * Modifica una persona
    * @returns Persona (la modificada)
    */
-  modificarPersona: async (personaID: string, datos: EditarPerfil) => {
+  modificarPersona: async (personaID: string, datos: ModificarPersonaDto) => {
     const personas = await postDataGql(
       GqlUsuarioModificarPersonas({
         busqueda: { _id: [personaID] },

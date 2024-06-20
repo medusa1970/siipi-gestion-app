@@ -1,6 +1,6 @@
 <template>
   <Transition name="in-out">
-    <div v-if="!authStore.getUser">
+    <div v-if="!authStore.getUsuario">
       <formularioLogin
         style="width: 300px"
         title-btn="Iniciar sesion"
@@ -32,15 +32,15 @@
 
   <!-- eslint-disable-next-line -->
   <Transition name="in-out">
-    <div class="w-full" v-if="authStore.getUser">
+    <div class="w-full" v-if="authStore.getUsuario">
       <div class="w-full">
         <p class="font-bold text-xl text-center">
-          Bienvenido, {{ authStore.getUserNombreCompleto }}.
+          Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
         </p>
         <p class="text-xl text-center">Selecciona a que negocio ingresar.</p>
       </div>
       <div
-        v-for="(negocio, index) in authStore.getUser.negocios"
+        v-for="(negocio, index) in authStore.getUsuario.negocios"
         :key="negocio.nombre"
         @click="elegirNegocio(index)"
         class="text-center"
@@ -71,6 +71,7 @@
 <script setup>
 import Logo from '@/assets/img/logo.png';
 import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
+import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
 definePageMeta({
@@ -103,16 +104,16 @@ const logout = () => {
 // mandamos un mensaje de confirmacio o de error cuando el
 // reactive del state cambia.
 authStore.$subscribe((mutation, state) => {
-  if (state.user && state.negocio) {
+  if (state.usuario && state.negocio) {
     NotifySucess(`Negocio elegido: ${state.negocio.nombre}`);
   }
-  if (state.user && !state.negocio) {
-    NotifySucess(`Bienvenido al sistema ${state.user.nombre}`);
+  if (state.usuario && !state.negocio) {
+    NotifySucess(`Bienvenido al sistema ${state.usuario.nombre}`);
   }
-  if (!state.user && mutation.payload.token !== null) {
+  if (!state.usuario && mutation.payload.token !== null) {
     NotifyError(`Datos incorrectos, intente de nuevo`);
   }
-  if (!state.user && mutation.payload.token === null) {
+  if (!state.usuario && mutation.payload.token === null) {
     NotifySucess(`Hasta pronto!`);
   }
 });

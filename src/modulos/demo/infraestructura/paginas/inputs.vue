@@ -5,6 +5,7 @@
       label="Texto"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refText = v)"
+      :default="refText"
       requerido
     />
   </div>
@@ -15,6 +16,7 @@
       label="Number"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refNumber = v)"
+      :default="refNumber"
       requerido
     />
   </div>
@@ -26,6 +28,7 @@
       :options="categoriaOptions"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refSelect = v)"
+      :default="refSelect"
       requerido
       :icono="work"
     />
@@ -37,6 +40,7 @@
       label="Imagen"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refImage64 = v)"
+      :default="refImage64"
       requerido
       icono="photo_camera"
       maxSizeKb="20"
@@ -49,6 +53,7 @@
       labeproductoApiServicel="Textarea"
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refTextarea = v)"
+      :default="refTextarea"
       requerido
     />
   </div>
@@ -56,22 +61,22 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { useProducto } from '~/modulos/productos/negocio/useProductoService';
+import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
 
-const productoApiService = useProducto();
+const productoService = useProductoService();
 
 definePageMeta({
   layout: 'cathering',
 });
 
-const categoriaOptions = ref(await productoApiService.categoriaSelectOptions());
+const categoriaOptions = ref(await productoService.categoriaSelectOptions());
 const log = (val) => (val === null ? 'null' : val === '' ? "''" : val);
 const log64 = (val) => (val === null ? 'null' : val === '' ? "''" : '<data>');
 const refText = ref(null);
-const refSelect = ref(null);
-const refNumber = ref(0);
+const refSelect = ref('65c7ce11ce1b515075092dbc');
+const refNumber = ref(42);
 const refImage64 = ref(null);
-const refTextarea = ref(null);
+const refTextarea = ref('escribir algo');
 
 /*
 Use onMounted for components that do not rely on the fetched data for their initial render.

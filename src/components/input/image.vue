@@ -20,7 +20,7 @@
       <q-icon :name="icono" @click.stop.prevent />
     </template>
     <template #after>
-      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
     </template>
     <template #file>
       <q-img v-if="preview" :src="preview"></q-img>
@@ -140,7 +140,7 @@ const handleClear = (event) => {
 const handleBlur = (event) => {
   if (!preview.value) {
     errorEstado.value = true;
-    errorMessage.value = requerido(null);
+    errorMessage.value = useRules.requerido(null);
   }
 };
 </script>

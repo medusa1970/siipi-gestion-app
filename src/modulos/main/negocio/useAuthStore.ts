@@ -1,43 +1,33 @@
 import { useAuth } from '~/modulos/main/API/useAuth';
-import type { EditarPerfil } from '../negocio/usuario.interface';
+import type { Empleado, Persona } from '#gql';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
+interface NegocioUsuario {
+  _id: string;
+  nombre: string;
+  tipo: string;
+  cargos: { nombre: string }[];
+  permisos: string[];
+}
+interface Usuario {
+  _id: string;
+  nombre: string;
+  usuario: string;
+  apellido: string;
+  correo: string;
+  telefono: string;
+  cloudinaryUrl?: string | null;
+  negocios: NegocioUsuario[] | null;
+}
+
 interface AuthStoreProps {
   token: string | null;
-  user: {
-    _id: string;
-    nombre: string;
-    usuario: string;
-    apellido: string;
-    correo: string;
-    telefono: string;
-    cloudinaryUrl?: string | null;
-    negocios: {
-      _id: string;
-      nombre: string;
-      tipo: string;
-      empleados: {
-        persona: string;
-        cargos: {
-          nombre: string;
-        }[];
-        permisos: {
-          permiso: string;
-        }[];
-      }[];
-    }[];
-  } | null;
-  negocio: {
-    _id: string;
-    nombre: string;
-    tipo: string;
-    cargos: { nombre: string }[];
-    permisos: string[];
-  } | null;
+  usuario: Usuario | null;
+  negocio: NegocioUsuario | null;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -47,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
   state: (): AuthStoreProps => {
     return {
       token: null,
-      user: null,
+      usuario: null,
       negocio: null,
     };
   },
@@ -57,11 +47,14 @@ export const useAuthStore = defineStore('auth', {
    */
   getters: {
     getToken: (state) => state.token,
-    getUser: (state) => state.user,
-    getUserId: (state) => state.user?._id,
+    getUsuario: (state) => state.usuario,
+    getUsuarioId: (state) => state.usuario?._id,
     getNegocio: (state) => state.negocio,
-    getUserNombreCompleto: (state) =>
-      state.user ? `${state.user.nombre} ${state.user.apellido}` : null,
+    getCargo: (state) => state.negocio?.cargos[0].nombre,
+    getUsuarioNombreCompleto: (state) =>
+      state.usuario
+        ? `${state.usuario.nombre} ${state.usuario.apellido}`
+        : null,
   },
 
   /**
@@ -73,18 +66,36 @@ export const useAuthStore = defineStore('auth', {
      */
     async login(usuario: string, contrasena: string) {
       useAuth.login(usuario, contrasena).then(async (loginResponse) => {
-        const negocios = await useAuth.buscarEntidadesDeUsuario(
+        const entidades = await useAuth.buscarEntidadesDeUsuario(
           loginResponse.token,
         );
+        const negocios = entidades.map((entidad) => {
+          console.log(entidad.empleados);
+          const empleado = entidad.empleados.find(
+            (empleado) => empleado.persona.usuario === loginResponse.usuario,
+          ) as Empleado;
+          return {
+            _id: entidad._id,
+            nombre: entidad.nombre,
+            tipo: entidad.tipo,
+            cargos: empleado.cargos.map((cargo) => {
+              return { nombre: cargo.nombre };
+            }),
+            permisos: empleado.permisos.map((permiso) => {
+              return permiso.permiso;
+            }),
+          } as NegocioUsuario;
+        });
         negocios.push({
           _id: 'cliente',
           nombre: 'Cliente',
           tipo: 'CLIENTE',
-          empleados: [],
+          cargos: [{ nombre: 'cliente' }],
+          permisos: [],
         });
         this.$patch({
           token: loginResponse.token,
-          user: {
+          usuario: {
             _id: loginResponse.personaId,
             usuario: loginResponse.usuario,
             nombre: loginResponse.nombre,
@@ -92,7 +103,7 @@ export const useAuthStore = defineStore('auth', {
             correo: loginResponse.correo,
             telefono: loginResponse.telefono,
             cloudinaryUrl: loginResponse.cloudinaryUrl,
-            negocios,
+            negocios: negocios,
           },
         });
       });
@@ -102,17 +113,8 @@ export const useAuthStore = defineStore('auth', {
      * Elegir negocio
      */
     async elegirNegocio(index: number) {
-      if (this.user && this.user.negocios[index]) {
-        const negocio = this.user.negocios[index];
-        this.$patch({
-          negocio: {
-            _id: negocio._id,
-            nombre: negocio.nombre,
-            tipo: negocio.tipo,
-            cargos: negocio.empleados[0].cargos,
-            permisos: negocio.empleados[0].permisos.map((p) => p.permiso),
-          },
-        });
+      if (this.usuario && this.usuario.negocios?.[index]) {
+        this.$patch({ negocio: this.usuario.negocios[index] });
       }
     },
 
@@ -122,7 +124,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.$patch({
         token: null,
-        user: null,
+        usuario: null,
         negocio: null,
       });
     },
@@ -147,8 +149,22 @@ export const useAuthStore = defineStore('auth', {
     /**
      * Editar el perfil
      */
-    editarPerfil(datos: EditarPerfil) {
-      //...
+    editarPerfil(persona: Persona, cloudinaryUrl = null) {
+      // solo tiene sentido si hay un usuario en el state
+      if (this.usuario) {
+        this.$patch((state) => {
+          const nuevo = {};
+          // @ts-expect-error ya averiguamos que existe state.usuario
+          Object.assign(state.usuario, {
+            nombre: persona.nombre,
+            apellido: persona.apellido,
+            telefono: persona.telefono,
+            correo: persona.correo,
+            cloudinaryUrl: persona.imagen?.cloudinaryUrl,
+          });
+          return state;
+        });
+      }
     },
   },
 

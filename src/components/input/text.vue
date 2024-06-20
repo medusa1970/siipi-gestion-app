@@ -14,21 +14,21 @@
       <q-icon :name="icono" @click.stop.prevent />
     </template>
     <template #after>
-      <input-botonAyuda v-if="info.length > 0" :mensaje="info" />
+      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
     </template>
   </q-input>
 </template>
 
 <script setup>
 /**
- * Refs
- */
-const localModel = ref('');
-
-/**
  * Props
  */
-defineProps({
+const props = defineProps({
+  // valor inicial
+  default: {
+    type: String,
+    default: '',
+  },
   // label del input
   label: {
     type: String,
@@ -37,7 +37,7 @@ defineProps({
   // texto del boton de informacion
   info: {
     type: String,
-    default: 'Escriba algo',
+    default: null,
   },
   // reglas de validacion
   rules: {
@@ -60,6 +60,11 @@ defineProps({
     default: '',
   },
 });
+
+/**
+ * Refs
+ */
+const localModel = ref(props.default);
 
 /**
  * Eventos

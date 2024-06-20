@@ -1,23 +1,24 @@
 <template>
   <q-dialog persistent>
     <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
-      <div class="flex justify-between">
-        <h1 class="text-lg font-bold">{{ title }}</h1>
-        <q-btn
-          icon="close"
-          flat
-          round
-          dense
-          v-close-popup
-          class="border-2 border-red-500"
-        />
-      </div>
-      <!-- <q-space /> -->
+      <h1 class="text-lg font-bold">{{ title }}</h1>
+      <q-btn
+        icon="close"
+        flat
+        round
+        dense
+        v-close-popup
+        class="border-2 border-red-500"
+      />
+    </q-card>
+    
+    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
+      <slot key="inputsDialog"></slot>
+    </q-card>
 
+    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
       <q-form @submit="handleSubmit" class="my-1">
-        <div class="my-1">
-          <slot name="inputsDialog"></slot>
-        </div>
+        <div class="my-1"></div>
         <div class="flex row justify-center">
           <q-btn
             class="mt-2 mb-1"

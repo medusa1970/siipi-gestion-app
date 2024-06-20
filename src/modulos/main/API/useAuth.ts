@@ -42,6 +42,7 @@ export const useAuth = {
     const entidades = await postDataGql(
       //@ts-ignore
       GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
+      false,
     );
     return entidades;
   },

@@ -115,6 +115,9 @@ export const useAuthStore = defineStore('auth', {
     async elegirNegocio(index: number) {
       if (this.usuario && this.usuario.negocios?.[index]) {
         this.$patch({ negocio: this.usuario.negocios[index] });
+        return this.usuario.negocios[index];
+      } else {
+        return null;
       }
     },
 

@@ -138,10 +138,12 @@
 // import { ModificarPersonaDto } from '#gql';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import { useUsuarioService } from '~/modulos/main/negocio/useUsuarioService';
+import { useAuth } from '../../API/useAuth';
 
 const authStore = useAuthStore();
 const usuarioService = useUsuarioService();
 const router = useRouter();
+const $q = useQuasar();
 
 const props = defineProps({
   disable: {
@@ -195,6 +197,51 @@ const editarPerfil = async () => {
     NotifyError('Hubo un error, intente de nuevo');
     show_editarPerfil.value = false;
   }
+};
+
+const password = ref('');
+const elegirNegocio = (index: number, nombre: string) => {
+  // playSound();
+  $q.dialog({
+    title: `<strong>Entrar a ${nombre}</strong>`,
+    message: '¿Está seguro de cambiar de negocio?',
+    cancel: true,
+    persistent: true,
+    html: true,
+    prompt: {
+      model: password.value,
+      type: 'password',
+      clearable: true,
+      required: true,
+      // native attributes:
+      min: 0,
+      max: 10,
+      step: 2,
+      label: 'Ingrese tu contrasena',
+      outlined: true,
+      dense: true,
+    },
+  }).onOk(async () => {
+    const to = await authStore.elegirNegocio(index);
+    const loginResponse = await useAuth.login(
+      authStore.getUsuario?.usuario as string,
+      password.value,
+      to?._id,
+    );
+    console.log(loginResponse);
+    if (!loginResponse) {
+      NotifyError(`contraseña incorrecta`);
+    } else {
+      authStore.token = loginResponse.token;
+      authStore.elegirNegocio(index);
+      NotifySucess(`Negocio elegido: ${nombre}`);
+      password.value = '';
+      router.push(`/${authStore.getNegocio?.tipo.toLowerCase()}`);
+
+      // TODO averiguar suscripcion, etc
+      // TODO BUGs de irala a iralita + cliente
+    }
+  });
 };
 
 // logout

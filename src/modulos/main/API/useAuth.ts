@@ -20,6 +20,7 @@ export const useAuth = {
     contrasena: string,
     entidad?: string,
   ): Promise<ConexionResponse> => {
+    console.log({ usuario, contrasena, entidad });
     const response = await postDataGql(
       GqlAuthConectar({
         datos: {

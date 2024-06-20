@@ -209,7 +209,7 @@ const elegirNegocio = (index: number, nombre: string) => {
     persistent: true,
     html: true,
     prompt: {
-      model: password.value,
+      model: password,
       type: 'password',
       clearable: true,
       required: true,

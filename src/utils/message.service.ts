@@ -33,9 +33,19 @@ export const NotifySucessCenter = (message: string) =>
 
 /**API ERROR */
 export const ApiError = (error: any) => {
-  console.log(error);
   hideLoading();
-  error.gqlErrors?.[0].message
-    ? NotifyError(error.gqlErrors[0].message)
+  console.log(error);
+  error.gqlErrors?.[0]?.message
+    ? NotifyError(error.gqlErrors?.[0]?.message)
     : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
+};
+export const getApiErrorCode = (error: any): number | null => {
+  const errorMsj = error.gqlErrors?.[0]?.message ?? null;
+  if (errorMsj) {
+    const regex = /\[(.*)\]/;
+    const match = errorMsj.match(regex);
+    return Number(match?.[1]);
+  } else {
+    return 0;
+  }
 };

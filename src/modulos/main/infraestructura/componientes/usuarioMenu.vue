@@ -222,13 +222,12 @@ const elegirNegocio = (index: number, nombre: string) => {
       dense: true,
     },
   }).onOk(async () => {
-    const to = await authStore.elegirNegocio(index);
+    const negocio = await authStore.elegirNegocio(index);
     const loginResponse = await useAuth.login(
       authStore.getUsuario?.usuario as string,
       password.value,
-      to?._id,
+      negocio?._id,
     );
-    console.log(loginResponse);
     if (!loginResponse) {
       NotifyError(`contraseña incorrecta`);
     } else {
@@ -236,7 +235,14 @@ const elegirNegocio = (index: number, nombre: string) => {
       authStore.elegirNegocio(index);
       NotifySucess(`Negocio elegido: ${nombre}`);
       password.value = '';
-      router.push(`/${authStore.getNegocio?.tipo.toLowerCase()}`);
+      switch (authStore.getNegocio?.tipo) {
+        case 'PUNTO':
+          goTo(router, 'punto');
+          break;
+        case 'CATHERING':
+          goTo(router, 'cathering');
+          break;
+      }
 
       // TODO averiguar suscripcion, etc
       // TODO BUGs de irala a iralita + cliente
@@ -249,7 +255,7 @@ const logout = () => {
   const username = authStore.getUsuario?.nombre;
   authStore.logout();
   NotifySucess(`Hasta pronto ${username}!`);
-  router.push('/');
+  goTo(router, 'inicio');
 };
 </script>
 

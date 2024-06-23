@@ -1,15 +1,5 @@
 import type { ConexionResponse, CrearPersonaDto, Entidad, Persona } from '#gql';
 
-export interface PersonaProps {
-  _id?: string;
-  usuario: string;
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  correo: string;
-  contrasena: string;
-}
-
 export const useAuth = {
   /**
    * Efectua un pedido de conexion por token jwt
@@ -20,18 +10,29 @@ export const useAuth = {
     contrasena: string,
     entidad?: string,
   ): Promise<ConexionResponse> => {
-    console.log({ usuario, contrasena, entidad });
-    const response = await postDataGql(
-      GqlAuthConectar({
+    return extraer(
+      await GqlAuthConectar({
         datos: {
           usuario,
           contrasena,
           entidad,
         },
       }),
-      false,
     );
-    return response;
+  },
+
+  /**
+   * Efectua un pedido de conexion por token jwt
+   * @returns { persona, entidad, permisos, cargos }
+   */
+  async cambiarEntidad(entidad: string, token: any): Promise<ConexionResponse> {
+    return extraer(
+      await GqlAuthCambiarEntidad(
+        { datos: { entidad } },
+        //@ts-ignore
+        useGqlToken(token),
+      ),
+    );
   },
 
   /**
@@ -39,12 +40,10 @@ export const useAuth = {
    * @returns Entidad[]
    */
   buscarEntidadesDeUsuario: async (token?: any): Promise<Entidad[]> => {
-    const entidades = await postDataGql(
+    return extraer(
       //@ts-ignore
-      GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
-      false,
+      await GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
     );
-    return entidades;
   },
 
   /**
@@ -53,8 +52,8 @@ export const useAuth = {
    */
   registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
     const { _id, usuario, ...nuevoDato } = datos;
-    const [nuevaPersona] = await postDataGql(
-      GqlAuthCrearPersonas({
+    const [nuevaPersona] = extraer(
+      await GqlAuthCrearPersonas({
         datos: [nuevoDato],
       }),
     );
@@ -66,8 +65,7 @@ export const useAuth = {
    * @returns true
    */
   pedirRDC: async (correo: string): Promise<boolean> => {
-    const res = await postDataGql(GqlAuthPedirRDC({ correo }));
-    return res;
+    return extraer(await GqlAuthPedirRDC({ correo }));
   },
 
   /**
@@ -75,12 +73,6 @@ export const useAuth = {
    * @returns true
    */
   actuarRDC: async (token: string, contrasena: string): Promise<boolean> => {
-    const res = await postDataGql(
-      GqlAuthActuarRDC({
-        token,
-        contrasena,
-      }),
-    );
-    return res;
+    return extraer(await GqlAuthActuarRDC({ token, contrasena }));
   },
 };

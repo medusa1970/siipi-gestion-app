@@ -1,136 +1,222 @@
 <template>
-  <div class="">
-    <div class="block-wrapper">
-      <div class="block1">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && !authStore.getUsuario">
-            <formularioLogin
-              style="width: 300px"
-              title-btn="Iniciar sesion"
-              login
-              :submit="login"
+  <div class="flex">
+    <!-- Bienvenido -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'bienvenido'">
+        <p>Bienvenido</p>
+        <p>Mensaje de bienvenida</p>
+        <q-btn dense no-caps label="Entrar" @click="page = 'login'" />
+      </div>
+    </Transition>
+
+    <!-- Login -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'login' && !authStore.getUsuario">
+        <p>Formulario de login</p>
+        <q-form @submit="submitLogin">
+          <div>
+            <q-input
+              v-model="usuarioInput"
+              ref="usuarioInputRef"
+              type="text"
+              label="Usuario"
+              outlined
+              dense
+              required
+              :rules="[useRules.req('El usuario es obligatorio')]"
+              clearable
+              :error="usuarioInputErr !== null"
             >
-              <template #inputs>
-                <q-input
-                  v-model="usuarioInput"
-                  type="text"
-                  label="Usuario"
-                  outlined
-                  dense
-                  clearable
-                />
-                <q-input
-                  v-model="contrasenaInput"
-                  label="Contraseña"
-                  outlined
-                  dense
-                  clearable
-                  type:password
-                >
-                </q-input>
+              <template #error>
+                <div>{{ usuarioInputErr }}</div>
               </template>
-            </formularioLogin>
-          </div>
-        </Transition>
-      </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block2">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && authStore.getUsuario">
-            <div class="w-full">
-              <p class="font-bold text-xl text-center">
-                Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
-              </p>
-              <p class="text-xl text-center">
-                Selecciona a que negocio ingresar.
-              </p>
-            </div>
-            <div
-              v-for="(negocio, index) in authStore.getUsuario.negocios"
-              :key="negocio.nombre"
-              @click="elegirNegocio(index)"
-              class="text-center"
+            </q-input>
+            <q-input
+              v-model="pwdInput"
+              label="Contraseña"
+              ref="pwdInputRef"
+              :rules="[useRules.requerido]"
+              outlined
+              dense
+              clearable
+              required
+              type:password
+              :error="pwdInputErr !== null"
             >
-              <q-btn
-                :color="getColor(negocio)"
-                :src="Logo"
-                class="w-full"
-                style="margin-top: 10px"
-              >
-                {{ negocio.nombre }}
-              </q-btn>
-            </div>
-            <div class="w-full text-center">
-              <q-btn
-                dense
-                no-caps
-                style="margin: 20px; padding: 5px 15px"
-                color="primary"
-                label="logout"
-                @click="logout"
-              />
-              <q-btn
-                dense
-                no-caps
-                style="margin: 20px; padding: 5px 15px"
-                color="primary"
-                label="show 3"
-                @click="show(3)"
-              />
-            </div>
-          </div>
-        </Transition>
-      </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block3">
-        <Transition name="fade">
-          <div class="w-full" v-if="show3">
+              <template #error>
+                <div>{{ pwdInputErr }}</div>
+              </template>
+            </q-input>
             <q-btn
-              dense
-              no-caps
-              style="margin: 20px; padding: 5px 15px"
+              label="Iniciar sesión"
+              @click="submitLogin"
               color="primary"
-              label="show 4"
-              @click="show(4)"
+              no-caps
             />
-            <p>Lorem ipsum 3</p>
           </div>
-        </Transition>
-      </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block4">
-        <Transition name="fade">
-          <div class="w-full" v-if="show4">
-            <p>Lorem ipsum 4</p>
+          <div>
             <q-btn
               dense
+              label="Recuperar contraseña"
               no-caps
-              style="margin: 20px; padding: 5px 15px"
-              color="primary"
-              label="show 3"
-              @click="show(3)"
+              @click="page = 'pedirRdc'"
             />
             <q-btn
               dense
+              label="Registrarse"
               no-caps
-              style="margin: 20px; padding: 5px 15px"
-              color="primary"
-              label="hide"
-              @click="show()"
+              @click="page = 'registro'"
             />
           </div>
-        </Transition>
+        </q-form>
       </div>
-    </div>
+    </Transition>
+
+    <!-- Negocios -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'login' && authStore.getUsuario">
+        <p class="font-bold text-xl text-center">
+          Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
+        </p>
+        <p class="text-xl text-center">Selecciona a que negocio ingresar.</p>
+        <div
+          v-for="(negocio, index) in authStore.getUsuario.negocios"
+          :key="negocio.nombre"
+          @click="elegirNegocio(index)"
+          class="text-center"
+        >
+          <q-btn
+            :color="getColor(negocio)"
+            :src="Logo"
+            class="w-full"
+            style="margin-top: 10px"
+          >
+            {{ negocio.nombre }}
+          </q-btn>
+        </div>
+        <div class="w-full text-center">
+          <q-btn dense no-caps color="primary" label="logout" @click="logout" />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Registro -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'registro'">
+        <p>Registrarse</p>
+        <q-form @submit="submitRegistro">
+          <div>
+            <q-input
+              v-model="nombreInput"
+              type="text"
+              label="Nombre"
+              outlined
+              dense
+              clearable
+            />
+            <q-input
+              v-model="apellidoInput"
+              type="text"
+              label="Apellido"
+              outlined
+              dense
+              clearable
+            />
+            <q-input
+              v-model="pwdInput1"
+              label="Contraseña"
+              outlined
+              dense
+              clearable
+              type:password
+            />
+            <q-input
+              v-model="pwdInput2"
+              label="Repetir contraseña"
+              outlined
+              dense
+              clearable
+              type:password
+            />
+            <q-btn label="Proceder" type="submit" color="primary" no-caps />
+          </div>
+        </q-form>
+        <q-btn dense no-caps label="volver" @click="page = 'login'" />
+      </div>
+    </Transition>
+
+    <!-- Registrado -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'registrado'">
+        <p>Registro OK</p>
+        <q-btn dense no-caps label="volver" @click="page = 'login'" />
+      </div>
+    </Transition>
+
+    <!-- PedirRdc -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'pedirRdc'">
+        <p>Recuperar su contraseña</p>
+        <q-form @submit="submitPedirRdc">
+          <q-input
+            v-model="correoInput"
+            type="email"
+            label="Correo electronico"
+            outlined
+            dense
+            :error="correoInputErr !== null"
+          >
+            <template #error>
+              <div>{{ correoInputErr }}</div>
+            </template>
+          </q-input>
+          <q-btn
+            :disable="correoInput"
+            label="Enviar codigo"
+            type="submit"
+            color="primary"
+            no-caps
+          />
+        </q-form>
+        <q-btn dense no-caps label="volver" @click="page = 'login'" />
+      </div>
+    </Transition>
+
+    <!-- ActuarRdc -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'actuarRdc'">
+        <p>Entre el codigo OTP</p>
+
+        <q-form @submit="submitActuarRdc">
+          <q-input
+            v-model="otp"
+            type="text"
+            label="Ingrese el codigo OTP"
+            outlined
+            dense
+          />
+          <q-input v-model="pwdInput" label="Nueva contraseña" outlined dense />
+
+          <div class="flex justify-center">
+            <q-btn no-caps label="OK" type="submit"></q-btn>
+          </div>
+        </q-form>
+        <q-btn dense no-caps label="volver" @click="page = 'login'" />
+      </div>
+    </Transition>
+
+    <!-- okRdc -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'okRdc'">
+        <p>Rdc ok</p>
+        <q-btn dense no-caps label="volver" @click="page = 'login'" />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
 import Logo from '@/assets/img/logo.png';
-import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
 import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
@@ -141,38 +227,113 @@ definePageMeta({
 
 const router = useRouter();
 const authStore = useAuthStore();
+const page = ref('login');
 
+// page 'login' formulario
 const usuarioInput = ref('');
-const contrasenaInput = ref('');
-const show3 = ref(false);
-const show4 = ref(true);
-const show = (num) => {
-  show3.value = false;
-  show4.value = false;
-  console.log(num);
-  if (num === 3) {
-    show3.value = true;
-    show4.value = false;
+const usuarioInputRef = ref(null);
+const usuarioInputErr = ref(null);
+const pwdInput = ref('');
+const pwdInputRef = ref(null);
+const pwdInputErr = ref(null);
+const submitLogin = async () => {
+  resetErrores(usuarioInputErr, pwdInputErr);
+  if (validarInputs(usuarioInputRef, pwdInputRef)) {
+    try {
+      await authStore.login(usuarioInput.value, pwdInput.value);
+    } catch (apiError) {
+      const code = getApiErrorCode(apiError);
+      switch (code) {
+        case 101:
+          usuarioInputErr.value = 'Usuario inexistente';
+          break;
+        case 102:
+          pwdInputErr.value = 'Contraseña incorrecta';
+          break;
+        default:
+          NotifyError(`Error desconocido (codigo ${code})`);
+      }
+    }
   }
-  if (num === 4) {
-    show3.value = false;
-    show4.value = true;
-  }
-};
-const login = async () => {
-  authStore.login('lionel', 'Siipi123');
-  // authStore.login(usuarioInput.value, contrasenaInput.value);
 };
 
-const elegirNegocio = (index) => {
-  const negocio = authStore.elegirNegocio(index);
-  const path = authStore.getNegocio.tipo.toLowerCase();
-  router.push(path);
+// page 'login' negocios
+const elegirNegocio = async (index) => {
+  // seleccion de la entidad + cambio de token
+  await authStore.elegirNegocio(index);
+
+  // redireccion
+  switch (authStore.getNegocio.tipo) {
+    case 'PUNTO':
+      goTo(router, 'punto');
+      break;
+    case 'CATHERING':
+      goTo(router, 'foo');
+      break;
+  }
 };
 
 const logout = () => {
   authStore.logout();
-  router.push(inicio);
+  goTo(router, 'inicio');
+};
+const getColor = (negocio) => {
+  switch (negocio.tipo) {
+    case 'CATHERING':
+      return 'green';
+    case 'PUNTO':
+      return 'orange';
+    case 'CLIENTE':
+      return 'black';
+  }
+};
+
+// page 'pedirRdc'
+const correoInput = ref('leoprod2023@gmail.com');
+const correoInputErr = ref(null);
+const submitPedirRdc = async () => {
+  try {
+    const res = await useAuth.pedirRDC(correoInput.value);
+    NotifySucess('Se ha enviado un codigo a tu correo');
+    page.value = 'actuarRdc';
+  } catch (error) {
+    const code = getApiErrorCode(error);
+    switch (code) {
+      case 104:
+        correoInputErr.value = 'Asegúrate que el email está correcto';
+        NotifyError('Asegúrate que el email está correcto');
+        break;
+      default:
+        NotifyError(`Un error ocurrió (${code})`);
+    }
+  }
+};
+
+// page 'actuarRdc'
+const submitActuarRdc = async () => {
+  page.value = 'okRdc';
+  try {
+    const res = await useAuth.actuarRDC(otp.value, pwdInput.value);
+    if (res) {
+      NotifySucess('Se ha actualizado tu contraseña');
+      showOtpDialog.value = false;
+    } else {
+      NotifyError('Un error ocurrió, intente de nuevo');
+    }
+  } catch (error) {
+    ApiError(error);
+  }
+};
+
+// page 'registro'
+const nombreInput = ref('');
+const apellidoInput = ref('');
+const pwdInput1 = ref('');
+const pwdInput2 = ref('');
+const submitRegistro = async (datos) => {
+  // const nuevaPersona = await registrar(datos);
+  // NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
+  page.value = 'registrado';
 };
 
 // mandamos un mensaje de confirmacio o de error cuando el
@@ -191,46 +352,29 @@ authStore.$subscribe((mutation, state) => {
     NotifySucess(`Hasta pronto!`);
   }
 });
-
-const getColor = (negocio) => {
-  switch (negocio.tipo) {
-    case 'CATHERING':
-      return 'green';
-    case 'PUNTO':
-      return 'orange';
-    case 'CLIENTE':
-      return 'black';
-  }
-};
 </script>
 
 <style scoped>
-.block1 {
-  float: left;
-  width: 300px;
+.fade-leave-from {
+  opacity: 100%;
 }
-.block2 {
-  float: left;
-  position: absolute;
-  width: 300px;
+.fade-leave-active {
+  transition-duration: 0.2s;
+  order: 1;
 }
-.block3 {
-  float: left;
-  position: absolute;
-  width: 300px;
-}
-.block4 {
-  float: left;
-  position: absolute;
-  width: 300px;
+.fade-leave-to {
+  opacity: 0%;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.fade-enter-from {
+  opacity: 0%;
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.fade-enter-active {
+  transition-delay: 0.2s;
+  transition-duration: 0.2;
+  order: 100;
+}
+.fade-enter-to {
+  opacity: 100%;
 }
 </style>

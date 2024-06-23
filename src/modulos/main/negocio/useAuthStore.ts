@@ -1,5 +1,5 @@
 import { useAuth } from '~/modulos/main/API/useAuth';
-import type { Empleado, Persona } from '#gql';
+import type { Empleado, Entidad, Persona } from '#gql';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth', {
      * Login
      */
     async login(usuario: string, contrasena: string) {
-      useAuth.login(usuario, contrasena).then(async (loginResponse) => {
+      await useAuth.login(usuario, contrasena).then(async (loginResponse) => {
         const entidades = await useAuth.buscarEntidadesDeUsuario(
           loginResponse.token,
         );
@@ -112,12 +112,29 @@ export const useAuthStore = defineStore('auth', {
     /**
      * Elegir negocio
      */
-    async elegirNegocio(index: number) {
-      if (this.usuario && this.usuario.negocios?.[index]) {
-        this.$patch({ negocio: this.usuario.negocios[index] });
-        return this.usuario.negocios[index];
-      } else {
-        return null;
+    async elegirNegocio(index: number): Promise<NegocioUsuario | false> {
+      // solo tiene sentido si el usuario y el negocio existen
+      if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
+        return false;
+      }
+      const negocio = this.usuario?.negocios?.[index];
+
+      // TODO Pasar al nivel superior
+      // cambiamos el token
+      try {
+        const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
+        this.$patch({
+          token,
+          negocio,
+        });
+        return negocio;
+      } catch (error) {
+        const code = getApiErrorCode(error);
+        switch (code) {
+          default:
+            NotifyError(`Un error ocurrió (${code})`);
+        }
+        return false;
       }
     },
 

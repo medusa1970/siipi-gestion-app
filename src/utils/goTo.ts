@@ -1,9 +1,8 @@
 export default function (router: any, routeName: string) {
   const route = router.getRoutes().find((r: any) => r.name === routeName);
   if (route) {
-    return route.path;
+    router.push(route);
   } else {
-    console.warn(`Ruta desconocida (${routeName}), redireccionando al inicio`);
-    return '/';
+    console.warn(`Ruta desconocida (${routeName})`);
   }
 }

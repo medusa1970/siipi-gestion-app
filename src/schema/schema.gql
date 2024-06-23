@@ -192,7 +192,7 @@ type Precio {
   _borrado: DateTime
   _orden: Float
   cantidadMin: Float!
-  precioConFactura: Float!
+  precioConFactura: Float
   precioSinFactura: Float!
 }
 
@@ -209,8 +209,8 @@ type Oferta {
   ingredientes: [Ingrediente!]
   preparados: [Preparado!]!
   imagen: FileUpload
-  precioConFactura: Float!
   precioSinFactura: Float!
+  precioConFactura: Float
   preciosPorMayor: [Precio!]!
   catalogo: Catalogo!
 }
@@ -468,6 +468,7 @@ type Query {
   contarEjemplos(busqueda: BuscarEjemploDto!, opciones: ContarOpciones): Float!
   buscarEjemplos(busqueda: BuscarEjemploDto!, opciones: BuscarOpciones, filtro: BuscarEjemploDto): [Ejemplo!]!
   conectar(datos: ConexionDto!): ConexionResponse!
+  cambiarEntidad(datos: ConexionDto!): ConexionResponse!
   pedirReinicioDeContrasena(correo: String!): Boolean!
   actuarReinicioDeContrasena(token: String!, contrasena: String!): Boolean!
   personaUsuarioConectado(opciones: BuscarOpciones): Persona!
@@ -537,8 +538,8 @@ input BuscarOpciones {
 }
 
 input ConexionDto {
-  usuario: String!
-  contrasena: String!
+  usuario: String
+  contrasena: String
   entidad: ID
 }
 
@@ -1190,7 +1191,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-06-20T01:32:56.875Z"
+  saldoActualizacion: DateTime = "2024-06-23T19:05:54.737Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1288,7 +1289,7 @@ input CrearServicioDto {
 input CrearPrecioDto {
   _id: ID
   cantidadMin: Float!
-  precioConFactura: Float!
+  precioConFactura: Float
   precioSinFactura: Float!
 }
 
@@ -1557,7 +1558,7 @@ input CrearOfertaDto {
   preparados: [CrearPreparadoDto!]
   ingredientes: [CrearIngredienteDto!]
   imagen: FileUploadInput
-  precioConFactura: Float!
+  precioConFactura: Float
   precioSinFactura: Float!
   preciosPorMayor: [CrearPrecioDto!]
   catalogo: ID!

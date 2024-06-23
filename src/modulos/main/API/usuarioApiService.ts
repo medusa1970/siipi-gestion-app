@@ -6,8 +6,8 @@ export const usuarioApiService = {
    * @returns Persona[]
    */
   buscarPersona: async (personaID: string): Promise<Persona> => {
-    const [persona] = await postDataGql(
-      GqlUsuarioBuscarPersonas({
+    const [persona] = extraer(
+      await GqlUsuarioBuscarPersonas({
         busqueda: { _id: [personaID] },
         opciones: { limit: 1, errorSiVacio: true },
       }),
@@ -20,8 +20,8 @@ export const usuarioApiService = {
    * @returns Persona (la modificada)
    */
   modificarPersona: async (personaID: string, datos: ModificarPersonaDto) => {
-    const personas = await postDataGql(
-      GqlUsuarioModificarPersonas({
+    const personas = extraer(
+      await GqlUsuarioModificarPersonas({
         busqueda: { _id: [personaID] },
         datos,
         opciones: { limit: 1, errorSiVacio: true },

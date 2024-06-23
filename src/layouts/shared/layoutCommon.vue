@@ -141,9 +141,8 @@ import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu
 const router = useRouter();
 const authStore = useAuthStore();
 if (!authStore.getUsuario) {
-  router.push('/');
+  goTo(router, 'inicio');
 }
-console.log(authStore.getUsuario);
 
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
@@ -161,47 +160,6 @@ function toggleLeftDrawer() {
 //     sonido.pause();
 //   }, 10000);
 // };
-
-const elegirNegocio = (index, nombre) => {
-  // playSound();
-  $q.dialog({
-    title: `<strong>Entrar a ${nombre}</strong>`,
-    message: '¿Está seguro de cambiar de negocio?',
-    cancel: true,
-    persistent: true,
-    html: true,
-    prompt: {
-      model: contrasena,
-      type: 'password',
-      clearable: true,
-      // native attributes:
-      min: 0,
-      max: 10,
-      step: 2,
-      label: 'Ingrese tu contrasena',
-      outlined: true,
-      dense: true,
-    },
-  }).onOk(async () => {
-    const loginResponse = await useAuth.login(
-      authStore.getUsuario?.usuario,
-      contrasena.value,
-    );
-    if (!loginResponse) {
-      NotifyError(`contraseña incorrecta`);
-    }
-
-    // el login response ya tiene el nuevo token
-    // authStore.setToken()
-
-    // TODO averiguar suscripcion, etc
-    // TODO BUGs de irala a iralita + cliente
-    authStore.elegirNegocio(index);
-    NotifySucess(`Negocio elegido: ${authStore.getNegocio.nombre}`);
-    router.push(`/${authStore.getNegocio.tipo.toLowerCase()}`);
-    contrasena.value = '';
-  });
-};
 </script>
 
 <style lang="scss">

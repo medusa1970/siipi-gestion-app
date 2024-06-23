@@ -1,3 +1,4 @@
+
 /**
  * VALIDACION DE INPUTS DEL FORMULARIO
  */
@@ -9,6 +10,16 @@ export const useRules = {
       return 'Campo requerido';
     }
     return true;
+  },
+
+  // campo required
+  req(msj: string) {
+    return (val = 'Campo requerido') => {
+      if (val === null || val === '') {
+        return msj;
+      }
+      return true;
+    };
   },
 
   // validación de contraseña

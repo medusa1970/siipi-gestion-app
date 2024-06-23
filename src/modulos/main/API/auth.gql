@@ -18,6 +18,26 @@ query authConectar($datos: ConexionDto!) {
   }
 }
 
+query authCambiarEntidad($datos: ConexionDto!) {
+  cambiarEntidad(datos: $datos) {
+    token
+    personaId
+    usuario
+    nombre
+    apellido
+    correo
+    telefono
+    cloudinaryUrl
+    entidadId
+    entidadNombre
+    entidadTipo
+    cargos {
+      nombre
+    }
+    permisos
+  }
+}
+
 query authEntidadesUsuarioConectado($opciones: BuscarOpciones = {}) {
   entidadesUsuarioConectado(opciones: $opciones) {
     _id

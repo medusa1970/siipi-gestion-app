@@ -39,13 +39,18 @@ export const ApiError = (error: any) => {
     ? NotifyError(error.gqlErrors?.[0]?.message)
     : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
 };
-export const getApiErrorCode = (error: any): number | null => {
-  const errorMsj = error.gqlErrors?.[0]?.message ?? null;
-  if (errorMsj) {
+
+/**
+ * Get error code
+ */
+export const getApiErrorCode = (err: any): string => {
+  const apiError = err.gqlErrors?.[0]?.message ?? null;
+  if (apiError) {
     const regex = /\[(.*)\]/;
-    const match = errorMsj.match(regex);
-    return Number(match?.[1]);
+    const match = apiError.match(regex);
+    return match?.[1];
   } else {
-    return 0;
+    console.warn('Error desconocida: ', err);
+    return 'B_ERROR';
   }
 };

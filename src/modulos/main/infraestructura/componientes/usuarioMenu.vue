@@ -222,12 +222,19 @@ const elegirNegocio = (index: number, nombre: string) => {
       dense: true,
     },
   }).onOk(async () => {
+    // averiguamos la contraseña
+
+    try {
+      await useAuth.login(
+        authStore.getUsuario?.usuario as string,
+        password.value,
+      );
+    } catch {
+      // bad contraseña
+    }
+
     const negocio = await authStore.elegirNegocio(index);
-    const loginResponse = await useAuth.login(
-      authStore.getUsuario?.usuario as string,
-      password.value,
-      negocio?._id,
-    );
+
     if (!loginResponse) {
       NotifyError(`contraseña incorrecta`);
     } else {

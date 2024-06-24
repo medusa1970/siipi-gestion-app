@@ -65,12 +65,17 @@ export const useAuthStore = defineStore('auth', {
      * Login
      */
     async login(usuario: string, contrasena: string) {
-      await useAuth.login(usuario, contrasena).then(async (loginResponse) => {
+      try {
+        // login
+        const loginResponse = await useAuth.login(usuario, contrasena);
+
+        // entidades del usuario
         const entidades = await useAuth.buscarEntidadesDeUsuario(
           loginResponse.token,
         );
+
+        // negocios del usuario filtrando los empleados de las entidad
         const negocios = entidades.map((entidad) => {
-          console.log(entidad.empleados);
           const empleado = entidad.empleados.find(
             (empleado) => empleado.persona.usuario === loginResponse.usuario,
           ) as Empleado;
@@ -86,6 +91,8 @@ export const useAuthStore = defineStore('auth', {
             }),
           } as NegocioUsuario;
         });
+
+        // agregamos el negocio 'cliente'
         negocios.push({
           _id: 'cliente',
           nombre: 'Cliente',
@@ -93,6 +100,8 @@ export const useAuthStore = defineStore('auth', {
           cargos: [{ nombre: 'cliente' }],
           permisos: [],
         });
+
+        // patcheamos el store
         this.$patch({
           token: loginResponse.token,
           usuario: {
@@ -106,35 +115,27 @@ export const useAuthStore = defineStore('auth', {
             negocios: negocios,
           },
         });
-      });
+      } catch (e) {
+        throw e;
+      }
     },
 
     /**
      * Elegir negocio
      */
-    async elegirNegocio(index: number): Promise<NegocioUsuario | false> {
-      // solo tiene sentido si el usuario y el negocio existen
+    async elegirNegocio(index: number) {
       if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
-        return false;
+        throw 'ERR_USUARIO_REQ';
       }
-      const negocio = this.usuario?.negocios?.[index];
-
-      // TODO Pasar al nivel superior
-      // cambiamos el token
       try {
+        const negocio = this.usuario.negocios[index];
         const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
         this.$patch({
           token,
           negocio,
         });
-        return negocio;
-      } catch (error) {
-        const code = getApiErrorCode(error);
-        switch (code) {
-          default:
-            NotifyError(`Un error ocurrió (${code})`);
-        }
-        return false;
+      } catch (e) {
+        throw e;
       }
     },
 
@@ -153,16 +154,19 @@ export const useAuthStore = defineStore('auth', {
      * checkPermisos
      */
     checkPermisos(permisosRequeridos: string[]) {
-      if (this.negocio) {
+      if (!this.negocio) {
+        // qué hacemos ?
+        return false;
+      }
+      try {
         const userPermisos = this.negocio.permisos;
         permisosRequeridos.push('DESAROLLO');
         return (
           permisosRequeridos.length === 0 ||
           userPermisos.find((permiso) => permisosRequeridos.includes(permiso))
         );
-      } else {
-        // ??
-        return false;
+      } catch (e) {
+        throw e;
       }
     },
 
@@ -170,21 +174,18 @@ export const useAuthStore = defineStore('auth', {
      * Editar el perfil
      */
     editarPerfil(persona: Persona, cloudinaryUrl = null) {
-      // solo tiene sentido si hay un usuario en el state
-      if (this.usuario) {
-        this.$patch((state) => {
-          const nuevo = {};
-          // @ts-expect-error ya averiguamos que existe state.usuario
-          Object.assign(state.usuario, {
-            nombre: persona.nombre,
-            apellido: persona.apellido,
-            telefono: persona.telefono,
-            correo: persona.correo,
-            cloudinaryUrl: persona.imagen?.cloudinaryUrl,
-          });
-          return state;
+      this.$patch((state) => {
+        if (!state.usuario) {
+          throw 'ERR_USUARIO_REQ';
+        }
+        Object.assign(state.usuario, {
+          nombre: persona.nombre,
+          apellido: persona.apellido,
+          telefono: persona.telefono,
+          correo: persona.correo,
+          cloudinaryUrl: persona.imagen?.cloudinaryUrl,
         });
-      }
+      });
     },
   },
 

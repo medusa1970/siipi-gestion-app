@@ -241,17 +241,16 @@ const submitLogin = async () => {
   if (validarInputs(usuarioInputRef, pwdInputRef)) {
     try {
       await authStore.login(usuarioInput.value, pwdInput.value);
-    } catch (apiError) {
-      const code = getApiErrorCode(apiError);
-      switch (code) {
-        case 101:
+    } catch (e) {
+      switch (e) {
+        case 'B102':
           usuarioInputErr.value = 'Usuario inexistente';
           break;
-        case 102:
+        case 'B104':
           pwdInputErr.value = 'Contraseña incorrecta';
           break;
         default:
-          NotifyError(`Error desconocido (codigo ${code})`);
+          NotifyError(`Error no tratado: ${e}`);
       }
     }
   }
@@ -259,17 +258,21 @@ const submitLogin = async () => {
 
 // page 'login' negocios
 const elegirNegocio = async (index) => {
-  // seleccion de la entidad + cambio de token
-  await authStore.elegirNegocio(index);
-
-  // redireccion
-  switch (authStore.getNegocio.tipo) {
-    case 'PUNTO':
-      goTo(router, 'punto');
-      break;
-    case 'CATHERING':
-      goTo(router, 'foo');
-      break;
+  try {
+    await authStore.elegirNegocio(index);
+    switch (authStore.getNegocio.tipo) {
+      case 'PUNTO':
+        goTo(router, 'punto');
+        break;
+      case 'CATHERING':
+        goTo(router, 'cathering');
+        break;
+    }
+  } catch (e) {
+    switch (e) {
+      default:
+        NotifyError(`Error no tratado: ${e}`);
+    }
   }
 };
 
@@ -296,15 +299,10 @@ const submitPedirRdc = async () => {
     const res = await useAuth.pedirRDC(correoInput.value);
     NotifySucess('Se ha enviado un codigo a tu correo');
     page.value = 'actuarRdc';
-  } catch (error) {
-    const code = getApiErrorCode(error);
-    switch (code) {
-      case 104:
-        correoInputErr.value = 'Asegúrate que el email está correcto';
-        NotifyError('Asegúrate que el email está correcto');
-        break;
+  } catch (e) {
+    switch (e) {
       default:
-        NotifyError(`Un error ocurrió (${code})`);
+        NotifyError(`Error no tratado: ${e}`);
     }
   }
 };
@@ -320,8 +318,11 @@ const submitActuarRdc = async () => {
     } else {
       NotifyError('Un error ocurrió, intente de nuevo');
     }
-  } catch (error) {
-    ApiError(error);
+  } catch (e) {
+    switch (e) {
+      default:
+        NotifyError(`Error no tratado: ${e}`);
+    }
   }
 };
 

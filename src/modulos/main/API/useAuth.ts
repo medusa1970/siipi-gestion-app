@@ -10,15 +10,19 @@ export const useAuth = {
     contrasena: string,
     entidad?: string,
   ): Promise<ConexionResponse> => {
-    return extraer(
-      await GqlAuthConectar({
-        datos: {
-          usuario,
-          contrasena,
-          entidad,
-        },
-      }),
-    );
+    try {
+      return extraer(
+        await GqlAuthConectar({
+          datos: {
+            usuario,
+            contrasena,
+            entidad,
+          },
+        }),
+      );
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 
   /**
@@ -26,13 +30,17 @@ export const useAuth = {
    * @returns { persona, entidad, permisos, cargos }
    */
   async cambiarEntidad(entidad: string, token: any): Promise<ConexionResponse> {
-    return extraer(
-      await GqlAuthCambiarEntidad(
-        { datos: { entidad } },
-        //@ts-ignore
-        useGqlToken(token),
-      ),
-    );
+    try {
+      return extraer(
+        await GqlAuthCambiarEntidad(
+          { datos: { entidad } },
+          //@ts-ignore
+          useGqlToken(token),
+        ),
+      );
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 
   /**
@@ -40,10 +48,14 @@ export const useAuth = {
    * @returns Entidad[]
    */
   buscarEntidadesDeUsuario: async (token?: any): Promise<Entidad[]> => {
-    return extraer(
-      //@ts-ignore
-      await GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
-    );
+    try {
+      return extraer(
+        //@ts-ignore
+        await GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
+      );
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 
   /**
@@ -51,13 +63,17 @@ export const useAuth = {
    * @returns Persona
    */
   registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
-    const { _id, usuario, ...nuevoDato } = datos;
-    const [nuevaPersona] = extraer(
-      await GqlAuthCrearPersonas({
-        datos: [nuevoDato],
-      }),
-    );
-    return nuevaPersona;
+    try {
+      const { _id, usuario, ...nuevoDato } = datos;
+      const [nuevaPersona] = extraer(
+        await GqlAuthCrearPersonas({
+          datos: [nuevoDato],
+        }),
+      );
+      return nuevaPersona;
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 
   /**
@@ -65,7 +81,11 @@ export const useAuth = {
    * @returns true
    */
   pedirRDC: async (correo: string): Promise<boolean> => {
-    return extraer(await GqlAuthPedirRDC({ correo }));
+    try {
+      return extraer(await GqlAuthPedirRDC({ correo }));
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 
   /**
@@ -73,6 +93,10 @@ export const useAuth = {
    * @returns true
    */
   actuarRDC: async (token: string, contrasena: string): Promise<boolean> => {
-    return extraer(await GqlAuthActuarRDC({ token, contrasena }));
+    try {
+      return extraer(await GqlAuthActuarRDC({ token, contrasena }));
+    } catch (e) {
+      throw getApiErrorCode(e);
+    }
   },
 };

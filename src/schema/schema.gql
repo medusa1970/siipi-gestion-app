@@ -470,7 +470,7 @@ type Query {
   conectar(datos: ConexionDto!): ConexionResponse!
   cambiarEntidad(datos: ConexionDto!): ConexionResponse!
   pedirReinicioDeContrasena(correo: String!): Boolean!
-  actuarReinicioDeContrasena(token: String!, contrasena: String!): Boolean!
+  actuarReinicioDeContrasena(token: String!, contrasena: String): Boolean!
   personaUsuarioConectado(opciones: BuscarOpciones): Persona!
   entidadesUsuarioConectado(opciones: BuscarOpciones): [Entidad!]!
   testAut: String!
@@ -1191,7 +1191,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-06-23T19:05:54.737Z"
+  saldoActualizacion: DateTime = "2024-06-24T10:39:11.685Z"
   servicios: [CrearServicioDto!]
 }
 

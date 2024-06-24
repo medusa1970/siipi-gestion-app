@@ -14,4 +14,9 @@ export default [
     path: '/punto',
     file: '@/modulos/main/infraestructura/paginas/punto.vue',
   },
+  {
+    name: 'cliente',
+    path: '/cliente',
+    file: '@/modulos/main/infraestructura/paginas/cliente.vue',
+  },
 ];

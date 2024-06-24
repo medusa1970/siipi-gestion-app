@@ -28,6 +28,10 @@ interface AuthStoreProps {
   token: string | null;
   usuario: Usuario | null;
   negocio: NegocioUsuario | null;
+  recienDesconectado: boolean;
+  cookie: {
+    rdcToken: string;
+  };
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -39,6 +43,8 @@ export const useAuthStore = defineStore('auth', {
       token: null,
       usuario: null,
       negocio: null,
+      recienDesconectado: false,
+      cookie: { rdcToken: '' },
     };
   },
 
@@ -61,6 +67,15 @@ export const useAuthStore = defineStore('auth', {
    * actions
    */
   actions: {
+    /**
+     * RD
+     */
+    getRecienDesconectado(): boolean {
+      const estado = this.recienDesconectado;
+      this.recienDesconectado = false;
+      return estado;
+    },
+
     /**
      * Login
      */
@@ -94,9 +109,9 @@ export const useAuthStore = defineStore('auth', {
 
         // agregamos el negocio 'cliente'
         negocios.push({
-          _id: 'cliente',
+          _id: '665ff01b7aa0f5756c88656e',
           nombre: 'Cliente',
-          tipo: 'CLIENTE',
+          tipo: 'CLIENTELA',
           cargos: [{ nombre: 'cliente' }],
           permisos: [],
         });
@@ -147,6 +162,7 @@ export const useAuthStore = defineStore('auth', {
         token: null,
         usuario: null,
         negocio: null,
+        recienDesconectado: true,
       });
     },
 

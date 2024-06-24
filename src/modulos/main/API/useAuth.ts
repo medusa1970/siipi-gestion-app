@@ -92,8 +92,12 @@ export const useAuth = {
    * cambiar la contraseña
    * @returns true
    */
-  actuarRDC: async (token: string, contrasena: string): Promise<boolean> => {
+  actuarRDC: async (
+    token: string,
+    contrasena: string | null = null,
+  ): Promise<boolean> => {
     try {
+      // @ts-ignore contrasena puede ser null pero ts no lo detecta bien
       return extraer(await GqlAuthActuarRDC({ token, contrasena }));
     } catch (e) {
       throw getApiErrorCode(e);

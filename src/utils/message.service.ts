@@ -48,7 +48,7 @@ export const getApiErrorCode = (err: any): string => {
   if (apiError) {
     const regex = /\[(.*)\]/;
     const match = apiError.match(regex);
-    return match?.[1];
+    return 'B' + match?.[1];
   } else {
     console.warn('Error desconocida: ', err);
     return 'B_ERROR';

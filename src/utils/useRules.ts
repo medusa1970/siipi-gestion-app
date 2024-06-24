@@ -1,4 +1,3 @@
-
 /**
  * VALIDACION DE INPUTS DEL FORMULARIO
  */
@@ -13,9 +12,19 @@ export const useRules = {
   },
 
   // campo required
-  req(msj: string) {
-    return (val = 'Campo requerido') => {
+  req(msj: string = 'Campo requerido') {
+    return (val: any) => {
       if (val === null || val === '') {
+        return msj;
+      }
+      return true;
+    };
+  },
+
+  // email
+  email(msj: string = 'Debe ser un email') {
+    return (val: any) => {
+      if (!/@/.test(val)) {
         return msj;
       }
       return true;

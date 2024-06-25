@@ -45,12 +45,18 @@ export const ApiError = (error: any) => {
  */
 export const getApiErrorCode = (err: any): string => {
   const apiError = err.gqlErrors?.[0]?.message ?? null;
+  console.log(apiError);
   if (apiError) {
-    const regex = /\[(.*)\]/;
+    const regex = /\[\[(.*)\]\]/;
     const match = apiError.match(regex);
-    return 'B' + match?.[1];
+    if (match?.[1]) {
+      return 'B' + match?.[1];
+    } else {
+      console.warn(err);
+      return 'B_ERROR_API';
+    }
   } else {
-    console.warn('Error desconocida: ', err);
+    console.warn(err);
     return 'B_ERROR';
   }
 };

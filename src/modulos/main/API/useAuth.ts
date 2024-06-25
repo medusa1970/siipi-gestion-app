@@ -26,8 +26,6 @@ export const useAuth = {
   },
 
   /**
-   * Efectua un pedido de conexion por token jwt
-   * @returns { persona, entidad, permisos, cargos }
    */
   async cambiarEntidad(entidad: string, token: any): Promise<ConexionResponse> {
     try {

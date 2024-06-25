@@ -40,8 +40,5 @@ export const productoApiService = {
         busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
     );
-    // console.log('arbol');
-    // console.log(arbol);
-    return arbol;
   },
 };

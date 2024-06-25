@@ -31,6 +31,7 @@ interface AuthStoreProps {
   recienDesconectado: boolean;
   cookie: {
     rdcToken: string;
+    registrado: Persona | null;
   };
 }
 
@@ -44,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
       usuario: null,
       negocio: null,
       recienDesconectado: false,
-      cookie: { rdcToken: '' },
+      cookie: { rdcToken: '', registrado: null },
     };
   },
 
@@ -57,6 +58,7 @@ export const useAuthStore = defineStore('auth', {
     getUsuarioId: (state) => state.usuario?._id,
     getNegocio: (state) => state.negocio,
     getCargo: (state) => state.negocio?.cargos[0].nombre,
+    getCookie: (state) => state.cookie,
     getUsuarioNombreCompleto: (state) =>
       state.usuario
         ? `${state.usuario.nombre} ${state.usuario.apellido}`
@@ -112,7 +114,7 @@ export const useAuthStore = defineStore('auth', {
           _id: '665ff01b7aa0f5756c88656e',
           nombre: 'Cliente',
           tipo: 'CLIENTELA',
-          cargos: [{ nombre: 'cliente' }],
+          cargos: [],
           permisos: [],
         });
 

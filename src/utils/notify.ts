@@ -1,10 +1,5 @@
-import { Notify, Loading } from 'quasar';
+import { Notify } from 'quasar';
 
-/**LOADING */
-export const showLoading = () => Loading.show();
-export const hideLoading = () => Loading.hide();
-
-/**NOTIFY */
 export const NotifySucess = (message: string) =>
   Notify.create({ message, color: 'positive', icon: 'check' });
 
@@ -30,15 +25,6 @@ export const NotifySucessCenter = (message: string) =>
     progress: true,
     timeout: 1000,
   });
-
-/**API ERROR */
-export const ApiError = (error: any) => {
-  hideLoading();
-  console.log(error);
-  error.gqlErrors?.[0]?.message
-    ? NotifyError(error.gqlErrors?.[0]?.message)
-    : NotifyError('Error inesperado. Por favor, inténtelo de nuevo.');
-};
 
 /**
  * Get error code

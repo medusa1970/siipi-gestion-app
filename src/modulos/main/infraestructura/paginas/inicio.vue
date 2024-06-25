@@ -68,6 +68,7 @@
       </div>
     </Transition>
   </div>
+  {{ foo }}
 </template>
 
 <script setup>
@@ -80,6 +81,7 @@ import Logo from '@/assets/img/logo.png';
 import { useRoute } from 'vue-router';
 import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { productoApiService } from '~/modulos/productos/API/productoApiService';
 
 import login from '../componientes/inicio/login.vue';
 import negocios from '../componientes/inicio/negocios.vue';
@@ -93,6 +95,18 @@ const page = ref('login');
 if (authStore.getRecienDesconectado()) {
   page.value = 'byebye';
 }
+
+// onMounted(async () => {
+//   let prods;
+//   prods = await loadingAsync(async () => {
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     return await productoApiService.buscarProductos();
+//   });
+// });
 
 // mandamos un mensaje de confirmacion o de error cuando el
 // reactive del state cambia.

@@ -13,12 +13,7 @@
     <span v-if="login | register" class="[&>*]:text-gray-500 flex gap-2">
       <p v-if="login">¿No tienes cuenta aún?</p>
       <p v-if="register">¿Ya tienes una cuenta?</p>
-      <a
-        v-if="login"
-        class="border-b-[1px] border-gray-500 font-semibold"
-        href="/registro"
-        >Registrate aquí</a
-      >
+      <a v-if="login" class="font-semibold" href="/registro">Registrate aquí</a>
       <a
         v-if="register"
         class="border-b-[1px] border-gray-500 font-semibold"
@@ -37,4 +32,4 @@ defineProps({
   submit: Function,
 });
 </script>
-<style scoped></style>
+<!-- <style scoped></style> -->

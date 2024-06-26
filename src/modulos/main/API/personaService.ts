@@ -1,6 +1,6 @@
 import type { ModificarPersonaDto, Persona } from '#gql';
 
-export const usuarioApiService = {
+export const personaService = {
   /**
    * Busca una persona
    * @returns Persona[]

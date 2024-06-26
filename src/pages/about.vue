@@ -1,5 +1,7 @@
 <template>
-  <div>Pagina de test</div>
+  <div class="text-2xl text-red-500 border-2 border-blue-500">
+    Pagina de test
+  </div>
 </template>
 
 <script setup>

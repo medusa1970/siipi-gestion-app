@@ -18,6 +18,7 @@
     "@nuxtjs/tailwindcss": "^6.9.4",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@types/date-fns": "^2.6.0",
+    "@types/socket.io-client": "^3.0.0",
     "nuxt": "^3.8.1",
     "nuxt-quasar-ui": "^2.0.6",
     "sass": "^1.70.0",
@@ -29,9 +30,11 @@
     "@nuxt/config": "^2.17.3",
     "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.8",
+    "localforage": "^1.10.0",
     "nuxt-graphql-client": "^0.2.31",
     "pinia": "^2.1.7",
     "quasar": "^2.13.1",
+    "socket.io-client": "^4.7.5",
     "vuedraggable": "^4.1.0"
   }
 }

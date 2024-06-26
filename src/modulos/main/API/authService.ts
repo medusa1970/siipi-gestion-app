@@ -10,7 +10,7 @@ export interface PersonaProps {
   contrasena: string;
 }
 
-export const useAuth = {
+export const authService = {
   /**
    * Efectua un pedido de conexion por token jwt
    * @returns { persona, entidad, permisos, cargos }
@@ -53,6 +53,7 @@ export const useAuth = {
    */
   registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
     const { _id, usuario, ...nuevoDato } = datos;
+    console.log(nuevoDato);
     const [nuevaPersona] = await postDataGql(
       GqlAuthCrearPersonas({
         datos: [nuevoDato],

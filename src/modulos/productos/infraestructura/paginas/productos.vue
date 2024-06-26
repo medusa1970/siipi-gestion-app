@@ -28,19 +28,18 @@
           no-caps
           style="font-size: 14.5px"
           padding="4px 10px"
-          @click="show_crearProductoBasico = true"
+          @click="
+            () => {
+              show_crearProductoBasico = true;
+            }
+          "
         />
       </template>
 
       <!-- BADGE -->
       <template #rows-badge="{ props }">
         <q-tr :props="props">
-          <q-td
-            key="imagen"
-            :props="props"
-            class="cursor-pointer"
-            @click="verImagen(props.row.imagen)"
-          >
+          <q-td key="imagen" :props="props" class="cursor-pointer">
             <q-img
               v-if="props.row.imagen"
               :src="props.row.imagen.cloudinaryUrl"
@@ -80,7 +79,6 @@
               dense
               padding="1px"
               size="11px"
-              @click="mostrarInformacionProducto(props.row)"
             >
               <q-tooltip> Ver informacion producto </q-tooltip>
             </q-btn>
@@ -92,7 +90,6 @@
               dense
               padding="1px"
               size="10px"
-              @click="esEditarProducto(props.row)"
             >
               <q-tooltip> Editar producto </q-tooltip></q-btn
             >
@@ -167,23 +164,23 @@
       </div>
     </template>
   </Dialog2>
-
-  {{ crearProducto }}
 </template>
 
 <script setup lang="ts">
+import { columnsProductos } from '@/modulos/productos/infraestructura/utils/columns';
 import ProductoImage from '@/assets/img/producto.png';
-import { columnsProductos } from '~/modulos/productos/infraestructura/utils/columns';
-import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
-import { useProductoStore } from '~/modulos/productos/negocio/useProductoStore';
+
+// import { columnsProductos } from '~/modulos/productos/infraestructura/utils/columns';
+import { useProducto } from '~/modulos/productos/negocio/producto.composable';
+import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 
 // types
-import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
+// import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
+// import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
 
 // composables
-const productoService = useProductoService();
-const productoStore = useProductoStore();
+const productoService = useProducto();
+const productoStore = storeProducto();
 
 // layout
 definePageMeta({
@@ -193,9 +190,9 @@ definePageMeta({
 // Refs y reactives
 const row = ref('');
 const options = ref([]);
-const productos = ref(await productoStore.getProductos());
-// productos.value = await productoStore.getProductos();
-const categoriaOptions = ref(await productoService.categoriaSelectOptions());
+const productos = ref<Producto[]>([]);
+// // productos.value = await productoStore.getProductos();
+const categoriaOptions = ref<any[]>([]);
 
 // MODAL crearProductoBasico
 const show_crearProductoBasico = ref(false);
@@ -225,6 +222,37 @@ const crearProductoBasico = async () => {
 //     productos.value = state.productos;
 //   }
 // });
+
+const { $socket } = useNuxtApp();
+onMounted(async () => {
+  await productoService.traerProductos();
+  productos.value = await productoStore.getProductos();
+  categoriaOptions.value = await productoService.categoriaSelectOptions();
+
+  // reload de la pagina productos
+  let reloaded = localStorage.getItem('reloaded');
+  if (reloaded) {
+    console.log('Se ha recargado la pagina');
+
+    //cada que recargo la pagina quiero guardar mis productos actuales al indexed
+    // pero me tira un error
+    // await productoService.actualizarProducto(productos.value);
+    await productoStore.actualizarProductos();
+  } else {
+    console.log('No se ha recargado la pagina');
+    localStorage.setItem('reloaded', 'true');
+  } //@ts-ignore
+  $socket.on('cambiosProductos', async (data: any) => {
+    console.log('first');
+    console.log(data);
+    await productoService.actProductosDB();
+  });
+});
+
+onBeforeUnmount(() => {
+  localStorage.removeItem('reloaded'); //@ts-ignore
+  $socket.off('cambiosProductos');
+});
 </script>
 
 <style scoped>
@@ -252,3 +280,5 @@ const crearProductoBasico = async () => {
   text-transform: uppercase;
 }
 </style>
+~/modulos/productos/negocio/useProducto
+~/modulos/productos/negocio/producto.composable

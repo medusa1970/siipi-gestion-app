@@ -1,7 +1,8 @@
 <template>
-  <div class="flex justify-center items-center h-[100vh]">
-    <div style="width: 300px" class="flex">
-      <img style="width: 100%" :src="Logo" />
+  <div class="flex justify-center items-center">
+    <div style="width: 300px" class="">
+      <!-- <img style="width: 100%" :src="Logo" /> -->
+
       <slot></slot>
     </div>
   </div>

@@ -61,9 +61,9 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
+import { useProducto } from '~/modulos/productos/negocio/useProducto';
 
-const productoService = useProductoService();
+const productoService = useProducto();
 
 definePageMeta({
   layout: 'cathering',
@@ -85,3 +85,5 @@ Use onServerPrefetch, asyncData, or fetch in Nuxt.js for server-side rendered or
 */
 onMounted(async () => {});
 </script>
+~/modulos/productos/negocio/useProducto
+~/modulos/productos/negocio/producto.composable

@@ -1,11 +1,23 @@
 <template>
-  <div class="">
-    <div class="block-wrapper">
-      <div class="block1">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && !authStore.getUsuario">
+  <div>
+    <div class="relative">
+      <!-- LOGIN -->
+      <div class="absolute inset-0">
+        <Transition
+          enter-active-class="transition-all duration-700 ease-out"
+          enter-from-class="opacity-0 -translate-x-full"
+          enter-to-class="opacity-100 translate-x-0"
+          leave-active-class="transition-all duration-700 ease-out"
+          leave-from-class="opacity-100 translate-x-0"
+          leave-to-class="opacity-0 translate-x-full"
+        >
+          <div
+            class="w-full h-screen flex flex-col justify-center items-center"
+            v-if="!show3 && !show4 && !authStore.getUsuario"
+          >
+            <img style="width: 100%" :src="Logo" />
             <formularioLogin
-              style="width: 300px"
+              style="width: 100%"
               title-btn="Iniciar sesion"
               login
               :submit="login"
@@ -25,32 +37,39 @@
                   outlined
                   dense
                   clearable
-                  type:password
-                >
-                </q-input>
+                  type="password"
+                />
               </template>
             </formularioLogin>
           </div>
         </Transition>
       </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block2">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && authStore.getUsuario">
+      <!-- SELECCION DE NEGOCIOS -->
+      <div class="absolute inset-0">
+        <Transition
+          enter-active-class="transition-all duration-700 ease-out"
+          enter-from-class="opacity-0 -translate-x-full"
+          enter-to-class="opacity-100 translate-x-0"
+          leave-active-class="transition-all duration-700 ease-in-out"
+          leave-from-class="opacity-100 translate-x-0"
+          leave-to-class="opacity-0 translate-x-full"
+        >
+          <div
+            class="w-full h-screen flex flex-col justify-center items-center"
+            v-if="!show3 && !show4 && authStore.getUsuario"
+          >
+            <img style="width: 100%" :src="Logo" />
             <div class="w-full">
-              <p class="font-bold text-xl text-center">
+              <p class="font-bold text-lg text-center">
                 Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
               </p>
-              <p class="text-xl text-center">
-                Selecciona a que negocio ingresar.
-              </p>
+              <p class="text-center">Selecciona a que negocio ingresar.</p>
             </div>
             <div
               v-for="(negocio, index) in authStore.getUsuario.negocios"
               :key="negocio.nombre"
               @click="elegirNegocio(index)"
-              class="text-center"
+              class="text-center w-full"
             >
               <q-btn
                 :color="getColor(negocio)"
@@ -83,6 +102,8 @@
         </Transition>
       </div>
     </div>
+
+    <!-- OTROS -->
     <div class="block-wrapper">
       <div class="block3">
         <Transition name="fade">
@@ -131,14 +152,17 @@
 <script setup>
 import Logo from '@/assets/img/logo.png';
 import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
-import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { iniciarLocalForage } from '@/modulos/main/negocio/localForage.config';
 
 definePageMeta({
   layout: 'inicio',
   // middleware: ['auth'],
 });
 
+/**
+ * REACTIVOS
+ */
 const router = useRouter();
 const authStore = useAuthStore();
 
@@ -159,6 +183,11 @@ const show = (num) => {
     show4.value = true;
   }
 };
+
+/**
+ * METODOS Y FUNCIONES
+ */
+
 const login = async () => {
   authStore.login('lionel', 'Siipi123');
   // authStore.login(usuarioInput.value, contrasenaInput.value);
@@ -202,35 +231,23 @@ const getColor = (negocio) => {
       return 'black';
   }
 };
+
+onMounted(() => {
+  console.log('first');
+  iniciarLocalForage();
+});
 </script>
 
 <style scoped>
-.block1 {
-  float: left;
-  width: 300px;
-}
-.block2 {
-  float: left;
-  position: absolute;
-  width: 300px;
-}
-.block3 {
-  float: left;
-  position: absolute;
-  width: 300px;
-}
-.block4 {
-  float: left;
-  position: absolute;
-  width: 300px;
-}
-
+/* transition para OTROS */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.5s ease-in-out;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: scale(0.9);
 }
 </style>

@@ -24,7 +24,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
   ],
-  tailwindcss: {},
+  tailwindcss: {
+    exposeConfig: true,
+    viewer: true,
+    // and more...
+  },
   quasar: {
     plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
     extras: { fontIcons: ['bootstrap-icons'] },

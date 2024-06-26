@@ -1355,7 +1355,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useProducts } from '~/modulos/productos/negocio/useProductoService';
+import { useProducts } from '~/modulos/productos/negocio/useProducto';
 // import {
 //   marcas,
 //   proveedores,
@@ -1475,3 +1475,5 @@ onMounted(async () => {
   /* border: 2px solid red; */
 }
 </style>
+~/modulos/productos/negocio/useProducto
+~/modulos/productos/negocio/producto.composable

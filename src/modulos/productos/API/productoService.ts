@@ -1,6 +1,6 @@
 import type { CrearProductoBasico } from '../negocio/producto.interface';
 
-export const productoApiService = {
+export const productoService = {
   /**
    * Buscar todos los productos
    * @returns Producto

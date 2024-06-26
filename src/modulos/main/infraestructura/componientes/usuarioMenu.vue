@@ -138,7 +138,7 @@
 // import { ModificarPersonaDto } from '#gql';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import { useUsuarioService } from '~/modulos/main/negocio/useUsuarioService';
-import { useAuth } from '../../API/useAuth';
+import { authService } from '../../API/authService';
 
 const authStore = useAuthStore();
 const usuarioService = useUsuarioService();
@@ -223,7 +223,7 @@ const elegirNegocio = (index: number, nombre: string) => {
     },
   }).onOk(async () => {
     const to = await authStore.elegirNegocio(index);
-    const loginResponse = await useAuth.login(
+    const loginResponse = await authService.login(
       authStore.getUsuario?.usuario as string,
       password.value,
       to?._id,

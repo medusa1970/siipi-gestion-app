@@ -1,5 +1,5 @@
-import { useAuth } from '~/modulos/main/API/useAuth';
-import type { Empleado, Persona } from '#gql';
+import { authService } from '~/modulos/main/API/authService';
+import type { Empleado, Persona, CrearPersonaDto } from '#gql';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -23,6 +23,16 @@ interface Usuario {
   cloudinaryUrl?: string | null;
   negocios: NegocioUsuario[] | null;
 }
+
+// export interface Persona {
+//   _id?: string; // ? porque no esta requerido ?
+//   usuario: string;
+//   nombre: string;
+//   apellido: string;
+//   telefono: string;
+//   correo: string;
+//   contrasena: string;
+// }
 
 interface AuthStoreProps {
   token: string | null;
@@ -65,23 +75,23 @@ export const useAuthStore = defineStore('auth', {
      * Login
      */
     async login(usuario: string, contrasena: string) {
-      useAuth.login(usuario, contrasena).then(async (loginResponse) => {
-        const entidades = await useAuth.buscarEntidadesDeUsuario(
+      authService.login(usuario, contrasena).then(async (loginResponse) => {
+        const entidades = await authService.buscarEntidadesDeUsuario(
           loginResponse.token,
         );
         const negocios = entidades.map((entidad) => {
           console.log(entidad.empleados);
-          const empleado = entidad.empleados.find(
+          const empleado = entidad.empleados?.find(
             (empleado) => empleado.persona.usuario === loginResponse.usuario,
           ) as Empleado;
           return {
             _id: entidad._id,
             nombre: entidad.nombre,
             tipo: entidad.tipo,
-            cargos: empleado.cargos.map((cargo) => {
+            cargos: empleado.cargos?.map((cargo) => {
               return { nombre: cargo.nombre };
             }),
-            permisos: empleado.permisos.map((permiso) => {
+            permisos: empleado.permisos?.map((permiso) => {
               return permiso.permiso;
             }),
           } as NegocioUsuario;
@@ -169,6 +179,15 @@ export const useAuthStore = defineStore('auth', {
         });
       }
     },
+
+    /**
+     * Register
+     */
+    // async register(persona: CrearPersonaDto) {
+    //   const nuevaPersona = await authService.registrar(persona);
+    //   if (nuevaPersona)
+    //     NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
+    // },
   },
 
   persist: true,

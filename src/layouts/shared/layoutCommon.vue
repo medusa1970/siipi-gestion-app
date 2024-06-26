@@ -134,7 +134,7 @@ import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { authService } from '@/modulos/main/API/authService';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
 
@@ -183,7 +183,7 @@ const elegirNegocio = (index, nombre) => {
       dense: true,
     },
   }).onOk(async () => {
-    const loginResponse = await useAuth.login(
+    const loginResponse = await authService.login(
       authStore.getUsuario?.usuario,
       contrasena.value,
     );
@@ -228,3 +228,4 @@ const elegirNegocio = (index, nombre) => {
 //   width: 340px !important;
 // }
 </style>
+~/modulos/main/API/authService

@@ -1,5 +1,5 @@
 import { useAuth } from '~/modulos/main/API/useAuth';
-import type { Empleado, Persona } from '#gql';
+import type { Empleado, Entidad, Persona } from '#gql';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -28,6 +28,11 @@ interface AuthStoreProps {
   token: string | null;
   usuario: Usuario | null;
   negocio: NegocioUsuario | null;
+  recienDesconectado: boolean;
+  cookie: {
+    rdcToken: string;
+    registrado: Persona | null;
+  };
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -39,6 +44,8 @@ export const useAuthStore = defineStore('auth', {
       token: null,
       usuario: null,
       negocio: null,
+      recienDesconectado: false,
+      cookie: { rdcToken: '', registrado: null },
     };
   },
 
@@ -51,6 +58,7 @@ export const useAuthStore = defineStore('auth', {
     getUsuarioId: (state) => state.usuario?._id,
     getNegocio: (state) => state.negocio,
     getCargo: (state) => state.negocio?.cargos[0].nombre,
+    getCookie: (state) => state.cookie,
     getUsuarioNombreCompleto: (state) =>
       state.usuario
         ? `${state.usuario.nombre} ${state.usuario.apellido}`
@@ -62,15 +70,29 @@ export const useAuthStore = defineStore('auth', {
    */
   actions: {
     /**
+     * RD
+     */
+    getRecienDesconectado(): boolean {
+      const estado = this.recienDesconectado;
+      this.recienDesconectado = false;
+      return estado;
+    },
+
+    /**
      * Login
      */
     async login(usuario: string, contrasena: string) {
-      useAuth.login(usuario, contrasena).then(async (loginResponse) => {
+      try {
+        // login
+        const loginResponse = await useAuth.login(usuario, contrasena);
+
+        // entidades del usuario
         const entidades = await useAuth.buscarEntidadesDeUsuario(
           loginResponse.token,
         );
+
+        // negocios del usuario filtrando los empleados de las entidad
         const negocios = entidades.map((entidad) => {
-          console.log(entidad.empleados);
           const empleado = entidad.empleados.find(
             (empleado) => empleado.persona.usuario === loginResponse.usuario,
           ) as Empleado;
@@ -86,13 +108,17 @@ export const useAuthStore = defineStore('auth', {
             }),
           } as NegocioUsuario;
         });
+
+        // agregamos el negocio 'cliente'
         negocios.push({
-          _id: 'cliente',
+          _id: '665ff01b7aa0f5756c88656e',
           nombre: 'Cliente',
-          tipo: 'CLIENTE',
-          cargos: [{ nombre: 'cliente' }],
+          tipo: 'CLIENTELA',
+          cargos: [],
           permisos: [],
         });
+
+        // patcheamos el store
         this.$patch({
           token: loginResponse.token,
           usuario: {
@@ -106,18 +132,27 @@ export const useAuthStore = defineStore('auth', {
             negocios: negocios,
           },
         });
-      });
+      } catch (e) {
+        throw e;
+      }
     },
 
     /**
      * Elegir negocio
      */
     async elegirNegocio(index: number) {
-      if (this.usuario && this.usuario.negocios?.[index]) {
-        this.$patch({ negocio: this.usuario.negocios[index] });
-        return this.usuario.negocios[index];
-      } else {
-        return null;
+      if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
+        throw 'ERR_USUARIO_REQ';
+      }
+      try {
+        const negocio = this.usuario.negocios[index];
+        const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
+        this.$patch({
+          token,
+          negocio,
+        });
+      } catch (e) {
+        throw e;
       }
     },
 
@@ -129,6 +164,7 @@ export const useAuthStore = defineStore('auth', {
         token: null,
         usuario: null,
         negocio: null,
+        recienDesconectado: true,
       });
     },
 
@@ -136,16 +172,19 @@ export const useAuthStore = defineStore('auth', {
      * checkPermisos
      */
     checkPermisos(permisosRequeridos: string[]) {
-      if (this.negocio) {
+      if (!this.negocio) {
+        // qué hacemos ?
+        return false;
+      }
+      try {
         const userPermisos = this.negocio.permisos;
         permisosRequeridos.push('DESAROLLO');
         return (
           permisosRequeridos.length === 0 ||
           userPermisos.find((permiso) => permisosRequeridos.includes(permiso))
         );
-      } else {
-        // ??
-        return false;
+      } catch (e) {
+        throw e;
       }
     },
 
@@ -153,21 +192,18 @@ export const useAuthStore = defineStore('auth', {
      * Editar el perfil
      */
     editarPerfil(persona: Persona, cloudinaryUrl = null) {
-      // solo tiene sentido si hay un usuario en el state
-      if (this.usuario) {
-        this.$patch((state) => {
-          const nuevo = {};
-          // @ts-expect-error ya averiguamos que existe state.usuario
-          Object.assign(state.usuario, {
-            nombre: persona.nombre,
-            apellido: persona.apellido,
-            telefono: persona.telefono,
-            correo: persona.correo,
-            cloudinaryUrl: persona.imagen?.cloudinaryUrl,
-          });
-          return state;
+      this.$patch((state) => {
+        if (!state.usuario) {
+          throw 'ERR_USUARIO_REQ';
+        }
+        Object.assign(state.usuario, {
+          nombre: persona.nombre,
+          apellido: persona.apellido,
+          telefono: persona.telefono,
+          correo: persona.correo,
+          cloudinaryUrl: persona.imagen?.cloudinaryUrl,
         });
-      }
+      });
     },
   },
 

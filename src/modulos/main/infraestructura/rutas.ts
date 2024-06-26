@@ -5,13 +5,18 @@ export default [
     file: '@/modulos/main/infraestructura/paginas/inicio.vue',
   },
   {
-    name: 'recuperarPwd',
-    path: '/recuperarPassword',
-    file: '@/modulos/main/infraestructura/paginas/recuperarPassword.vue',
+    name: 'cathering',
+    path: '/cathering',
+    file: '@/modulos/main/infraestructura/paginas/cathering.vue',
   },
   {
-    name: 'registracion',
-    path: '/registro',
-    file: '@/modulos/main/infraestructura/paginas/registro.vue',
+    name: 'punto',
+    path: '/punto',
+    file: '@/modulos/main/infraestructura/paginas/punto.vue',
+  },
+  {
+    name: 'cliente',
+    path: '/cliente',
+    file: '@/modulos/main/infraestructura/paginas/cliente.vue',
   },
 ];

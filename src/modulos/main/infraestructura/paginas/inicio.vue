@@ -1,236 +1,155 @@
 <template>
-  <div class="">
-    <div class="block-wrapper">
-      <div class="block1">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && !authStore.getUsuario">
-            <formularioLogin
-              style="width: 300px"
-              title-btn="Iniciar sesion"
-              login
-              :submit="login"
-            >
-              <template #inputs>
-                <q-input
-                  v-model="usuarioInput"
-                  type="text"
-                  label="Usuario"
-                  outlined
-                  dense
-                  clearable
-                />
-                <q-input
-                  v-model="contrasenaInput"
-                  label="Contraseña"
-                  outlined
-                  dense
-                  clearable
-                  type:password
-                >
-                </q-input>
-              </template>
-            </formularioLogin>
-          </div>
-        </Transition>
+  <div class="flex">
+    <!-- Formulario de login -->
+    <Transition name="fade">
+      <login
+        v-if="page === 'login' && !authStore.getUsuario"
+        @go="(p) => (page = p)"
+      />
+    </Transition>
+
+    <!-- Elegir un negocio -->
+    <Transition name="fade">
+      <negocios
+        v-if="page === 'login' && authStore.getUsuario"
+        @go="(p) => (page = p)"
+      />
+    </Transition>
+
+    <!-- Registro nuevo usuario -->
+    <Transition name="fade">
+      <registro1 v-if="page === 'registro1'" @go="(p) => (page = p)" />
+    </Transition>
+    <Transition name="fade">
+      <div>
+        <div class="w-full" v-if="page === 'registro2'">
+          <p>Registro OK {{ authStore.getCookie.registrado?.nombre }}</p>
+          <q-btn dense no-caps label="volver" @click="page = 'login'" />
+        </div>
       </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block2">
-        <Transition name="fade">
-          <div class="w-full" v-if="!show3 && !show4 && authStore.getUsuario">
-            <div class="w-full">
-              <p class="font-bold text-xl text-center">
-                Bienvenido, {{ authStore.getUsuarioNombreCompleto }}.
-              </p>
-              <p class="text-xl text-center">
-                Selecciona a que negocio ingresar.
-              </p>
-            </div>
-            <div
-              v-for="(negocio, index) in authStore.getUsuario.negocios"
-              :key="negocio.nombre"
-              @click="elegirNegocio(index)"
-              class="text-center"
-            >
-              <q-btn
-                :color="getColor(negocio)"
-                :src="Logo"
-                class="w-full"
-                style="margin-top: 10px"
-              >
-                {{ negocio.nombre }}
-              </q-btn>
-            </div>
-            <div class="w-full text-center">
-              <q-btn
-                dense
-                no-caps
-                style="margin: 20px; padding: 5px 15px"
-                color="primary"
-                label="logout"
-                @click="logout"
-              />
-              <q-btn
-                dense
-                no-caps
-                style="margin: 20px; padding: 5px 15px"
-                color="primary"
-                label="show 3"
-                @click="show(3)"
-              />
-            </div>
-          </div>
-        </Transition>
+    </Transition>
+
+    <!-- Rinicializacion de contraseña -->
+    <Transition name="fade">
+      <rdc1 v-if="page === 'rdc1'" @go="(p) => (page = p)" />
+    </Transition>
+    <Transition name="fade">
+      <rdc2 v-if="page === 'rdc2'" @go="(p) => (page = p)" />
+    </Transition>
+    <Transition name="fade">
+      <rdc3 v-if="page === 'rdc3'" @go="(p) => (page = p)" />
+    </Transition>
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'rdc4'">
+        <div class="w-full text-center mt-2">
+          <q-avatar color="green" round>
+            <q-icon name="check" color="white" size="lg" />
+          </q-avatar>
+          <div class="mt-2 mb-2">Contraseña cambiada</div>
+        </div>
+        <div class="w-full text-center">
+          <q-btn label="volver" @click="page = 'login'" dense flat no-caps />
+        </div>
       </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block3">
-        <Transition name="fade">
-          <div class="w-full" v-if="show3">
-            <q-btn
-              dense
-              no-caps
-              style="margin: 20px; padding: 5px 15px"
-              color="primary"
-              label="show 4"
-              @click="show(4)"
-            />
-            <p>Lorem ipsum 3</p>
-          </div>
-        </Transition>
+    </Transition>
+
+    <!-- byebye -->
+    <Transition name="fade">
+      <div class="w-full" v-if="page === 'byebye'">
+        <div class="w-full text-center mt-2">
+          <q-avatar color="green" round>
+            <q-icon name="waving_hand" color="white" size="md" />
+          </q-avatar>
+          <div class="mt-2 mb-2">Hasta luego !</div>
+        </div>
+        <div class="w-full text-center">
+          <q-btn label="volver" @click="page = 'login'" dense flat no-caps />
+        </div>
       </div>
-    </div>
-    <div class="block-wrapper">
-      <div class="block4">
-        <Transition name="fade">
-          <div class="w-full" v-if="show4">
-            <p>Lorem ipsum 4</p>
-            <q-btn
-              dense
-              no-caps
-              style="margin: 20px; padding: 5px 15px"
-              color="primary"
-              label="show 3"
-              @click="show(3)"
-            />
-            <q-btn
-              dense
-              no-caps
-              style="margin: 20px; padding: 5px 15px"
-              color="primary"
-              label="hide"
-              @click="show()"
-            />
-          </div>
-        </Transition>
-      </div>
-    </div>
+    </Transition>
   </div>
+  {{ foo }}
 </template>
 
 <script setup>
-import Logo from '@/assets/img/logo.png';
-import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
-import { useAuth } from '~/modulos/main/API/useAuth';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-
 definePageMeta({
   layout: 'inicio',
   // middleware: ['auth'],
 });
 
-const router = useRouter();
+import Logo from '@/assets/img/logo.png';
+import { useRoute } from 'vue-router';
+import { useAuth } from '~/modulos/main/API/useAuth';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { productoApiService } from '~/modulos/productos/API/productoApiService';
+
+import login from '../componientes/inicio/login.vue';
+import negocios from '../componientes/inicio/negocios.vue';
+import rdc1 from '../componientes/inicio/rdc1.vue';
+import rdc2 from '../componientes/inicio/rdc2.vue';
+import rdc3 from '../componientes/inicio/rdc3.vue';
+import registro1 from '../componientes/inicio/registro1.vue';
+
 const authStore = useAuthStore();
+const page = ref('login');
+if (authStore.getRecienDesconectado()) {
+  page.value = 'byebye';
+}
 
-const usuarioInput = ref('');
-const contrasenaInput = ref('');
-const show3 = ref(false);
-const show4 = ref(true);
-const show = (num) => {
-  show3.value = false;
-  show4.value = false;
-  console.log(num);
-  if (num === 3) {
-    show3.value = true;
-    show4.value = false;
-  }
-  if (num === 4) {
-    show3.value = false;
-    show4.value = true;
-  }
-};
-const login = async () => {
-  authStore.login('lionel', 'Siipi123');
-  // authStore.login(usuarioInput.value, contrasenaInput.value);
-};
+// onMounted(async () => {
+//   let prods;
+//   prods = await loadingAsync(async () => {
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     await productoApiService.buscarProductos();
+//     return await productoApiService.buscarProductos();
+//   });
+// });
 
-const elegirNegocio = (index) => {
-  const negocio = authStore.elegirNegocio(index);
-  const path = authStore.getNegocio.tipo.toLowerCase();
-  router.push(path);
-};
-
-const logout = () => {
-  authStore.logout();
-  router.push(inicio);
-};
-
-// mandamos un mensaje de confirmacio o de error cuando el
+// mandamos un mensaje de confirmacion o de error cuando el
 // reactive del state cambia.
 authStore.$subscribe((mutation, state) => {
   if (state.usuario && state.negocio) {
     NotifySucess(`Negocio elegido: ${state.negocio.nombre}`);
   }
-  if (state.usuario && !state.negocio) {
-    NotifySucess(`Bienvenido al sistema ${state.usuario.nombre}`);
-  }
-  if (!state.usuario && mutation.payload.token !== null) {
-    NotifyError(`Datos incorrectos, intente de nuevo`);
-  }
-  if (!state.usuario && mutation.payload.token === null) {
-    NotifySucess(`Hasta pronto!`);
-  }
+  // if (state.usuario && !state.negocio) {
+  //   NotifySucess(`Bienvenido al sistema ${state.usuario.nombre}`);
+  // }
+  // if (!state.usuario && mutation.payload?.token === null) {
+  //   NotifySucess(`Hasta pronto!`);
+  // }
+  // if (!state.usuario && mutation.payload?.token !== null) {
+  //   NotifyError(`Datos incorrectos, intente de nuevo`);
+  // }
+  // if (!state.usuario && mutation.payload?.token === null) {
+  //   NotifySucess(`Hasta pronto!`);
+  // }
 });
-
-const getColor = (negocio) => {
-  switch (negocio.tipo) {
-    case 'CATHERING':
-      return 'green';
-    case 'PUNTO':
-      return 'orange';
-    case 'CLIENTE':
-      return 'black';
-  }
-};
 </script>
 
 <style scoped>
-.block1 {
-  float: left;
-  width: 300px;
+.fade-leave-from {
+  opacity: 100%;
 }
-.block2 {
-  float: left;
-  position: absolute;
-  width: 300px;
+.fade-leave-active {
+  transition-duration: 0.2s;
+  order: 1;
 }
-.block3 {
-  float: left;
-  position: absolute;
-  width: 300px;
-}
-.block4 {
-  float: left;
-  position: absolute;
-  width: 300px;
+.fade-leave-to {
+  opacity: 0%;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.fade-enter-from {
+  opacity: 0%;
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.fade-enter-active {
+  transition-delay: 0.2s;
+  transition-duration: 0.2;
+  order: 100;
+}
+.fade-enter-to {
+  opacity: 100%;
 }
 </style>

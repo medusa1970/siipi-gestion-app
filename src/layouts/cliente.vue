@@ -17,7 +17,7 @@ import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const router = useRouter();
 const authStore = useAuthStore();
-if (authStore.getNegocio?.tipo !== 'CATHERING') {
+if (authStore.getNegocio?.tipo !== 'CLIENTELA') {
   goTo(router, 'inicio');
 }
 </script>

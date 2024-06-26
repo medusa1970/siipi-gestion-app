@@ -6,15 +6,14 @@ export const productoApiService = {
    * @returns Producto
    */
   buscarProductos: async () => {
-    const productos = await postDataGql(
-      GqlProductosBuscar({
+    return extraer(
+      await GqlProductosBuscar({
         opciones: {
           populate: true,
           sort: '-_modificado -_creado',
         },
       }),
     );
-    return productos;
   },
 
   /**
@@ -22,9 +21,8 @@ export const productoApiService = {
    * @returns Producto
    */
   crearProductoBasico: async (datos: CrearProductoBasico) => {
-    // console.log(datos);
-    const producto = await postDataGql(
-      GqlProductosCrearBasico({
+    const producto = extraer(
+      await GqlProductosCrearBasico({
         datos: [datos],
         opciones: { populate: true, aceptarInexistentes: true },
       }),
@@ -37,13 +35,10 @@ export const productoApiService = {
    * @returns Categoria (con sus hijas populadas)
    */
   obtenerTodasCategorias: async () => {
-    const arbol = await postDataGql(
-      GqlProductosCategoriaArbol({
+    return extraer(
+      await GqlProductosCategoriaArbol({
         busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
     );
-    // console.log('arbol');
-    // console.log(arbol);
-    return arbol;
   },
 };

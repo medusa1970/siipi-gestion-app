@@ -1,10 +1,5 @@
 export default [
   {
-    name: 'index',
-    path: '/cathering',
-    file: '@/modulos/productos/infraestructura/paginas/index.vue',
-  },
-  {
     name: 'productos',
     path: '/cathering/productos',
     file: '@/modulos/productos/infraestructura/paginas/productos.vue',

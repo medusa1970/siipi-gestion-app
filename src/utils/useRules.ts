@@ -11,6 +11,26 @@ export const useRules = {
     return true;
   },
 
+  // campo required
+  req(msj: string = 'Campo requerido') {
+    return (val: any) => {
+      if (val === null || val === '') {
+        return msj;
+      }
+      return true;
+    };
+  },
+
+  // email
+  email(msj: string = 'Debe ser un email') {
+    return (val: any) => {
+      if (!/@/.test(val)) {
+        return msj;
+      }
+      return true;
+    };
+  },
+
   // validación de contraseña
   password(val: any): string | true {
     if (

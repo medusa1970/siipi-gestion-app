@@ -83,7 +83,6 @@ export default defineNuxtConfig({
             '/infraestructura/rutas.ts',
           );
           if (fs.existsSync(fullPath)) {
-            console.log('creating routes for module', file);
             const routes = await import(fullPath);
             for (const route of routes.default || []) {
               // console.log(route.name);
@@ -92,8 +91,9 @@ export default defineNuxtConfig({
           }
         }
       }
+      console.log(
+        '\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Creando las rutas dinamicas',
+      );
     },
   },
 });
-
-console.log('uri', process.env.GRAPH_URI);

@@ -1,18 +1,18 @@
 <template>
-  <!-- eslint-disable -->
   <q-input
-    :type="type !== 'password' ? type : isPwd ? 'password' : 'text'"
-    ref="localRef"
     v-model="localModel"
+    :type="tipo !== 'password' ? tipo : isPwd ? 'password' : 'text'"
+    ref="localRef"
     @update:model-value="handleChange"
     :label="label + (requerido ? '*' : '')"
-    :rules="requerido ? [useRules.requerido, ...rules] : rules"
-    outlined
+    :rules="rules"
+    :hint="hint"
     debounce="400"
+    outlined
+    :autogrow="autogrow"
     :clearable="clearable"
     :dense="dense"
-    :class="class"
-    :autogrow="autogrow"
+    :class="clase"
     bottom-slots
     :error="error"
     :errorMessage="errorMessage"
@@ -36,19 +36,21 @@
 </template>
 
 <script setup>
-// props
 const props = defineProps({
   // debe ser un ref, cuando cambia se activara la validación
   validate: Boolean,
 
   // type : text, textarea, autogrow, password
-  type: { type: String, default: 'text' },
+  tipo: { type: String, default: 'text' },
 
   // el valor inicial
   default: { type: String, default: '' },
 
   // el label del input
   label: { type: String, default: null },
+
+  // texto de ayuda debajo del input
+  hint: { type: String, default: null },
 
   // el texto del boton de informacion
   info: { type: String, default: null },
@@ -59,32 +61,31 @@ const props = defineProps({
   // el icono en prepend
   icono: { type: String, default: null },
 
-  // el icono en prepend
+  // mensaje de error personalizado desde el componiente padre
   errorMessage: { type: String, default: null },
 });
 
-// type del input
+// tipo del input
 if (
-  !['textarea', 'text', 'autogrow', 'password', 'number'].includes(props.type)
+  !['textarea', 'text', 'autogrow', 'password', 'number'].includes(props.tipo)
 ) {
-  props.type = 'text';
+  props.tipo = 'text';
 }
 const autogrow = ref(false);
-if (props.type === 'autogrow') {
-  props.type = 'text';
+if (props.tipo === 'autogrow') {
+  props.tipo = 'text';
   autogrow.value = true;
 }
 
-// la ref del model que contiene el valor actual
+// refs
 const localModel = ref(props.default);
-
-// la ref del input para llamar a sus metodos
-// localref.value.validacion(), .resetValidacion(), .focus(), .blur())
 const localRef = ref(null);
-
-// visibilidad del icono de show pwd
-const isPwd = ref(true);
 const error = ref(false);
+const dense = ref(null);
+const clase = ref(null);
+const clearable = ref(null);
+const isPwd = ref(true);
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
 // pasando el nuevo valor al componiente padre
 const emits = defineEmits(['update']);
@@ -92,7 +93,6 @@ const handleChange = (newValue, oldValue) => {
   emits('update', newValue, oldValue);
 };
 
-/*
 // recibiendo un ordén de validación desde el componiente padre
 // sirve para actualizacion cuando se llama por @click en vez de @submit
 watch(
@@ -103,7 +103,6 @@ watch(
   },
   { immediate: false },
 );
-*/
 
 // recibiendo un mensaje de error desde el componiente padre
 watch(
@@ -112,10 +111,4 @@ watch(
     error.value = props.errorMessage != null;
   },
 );
-
-// reinicializando el error y el mensaje personalizado cuando cambia el valor del input
-watch(localModel, () => {
-  error.value = false;
-  props.errorMessage = '';
-});
 </script>

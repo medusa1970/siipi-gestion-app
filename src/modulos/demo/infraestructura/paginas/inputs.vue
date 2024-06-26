@@ -1,11 +1,36 @@
 <template>
   <q-form @submit="formSubmit">
+    <p>Input image, value = {{ log64(refImage64) }}</p>
+    <input-image
+      label="Imagen"
+      info="(una pequeña ayuda aquí)"
+      @update="(v) => (refImage64 = v)"
+      :default="refImage64"
+      icono="photo_camera"
+      maxSizeKb="2000"
+      :rules="[useRules.requerido]"
+      clearable
+    />
+
+    <p>Input select, value = {{ log(refSelect) }}</p>
+    <input-dropdown
+      label="Categoria"
+      :options="categoriaOptions"
+      info="(una pequeña ayuda aquí)"
+      @update="(v) => (refSelect = v)"
+      :rules="[useRules.requerido, NoMasita]"
+      :default="refSelect"
+      dense
+      clearable
+    />
+
     <p>Input text, value = {{ log(refText) }}</p>
     <input-text
+      tipo="textarea"
       label="Texto 1"
       @update="(v) => (refText = v)"
       :default="refText"
-      :rules="[useRules.requerido]"
+      :rules="[useRules.requerido, NoMasita2]"
       dense
       clearable
     />
@@ -18,36 +43,6 @@
       :default="refText2"
       :rules="[refText2_rule]"
       dense
-    />
-    <p>Input select, value = {{ log(refSelect) }}</p>
-    <input-dropdown
-      label="Categoria"
-      :options="categoriaOptions"
-      info="(una pequeña ayuda aquí)"
-      @update="(v) => (refSelect = v)"
-      :default="refSelect"
-      requerido
-      :icono="work"
-    />
-
-    <p>Input image, value = {{ log64(refImage64) }}</p>
-    <input-image
-      label="Imagen"
-      info="(una pequeña ayuda aquí)"
-      @update="(v) => (refImage64 = v)"
-      :default="refImage64"
-      requerido
-      icono="photo_camera"
-      maxSizeKb="20"
-    />
-
-    <p>Input textarea, value = {{ log(refTextarea) }}</p>
-    <input-textarea
-      labeproductoApiServicel="Textarea"
-      info="(una pequeña ayuda aquí)"
-      @update="(v) => (refTextarea = v)"
-      :default="refTextarea"
-      requerido
     />
 
     <q-btn label="submit" type="submit" />
@@ -80,6 +75,14 @@ const refText = ref(null);
 const refText2 = ref(null);
 const refText2_rule = (val) => {
   return val !== refText.value ? 'Debe ser lo mismo que input text 1' : true;
+};
+const NoMasita = (val) => {
+  return val.value === '65c7ce11ce1b515075092db9'
+    ? 'No puede ser una masita'
+    : true;
+};
+const NoMasita2 = (val) => {
+  return val === 'masita' ? 'No puede ser una masita' : true;
 };
 
 // para pasar un ordén de validación a los inputs

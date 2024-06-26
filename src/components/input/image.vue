@@ -1,97 +1,77 @@
 <template>
   <q-file
-    class="w-full"
     v-model="localModel"
+    ref="localRef"
+    @update:model-value="handleChange"
+    @rejected="handleReject"
     :label="label + (requerido ? '*' : '')"
     :hint="hint.replace('{maxSizeKb}', maxSizeKb)"
     :accept="accept"
-    :max-total-size="maxSizeKb * 1024"
-    :dense="!notDense"
-    filled
-    clearable
-    :error="errorEstado"
+    :max-total-size="Number(maxSizeKb) * 1024"
+    outlined
+    :clearable="clearable"
+    :dense="dense"
+    :class="clase"
     bottom-slots
-    @update:model-value="handleChange"
-    @rejected="handleReject"
-    @clear="handleClear"
-    @blur="handleBlur"
+    :error="error"
+    :errorMessage="errorMsg"
   >
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
+
     <template #after v-if="info && info.length > 0">
       <input-botonAyuda :mensaje="info" />
     </template>
+
     <template #file>
       <q-img v-if="preview" :src="preview"></q-img>
     </template>
-    <template #error> {{ errorMessage }} </template>
   </q-file>
 </template>
 
 <script setup>
-/**
- * Refs
- */
-const preview = ref('');
-const localModel = ref('');
-const errorEstado = ref(false);
-const errorMessage = ref(null);
-
-/**
- * Props
- */
 const props = defineProps({
-  // label del input
-  label: {
-    type: String,
-    default: 'Seleccionar imagen',
-  },
-  // texto del boton de informacion
-  info: {
-    type: String,
-    default: '',
-  },
-  // extensiones de archivos autorizadas
-  accept: {
-    type: String,
-    default: '.jpg, .png, .jpeg',
-  },
-  // tamaño maximo en Kb
-  maxSizeKb: {
-    type: Number,
-    default: 500,
-  },
+  // el label del input
+  label: { type: String, default: null },
+
   // texto de ayuda debajo del input
-  hint: {
-    type: String,
-    default: 'Tamaño máximo {maxSizeKb}Kb',
-  },
-  // si el input es dense o no
-  notDense: {
-    type: Boolean,
-    default: false,
-  },
-  // si el campo es requerido o no
-  requerido: {
-    type: Boolean,
-    default: false,
-  },
+  hint: { type: String, default: 'Tamaño máximo {maxSizeKb}Kb' },
+
+  // el texto del boton de informacion
+  info: { type: String, default: null },
+
+  // las reglas de validacion
+  rules: { type: Array, default: [] },
+
   // el icono en prepend
-  icono: {
-    type: String,
-    default: '',
-  },
+  icono: { type: String, default: null },
+
+  // mensaje de error personalizado desde el componiente padre
+  errorMessage: { type: String, default: null },
+
+  // extensiones de archivos autorizadas
+  accept: { type: String, default: '.jpg, .png, .jpeg' },
+
+  // tamaño maximo en Kb
+  maxSizeKb: { type: String, default: '500' },
 });
 
-/**
- * Eventos
- */
-const emits = defineEmits(['update, reject, clear']);
+// refs
+const localModel = ref('');
+const localRef = ref(null);
+const preview = ref('');
+const error = ref(false);
+const errorMsg = ref(props.errorMessage);
+const dense = ref(null);
+const clase = ref(null);
+const clearable = ref(null);
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
-// el valor cambió
+// pasando el nuevo valor al componiente padre
+const emits = defineEmits(['update, reject, clear']);
 const handleChange = (newValue, oldValue) => {
-  errorEstado.value = false;
+  // error.value = false;
 
   // hemos recibido una imagen ?
   if (newValue instanceof Blob) {
@@ -102,8 +82,7 @@ const handleChange = (newValue, oldValue) => {
       emits('update', imageBase64);
     });
     lector.addEventListener('error', () => {
-      errorMessage.value = 'Hubo un problema al cargar la imagen';
-      errorEstado.value = false;
+      errorMsg.value = 'Hubo un problema al cargar la imagen';
       preview.value = null;
     });
     lector.readAsDataURL(localModel.value);
@@ -111,10 +90,9 @@ const handleChange = (newValue, oldValue) => {
 
   // sino
   else {
-    if (props.requerido) {
-      errorEstado.value = true;
-      errorMessage.value = requerido(null);
-    }
+    // if (props.requerido) {
+    //   props.errorMessage = requerido(null);
+    // }
     emits('update', null);
   }
 };
@@ -122,12 +100,11 @@ const handleChange = (newValue, oldValue) => {
 // hubo un error de tamaño o de extensión de la imagen
 const handleReject = ([event]) => {
   if (event.failedPropValidation == 'max-total-size') {
-    errorMessage.value =
-      'La imagen debe pesar menos de ' + props.maxSizeKb + 'KB';
+    errorMsg.value =
+      'La imagen debe pesar menos de ' + Number(props.maxSizeKb) + 'KB';
   } else if (event.failedPropValidation == 'accept') {
-    errorMessage.value = 'Este archivo no es una imagen';
+    errorMsg.value = 'Este archivo no es una imagen';
   }
-  errorEstado.value = true;
   emits('reject', event);
 };
 
@@ -139,8 +116,31 @@ const handleClear = (event) => {
 // se borró el campo
 const handleBlur = (event) => {
   if (!preview.value) {
-    errorEstado.value = true;
-    errorMessage.value = useRules.requerido(null);
+    // errorMsg.value = useRules.requerido(null);
   }
 };
+
+// recibiendo un ordén de validación desde el componiente padre
+// sirve para actualizacion cuando se llama por @click en vez de @submit
+watch(
+  () => props.validate,
+  () => {
+    // localRef.value.resetValidation();
+    localRef.value?.validate();
+  },
+  { immediate: false },
+);
+
+// recibiendo un mensaje de error desde el componiente padre
+watch(
+  () => props.errorMessage,
+  () => {
+    errorMsg.value = props.errorMessage;
+  },
+);
+
+// ... o desde aqui mismo
+watch(errorMsg, () => {
+  error.value = errorMsg.value != null;
+});
 </script>

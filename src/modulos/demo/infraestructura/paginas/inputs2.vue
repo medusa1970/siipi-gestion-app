@@ -55,7 +55,8 @@
       requerido
       :validate="validate"
     />
-
+￼
+WillCh — hoy a las 10:40
     <q-btn label="submit" @click="formSubmit" />
   </q-form>
 </template>

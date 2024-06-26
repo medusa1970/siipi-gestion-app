@@ -19,8 +19,8 @@
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
-    <template #after>
-      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
+    <template #after v-if="info && info.length > 0">
+      <input-botonAyuda :mensaje="info" />
     </template>
     <template #file>
       <q-img v-if="preview" :src="preview"></q-img>

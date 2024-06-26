@@ -47,7 +47,6 @@ export const useRules = {
 
   // validación de numero de telefono
   phone(val: any): string | true {
-    if (!val) return 'Telefono es requerido';
     if (val.length != 8) return 'Debe contener 8 caracteres.';
     return true;
   },

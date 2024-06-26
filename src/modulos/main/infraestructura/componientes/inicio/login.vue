@@ -6,52 +6,33 @@
       </q-avatar>
       <div class="mt-2 mb-2">Login SIIPIGES</div>
     </div>
-    <q-input
-      v-model="usuarioInput"
-      type="text"
-      label="Usuario"
-      ref="usuarioInputRef"
-      :rules="[useRules.req('El usuario es obligatorio')]"
-      :error="usuarioInputErr !== null"
-      outlined
-      class="mt-2"
-      clearable
-    >
-      <template #prepend>
-        <q-icon name="person" />
-      </template>
-      <template #error>
-        <div>{{ usuarioInputErr }}</div>
-      </template>
-    </q-input>
 
-    <q-input
-      v-model="pwdInput"
-      type="password"
-      label="Contraseña"
-      ref="pwdInputRef"
-      :rules="[useRules.requerido]"
-      :error="pwdInputErr !== null"
-      outlined
-      clearable
-      class="mt-2"
-    >
-      <template #prepend>
-        <q-icon name="key" />
-      </template>
-      <template #error>
-        <div>{{ pwdInputErr }}</div>
-      </template>
-    </q-input>
-
-    <div class="mt-1 w-full text-center">
-      <q-btn
-        label="Iniciar sesión"
-        @click="submitLogin"
-        color="primary"
-        no-caps
+    <q-form @submit="submit">
+      <input-text
+        label="Usuario"
+        @update="(v) => (usuario = v)"
+        :rules="[useRules.req('El usuario es obligatorio')]"
+        icono="person"
+        dense
+        class="mt-2"
+        clearable
+        :errorMessage="usuarioErr"
       />
-    </div>
+      <input-text
+        type="password"
+        label="Contraseña"
+        @update="(v) => (password = v)"
+        :rules="[useRules.req()]"
+        icono="key"
+        dense
+        class="mt-2"
+        clearable
+        :errorMessage="passwordErr"
+      />
+      <div class="mt-1 w-full text-center">
+        <q-btn label="Iniciar sesión" type="submit" color="primary" no-caps />
+      </div>
+    </q-form>
 
     <div class="mt-2 w-full text-center">
       <q-btn
@@ -78,27 +59,18 @@ const emits = defineEmits(['go']);
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const authStore = useAuthStore();
 
-const usuarioInput = ref('');
-const usuarioInputRef = ref(null);
-const usuarioInputErr = ref(null);
-
-const pwdInput = ref('');
-const pwdInputRef = ref(null);
-const pwdInputErr = ref(null);
-
-const submitLogin = async () => {
-  // gestion de errores del formulario
-  resetErrores(usuarioInputErr, pwdInputErr);
-  if (!validarInputs(usuarioInputRef, pwdInputRef)) return false;
-
-  // llamada a la api
+const usuario = ref('');
+const usuarioErr = ref(null);
+const password = ref('');
+const passwordErr = ref(null);
+const submit = async () => {
   try {
-    await authStore.login(usuarioInput.value, pwdInput.value);
+    await authStore.login(usuario.value, password.value);
   } catch (e) {
     if (e === 'B102') {
-      usuarioInputErr.value = 'Usuario inexistente';
+      usuarioErr.value = 'Usuario inexistente';
     } else if (e === 'B104') {
-      pwdInputErr.value = 'Contraseña incorrecta';
+      passwordErr.value = 'Contraseña incorrecta';
     } else {
       NotifyError(`Error no tratado: ${e}`);
     }

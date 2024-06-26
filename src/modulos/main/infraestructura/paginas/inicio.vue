@@ -68,7 +68,6 @@
       </div>
     </Transition>
   </div>
-  {{ foo }}
 </template>
 
 <script setup>
@@ -114,18 +113,6 @@ authStore.$subscribe((mutation, state) => {
   if (state.usuario && state.negocio) {
     NotifySucess(`Negocio elegido: ${state.negocio.nombre}`);
   }
-  // if (state.usuario && !state.negocio) {
-  //   NotifySucess(`Bienvenido al sistema ${state.usuario.nombre}`);
-  // }
-  // if (!state.usuario && mutation.payload?.token === null) {
-  //   NotifySucess(`Hasta pronto!`);
-  // }
-  // if (!state.usuario && mutation.payload?.token !== null) {
-  //   NotifyError(`Datos incorrectos, intente de nuevo`);
-  // }
-  // if (!state.usuario && mutation.payload?.token === null) {
-  //   NotifySucess(`Hasta pronto!`);
-  // }
 });
 </script>
 

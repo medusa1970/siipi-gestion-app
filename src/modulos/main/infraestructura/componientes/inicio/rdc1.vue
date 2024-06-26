@@ -7,28 +7,21 @@
       <div class="mt-2 mb-2">Recupera tu contraseña (1/3)</div>
     </div>
 
-    <q-input
-      v-model="correoInput"
-      type="email"
-      label="Tu correo electronico"
-      ref="correoInputRef"
-      :rules="[useRules.req(), useRules.email()]"
-      :error="correoInputErr !== null"
-      outlined
-    >
-      <template #error>
-        <div>{{ correoInputErr }}</div>
-      </template>
-    </q-input>
-
-    <div class="w-full text-center">
-      <q-btn
-        label="Enviar codigo"
-        @click="submitRdc1"
-        color="primary"
-        no-caps
+    <q-form @submit="submit">
+      <input-text
+        label="Correo electronico"
+        @update="(v) => (correo = v)"
+        :rules="[useRules.req(), useRules.email()]"
+        icono="email"
+        dense
+        class="mt-2"
+        clearable
+        :errorMessage="correoErr"
       />
-    </div>
+      <div class="mt-1 w-full text-center">
+        <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
+      </div>
+    </q-form>
 
     <div class="w-full text-center">
       <q-btn label="volver" @click="emits('go', 'login')" dense flat no-caps />
@@ -39,32 +32,20 @@
 <script setup>
 const emits = defineEmits(['go']);
 import { useAuth } from '~/modulos/main/API/useAuth';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-const authStore = useAuthStore();
-const router = useRouter();
 
-const correoInput = ref('');
-const correoInputRef = ref(null);
-const correoInputErr = ref(null);
-
-const submitRdc1 = async () => {
-  // gestion de errores del formulario
-  resetErrores(correoInputErr);
-  if (!validarInputs(correoInputRef)) return false;
-
-  // llamada a la api
+const correo = ref('');
+const correoErr = ref(null);
+const submit = async () => {
   try {
-    const res = await useAuth.pedirRDC(correoInput.value);
+    const res = await useAuth.pedirRDC(correo.value);
   } catch (e) {
     if (e === 'B106') {
-      correoInputErr.value = 'Email desconocido';
+      correoErr.value = 'Email desconocido';
     } else {
       NotifyError(`Error no tratado: ${e}`);
     }
     return false;
   }
-
-  // cambiar a la seccion siguiente
   emits('go', 'rdc2');
 };
 </script>

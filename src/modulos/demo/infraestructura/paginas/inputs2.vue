@@ -1,10 +1,12 @@
 <template>
-  <q-form @submit="formSubmit">
+  <q-form>
     <p>Input text, value = {{ log(refText) }}</p>
     <input-text
+      type="password"
       label="Texto 1"
       @update="(v) => (refText = v)"
       :default="refText"
+      :validate="validate"
       :rules="[useRules.requerido]"
       dense
       clearable
@@ -16,6 +18,7 @@
       info="(una pequeña ayuda aquí)"
       @update="(v) => (refText2 = v)"
       :default="refText2"
+      :validate="validate"
       :rules="[refText2_rule]"
       dense
     />
@@ -28,6 +31,7 @@
       :default="refSelect"
       requerido
       :icono="work"
+      :validate="validate"
     />
 
     <p>Input image, value = {{ log64(refImage64) }}</p>
@@ -39,6 +43,7 @@
       requerido
       icono="photo_camera"
       maxSizeKb="20"
+      :validate="validate"
     />
 
     <p>Input textarea, value = {{ log(refTextarea) }}</p>
@@ -48,9 +53,10 @@
       @update="(v) => (refTextarea = v)"
       :default="refTextarea"
       requerido
+      :validate="validate"
     />
 
-    <q-btn label="submit" type="submit" />
+    <q-btn label="submit" @click="formSubmit" />
   </q-form>
 </template>
 
@@ -83,7 +89,11 @@ const refText2_rule = (val) => {
 };
 
 // para pasar un ordén de validación a los inputs
-const formSubmit = () => {};
+const validate = ref(null);
+const formSubmit = () => {
+  trigger(validate);
+  console.log(this.$refs);
+};
 
 /*
 Use onMounted for components that do not rely on the fetched data for their initial render.

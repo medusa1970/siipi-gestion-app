@@ -11,3 +11,8 @@ export const resetErrores = function (...errs: any[]) {
     err.value = null;
   }
 };
+
+// flag must be a ref
+export const trigger = function (flag: any) {
+  flag.value = !Boolean(flag.value);
+};

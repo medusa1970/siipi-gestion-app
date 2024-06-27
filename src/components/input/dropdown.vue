@@ -95,6 +95,7 @@ const props = defineProps({
   clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
   dense: { type: Boolean, default: false }, // mas compacto
   clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
+  componienteAdd: { type: Object, default: null }, // el componiente que va en el dialog
   // validate: Boolean, // para activar la validacion desde el componiente padre
 });
 

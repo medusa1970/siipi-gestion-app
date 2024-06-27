@@ -9,10 +9,12 @@
 
     <q-form @submit="formSubmit">
       <input-text
+        type="password"
         label="Usuario"
         @update="(v) => (usuario.valor = v)"
         :errorMessage="usuario.error"
         :rules="[useRules.requerido('El usuario es obligatorio')]"
+        default="lionel"
         icono="person"
         dense
         clearable
@@ -23,6 +25,7 @@
         @update="(v) => (password.valor = v)"
         :errorMessage="password.error"
         :rules="[useRules.requerido()]"
+        default="Siipi123"
         icono="key"
         dense
         clearable

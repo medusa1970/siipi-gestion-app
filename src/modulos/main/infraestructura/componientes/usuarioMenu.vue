@@ -9,7 +9,7 @@
     >
       <q-list style="min-width: 100px">
         <!-- perfil -->
-        <q-item clickable @click="toggle_editarPerfil">
+        <q-item clickable @click="showRaiz = true">
           <q-item-section avatar>
             <q-avatar>
               <img
@@ -68,7 +68,7 @@
     </q-menu>
   </q-btn>
 
-  <q-dialog v-model="show_editarPerfil">
+  <q-dialog v-model="showRaiz">
     <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
       <q-card-section>
         <div class="flex justify-between">
@@ -84,39 +84,40 @@
         </div>
       </q-card-section>
 
-      <q-form @submit.prevent="editarPerfil">
+      <q-form @submit="editarPerfilSubmit">
         <q-card-section>
           <input-text
             label="Nombre"
-            @update="(v) => (ref_editarPerfil.nombre = v)"
-            :default="ref_editarPerfil.nombre"
+            @update="(v) => (perfil.nombre.valor = v)"
+            :default="perfil.nombre.valor"
+            dense
           />
-          <br />
           <input-text
             label="Apellido"
-            @update="(v) => (ref_editarPerfil.apellido = v)"
-            :default="ref_editarPerfil.apellido"
+            @update="(v) => (perfil.apellido.valor = v)"
+            :default="perfil.apellido.valor"
+            dense
           />
-          <br />
           <input-text
             label="telefono"
-            @update="(v) => (ref_editarPerfil.telefono = v)"
-            :default="ref_editarPerfil.telefono"
+            @update="(v) => (perfil.telefono.valor = v)"
+            :default="perfil.telefono.valor"
+            dense
           />
-          <br />
           <input-text
             label="email"
-            @update="(v) => (ref_editarPerfil.correo = v)"
-            :default="ref_editarPerfil.correo"
+            @update="(v) => (perfil.correo.valor = v)"
+            :default="perfil.correo.valor"
+            :errorMessage="perfil.correo.error"
+            dense
           />
-          <br />
           <input-image
             label="Cambiar imagen"
-            @update="(v) => (ref_editarPerfil.imagen.data = v)"
-            :default="ref_editarPerfil.imagen.data"
+            @update="(v) => (perfil.imagen.valor = v)"
+            :default="perfil.imagen.valor"
             maxSizeKb="500"
+            dense
           />
-          <br />
           <div class="flex justify-center">
             <q-btn
               class="mt-2 mb-1"
@@ -153,50 +154,55 @@ const props = defineProps({
 });
 
 // MODAL editarPerfil
-const show_editarPerfil = ref(false);
-const init_editarPerfil = {
-  nombre: authStore.getUsuario?.nombre,
-  apellido: authStore.getUsuario?.apellido,
-  correo: authStore.getUsuario?.correo,
-  telefono: authStore.getUsuario?.telefono,
-  imagen: {
-    data: '',
-    mimetype: 'image/png',
-  },
+
+const perfil = {
+  nombre: reactiveInput(authStore.getUsuario?.nombre),
+  apellido: reactiveInput(authStore.getUsuario?.apellido),
+  telefono: reactiveInput(authStore.getUsuario?.telefono),
+  correo: reactiveInput(authStore.getUsuario?.correo),
+  imagen: reactiveInput(),
+  show: ref(true),
 };
-const ref_editarPerfil = ref(init_editarPerfil);
-const toggle_editarPerfil = () => {
-  show_editarPerfil.value = !show_editarPerfil.value;
-};
-const editarPerfil = async () => {
+const showRaiz = ref(false);
+
+const editarPerfilSubmit = async () => {
   // en que caso no hubiera usuario ? pero bueno por seguridad
   if (!authStore.getUsuarioId) {
     return false;
   }
 
-  // el backend no puede recibir una imagen con data = ''
-  // trabajemos con una copia
-  const copia_editarPerfil = JSON.parse(JSON.stringify(ref_editarPerfil.value));
-  if (copia_editarPerfil.imagen.data === '') {
-    copia_editarPerfil.imagen = null;
-  }
-
   // modificamos el usuario
+  const datos = {
+    nombre: perfil.nombre.valor,
+    apellido: perfil.apellido.valor,
+    correo: perfil.correo.valor,
+    telefono: perfil.telefono.valor,
+  };
+  if (perfil.imagen.valor) {
+    Object.assign(datos, {
+      imagen: {
+        data: perfil.imagen.valor,
+        mimetype: 'image/png',
+      },
+    });
+  }
   const persona = await usuarioService.editarPerfil(
     authStore.getUsuarioId,
-    copia_editarPerfil,
+    datos,
   );
 
   // success : actualizamos el usuario en el store y cerramos
   if (persona !== null) {
+    try {
+      authStore.editarPerfil(persona);
+    } catch (e) {
+      throw e;
+    }
     NotifySucessCenter('Usuario editado correctamente');
-    authStore.editarPerfil(persona);
-    show_editarPerfil.value = false;
-    Object.assign(ref_editarPerfil, init_editarPerfil);
   } else {
     NotifyError('Hubo un error, intente de nuevo');
-    show_editarPerfil.value = false;
   }
+  // perfil.show.value = false;
 };
 
 const password = ref('');

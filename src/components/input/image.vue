@@ -6,7 +6,7 @@
     @rejected="handleReject"
     @blur="activarValidacion"
     :label="label + (requerido ? '*' : '')"
-    :hint="hint.replace('{maxSizeKb}', maxSizeKb)"
+    :hint="hint?.replace('{maxSizeKb}', maxSizeKb)"
     :accept="accept"
     :max-total-size="Number(maxSizeKb) * 1024"
     outlined
@@ -34,6 +34,7 @@
 <script setup>
 const props = defineProps({
   label: { type: String, default: null }, // el label que aparece adentro
+  default: { type: Blob, default: null }, // el valor inicial del input
   hint: { type: String, default: null }, // texto de ayuda debajo del input
   info: { type: String, default: null }, // el texto del boton de informacion
   rules: { type: Array, default: [] }, // las reglas de validacion

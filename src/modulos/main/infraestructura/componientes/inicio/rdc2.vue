@@ -7,16 +7,15 @@
       <div class="mt-2 mb-2">Recupera tu contraseña (2/3)</div>
     </div>
 
-    <q-form @submit="submit">
+    <q-form @submit="formSubmit">
       <input-text
         label="Código recibido por mail"
-        @update="(v) => (codigo = v)"
-        :rules="[useRules.req()]"
+        @update="(v) => (codigo.valor = v)"
+        :errorMessage="codigo.error"
+        :rules="[useRules.requerido()]"
         icono="key"
         dense
-        class="mt-2"
         clearable
-        :errorMessage="codigoErr"
       />
       <div class="mt-1 w-full text-center">
         <q-btn no-caps label="siguiente" color="primary" type="submit"></q-btn>
@@ -36,21 +35,24 @@ import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
 
-const codigo = ref('');
-const codigoErr = ref(null);
-const submit = async () => {
+const codigo = reactiveInput();
+
+/**
+ * Submit del formulario
+ */
+const formSubmit = async (datos) => {
   let codigoOk = null;
   try {
-    codigoOk = await useAuth.actuarRDC(codigo.value);
+    codigoOk = await useAuth.actuarRDC(codigo.valor);
   } catch (e) {
     NotifyError(`Error no tratado: ${e}`);
     return false;
   }
   if (codigoOk) {
-    authStore.cookie.rdcToken = codigo.value;
+    authStore.cookie.rdcToken = codigo.valor;
     emits('go', 'rdc3');
   } else {
-    codigoErr.value = 'token inválido';
+    codigo.error = 'token inválido';
   }
 };
 </script>

@@ -7,34 +7,32 @@
       <div class="mt-2 mb-2">Login SIIPIGES</div>
     </div>
 
-    <q-form @submit="submit">
+    <q-form @submit="formSubmit">
       <input-text
         label="Usuario"
-        @update="(v) => (usuario = v)"
-        :rules="[useRules.req('El usuario es obligatorio')]"
+        @update="(v) => (usuario.valor = v)"
+        :errorMessage="usuario.error"
+        :rules="[useRules.requerido('El usuario es obligatorio')]"
         icono="person"
         dense
-        class="mt-2"
         clearable
-        :errorMessage="usuarioErr"
       />
       <input-text
         type="password"
         label="Contraseña"
-        @update="(v) => (password = v)"
-        :rules="[useRules.req()]"
+        @update="(v) => (password.valor = v)"
+        :errorMessage="password.error"
+        :rules="[useRules.requerido()]"
         icono="key"
         dense
-        class="mt-2"
         clearable
-        :errorMessage="passwordErr"
       />
-      <div class="mt-1 w-full text-center">
+      <div class="w-full text-center">
         <q-btn label="Iniciar sesión" type="submit" color="primary" no-caps />
       </div>
     </q-form>
 
-    <div class="mt-2 w-full text-center">
+    <div class="w-full text-center">
       <q-btn
         label="Recuperar contraseña"
         @click="emits('go', 'rdc1')"
@@ -52,6 +50,8 @@
       />
     </div>
   </div>
+
+  {{ passwordErr }}
 </template>
 
 <script setup>
@@ -59,20 +59,20 @@ const emits = defineEmits(['go']);
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const authStore = useAuthStore();
 
-const usuario = ref('');
-const usuarioErr = ref(null);
-const password = ref('');
-const passwordErr = ref(null);
-const submit = async () => {
+const usuario = reactiveInput();
+const password = reactiveInput();
+
+// funcion llamada al hacer submit
+const formSubmit = async (datos) => {
   try {
-    await authStore.login(usuario.value, password.value);
+    await authStore.login(usuario.valor, password.valor);
   } catch (e) {
     if (e === 'B102') {
-      usuarioErr.value = 'Usuario inexistente';
+      usuario.error = 'Usuario inexistente';
     } else if (e === 'B104') {
-      passwordErr.value = 'Contraseña incorrecta';
+      password.error = 'Contraseña incorrecta';
     } else {
-      NotifyError(`Error no tratado: ${e}`);
+      NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
     }
     return false;
   }

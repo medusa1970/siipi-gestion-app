@@ -1,3 +1,4 @@
+import type { CrearCategoriaDto } from '#gql';
 import type { CrearProductoBasico } from '../negocio/producto.interface';
 
 export const productoApiService = {
@@ -40,5 +41,13 @@ export const productoApiService = {
         busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
     );
+  },
+
+  /**
+   * Crea una categoria
+   * @returns Categoria
+   */
+  crearCategoria: async (categoria: CrearCategoriaDto) => {
+    return extraer(await GqlProductosCrearCategoria({ categoria }));
   },
 };

@@ -1,38 +1,14 @@
 <template>
   <q-form @submit="formSubmit">
-    <p>Input image, value = {{ log64(refImage64) }}</p>
-    <input-image
-      label="Imagen"
-      info="(una pequeña ayuda aquí)"
-      @update="(v) => (refImage64 = v)"
-      :default="refImage64"
-      icono="photo_camera"
-      maxSizeKb="2000"
-      :rules="[useRules.requerido]"
-      clearable
-    />
-
-    <p>Input select, value = {{ log(refSelect) }}</p>
-    <input-dropdown
-      label="Categoria"
-      :options="categoriaOptions"
-      info="(una pequeña ayuda aquí)"
-      @update="(v) => (refSelect = v)"
-      :rules="[useRules.requerido, NoMasita]"
-      :default="refSelect"
-      dense
-      clearable
-    />
-
     <p>Input text, value = {{ log(refText) }}</p>
     <input-text
-      tipo="textarea"
       label="Texto 1"
       @update="(v) => (refText = v)"
       :default="refText"
-      :rules="[useRules.requerido, NoMasita2]"
+      :rules="[useRules.requerido(), NoMasita2]"
       dense
       clearable
+      :validate="validate"
     />
 
     <p>Input text, value = {{ log(refText2) }}</p>
@@ -43,8 +19,36 @@
       :default="refText2"
       :rules="[refText2_rule]"
       dense
+      clearable
+      :validate="validate"
     />
 
+    <p>Input image, value = {{ log64(refImage64) }}</p>
+    <input-image
+      label="Imagen"
+      info="(una pequeña ayuda aquí)"
+      @update="(v) => (refImage64 = v)"
+      :default="refImage64"
+      icono="photo_camera"
+      maxSizeKb="200"
+      :rules="[useRules.requerido()]"
+      clearable
+      :validate="validate"
+    />
+
+    <p>Input select, value = {{ log(refSelect) }}</p>
+    <input-dropdown
+      label="Categoria"
+      :options="categoriaOptions"
+      info="(una pequeña ayuda aquí)"
+      @update="(v) => (refSelect = v)"
+      :rules="[useRules.requerido(), NoMasita]"
+      :default="refSelect"
+      dense
+      clearable
+      :validate="validate"
+      :componienteAdd="componienteAdd"
+    />
     <q-btn label="submit" type="submit" />
   </q-form>
 </template>
@@ -54,6 +58,9 @@ import { onMounted } from 'vue';
 import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
 const productoService = useProductoService();
 
+import comp from '~/modulos/main/infraestructura/componientes/agregarCategoria.vue';
+const componienteAdd = ref(comp);
+
 definePageMeta({
   layout: 'inicio',
 });
@@ -62,7 +69,9 @@ const log = (val) => (val === null ? 'null' : val === '' ? "''" : val);
 const log64 = (val) => (val === null ? 'null' : val === '' ? "''" : '<data>');
 
 // select
-const categoriaOptions = ref(await productoService.categoriaSelectOptions());
+const categoriaOptions = ref(
+  await productoService.categoriaSelectOptions(true),
+);
 const refSelect = ref(null);
 
 // number, image, textarea
@@ -77,16 +86,17 @@ const refText2_rule = (val) => {
   return val !== refText.value ? 'Debe ser lo mismo que input text 1' : true;
 };
 const NoMasita = (val) => {
-  return val.value === '65c7ce11ce1b515075092db9'
-    ? 'No puede ser una masita'
-    : true;
+  return val === '65c7ce11ce1b515075092db9' ? 'No puede ser una masita' : true;
 };
 const NoMasita2 = (val) => {
   return val === 'masita' ? 'No puede ser una masita' : true;
 };
 
 // para pasar un ordén de validación a los inputs
-const formSubmit = () => {};
+const validate = ref(null);
+const formSubmit = () => {
+  console.log('ok');
+};
 
 /*
 Use onMounted for components that do not rely on the fetched data for their initial render.

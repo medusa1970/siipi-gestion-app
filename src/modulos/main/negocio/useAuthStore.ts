@@ -1,5 +1,5 @@
 import { useAuth } from '~/modulos/main/API/useAuth';
-import type { Empleado, Entidad, Persona } from '#gql';
+import type { ConexionResponse, Empleado, Entidad, Persona } from '#gql';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -82,59 +82,57 @@ export const useAuthStore = defineStore('auth', {
      * Login
      */
     async login(usuario: string, contrasena: string) {
+      let entidades: Entidad[];
+      let loginResponse: ConexionResponse;
+
       try {
-        // login
-        const loginResponse = await useAuth.login(usuario, contrasena);
-
-        // entidades del usuario
-        const entidades = await useAuth.buscarEntidadesDeUsuario(
-          loginResponse.token,
-        );
-
-        // negocios del usuario filtrando los empleados de las entidad
-        const negocios = entidades.map((entidad) => {
-          const empleado = entidad.empleados.find(
-            (empleado) => empleado.persona.usuario === loginResponse.usuario,
-          ) as Empleado;
-          return {
-            _id: entidad._id,
-            nombre: entidad.nombre,
-            tipo: entidad.tipo,
-            cargos: empleado.cargos.map((cargo) => {
-              return { nombre: cargo.nombre };
-            }),
-            permisos: empleado.permisos.map((permiso) => {
-              return permiso.permiso;
-            }),
-          } as NegocioUsuario;
-        });
-
-        // agregamos el negocio 'cliente'
-        negocios.push({
-          _id: '665ff01b7aa0f5756c88656e',
-          nombre: 'Cliente',
-          tipo: 'CLIENTELA',
-          cargos: [],
-          permisos: [],
-        });
-
-        // patcheamos el store
-        this.$patch({
-          token: loginResponse.token,
-          usuario: {
-            _id: loginResponse.personaId,
-            usuario: loginResponse.usuario,
-            nombre: loginResponse.nombre,
-            apellido: loginResponse.apellido,
-            correo: loginResponse.correo,
-            telefono: loginResponse.telefono,
-            cloudinaryUrl: loginResponse.cloudinaryUrl,
-            negocios: negocios,
-          },
-        });
+        loginResponse = await useAuth.login(usuario, contrasena);
+        entidades = await useAuth.buscarEntidadesDeUsuario(loginResponse.token);
       } catch (e) {
         throw e;
       }
+
+      // negocios del usuario filtrando los empleados de las entidad
+      const negocios = entidades.map((entidad) => {
+        const empleado = entidad.empleados.find(
+          (empleado) => empleado.persona.usuario === loginResponse.usuario,
+        ) as Empleado;
+        return {
+          _id: entidad._id,
+          nombre: entidad.nombre,
+          tipo: entidad.tipo,
+          cargos: empleado.cargos.map((cargo) => {
+            return { nombre: cargo.nombre };
+          }),
+          permisos: empleado.permisos.map((permiso) => {
+            return permiso.permiso;
+          }),
+        } as NegocioUsuario;
+      });
+
+      // agregamos el negocio 'cliente'
+      negocios.push({
+        _id: '665ff01b7aa0f5756c88656e',
+        nombre: 'Cliente',
+        tipo: 'CLIENTELA',
+        cargos: [],
+        permisos: [],
+      });
+
+      // patcheamos el store
+      this.$patch({
+        token: loginResponse.token,
+        usuario: {
+          _id: loginResponse.personaId,
+          usuario: loginResponse.usuario,
+          nombre: loginResponse.nombre,
+          apellido: loginResponse.apellido,
+          correo: loginResponse.correo,
+          telefono: loginResponse.telefono,
+          cloudinaryUrl: loginResponse.cloudinaryUrl,
+          negocios: negocios,
+        },
+      });
     },
 
     /**

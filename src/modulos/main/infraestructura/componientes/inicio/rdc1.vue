@@ -7,16 +7,15 @@
       <div class="mt-2 mb-2">Recupera tu contraseña (1/3)</div>
     </div>
 
-    <q-form @submit="submit">
+    <q-form @submit="formSubmit">
       <input-text
         label="Correo electronico"
-        @update="(v) => (correo = v)"
-        :rules="[useRules.req(), useRules.email()]"
+        @update="(v) => (correo.valor = v)"
+        :errorMessage="correo.error"
+        :rules="[useRules.requerido(), useRules.correo()]"
         icono="email"
         dense
-        class="mt-2"
         clearable
-        :errorMessage="correoErr"
       />
       <div class="mt-1 w-full text-center">
         <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
@@ -33,14 +32,17 @@
 const emits = defineEmits(['go']);
 import { useAuth } from '~/modulos/main/API/useAuth';
 
-const correo = ref('');
-const correoErr = ref(null);
-const submit = async () => {
+const correo = reactiveInput();
+
+/**
+ * Submit del formulario
+ */
+const formSubmit = async (datos) => {
   try {
-    const res = await useAuth.pedirRDC(correo.value);
+    const res = await useAuth.pedirRDC(correo.valor);
   } catch (e) {
     if (e === 'B106') {
-      correoErr.value = 'Email desconocido';
+      correo.error = 'Email desconocido';
     } else {
       NotifyError(`Error no tratado: ${e}`);
     }

@@ -4,6 +4,7 @@
     ref="localRef"
     @update:model-value="handleChange"
     @rejected="handleReject"
+    @blur="activarValidacion"
     :label="label + (requerido ? '*' : '')"
     :hint="hint.replace('{maxSizeKb}', maxSizeKb)"
     :accept="accept"
@@ -32,115 +33,103 @@
 
 <script setup>
 const props = defineProps({
-  // el label del input
-  label: { type: String, default: null },
-
-  // texto de ayuda debajo del input
-  hint: { type: String, default: 'Tamaño máximo {maxSizeKb}Kb' },
-
-  // el texto del boton de informacion
-  info: { type: String, default: null },
-
-  // las reglas de validacion
-  rules: { type: Array, default: [] },
-
-  // el icono en prepend
-  icono: { type: String, default: null },
-
-  // mensaje de error personalizado desde el componiente padre
-  errorMessage: { type: String, default: null },
-
-  // extensiones de archivos autorizadas
-  accept: { type: String, default: '.jpg, .png, .jpeg' },
-
-  // tamaño maximo en Kb
-  maxSizeKb: { type: String, default: '500' },
+  label: { type: String, default: null }, // el label que aparece adentro
+  hint: { type: String, default: null }, // texto de ayuda debajo del input
+  info: { type: String, default: null }, // el texto del boton de informacion
+  rules: { type: Array, default: [] }, // las reglas de validacion
+  icono: { type: String, default: null }, // el icono en prepend
+  errorMessage: { type: String, default: null }, // msj de error desde el componiente padre
+  clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
+  dense: { type: Boolean, default: false }, // mas compacto
+  clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
+  accept: { type: String, default: '.jpg, .png, .jpeg' }, // extenciones de archivo validas
+  maxSizeKb: { type: String, default: '500' }, // tamaño maximo en Kb
+  // validate: Boolean, // para activar la validacion desde el componiente padre
 });
 
 // refs
-const localModel = ref('');
-const localRef = ref(null);
-const preview = ref('');
-const error = ref(false);
-const errorMsg = ref(props.errorMessage);
-const dense = ref(null);
-const clase = ref(null);
-const clearable = ref(null);
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+const localModel = ref(props.default); // contenido del input
+const localRef = ref(null); // referencia del input
+const error = ref(false); // si se tiene que mostrar o no el error
+const errorMsg = ref(props.errorMessage); // el mensaje de error
+const preview = ref(''); // el archivo para el preview en base64
 
-// pasando el nuevo valor al componiente padre
-const emits = defineEmits(['update, reject, clear']);
+// computed
+const requerido = props.rules // para saber si el input es requerido
+  .map((rule) => rule.name)
+  .includes('requerido');
+
+// declaracion de los eventos
+const emits = defineEmits(['update', 'error']);
+
+// activar o desactivar el modo de error para el input
+function setError(mensaje) {
+  errorMsg.value = mensaje; // setear el mensaje de error, o resetear todo si es null
+  error.value = mensaje !== null; // activar el error
+  emits('error', error.value); // emitir el error al componiente padre
+}
+
+// funcion de validacion
+function activarValidacion(reset = true) {
+  for (const regla of props.rules) {
+    // para cada regla:
+    const resultado = regla(localModel.value); // aplicar la regla al valor actual
+    if (resultado !== true) {
+      setError(resultado); // mandar el error
+      return; // solo el primer error se manda
+    }
+  }
+  if (reset) {
+    // si no se especifico que no, reinicialisa el error
+    setError(null);
+  }
+}
+
+// llamado cuando cambia el valor del input
 const handleChange = (newValue, oldValue) => {
-  // error.value = false;
-
-  // hemos recibido una imagen ?
+  setError(null); // primero reinicialisemos los errores
   if (newValue instanceof Blob) {
     const lector = new FileReader();
     lector.addEventListener('load', () => {
       const imageBase64 = lector.result;
-      preview.value = imageBase64;
-      emits('update', imageBase64);
+      preview.value = imageBase64; // mandamos el archivo al preview
+      emits('update', imageBase64); // y al componiente padre directamente en base64
     });
     lector.addEventListener('error', () => {
-      errorMsg.value = 'Hubo un problema al cargar la imagen';
+      setError('Hubo un problema al cargar la imagen');
       preview.value = null;
     });
-    lector.readAsDataURL(localModel.value);
+    lector.readAsDataURL(localModel.value); // lo ponemos tambien como valor del input
+  } else {
+    emits('update', null); // si no se subió ningun archivo, avisamo al padre
   }
-
-  // sino
-  else {
-    // if (props.requerido) {
-    //   props.errorMessage = requerido(null);
-    // }
-    emits('update', null);
-  }
+  activarValidacion(false); // activamos la validacion (para el requerido mas que todo)
 };
 
 // hubo un error de tamaño o de extensión de la imagen
 const handleReject = ([event]) => {
+  error.value = true;
   if (event.failedPropValidation == 'max-total-size') {
     errorMsg.value =
       'La imagen debe pesar menos de ' + Number(props.maxSizeKb) + 'KB';
   } else if (event.failedPropValidation == 'accept') {
     errorMsg.value = 'Este archivo no es una imagen';
+  } else {
+    errorMsg.value = 'Algo fue mal, intente de nuevo';
   }
-  emits('reject', event);
+  emits('reject', event); // avisamos al padre
 };
-
-// se borró el campo
-const handleClear = (event) => {
-  emits('clear', event);
-};
-
-// se borró el campo
-const handleBlur = (event) => {
-  if (!preview.value) {
-    // errorMsg.value = useRules.requerido(null);
-  }
-};
-
-// recibiendo un ordén de validación desde el componiente padre
-// sirve para actualizacion cuando se llama por @click en vez de @submit
-watch(
-  () => props.validate,
-  () => {
-    // localRef.value.resetValidation();
-    localRef.value?.validate();
-  },
-  { immediate: false },
-);
 
 // recibiendo un mensaje de error desde el componiente padre
 watch(
-  () => props.errorMessage,
-  () => {
-    errorMsg.value = props.errorMessage;
-  },
+  () => props.errorMessage, // si cambia el ref en el componiente padre,
+  () => setError(props.errorMessage), // activamos el error
 );
 
-// ... o desde aqui mismo
-watch(errorMsg, () => {
-  error.value = errorMsg.value != null;
-});
+// // validacion desde el componiente padre
+// watch(
+//   () => props.validate, // si cambia la ref validate en el componiente padre,
+//   () => activarValidacion(), // se activa la validacion
+//   { immediate: false },
+// );
 </script>

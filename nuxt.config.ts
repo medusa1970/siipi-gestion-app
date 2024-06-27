@@ -15,6 +15,11 @@ export default defineNuxtConfig({
         },
       },
     },
+    resolve: {
+      alias: {
+        '@modulos': '/home/leo/Workspace/siipi-gestion-app/src/modulos',
+      },
+    },
   },
   modules: [
     '@nuxtjs/tailwindcss',

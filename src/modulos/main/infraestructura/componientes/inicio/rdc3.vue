@@ -11,21 +11,19 @@
       <input-text
         type="password"
         label="Contraseña"
-        @update="(v) => (password = v)"
-        :rules="[useRules.req(), useRules.password]"
+        @update="(v) => (password.valor = v)"
+        :rules="[useRules.requerido(), useRules.password]"
         icono="key"
         dense
-        class="mt-2"
         clearable
       />
       <input-text
         type="password"
         label="Repetir"
-        @update="(v) => (password2 = v)"
+        @update="(v) => (password2.valor = v)"
         :rules="[password2Rule]"
         icono="key"
         dense
-        class="mt-2"
         clearable
       />
       <div class="mt-1 w-full text-center">
@@ -45,14 +43,21 @@ import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const authStore = useAuthStore();
 
-const password = ref('');
-const password2 = ref('');
+const password = reactiveInput();
+const password2 = reactiveInput();
 const password2Rule = (p) => {
-  return p !== password.value ? 'Las contraseñas no coinciden' : true;
+  return p !== password.valor ? 'Las contraseñas no coinciden' : true;
 };
-const submit = async () => {
+
+/**
+ * Submit del formulario
+ */
+const formSubmit = async (datos) => {
   try {
-    await useAuth.actuarRDC(authStore.cookie.rdcToken, password.value);
+    const res = await useAuth.actuarRDC(
+      authStore.cookie.rdcToken,
+      password.valor,
+    );
   } catch (e) {
     NotifyError(`Error no tratado: ${e}`);
     return false;

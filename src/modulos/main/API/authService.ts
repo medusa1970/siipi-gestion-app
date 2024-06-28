@@ -1,20 +1,6 @@
 import type { ConexionResponse, CrearPersonaDto, Entidad, Persona } from '#gql';
 
-<<<<<<< HEAD:src/modulos/main/API/useAuth.ts
 export const useAuth = {
-=======
-export interface PersonaProps {
-  _id?: string;
-  usuario: string;
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  correo: string;
-  contrasena: string;
-}
-
-export const authService = {
->>>>>>> will-productos:src/modulos/main/API/authService.ts
   /**
    * Efectua un pedido de conexion por token jwt
    * @returns { persona, entidad, permisos, cargos }

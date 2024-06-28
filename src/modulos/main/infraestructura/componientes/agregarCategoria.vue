@@ -33,10 +33,11 @@ const props = defineProps({
 
 // imports & composables
 import type { CrearCategoriaDto } from '#gql';
-import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
-const productoService = useProductoService();
+import { useProducto } from '~/modulos/productos/negocio/producto.composable';
+const productoService = useProducto();
 
 // recuperacion de todas las opciones de nivel uno
+// @ts-ignore
 const categoriasNivelUno = await productoService.categoriaSelectOptions1nivel();
 
 // reactives

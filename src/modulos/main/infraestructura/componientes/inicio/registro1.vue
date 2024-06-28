@@ -12,44 +12,29 @@
         label="Nombre"
         @update="(v) => (nombre.value = v)"
         :rules="[useRules.requerido()]"
-        class="mt-2"
-        clearable
-        dense
       />
       <input-text
         label="Apellido"
         @update="(v) => (apellido.value = v)"
         :rules="[useRules.requerido()]"
-        class="mt-2"
-        clearable
-        dense
       />
       <input-text
         label="Usuario"
         @update="(v) => (usuario.value = v)"
-        :errorMessage="usuario.error"
+        :error="usuario.error"
         :rules="[useRules.requerido()]"
-        class="mt-2"
-        clearable
-        dense
       />
       <input-text
         label="Correo"
         @update="(v) => (correo.value = v)"
-        :errorMessage="correo.error"
+        :error="correo.error"
         :rules="[useRules.requerido(), useRules.correo()]"
-        class="mt-2"
-        clearable
-        dense
       />
       <input-text
         label="Telefono"
         @update="(v) => (telefono.value = v)"
-        :errorMessage="telefono.value"
+        :error="telefono.value"
         :rules="[useRules.requerido(), useRules.telefono()]"
-        class="mt-2"
-        clearable
-        dense
       />
       <input-text
         type="password"
@@ -57,9 +42,6 @@
         @update="(v) => (password.value = v)"
         :rules="[useRules.requerido(), useRules.password]"
         icono="key"
-        dense
-        class="mt-2"
-        clearable
       />
       <input-text
         type="password"
@@ -67,9 +49,6 @@
         @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
         icono="key"
-        dense
-        class="mt-2"
-        clearable
       />
       <div class="mt-1 w-full text-center">
         <q-btn no-caps label="Confirmar" type="submit" color="primary" />

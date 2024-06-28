@@ -482,7 +482,7 @@ export const useProductoDetalle = () => {
     estado.modal.show_crearProductoProveedor = false;
   };
   const crearProveedorGlobal = async () => {
-    const [proveedorCreado] = await productoService.crearEntidadProveedor({
+    const proveedorCreado = await productoService.crearEntidadProveedor({
       nombre: estado.proveedor.nombre,
       descripcion: estado.proveedor.descripcion,
     });

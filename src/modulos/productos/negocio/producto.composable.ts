@@ -48,6 +48,7 @@ export const useProducto = () => {
       NotifyError('Problema al agregar el producto');
     }
   };
+
   /**
    * Generar una lista de opciones para q-select a partir del
    * arbol de categorias
@@ -90,8 +91,8 @@ export const useProducto = () => {
    * Actualizar la base de datos local de productos
    */
   const actProductosDB = async () => {
-    const productos = await postDataGql(
-      GqlProductosBuscar({
+    const productos = extraer(
+      await GqlProductosBuscar({
         opciones: {
           populate: true,
           sort: '-_modificado -_creado',
@@ -105,6 +106,19 @@ export const useProducto = () => {
     if (res) console.log('Se actualizo la base de datos');
   };
 
+  /**
+   * Agregar una categoria
+   */
+  const crearCategoria = async (
+    datos: CrearCategoriaDto,
+  ): Promise<Categoria> => {
+    const [categoriaCreada] = await productoApiService.crearCategoria(datos);
+    if (categoriaCreada) {
+      // TODO Ajouter la categorie a l'arbol
+      // productoStore.addCategoria(categoriaCreada);
+    }
+    return categoriaCreada;
+  };
   const mostrarInformacionProducto = (producto: Producto) => {
     estado.producto = producto;
     estado.modal.show_informacionProducto = true;
@@ -127,5 +141,6 @@ export const useProducto = () => {
     estado,
     mostrarInformacionProducto,
     irEdicionProducto,
+    crearCategoria,
   };
 };

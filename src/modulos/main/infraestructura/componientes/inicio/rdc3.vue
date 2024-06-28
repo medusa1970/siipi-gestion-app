@@ -14,8 +14,6 @@
         @update="(v) => (password.value = v)"
         :rules="[useRules.requerido(), useRules.password]"
         icono="key"
-        dense
-        clearable
       />
       <input-text
         type="password"
@@ -23,8 +21,6 @@
         @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
         icono="key"
-        dense
-        clearable
       />
       <div class="mt-1 w-full text-center">
         <q-btn label="Confirmar" type="submit" color="primary" no-caps />

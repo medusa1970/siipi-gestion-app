@@ -1,54 +1,56 @@
+import type { Categoria, Entidad, Marca, Medida, Producto } from '#gql';
+import type { CrearCategoriaDto } from '#gql';
+import { extraerUno } from '~/utils/objeto';
 import type { CrearProductoBasico } from '../negocio/producto.interface';
 
 export const productoService = {
   /**
    * Buscar todos los productos
-   * @returns Producto
    */
-  buscarProductos: async () => {
-    const productos = await postDataGql(
-      GqlProductosBuscar({
+  buscarProductos: async (): Promise<Producto[]> =>
+    extraer(
+      await GqlProductosBuscar({
         opciones: {
           populate: true,
           sort: '-_modificado -_creado',
         },
       }),
-    );
-    return productos;
-  },
+    ),
 
   /**
    * Crear una producto con datos basicos
-   * @returns Producto
    */
-  crearProductoBasico: async (datos: CrearProductoBasico) => {
-    // console.log(datos);
-    const producto = await postDataGql(
-      GqlProductosCrearBasico({
+  crearProductoBasico: async (
+    datos: CrearProductoBasico,
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlProductosCrearBasico({
         datos: [datos],
         opciones: { populate: true, aceptarInexistentes: true },
       }),
-    );
-    return producto[0];
-  },
+    ),
 
   /**
    * Busca todas las categorias en forma de arbol
-   * @returns Categoria (con sus hijas populadas)
+   * Retorna una categoria con sus hijas populadas
    */
-  obtenerTodasCategorias: async () => {
-    const arbol = await postDataGql(
-      GqlProductosCategoriaArbol({
+  obtenerTodasCategorias: async (): Promise<Categoria | null> =>
+    extraerUno(
+      await GqlProductosCategoriaArbol({
         busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
-    );
-    // console.log('arbol');
-    // console.log(arbol);
-    return arbol;
-  },
+    ),
+
+  /**
+   * Crea una categoria
+   */
+  crearCategoria: async (
+    categoria: CrearCategoriaDto,
+  ): Promise<Categoria | null> =>
+    extraerUno(await GqlProductosCrearCategoria({ categoria })),
+
   /**
    * Modifica un producto con datos basicos
-   * @returns Producto
    */
   modificarProductoBasico: async (
     productoID: string,
@@ -58,39 +60,33 @@ export const productoService = {
       comentario: string;
       imagen?: { data: any; mimetype: string };
     },
-  ) => {
-    const [producto] = await postDataGql(
-      GqlModificarProductosBasicos({
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductosBasicos({
         busqueda: { _id: [productoID] },
         datos,
         opciones: { populate: true, aceptarInexistentes: true },
       }),
-    );
-    return producto;
-  },
+    ),
+
   /**
    * Buscar todas las marcas globales
-   * @returns Marca
    */
-  buscarMarcas: async () => {
-    const marcas = postDataGql(
-      GqlBuscarMarcas({
+  buscarMarcas: async (): Promise<Marca[]> =>
+    extraer(
+      await GqlBuscarMarcas({
         opciones: { sort: 'nombre' },
       }),
-    );
-    return marcas;
-  },
+    ),
+
   /**
    * Crear una marca global
-   * @returns Marca
    */
-  crearMarca: async (datos: { nombre: string }) => {
-    const [marca] = await postDataGql(GqlCrearMarcas({ datos }));
-    return marca;
-  },
+  crearMarca: async (datos: { nombre: string }): Promise<Marca | null> =>
+    extraerUno(await GqlCrearMarcas({ datos })),
+
   /**
    * Modificar un producto : agregar una marca
-   * @returns Producto
    */
   crearProductosMarca: async (
     productoID: string,
@@ -100,9 +96,9 @@ export const productoService = {
       cantidadMax: number;
       cantidadMin: number;
     },
-  ) => {
-    const [producto] = await postDataGql(
-      GqlModificarProductosMarca({
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductosMarca({
         busqueda: { _id: [productoID] },
         datos: {
           variedades: {
@@ -111,12 +107,10 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return producto;
-  },
+    ),
+
   /**
    * Modificar un producto : agregar una marca
-   * @returns Producto
    */
   modificarProductosMarca: async (
     productoID: string,
@@ -125,9 +119,9 @@ export const productoService = {
       cantidadMax: number;
       cantidadMin: number;
     },
-  ) => {
-    const [producto] = await postDataGql(
-      GqlModificarProductosMarca({
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductosMarca({
         busqueda: { _id: [productoID] },
         datos: {
           variedades: {
@@ -137,38 +131,29 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return producto;
-  },
+    ),
 
   /**
    * Crear una medida global
-   * @returns Medida
    */
-  crearMedida: async (datos: { nombre: string }) => {
-    const [medida] = await postDataGql(GqlCrearMedidas({ datos }));
-    return medida;
-  },
+  crearMedida: async (datos: { nombre: string }): Promise<Medida | null> =>
+    extraerUno(await GqlCrearMedidas({ datos })),
 
   /**
    * Buscar todas las medidas globales
-   * @returns Medida
    */
-  buscarMedidas: async () => {
-    const medidas = await postDataGql(GqlBuscarMedidas());
-    return medidas;
-  },
+  buscarMedidas: async (): Promise<Medida[]> =>
+    extraer(await GqlBuscarMedidas()),
 
   /**
    * Agregar un tipo de empaque a una medida global
-   * @returns Medida
    */
   agregarEmpaqueMedida: async (
     medidaID: string,
     empaque: { nombre: string; abreviacion: string; cantidad: number },
-  ) => {
-    const [medida] = await postDataGql(
-      GqlModificarMedidas({
+  ): Promise<Medida | null> =>
+    extraerUno(
+      await GqlModificarMedidas({
         busqueda: { _id: [medidaID] },
         datos: {
           tipoEmpaques: {
@@ -176,12 +161,10 @@ export const productoService = {
           },
         },
       }),
-    );
-    return medida;
-  },
+    ),
+
   /**
    * Modifica un empaque del producto
-   * @returns PRODUCTO
    */
   modificarEmpaqueProducto: async (
     productoID: string,
@@ -192,9 +175,9 @@ export const productoService = {
       abreviacion: string;
       cantidad: number;
     },
-  ) => {
-    const [producto] = await postDataGql(
-      GqlModificarProductosMedidaEmpaque({
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductosMedidaEmpaque({
         busqueda: { _id: [productoID] },
         datos: {
           empaques: {
@@ -204,28 +187,27 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return producto;
-  },
+    ),
+
   /**
    * Guarda la medida basica del producto
-   * @returns PRODUCTO.medida
    */
-  guardarMedidaProducto: async (productoID: string, medidaID: string) => {
-    const [producto] = await postDataGql(
-      GqlModificarProductoMedida({
+  guardarMedidaProducto: async (
+    productoID: string,
+    medidaID: string,
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductoMedida({
         busqueda: { _id: [productoID] },
         datos: {
           medida: medidaID,
         },
         opciones: { populate: true },
       }),
-    );
-    return producto;
-  },
+    ),
+
   /**
    * Modificar un producto : agregar empaque
-   * @returns Producto
    */
   agregarProductosMedidaEmpaque: async (
     productoID: string,
@@ -235,10 +217,9 @@ export const productoService = {
       abreviacion: string;
       cantidad: number;
     },
-  ) => {
-    console.log(productoID, empaque);
-    const [producto] = await postDataGql(
-      GqlModificarProductosMedidaEmpaque({
+  ): Promise<Producto | null> =>
+    extraerUno(
+      await GqlModificarProductosMedidaEmpaque({
         busqueda: { _id: [productoID] },
         datos: {
           empaques: {
@@ -247,28 +228,29 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return producto;
-  },
+    ),
+
   /**
    * PROVEEDORES PRODUCTO
    */
-  buscarEntidadesProveedor: async () =>
-    postDataGql(
-      GqlBuscarEntidadesProveedor({
+  buscarEntidadesProveedor: async (): Promise<Entidad[]> =>
+    extraer(
+      await GqlBuscarEntidadesProveedor({
         busqueda: {
           tipo: ['PROVEEDOR'],
         },
       }),
     ),
+
   crearEntidadProveedor: async (datos: {
     nombre: string;
     tipo?: string;
     descripcion: string;
-  }) => {
+  }): Promise<Entidad | null> => {
     const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
-    return postDataGql(GqlCrearEntidadProveedor({ datos: datosDefecto }));
+    return extraerUno(await GqlCrearEntidadProveedor({ datos: datosDefecto }));
   },
+
   agregarProveedorProducto: async (
     proveedorId: string,
     servicio: {
@@ -285,9 +267,9 @@ export const productoService = {
         },
       ];
     },
-  ) => {
-    const [proveedor] = await postDataGql(
-      GqlModificarProveedorServicio({
+  ): Promise<Entidad | null> =>
+    extraerUno(
+      await GqlModificarProveedorServicio({
         busqueda: { _id: [proveedorId] },
         datos: {
           servicios: {
@@ -296,9 +278,8 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return proveedor;
-  },
+    ),
+
   modificarProveedorProducto: async (
     proveedorId: string,
     servicioId: string,
@@ -308,9 +289,9 @@ export const productoService = {
       precioConFactura: number;
       precioSinFactura: number;
     },
-  ) => {
-    const [proveedor] = await postDataGql(
-      GqlModificarProveedorServicio({
+  ): Promise<Entidad | null> =>
+    extraerUno(
+      await GqlModificarProveedorServicio({
         busqueda: { _id: [proveedorId] },
         datos: {
           servicios: {
@@ -320,44 +301,41 @@ export const productoService = {
         },
         opciones: { populate: true },
       }),
-    );
-    return proveedor;
-  },
-  buscarProveedoresProducto: async (productoID: string) => {
-    const proveedores = await postDataGql(
-      GqlBuscarEntidadProveedoresProducto({
+    ),
+
+  buscarProveedoresProducto: async (productoID: string): Promise<Entidad[]> =>
+    extraer(
+      await GqlBuscarEntidadProveedoresProducto({
         busqueda: {
           servicios: {
             producto: productoID,
           },
         },
       }),
-    );
-    return proveedores;
-  },
+    ),
+
   /**
    * Borrar un producto
-   * @returns Producto
    */
   borrarProducto: async (
     productoID: string,
     comentario: string = 'test comentario borrar',
     token: any,
-  ) => {
+  ): Promise<Producto | null> => {
     // borramos el producto
-    const [producto] = await postDataGql(
-      GqlBorrarProductos({
+    const [producto] = extraer(
+      await GqlBorrarProductos({
         busqueda: { _id: [productoID] },
       }),
     );
     // en caso de que no se borró nada
     if (!producto) {
       console.log('no se elimino el producto', productoID);
-      return false;
+      return null;
     }
     // creamos la accion
-    const accion = await postDataGql(
-      GqlCrearAccion(
+    const accion = extraer(
+      await GqlCrearAccion(
         {
           datos: {
             // persona: va con el token

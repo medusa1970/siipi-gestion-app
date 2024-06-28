@@ -6,3 +6,7 @@ export const extraer = function (objeto: { [key: string]: any }) {
   const keys = Object.keys(objeto);
   return objeto[keys[0]];
 };
+export const extraerUno = function (objeto: { [key: string]: any }) {
+  const [res] = extraer(objeto);
+  return res;
+};

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import type { dropdownOpcion } from './dropdown.interface';
+import type { DropdownOpcion } from './dropdown.interface';
 
 /**
  * emits
@@ -16,7 +16,7 @@ const emits = defineEmits<{
   (
     // se hizo el update de la lista de opciones
     event: 'update:opciones',
-    opciones: Array<dropdownOpcion>,
+    opciones: Array<DropdownOpcion>,
     posicion: Number,
   ): void;
 }>();
@@ -50,10 +50,10 @@ const formSubmit = async (datos: any) => {
     label: nombre.value,
     value: nombre.value,
     disable: false,
-  } as dropdownOpcion;
+  } as DropdownOpcion;
 
   // logica para insertar la nueva opcion en la lista
-  const opciones = props.opciones as dropdownOpcion[];
+  const opciones = props.opciones as DropdownOpcion[];
   const posicion = opciones.length;
   opciones.splice(posicion, 0, nuevaOpcion);
   emits('update:opciones', opciones, posicion);

@@ -1,7 +1,6 @@
 <template>
   <q-select
     v-model="localModel"
-    ref="localRef"
     @update:model-value="handleChange"
     @filter="filterFn"
     @blur="activarValidacion"
@@ -12,13 +11,14 @@
     fill-input
     hide-selected
     input-debounce="0"
-    outlined
     :clearable="clearable"
     :dense="dense"
+    :filled="filled"
+    :outlined="outlined"
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="errorMensaje"
+    :errorMessage="error"
     options-cover
     options-dense
     :options="listaOpciones"
@@ -69,12 +69,13 @@
           @update:opciones="updateOpciones"
         />
       </q-card-section>
-    </q-card>
-  </q-dialog>
+    </q-card> </q-dialog
+  >!{{ props.dense }}
 </template>
 
 <script setup lang="ts">
-import type { dropdownOpcion } from './dropdown.interface';
+import type { DropdownOpcion } from './dropdown.interface';
+import { withDefaults } from 'vue';
 
 /**
  * emits
@@ -97,37 +98,44 @@ const emits = defineEmits<{
 /**
  * props
  */
-
-const props = defineProps({
-  opciones: Array, // lista de opciones para inicializar la lista (tipo dropdoqnOpcion[])
-  valorInicial: { type: String, default: '' }, // el valor inicial del input
-  label: { type: String, default: null }, // el label que aparece adentro
-  hint: { type: String, default: null }, // texto de ayuda debajo del input
-  info: { type: String, default: null }, // el texto del boton de informacion
-  rules: { type: Array, default: [] }, // las reglas de validacion
-  icono: { type: String, default: null }, // el icono en prepend
-  error: { type: String, default: null }, // msj de error desde el componiente padre
-  clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
-  dense: { type: Boolean, default: false }, // mas compacto
-  clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
-  dialog: { type: Object, default: null }, // el componiente que va en el dialog
-  activarValidacion: { type: Boolean, default: false }, // para activar la validacion desde el componiente padre
-});
+const props = withDefaults(
+  defineProps<{
+    label?: string; // label adentro del input
+    hint?: string; // texto de ayuda debajo del input
+    info: string; // texto de ayuda en el boton de ayuda
+    opciones: DropdownOpcion[]; // lista de opciones del select
+    valorInicial?: string; // valor seleccionado al iniciar
+    rules?: Function[]; // reglas de validacion
+    icono?: string; // icono a mostrar adentro a la isquierda antes del label
+    clase?: string; // clases css o tailwind
+    dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
+    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
+    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    dense?: boolean;
+    outlined?: boolean;
+    filled?: boolean;
+    clearable?: boolean;
+  }>(),
+  {
+    outlined: true,
+    // filled: true,
+    dense: true,
+    clearable: true,
+    clase: 'mt-5 mb-2',
+  },
+);
 
 /**
  * refs, reactives y computed
  */
 
-const localModel = ref(props.valorInicial); // contenido del input
-const localRef = ref(null); // referencia del input
-const listaOpciones = ref(props.opciones); // lista de opciones, copia de props.opciones para trabajar
-const errorFlag = ref(false); // si se tiene que mostrar o no el error
-const errorMensaje = ref(props.error); // el mensaje de error
-const contenidoDialog = ref(props.dialog); // componiente para agregar un nuevo objeto
-const showDialog = ref(false); // mostrar o esconder el dialogo de agregar objeto
-const requerido = (props.rules as Function[])
-  .map((rule) => rule.name)
-  .includes('requerido');
+const localModel = ref<string>(props.valorInicial); // contenido del input
+const listaOpciones = ref<DropdownOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
+const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
+const errorMensaje = ref<string>(props.error); // el mensaje de error
+const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
+const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
 /**
  * metodos
@@ -143,7 +151,7 @@ function setError(mensaje: string | null) {
 
 // activar la validacíon del valor actual del input
 function activarValidacion() {
-  for (const regla of props.rules as Function[]) {
+  for (const regla of props.rules) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {
       setError(resultado);
@@ -163,7 +171,7 @@ const handleChange = (valor: string | null) => {
 function filterFn(valor: string, update: Function) {
   update(() => {
     const needle = valor.toLowerCase();
-    const opciones = props.opciones as dropdownOpcion[];
+    const opciones = props.opciones;
     listaOpciones.value =
       valor === ''
         ? opciones
@@ -174,7 +182,7 @@ function filterFn(valor: string, update: Function) {
 }
 
 // agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(opciones: dropdownOpcion[], posicion: number) {
+function updateOpciones(opciones: DropdownOpcion[], posicion: number) {
   listaOpciones.value = opciones;
   localModel.value = opciones[posicion].value;
   handleChange(opciones[posicion].value);

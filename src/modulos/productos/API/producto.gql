@@ -200,3 +200,16 @@ mutation modificarProductoMedida(
     }
   }
 }
+
+mutation productosCrearCategoria(
+  $categoria: CrearCategoriaDto!
+  $opciones: CrearOpciones = {}
+) {
+  crearCategorias(datos: [$categoria], opciones: $opciones) {
+    _id
+    nombre
+    pariente {
+      _id
+    }
+  }
+}

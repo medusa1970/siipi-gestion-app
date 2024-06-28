@@ -9,26 +9,21 @@
 
     <q-form @submit="formSubmit">
       <input-text
-        type="password"
         label="Usuario"
         @update="(v) => (usuario.value = v)"
-        :errorMessage="usuario.error"
+        :error="usuario.error"
         :rules="[useRules.requerido('El usuario es obligatorio')]"
         default="lionel"
         icono="person"
-        dense
-        clearable
       />
       <input-text
-        type="password"
+        tipo="password"
         label="Contraseña"
         @update="(v) => (password.value = v)"
-        :errorMessage="password.error"
+        :error="password.error"
         :rules="[useRules.requerido()]"
         default="Siipi123"
         icono="key"
-        dense
-        clearable
       />
       <div class="w-full text-center">
         <q-btn label="Iniciar sesión" type="submit" color="primary" no-caps />

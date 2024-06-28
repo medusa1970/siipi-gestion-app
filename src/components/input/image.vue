@@ -1,7 +1,6 @@
 <template>
   <q-file
     v-model="localModel"
-    ref="localRef"
     @update:model-value="handleChange"
     @rejected="handleReject"
     @blur="activarValidacion"
@@ -10,12 +9,13 @@
     :hint="hint?.replace('{maxSizeKb}', maxSizeKb)"
     :accept="accept"
     :max-total-size="Number(maxSizeKb) * 1024"
-    outlined
     :dense="dense"
+    :filled="filled"
+    :outlined="outlined"
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="errorMensaje"
+    :errorMessage="error"
   >
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
@@ -62,7 +62,7 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    valor: Blob | null,
+    valor: string | null,
   ): void;
   (
     // el input está en estado de error de validación
@@ -76,32 +76,42 @@ const emits = defineEmits<{
  * props
  */
 
-const props = defineProps({
-  label: { type: String, default: null }, // el label que aparece adentro
-  valorInicial: { type: Blob, default: null }, // el valor inicial del input
-  valorPreview: { type: Blob, default: null }, // blob solo para preview que no se guarda
-  hint: { type: String, default: null }, // texto de ayuda debajo del input
-  info: { type: String, default: null }, // el texto del boton de informacion
-  rules: { type: Array, default: [] }, // las reglas de validacion
-  icono: { type: String, default: null }, // el icono en prepend
-  error: { type: String, default: null }, // msj de error desde el componiente padre
-  clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
-  dense: { type: Boolean, default: false }, // mas compacto
-  clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
-  accept: { type: String, default: '.jpg, .png, .jpeg' }, // extenciones de archivo validas
-  maxSizeKb: { type: String, default: '500' }, // tamaño maximo en Kb
-  activarValidacion: { type: Boolean, default: false }, // para activar la validacion desde el componiente padre
-});
+const props = withDefaults(
+  defineProps<{
+    accept?: string; // extenciones de archivo validas
+    maxSizeKb?: string; // tamaño maximo en Kb
+    valorInicial?: string; // valor seleccionado al iniciar
+    valorPreview?: string; // valor mostrado al iniciar, sin seleccionar
+    label?: string; // label adentro del input
+    hint?: string; // texto de ayuda debajo del input
+    info: string; // texto de ayuda en el boton de ayuda
+    rules?: Function[]; // reglas de validacion
+    icono?: string; // icono a mostrar adentro a la isquierda antes del label
+    clase?: string; // clases css o tailwind
+    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
+    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    dense?: boolean;
+    outlined?: boolean;
+    filled?: boolean;
+    clearable?: boolean;
+  }>(),
+  {
+    outlined: true,
+    // filled: true,
+    dense: true,
+    clearable: true,
+    clase: 'mt-5 mb-2',
+  },
+);
 
 /**
  * refs, reactives y computed
  */
 
-const preview = ref(null as Blob | null); // contenido del input
-const localModel = ref(null as Blob | null); // contenido del input
-const localRef = ref(null); // referencia del input
-const errorFlag = ref(false); // si se tiene que mostrar o no el error
-const errorMensaje = ref(props.error); // el mensaje de error
+const preview = ref<string>(null); // contenido del input
+const localModel = ref<string | null>(null); // contenido del input
+const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
+const errorMensaje = ref<string>(props.error); // el mensaje de error
 const requerido = (props.rules as Function[])
   .map((rule) => rule.name)
   .includes('requerido');

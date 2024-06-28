@@ -11,11 +11,9 @@
       <input-text
         label="Código recibido por mail"
         @update="(v) => (codigo.value = v)"
-        :errorMessage="codigo.error"
+        :error="codigo.error"
         :rules="[useRules.requerido()]"
         icono="key"
-        dense
-        clearable
       />
       <div class="mt-1 w-full text-center">
         <q-btn no-caps label="siguiente" color="primary" type="submit"></q-btn>

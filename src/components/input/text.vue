@@ -1,22 +1,22 @@
 <template>
   <q-input
-    v-model="localModel"
-    ref="localRef"
     :type="tipo !== 'password' ? tipo : isPwd ? 'password' : 'text'"
+    v-model="localModel"
     @update:model-value="handleChange"
     @blur="activarValidacion"
     :label="label + (requerido ? '*' : '')"
     :rules="rules"
     :hint="hint"
     debounce="400"
-    outlined
-    :autogrow="autogrow"
+    :autogrow="tipo === 'password' ? false : autogrow"
     :clearable="clearable"
     :dense="dense"
+    :filled="filled"
+    :outlined="outlined"
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="errorMensaje"
+    :errorMessage="error"
   >
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
@@ -58,43 +58,43 @@ const emits = defineEmits<{
 /**
  * props
  */
-
-const props = defineProps({
-  type: { type: String, default: 'text' }, // type : text, textarea, autogrow, password
-  valorInicial: { type: String, default: '' }, // el valor inicial del input
-  label: { type: String, default: null }, // el label que aparece adentro
-  hint: { type: String, default: null }, // texto de ayuda debajo del input
-  info: { type: String, default: null }, // el texto del boton de informacion
-  rules: { type: Array, default: [] }, // las reglas de validacion
-  icono: { type: String, default: null }, // el icono en prepend
-  error: { type: String, default: null }, // msj de error desde el componiente padre
-  clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
-  dense: { type: Boolean, default: false }, // mas compacto
-  autogrow: { type: Boolean, default: false }, // autogrow para tipo text
-  clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
-  activarValidacion: { type: Boolean, default: false }, // para activar la validacion desde el componiente padre
-});
+const props = withDefaults(
+  defineProps<{
+    tipo?: 'text' | 'textarea' | 'password'; // text, textarea, password
+    label?: string; // label adentro del input
+    hint?: string; // texto de ayuda debajo del input
+    info: string; // texto de ayuda en el boton de ayuda
+    valorInicial?: string; // valor seleccionado al iniciar
+    rules?: Function[]; // reglas de validacion
+    icono?: string; // icono a mostrar adentro a la isquierda antes del label
+    clase?: string; // clases css o tailwind
+    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
+    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    dense?: boolean;
+    outlined?: boolean;
+    filled?: boolean;
+    clearable?: boolean;
+    autogrow?: boolean;
+  }>(),
+  {
+    tipo: 'text',
+    outlined: true,
+    // filled: true,
+    autogrow: false,
+    dense: true,
+    clearable: true,
+    clase: 'mt-2 mb-1',
+  },
+);
 
 /**
  * refs, reactives y computed
  */
 
-const localModel = ref(props.valorInicial); // contenido del input
-const localRef = ref(null); // referencia del input
-const errorFlag = ref(false); // si se tiene que mostrar o no el error
-const errorMensaje = ref(props.error); // el mensaje de error
-const isPwd = ref(true); // si las letras son visibles o
-const tipo = ref(props.type);
-if (
-  ![
-    'text', // un campo de texto normal
-    'textarea', // un bloque cuadrado de texto fijo
-    'password', // las letras estan escondidas, hay un boton para verlas
-    'number', // un campo de texto normal pero solo se pueden entrar numeros
-  ].includes(tipo.value)
-) {
-  tipo.value = 'text'; // por defecto es text
-}
+const localModel = ref<string>(props.valorInicial); // contenido del input
+const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
+const errorMensaje = ref<string>(props.error); // el mensaje de error
+const isPwd = ref<boolean>(true); // si las letras son visibles o
 const requerido = (props.rules as Function[])
   .map((rule) => rule.name)
   .includes('requerido');

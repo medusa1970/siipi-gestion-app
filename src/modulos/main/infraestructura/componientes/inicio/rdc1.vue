@@ -11,13 +11,11 @@
       <input-text
         label="Correo electronico"
         @update="(v) => (correo.value = v)"
-        :errorMessage="correo.error"
+        :error="correo.error"
         :rules="[useRules.requerido(), useRules.correo()]"
         icono="email"
-        dense
-        clearable
       />
-      <div class="mt-1 w-full text-center">
+      <div class="w-full text-center">
         <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
       </div>
     </q-form>

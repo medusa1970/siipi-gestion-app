@@ -18,7 +18,7 @@
       TABLE
       -->
 
-    <Table badge :rows="productos" :columns="columnsProductos" dense>
+    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <!-- BADGE -->
       <template #dropdown>
         <q-btn
@@ -30,7 +30,7 @@
           padding="4px 10px"
           @click="
             () => {
-              show_crearProductoBasico = true;
+              estado.modal.show_crearProductoBasico = true;
             }
           "
         />
@@ -79,6 +79,11 @@
               dense
               padding="1px"
               size="11px"
+              @click="
+                () => {
+                  mostrarInformacionProducto(props.row);
+                }
+              "
             >
               <q-tooltip> Ver informacion producto </q-tooltip>
             </q-btn>
@@ -90,6 +95,11 @@
               dense
               padding="1px"
               size="10px"
+              @click="
+                () => {
+                  irEdicionProducto(props.row);
+                }
+              "
             >
               <q-tooltip> Editar producto </q-tooltip></q-btn
             >
@@ -105,7 +115,7 @@
   -->
 
   <Dialog2
-    v-model="show_crearProductoBasico"
+    v-model="estado.modal.show_crearProductoBasico"
     title="Crear producto"
     label-btn="Crear"
     :handle-submit="crearProductoBasico"
@@ -122,7 +132,7 @@
         <input-text
           label="Texto"
           info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
-          @update="(v) => (datos_crearProductoBasico.nombre = v)"
+          @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
           requerido
         />
       </div>
@@ -131,9 +141,9 @@
       <div>
         <input-dropdown
           label="Categoria"
-          :options="categoriaOptions"
+          :options="estado.categoriaOptions"
           info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          @update="(v) => (datos_crearProductoBasico.categoria = v)"
+          @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
           requerido
         />
       </div>
@@ -145,7 +155,7 @@
           info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
           @update="
             (v) =>
-              (datos_crearProductoBasico.imagen = {
+              (estado.datos_crearProductoBasico.imagen = {
                 data: v,
                 mimetype: 'image/png',
               })
@@ -159,98 +169,149 @@
         <input-textarea
           labeproductoApiServicel="Textarea"
           info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-          @update="(v) => (datos_crearProductoBasico.comentario = v)"
+          @update="(v) => (estado.datos_crearProductoBasico.comentario = v)"
         />
       </div>
     </template>
   </Dialog2>
+
+  <!-- 
+  VER INFORMACION PRODUCTO
+  -->
+  <Dialog
+    v-model="estado.modal.show_informacionProducto"
+    title="Informacion producto"
+    no-btn
+  >
+    <template #inputsDialog>
+      <!-- <h1 class="font-bold uppercase text-center mb-2 text-blue-800">
+        {{ producto.informacion.nombre }}
+      </h1> -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">NOMBRE:</h1>
+        <p>{{ estado.producto?.nombre }}</p></span
+      >
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">COMENTARIO:</h1>
+        <p>{{ estado.producto?.comentario }}</p></span
+      >
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">CATEGORIA:</h1>
+        <p>{{ estado.producto.categoria?.nombre }}</p></span
+      >
+
+      <!-- MARCAS -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCAS</h1>
+      <div
+        v-for="variedad in estado.producto.variedades"
+        :key="variedad._id"
+        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+      >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">MARCA:</h1>
+          <p>{{ variedad.marca.nombre }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
+          <p>{{ variedad.cantidadMin }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
+          <p>{{ variedad.cantidadMax }}</p></span
+        >
+      </div>
+      <h1 v-if="estado.producto.variedades.length == 0">Sin marcas ...</h1>
+
+      <!-- MEDIDAS -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
+        MEDIDA & EMPAQUES
+      </h1>
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">MEDIDA:</h1>
+        <p v-if="estado.producto?.medida">
+          {{ estado.producto?.medida?.nombre }}
+        </p>
+        <p v-else>sin medida basica...</p>
+      </span>
+      <div
+        v-for="empaque in estado.producto.empaques"
+        :key="empaque.nombre"
+        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+      >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">NOMBRE:</h1>
+          <p>{{ empaque.nombre }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">ABREVIACION:</h1>
+          <p>{{ empaque.abreviacion }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD:</h1>
+          <p>{{ empaque.cantidad }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">MARCA:</h1>
+          <p>{{ empaque.marca.nombre }}</p></span
+        >
+      </div>
+      <h1 v-if="estado.producto.empaques.length == 0">Sin empaques ...</h1>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { columnsProductos } from '@/modulos/productos/infraestructura/utils/columns';
 import ProductoImage from '@/assets/img/producto.png';
-
-// import { columnsProductos } from '~/modulos/productos/infraestructura/utils/columns';
-import { useProducto } from '~/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 
-// types
-// import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-// import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
-
-// composables
-const productoService = useProducto();
 const productoStore = storeProducto();
+
+const {
+  estado,
+  crearProductoBasico,
+  actProductosDB,
+  traerProductos,
+  categoriaSelectOptions,
+  mostrarInformacionProducto,
+  irEdicionProducto,
+} = useProducto();
 
 // layout
 definePageMeta({
   layout: 'cathering',
 });
 
-// Refs y reactives
-const row = ref('');
-const options = ref([]);
-const productos = ref<Producto[]>([]);
-// // productos.value = await productoStore.getProductos();
-const categoriaOptions = ref<any[]>([]);
-
-// MODAL crearProductoBasico
-const show_crearProductoBasico = ref(false);
-const init_crearProductoBasico = {
-  nombre: '',
-  categoria: '',
-  comentario: null,
-  imagen: null,
-} as CrearProductoBasico;
-const datos_crearProductoBasico = ref(init_crearProductoBasico);
-const crearProductoBasico = async () => {
-  const productoCreado = await productoService.crearProductoBasico(
-    datos_crearProductoBasico.value,
-  );
-  if (productoCreado !== null) {
-    NotifySucessCenter('Producto agregado correctamente');
-    show_crearProductoBasico.value = false;
-    Object.assign(datos_crearProductoBasico, init_crearProductoBasico);
-  } else {
-    NotifyError('Problema al agregar el producto');
-  }
-};
-
-// subscriptions
-// productoStore.$subscribe((mutation, state) => {
-//   if (mutation.payload.productos) {
-//     productos.value = state.productos;
-//   }
-// });
-
 const { $socket } = useNuxtApp();
 onMounted(async () => {
-  await productoService.traerProductos();
-  productos.value = await productoStore.getProductos();
-  categoriaOptions.value = await productoService.categoriaSelectOptions();
+  await traerProductos();
+  estado.productos = await productoStore.getProductos();
+  estado.categoriaOptions = await categoriaSelectOptions();
 
   // reload de la pagina productos
   let reloaded = localStorage.getItem('reloaded');
   if (reloaded) {
     console.log('Se ha recargado la pagina');
-
-    //cada que recargo la pagina quiero guardar mis productos actuales al indexed
-    // pero me tira un error
-    // await productoService.actualizarProducto(productos.value);
-    await productoStore.actualizarProductos();
+    // await productoStore.actualizarProductos();
   } else {
     console.log('No se ha recargado la pagina');
     localStorage.setItem('reloaded', 'true');
-  } //@ts-ignore
+  }
   $socket.on('cambiosProductos', async (data: any) => {
     console.log('first');
     console.log(data);
-    await productoService.actProductosDB();
+    await actProductosDB();
   });
 });
 
+// onBeforeMount(async () => {
+//   await traerProductos();
+// });
+
 onBeforeUnmount(() => {
-  localStorage.removeItem('reloaded'); //@ts-ignore
+  localStorage.removeItem('reloaded');
   $socket.off('cambiosProductos');
 });
 </script>
@@ -280,5 +341,3 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
 }
 </style>
-~/modulos/productos/negocio/useProducto
-~/modulos/productos/negocio/producto.composable

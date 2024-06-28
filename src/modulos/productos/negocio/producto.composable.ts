@@ -1,12 +1,53 @@
-import type { CrearProductoBasico } from './producto.interface';
 import { productoService } from '../API/productoService';
-import { storeProducto } from './producto.store';
-import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
+import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import localforage from 'localforage';
 
+import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
+import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
+
 export const useProducto = () => {
+  /** DECLARACIONES */
   const productoStore = storeProducto();
   const { $socket } = useNuxtApp();
+  const router = useRouter();
+
+  /** REACTIVOS */
+  const init_crearProductoBasico = {
+    nombre: '',
+    categoria: '',
+    comentario: null,
+    imagen: null,
+  } as CrearProductoBasico;
+
+  const estado = reactive({
+    productos: [] as Producto[],
+    categoriaOptions: [] as any[],
+
+    // modales
+    modal: {
+      show_crearProductoBasico: false,
+      show_informacionProducto: false,
+    },
+    datos_crearProductoBasico: init_crearProductoBasico,
+    producto: {} as Producto,
+  });
+
+  /** FUNCIONES */
+  const crearProductoBasico = async () => {
+    console.log(estado.datos_crearProductoBasico);
+    const productoCreado = await productoService.crearProductoBasico(
+      estado.datos_crearProductoBasico,
+    );
+    if (productoCreado !== null) {
+      NotifySucessCenter('Producto agregado correctamente');
+      await productoStore.addProducto(productoCreado);
+      estado.modal.show_crearProductoBasico = false;
+      // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
+      // estado.datos_crearProductoBasico = init_crearProductoBasico;
+    } else {
+      NotifyError('Problema al agregar el producto');
+    }
+  };
   /**
    * Generar una lista de opciones para q-select a partir del
    * arbol de categorias
@@ -32,23 +73,12 @@ export const useProducto = () => {
   };
 
   /**
-   * Agregar un producto (solo datos basicos)
+   * Traer productos de la base de datos local
    */
-  const crearProductoBasico = async (datos: CrearProductoBasico) => {
-    const productoCreado = await productoService.crearProductoBasico(datos);
-    if (productoCreado) {
-      productoStore.addProducto(productoCreado);
-    }
-    console.log(productoCreado);
-    // El producto creado quiero hacer push en mi indexdb productos
-
-    return productoCreado;
-  };
-
-  //
   const traerProductos = async () => {
+    console.log('first');
     const productosAlmacenados = await localforage.getItem('productos');
-
+    console.log(productosAlmacenados);
     if (!productosAlmacenados) {
       const productos = await productoService.buscarProductos();
       //si existe producto lo guardamos y si no le damos un []
@@ -56,6 +86,9 @@ export const useProducto = () => {
     }
   };
 
+  /**
+   * Actualizar la base de datos local de productos
+   */
   const actProductosDB = async () => {
     const productos = await postDataGql(
       GqlProductosBuscar({
@@ -65,34 +98,34 @@ export const useProducto = () => {
         },
       }),
     );
-    console.log(productos);
     const res = await localforage.setItem(
       'productos',
       productos ? productos : [],
     );
-    console.log(res);
     if (res) console.log('Se actualizo la base de datos');
   };
 
-  // // const deletePeople = (fila) => {
-  // //   storePersona.deletePeople(fila._id);
-  // // };
-  // onMounted(async () => {
-  //   // await storePersona.traerProductos();
-  //   $socket.on('productoChanged', async (data: any) => {
-  //     console.log(data);
-  //     // if (data) await storePersona.traerProductos();
-  //     window.alert('SE CAMBIO PRODUCTOS');
-  //   });
-  // });
-  // onUnmounted(() => {
-  //   $socket.off('productoChanged');
-  // });
+  const mostrarInformacionProducto = (producto: Producto) => {
+    estado.producto = producto;
+    estado.modal.show_informacionProducto = true;
+  };
+
+  const irEdicionProducto = (producto: Producto) => {
+    productoStore.producto = producto;
+    router.push('productos/detalleProducto');
+  };
+
+  /**
+   ***************  DETALLES PRODUCTOS ***************
+   */
 
   return {
     categoriaSelectOptions,
     crearProductoBasico,
     traerProductos,
     actProductosDB,
+    estado,
+    mostrarInformacionProducto,
+    irEdicionProducto,
   };
 };

@@ -6,7 +6,6 @@
 import { productoService } from '../API/productoService';
 import type { Producto, Categoria } from '../API/producto.interfaceApi';
 import localforage from 'localforage';
-import { defineStore } from 'pinia';
 
 interface ProductoStoreProps {
   // producto que se esta editando en el formulario detalle
@@ -49,15 +48,26 @@ export const storeProducto = defineStore('producto', {
      * Si no existe o si se indico refresh=true, lo obtiene de la API
      * @retorne Producto[]
      */
-    getProductos: (state) => {
-      return async (refresh: boolean = false): Promise<Producto[]> => {
-        state.productos = await localforage.getItem('productos');
-        return state.productos as Producto[];
-      };
-    },
+    // getProductos: (state) => {
+    //   return async (refresh: boolean = false): Promise<Producto[]> => {
+    //     state.productos = await localforage.getItem('productos');
+    //     return state.productos as Producto[];
+    //   };
+    // },
   },
 
   actions: {
+    /**
+     * Retorna la lista de los productos
+     * Si no existe o si se indico refresh=true, lo obtiene de la API
+     * @retorne Producto[]
+     */
+    async getProductos(): Promise<Producto[]> {
+      console.log('first');
+      this.productos = await localforage.getItem('productos');
+
+      return this.productos as Producto[];
+    },
     /**
      * Agrega un producto
      * @retorne Producto
@@ -90,5 +100,7 @@ export const storeProducto = defineStore('producto', {
     },
   },
 
-  persist: false,
+  persist: {
+    paths: ['producto'], // Solo persiste 'myPersistentState'
+  },
 });

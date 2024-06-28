@@ -167,7 +167,7 @@ export const useAuthStore = defineStore('auth', {
       if (this.usuario) {
         this.$patch((state) => {
           const nuevo = {};
-          // @ts-expect-error ya averiguamos que existe state.usuario
+          //  ya averiguamos que existe state.usuario
           Object.assign(state.usuario, {
             nombre: persona.nombre,
             apellido: persona.apellido,

@@ -7,6 +7,11 @@ export default defineNuxtConfig({
   devtools: {
     enabled: false,
   },
+  ssr: false,
+  typescript: {
+    typeCheck: false,
+    strict: false,
+  },
   vite: {
     css: {
       preprocessorOptions: {
@@ -57,10 +62,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  // piniaPersistedstate: {
+  //   cookieOptions: {
+  //     sameSite: 'strict',
+  //   },
+  //   storage: 'localStorage',
+  // },
   piniaPersistedstate: {
-    cookieOptions: {
-      sameSite: 'strict',
-    },
     storage: 'localStorage',
   },
   router: {

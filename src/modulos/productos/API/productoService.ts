@@ -46,4 +46,333 @@ export const productoService = {
     // console.log(arbol);
     return arbol;
   },
+  /**
+   * Modifica un producto con datos basicos
+   * @returns Producto
+   */
+  modificarProductoBasico: async (
+    productoID: string,
+    datos: {
+      nombre: string;
+      categoria: string;
+      comentario: string;
+      imagen?: { data: any; mimetype: string };
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosBasicos({
+        busqueda: { _id: [productoID] },
+        datos,
+        opciones: { populate: true, aceptarInexistentes: true },
+      }),
+    );
+    return producto;
+  },
+  /**
+   * Buscar todas las marcas globales
+   * @returns Marca
+   */
+  buscarMarcas: async () => {
+    const marcas = postDataGql(
+      GqlBuscarMarcas({
+        opciones: { sort: 'nombre' },
+      }),
+    );
+    return marcas;
+  },
+  /**
+   * Crear una marca global
+   * @returns Marca
+   */
+  crearMarca: async (datos: { nombre: string }) => {
+    const [marca] = await postDataGql(GqlCrearMarcas({ datos }));
+    return marca;
+  },
+  /**
+   * Modificar un producto : agregar una marca
+   * @returns Producto
+   */
+  crearProductosMarca: async (
+    productoID: string,
+    productoMarca: {
+      imagen: { data: any; mimetype: string };
+      marca: string;
+      cantidadMax: number;
+      cantidadMin: number;
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosMarca({
+        busqueda: { _id: [productoID] },
+        datos: {
+          variedades: {
+            agregar: [productoMarca],
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+  /**
+   * Modificar un producto : agregar una marca
+   * @returns Producto
+   */
+  modificarProductosMarca: async (
+    productoID: string,
+    variedadID: string,
+    productoMarca: {
+      cantidadMax: number;
+      cantidadMin: number;
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosMarca({
+        busqueda: { _id: [productoID] },
+        datos: {
+          variedades: {
+            buscar: { _id: [variedadID] },
+            modificar: productoMarca,
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+
+  /**
+   * Crear una medida global
+   * @returns Medida
+   */
+  crearMedida: async (datos: { nombre: string }) => {
+    const [medida] = await postDataGql(GqlCrearMedidas({ datos }));
+    return medida;
+  },
+
+  /**
+   * Buscar todas las medidas globales
+   * @returns Medida
+   */
+  buscarMedidas: async () => {
+    const medidas = await postDataGql(GqlBuscarMedidas());
+    return medidas;
+  },
+
+  /**
+   * Agregar un tipo de empaque a una medida global
+   * @returns Medida
+   */
+  agregarEmpaqueMedida: async (
+    medidaID: string,
+    empaque: { nombre: string; abreviacion: string; cantidad: number },
+  ) => {
+    const [medida] = await postDataGql(
+      GqlModificarMedidas({
+        busqueda: { _id: [medidaID] },
+        datos: {
+          tipoEmpaques: {
+            agregar: [empaque],
+          },
+        },
+      }),
+    );
+    return medida;
+  },
+  /**
+   * Modifica un empaque del producto
+   * @returns PRODUCTO
+   */
+  modificarEmpaqueProducto: async (
+    productoID: string,
+    empaqueID: string,
+    productoEmpaque: {
+      marca: string;
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    },
+  ) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductosMedidaEmpaque({
+        busqueda: { _id: [productoID] },
+        datos: {
+          empaques: {
+            buscar: { _id: [empaqueID] },
+            modificar: productoEmpaque,
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+  /**
+   * Guarda la medida basica del producto
+   * @returns PRODUCTO.medida
+   */
+  guardarMedidaProducto: async (productoID: string, medidaID: string) => {
+    const [producto] = await postDataGql(
+      GqlModificarProductoMedida({
+        busqueda: { _id: [productoID] },
+        datos: {
+          medida: medidaID,
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+  /**
+   * Modificar un producto : agregar empaque
+   * @returns Producto
+   */
+  agregarProductosMedidaEmpaque: async (
+    productoID: string,
+    empaque: {
+      marca: string;
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    },
+  ) => {
+    console.log(productoID, empaque);
+    const [producto] = await postDataGql(
+      GqlModificarProductosMedidaEmpaque({
+        busqueda: { _id: [productoID] },
+        datos: {
+          empaques: {
+            agregar: [empaque],
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return producto;
+  },
+  /**
+   * PROVEEDORES PRODUCTO
+   */
+  buscarEntidadesProveedor: async () =>
+    postDataGql(
+      GqlBuscarEntidadesProveedor({
+        busqueda: {
+          tipo: ['PROVEEDOR'],
+        },
+      }),
+    ),
+  crearEntidadProveedor: async (datos: {
+    nombre: string;
+    tipo?: string;
+    descripcion: string;
+  }) => {
+    const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
+    return postDataGql(GqlCrearEntidadProveedor({ datos: datosDefecto }));
+  },
+  agregarProveedorProducto: async (
+    proveedorId: string,
+    servicio: {
+      marca: string;
+      producto: string;
+      identificativo: string;
+      precioConFactura: number;
+      precioSinFactura: number;
+      preciosPorMayor: [
+        {
+          cantidadMin: number;
+          precioConFactura: number;
+          precioSinFactura: number;
+        },
+      ];
+    },
+  ) => {
+    const [proveedor] = await postDataGql(
+      GqlModificarProveedorServicio({
+        busqueda: { _id: [proveedorId] },
+        datos: {
+          servicios: {
+            agregar: [servicio],
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return proveedor;
+  },
+  modificarProveedorProducto: async (
+    proveedorId: string,
+    servicioId: string,
+    servicio: {
+      marca: string;
+      identificativo: string;
+      precioConFactura: number;
+      precioSinFactura: number;
+    },
+  ) => {
+    const [proveedor] = await postDataGql(
+      GqlModificarProveedorServicio({
+        busqueda: { _id: [proveedorId] },
+        datos: {
+          servicios: {
+            buscar: { _id: [servicioId] },
+            modificar: servicio,
+          },
+        },
+        opciones: { populate: true },
+      }),
+    );
+    return proveedor;
+  },
+  buscarProveedoresProducto: async (productoID: string) => {
+    const proveedores = await postDataGql(
+      GqlBuscarEntidadProveedoresProducto({
+        busqueda: {
+          servicios: {
+            producto: productoID,
+          },
+        },
+      }),
+    );
+    return proveedores;
+  },
+  /**
+   * Borrar un producto
+   * @returns Producto
+   */
+  borrarProducto: async (
+    productoID: string,
+    comentario: string = 'test comentario borrar',
+    token: any,
+  ) => {
+    // borramos el producto
+    const [producto] = await postDataGql(
+      GqlBorrarProductos({
+        busqueda: { _id: [productoID] },
+      }),
+    );
+    // en caso de que no se borró nada
+    if (!producto) {
+      console.log('no se elimino el producto', productoID);
+      return false;
+    }
+    // creamos la accion
+    const accion = await postDataGql(
+      GqlCrearAccion(
+        {
+          datos: {
+            // persona: va con el token
+            comentario: comentario,
+            producto: producto._id,
+            accion: 'borrado',
+          },
+          opciones: {
+            aceptarInexistentes: true,
+          },
+        },
+        token,
+      ),
+    );
+    // retornamos el producto
+    return producto;
+  },
 };

@@ -74,6 +74,21 @@ mutation productosCrearBasico(
   }
 }
 
+mutation borrarProductos(
+  $busqueda: BuscarProductoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarProductos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+mutation crearAccion($datos: CrearAccionDto!, $opciones: CrearOpciones = {}) {
+  crearAcciones(datos: [$datos], opciones: $opciones) {
+    _id
+  }
+}
+
 query productosCategoriaArbol(
   $busqueda: BuscarCategoriaDto!
   $opciones: BuscarOpciones = {}
@@ -99,6 +114,89 @@ query productosCategoriaArbol(
         #   nombre
         # }
       }
+    }
+  }
+}
+
+mutation modificarProductosBasicos(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    comentario
+    imagen {
+      archivoLocal
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+  }
+}
+
+mutation modificarProductosMarca(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation modificarProductosMedidaEmpaque(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    medida {
+      _id
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+  }
+}
+
+# MODIFICAR MEDIDA PRODUCTO
+mutation modificarProductoMedida(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    medida {
+      _id
+      nombre
     }
   }
 }

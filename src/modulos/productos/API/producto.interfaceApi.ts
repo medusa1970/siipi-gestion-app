@@ -14,6 +14,15 @@ export interface Producto {
   imagen: string;
   variedades: Variedad[];
   empaques: Empaque[];
+  medida: {
+    _id: string;
+    nombre: string;
+    tipoEmpaques: {
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    }[];
+  };
 }
 
 export interface Variedad {

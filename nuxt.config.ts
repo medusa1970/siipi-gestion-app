@@ -7,6 +7,11 @@ export default defineNuxtConfig({
   devtools: {
     enabled: false,
   },
+  ssr: false,
+  typescript: {
+    typeCheck: false,
+    strict: false,
+  },
   vite: {
     css: {
       preprocessorOptions: {
@@ -29,7 +34,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
   ],
-  tailwindcss: {},
+  tailwindcss: {
+    exposeConfig: true,
+    viewer: true,
+    // and more...
+  },
   quasar: {
     plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
     extras: { fontIcons: ['bootstrap-icons'] },
@@ -58,10 +67,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  // piniaPersistedstate: {
+  //   cookieOptions: {
+  //     sameSite: 'strict',
+  //   },
+  //   storage: 'localStorage',
+  // },
   piniaPersistedstate: {
-    cookieOptions: {
-      sameSite: 'strict',
-    },
     storage: 'localStorage',
   },
   router: {

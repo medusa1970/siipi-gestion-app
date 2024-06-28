@@ -134,7 +134,7 @@ import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { authService } from '@/modulos/main/API/authService';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
 
@@ -160,6 +160,50 @@ function toggleLeftDrawer() {
 //     sonido.pause();
 //   }, 10000);
 // };
+<<<<<<< HEAD
+=======
+
+const elegirNegocio = (index, nombre) => {
+  // playSound();
+  $q.dialog({
+    title: `<strong>Entrar a ${nombre}</strong>`,
+    message: '¿Está seguro de cambiar de negocio?',
+    cancel: true,
+    persistent: true,
+    html: true,
+    prompt: {
+      model: contrasena,
+      type: 'password',
+      clearable: true,
+      // native attributes:
+      min: 0,
+      max: 10,
+      step: 2,
+      label: 'Ingrese tu contrasena',
+      outlined: true,
+      dense: true,
+    },
+  }).onOk(async () => {
+    const loginResponse = await authService.login(
+      authStore.getUsuario?.usuario,
+      contrasena.value,
+    );
+    if (!loginResponse) {
+      NotifyError(`contraseña incorrecta`);
+    }
+
+    // el login response ya tiene el nuevo token
+    // authStore.setToken()
+
+    // TODO averiguar suscripcion, etc
+    // TODO BUGs de irala a iralita + cliente
+    authStore.elegirNegocio(index);
+    NotifySucess(`Negocio elegido: ${authStore.getNegocio.nombre}`);
+    router.push(`/${authStore.getNegocio.tipo.toLowerCase()}`);
+    contrasena.value = '';
+  });
+};
+>>>>>>> will-productos
 </script>
 
 <style lang="scss">
@@ -186,3 +230,4 @@ function toggleLeftDrawer() {
 //   width: 340px !important;
 // }
 </style>
+~/modulos/main/API/authService

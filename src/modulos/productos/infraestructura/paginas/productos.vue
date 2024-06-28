@@ -277,6 +277,7 @@ const {
   categoriaSelectOptions,
   mostrarInformacionProducto,
   irEdicionProducto,
+  getProductos,
 } = useProducto();
 
 // layout
@@ -287,7 +288,8 @@ definePageMeta({
 const { $socket } = useNuxtApp();
 onMounted(async () => {
   await traerProductos();
-  estado.productos = await productoStore.getProductos();
+  await getProductos();
+  // estado.productos = await productoStore.getProductos();
   estado.categoriaOptions = await categoriaSelectOptions();
 
   // reload de la pagina productos

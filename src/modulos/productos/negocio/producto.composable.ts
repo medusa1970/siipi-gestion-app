@@ -116,8 +116,12 @@ export const useProducto = () => {
   };
 
   /**
-   ***************  DETALLES PRODUCTOS ***************
+   ***************  STORE PRODUCTO ***************
    */
+  const getProductos = async () => {
+    productoStore.productos = await localforage.getItem('productos');
+    estado.productos = productoStore.productos;
+  };
 
   return {
     categoriaSelectOptions,
@@ -127,5 +131,6 @@ export const useProducto = () => {
     estado,
     mostrarInformacionProducto,
     irEdicionProducto,
+    getProductos,
   };
 };

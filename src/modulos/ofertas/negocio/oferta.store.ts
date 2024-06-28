@@ -5,6 +5,7 @@
 
 import localforage from 'localforage';
 import type { Oferta } from '../API/oferta.interface';
+import { defineStore } from 'pinia';
 
 interface OfertaStore {
   // oferta que se esta editando en el formulario detalle
@@ -23,18 +24,6 @@ export const storeOferta = defineStore('producto', {
 
   getters: {
     getOferta: (state) => state.oferta,
-
-    /**
-     * Retorna la lista de los productos
-     * Si no existe o si se indico refresh=true, lo obtiene de la API
-     * @retorne Producto[]
-     */
-    // getOfertas: (state) => {
-    //   return async (refresh: boolean = false): Promise<Oferta[]> => {
-    //     state.ofertas = await localforage.getItem('ofertas');
-    //     return state.ofertas as Oferta[];
-    //   };
-    // },
   },
 
   actions: {
@@ -44,7 +33,6 @@ export const storeOferta = defineStore('producto', {
      * @retorne Producto[]
      */
     async getOfertas() {
-      console.log('first');
       this.ofertas = await localforage.getItem('ofertas');
       console.log(this.ofertas);
 

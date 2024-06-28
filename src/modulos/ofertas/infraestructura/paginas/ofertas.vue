@@ -148,15 +148,14 @@ import { columnaOfertas } from '../utils/columns';
 import Oferta from '@/assets/img/oferta.png';
 import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
 
-const { estado, traerOfertas, test } = useOferta();
+const { estado, traerOfertas, getOfertas } = useOferta();
 const ofertaStore = storeOferta();
 
 onMounted(async () => {
   await traerOfertas();
-  await test();
+  await getOfertas();
+  // ofertaStore.obtenerOfertas();
 });
-// onBeforeMount(async () => {
-// });
 </script>
 <style scoped>
 /* Estilo base del checkbox */

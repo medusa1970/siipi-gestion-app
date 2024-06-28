@@ -55,9 +55,9 @@ export const useOferta = () => {
     if (res) console.log('Se actualizo la base de datos');
   };
 
-  const test = async () => {
-    console.log('first');
-    estado.ofertas = await ofertaStore.getOfertas();
+  const getOfertas = async () => {
+    ofertaStore.ofertas = await localforage.getItem('ofertas');
+    estado.ofertas = ofertaStore.ofertas;
   };
 
   return {
@@ -65,6 +65,6 @@ export const useOferta = () => {
     traerOfertas,
     actOfertasDB,
     ofertaStore,
-    test,
+    getOfertas,
   };
 };

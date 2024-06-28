@@ -11,7 +11,7 @@
       <input-text
         type="password"
         label="Usuario"
-        @update="(v) => (usuario.valor = v)"
+        @update="(v) => (usuario.value = v)"
         :errorMessage="usuario.error"
         :rules="[useRules.requerido('El usuario es obligatorio')]"
         default="lionel"
@@ -22,7 +22,7 @@
       <input-text
         type="password"
         label="Contraseña"
-        @update="(v) => (password.valor = v)"
+        @update="(v) => (password.value = v)"
         :errorMessage="password.error"
         :rules="[useRules.requerido()]"
         default="Siipi123"
@@ -53,8 +53,6 @@
       />
     </div>
   </div>
-
-  {{ passwordErr }}
 </template>
 
 <script setup>
@@ -68,7 +66,7 @@ const password = reactiveInput();
 // funcion llamada al hacer submit
 const formSubmit = async (datos) => {
   try {
-    await authStore.login(usuario.valor, password.valor);
+    await authStore.login(usuario.value, password.value);
   } catch (e) {
     if (e === 'B102') {
       usuario.error = 'Usuario inexistente';

@@ -11,7 +11,7 @@
       <input-text
         type="password"
         label="Contraseña"
-        @update="(v) => (password.valor = v)"
+        @update="(v) => (password.value = v)"
         :rules="[useRules.requerido(), useRules.password]"
         icono="key"
         dense
@@ -20,7 +20,7 @@
       <input-text
         type="password"
         label="Repetir"
-        @update="(v) => (password2.valor = v)"
+        @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
         icono="key"
         dense
@@ -46,7 +46,7 @@ const authStore = useAuthStore();
 const password = reactiveInput();
 const password2 = reactiveInput();
 const password2Rule = (p) => {
-  return p !== password.valor ? 'Las contraseñas no coinciden' : true;
+  return p !== password.value ? 'Las contraseñas no coinciden' : true;
 };
 
 /**
@@ -56,7 +56,7 @@ const formSubmit = async (datos) => {
   try {
     const res = await useAuth.actuarRDC(
       authStore.cookie.rdcToken,
-      password.valor,
+      password.value,
     );
   } catch (e) {
     NotifyError(`Error no tratado: ${e}`);

@@ -10,7 +10,7 @@
     <q-form @submit="formSubmit">
       <input-text
         label="Código recibido por mail"
-        @update="(v) => (codigo.valor = v)"
+        @update="(v) => (codigo.value = v)"
         :errorMessage="codigo.error"
         :rules="[useRules.requerido()]"
         icono="key"
@@ -43,13 +43,13 @@ const codigo = reactiveInput();
 const formSubmit = async (datos) => {
   let codigoOk = null;
   try {
-    codigoOk = await useAuth.actuarRDC(codigo.valor);
+    codigoOk = await useAuth.actuarRDC(codigo.value);
   } catch (e) {
     NotifyError(`Error no tratado: ${e}`);
     return false;
   }
   if (codigoOk) {
-    authStore.cookie.rdcToken = codigo.valor;
+    authStore.cookie.rdcToken = codigo.value;
     emits('go', 'rdc3');
   } else {
     codigo.error = 'token inválido';

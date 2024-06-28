@@ -10,7 +10,7 @@
     <q-form @submit="submit">
       <input-text
         label="Nombre"
-        @update="(v) => (nombre.valor = v)"
+        @update="(v) => (nombre.value = v)"
         :rules="[useRules.requerido()]"
         class="mt-2"
         clearable
@@ -18,7 +18,7 @@
       />
       <input-text
         label="Apellido"
-        @update="(v) => (apellido.valor = v)"
+        @update="(v) => (apellido.value = v)"
         :rules="[useRules.requerido()]"
         class="mt-2"
         clearable
@@ -26,7 +26,7 @@
       />
       <input-text
         label="Usuario"
-        @update="(v) => (usuario.valor = v)"
+        @update="(v) => (usuario.value = v)"
         :errorMessage="usuario.error"
         :rules="[useRules.requerido()]"
         class="mt-2"
@@ -35,7 +35,7 @@
       />
       <input-text
         label="Correo"
-        @update="(v) => (correo.valor = v)"
+        @update="(v) => (correo.value = v)"
         :errorMessage="correo.error"
         :rules="[useRules.requerido(), useRules.correo()]"
         class="mt-2"
@@ -44,8 +44,8 @@
       />
       <input-text
         label="Telefono"
-        @update="(v) => (telefono.valor = v)"
-        :errorMessage="telefono.valor"
+        @update="(v) => (telefono.value = v)"
+        :errorMessage="telefono.value"
         :rules="[useRules.requerido(), useRules.telefono()]"
         class="mt-2"
         clearable
@@ -54,7 +54,7 @@
       <input-text
         type="password"
         label="Contraseña"
-        @update="(v) => (password.valor = v)"
+        @update="(v) => (password.value = v)"
         :rules="[useRules.requerido(), useRules.password]"
         icono="key"
         dense
@@ -64,7 +64,7 @@
       <input-text
         type="password"
         label="Repetir"
-        @update="(v) => (password2.valor = v)"
+        @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
         icono="key"
         dense
@@ -105,12 +105,12 @@ const password2Rule = (p) =>
 const submit = async () => {
   try {
     const persona = await useAuth.registrar({
-      nombre: nombre.valor,
-      apellido: apellido.valor,
-      usuario: usuario.valor,
-      correo: correo.valor,
-      telefono: telefono.valor,
-      contrasena: password.valor,
+      nombre: nombre.value,
+      apellido: apellido.value,
+      usuario: usuario.value,
+      correo: correo.value,
+      telefono: telefono.value,
+      contrasena: password.value,
     });
     authStore.cookie.registrado = persona;
   } catch (e) {

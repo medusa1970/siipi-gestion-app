@@ -75,40 +75,33 @@ definePageMeta({
   layout: 'inicio',
   // middleware: ['auth'],
 });
-
 import Logo from '@/assets/img/logo.png';
 import { useRoute } from 'vue-router';
 import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import { productoApiService } from '~/modulos/productos/API/productoApiService';
-
 import login from '../componientes/inicio/login.vue';
 import negocios from '../componientes/inicio/negocios.vue';
 import rdc1 from '../componientes/inicio/rdc1.vue';
 import rdc2 from '../componientes/inicio/rdc2.vue';
 import rdc3 from '../componientes/inicio/rdc3.vue';
 import registro1 from '../componientes/inicio/registro1.vue';
-
 const authStore = useAuthStore();
+
+/**
+ * refs
+ */
+
 const page = ref('login');
 if (authStore.getRecienDesconectado()) {
   page.value = 'byebye';
 }
 
-// onMounted(async () => {
-//   let prods;
-//   prods = await loadingAsync(async () => {
-//     await productoApiService.buscarProductos();
-//     await productoApiService.buscarProductos();
-//     await productoApiService.buscarProductos();
-//     await productoApiService.buscarProductos();
-//     await productoApiService.buscarProductos();
-//     return await productoApiService.buscarProductos();
-//   });
-// });
+/**
+ * watch y subscripciones
+ */
 
-// mandamos un mensaje de confirmacion o de error cuando el
-// reactive del state cambia.
+// mandamos un mensaje de confirmacion o de error cuando el reactive del state cambia.
 authStore.$subscribe((mutation, state) => {
   if (state.usuario && state.negocio) {
     NotifySucess(`Negocio elegido: ${state.negocio.nombre}`);

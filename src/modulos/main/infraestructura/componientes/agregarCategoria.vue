@@ -2,7 +2,7 @@
   <q-form @submit="formSubmit">
     <input-text
       label="Nombre"
-      @update="(v) => (nombre.valor = v)"
+      @update="(v) => (nombre.value = v)"
       :errorMessage="nombre.error"
       :rules="[useRules.requerido()]"
       dense
@@ -11,8 +11,8 @@
 
     <input-dropdown
       label="Categoria"
-      :options="categoriaOptions"
-      @update="(v) => (pariente.valor = v)"
+      :opciones="categoriasNivelUno"
+      @update="(v) => (pariente.value = v)"
       :rules="[useRules.requerido()]"
       dense
       clearable
@@ -23,42 +23,66 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Imports y inicializaciones
- */
-definePageMeta({
-  layout: 'inicio',
+// definicion de los eventos emitibles
+const emits = defineEmits(['update:opciones']);
+
+// props
+const props = defineProps({
+  opciones: Array, // debe pasarlo el dropdown que llamó al componiente
 });
-const emits = defineEmits(['crear:objeto']);
-import { onMounted } from 'vue';
+
+// imports & composables
 import type { CrearCategoriaDto } from '#gql';
 import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
 const productoService = useProductoService();
 
-const nombre = reactiveInput('');
-const pariente = reactiveInput('');
-const catSelect1 = await productoService.categoriaSelectOptions1nivel();
-const categoriaOptions = ref(catSelect1); // opciones para el input pariente
+// recuperacion de todas las opciones de nivel uno
+const categoriasNivelUno = await productoService.categoriaSelectOptions1nivel();
 
+// reactives
+const nombre = reactiveInput(''); // input nombre
+const pariente = reactiveInput(''); // input pariente
+const parienteOpciones = ref(categoriasNivelUno); // opciones para el input pariente
+
+// metodo submit del formulario
 const formSubmit = async (datos: any) => {
-  try {
-    const nuevaCategoria = await productoService.crearCategoria({
-      nombre: nombre.valor,
-      pariente: pariente.valor,
-    } as CrearCategoriaDto);
+  if (!props.opciones) {
+    throw 'prop opciones obligatoria';
+  }
 
-    // find id of next cat nivel1, or null
-    const indexPariente = catSelect1.findIndex(
-      (c) => c.value === pariente.valor,
-    );
-    const insertarAntesDe = catSelect1[indexPariente + 1]?.value;
-    Object.assign(nuevaCategoria, { insertarAntesDe });
-    emits('crear:objeto', nuevaCategoria);
-    NotifySucess(`Categoria creada con éxito`);
+  // agregamos la categoria
+  let nuevaCategoria;
+  try {
+    nuevaCategoria = await productoService.crearCategoria({
+      nombre: nombre.value,
+      pariente: pariente.value,
+    } as CrearCategoriaDto);
   } catch (e: any) {
     NotifyError(`Error no tratado: ${e}`);
-    console.log(e);
     return false;
   }
+  NotifySucess(`Categoria creada con éxito`);
+
+  // la nueva opcion que insertaremos en la lista
+  const nuevaOpcion = {
+    label: nuevaCategoria.nombre,
+    value: nuevaCategoria._id,
+    disable: false,
+  };
+
+  // buscamos el index donde la insertaremos (antes de la categoria de nivel superior que sigue el pariente)
+  const opciones = props.opciones;
+  const indexPariente = categoriasNivelUno.findIndex(
+    (c) => c.value === pariente.value,
+  );
+  const idSiguiente = categoriasNivelUno[indexPariente + 1]?.value;
+  const index = idSiguiente
+    ? // @ts-ignore
+      opciones.findIndex((o) => o.value === idSiguiente)
+    : opciones.length;
+
+  // insertamos la opcion y devolvemos todo via evento
+  opciones.splice(index, 0, nuevaOpcion);
+  emits('update:opciones', opciones, index, nuevaCategoria);
 };
 </script>

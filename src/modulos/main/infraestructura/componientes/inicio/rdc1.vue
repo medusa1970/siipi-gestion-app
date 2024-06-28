@@ -10,7 +10,7 @@
     <q-form @submit="formSubmit">
       <input-text
         label="Correo electronico"
-        @update="(v) => (correo.valor = v)"
+        @update="(v) => (correo.value = v)"
         :errorMessage="correo.error"
         :rules="[useRules.requerido(), useRules.correo()]"
         icono="email"
@@ -39,7 +39,7 @@ const correo = reactiveInput();
  */
 const formSubmit = async (datos) => {
   try {
-    const res = await useAuth.pedirRDC(correo.valor);
+    const res = await useAuth.pedirRDC(correo.value);
   } catch (e) {
     if (e === 'B106') {
       correo.error = 'Email desconocido';

@@ -17,14 +17,14 @@
     :dense="dense"
     :class="clase"
     bottom-slots
-    :error="error"
-    :errorMessage="errorMsg"
+    :error="errorFlag"
+    :errorMessage="errorMensaje"
     options-cover
     options-dense
-    :options="displayOpts"
+    :options="listaOpciones"
     emit-value
     map-options
-    :componienteAdd="componienteAdd"
+    :dialog="dialog"
   >
     <template #no-option>
       <q-item>
@@ -45,159 +45,164 @@
     </template>
     <template #after>
       <q-btn
-        v-if="componienteAdd"
+        v-if="dialog"
         size="12px"
         icon="add"
         color="primary"
         round
         style="height: 16px"
-        @click="showAdd"
+        @click="() => (showDialog = true)"
       ></q-btn>
       <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
     </template>
   </q-select>
 
-  <q-dialog v-model="showAddOpt">
+  <q-dialog v-model="showDialog">
     <q-card>
       <q-card-section class="flex justify-between">
         <div class="mt-2">Agregar un nuevo item</div>
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
       <q-card-section>
-        <formulario-agregar
-          @crear:objeto="
-            (o) => {
-              objetoCreado = o;
-              showAddOpt = false;
-            }
-          "
+        <contenido-dialog
+          :opciones="listaOpciones"
+          @update:opciones="updateOpciones"
         />
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { dropdownOpcion } from './dropdown.interface';
+
+/**
+ * emits
+ */
+
+const emits = defineEmits<{
+  (
+    // cambió el valor del input
+    event: 'update',
+    valor: string | null,
+  ): void;
+  (
+    // el input está en estado de error de validación
+    event: 'error',
+    errorFlag: boolean,
+    errorMensaje: string | null,
+  ): void;
+}>();
+
+/**
+ * props
+ */
+
 const props = defineProps({
-  options: Array, // lista de opciones para inicializar la lista, del tipo :
-  // [{
-  //   label: String;
-  //   value: String;
-  //   disable: Boolean;
-  // }]
-  default: { type: String, default: '' }, // el valor inicial del input
+  opciones: Array, // lista de opciones para inicializar la lista (tipo dropdoqnOpcion[])
+  valorInicial: { type: String, default: '' }, // el valor inicial del input
   label: { type: String, default: null }, // el label que aparece adentro
   hint: { type: String, default: null }, // texto de ayuda debajo del input
   info: { type: String, default: null }, // el texto del boton de informacion
   rules: { type: Array, default: [] }, // las reglas de validacion
   icono: { type: String, default: null }, // el icono en prepend
-  errorMessage: { type: String, default: null }, // msj de error desde el componiente padre
+  error: { type: String, default: null }, // msj de error desde el componiente padre
   clearable: { type: Boolean, default: false }, // una cruz para vaciar el campo
   dense: { type: Boolean, default: false }, // mas compacto
   clase: { type: Boolean, default: false }, // clase css / tailwind a aplicar al input
-  componienteAdd: { type: Object, default: null }, // el componiente que va en el dialog
-  // validate: Boolean, // para activar la validacion desde el componiente padre
+  dialog: { type: Object, default: null }, // el componiente que va en el dialog
+  activarValidacion: { type: Boolean, default: false }, // para activar la validacion desde el componiente padre
 });
 
-// refs
-const localModel = ref(props.default); // contenido del input
+/**
+ * refs, reactives y computed
+ */
+
+const localModel = ref(props.valorInicial); // contenido del input
 const localRef = ref(null); // referencia del input
-const error = ref(false); // si se tiene que mostrar o no el error
-const errorMsg = ref(props.errorMessage); // el mensaje de error
-
-// ref para la lista de opciones que el select ocupa
-const displayOpts = ref(props.options); // trabajamos con una copia del prop para poder filtrar
-watch(
-  () => props.options, // si cambia el prop en el componiente padre,
-  async () => (displayOpts.value = props.options), // lo ponemos al dia aqui
-  { immediate: false },
-);
-const defaultOption = props.options // seteamos la opcion por defecto
-  .find((option) => option.value === props.default);
-
-// computed
-const requerido = props.rules // para saber si el input es requerido
+const listaOpciones = ref(props.opciones); // lista de opciones, copia de props.opciones para trabajar
+const errorFlag = ref(false); // si se tiene que mostrar o no el error
+const errorMensaje = ref(props.error); // el mensaje de error
+const contenidoDialog = ref(props.dialog); // componiente para agregar un nuevo objeto
+const showDialog = ref(false); // mostrar o esconder el dialogo de agregar objeto
+const requerido = (props.rules as Function[])
   .map((rule) => rule.name)
   .includes('requerido');
 
-// declaracion de los eventos
-const emits = defineEmits(['update', 'error']);
+/**
+ * metodos
+ */
 
-// llamado cuando cambia el valor del input
-const handleChange = (newValue, oldValue) => {
-  activarValidacion(); // activar la validacion con el valor actual del input
-  emits('update', newValue, oldValue); // emitir el cambio al componiente padre
-};
-
-// activar o desactivar el modo de error para el input
-function setError(mensaje) {
-  errorMsg.value = mensaje; // setear el mensaje de error, o resetear todo si es null
-  error.value = mensaje !== null; // activar el error
-  emits('error', error.value); // emitir el error al componiente padre
+// activar o deactivar el error para el input (desactiva si param null)
+function setError(mensaje: string | null) {
+  //@ts-ignore
+  errorMensaje.value = mensaje;
+  errorFlag.value = mensaje !== null;
+  emits('error', errorFlag.value, errorMensaje.value);
 }
 
 // activar la validacíon del valor actual del input
 function activarValidacion() {
-  for (const regla of props.rules) {
-    // para cada regla:
-    const resultado = regla(localModel.value); // aplicar la regla al valor actual
+  for (const regla of props.rules as Function[]) {
+    const resultado = regla(localModel.value);
     if (resultado !== true) {
-      setError(resultado); // mandar el error
+      setError(resultado);
       return; // solo el primer error se manda
     }
   }
-  setError(null); // todas las reglas han pasado, reseteamos el error
+  setError(null);
 }
 
-// recibiendo un mensaje de error desde el componiente padre
-watch(
-  () => props.errorMessage, // si cambia el ref en el componiente padre,
-  () => setError(props.errorMessage), // activamos el error
-);
+// metodo llamado cuando el valor del input cambia
+const handleChange = (valor: string | null) => {
+  activarValidacion(); // activar la validacion con el valor actual del input
+  emits('update', valor); // emitir el cambio al componiente padre
+};
 
-// filtrar las opciones al entrar un valor en el input
-function filterFn(val, update) {
+// al entrar un valor en el input, filtra las opciones (no-case)
+function filterFn(valor: string, update: Function) {
   update(() => {
-    const needle = val.toLowerCase(); // filtramos sin distinguir entre mayusc. y minusc.
-    displayOpts.value =
-      val === ''
-        ? props.options // si no hay valor, se muestran todas las opciones
-        : props.options.filter(
-            (v) => !v.disabled && v.label.toLowerCase().indexOf(needle) > -1,
+    const needle = valor.toLowerCase();
+    const opciones = props.opciones as dropdownOpcion[];
+    listaOpciones.value =
+      valor === ''
+        ? opciones
+        : opciones?.filter(
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
           );
   });
 }
 
-// formulario agregar
-const formularioAgregar = ref(props.componienteAdd); // el componiente a cargar
-const objetoCreado = ref(null); //el resultado a agregar a las opciones del select
-const showAddOpt = ref(false); // mostrar el dialog de agregar nuevo elto
-function showAdd() {
-  showAddOpt.value = true;
+// agregar nuevo objeto : el resultado a agregar a las opciones del select
+function updateOpciones(opciones: dropdownOpcion[], posicion: number) {
+  listaOpciones.value = opciones;
+  localModel.value = opciones[posicion].value;
+  handleChange(opciones[posicion].value);
+  activarValidacion();
+  showDialog.value = false;
 }
 
-// recepcion del objeto creado desde el componiente en el dialog
-watch(objetoCreado, async () => {
-  const insert = {
-    // el objeto que se insertara en la lista de opciones
-    label: objetoCreado.value.nombre,
-    value: objetoCreado.value._id,
-    disable: false,
-  };
+/**
+ * watch
+ */
 
-  // especificar un lugar especifico donde insertar en la lista
-  const insertarAntesDe = objetoCreado.value.insertarAntesDe;
-  const index = insertarAntesDe // buscamos el index donde insertar
-    ? displayOpts.value.findIndex((c) => c.value === insertarAntesDe)
-    : displayOpts.value.length; // si no se especifico nada, se inserta al final
-  displayOpts.value.splice(index, 0, insert); // insertamos el objeto
-  localModel.value = displayOpts.value[index]; // y seleccionamos el nuevo elemento
-});
+// update listaOpciones cuando props.opciones cambia
+watch(
+  () => props.opciones,
+  async () => (listaOpciones.value = props.opciones),
+  { immediate: false },
+);
 
-// // validacion desde el componiente padre
-// watch(
-//   () => props.validate, // si cambia la ref validate en el componiente padre,
-//   () => activarValidacion(), // se activa la validacion
-//   { immediate: false },
-// );
+// activar el error si llega un mensaje de error desde el componiente padre
+watch(
+  () => props.error,
+  () => setError(props.error),
+);
+
+// activar la validacion desde el componiente padre
+watch(
+  () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
+  () => activarValidacion(), // se activa la validacion
+  { immediate: false },
+);
 </script>

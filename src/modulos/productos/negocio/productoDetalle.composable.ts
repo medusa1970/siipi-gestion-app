@@ -25,11 +25,11 @@ export const useProductoDetalle = () => {
 
   /** REACTIVOS */
   const init_modificarProductoBasico = {
-    nombre: '',
-    categoria: '',
-    comentario: null,
-    imagen: null,
-  } as ModificarProductoDto;
+    nombre: null as string,
+    categoria: null as { _id: string; nombre: string },
+    comentario: null as string,
+    imagen: null as { data: string; mimetype: string },
+  };
 
   // Modificando la estructura de ModificarProductoDto para que marca: string pase a marca: {_id: string, nombre: string}
   interface ModificarProductoDtoConMarcaObjeto
@@ -126,6 +126,7 @@ export const useProductoDetalle = () => {
       show_crearProveedor: false,
     },
     marcas: [] as Marca[],
+    marcasSelectOpciones: [],
     marca: {
       _id: '',
       nombre: '',
@@ -139,6 +140,8 @@ export const useProductoDetalle = () => {
     },
 
     datos_modificarProductoBasico: init_modificarProductoBasico,
+    modProductoBasicoImagen: null,
+
     datos_productoMarca: init_productoMarca.variedades.modificar,
     datos_productoMedida: init_productoMedida,
 
@@ -166,7 +169,7 @@ export const useProductoDetalle = () => {
         productoStore.producto._id,
         {
           nombre: estado.datos_modificarProductoBasico.nombre, //@ts-ignore
-          categoria: estado.datos_modificarProductoBasico.categoria._id,
+          categoria: estado.datos_modificarProductoBasico.categoria,
           comentario: estado.datos_modificarProductoBasico.comentario,
         },
       );
@@ -189,10 +192,17 @@ export const useProductoDetalle = () => {
   /**
    ********************* MARCAS *********************
    */
+
+  /**
+   * buscarMarcas
+   */
   const buscarMarcas = async () => {
-    const marcas = await productoService.buscarMarcas();
-    estado.marcas = marcas;
+    estado.marcas = await productoService.buscarMarcas();
   };
+
+  /**
+   * crearMarcaGlobal
+   */
   const crearMarcaGlobal = async () => {
     const marcaNueva = await productoService.crearMarca({
       nombre: estado.marca.nombre,
@@ -203,31 +213,46 @@ export const useProductoDetalle = () => {
     estado.datos_productoMarca.marca = marcaNueva;
     estado.marca = { _id: '', nombre: '' };
   };
+
+  /**
+   * limpiarProductoMarca
+   */
   const limpiarProductoMarca = () => {
     estado.datos_productoMarca.cantidadMax = null;
     estado.datos_productoMarca.cantidadMin = null;
     estado.datos_productoMarca.imagen = null;
     estado.datos_productoMarca.marca = { _id: '', nombre: '' };
   };
-  const crearProductoMarca = async () => {
-    const productoModificado = await productoService.crearProductosMarca(
-      productoStore.producto._id,
-      {
-        marca: estado.datos_productoMarca.marca._id,
-        cantidadMin: estado.datos_productoMarca.cantidadMin,
-        cantidadMax: estado.datos_productoMarca.cantidadMax,
-        imagen: estado.datos_productoMarca.imagen,
-      },
-    );
-    if (productoModificado) {
-      NotifySucessCenter('Marca creado correctamente');
-      const nuevaMarca = productoModificado.variedades.pop();
-      productoStore.producto.variedades.push(nuevaMarca);
-    }
 
-    estado.modal.show_crearProductoMarca = false;
-    limpiarProductoMarca();
+  /**
+   * crearProductoMarca
+   */
+  const crearProductoMarca = async () => {
+    const productoModificado = ref();
+    loadingAsync(async () => {
+      productoModificado.value = await productoService.crearProductosMarca(
+        productoStore.producto._id,
+        {
+          marca: estado.datos_productoMarca.marca._id,
+          cantidadMin: estado.datos_productoMarca.cantidadMin,
+          cantidadMax: estado.datos_productoMarca.cantidadMax,
+          imagen: estado.datos_productoMarca.imagen,
+        },
+      );
+    }).then(async () => {
+      if (productoModificado.value) {
+        NotifySucessCenter('Marca creado correctamente');
+        const nuevaMarca = productoModificado.value.variedades.pop();
+        productoStore.producto.variedades.push(nuevaMarca);
+      }
+      estado.modal.show_crearProductoMarca = false;
+      limpiarProductoMarca();
+    });
   };
+
+  /**
+   * modalModificarProductoMarca
+   */
   const modalModificarProductoMarca = (
     marca: ModificarProductoDtoConMarcaObjeto,
   ) => {
@@ -236,6 +261,10 @@ export const useProductoDetalle = () => {
     // @ts-expect-error
     estado.datos_productoMarca = marca;
   };
+
+  /**
+   * modificarProductoMarca
+   */
   const modificarProductoMarca = async () => {
     const marcaModificada = await productoService.modificarProductosMarca(
       productoStore.producto._id,
@@ -265,9 +294,11 @@ export const useProductoDetalle = () => {
       estado.modal.show_crearProductoMarca = false;
     }
   };
+
   /**
    ********************* MEDIDAS & EMPAQUES *********************
    */
+
   const buscarMedidas = async () => {
     const medidas = await productoService.buscarMedidas();
     estado.medidas = medidas;

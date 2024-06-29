@@ -3,7 +3,7 @@
     <p>Proveedores</p>
 
     <Table :rows="estado.proveedoresProducto" :columns="columnaProveedores">
-      <template #select>
+      <template #dropdown>
         <q-btn
           color="primary"
           icon="add"

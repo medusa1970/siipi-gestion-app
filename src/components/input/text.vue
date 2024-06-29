@@ -65,7 +65,7 @@ const props = withDefaults(
     tipo?: 'text' | 'textarea' | 'password'; // text, textarea, password
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
-    valorInicial?: string; // valor seleccionado al iniciar
+    porDefecto?: string; // valor seleccionado al iniciar
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
@@ -93,7 +93,7 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const localModel = ref<string>(props.valorInicial); // contenido del input
+const localModel = ref<string>(props.porDefecto); // contenido del input
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o

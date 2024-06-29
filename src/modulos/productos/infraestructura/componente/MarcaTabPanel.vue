@@ -8,7 +8,7 @@
       style="padding: 0"
       badge
     >
-      <template #select>
+      <template #dropdown>
         <q-btn
           color="primary"
           icon="add"
@@ -82,113 +82,50 @@
     <template #inputsDialog>
       <p>Se va registrar una marca para este producto.</p>
 
-      <!-- input marca -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-select
-            label="Marca *"
-            required
-            v-model="estado.datos_productoMarca.marca"
-            :options="estado.marcas"
-            option-label="nombre"
-            class="w-full"
-            map-options
-            options-cover
-            dense
-            filled
-            :disable="estado.modal.show_modificarProductoMarca"
-          >
-            <!--  
-            fill-input
-            emit-value
-            use-input
-            outlined
-            input-debounce="0"
-            hide-selected
-            onfocus="this.select()" -->
+      <input-select
+        label="Marca"
+        :opciones="estado.marcasSelectOpciones"
+        info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+        @update="(v) => (estado.datos_productoMarca.marca._id = v)"
+        :rules="[useRules.requerido()]"
+        :disable="estado.modal.show_modificarProductoMarca"
+        :porDefecto="estado.datos_productoMarca.marca._id"
+      />
 
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps" :class="scope.opt.class">
-                <q-item-section>{{ scope.opt.nombre }}</q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <q-btn
-          size="12px"
-          icon="add"
-          color="primary"
-          round
-          style="height: 16px"
-          @click="
-            () => {
-              estado.marca.nombre = '';
-              estado.modal.show_crearMarca = true;
-            }
-          "
-        ></q-btn>
-        <div>
-          <BotonDetalle
-            mensaje="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
-          />
-        </div>
-      </div>
+      <!-- Imagen -->
+      <input-image
+        label="Imagen"
+        @update="
+          (v) =>
+            (estado.datos_productoMarca.imagen = {
+              data: v,
+              mimetype: 'image/png',
+            })
+        "
+        info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+        icono="photo_camera"
+        :rules="[useRules.requerido()]"
+      />
 
-      <!-- input imagen -->
-      <div>
-        <input-image
-          label="Imagen"
-          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
-          @update="
-            (v) =>
-              (estado.datos_productoMarca.imagen = {
-                data: v,
-                mimetype: 'image/png',
-              })
-          "
-          icono="photo_camera"
-        />
-      </div>
+      <!-- Stock minimo -->
+      <input-text
+        type="number"
+        label="Stock minimo antes de hacer pedido"
+        @update="(v) => (estado.datos_productoMarca.cantidadMin = Number(v))"
+        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+        :rules="[useRules.requerido()]"
+        :porDefecto="'' + estado.datos_productoMarca.cantidadMin"
+      />
 
-      <!-- input cantidadMin -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Stock minimo antes de hacer pedido *"
-            required
-            class="w-full"
-            v-model.number="estado.datos_productoMarca.cantidadMin"
-            type="text"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-          />
-        </div>
-      </div>
-
-      <!-- input cantidadMax -->
-      <div class="flex" style="justify-content: space-between; margin: 10px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Cantidad max en un pedido *"
-            required
-            class="w-full"
-            v-model.number="estado.datos_productoMarca.cantidadMax"
-            type="text"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
-          />
-        </div>
-      </div>
+      <!-- Cantidad max en un pedido -->
+      <input-text
+        type="number"
+        label="Cantidad max en un pedido"
+        @update="(v) => (estado.datos_productoMarca.cantidadMax = Number(v))"
+        info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
+        :rules="[useRules.requerido()]"
+        :porDefecto="'' + estado.datos_productoMarca.cantidadMax"
+      />
     </template>
   </Dialog>
 
@@ -234,6 +171,7 @@
 import { columnaMarca } from '@/modulos/productos/infraestructura/utils/columns';
 import { useProductoDetalle } from '@/modulos/productos/negocio/productoDetalle.composable';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { productoService } from '../../API/productoService';
 
 const {
   estado,
@@ -255,7 +193,12 @@ const { $socket } = useNuxtApp();
 onMounted(async () => {
   estadoProducto.categoriaOptions = await categoriaSelectOptions();
   await buscarMarcas();
-
+  estado.marcasSelectOpciones = estado.marcas.map((marca) => {
+    return {
+      label: marca.nombre,
+      value: marca._id,
+    };
+  });
   $socket.on('cambiosProductos', async (data) => {
     console.log('first');
     await actProductosDB();

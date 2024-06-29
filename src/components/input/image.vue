@@ -33,7 +33,7 @@
         round
       />
       <q-btn
-        v-if="valorInicial || valorImagen"
+        v-if="dataPreview || dataInicial"
         @click="handleRefresh"
         icon="refresh"
         size="xs"
@@ -52,8 +52,6 @@
       <input-botonAyuda :mensaje="info" />
     </template>
   </q-file>
-  {{ errorFlag }}
-  {{ errorMensaje }}
 </template>
 
 <script setup lang="ts">
@@ -65,8 +63,8 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    data: string,
-    archivo: File | null,
+    data: string | null,
+    mimetype: string | null,
     isPreview: boolean,
   ): void;
   (
@@ -87,8 +85,6 @@ const props = withDefaults(
     label: string; // label adentro del input
     accept?: string; // extenciones de archivo validas
     maxSizeKb?: string; // tamaño maximo en Kb
-    valorInicial?: File; // valor seleccionado al iniciar
-    valorImagen?: File; // valor mostrado al iniciar, sin seleccionar
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     rules?: any; // reglas de validacion
@@ -100,6 +96,8 @@ const props = withDefaults(
     outlined?: boolean;
     filled?: boolean;
     clearable?: boolean;
+    dataInicial?: string; // valor seleccionado al iniciar
+    dataPreview?: string; // valor mostrado al iniciar, sin seleccionar
   }>(),
   {
     outlined: true,
@@ -108,6 +106,7 @@ const props = withDefaults(
     clearable: true,
     clase: 'mt-5 mb-2',
     rules: [] as Function[],
+    maxSizeKb: '500',
   },
 );
 
@@ -117,23 +116,12 @@ const props = withDefaults(
 
 const archivo = ref<File | null>(null); // contenido del input
 const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
-const valorInicial = ref(null); // carga una vez : valor inicial desde el pariente
-const valorImagen = ref(null); // carga una vez : valor imagen desde el pariente
-const isPreview = ref<boolean>(true); // si estamos con una preview o un valor
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
-//@ts-ignore
-if (props.valorInicial) valorInicial.value = await props.valorInicial.text();
-//@ts-ignore
-if (props.valorImagen) valorImagen.value = await props.valorImagen.text();
-
 // bug
-onBeforeMount(async () => {
-  if (props.valorInicial) valorInicial.value = await props.valorInicial.text();
-  if (props.valorImagen) valorImagen.value = await props.valorImagen.text();
-});
+onBeforeMount(async () => {});
 
 /**
  * Metodos
@@ -160,20 +148,19 @@ function activarValidacion() {
 }
 
 // llamado cuando cambia el valor del input
-const handleChange = async (valor: File | null) => {
+const handleChange = async (file: File | null) => {
   setError(null);
-  if (valor instanceof File) {
-    archivo.value = valor;
-    isPreview.value = false;
+  if (file instanceof File) {
+    archivo.value = file;
     const lector = new FileReader();
     lector.addEventListener('load', () => {
       imagen.value = lector.result as string;
-      emits('update', imagen.value, archivo.value, isPreview.value);
+      emits('update', imagen.value, file.type, false);
     });
     lector.addEventListener('error', () => {
       setError('Hubo un problema al cargar la imagen');
     });
-    lector.readAsDataURL(valor);
+    lector.readAsDataURL(file);
   }
   // TODO pensarlo mejor
   for (const regla of props.rules as Function[]) {
@@ -207,26 +194,29 @@ const handleReject = ([event]: [any]) => {
 const handleClear = () => {
   archivo.value = null;
   imagen.value = null;
-  isPreview.value = false;
-  emits('update', imagen.value, archivo.value, isPreview.value);
+  emits('update', null, null, false);
 };
 
 // reiniciar el valor inicial del input
 const handleRefresh = () => {
-  if (props.valorInicial) {
-    archivo.value = props.valorInicial;
-    imagen.value = valorInicial.value;
-    isPreview.value = false;
-  } else if (props.valorImagen) {
-    archivo.value = props.valorImagen;
-    imagen.value = valorImagen.value;
-    isPreview.value = true;
-  } else {
-    archivo.value = null;
-    imagen.value = null;
-    isPreview.value = false;
+  // valor por defecto
+  if (props.dataInicial) {
+    imagen.value = props.dataInicial;
+    archivo.value = new File([props.dataInicial], 'foo.bar', {
+      type: 'image/png',
+    });
+    emits('update', props.dataInicial, 'image/png', false);
   }
-  emits('update', imagen.value, archivo.value, isPreview.value);
+
+  // valor por defecto
+  else if (props.dataPreview) {
+    imagen.value = props.dataPreview;
+    archivo.value = null;
+    emits('update', null, null, true);
+  }
+
+  // nada
+  else handleClear();
 };
 
 /**

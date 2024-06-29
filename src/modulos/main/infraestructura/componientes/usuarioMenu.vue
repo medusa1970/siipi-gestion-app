@@ -9,7 +9,7 @@
     >
       <q-list style="min-width: 100px">
         <!-- perfil -->
-        <q-item clickable @click="perfil.show = true">
+        <q-item clickable @click="showPerfil = true">
           <q-item-section avatar>
             <q-avatar>
               <img
@@ -63,8 +63,8 @@
     </q-menu>
   </q-btn>
 
-  <q-dialog v-model="perfil.show">
-    <q-card style="min-width: 300px" class="p-3">
+  <q-dialog v-model="showPerfil">
+    <q-card style="min-width: 350px" class="p-3">
       <q-card-section>
         <div class="flex justify-between">
           <h1 class="text-lg font-bold">Editar perfil</h1>
@@ -83,30 +83,37 @@
         <q-card-section>
           <input-text
             label="Nombre"
-            @update="(v) => (perfil.nombre.value = v)"
-            :valorInicial="perfil.nombre.value"
+            @update="(v) => (perfil.nombre = v)"
+            :porDefecto="perfil.nombre"
+            :rules="[useRules.requerido()]"
           />
           <input-text
             label="Apellido"
-            @update="(v) => (perfil.apellido.value = v)"
-            :valorInicial="perfil.apellido.value"
+            @update="(v) => (perfil.apellido = v)"
+            :porDefecto="perfil.apellido"
+            :rules="[useRules.requerido()]"
           />
           <input-text
             label="telefono"
-            @update="(v) => (perfil.telefono.value = v)"
-            :valorInicial="perfil.telefono.value"
+            @update="(v) => (perfil.telefono = v)"
+            :porDefecto="perfil.telefono"
+            :rules="[useRules.requerido()]"
           />
           <input-text
             label="email"
-            @update="(v) => (perfil.correo.value = v)"
-            :valorInicial="perfil.correo.value"
-            :error="perfil.correo.error"
-            dense
+            @update="(v) => (perfil.correo = v)"
+            :porDefecto="perfil.correo"
+            :rules="[]"
           />
           <input-image
-            label="Cambiar imagen"
-            @update="onImageChange"
-            maxSizeKb="500"
+            label="inagen"
+            @update="
+              (base64Data, mimetype) =>
+                (perfil.imagen = base64Data
+                  ? { data: base64Data, mimetype: mimetype }
+                  : null)
+            "
+            :dataPreview="previewImagenPerfil"
           />
           <div class="flex justify-center">
             <q-btn
@@ -129,6 +136,7 @@
 // import { ModificarPersonaDto } from '#gql';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import { useUsuarioService } from '~/modulos/main/negocio/useUsuarioService';
+import { UrlToBase64Image } from '~/components/input/input.service';
 import { useAuth } from '../../API/useAuth';
 
 const authStore = useAuthStore();
@@ -139,52 +147,37 @@ const $q = useQuasar();
 const props = defineProps({
   disable: {
     type: Boolean,
-    default: true,
+    porDefecto: true,
   },
 });
 
 // MODAL editarPerfil
 
+const showPerfil = ref(null);
 const perfil = reactive({
-  nombre: reactiveData(authStore.getUsuario?.nombre),
-  apellido: reactiveData(authStore.getUsuario?.apellido),
-  telefono: reactiveData(authStore.getUsuario?.telefono),
-  correo: reactiveData(authStore.getUsuario?.correo, 'oo'),
-  imagen: reactiveData(),
-  show: false,
+  nombre: authStore.getUsuario?.nombre,
+  apellido: authStore.getUsuario?.apellido,
+  telefono: authStore.getUsuario?.telefono,
+  correo: authStore.getUsuario?.correo,
+  imagen: null as { data: string; mimetype: string },
 });
-const showRaiz = ref(false);
-
-function onImageChange(data, archivo, isPreview) {
-  if (!isPreview && archivo !== null) {
-    perfil.imagen.value = {
-      data,
-      mimetype: archivo.type,
-    };
-  } else {
-    perfil.imagen.value = null;
-  }
-}
-
+const previewImagenPerfil = ref(null);
+//@ts-ignore
+await UrlToBase64Image(
+  authStore.getUsuario?.cloudinaryUrl,
+  (base64Data) => (previewImagenPerfil.value = base64Data),
+);
 const editarPerfilSubmit = async () => {
-  // en que caso no hubiera usuario ? pero bueno por seguridad
-  if (!authStore.getUsuarioId) {
-    return false;
-  }
-
-  // modificamos el usuario
+  // preparacion de los datos
   const datos = {
-    nombre: perfil.nombre.value,
-    apellido: perfil.apellido.value,
-    correo: perfil.correo.value,
-    telefono: perfil.telefono.value,
+    nombre: perfil.nombre,
+    apellido: perfil.apellido,
+    correo: perfil.correo,
+    telefono: perfil.telefono,
   };
-  if (perfil.imagen.value) {
-    Object.assign(datos, {
-      imagen: perfil.imagen.value,
-    });
-  }
+  if (perfil.imagen) Object.assign(datos, { imagen: perfil.imagen });
 
+  // modificacion en API
   let persona = ref(null);
   try {
     loadingAsync(async () => {
@@ -192,10 +185,11 @@ const editarPerfilSubmit = async () => {
         authStore.getUsuarioId,
         datos,
       );
+      previewImagenPerfil.value = perfil.imagen?.data;
     }).then(() => {
       if (persona.value !== null) {
         authStore.editarPerfil(persona.value);
-        perfil.show = false;
+        showPerfil.value = false;
         NotifySucessCenter('Usuario editado correctamente');
       } else {
         NotifyError('Hubo un error, intente de nuevo');
@@ -205,6 +199,8 @@ const editarPerfilSubmit = async () => {
     throw e;
   }
 };
+
+// ELEGIR NEGOCIO
 
 const password = ref('');
 const elegirNegocio = (index: number, nombre: string) => {
@@ -216,6 +212,7 @@ const elegirNegocio = (index: number, nombre: string) => {
     persistent: true,
     html: true,
     prompt: {
+      //@ts-ignore
       model: password,
       type: 'password',
       clearable: true,
@@ -243,7 +240,7 @@ const elegirNegocio = (index: number, nombre: string) => {
         authStore.token = loginResponse.token;
         password.value = '';
         NotifySucess(`Negocio elegido: ${nombre}`);
-        perfil.show = false;
+        showPerfil.value = false;
         switch (authStore.getNegocio?.tipo) {
           case 'PUNTO':
             goTo(router, 'punto');

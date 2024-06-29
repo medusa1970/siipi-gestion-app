@@ -46,106 +46,62 @@
   -->
 
     <q-tab-panel name="datosBasicos" animated>
-      <p>Entre los datos basicos del producto:</p>
-      <!-- nombre -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Nombre *"
-            required
-            v-model="estado.datos_modificarProductoBasico.nombre"
-            type="text"
-            class="w-full"
-            filled
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
-          />
-        </div>
-      </div>
+      <q-form @submit="modificarProductoBasico">
+        <p>Entre los datos basicos del producto:</p>
+        <!-- nombre -->
+        <input-text
+          label="Nombre"
+          @update="(v) => (estado.datos_modificarProductoBasico.nombre = v)"
+          info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
+          :porDefecto="estado.datos_modificarProductoBasico.nombre"
+          :rules="[useRules.requerido()]"
+        />
 
-      <!-- Categoria -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-select
-            label="Categoria*"
-            required
-            v-model="estado.datos_modificarProductoBasico.categoria"
-            :options="estadoProducto.categoriaOptions"
-            option-label="nombre"
-            filled
-            options-cover
-            id="two-level-select"
-            class="w-full"
-            map-options
-          >
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps" :class="scope.opt.class">
-                <q-item-section>{{ scope.opt.label }}</q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          />
-        </div>
-      </div>
+        <!-- Categoria -->
+        <input-select
+          label="Categoria"
+          @update="
+            (v) => {
+              estado.datos_modificarProductoBasico.categoria = v;
+              console.log(v);
+            }
+          "
+          :porDefecto="estado.datos_modificarProductoBasico.categoria"
+          :rules="[useRules.requerido()]"
+          :opciones="estadoProducto.categoriaOptions"
+        />
 
-      <!-- Imagen -->
-      <div>
+        <!-- Imagen -->
         <input-image
           label="Imagen"
-          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
           @update="
-            (v) =>
-              (estado.datos_modificarProductoBasico.imagen = {
-                data: v,
-                mimetype: 'image/png',
-              })
+            (base64Data, mimetype) =>
+              (estado.datos_modificarProductoBasico.imagen = base64Data
+                ? { data: base64Data, mimetype: mimetype }
+                : null)
           "
+          :key="estado.modProductoBasicoImagen"
+          :dataPreview="estado.modProductoBasicoImagen"
+          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
           icono="photo_camera"
+          :rules="[]"
         />
-      </div>
 
-      <!-- Comentario -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            class="w-full"
-            v-model="estado.datos_modificarProductoBasico.comentario"
-            type="textarea"
-            label="Comentario"
-            filled
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-          />
-        </div>
-      </div>
+        <!-- Comentario -->
+        <input-text
+          tipo="textarea"
+          label="comentario"
+          info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+          :porDefecto="estado.datos_modificarProductoBasico.comentario"
+          @update="(v) => (estado.datos_modificarProductoBasico.comentario = v)"
+        />
 
-      <!--div class="flex gap-4 justify-center">
-        <q-btn
-          color="secondary"
-          label="Cancelar"
-          no-caps
-          @click="cancelarEdicionProductoBasico"
-        /-->
-      <q-btn
-        color="primary"
-        label="Guardar"
-        no-caps
-        @click="modificarProductoBasico"
-      />
+        <q-btn color="primary" label="Guardar" type="submit" no-caps />
+      </q-form>
     </q-tab-panel>
 
     <!-- 
-    MARCAS 
+        MARCAS 
   -->
     <q-tab-panel name="marcas" animated>
       <MarcaTabPanel />
@@ -208,6 +164,7 @@ import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import MarcaTabPanel from '@/modulos/productos/infraestructura/componente/MarcaTabPanel.vue';
 import MedidaTabPanel from '@/modulos/productos/infraestructura/componente/MedidaTabPanel.vue';
 import ProveedorTabPanel from '@/modulos/productos/infraestructura/componente/ProveedorTabPanel.vue';
+import { UrlToBase64Image } from '~/components/input/input.service';
 
 // Verificacion de permisos
 const authStore = useAuthStore();
@@ -244,27 +201,26 @@ const showTable = ref(false); //estado.medidaProducto.medida;
 if (productoStore.producto) {
   // @ts-expect-error
   estado.datos_modificarProductoBasico = productoStore.producto;
-  console.log(estado.datos_modificarProductoBasico);
-  // estado.datos_productoMedida.medida = productoStore.producto.medida;
-  // console.log(estado.datos_productoMedida.medida);
-  // imagePreview.value = useProducto.producto.imagen?.cloudinaryUrl;
-  // console.log(estado.datos_modificarProductoBasico);
+  if (estado.datos_modificarProductoBasico.categoria) {
+    estado.datos_modificarProductoBasico.categoria =
+      estado.datos_modificarProductoBasico.categoria;
+  }
 }
 
 const { $socket } = useNuxtApp();
 onMounted(async () => {
-  // await getCategoria();
+  // recuperamos las categorias
+  estadoProducto.categoriaOptions = await categoriaSelectOptions(true);
 
-  // estadoProducto.categoriaOptions = await categoriaSelectOptions();
+  // recuperamos la imagen desde la url
+  await UrlToBase64Image(
+    productoStore.producto.imagen?.cloudinaryUrl,
+    (base64Data) => {
+      estado.modProductoBasicoImagen = base64Data;
+    },
+  );
 
-  // buscarMarcas();
-  // buscarMedidas();
-  // buscarProveedores();
-  // buscarProveedoresProducto();
-
-  // estadoInicial.datosBasicos.nombre = estado.datos_modificarProductoBasico.nombre;
-  // estadoInicial.datosBasicos.categoria = estado.datos_modificarProductoBasico.categoria;
-  // estadoInicial.datosBasicos.comentario = estado.datos_modificarProductoBasico.comentario;
+  // sockets
   $socket.on('cambiosProductos', async (data) => {
     console.log('first');
     await actProductosDB();

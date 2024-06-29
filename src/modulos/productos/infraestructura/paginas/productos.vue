@@ -128,50 +128,42 @@
       </p>
 
       <!-- nombre -->
-      <div>
-        <input-text
-          label="Nombre"
-          info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
-          @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
-          :rules="[useRules.requerido()]"
-        />
-      </div>
+      <input-text
+        label="Nombre"
+        info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+        @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
+        :rules="[useRules.requerido()]"
+      />
 
       <!-- Categoria -->
-      <div>
-        <input-select
-          label="Categoria"
-          :opciones="estado.categoriaOptions"
-          info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
-          :rules="[useRules.requerido()]"
-        />
-      </div>
+      <input-select
+        label="Categoria"
+        :opciones="estado.categoriaOptions"
+        info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+        @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
+        :rules="[useRules.requerido()]"
+      />
 
       <!-- Imagen -->
-      <div>
-        <input-image
-          label="Imagen"
-          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
-          @update="
-            (data) =>
-              (estado.datos_crearProductoBasico.imagen = {
-                data,
-                mimetype: 'image/png',
-              })
-          "
-          icono="photo_camera"
-        />
-      </div>
+      <input-image
+        label="Imagen"
+        info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+        @update="
+          (file, isPreview) =>
+            (estado.datos_crearProductoBasico.imagen =
+              file?.data && !isPreview
+                ? { data: file.data, mimetype: file.mimetype }
+                : null)
+        "
+        icono="photo_camera"
+      />
 
-      <!-- Comentario -->
-      <div>
-        <input-textarea
-          labeproductoApiServicel="Textarea"
-          info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-          @update="(v) => (estado.datos_crearProductoBasico.comentario = v)"
-        />
-      </div>
+      <input-text
+        tipo="textarea"
+        label="comentario"
+        info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+        @update="(v) => (estado.datos_crearProductoBasico.comentario = v)"
+      />
     </template>
   </Dialog2>
 
@@ -288,6 +280,8 @@ const { $socket } = useNuxtApp();
 onMounted(async () => {
   await traerProductos();
   await getProductos();
+
+  estado.categoriaOptions = await categoriaSelectOptions(true);
 
   // reload de la pagina productos
   let reloaded = localStorage.getItem('reloaded');

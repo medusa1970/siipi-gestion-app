@@ -14,8 +14,6 @@
       :opciones="categoriasNivelUno"
       @update="(v) => (pariente.value = v)"
       :rules="[useRules.requerido()]"
-      dense
-      clearable
     />
 
     <q-btn label="Crear" type="submit" />

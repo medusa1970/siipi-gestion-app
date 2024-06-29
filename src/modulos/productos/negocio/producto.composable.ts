@@ -3,7 +3,7 @@ import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import localforage from 'localforage';
 
 import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
+import type { Categoria, CrearCategoriaDto, Producto } from '#gql';
 
 export const useProducto = () => {
   /** DECLARACIONES */
@@ -34,26 +34,29 @@ export const useProducto = () => {
 
   /** FUNCIONES */
   const crearProductoBasico = async () => {
-    console.log(estado.datos_crearProductoBasico);
-    const productoCreado = await productoService.crearProductoBasico(
-      estado.datos_crearProductoBasico,
-    );
-    if (productoCreado !== null) {
-      NotifySucessCenter('Producto agregado correctamente');
-      await productoStore.addProducto(productoCreado);
-      estado.modal.show_crearProductoBasico = false;
-      // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
-      // estado.datos_crearProductoBasico = init_crearProductoBasico;
-    } else {
-      NotifyError('Problema al agregar el producto');
-    }
+    let productoCreado = ref(null);
+    loadingAsync(async () => {
+      productoCreado.value = await productoService.crearProductoBasico(
+        estado.datos_crearProductoBasico,
+      );
+    }).then(async () => {
+      if (productoCreado.value !== null) {
+        NotifySucessCenter('Producto agregado correctamente');
+        await productoStore.addProducto(productoCreado.value);
+        estado.modal.show_crearProductoBasico = false;
+        // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
+        // estado.datos_crearProductoBasico = init_crearProductoBasico;
+      } else {
+        NotifyError('Problema al agregar el producto');
+      }
+    });
   };
 
   /**
    * Generar una lista de opciones para q-select a partir del
    * arbol de categorias
    */
-  const categoriaSelectOptions = async () => {
+  const categoriaSelectOptions = async (nivel2 = true) => {
     const options = [];
     const arbol = await productoStore.getCategoriaArbol();
     for (const cat of arbol.hijas) {
@@ -62,12 +65,14 @@ export const useProducto = () => {
         disable: true,
         class: 'title',
       });
-      for (const subcat of cat.hijas) {
-        options.push({
-          label: subcat.nombre,
-          value: subcat._id,
-          class: 'option',
-        });
+      if (nivel2) {
+        for (const subcat of cat.hijas) {
+          options.push({
+            label: subcat.nombre,
+            value: subcat._id,
+            class: 'option',
+          });
+        }
       }
     }
     return options;
@@ -112,7 +117,7 @@ export const useProducto = () => {
   const crearCategoria = async (
     datos: CrearCategoriaDto,
   ): Promise<Categoria> => {
-    const [categoriaCreada] = await productoApiService.crearCategoria(datos);
+    const categoriaCreada = await productoService.crearCategoria(datos);
     if (categoriaCreada) {
       // TODO Ajouter la categorie a l'arbol
       // productoStore.addCategoria(categoriaCreada);

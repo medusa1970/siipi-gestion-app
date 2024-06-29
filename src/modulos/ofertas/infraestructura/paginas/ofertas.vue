@@ -6,7 +6,7 @@
     </h1>
     <Table :rows="estado.ofertas" :columns="columnaOfertas" badge dense>
       <!-- AGREGAR -->
-      <template #select>
+      <template #dropdown>
         <!-- <code>{{ estado.catalogos?.hijas }}</code> -->
         <!-- <q-select
           v-model="estado.catalogoSeleccionado"

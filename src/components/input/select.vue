@@ -100,7 +100,7 @@ const props = withDefaults(
     label: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
-    valorInicial?: string; // valor seleccionado al iniciar
+    porDefecto?: string; // valor seleccionado al iniciar
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
@@ -126,7 +126,7 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const localModel = ref<string>(props.valorInicial); // contenido del input
+const localModel = ref<string>(props.porDefecto); // contenido del input
 const listaOpciones = ref<SelectOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error

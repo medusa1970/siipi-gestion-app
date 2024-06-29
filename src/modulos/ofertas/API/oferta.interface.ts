@@ -17,3 +17,26 @@ export interface Oferta {
   cantidad: number;
   imagen: string;
 }
+
+export interface Catalogo {
+  _id: string;
+  nombre: string;
+  ofertas?: Array<{
+    nombre: string;
+  }>;
+  hijas?: Array<{
+    _id: string;
+    nombre: string;
+    ofertas?: Array<{
+      _id: string;
+      nombre: string;
+    }>;
+    hijas?: Array<{
+      _id: string;
+      nombre: string;
+      ofertas?: Array<{
+        nombre: string;
+      }>;
+    }>;
+  }>;
+}

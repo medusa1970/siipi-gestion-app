@@ -7,25 +7,13 @@
     <Table :rows="estado.ofertas" :columns="columnaOfertas" badge dense>
       <!-- AGREGAR -->
       <template #dropdown>
-        <!-- <code>{{ estado.catalogos?.hijas }}</code> -->
-        <!-- <q-select
-          v-model="estado.catalogoSeleccionado"
-          :options="estado.catalogos?.hijas"
-          option-label="nombre"
-          label="Selecciona un catalogo"
-          style="width: 170px"
-          dense
-          filled
-          color="black"
-          bg-color="orange-5"
-          @update:model-value="handleSelectionChange"
-        /> -->
         <q-btn
           icon-right="add"
           color="green"
           label="Crear oferta"
           no-caps
           style="padding: 7px 15px; margin-left: 10px"
+          @click="() => (estado.modal.show_crearOfertaBasico = true)"
         />
       </template>
       <!-- BADGE -->
@@ -137,6 +125,104 @@
       </template>
     </Table>
   </div>
+
+  <!-- OFERTA DATOS BASICOS -->
+  <Dialog
+    v-model="estado.modal.show_crearOfertaBasico"
+    title="Crear oferta"
+    label-btn="Crear"
+  >
+    <template #inputsDialog>
+      <!-- Imagen -->
+      <input-image
+        label="Imagen"
+        info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+        @update="
+          (v) =>
+            (estado.datos_ofertaBasica.imagen = {
+              data: v,
+              mimetype: 'image/png',
+            })
+        "
+        icono="photo_camera"
+      />
+
+      <!-- Nombre -->
+      <input-text
+        label="Nombre"
+        info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+        @update="(v) => (estado.datos_ofertaBasica.nombre = v)"
+        requerido
+      />
+
+      <!-- Abreviacion -->
+      <input-text
+        label="Abreviación"
+        info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+        @update="(v) => (estado.datos_ofertaBasica.abreviacion = v)"
+        requerido
+      />
+
+      <!-- Catalogo -->
+      <!-- <div>
+        <input-dropdown
+          label="Catalogo"
+          :options="text"
+          info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+          @update="(v) => (estado.datos_ofertaBasica.catalogo = v)"
+          requerido
+        />
+      </div> -->
+      <!-- <q-select
+        class="col-span-3"
+        v-model="estado.oferta.catalogo"
+        :options="estado.catalogos.hijas"
+        label="Seleccionar catalogo"
+        option-label="nombre"
+        style="width: 100%; flex: 1 0 auto"
+        outlined
+        onfocus="this.select()"
+        use-input
+        hide-selected
+        fill-input
+        dense
+        clearable
+      >
+        <template v-slot:prepend>
+          <q-icon name="bi-cart-plus" />
+        </template>
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No hay resultados
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select> -->
+      <!-- <code>{{ estado.oferta.catalogo.hijas }}</code> -->
+      <!-- <div class="select-container">
+        <select
+          id="two-level-select"
+          class="border border-gray-400 rounded-[4px] shadow-sm text-base block w-full py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <option value="" disabled selected>Selecciona una categoria</option>
+          <optgroup
+            v-for="categoria in estado.oferta.catalogo.hijas"
+            :key="categoria"
+            :label="`${categoria.nombre} ( ${categoria.hijas.length} )`"
+          >
+            <option
+              v-for="subCategoria in categoria.hijas"
+              :key="subCategoria"
+              :value="subCategoria"
+            >
+              {{ subCategoria.nombre }}
+            </option>
+          </optgroup>
+        </select>
+      </div> -->
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -148,12 +234,13 @@ import { columnaOfertas } from '../utils/columns';
 import Oferta from '@/assets/img/oferta.png';
 import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
 
-const { estado, traerOfertas, getOfertas } = useOferta();
+const { estado, traerOfertas, traerCatalagos } = useOferta();
 const ofertaStore = storeOferta();
 
 onMounted(async () => {
   await traerOfertas();
-  await getOfertas();
+  await traerCatalagos();
+
   // ofertaStore.obtenerOfertas();
 });
 </script>

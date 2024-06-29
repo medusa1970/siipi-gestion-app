@@ -130,7 +130,7 @@
       <!-- nombre -->
       <div>
         <input-text
-          label="Texto"
+          label="Nombre"
           info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
           @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
           requerido
@@ -277,7 +277,6 @@ const {
   categoriaSelectOptions,
   mostrarInformacionProducto,
   irEdicionProducto,
-  getProductos,
 } = useProducto();
 
 // layout
@@ -288,7 +287,6 @@ definePageMeta({
 const { $socket } = useNuxtApp();
 onMounted(async () => {
   await traerProductos();
-  await getProductos();
   // estado.productos = await productoStore.getProductos();
   estado.categoriaOptions = await categoriaSelectOptions();
 

@@ -2,10 +2,20 @@ import { ofertaService } from '../API/oferta.service.js';
 import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
 
 import localforage from 'localforage';
-import type { Oferta } from '../API/oferta.interface';
+import type { Catalogo, Oferta } from '../API/oferta.interface';
+import type { CrearOfertaDto } from '#gql';
+import type { CrearOferta } from './oferta.interface.js';
 
 // import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
 // import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
+
+const init_crearOfertaBasico: CrearOferta = {
+  nombre: '',
+  abreviacion: '',
+  imagen: null,
+  catalogo: null,
+  categoria: null,
+};
 
 export const useOferta = () => {
   /** DECLARACIONES */
@@ -17,47 +27,59 @@ export const useOferta = () => {
 
   const estado = reactive({
     ofertas: [] as Oferta[],
-
     oferta: {} as Oferta,
+    catalogos: [] as Catalogo[],
+    catalogoSeleccionado: null as Catalogo | null,
+
+    modal: {
+      show_crearOfertaBasico: false,
+      show_informacionOferta: false,
+    },
+
+    datos_ofertaBasica: init_crearOfertaBasico,
   });
 
   /** FUNCIONES */
   /**
-   * Traer productos de la base de datos local
+   * Traer ofertas de la base de datos local y si no existe le carga
+   * ofertas al indexedDB.
    */
   const traerOfertas = async () => {
-    const ofertasAlmacenados = await localforage.getItem('ofertas');
-
-    if (!ofertasAlmacenados) {
-      const ofertas = await ofertaService.buscarOfertas();
-
-      //si existe producto lo guardamos y si no le damos un []
-      await localforage.setItem('ofertas', ofertas ? ofertas : []);
+    let ofertas = await localforage.getItem<Oferta[]>('ofertas');
+    if (!ofertas) {
+      ofertas = await ofertaService.buscarOfertas();
+      await localforage.setItem('ofertas', ofertas);
     }
+    ofertaStore.ofertas = estado.ofertas = ofertas;
   };
-
   /**
-   * Actualizar la base de datos local de productos
+   * Actualizar la base de datos local de ofertas si escucha un cambio
+   * desde el servidor
    */
   const actOfertasDB = async () => {
-    const productos = await postDataGql(
-      GqlProductosBuscar({
+    const ofertas = await postDataGql(
+      GqlBuscarOfertas({
         opciones: {
           populate: true,
           sort: '-_modificado -_creado',
         },
       }),
     );
-    const res = await localforage.setItem(
-      'productos',
-      productos ? productos : [],
-    );
+    const res = await localforage.setItem('ofertas', ofertas ? ofertas : []);
     if (res) console.log('Se actualizo la base de datos');
   };
+  /**
+   * Trae todos los catalogos de la BD y los guarda en el estado y store
+   */
+  const traerCatalagos = async () => {
+    let catalogos = await localforage.getItem<Catalogo[]>('catalogos');
 
-  const getOfertas = async () => {
-    ofertaStore.ofertas = await localforage.getItem('ofertas');
-    estado.ofertas = ofertaStore.ofertas;
+    if (!catalogos) {
+      const res = await ofertaService.buscarCatalogos();
+      catalogos = res?.hijas || [];
+      await localforage.setItem('catalogos', catalogos);
+    }
+    ofertaStore.catalogos = estado.catalogos = catalogos;
   };
 
   return {
@@ -65,6 +87,6 @@ export const useOferta = () => {
     traerOfertas,
     actOfertasDB,
     ofertaStore,
-    getOfertas,
+    traerCatalagos,
   };
 };

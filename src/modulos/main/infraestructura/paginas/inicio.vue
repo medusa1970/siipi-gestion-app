@@ -233,7 +233,6 @@ const getColor = (negocio) => {
 };
 
 onMounted(() => {
-  console.log('first');
   iniciarLocalForage();
 });
 </script>

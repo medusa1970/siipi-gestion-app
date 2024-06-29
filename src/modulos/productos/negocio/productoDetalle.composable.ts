@@ -26,8 +26,8 @@ export const useProductoDetalle = () => {
   /** REACTIVOS */
   const init_modificarProductoBasico = {
     nombre: null as string,
-    categoria: null as { _id: string; nombre: string },
-    comentario: null as string,
+    categoria: null as string,
+    comentario: null as string | null | undefined,
     imagen: null as { data: string; mimetype: string },
   };
 
@@ -62,6 +62,7 @@ export const useProductoDetalle = () => {
       },
     },
   };
+
   const init_productoMedida = {
     medida: {
       _id: '',
@@ -164,29 +165,32 @@ export const useProductoDetalle = () => {
    ********************* DATOS BASICOS *********************
    */
   const modificarProductoBasico = async () => {
-    if (estado.datos_modificarProductoBasico.imagen?.data == null) {
-      const productoModificado = await productoService.modificarProductoBasico(
-        productoStore.producto._id,
-        {
-          nombre: estado.datos_modificarProductoBasico.nombre, //@ts-ignore
-          categoria: estado.datos_modificarProductoBasico.categoria,
-          comentario: estado.datos_modificarProductoBasico.comentario,
-        },
-      );
-      if (productoModificado)
-        NotifySucessCenter('Producto modificado correctamente');
-    } else {
-      const productoModificado = await productoService.modificarProductoBasico(
-        productoStore.producto._id,
-        {
-          nombre: estado.datos_modificarProductoBasico.nombre, //@ts-ignore
-          categoria: estado.datos_modificarProductoBasico.categoria._id,
-          comentario: estado.datos_modificarProductoBasico.comentario,
-          imagen: estado.datos_modificarProductoBasico.imagen,
-        },
-      );
-      if (productoModificado)
-        NotifySucessCenter('Producto modificado correctamente');
+    const datos = {
+      nombre: estado.datos_modificarProductoBasico.nombre,
+      categoria: estado.datos_modificarProductoBasico.categoria,
+      comentario: estado.datos_modificarProductoBasico.comentario,
+    };
+    if (estado.datos_modificarProductoBasico.imagen) {
+      Object.assign(datos, {
+        imagen: estado.datos_modificarProductoBasico.imagen,
+      });
+    }
+    console.log(datos);
+    let productoModificado;
+    try {
+      loadingAsync(async () => {
+        const productoModificado =
+          await productoService.modificarProductoBasico(
+            productoStore.producto._id,
+            datos,
+          );
+      }).then(() => {
+        if (productoModificado)
+          NotifySucessCenter('Producto modificado correctamente');
+      });
+    } catch (e) {
+      NotifyError(e);
+      throw e;
     }
   };
   /**

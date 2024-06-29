@@ -165,6 +165,8 @@ import MarcaTabPanel from '@/modulos/productos/infraestructura/componente/MarcaT
 import MedidaTabPanel from '@/modulos/productos/infraestructura/componente/MedidaTabPanel.vue';
 import ProveedorTabPanel from '@/modulos/productos/infraestructura/componente/ProveedorTabPanel.vue';
 import { UrlToBase64Image } from '~/components/input/input.service';
+import type { Producto } from '#gql';
+const router = useRouter();
 
 // Verificacion de permisos
 const authStore = useAuthStore();
@@ -193,18 +195,19 @@ const {
 const options = ref([]);
 const showTable = ref(false); //estado.medidaProducto.medida;
 
-// const fnGuardarMedidaBasica = () => {
-//   guardarMedidaBasica();
-//   showTable.value = true;
-// };
+// si no hay producto, pagina equivocada y volvemos a lalista
+if (!productoStore.producto) {
+  goTo(router, 'productos');
+}
 
-if (productoStore.producto) {
-  // @ts-expect-error
-  estado.datos_modificarProductoBasico = productoStore.producto;
-  if (estado.datos_modificarProductoBasico.categoria) {
-    estado.datos_modificarProductoBasico.categoria =
-      estado.datos_modificarProductoBasico.categoria;
+// inicializacion del formulario modif
+for (const key in estado.datos_modificarProductoBasico) {
+  if (key === 'categoria') {
+    estado.datos_modificarProductoBasico[key] = productoStore.producto[key]._id;
+    continue;
   }
+  estado.datos_modificarProductoBasico[key] =
+    productoStore.producto[key] ?? null;
 }
 
 const { $socket } = useNuxtApp();

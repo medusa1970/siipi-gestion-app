@@ -1,6 +1,6 @@
 <template>
   <q-file
-    v-model="localModel"
+    v-model="archivo"
     @update:model-value="handleChange"
     @rejected="handleReject"
     @blur="activarValidacion"
@@ -15,7 +15,8 @@
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="error"
+    :errorMessage="errorMensaje"
+    counter
   >
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
@@ -32,7 +33,7 @@
         round
       />
       <q-btn
-        v-if="valorInicial || valorPreview"
+        v-if="valorInicial || valorImagen"
         @click="handleRefresh"
         icon="refresh"
         size="xs"
@@ -43,14 +44,16 @@
       />
     </template>
 
-    <template #before v-if="preview">
-      <q-img :src="preview" style="width: 50px" />
+    <template #before v-if="imagen">
+      <q-img :src="imagen" style="width: 50px" />
     </template>
 
     <template #after v-if="info && info.length > 0">
       <input-botonAyuda :mensaje="info" />
     </template>
   </q-file>
+  {{ errorFlag }}
+  {{ errorMensaje }}
 </template>
 
 <script setup lang="ts">
@@ -62,13 +65,15 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    valor: string | null,
+    imagen: string,
+    archivo: File | null,
+    isPreview: boolean,
   ): void;
   (
     // el input está en estado de error de validación
     event: 'error',
     errorFlag: boolean,
-    errorMessage: string | null,
+    errorMensaje: string | null,
   ): void;
 }>();
 
@@ -78,14 +83,15 @@ const emits = defineEmits<{
 
 const props = withDefaults(
   defineProps<{
+    onUpdate: Function; // para que el @update sea obligatorio
     accept?: string; // extenciones de archivo validas
     maxSizeKb?: string; // tamaño maximo en Kb
-    valorInicial?: string; // valor seleccionado al iniciar
-    valorPreview?: string; // valor mostrado al iniciar, sin seleccionar
+    valorInicial?: File; // valor seleccionado al iniciar
+    valorImagen?: File; // valor mostrado al iniciar, sin seleccionar
     label?: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
     info: string; // texto de ayuda en el boton de ayuda
-    rules?: Function[]; // reglas de validacion
+    rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
@@ -101,6 +107,7 @@ const props = withDefaults(
     dense: true,
     clearable: true,
     clase: 'mt-5 mb-2',
+    rules: [] as Function[],
   },
 );
 
@@ -108,42 +115,22 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const preview = ref<string>(null); // contenido del input
-const localModel = ref<string | null>(null); // contenido del input
+const archivo = ref<File | null>(null); // contenido del input
+const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
+const imagenInicial = ref(null); // carga una vez : valor inicial desde el pariente
+const imagenimagen = ref(null); // carga una vez : valor imagen desde el pariente
+const isPreview = ref<boolean>(true); // si estamos con una preview o un valor
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
-const requerido = (props.rules as Function[])
-  .map((rule) => rule.name)
-  .includes('requerido');
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+if (props.valorInicial) imagenInicial.value = await props.valorInicial.text();
+if (props.valorImagen) imagenimagen.value = await props.valorImagen.text();
 
-/**
- * Logica especifica para refresh y clear
- */
-
-// al cambiar el local model, avisar el componiente padre
-watch(localModel, () => {
-  emits('update', localModel.value);
+// bug
+onBeforeMount(async () => {
+  if (props.valorInicial) imagenInicial.value = await props.valorInicial.text();
+  if (props.valorImagen) imagenimagen.value = await props.valorImagen.text();
 });
-
-// borrar el contenido del input
-const handleClear = () => {
-  localModel.value = null;
-  preview.value = null;
-};
-
-// reiniciar el valor inicial del input
-const handleRefresh = () => {
-  if (props.valorInicial) {
-    localModel.value = props.valorInicial;
-    preview.value = props.valorInicial;
-  } else if (props.valorPreview) {
-    localModel.value = null;
-    preview.value = props.valorPreview;
-  } else handleClear();
-};
-
-// refresh con los valores iniciales
-handleRefresh();
 
 /**
  * Metodos
@@ -158,32 +145,41 @@ function setError(mensaje: string | null) {
 }
 
 // activar la validacíon del valor actual del input
-function activarValidacion(reset = true) {
+function activarValidacion() {
   for (const regla of props.rules as Function[]) {
-    const resultado = regla(localModel.value);
+    const resultado = regla(archivo.value);
     if (resultado !== true) {
       setError(resultado);
-      return; // solo el primer error se manda
+      return;
     }
   }
-  if (reset) setError(null);
+  setError(null);
 }
 
 // llamado cuando cambia el valor del input
-const handleChange = (valor: Blob | null) => {
+const handleChange = async (valor: File | null) => {
   setError(null);
-  if (valor instanceof Blob) {
+  if (valor instanceof File) {
+    archivo.value = valor;
+    isPreview.value = false;
     const lector = new FileReader();
     lector.addEventListener('load', () => {
-      // @ts-ignore
-      localModel.value = lector.result;
+      imagen.value = lector.result as string;
+      emits('update', imagen.value, archivo.value, isPreview.value);
     });
     lector.addEventListener('error', () => {
       setError('Hubo un problema al cargar la imagen');
     });
     lector.readAsDataURL(valor);
   }
-  activarValidacion(false);
+  // TODO pensarlo mejor
+  for (const regla of props.rules as Function[]) {
+    const resultado = regla(archivo.value);
+    if (resultado !== true) {
+      setError(resultado);
+      return;
+    }
+  }
 };
 
 // hubo un error de tamaño o de extensión de la imagen
@@ -198,6 +194,36 @@ const handleReject = ([event]: [any]) => {
     errorMensaje.value = 'Algo fue mal, intente de nuevo';
   }
   emits('error', errorFlag.value, errorMensaje.value);
+};
+
+/**
+ * Logica especifica para refresh y clear
+ */
+
+// borrar el contenido del input
+const handleClear = () => {
+  archivo.value = null;
+  imagen.value = null;
+  isPreview.value = false;
+  emits('update', imagen.value, archivo.value, isPreview.value);
+};
+
+// reiniciar el valor inicial del input
+const handleRefresh = () => {
+  if (props.valorInicial) {
+    archivo.value = props.valorInicial;
+    imagen.value = imagenInicial.value;
+    isPreview.value = false;
+  } else if (props.valorImagen) {
+    archivo.value = props.valorImagen;
+    imagen.value = imagenimagen.value;
+    isPreview.value = true;
+  } else {
+    archivo.value = null;
+    imagen.value = null;
+    isPreview.value = false;
+  }
+  emits('update', imagen.value, archivo.value, isPreview.value);
 };
 
 /**
@@ -216,4 +242,10 @@ watch(
   () => activarValidacion(), // se activa la validacion
   { immediate: false },
 );
+
+/**
+ * Inicialisacion
+ */
+
+handleRefresh();
 </script>

@@ -18,7 +18,7 @@
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="error"
+    :errorMessage="errorMensaje"
     options-cover
     options-dense
     :options="listaOpciones"
@@ -35,11 +35,7 @@
       <q-icon :name="icono" @click.stop.prevent />
     </template>
     <template v-slot:option="scope">
-      <q-item
-        v-bind="scope.itemProps"
-        v-on="scope.itemEvents"
-        :class="scope.opt.class"
-      >
+      <q-item v-bind="scope.itemProps" :class="scope.opt.class">
         <q-item-section>{{ scope.opt.label }}</q-item-section>
       </q-item>
     </template>
@@ -69,13 +65,12 @@
           @update:opciones="updateOpciones"
         />
       </q-card-section>
-    </q-card> </q-dialog
-  >!{{ props.dense }}
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
-import type { DropdownOpcion } from './dropdown.interface';
-import { withDefaults } from 'vue';
+import type { SelectOpcion } from './select.interface';
 
 /**
  * emits
@@ -100,12 +95,13 @@ const emits = defineEmits<{
  */
 const props = withDefaults(
   defineProps<{
+    onUpdate: Function; // para que el @update sea obligatorio
     label?: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
     info: string; // texto de ayuda en el boton de ayuda
-    opciones: DropdownOpcion[]; // lista de opciones del select
+    opciones: SelectOpcion[]; // lista de opciones del select
     valorInicial?: string; // valor seleccionado al iniciar
-    rules?: Function[]; // reglas de validacion
+    rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
@@ -122,6 +118,7 @@ const props = withDefaults(
     dense: true,
     clearable: true,
     clase: 'mt-5 mb-2',
+    rules: [] as Function[],
   },
 );
 
@@ -130,7 +127,7 @@ const props = withDefaults(
  */
 
 const localModel = ref<string>(props.valorInicial); // contenido del input
-const listaOpciones = ref<DropdownOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
+const listaOpciones = ref<SelectOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
@@ -182,7 +179,7 @@ function filterFn(valor: string, update: Function) {
 }
 
 // agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(opciones: DropdownOpcion[], posicion: number) {
+function updateOpciones(opciones: SelectOpcion[], posicion: number) {
   listaOpciones.value = opciones;
   localModel.value = opciones[posicion].value;
   handleChange(opciones[posicion].value);

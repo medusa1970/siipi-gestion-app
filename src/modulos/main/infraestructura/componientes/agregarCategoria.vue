@@ -9,7 +9,7 @@
       clearable
     />
 
-    <input-dropdown
+    <input-select
       label="Categoria"
       :opciones="categoriasNivelUno"
       @update="(v) => (pariente.value = v)"

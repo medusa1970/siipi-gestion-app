@@ -130,21 +130,21 @@
       <!-- nombre -->
       <div>
         <input-text
-          label="Texto"
+          label="Nombre"
           info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
           @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
-          requerido
+          :rules="[useRules.requerido()]"
         />
       </div>
 
       <!-- Categoria -->
       <div>
-        <input-dropdown
+        <input-select
           label="Categoria"
-          :options="estado.categoriaOptions"
+          :opciones="estado.categoriaOptions"
           info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
           @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
-          requerido
+          :rules="[useRules.requerido()]"
         />
       </div>
 
@@ -154,9 +154,9 @@
           label="Imagen"
           info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
           @update="
-            (v) =>
+            (data) =>
               (estado.datos_crearProductoBasico.imagen = {
-                data: v,
+                data,
                 mimetype: 'image/png',
               })
           "
@@ -266,7 +266,6 @@ import { columnsProductos } from '@/modulos/productos/infraestructura/utils/colu
 import ProductoImage from '@/assets/img/producto.png';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
-
 const productoStore = storeProducto();
 
 const {
@@ -289,8 +288,6 @@ const { $socket } = useNuxtApp();
 onMounted(async () => {
   await traerProductos();
   await getProductos();
-  // estado.productos = await productoStore.getProductos();
-  estado.categoriaOptions = await categoriaSelectOptions();
 
   // reload de la pagina productos
   let reloaded = localStorage.getItem('reloaded');

@@ -23,7 +23,7 @@
       dense
     />
     <p>Input select, value = {{ log(refSelect) }}</p>
-    <input-dropdown
+    <input-select
       label="Categoria"
       :options="categoriaOptions"
       info="(una pequeña ayuda aquí)"

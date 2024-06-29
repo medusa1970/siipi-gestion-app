@@ -35,7 +35,7 @@ export const productoService = {
    * Retorna una categoria con sus hijas populadas
    */
   obtenerTodasCategorias: async (): Promise<Categoria | null> =>
-    extraerUno(
+    extraer(
       await GqlProductosCategoriaArbol({
         busqueda: { nombre: ['CATEGORIA RAIZ'] },
       }),
@@ -323,7 +323,7 @@ export const productoService = {
     token: any,
   ): Promise<Producto | null> => {
     // borramos el producto
-    const [producto] = extraer(
+    const producto = extraerUno(
       await GqlBorrarProductos({
         busqueda: { _id: [productoID] },
       }),
@@ -334,7 +334,7 @@ export const productoService = {
       return null;
     }
     // creamos la accion
-    const accion = extraer(
+    const accion = extraerUno(
       await GqlCrearAccion(
         {
           datos: {

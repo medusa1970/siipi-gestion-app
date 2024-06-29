@@ -69,7 +69,7 @@
 
     <!-- DROPDDOWN -->
     <template v-slot:top-left>
-      <slot name="dropdown"></slot>
+      <slot name="select"></slot>
     </template>
     <!-- ACCIONES -->
     <template v-slot:body-cell-actions="props">

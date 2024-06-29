@@ -8,7 +8,7 @@
       style="padding: 0"
       badge
     >
-      <template #dropdown>
+      <template #select>
         <q-btn
           color="primary"
           icon="add"

@@ -16,7 +16,7 @@
     :class="clase"
     bottom-slots
     :error="errorFlag"
-    :errorMessage="error"
+    :errorMessage="errorMensaje"
   >
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
@@ -60,12 +60,13 @@ const emits = defineEmits<{
  */
 const props = withDefaults(
   defineProps<{
+    onUpdate: Function; // para que el @update sea obligatorio
+    label: string; // label adentro del input
     tipo?: 'text' | 'textarea' | 'password'; // text, textarea, password
-    label?: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
-    info: string; // texto de ayuda en el boton de ayuda
+    info?: string; // texto de ayuda en el boton de ayuda
     valorInicial?: string; // valor seleccionado al iniciar
-    rules?: Function[]; // reglas de validacion
+    rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
@@ -84,6 +85,7 @@ const props = withDefaults(
     dense: true,
     clearable: true,
     clase: 'mt-2 mb-1',
+    rules: [] as Function[],
   },
 );
 
@@ -95,9 +97,7 @@ const localModel = ref<string>(props.valorInicial); // contenido del input
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o
-const requerido = (props.rules as Function[])
-  .map((rule) => rule.name)
-  .includes('requerido');
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
 /**
  * metodos

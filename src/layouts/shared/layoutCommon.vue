@@ -134,7 +134,6 @@ import { useQuasar } from 'quasar';
 import RickRoll from '@/assets/mp3/rickroll.mp3';
 import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
-import { authService } from '@/modulos/main/API/authService';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
 

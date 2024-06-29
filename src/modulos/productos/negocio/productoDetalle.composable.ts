@@ -4,7 +4,6 @@ import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import localforage from 'localforage';
 // types
 import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
 import type {
   CrearVariedadDto,
   Marca,
@@ -12,6 +11,7 @@ import type {
   ModificarCargoDto,
   ModificarMedidaDto,
   ModificarProductoDto,
+  Producto,
 } from '#gql';
 import { useQuasar } from 'quasar';
 

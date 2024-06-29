@@ -150,7 +150,7 @@
           :rows="productoStore.producto.empaques"
           :columns="columnaEmpaques"
         >
-          <template #dropdown>
+          <template #select>
             <q-btn
               color="primary"
               icon="add"

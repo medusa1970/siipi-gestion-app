@@ -82,11 +82,7 @@
             map-options
           >
             <template v-slot:option="scope">
-              <q-item
-                v-bind="scope.itemProps"
-                v-on="scope.itemEvents"
-                :class="scope.opt.class"
-              >
+              <q-item v-bind="scope.itemProps" :class="scope.opt.class">
                 <q-item-section>{{ scope.opt.label }}</q-item-section>
               </q-item>
             </template>

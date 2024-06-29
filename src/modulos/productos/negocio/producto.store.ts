@@ -3,8 +3,8 @@
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
+import type { Categoria, Producto } from '#gql';
 import { productoService } from '../API/productoService';
-import type { Producto, Categoria } from '../API/producto.interfaceApi';
 import localforage from 'localforage';
 
 interface ProductoStoreProps {

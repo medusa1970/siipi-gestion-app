@@ -61,9 +61,8 @@ export const useAuth = {
    * @returns Persona
    */
   registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
-<<<<<<< HEAD:src/modulos/main/API/useAuth.ts
     try {
-      const [nuevaPersona] = extraer(
+      const nuevaPersona = extraerUno(
         await GqlAuthCrearPersonas({
           datos: [datos],
         }),
@@ -74,16 +73,6 @@ export const useAuth = {
     } catch (e) {
       throw getApiErrorCode(e);
     }
-=======
-    const { _id, usuario, ...nuevoDato } = datos;
-    console.log(nuevoDato);
-    const [nuevaPersona] = await postDataGql(
-      GqlAuthCrearPersonas({
-        datos: [nuevoDato],
-      }),
-    );
-    return nuevaPersona;
->>>>>>> will-productos:src/modulos/main/API/authService.ts
   },
 
   /**

@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults, defineProps } from 'vue';
+import { withDefaults } from 'vue';
 // Usar una declaración basada en tipos para definir props y valores predeterminados
 const props = withDefaults(
   defineProps<{

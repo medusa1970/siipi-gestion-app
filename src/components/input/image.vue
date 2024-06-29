@@ -65,7 +65,7 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    imagen: string,
+    data: string,
     archivo: File | null,
     isPreview: boolean,
   ): void;
@@ -84,13 +84,13 @@ const emits = defineEmits<{
 const props = withDefaults(
   defineProps<{
     onUpdate: Function; // para que el @update sea obligatorio
+    label: string; // label adentro del input
     accept?: string; // extenciones de archivo validas
     maxSizeKb?: string; // tamaño maximo en Kb
     valorInicial?: File; // valor seleccionado al iniciar
     valorImagen?: File; // valor mostrado al iniciar, sin seleccionar
-    label?: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
-    info: string; // texto de ayuda en el boton de ayuda
+    info?: string; // texto de ayuda en el boton de ayuda
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
@@ -117,19 +117,22 @@ const props = withDefaults(
 
 const archivo = ref<File | null>(null); // contenido del input
 const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
-const imagenInicial = ref(null); // carga una vez : valor inicial desde el pariente
-const imagenimagen = ref(null); // carga una vez : valor imagen desde el pariente
+const valorInicial = ref(null); // carga una vez : valor inicial desde el pariente
+const valorImagen = ref(null); // carga una vez : valor imagen desde el pariente
 const isPreview = ref<boolean>(true); // si estamos con una preview o un valor
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
-if (props.valorInicial) imagenInicial.value = await props.valorInicial.text();
-if (props.valorImagen) imagenimagen.value = await props.valorImagen.text();
+
+//@ts-ignore
+if (props.valorInicial) valorInicial.value = await props.valorInicial.text();
+//@ts-ignore
+if (props.valorImagen) valorImagen.value = await props.valorImagen.text();
 
 // bug
 onBeforeMount(async () => {
-  if (props.valorInicial) imagenInicial.value = await props.valorInicial.text();
-  if (props.valorImagen) imagenimagen.value = await props.valorImagen.text();
+  if (props.valorInicial) valorInicial.value = await props.valorInicial.text();
+  if (props.valorImagen) valorImagen.value = await props.valorImagen.text();
 });
 
 /**
@@ -212,11 +215,11 @@ const handleClear = () => {
 const handleRefresh = () => {
   if (props.valorInicial) {
     archivo.value = props.valorInicial;
-    imagen.value = imagenInicial.value;
+    imagen.value = valorInicial.value;
     isPreview.value = false;
   } else if (props.valorImagen) {
     archivo.value = props.valorImagen;
-    imagen.value = imagenimagen.value;
+    imagen.value = valorImagen.value;
     isPreview.value = true;
   } else {
     archivo.value = null;

@@ -96,10 +96,10 @@ const emits = defineEmits<{
 const props = withDefaults(
   defineProps<{
     onUpdate: Function; // para que el @update sea obligatorio
-    label?: string; // label adentro del input
-    hint?: string; // texto de ayuda debajo del input
-    info: string; // texto de ayuda en el boton de ayuda
     opciones: SelectOpcion[]; // lista de opciones del select
+    label: string; // label adentro del input
+    hint?: string; // texto de ayuda debajo del input
+    info?: string; // texto de ayuda en el boton de ayuda
     valorInicial?: string; // valor seleccionado al iniciar
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label

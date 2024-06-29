@@ -58,10 +58,9 @@ const file = ref(
     { type: 'image/jpg' },
   ),
 );
-function onImageChange(data, archivo, send) {
-  console.log(send);
-  if (archivo !== null) {
-    refImage64.value = archivo.text();
+function onImageChange(data, archivo, isPreview) {
+  if (!isPreview && archivo !== null) {
+    refImage64.value = archivo;
     imagen.value = data;
   } else {
     refImage64.value = null;

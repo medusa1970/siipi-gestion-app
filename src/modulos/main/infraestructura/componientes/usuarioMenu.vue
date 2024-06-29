@@ -9,28 +9,24 @@
     >
       <q-list style="min-width: 100px">
         <!-- perfil -->
-        <q-item clickable @click="showRaiz = true">
+        <q-item clickable @click="perfil.show = true">
           <q-item-section avatar>
             <q-avatar>
               <img
-                v-if="authStore.getUsuario?.cloudinaryUrl"
-                class="rounded-full object-cover"
+                class="round object-cover"
                 style="width: 40px; height: 40px"
-                :src="authStore.getUsuario?.cloudinaryUrl"
-              />
-              <img
-                v-else
-                class="rounded-full object-cover"
-                style="width: 40px; height: 40px"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="
+                  authStore.getUsuario?.cloudinaryUrl ??
+                  'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg'
+                "
               />
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Perfil</q-item-label>
-            <q-item-label caption lines="1">{{
-              authStore.getUsuario?.correo
+            <q-item-label>{{
+              authStore.getUsuarioNombreCompleto
             }}</q-item-label>
+            <q-item-label caption lines="1"></q-item-label>
           </q-item-section>
         </q-item>
         <q-separator />
@@ -46,7 +42,6 @@
           <q-list class="px-2">
             <q-item
               clickable
-              @click="sede"
               v-for="(negocio, index) in authStore.getUsuario?.negocios"
               :key="negocio.nombre"
             >
@@ -68,8 +63,8 @@
     </q-menu>
   </q-btn>
 
-  <q-dialog v-model="showRaiz">
-    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
+  <q-dialog v-model="perfil.show">
+    <q-card style="min-width: 300px" class="p-3">
       <q-card-section>
         <div class="flex justify-between">
           <h1 class="text-lg font-bold">Editar perfil</h1>
@@ -88,35 +83,30 @@
         <q-card-section>
           <input-text
             label="Nombre"
-            @update="(v) => (perfil.nombre.valor = v)"
-            :default="perfil.nombre.valor"
-            dense
+            @update="(v) => (perfil.nombre.value = v)"
+            :valorInicial="perfil.nombre.value"
           />
           <input-text
             label="Apellido"
-            @update="(v) => (perfil.apellido.valor = v)"
-            :default="perfil.apellido.valor"
-            dense
+            @update="(v) => (perfil.apellido.value = v)"
+            :valorInicial="perfil.apellido.value"
           />
           <input-text
             label="telefono"
-            @update="(v) => (perfil.telefono.valor = v)"
-            :default="perfil.telefono.valor"
-            dense
+            @update="(v) => (perfil.telefono.value = v)"
+            :valorInicial="perfil.telefono.value"
           />
           <input-text
             label="email"
-            @update="(v) => (perfil.correo.valor = v)"
-            :default="perfil.correo.valor"
-            :errorMessage="perfil.correo.error"
+            @update="(v) => (perfil.correo.value = v)"
+            :valorInicial="perfil.correo.value"
+            :error="perfil.correo.error"
             dense
           />
           <input-image
             label="Cambiar imagen"
-            @update="(v) => (perfil.imagen.valor = v)"
-            :default="perfil.imagen.valor"
+            @update="onImageChange"
             maxSizeKb="500"
-            dense
           />
           <div class="flex justify-center">
             <q-btn
@@ -155,15 +145,26 @@ const props = defineProps({
 
 // MODAL editarPerfil
 
-const perfil = {
-  nombre: reactiveInput(authStore.getUsuario?.nombre),
-  apellido: reactiveInput(authStore.getUsuario?.apellido),
-  telefono: reactiveInput(authStore.getUsuario?.telefono),
-  correo: reactiveInput(authStore.getUsuario?.correo),
-  imagen: reactiveInput(),
-  show: ref(true),
-};
+const perfil = reactive({
+  nombre: reactiveData(authStore.getUsuario?.nombre),
+  apellido: reactiveData(authStore.getUsuario?.apellido),
+  telefono: reactiveData(authStore.getUsuario?.telefono),
+  correo: reactiveData(authStore.getUsuario?.correo, 'oo'),
+  imagen: reactiveData(),
+  show: false,
+});
 const showRaiz = ref(false);
+
+function onImageChange(data, archivo, isPreview) {
+  if (!isPreview && archivo !== null) {
+    perfil.imagen.value = {
+      data,
+      mimetype: archivo.type,
+    };
+  } else {
+    perfil.imagen.value = null;
+  }
+}
 
 const editarPerfilSubmit = async () => {
   // en que caso no hubiera usuario ? pero bueno por seguridad
@@ -173,36 +174,36 @@ const editarPerfilSubmit = async () => {
 
   // modificamos el usuario
   const datos = {
-    nombre: perfil.nombre.valor,
-    apellido: perfil.apellido.valor,
-    correo: perfil.correo.valor,
-    telefono: perfil.telefono.valor,
+    nombre: perfil.nombre.value,
+    apellido: perfil.apellido.value,
+    correo: perfil.correo.value,
+    telefono: perfil.telefono.value,
   };
-  if (perfil.imagen.valor) {
+  if (perfil.imagen.value) {
     Object.assign(datos, {
-      imagen: {
-        data: perfil.imagen.valor,
-        mimetype: 'image/png',
-      },
+      imagen: perfil.imagen.value,
     });
   }
-  const persona = await usuarioService.editarPerfil(
-    authStore.getUsuarioId,
-    datos,
-  );
 
-  // success : actualizamos el usuario en el store y cerramos
-  if (persona !== null) {
-    try {
-      authStore.editarPerfil(persona);
-    } catch (e) {
-      throw e;
-    }
-    NotifySucessCenter('Usuario editado correctamente');
-  } else {
-    NotifyError('Hubo un error, intente de nuevo');
+  let persona = ref(null);
+  try {
+    loadingAsync(async () => {
+      persona.value = await usuarioService.editarPerfil(
+        authStore.getUsuarioId,
+        datos,
+      );
+    }).then(() => {
+      if (persona.value !== null) {
+        authStore.editarPerfil(persona.value);
+        perfil.show = false;
+        NotifySucessCenter('Usuario editado correctamente');
+      } else {
+        NotifyError('Hubo un error, intente de nuevo');
+      }
+    });
+  } catch (e) {
+    throw e;
   }
-  // perfil.show.value = false;
 };
 
 const password = ref('');
@@ -230,36 +231,38 @@ const elegirNegocio = (index: number, nombre: string) => {
   }).onOk(async () => {
     // averiguamos la contraseña
 
+    let loginResponse;
     try {
-      await useAuth.login(
+      loginResponse = await useAuth.login(
         authStore.getUsuario?.usuario as string,
         password.value,
       );
-    } catch {
-      // bad contraseña
-    }
-
-    const negocio = await authStore.elegirNegocio(index);
-
-    if (!loginResponse) {
-      NotifyError(`contraseña incorrecta`);
-    } else {
-      authStore.token = loginResponse.token;
-      authStore.elegirNegocio(index);
-      NotifySucess(`Negocio elegido: ${nombre}`);
-      password.value = '';
-      switch (authStore.getNegocio?.tipo) {
-        case 'PUNTO':
-          goTo(router, 'punto');
-          break;
-        case 'CATHERING':
-          goTo(router, 'cathering');
-          break;
+      if (!loginResponse) {
+      } else {
+        authStore.elegirNegocio(index);
+        authStore.token = loginResponse.token;
+        password.value = '';
+        NotifySucess(`Negocio elegido: ${nombre}`);
+        perfil.show = false;
+        switch (authStore.getNegocio?.tipo) {
+          case 'PUNTO':
+            goTo(router, 'punto');
+            break;
+          case 'CATHERING':
+            goTo(router, 'cathering');
+            break;
+        }
       }
-
-      // TODO averiguar suscripcion, etc
-      // TODO BUGs de irala a iralita + cliente
+    } catch (e: any) {
+      if (e === 'B104') {
+        NotifyError(`Contraseña incorrecta`); // notificacion en caso de error desconocido
+      } else {
+        NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
+      }
+      return false;
     }
+    // TODO averiguar suscripcion, etc
+    // TODO BUGs de irala a iralita + cliente
   });
 };
 

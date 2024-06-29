@@ -7,27 +7,16 @@
       class="px-2 py-1"
       style="height: auto"
     >
-      <div class="max-w-[200px]">
-        <h1>{{ mensaje }}</h1>
-      </div>
-    </q-popup-edit></q-btn
-  >
+      <div class="max-w-[200px]">{{ mensaje }}</div>
+    </q-popup-edit>
+  </q-btn>
 </template>
 
 <script setup>
 defineProps({
   mensaje: String,
-  colorBtn: {
-    type: String,
-    default: 'blue',
-  },
-  iconBtn: {
-    type: String,
-    default: 'info',
-  },
-  size: {
-    type: String,
-    default: '13px',
-  },
+  colorBtn: { type: String, default: 'blue' },
+  iconBtn: { type: String, default: 'info' },
+  size: { type: String, default: '13px' },
 });
 </script>

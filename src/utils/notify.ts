@@ -35,8 +35,14 @@ export const getApiErrorCode = (err: any): string => {
   if (apiError) {
     const regex = /\[\[(.*)\]\]/;
     const match = apiError.match(regex);
-    if (match?.[1]) {
-      return 'B' + match?.[1];
+    const codigo = match?.[1];
+    if (codigo) {
+      if (codigo === '204') {
+        const regex2 = /<(.*)>/;
+        const match = apiError.match(regex2);
+        return 'B' + codigo + ',' + match?.[1];
+      }
+      return 'B' + codigo;
     } else {
       console.warn(err);
       return 'B_ERROR_API';

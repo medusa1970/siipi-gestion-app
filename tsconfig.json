@@ -1,4 +1,22 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    // "types": ["pinia-plugin-persist"],
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["src/*"],
+    //   "~/*": ["src/*"]
+    // },
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowJs": true, // Permite archivos JS
+    "skipLibCheck": true, // Omite la verificación de tipos en archivos de declaración
+    "strict": false // Desactiva la verificación estricta de tipos
+  }
+
+  // LOS ODIOOOOO
+  // "exclude": ["node_modules"]
+  // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
 }

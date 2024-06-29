@@ -43,7 +43,7 @@ export const columnsProductos = [
   },
 ];
 
-export const empaques = [
+export const columnaEmpaques = [
   {
     name: 'nombre',
     required: true,
@@ -83,7 +83,7 @@ export const empaques = [
   },
 ];
 
-export const proveedores = [
+export const columnaProveedores = [
   {
     name: 'proveedor',
     required: true,
@@ -131,7 +131,7 @@ export const proveedores = [
   },
 ];
 
-export const marcas = [
+export const columnaMarca = [
   {
     name: 'imagen',
     label: 'Imagen',

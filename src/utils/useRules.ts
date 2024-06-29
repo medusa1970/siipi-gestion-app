@@ -1,54 +1,47 @@
-/**
- * VALIDACION DE INPUTS DEL FORMULARIO
- */
-
 export const useRules = {
-  // campo required
-  requerido(val: any): string | true {
-    if (val === null || val === '') {
-      return 'Campo requerido';
-    }
-    return true;
-  },
-
-  // campo required
-  req(msj: string = 'Campo requerido') {
-    return (val: any) => {
-      if (val === null || val === '') {
-        return msj;
+  requerido(mensaje: string = 'Campo requerido'): Function {
+    const requerido = (val: any): String | true => {
+      if (val == null || val === '') {
+        return mensaje;
+      } else {
+        return true;
       }
-      return true;
     };
+    return requerido;
   },
 
-  // email
-  email(msj: string = 'Debe ser un email') {
-    return (val: any) => {
+  correo(mensaje: string = 'Email malformado'): Function {
+    const correo = (val: string): String | true => {
       if (!/@/.test(val)) {
-        return msj;
+        return mensaje;
+      } else {
+        return true;
       }
-      return true;
     };
+    return correo;
   },
 
-  // validación de contraseña
-  password(val: any): string | true {
+  telefono(mensaje: string = 'Telefono malformado'): Function {
+    const telefono = (val: string): String | true => {
+      if (val.length !== 8) {
+        return mensaje;
+      } else {
+        return true;
+      }
+    };
+    return telefono;
+  },
+
+  password(val: string): string | true {
     if (
       val.length > 0 &&
       !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*$/.test(val)
     ) {
       return 'La contraseña debe tener por lo menos una minuscula, una maiuscula y un numero.';
-    }
-    if (val.length < 8) {
+    } else if (val.length < 8) {
       return 'La contraseña debe tener al menos 8 caracteres.';
+    } else {
+      return true;
     }
-    return true;
-  },
-
-  // validación de numero de telefono
-  phone(val: any): string | true {
-    if (!val) return 'Telefono es requerido';
-    if (val.length != 8) return 'Debe contener 8 caracteres.';
-    return true;
   },
 };

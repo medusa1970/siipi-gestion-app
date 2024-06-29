@@ -7,31 +7,20 @@
       <div class="mt-2 mb-2">Recupera tu contraseña (2/3)</div>
     </div>
 
-    <q-input
-      v-model="rdcTokenInput"
-      type="text"
-      label="El código recibido por mail"
-      ref="rdcTokenInputRef"
-      :rules="[useRules.req()]"
-      :error="rdcTokenInputErr !== null"
-      outlined
-      dense
-    >
-      <template #error>
-        <div>{{ rdcTokenInputErr }}</div>
-      </template>
-    </q-input>
+    <q-form @submit="formSubmit">
+      <input-text
+        label="Código recibido por mail"
+        @update="(v) => (codigo.value = v)"
+        :error="codigo.error"
+        :rules="[useRules.requerido()]"
+        icono="key"
+      />
+      <div class="mt-1 w-full text-center">
+        <q-btn no-caps label="siguiente" color="primary" type="submit"></q-btn>
+      </div>
+    </q-form>
 
-    <div class="w-full text-center">
-      <q-btn
-        no-caps
-        label="siguiente"
-        color="primary"
-        @click="submitRdc2"
-      ></q-btn>
-    </div>
-
-    <div class="w-full text-center">
+    <div class="mt-1 w-full text-center">
       <q-btn label="volver" @click="emits('go', 'login')" dense flat no-caps />
     </div>
   </div>
@@ -44,30 +33,24 @@ import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
 
-const rdcTokenInput = ref('');
-const rdcTokenInputRef = ref(null);
-const rdcTokenInputErr = ref(null);
+const codigo = reactiveInput();
 
-const submitRdc2 = async () => {
-  // gestion de errores del formulario
-  resetErrores(rdcTokenInputErr);
-  if (!validarInputs(rdcTokenInputRef)) return false;
-
-  // llamada a la api
+/**
+ * Submit del formulario
+ */
+const formSubmit = async (datos) => {
   let codigoOk = null;
   try {
-    codigoOk = await useAuth.actuarRDC(rdcTokenInput.value);
+    codigoOk = await useAuth.actuarRDC(codigo.value);
   } catch (e) {
     NotifyError(`Error no tratado: ${e}`);
     return false;
   }
-
-  // cambiar a la seccion siguiente
   if (codigoOk) {
-    authStore.cookie.rdcToken = rdcTokenInput.value;
+    authStore.cookie.rdcToken = codigo.value;
     emits('go', 'rdc3');
   } else {
-    rdcTokenInputErr.value = 'token inválido';
+    codigo.error = 'token inválido';
   }
 };
 </script>

@@ -9,11 +9,20 @@ export interface Producto {
   _modificado?: string;
   _creado?: string;
   nombre: string;
-  comentario: string;
+  comentario?: string;
   categoria: { _id: string; nombre: string };
   imagen: string;
   variedades: Variedad[];
   empaques: Empaque[];
+  medida: {
+    _id: string;
+    nombre: string;
+    tipoEmpaques: {
+      nombre: string;
+      abreviacion: string;
+      cantidad: number;
+    }[];
+  };
 }
 
 export interface Variedad {

@@ -39,20 +39,20 @@ export const menuListCathering = [
   //     // },
   //   ],
   // },
-  // {
-  //   icon: 'sell',
-  //   label: 'Venta',
-  //   subMenu: [
-  //     {
-  //       label: 'Ofertas',
-  //       to: '/cathering/sede/ofertas',
-  //     },
-  //     {
-  //       label: 'Catalogos de oferta',
-  //       to: '/cathering/sede/catalogos/75a4475e446a5885b05739c4',
-  //     },
-  //   ],
-  // },
+  {
+    icon: 'sell',
+    label: 'Venta',
+    subMenu: [
+      {
+        label: 'Ofertas',
+        to: '/cathering/ofertas',
+      },
+      {
+        label: 'Catalogos de oferta',
+        to: '/cathering/ofertas/catalogos',
+      },
+    ],
+  },
   // {
   //   icon: 'description',
   //   label: 'Pedidos',

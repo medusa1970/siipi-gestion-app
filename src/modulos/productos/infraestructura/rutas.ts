@@ -6,8 +6,8 @@ export default [
   },
   {
     name: 'productosDetalles',
-    path: '/cathering/productos/detailProduct',
-    file: '@/modulos/productos/infraestructura/paginas/detailProduct.vue',
+    path: '/cathering/productos/detalleProducto',
+    file: '@/modulos/productos/infraestructura/paginas/detalleProducto.vue',
   },
   {
     name: 'categorias',

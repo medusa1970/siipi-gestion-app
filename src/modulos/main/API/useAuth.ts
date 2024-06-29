@@ -62,12 +62,13 @@ export const useAuth = {
    */
   registrar: async (datos: CrearPersonaDto): Promise<Persona> => {
     try {
-      const { _id, usuario, ...nuevoDato } = datos;
       const [nuevaPersona] = extraer(
         await GqlAuthCrearPersonas({
-          datos: [nuevoDato],
+          datos: [datos],
         }),
       );
+      console.log(datos);
+      console.log(nuevaPersona);
       return nuevaPersona;
     } catch (e) {
       throw getApiErrorCode(e);

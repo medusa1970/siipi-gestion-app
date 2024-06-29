@@ -1,0 +1,84 @@
+#
+# OFERTAS
+#
+
+query buscarOfertas(
+  $busqueda: BuscarOfertaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarOfertaDto = {}
+) {
+  buscarOfertas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    descripcion
+    catalogo {
+      _id
+      nombre
+    }
+    preparados {
+      producto {
+        _id
+      }
+      cantidad
+    }
+    ingredientes {
+      tipo
+      producto {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation crearOfertas(
+  $datos: [CrearOfertaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearOfertas(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    abreviacion
+    descripcion
+    catalogo {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation modificarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    descripcion
+    abreviacion
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation borrarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}

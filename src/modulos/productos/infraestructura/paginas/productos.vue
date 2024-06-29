@@ -18,7 +18,7 @@
       TABLE
       -->
 
-    <Table badge :rows="productos" :columns="columnsProductos" dense>
+    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
       <!-- BADGE -->
       <template #dropdown>
         <q-btn
@@ -28,19 +28,18 @@
           no-caps
           style="font-size: 14.5px"
           padding="4px 10px"
-          @click="show_crearProductoBasico = true"
+          @click="
+            () => {
+              estado.modal.show_crearProductoBasico = true;
+            }
+          "
         />
       </template>
 
       <!-- BADGE -->
       <template #rows-badge="{ props }">
         <q-tr :props="props">
-          <q-td
-            key="imagen"
-            :props="props"
-            class="cursor-pointer"
-            @click="verImagen(props.row.imagen)"
-          >
+          <q-td key="imagen" :props="props" class="cursor-pointer">
             <q-img
               v-if="props.row.imagen"
               :src="props.row.imagen.cloudinaryUrl"
@@ -80,7 +79,11 @@
               dense
               padding="1px"
               size="11px"
-              @click="mostrarInformacionProducto(props.row)"
+              @click="
+                () => {
+                  mostrarInformacionProducto(props.row);
+                }
+              "
             >
               <q-tooltip> Ver informacion producto </q-tooltip>
             </q-btn>
@@ -92,7 +95,11 @@
               dense
               padding="1px"
               size="10px"
-              @click="esEditarProducto(props.row)"
+              @click="
+                () => {
+                  irEdicionProducto(props.row);
+                }
+              "
             >
               <q-tooltip> Editar producto </q-tooltip></q-btn
             >
@@ -108,7 +115,7 @@
   -->
 
   <Dialog2
-    v-model="show_crearProductoBasico"
+    v-model="estado.modal.show_crearProductoBasico"
     title="Crear producto"
     label-btn="Crear"
     :handle-submit="crearProductoBasico"
@@ -121,110 +128,185 @@
       </p>
 
       <!-- nombre -->
-      <div>
-        <input-text
-          label="Texto"
-          info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
-          @update="(v) => (datos_crearProductoBasico.nombre = v)"
-          requerido
-        />
-      </div>
+      <input-text
+        label="Nombre"
+        info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+        @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
+        :rules="[useRules.requerido()]"
+      />
 
       <!-- Categoria -->
-      <div>
-        <input-dropdown
-          label="Categoria"
-          :options="categoriaOptions"
-          info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          @update="(v) => (datos_crearProductoBasico.categoria = v)"
-          requerido
-        />
-      </div>
+      <input-select
+        label="Categoria"
+        :opciones="estado.categoriaOptions"
+        info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+        @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
+        :rules="[useRules.requerido()]"
+      />
 
       <!-- Imagen -->
-      <div>
-        <input-image
-          label="Imagen"
-          info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
-          @update="
-            (v) =>
-              (datos_crearProductoBasico.imagen = {
-                data: v,
-                mimetype: 'image/png',
-              })
-          "
-          icono="photo_camera"
-        />
-      </div>
+      <input-image
+        label="Imagen"
+        info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+        @update="
+          (file, isPreview) =>
+            (estado.datos_crearProductoBasico.imagen =
+              file?.data && !isPreview
+                ? { data: file.data, mimetype: file.mimetype }
+                : null)
+        "
+        icono="photo_camera"
+      />
 
-      <!-- Comentario -->
-      <div>
-        <input-textarea
-          labeproductoApiServicel="Textarea"
-          info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-          @update="(v) => (datos_crearProductoBasico.comentario = v)"
-        />
-      </div>
+      <input-text
+        tipo="textarea"
+        label="comentario"
+        info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+        @update="(v) => (estado.datos_crearProductoBasico.comentario = v)"
+      />
     </template>
   </Dialog2>
 
-  {{ crearProducto }}
+  <!-- 
+  VER INFORMACION PRODUCTO
+  -->
+  <Dialog
+    v-model="estado.modal.show_informacionProducto"
+    title="Informacion producto"
+    no-btn
+  >
+    <template #inputsDialog>
+      <!-- <h1 class="font-bold uppercase text-center mb-2 text-blue-800">
+        {{ producto.informacion.nombre }}
+      </h1> -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1>
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">NOMBRE:</h1>
+        <p>{{ estado.producto?.nombre }}</p></span
+      >
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">COMENTARIO:</h1>
+        <p>{{ estado.producto?.comentario }}</p></span
+      >
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">CATEGORIA:</h1>
+        <p>{{ estado.producto.categoria?.nombre }}</p></span
+      >
+
+      <!-- MARCAS -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCAS</h1>
+      <div
+        v-for="variedad in estado.producto.variedades"
+        :key="variedad._id"
+        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+      >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">MARCA:</h1>
+          <p>{{ variedad.marca.nombre }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
+          <p>{{ variedad.cantidadMin }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
+          <p>{{ variedad.cantidadMax }}</p></span
+        >
+      </div>
+      <h1 v-if="estado.producto.variedades.length == 0">Sin marcas ...</h1>
+
+      <!-- MEDIDAS -->
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">
+        MEDIDA & EMPAQUES
+      </h1>
+      <span class="flex gap-2 items-center"
+        ><h1 class="font-bold text-xs">MEDIDA:</h1>
+        <p v-if="estado.producto?.medida">
+          {{ estado.producto?.medida?.nombre }}
+        </p>
+        <p v-else>sin medida basica...</p>
+      </span>
+      <div
+        v-for="empaque in estado.producto.empaques"
+        :key="empaque.nombre"
+        class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+      >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">NOMBRE:</h1>
+          <p>{{ empaque.nombre }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">ABREVIACION:</h1>
+          <p>{{ empaque.abreviacion }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">CANTIDAD:</h1>
+          <p>{{ empaque.cantidad }}</p></span
+        >
+        <span class="flex gap-2 items-center"
+          ><h1 class="font-bold text-xs">MARCA:</h1>
+          <p>{{ empaque.marca.nombre }}</p></span
+        >
+      </div>
+      <h1 v-if="estado.producto.empaques.length == 0">Sin empaques ...</h1>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
+import { columnsProductos } from '@/modulos/productos/infraestructura/utils/columns';
 import ProductoImage from '@/assets/img/producto.png';
-import { columnsProductos } from '~/modulos/productos/infraestructura/utils/columns';
-import { useProductoService } from '~/modulos/productos/negocio/useProductoService';
-import { useProductoStore } from '~/modulos/productos/negocio/useProductoStore';
+import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { storeProducto } from '@/modulos/productos/negocio/producto.store';
+const productoStore = storeProducto();
 
-// types
-import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
-
-// composables
-const productoService = useProductoService();
-const productoStore = useProductoStore();
+const {
+  estado,
+  crearProductoBasico,
+  actProductosDB,
+  traerProductos,
+  categoriaSelectOptions,
+  mostrarInformacionProducto,
+  irEdicionProducto,
+  getProductos,
+} = useProducto();
 
 // layout
 definePageMeta({
   layout: 'cathering',
 });
 
-// Refs y reactives
-const row = ref('');
-const options = ref([]);
-const productos = ref(await productoStore.getProductos());
-// productos.value = await productoStore.getProductos();
-const categoriaOptions = ref(await productoService.categoriaSelectOptions());
+const { $socket } = useNuxtApp();
+onMounted(async () => {
+  await traerProductos();
+  await getProductos();
 
-// MODAL crearProductoBasico
-const show_crearProductoBasico = ref(false);
-const init_crearProductoBasico = {
-  nombre: '',
-  categoria: '',
-  comentario: null,
-  imagen: null,
-} as CrearProductoBasico;
-const datos_crearProductoBasico = ref(init_crearProductoBasico);
-const crearProductoBasico = async () => {
-  const productoCreado = await productoService.crearProductoBasico(
-    datos_crearProductoBasico.value,
-  );
-  if (productoCreado !== null) {
-    NotifySucessCenter('Producto agregado correctamente');
-    show_crearProductoBasico.value = false;
-    Object.assign(datos_crearProductoBasico, init_crearProductoBasico);
+  estado.categoriaOptions = await categoriaSelectOptions(true);
+
+  // reload de la pagina productos
+  let reloaded = localStorage.getItem('reloaded');
+  if (reloaded) {
+    console.log('Se ha recargado la pagina');
+    // await productoStore.actualizarProductos();
   } else {
-    NotifyError('Problema al agregar el producto');
+    console.log('No se ha recargado la pagina');
+    localStorage.setItem('reloaded', 'true');
   }
-};
+  $socket.on('cambiosProductos', async (data: any) => {
+    console.log('first');
+    console.log(data);
+    await actProductosDB();
+  });
+});
 
-// subscriptions
-// productoStore.$subscribe((mutation, state) => {
-//   if (mutation.payload.productos) {
-//     productos.value = state.productos;
-//   }
+// onBeforeMount(async () => {
+//   await traerProductos();
 // });
+
+onBeforeUnmount(() => {
+  localStorage.removeItem('reloaded');
+  $socket.off('cambiosProductos');
+});
 </script>
 
 <style scoped>

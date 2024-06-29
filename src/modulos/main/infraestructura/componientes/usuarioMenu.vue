@@ -9,28 +9,24 @@
     >
       <q-list style="min-width: 100px">
         <!-- perfil -->
-        <q-item clickable @click="toggle_editarPerfil">
+        <q-item clickable @click="showPerfil = true">
           <q-item-section avatar>
             <q-avatar>
               <img
-                v-if="authStore.getUsuario?.cloudinaryUrl"
-                class="rounded-full object-cover"
+                class="round object-cover"
                 style="width: 40px; height: 40px"
-                :src="authStore.getUsuario?.cloudinaryUrl"
-              />
-              <img
-                v-else
-                class="rounded-full object-cover"
-                style="width: 40px; height: 40px"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+                :src="
+                  authStore.getUsuario?.cloudinaryUrl ??
+                  'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg'
+                "
               />
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Perfil</q-item-label>
-            <q-item-label caption lines="1">{{
-              authStore.getUsuario?.correo
+            <q-item-label>{{
+              authStore.getUsuarioNombreCompleto
             }}</q-item-label>
+            <q-item-label caption lines="1"></q-item-label>
           </q-item-section>
         </q-item>
         <q-separator />
@@ -46,7 +42,6 @@
           <q-list class="px-2">
             <q-item
               clickable
-              @click="sede"
               v-for="(negocio, index) in authStore.getUsuario?.negocios"
               :key="negocio.nombre"
             >
@@ -68,8 +63,8 @@
     </q-menu>
   </q-btn>
 
-  <q-dialog v-model="show_editarPerfil">
-    <q-card :style="cardBig ? 'width: 450px' : 'width: 380px'" class="p-3">
+  <q-dialog v-model="showPerfil">
+    <q-card style="min-width: 350px" class="p-3">
       <q-card-section>
         <div class="flex justify-between">
           <h1 class="text-lg font-bold">Editar perfil</h1>
@@ -84,39 +79,42 @@
         </div>
       </q-card-section>
 
-      <q-form @submit.prevent="editarPerfil">
+      <q-form @submit="editarPerfilSubmit">
         <q-card-section>
           <input-text
             label="Nombre"
-            @update="(v) => (ref_editarPerfil.nombre = v)"
-            :default="ref_editarPerfil.nombre"
+            @update="(v) => (perfil.nombre = v)"
+            :porDefecto="perfil.nombre"
+            :rules="[useRules.requerido()]"
           />
-          <br />
           <input-text
             label="Apellido"
-            @update="(v) => (ref_editarPerfil.apellido = v)"
-            :default="ref_editarPerfil.apellido"
+            @update="(v) => (perfil.apellido = v)"
+            :porDefecto="perfil.apellido"
+            :rules="[useRules.requerido()]"
           />
-          <br />
           <input-text
             label="telefono"
-            @update="(v) => (ref_editarPerfil.telefono = v)"
-            :default="ref_editarPerfil.telefono"
+            @update="(v) => (perfil.telefono = v)"
+            :porDefecto="perfil.telefono"
+            :rules="[useRules.requerido()]"
           />
-          <br />
           <input-text
             label="email"
-            @update="(v) => (ref_editarPerfil.correo = v)"
-            :default="ref_editarPerfil.correo"
+            @update="(v) => (perfil.correo = v)"
+            :porDefecto="perfil.correo"
+            :rules="[]"
           />
-          <br />
           <input-image
-            label="Cambiar imagen"
-            @update="(v) => (ref_editarPerfil.imagen.data = v)"
-            :default="ref_editarPerfil.imagen.data"
-            maxSizeKb="500"
+            label="inagen"
+            @update="
+              (base64Data, mimetype) =>
+                (perfil.imagen = base64Data
+                  ? { data: base64Data, mimetype: mimetype }
+                  : null)
+            "
+            :dataPreview="previewImagenPerfil"
           />
-          <br />
           <div class="flex justify-center">
             <q-btn
               class="mt-2 mb-1"
@@ -138,6 +136,7 @@
 // import { ModificarPersonaDto } from '#gql';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import { useUsuarioService } from '~/modulos/main/negocio/useUsuarioService';
+import { UrlToBase64Image } from '~/components/input/input.service';
 import { useAuth } from '../../API/useAuth';
 
 const authStore = useAuthStore();
@@ -148,56 +147,60 @@ const $q = useQuasar();
 const props = defineProps({
   disable: {
     type: Boolean,
-    default: true,
+    porDefecto: true,
   },
 });
 
 // MODAL editarPerfil
-const show_editarPerfil = ref(false);
-const init_editarPerfil = {
+
+const showPerfil = ref(null);
+const perfil = reactive({
   nombre: authStore.getUsuario?.nombre,
   apellido: authStore.getUsuario?.apellido,
-  correo: authStore.getUsuario?.correo,
   telefono: authStore.getUsuario?.telefono,
-  imagen: {
-    data: '',
-    mimetype: 'image/png',
-  },
-};
-const ref_editarPerfil = ref(init_editarPerfil);
-const toggle_editarPerfil = () => {
-  show_editarPerfil.value = !show_editarPerfil.value;
-};
-const editarPerfil = async () => {
-  // en que caso no hubiera usuario ? pero bueno por seguridad
-  if (!authStore.getUsuarioId) {
-    return false;
-  }
+  correo: authStore.getUsuario?.correo,
+  imagen: null as { data: string; mimetype: string },
+});
+const previewImagenPerfil = ref(null);
+//@ts-ignore
+await UrlToBase64Image(
+  authStore.getUsuario?.cloudinaryUrl,
+  (base64Data) => (previewImagenPerfil.value = base64Data),
+);
+const editarPerfilSubmit = async () => {
+  // preparacion de los datos
+  const datos = {
+    nombre: perfil.nombre,
+    apellido: perfil.apellido,
+    correo: perfil.correo,
+    telefono: perfil.telefono,
+  };
+  if (perfil.imagen) Object.assign(datos, { imagen: perfil.imagen });
 
-  // el backend no puede recibir una imagen con data = ''
-  // trabajemos con una copia
-  const copia_editarPerfil = JSON.parse(JSON.stringify(ref_editarPerfil.value));
-  if (copia_editarPerfil.imagen.data === '') {
-    copia_editarPerfil.imagen = null;
-  }
-
-  // modificamos el usuario
-  const persona = await usuarioService.editarPerfil(
-    authStore.getUsuarioId,
-    copia_editarPerfil,
-  );
-
-  // success : actualizamos el usuario en el store y cerramos
-  if (persona !== null) {
-    NotifySucessCenter('Usuario editado correctamente');
-    authStore.editarPerfil(persona);
-    show_editarPerfil.value = false;
-    Object.assign(ref_editarPerfil, init_editarPerfil);
-  } else {
-    NotifyError('Hubo un error, intente de nuevo');
-    show_editarPerfil.value = false;
+  // modificacion en API
+  let persona = ref(null);
+  try {
+    loadingAsync(async () => {
+      persona.value = await usuarioService.editarPerfil(
+        authStore.getUsuarioId,
+        datos,
+      );
+      previewImagenPerfil.value = perfil.imagen?.data;
+    }).then(() => {
+      if (persona.value !== null) {
+        authStore.editarPerfil(persona.value);
+        showPerfil.value = false;
+        NotifySucessCenter('Usuario editado correctamente');
+      } else {
+        NotifyError('Hubo un error, intente de nuevo');
+      }
+    });
+  } catch (e) {
+    throw e;
   }
 };
+
+// ELEGIR NEGOCIO
 
 const password = ref('');
 const elegirNegocio = (index: number, nombre: string) => {
@@ -209,6 +212,7 @@ const elegirNegocio = (index: number, nombre: string) => {
     persistent: true,
     html: true,
     prompt: {
+      //@ts-ignore
       model: password,
       type: 'password',
       clearable: true,
@@ -224,36 +228,38 @@ const elegirNegocio = (index: number, nombre: string) => {
   }).onOk(async () => {
     // averiguamos la contraseña
 
+    let loginResponse;
     try {
-      await useAuth.login(
+      loginResponse = await useAuth.login(
         authStore.getUsuario?.usuario as string,
         password.value,
       );
-    } catch {
-      // bad contraseña
-    }
-
-    const negocio = await authStore.elegirNegocio(index);
-
-    if (!loginResponse) {
-      NotifyError(`contraseña incorrecta`);
-    } else {
-      authStore.token = loginResponse.token;
-      authStore.elegirNegocio(index);
-      NotifySucess(`Negocio elegido: ${nombre}`);
-      password.value = '';
-      switch (authStore.getNegocio?.tipo) {
-        case 'PUNTO':
-          goTo(router, 'punto');
-          break;
-        case 'CATHERING':
-          goTo(router, 'cathering');
-          break;
+      if (!loginResponse) {
+      } else {
+        authStore.elegirNegocio(index);
+        authStore.token = loginResponse.token;
+        password.value = '';
+        NotifySucess(`Negocio elegido: ${nombre}`);
+        showPerfil.value = false;
+        switch (authStore.getNegocio?.tipo) {
+          case 'PUNTO':
+            goTo(router, 'punto');
+            break;
+          case 'CATHERING':
+            goTo(router, 'cathering');
+            break;
+        }
       }
-
-      // TODO averiguar suscripcion, etc
-      // TODO BUGs de irala a iralita + cliente
+    } catch (e: any) {
+      if (e === 'B104') {
+        NotifyError(`Contraseña incorrecta`); // notificacion en caso de error desconocido
+      } else {
+        NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
+      }
+      return false;
     }
+    // TODO averiguar suscripcion, etc
+    // TODO BUGs de irala a iralita + cliente
   });
 };
 

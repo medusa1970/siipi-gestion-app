@@ -1,15 +1,11 @@
 import type { ModificarPersonaDto, Persona } from '#gql';
 
-
 export const usuarioApiService = {
   /**
    * Busca una persona
    * @returns Persona[]
    */
-  buscarPersona: async (
-    personaID: string,
-    loading = false,
-  ): Promise<Persona> => {
+  buscarPersona: async (personaID: string): Promise<Persona> => {
     const [persona] = extraer(
       await GqlUsuarioBuscarPersonas({
         busqueda: { _id: [personaID] },

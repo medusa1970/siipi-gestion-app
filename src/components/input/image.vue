@@ -118,6 +118,7 @@ const archivo = ref<File | null>(null); // contenido del input
 const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
+console.log(props.rules);
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
 // bug

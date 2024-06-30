@@ -13,6 +13,7 @@
     input-debounce="0"
     :clearable="clearable"
     :dense="dense"
+    :disable="disable"
     :filled="filled"
     :outlined="outlined"
     :class="clase"
@@ -108,6 +109,7 @@ const props = withDefaults(
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
     error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
     dense?: boolean;
+    disable?: boolean;
     outlined?: boolean;
     filled?: boolean;
     clearable?: boolean;
@@ -119,6 +121,7 @@ const props = withDefaults(
     clearable: true,
     clase: 'mt-5 mb-2',
     rules: [] as Function[],
+    disable: false,
   },
 );
 

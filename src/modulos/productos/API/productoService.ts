@@ -7,47 +7,79 @@ export const productoService = {
   /**
    * Buscar todos los productos
    */
-  buscarProductos: async (): Promise<Producto[]> =>
-    extraer(
-      await GqlProductosBuscar({
-        opciones: {
-          populate: true,
-          sort: '-_modificado -_creado',
-        },
-      }),
-    ),
+  buscarProductos: async (): Promise<Producto[]> => {
+    try {
+      return extraer(
+        await GqlProductosBuscar({
+          opciones: {
+            populate: true,
+            sort: '-_modificado -_creado',
+          },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Crear una producto con datos basicos
    */
   crearProductoBasico: async (
     datos: CrearProductoBasico,
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlProductosCrearBasico({
-        datos: [datos],
-        opciones: { populate: true, aceptarInexistentes: true },
-      }),
-    ),
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlProductosCrearBasico({
+          datos: [datos],
+          opciones: { populate: true, aceptarInexistentes: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Busca todas las categorias en forma de arbol
    * Retorna una categoria con sus hijas populadas
    */
-  obtenerTodasCategorias: async (): Promise<Categoria | null> =>
-    extraer(
-      await GqlProductosCategoriaArbol({
-        busqueda: { nombre: ['CATEGORIA RAIZ'] },
-      }),
-    ),
+  obtenerTodasCategorias: async (): Promise<Categoria | null> => {
+    try {
+      return extraer(
+        await GqlProductosCategoriaArbol({
+          busqueda: { nombre: ['CATEGORIA RAIZ'] },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Crea una categoria
    */
   crearCategoria: async (
     categoria: CrearCategoriaDto,
-  ): Promise<Categoria | null> =>
-    extraerUno(await GqlProductosCrearCategoria({ categoria })),
+  ): Promise<Categoria | null> => {
+    try {
+      return extraerUno(await GqlProductosCrearCategoria({ categoria }));
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Modifica un producto con datos basicos
@@ -60,30 +92,54 @@ export const productoService = {
       comentario: string;
       imagen?: { data: any; mimetype: string };
     },
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductosBasicos({
-        busqueda: { _id: [productoID] },
-        datos,
-        opciones: { populate: true, aceptarInexistentes: true },
-      }),
-    ),
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosBasicos({
+          busqueda: { _id: [productoID] },
+          datos,
+          opciones: { populate: true, aceptarInexistentes: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Buscar todas las marcas globales
    */
-  buscarMarcas: async (): Promise<Marca[]> =>
-    extraer(
-      await GqlBuscarMarcas({
-        opciones: { sort: 'nombre' },
-      }),
-    ),
+  buscarMarcas: async (): Promise<Marca[]> => {
+    try {
+      return extraer(
+        await GqlBuscarMarcas({
+          opciones: { sort: 'nombre' },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Crear una marca global
    */
-  crearMarca: async (datos: { nombre: string }): Promise<Marca | null> =>
-    extraerUno(await GqlCrearMarcas({ datos })),
+  crearMarca: async (datos: { nombre: string }): Promise<Marca | null> => {
+    try {
+      return extraerUno(await GqlCrearMarcas({ datos }));
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Modificar un producto : agregar una marca
@@ -96,18 +152,26 @@ export const productoService = {
       cantidadMax: number;
       cantidadMin: number;
     },
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductosMarca({
-        busqueda: { _id: [productoID] },
-        datos: {
-          variedades: {
-            agregar: [productoMarca],
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosMarca({
+          busqueda: { _id: [productoID] },
+          datos: {
+            variedades: {
+              agregar: [productoMarca],
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Modificar un producto : agregar una marca
@@ -119,31 +183,55 @@ export const productoService = {
       cantidadMax: number;
       cantidadMin: number;
     },
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductosMarca({
-        busqueda: { _id: [productoID] },
-        datos: {
-          variedades: {
-            buscar: { _id: [variedadID] },
-            modificar: productoMarca,
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosMarca({
+          busqueda: { _id: [productoID] },
+          datos: {
+            variedades: {
+              buscar: { _id: [variedadID] },
+              modificar: productoMarca,
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Crear una medida global
    */
-  crearMedida: async (datos: { nombre: string }): Promise<Medida | null> =>
-    extraerUno(await GqlCrearMedidas({ datos })),
+  crearMedida: async (datos: { nombre: string }): Promise<Medida | null> => {
+    try {
+      return extraerUno(await GqlCrearMedidas({ datos }));
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Buscar todas las medidas globales
    */
-  buscarMedidas: async (): Promise<Medida[]> =>
-    extraer(await GqlBuscarMedidas()),
+  buscarMedidas: async (): Promise<Medida[]> => {
+    try {
+      return extraer(await GqlBuscarMedidas());
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Agregar un tipo de empaque a una medida global
@@ -151,17 +239,25 @@ export const productoService = {
   agregarEmpaqueMedida: async (
     medidaID: string,
     empaque: { nombre: string; abreviacion: string; cantidad: number },
-  ): Promise<Medida | null> =>
-    extraerUno(
-      await GqlModificarMedidas({
-        busqueda: { _id: [medidaID] },
-        datos: {
-          tipoEmpaques: {
-            agregar: [empaque],
+  ): Promise<Medida | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarMedidas({
+          busqueda: { _id: [medidaID] },
+          datos: {
+            tipoEmpaques: {
+              agregar: [empaque],
+            },
           },
-        },
-      }),
-    ),
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Modifica un empaque del producto
@@ -175,19 +271,27 @@ export const productoService = {
       abreviacion: string;
       cantidad: number;
     },
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductosMedidaEmpaque({
-        busqueda: { _id: [productoID] },
-        datos: {
-          empaques: {
-            buscar: { _id: [empaqueID] },
-            modificar: productoEmpaque,
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosMedidaEmpaque({
+          busqueda: { _id: [productoID] },
+          datos: {
+            empaques: {
+              buscar: { _id: [empaqueID] },
+              modificar: productoEmpaque,
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Guarda la medida basica del producto
@@ -195,16 +299,24 @@ export const productoService = {
   guardarMedidaProducto: async (
     productoID: string,
     medidaID: string,
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductoMedida({
-        busqueda: { _id: [productoID] },
-        datos: {
-          medida: medidaID,
-        },
-        opciones: { populate: true },
-      }),
-    ),
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductoMedida({
+          busqueda: { _id: [productoID] },
+          datos: {
+            medida: medidaID,
+          },
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Modificar un producto : agregar empaque
@@ -217,30 +329,46 @@ export const productoService = {
       abreviacion: string;
       cantidad: number;
     },
-  ): Promise<Producto | null> =>
-    extraerUno(
-      await GqlModificarProductosMedidaEmpaque({
-        busqueda: { _id: [productoID] },
-        datos: {
-          empaques: {
-            agregar: [empaque],
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosMedidaEmpaque({
+          busqueda: { _id: [productoID] },
+          datos: {
+            empaques: {
+              agregar: [empaque],
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * PROVEEDORES PRODUCTO
    */
-  buscarEntidadesProveedor: async (): Promise<Entidad[]> =>
-    extraer(
-      await GqlBuscarEntidadesProveedor({
-        busqueda: {
-          tipo: ['PROVEEDOR'],
-        },
-      }),
-    ),
+  buscarEntidadesProveedor: async (): Promise<Entidad[]> => {
+    try {
+      return extraer(
+        await GqlBuscarEntidadesProveedor({
+          busqueda: {
+            tipo: ['PROVEEDOR'],
+          },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   crearEntidadProveedor: async (datos: {
     nombre: string;
@@ -248,7 +376,16 @@ export const productoService = {
     descripcion: string;
   }): Promise<Entidad | null> => {
     const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
-    return extraerUno(await GqlCrearEntidadProveedor({ datos: datosDefecto }));
+    try {
+      return extraerUno(
+        await GqlCrearEntidadProveedor({ datos: datosDefecto }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
   },
 
   agregarProveedorProducto: async (
@@ -267,18 +404,26 @@ export const productoService = {
         },
       ];
     },
-  ): Promise<Entidad | null> =>
-    extraerUno(
-      await GqlModificarProveedorServicio({
-        busqueda: { _id: [proveedorId] },
-        datos: {
-          servicios: {
-            agregar: [servicio],
+  ): Promise<Entidad | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProveedorServicio({
+          busqueda: { _id: [proveedorId] },
+          datos: {
+            servicios: {
+              agregar: [servicio],
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   modificarProveedorProducto: async (
     proveedorId: string,
@@ -289,30 +434,46 @@ export const productoService = {
       precioConFactura: number;
       precioSinFactura: number;
     },
-  ): Promise<Entidad | null> =>
-    extraerUno(
-      await GqlModificarProveedorServicio({
-        busqueda: { _id: [proveedorId] },
-        datos: {
-          servicios: {
-            buscar: { _id: [servicioId] },
-            modificar: servicio,
+  ): Promise<Entidad | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProveedorServicio({
+          busqueda: { _id: [proveedorId] },
+          datos: {
+            servicios: {
+              buscar: { _id: [servicioId] },
+              modificar: servicio,
+            },
           },
-        },
-        opciones: { populate: true },
-      }),
-    ),
+          opciones: { populate: true },
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
-  buscarProveedoresProducto: async (productoID: string): Promise<Entidad[]> =>
-    extraer(
-      await GqlBuscarEntidadProveedoresProducto({
-        busqueda: {
-          servicios: {
-            producto: productoID,
+  buscarProveedoresProducto: async (productoID: string): Promise<Entidad[]> => {
+    try {
+      return extraer(
+        await GqlBuscarEntidadProveedoresProducto({
+          busqueda: {
+            servicios: {
+              producto: productoID,
+            },
           },
-        },
-      }),
-    ),
+        }),
+      );
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
+    }
+  },
 
   /**
    * Borrar un producto
@@ -322,35 +483,43 @@ export const productoService = {
     comentario: string = 'test comentario borrar',
     token: any,
   ): Promise<Producto | null> => {
-    // borramos el producto
-    const producto = extraerUno(
-      await GqlBorrarProductos({
-        busqueda: { _id: [productoID] },
-      }),
-    );
-    // en caso de que no se borró nada
-    if (!producto) {
-      console.log('no se elimino el producto', productoID);
-      return null;
+    try {
+      // borramos el producto
+      const producto = extraerUno(
+        await GqlBorrarProductos({
+          busqueda: { _id: [productoID] },
+        }),
+      );
+
+      // en caso de que no se borró nada
+      if (!producto) {
+        console.log('no se elimino el producto', productoID);
+        return null;
+      }
+      // creamos la accion
+      const accion = extraerUno(
+        await GqlCrearAccion(
+          {
+            datos: {
+              // persona: va con el token
+              comentario: comentario,
+              producto: producto._id,
+              accion: 'borrado',
+            },
+            opciones: {
+              aceptarInexistentes: true,
+            },
+          },
+          token,
+        ),
+      );
+      // retornamos el producto
+      return producto;
+    } catch (e) {
+      throw {
+        tipo: 'API',
+        error: getApiErrorCode(e),
+      };
     }
-    // creamos la accion
-    const accion = extraerUno(
-      await GqlCrearAccion(
-        {
-          datos: {
-            // persona: va con el token
-            comentario: comentario,
-            producto: producto._id,
-            accion: 'borrado',
-          },
-          opciones: {
-            aceptarInexistentes: true,
-          },
-        },
-        token,
-      ),
-    );
-    // retornamos el producto
-    return producto;
   },
 };

@@ -138,10 +138,11 @@
       <!-- Categoria -->
       <input-select
         label="Categoria"
-        :opciones="estado.categoriaOptions"
+        :opciones="estado.categoriaSelectOpciones"
         info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
         @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
         :rules="[useRules.requerido()]"
+        :dialog="agregarCategoriaComp"
       />
 
       <!-- Imagen -->
@@ -149,11 +150,10 @@
         label="Imagen"
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         @update="
-          (file, isPreview) =>
-            (estado.datos_crearProductoBasico.imagen =
-              file?.data && !isPreview
-                ? { data: file.data, mimetype: file.mimetype }
-                : null)
+          (base64Data, mimetype) =>
+            (estado.datos_crearProductoBasico.imagen = base64Data
+              ? { data: base64Data, mimetype: mimetype }
+              : null)
         "
         icono="photo_camera"
       />
@@ -258,6 +258,7 @@ import { columnsProductos } from '@/modulos/productos/infraestructura/utils/colu
 import ProductoImage from '@/assets/img/producto.png';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
+import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
 const productoStore = storeProducto();
 
 const {
@@ -281,7 +282,7 @@ onMounted(async () => {
   await traerProductos();
   await getProductos();
 
-  estado.categoriaOptions = await categoriaSelectOptions(true);
+  estado.categoriaSelectOpciones = await categoriaSelectOptions(true);
 
   // reload de la pagina productos
   let reloaded = localStorage.getItem('reloaded');

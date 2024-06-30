@@ -52,3 +52,7 @@ export const getApiErrorCode = (err: any): string => {
     return 'B_ERROR';
   }
 };
+
+export const isApiError = (e, codigo) => {
+  return e.tipo && e.tipo === 'API' && codigo === e.error;
+};

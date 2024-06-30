@@ -1,19 +1,24 @@
 import { productoService } from '../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
-import localforage from 'localforage';
-// types
-import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-import type {
-  CrearVariedadDto,
-  Marca,
-  Medida,
-  ModificarCargoDto,
-  ModificarMedidaDto,
-  ModificarProductoDto,
-  Producto,
-} from '#gql';
+import type { Marca, Medida, Producto } from '#gql';
 import { useQuasar } from 'quasar';
+
+/*
+interface ModificarProductoBasico {
+  nombre: string;
+  categoria: string;
+  comentario: string | null | undefined;
+  imagen: { data: string; mimetype: string };
+}
+interface ProductoMarca {
+  _id: string;
+  cantidadMax: number;
+  cantidadMin: number;
+  imagen: { data: string; mimetype: string };
+  marca: string;
+}
+*/
 
 export const useProductoDetalle = () => {
   /** DECLARACIONES */
@@ -23,7 +28,7 @@ export const useProductoDetalle = () => {
   const router = useRouter();
   const $q = useQuasar();
 
-  /** REACTIVOS */
+  /** Modificar PRoducto Basico */
   const init_modificarProductoBasico = {
     nombre: null as string,
     categoria: null as string,
@@ -31,84 +36,69 @@ export const useProductoDetalle = () => {
     imagen: null as { data: string; mimetype: string },
   };
 
-  // Modificando la estructura de ModificarProductoDto para que marca: string pase a marca: {_id: string, nombre: string}
-  interface ModificarProductoDtoConMarcaObjeto
-    extends Omit<ModificarProductoDto, 'variedades'> {
-    variedades: {
-      modificar: Omit<
-        ModificarProductoDto['variedades']['modificar'],
-        'marca'
-      > & {
-        marca: {
-          _id: string;
-          nombre: string;
-        };
-        _id?: string;
-      };
-    };
-  }
-
-  const init_productoMarca: ModificarProductoDtoConMarcaObjeto = {
-    variedades: {
-      modificar: {
-        _id: '',
-        cantidadMax: null,
-        cantidadMin: null,
-        imagen: null,
-        marca: {
-          _id: '',
-          nombre: '',
-        },
-      },
-    },
+  /** Modificar Producto Marca */
+  const init_productoMarca = {
+    _id: null as string,
+    cantidadMax: null as number,
+    cantidadMin: null as number,
+    imagen: null as { data: string; mimetype: string },
+    marca: null as string,
   };
 
+  /** Modificar Producto Medidas y empaques */
   const init_productoMedida = {
     medida: {
-      _id: '',
-      nombre: '',
-      tipoEmpaques: [
-        {
-          nombre: '',
-          abreviacion: '',
-          cantidad: 0,
-        },
-      ],
+      _id: null as string,
+      nombre: null as string,
+      tipoEmpaques: [] as {
+        nombre: string;
+        abreviacion: string;
+        cantidad: number;
+      }[],
     },
     empaque: {
-      _id: '',
-      nombre: '',
-      abreviacion: '',
-      cantidad: 0,
+      _id: null as string,
+      nombre: null as string,
+      abreviacion: null as string,
+      cantidad: null as number,
     },
     marca: {
-      _id: '',
-      nombre: '',
+      _id: null as string,
+      nombre: null as string,
     },
-    cantidad: 0,
+    cantidad: null as number,
   };
 
+  /** Modificar Proveedores */
   const init_productoProveedor = {
-    servicioID: '',
+    servicioID: null as string,
     marca: {
-      _id: '',
-      nombre: '',
+      _id: null as string,
+      nombre: null as string,
     },
     proveedor: {
-      _id: '',
-      nombre: '',
+      _id: null as string,
+      nombre: null as string,
     },
-    identificativo: '',
-    precioConFactura: 0,
-    precioSinFactura: 0,
+    identificativo: null as string,
+    precioConFactura: null as number,
+    precioSinFactura: null as number,
     precios: [],
   };
 
+  /** Estado */
   const estado = reactive({
+    // productos en la lista
     productos: [] as Producto[],
+
+    // producto activo para modificar
     producto: {} as Producto,
+
+    // tab por defecto
     tab: 'datosBasicos',
-    categoriaOptions: [] as any[],
+
+    // opciones de los selects
+    categoriaSelectOpciones: [] as any[],
 
     // modales
     modal: {
@@ -126,6 +116,7 @@ export const useProductoDetalle = () => {
       show_crearEmpaque: false,
       show_crearProveedor: false,
     },
+
     marcas: [] as Marca[],
     marcasSelectOpciones: [],
     marca: {
@@ -143,7 +134,9 @@ export const useProductoDetalle = () => {
     datos_modificarProductoBasico: init_modificarProductoBasico,
     modProductoBasicoImagen: null,
 
-    datos_productoMarca: init_productoMarca.variedades.modificar,
+    datos_productoMarca: init_productoMarca,
+    errorMarca: null,
+
     datos_productoMedida: init_productoMedida,
 
     showTableEmpaque: false,
@@ -164,7 +157,13 @@ export const useProductoDetalle = () => {
   /**
    ********************* DATOS BASICOS *********************
    */
+
+  /**
+   * Datos básicos >> Guardar
+   */
+
   const modificarProductoBasico = async () => {
+    // preparacion de los datos
     const datos = {
       nombre: estado.datos_modificarProductoBasico.nombre,
       categoria: estado.datos_modificarProductoBasico.categoria,
@@ -175,24 +174,27 @@ export const useProductoDetalle = () => {
         imagen: estado.datos_modificarProductoBasico.imagen,
       });
     }
-    console.log(datos);
+    // hacemos la consulta
     let productoModificado;
     try {
-      loadingAsync(async () => {
-        const productoModificado =
-          await productoService.modificarProductoBasico(
-            productoStore.producto._id,
-            datos,
-          );
-      }).then(() => {
-        if (productoModificado)
-          NotifySucessCenter('Producto modificado correctamente');
+      await loadingAsync(async () => {
+        productoModificado = productoService.modificarProductoBasico(
+          productoStore.producto._id,
+          datos,
+        );
       });
+      if (!productoModificado) {
+        throw 'No se pudo modificar el producto';
+      }
     } catch (e) {
-      NotifyError(e);
-      throw e;
+      NotifyError(`Error no tratado, ver consola`);
+      console.log(e);
+      return;
     }
+
+    NotifySucessCenter('Producto modificado correctamente');
   };
+
   /**
    ********************* MARCAS *********************
    */
@@ -208,76 +210,116 @@ export const useProductoDetalle = () => {
    * crearMarcaGlobal
    */
   const crearMarcaGlobal = async () => {
-    const marcaNueva = await productoService.crearMarca({
-      nombre: estado.marca.nombre,
-    });
-    if (marcaNueva) NotifySucessCenter('Marca creado correctamente');
-    estado.modal.show_crearMarca = false;
-    estado.marcas.push(marcaNueva);
-    estado.datos_productoMarca.marca = marcaNueva;
-    estado.marca = { _id: '', nombre: '' };
-  };
-
-  /**
-   * limpiarProductoMarca
-   */
-  const limpiarProductoMarca = () => {
-    estado.datos_productoMarca.cantidadMax = null;
-    estado.datos_productoMarca.cantidadMin = null;
-    estado.datos_productoMarca.imagen = null;
-    estado.datos_productoMarca.marca = { _id: '', nombre: '' };
-  };
-
-  /**
-   * crearProductoMarca
-   */
-  const crearProductoMarca = async () => {
-    const productoModificado = ref();
-    loadingAsync(async () => {
-      productoModificado.value = await productoService.crearProductosMarca(
-        productoStore.producto._id,
-        {
-          marca: estado.datos_productoMarca.marca._id,
-          cantidadMin: estado.datos_productoMarca.cantidadMin,
-          cantidadMax: estado.datos_productoMarca.cantidadMax,
-          imagen: estado.datos_productoMarca.imagen,
-        },
-      );
-    }).then(async () => {
-      if (productoModificado.value) {
-        NotifySucessCenter('Marca creado correctamente');
-        const nuevaMarca = productoModificado.value.variedades.pop();
-        productoStore.producto.variedades.push(nuevaMarca);
+    let marcaNueva;
+    try {
+      await loadingAsync(async () => {
+        marcaNueva = await productoService.crearMarca({
+          nombre: estado.marca.nombre,
+        });
+      });
+      if (!marcaNueva) throw 'No se pudo modificar el producto';
+    } catch (e) {
+      if (isApiError(e, 'B206')) {
+        NotifyError(`Error 206`);
+      } else {
+        NotifyError(`Error no tratado, ver consola`);
+        console.log(e);
       }
-      estado.modal.show_crearProductoMarca = false;
-      limpiarProductoMarca();
-    });
+      return;
+    }
+    NotifySucessCenter('Marca creado correctamente');
+    estado.marcas.push(marcaNueva.value);
+    estado.modal.show_crearMarca = false;
+    estado.datos_productoMarca.marca = marcaNueva._id;
   };
 
   /**
-   * modalModificarProductoMarca
+   * Marcas >> Registrar una marca
    */
-  const modalModificarProductoMarca = (
-    marca: ModificarProductoDtoConMarcaObjeto,
-  ) => {
+
+  const crearProductoMarca = async () => {
+    // preparacion de los datos
+    const datos = {
+      marca: estado.datos_productoMarca.marca,
+      cantidadMin: estado.datos_productoMarca.cantidadMin,
+      cantidadMax: estado.datos_productoMarca.cantidadMax,
+      imagen: estado.datos_productoMarca.imagen,
+    };
+    if (estado.datos_productoMarca.imagen) {
+      Object.assign(datos, {
+        imagen: estado.datos_productoMarca.imagen,
+      });
+    }
+    // hacemos la consulta
+    let productoModificado;
+    try {
+      await loadingAsync(async () => {
+        productoModificado.value = await productoService.crearProductosMarca(
+          productoStore.producto._id,
+          datos,
+        );
+      });
+    } catch (e) {
+      if (isApiError(e, 'B206')) {
+        estado.errorMarca = 'Esta marca ya esta registrada';
+      } else {
+        NotifyError(`Error no tratado, ver consola`);
+      }
+      return;
+    }
+    if (productoModificado) {
+      NotifySucessCenter('Marca creado correctamente');
+      const nuevaMarca = productoModificado.variedades.pop();
+      productoStore.producto.variedades.push(nuevaMarca);
+    }
+    estado.modal.show_crearProductoMarca = false;
+    estado.datos_productoMarca = init_productoMarca;
+  };
+
+  /**
+   * Marcas >> Modificar una marca (icono lapiz)
+   * (preparacion del modal)
+   */
+
+  const modalModificarProductoMarca = (marca) => {
+    // mostrar el modal en modo "modificar"
     estado.modal.show_modificarProductoMarca = true;
     estado.modal.show_crearProductoMarca = true;
-    // @ts-expect-error
-    estado.datos_productoMarca = marca;
+
+    // inicializar el formulario
+    for (const key in estado.datos_productoMarca) {
+      estado.datos_productoMarca[key] =
+        key === 'marca' ? marca[key]._id : marca[key];
+    }
   };
 
   /**
-   * modificarProductoMarca
+   * Marcas >> Modificar una marca (icono lapiz)
    */
   const modificarProductoMarca = async () => {
-    const marcaModificada = await productoService.modificarProductosMarca(
-      productoStore.producto._id,
-      estado.datos_productoMarca._id,
-      {
-        cantidadMax: estado.datos_productoMarca.cantidadMax,
-        cantidadMin: estado.datos_productoMarca.cantidadMin,
-      },
-    );
+    // preparacion de los datos
+    const datos = {
+      cantidadMax: estado.datos_productoMarca.cantidadMax,
+      cantidadMin: estado.datos_productoMarca.cantidadMin,
+    };
+    if (estado.datos_productoMarca.imagen) {
+      Object.assign(datos, {
+        imagen: estado.datos_productoMarca.imagen,
+      });
+    }
+    // hacemos la consulta
+    let marcaModificada;
+    try {
+      marcaModificada = await productoService.modificarProductosMarca(
+        productoStore.producto._id,
+        estado.datos_productoMarca._id,
+        datos,
+      );
+    } catch (e) {
+      NotifyError(`Error no tratado, ver consola`);
+      console.log(e);
+      return;
+    }
     if (marcaModificada) {
       NotifySucessCenter('Marca modificado correctamente');
       // encontrar index de la variedad modificada
@@ -564,7 +606,6 @@ export const useProductoDetalle = () => {
     crearMarcaGlobal,
     crearProductoMarca,
     modificarProductoMarca,
-    limpiarProductoMarca,
     modalModificarProductoMarca,
     buscarMedidas,
     crearMedidaGlobal,

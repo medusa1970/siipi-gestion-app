@@ -16,7 +16,7 @@
           no-caps
           @click="
             () => {
-              limpiarProductoMarca();
+              // limpiarProductoMarca();
               estado.modal.show_crearProductoMarca = true;
               estado.modal.show_modificarProductoMarca = false;
             }
@@ -80,36 +80,42 @@
     "
   >
     <template #inputsDialog>
-      <p>Se va registrar una marca para este producto.</p>
+      <div v-if="estado.modal.show_modificarProductoMarca"></div>
+      <div v-else="estado.modal.show_modificarProductoMarca">
+        <p>Se va registrar una marca para este producto.</p>
+      </div>
 
+      <!-- Marca -->
       <input-select
         label="Marca"
         :opciones="estado.marcasSelectOpciones"
         info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
-        @update="(v) => (estado.datos_productoMarca.marca._id = v)"
-        :rules="[useRules.requerido()]"
+        @update="(v) => (estado.datos_productoMarca.marca = v)"
+        :porDefecto="estado.datos_productoMarca.marca"
+        :error="estado.errorMarca"
         :disable="estado.modal.show_modificarProductoMarca"
-        :porDefecto="estado.datos_productoMarca.marca._id"
+        :rules="[useRules.requerido()]"
       />
 
       <!-- Imagen -->
       <input-image
         label="Imagen"
         @update="
-          (v) =>
-            (estado.datos_productoMarca.imagen = {
-              data: v,
-              mimetype: 'image/png',
-            })
+          (base64Data, mimetype) =>
+            (estado.datos_productoMarca.imagen = base64Data
+              ? { data: base64Data, mimetype: mimetype }
+              : null)
         "
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
-        :rules="[useRules.requerido()]"
+        :rules="
+          estado.modal.show_modificarProductoMarca ? [] : [useRules.requerido()]
+        "
       />
 
       <!-- Stock minimo -->
       <input-text
-        type="number"
+        tipo="number"
         label="Stock minimo antes de hacer pedido"
         @update="(v) => (estado.datos_productoMarca.cantidadMin = Number(v))"
         info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
@@ -119,7 +125,7 @@
 
       <!-- Cantidad max en un pedido -->
       <input-text
-        type="number"
+        tipo="number"
         label="Cantidad max en un pedido"
         @update="(v) => (estado.datos_productoMarca.cantidadMax = Number(v))"
         info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
@@ -180,7 +186,6 @@ const {
   crearMarcaGlobal,
   modificarProductoMarca,
   crearProductoMarca,
-  limpiarProductoMarca,
   modalModificarProductoMarca,
 } = useProductoDetalle();
 const {
@@ -191,7 +196,7 @@ const {
 const { $socket } = useNuxtApp();
 
 onMounted(async () => {
-  estadoProducto.categoriaOptions = await categoriaSelectOptions();
+  estadoProducto.categoriaSelectOpciones = await categoriaSelectOptions();
   await buscarMarcas();
   estado.marcasSelectOpciones = estado.marcas.map((marca) => {
     return {
@@ -200,7 +205,6 @@ onMounted(async () => {
     };
   });
   $socket.on('cambiosProductos', async (data) => {
-    console.log('first');
     await actProductosDB();
   });
 });

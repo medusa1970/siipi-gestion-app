@@ -21,7 +21,7 @@ export const useProducto = () => {
 
   const estado = reactive({
     productos: [] as Producto[],
-    categoriaOptions: [] as any[],
+    categoriaSelectOpciones: [] as any[],
 
     // modales
     modal: {
@@ -34,38 +34,44 @@ export const useProducto = () => {
 
   /** FUNCIONES */
   const crearProductoBasico = async () => {
-    let productoCreado = ref(null);
-    loadingAsync(async () => {
-      productoCreado.value = await productoService.crearProductoBasico(
-        estado.datos_crearProductoBasico,
-      );
-    }).then(async () => {
-      if (productoCreado.value !== null) {
-        NotifySucessCenter('Producto agregado correctamente');
-        await productoStore.addProducto(productoCreado.value);
-        estado.modal.show_crearProductoBasico = false;
-        // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
-        // estado.datos_crearProductoBasico = init_crearProductoBasico;
-      } else {
-        NotifyError('Problema al agregar el producto');
-      }
-    });
+    let productoCreado;
+    try {
+      await loadingAsync(async () => {
+        productoCreado = await productoService.crearProductoBasico(
+          estado.datos_crearProductoBasico,
+        );
+        if (!productoCreado) {
+          throw 'No se pudo agregar el producto';
+        }
+      });
+    } catch (e) {
+      NotifyError(`Error no tratado, ver consola`);
+      console.log(e);
+      return;
+    }
+
+    NotifySucessCenter('Producto agregado correctamente');
+    await productoStore.addProducto(productoCreado);
+    estado.modal.show_crearProductoBasico = false;
+    // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
+    // estado.datos_crearProductoBasico = init_crearProductoBasico;
   };
 
   /**
    * Generar una lista de opciones para q-select a partir del
    * arbol de categorias
    */
-  const categoriaSelectOptions = async (nivel2 = true) => {
+  const categoriaSelectOptions = async (nivel2: boolean = true) => {
     const options = [];
     const arbol = await productoStore.getCategoriaArbol();
     for (const cat of arbol.hijas) {
-      options.push({
-        label: `${cat.nombre} (${cat.hijas.length})`,
-        disable: true,
-        class: 'title',
-      });
       if (nivel2) {
+        options.push({
+          label: `${cat.nombre} (${cat.hijas.length})`,
+          value: cat._id,
+          disable: true,
+          class: 'title',
+        });
         for (const subcat of cat.hijas) {
           options.push({
             label: subcat.nombre,
@@ -73,6 +79,12 @@ export const useProducto = () => {
             class: 'option',
           });
         }
+      } else {
+        options.push({
+          label: `${cat.nombre}`,
+          value: cat._id,
+          disable: nivel2,
+        });
       }
     }
     return options;
@@ -108,7 +120,7 @@ export const useProducto = () => {
       'productos',
       productos ? productos : [],
     );
-    if (res) console.log('Se actualizo la base de datos');
+    // if (res) console.log('Se actualizo la base de datos');
   };
 
   /**

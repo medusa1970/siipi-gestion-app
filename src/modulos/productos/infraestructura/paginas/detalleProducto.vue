@@ -60,6 +60,7 @@
         <!-- Categoria -->
         <input-select
           label="Categoria"
+          info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
           @update="
             (v) => {
               estado.datos_modificarProductoBasico.categoria = v;
@@ -68,7 +69,8 @@
           "
           :porDefecto="estado.datos_modificarProductoBasico.categoria"
           :rules="[useRules.requerido()]"
-          :opciones="estadoProducto.categoriaOptions"
+          :opciones="estadoProducto.categoriaSelectOpciones"
+          :dialog="agregarCategoriaComp"
         />
 
         <!-- Imagen -->
@@ -165,7 +167,7 @@ import MarcaTabPanel from '@/modulos/productos/infraestructura/componente/MarcaT
 import MedidaTabPanel from '@/modulos/productos/infraestructura/componente/MedidaTabPanel.vue';
 import ProveedorTabPanel from '@/modulos/productos/infraestructura/componente/ProveedorTabPanel.vue';
 import { UrlToBase64Image } from '~/components/input/input.service';
-import type { Producto } from '#gql';
+import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
 const router = useRouter();
 
 // Verificacion de permisos
@@ -202,18 +204,16 @@ if (!productoStore.producto) {
 
 // inicializacion del formulario modif
 for (const key in estado.datos_modificarProductoBasico) {
-  if (key === 'categoria') {
-    estado.datos_modificarProductoBasico[key] = productoStore.producto[key]._id;
-    continue;
-  }
   estado.datos_modificarProductoBasico[key] =
-    productoStore.producto[key] ?? null;
+    key === 'categoria'
+      ? productoStore.producto[key]._id
+      : productoStore.producto[key];
 }
 
 const { $socket } = useNuxtApp();
 onMounted(async () => {
   // recuperamos las categorias
-  estadoProducto.categoriaOptions = await categoriaSelectOptions(true);
+  estadoProducto.categoriaSelectOpciones = await categoriaSelectOptions(true);
 
   // recuperamos la imagen desde la url
   await UrlToBase64Image(
@@ -225,7 +225,6 @@ onMounted(async () => {
 
   // sockets
   $socket.on('cambiosProductos', async (data) => {
-    console.log('first');
     await actProductosDB();
   });
 });

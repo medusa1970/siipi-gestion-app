@@ -146,5 +146,6 @@ export const useProducto = () => {
     estado,
     mostrarInformacionProducto,
     irEdicionProducto,
+    crearCategoria,
   };
 };

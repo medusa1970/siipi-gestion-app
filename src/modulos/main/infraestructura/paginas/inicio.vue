@@ -107,9 +107,9 @@ authStore.$subscribe((mutation, state) => {
   }
 });
 
-onMounted(() => {
-  iniciarLocalForage();
-});
+// onMounted(() => {
+//   iniciarLocalForage();
+// });
 </script>
 
 <style scoped>

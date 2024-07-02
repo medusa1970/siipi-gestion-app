@@ -106,6 +106,10 @@ authStore.$subscribe((mutation, state) => {
     NotifySucess(`Negocio elegido: ${state.negocio.nombre}`);
   }
 });
+
+// onMounted(() => {
+//   iniciarLocalForage();
+// });
 </script>
 
 <style scoped>

@@ -94,7 +94,8 @@ export const useProducto = () => {
   };
 
   /**
-   * Traer productos de la base de datos local
+   * Traer productos de la base de datos local y si no existe le carga
+   * productos al indexedDB
    */
   const traerProductos = async () => {
     let productos = await localforage.getItem<Producto[]>('productos');
@@ -102,10 +103,12 @@ export const useProducto = () => {
       productos = await productoService.buscarProductos();
       await localforage.setItem('productos', productos);
     }
+    productoStore.productos = estado.productos = productos;
   };
 
   /**
-   * Actualizar la base de datos local de productos
+   * Actualizar la base de datos local de productos si escucha un cambio
+   * desde el servidor
    */
   const actProductosDB = async () => {
     const productos = extraer(
@@ -141,18 +144,14 @@ export const useProducto = () => {
     estado.modal.show_informacionProducto = true;
   };
 
+  /**
+   * Redirige a la pagina de edicion de producto y alamcena los datos del
+   * producto en el store para lectura y cambios
+   */
   const irEdicionProducto = (producto: Producto) => {
     productoStore.producto = producto;
     console.log(estado.productos[0]);
     router.push('productos/detalleProducto');
-  };
-
-  /**
-   ***************  STORE PRODUCTO ***************
-   */
-  const getProductos = async () => {
-    productoStore.productos = await localforage.getItem('productos');
-    estado.productos = productoStore.productos;
   };
 
   return {
@@ -164,6 +163,5 @@ export const useProducto = () => {
     mostrarInformacionProducto,
     irEdicionProducto,
     crearCategoria,
-    getProductos,
   };
 };

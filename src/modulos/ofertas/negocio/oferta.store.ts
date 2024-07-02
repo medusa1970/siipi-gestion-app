@@ -4,7 +4,7 @@
  */
 
 import localforage from 'localforage';
-import type { Oferta } from '../API/oferta.interface';
+import type { Catalogo, Oferta } from '../API/oferta.interface';
 import { defineStore } from 'pinia';
 
 interface OfertaStore {
@@ -13,6 +13,7 @@ interface OfertaStore {
   // cache de la lista de los ofertas
   ofertas: Oferta[] | null;
   catalogoElegido: any | null;
+  catalogos: Catalogo[] | null;
 }
 
 export const storeOferta = defineStore('producto', {
@@ -20,6 +21,7 @@ export const storeOferta = defineStore('producto', {
     oferta: null,
     ofertas: null,
     catalogoElegido: null,
+    catalogos: null,
   }),
 
   getters: {

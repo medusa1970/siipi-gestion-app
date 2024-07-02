@@ -56,6 +56,7 @@
 <script setup>
 import Logo from '@/assets/img/logo.png';
 import formularioLogin from '@/modulos/main/infraestructura/componientes/formularioLogin.vue';
+import second from 'first';
 
 definePageMeta({
   layout: false,

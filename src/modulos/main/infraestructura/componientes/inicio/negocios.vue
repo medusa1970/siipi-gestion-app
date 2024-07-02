@@ -72,7 +72,6 @@ const logout = () => {
 
 // colores para los botones
 const getColor = (negocio) => {
-  console.log(negocio.tipo);
   switch (negocio.tipo) {
     case 'CATHERING':
       return 'green';

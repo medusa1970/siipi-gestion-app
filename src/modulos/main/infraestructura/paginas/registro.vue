@@ -73,7 +73,6 @@ const persona = reactive({
 
 async function register() {
   const nuevaPersona = await authService.registrar(persona);
-  console.log(nuevaPersona);
   if (nuevaPersona) {
     NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
     router.push('/');

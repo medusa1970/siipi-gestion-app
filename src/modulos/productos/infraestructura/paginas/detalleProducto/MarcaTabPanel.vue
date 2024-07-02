@@ -82,18 +82,18 @@
     <template #inputsDialog>
       <div v-if="estado.modal.show_modificarProductoMarca"></div>
       <div v-else="estado.modal.show_modificarProductoMarca">
-        <p>Se va registrar una marca para este producto.</p>
+        <p></p>
       </div>
 
       <!-- Marca -->
       <input-select
         label="Marca"
-        :opciones="estado.marcasSelectOpciones"
+        v-if="!estado.modal.show_modificarProductoMarca"
+        :opciones="estado.marcasParaSelect"
         info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
         @update="(v) => (estado.datos_productoMarca.marca = v)"
         :porDefecto="estado.datos_productoMarca.marca"
         :error="estado.errorMarca"
-        :disable="estado.modal.show_modificarProductoMarca"
         :rules="[useRules.requerido()]"
       />
 
@@ -108,29 +108,24 @@
         "
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
-        :rules="
-          estado.modal.show_modificarProductoMarca ? [] : [useRules.requerido()]
-        "
       />
 
       <!-- Stock minimo -->
       <input-text
-        tipo="number"
         label="Stock minimo antes de hacer pedido"
         @update="(v) => (estado.datos_productoMarca.cantidadMin = Number(v))"
         info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-        :rules="[useRules.requerido()]"
-        :porDefecto="'' + estado.datos_productoMarca.cantidadMin"
+        :rules="[useRules.requerido(), useRules.numero()]"
+        :porDefecto="'' + (estado.datos_productoMarca.cantidadMin ?? '')"
       />
 
       <!-- Cantidad max en un pedido -->
       <input-text
-        tipo="number"
         label="Cantidad max en un pedido"
         @update="(v) => (estado.datos_productoMarca.cantidadMax = Number(v))"
         info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
-        :rules="[useRules.requerido()]"
-        :porDefecto="'' + estado.datos_productoMarca.cantidadMax"
+        :rules="[useRules.requerido(), useRules.numero()]"
+        :porDefecto="'' + (estado.datos_productoMarca.cantidadMax ?? '')"
       />
     </template>
   </Dialog>
@@ -174,10 +169,9 @@
 </template>
 
 <script setup lang="ts">
+import { useDetalleMarcas } from '@/modulos/productos/negocio/detalle/marcas.composable';
 import { columnaMarca } from '@/modulos/productos/infraestructura/utils/columns';
-import { useProductoDetalle } from '@/modulos/productos/negocio/productoDetalle.composable';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
-import { productoService } from '../../API/productoService';
 
 const {
   estado,
@@ -187,18 +181,14 @@ const {
   modificarProductoMarca,
   crearProductoMarca,
   modalModificarProductoMarca,
-} = useProductoDetalle();
-const {
-  estado: estadoProducto,
-  categoriaSelectOptions,
-  actProductosDB,
-} = useProducto();
+} = useDetalleMarcas();
+
+const { estado: estadoProducto, actProductosDB } = useProducto();
 const { $socket } = useNuxtApp();
 
 onMounted(async () => {
-  estadoProducto.categoriaSelectOpciones = await categoriaSelectOptions();
   await buscarMarcas();
-  estado.marcasSelectOpciones = estado.marcas.map((marca) => {
+  estado.marcasParaSelect = estado.marcas.map((marca) => {
     return {
       label: marca.nombre,
       value: marca._id,

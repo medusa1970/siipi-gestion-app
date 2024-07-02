@@ -39,7 +39,6 @@ export const fechaDiaMes = (fecha: any) =>
   });
 
 export const plazo24hrs = (fecha: any) => {
-  console.log(fecha);
   let fechaPedido = new Date(fecha);
   let fechaActual = new Date();
 
@@ -52,6 +51,5 @@ export const plazo24hrs = (fecha: any) => {
   //24hrs
   //@ts-ignore
   const diferencia = (fechaActual - fechaPedido) / 1000 / 60 / 60;
-  console.log(diferencia);
   return diferencia <= 24;
 };

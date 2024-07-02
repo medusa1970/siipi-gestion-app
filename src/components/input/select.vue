@@ -102,6 +102,7 @@ const props = withDefaults(
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string; // valor seleccionado al iniciar
+    watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
@@ -119,7 +120,7 @@ const props = withDefaults(
     // filled: true,
     dense: true,
     clearable: true,
-    clase: 'mt-5 mb-2',
+    clase: 'mt-2 mb-1',
     rules: [] as Function[],
     disable: false,
   },
@@ -211,6 +212,16 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
+  { immediate: false },
+);
+
+// modificar el valor desde el componiente padre
+watch(
+  () => props.watch,
+  () => {
+    localModel.value = props.watch;
+    activarValidacion();
+  },
   { immediate: false },
 );
 </script>

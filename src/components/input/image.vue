@@ -92,6 +92,7 @@ const props = withDefaults(
     clase?: string; // clases css o tailwind
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
     error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    watch?: File; // ref de la cual se hara un watch de los cambios para cambiar el input
     dense?: boolean;
     outlined?: boolean;
     filled?: boolean;
@@ -104,7 +105,7 @@ const props = withDefaults(
     // filled: true,
     dense: true,
     clearable: true,
-    clase: 'mt-5 mb-2',
+    clase: 'mt-2 mb-1',
     rules: [] as Function[],
     maxSizeKb: '500',
   },
@@ -118,7 +119,6 @@ const archivo = ref<File | null>(null); // contenido del input
 const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
-console.log(props.rules);
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 
 // bug
@@ -234,6 +234,16 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
+  { immediate: false },
+);
+
+// modificar el valor desde el componiente padre
+watch(
+  () => props.watch,
+  () => {
+    archivo.value = props.watch;
+    activarValidacion();
+  },
   { immediate: false },
 );
 

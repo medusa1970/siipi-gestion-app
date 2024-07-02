@@ -92,7 +92,6 @@ const refText2_rule = (val) => {
 const validate = ref(null);
 const formSubmit = () => {
   trigger(validate);
-  console.log(this.$refs);
 };
 
 /*

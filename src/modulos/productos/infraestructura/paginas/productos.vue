@@ -138,7 +138,7 @@
       <!-- Categoria -->
       <input-select
         label="Categoria"
-        :opciones="estado.categoriaSelectOpciones"
+        :opciones="estado.categoriasParaSelect"
         info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
         @update="(v) => (estado.datos_crearProductoBasico.categoria = v)"
         :rules="[useRules.requerido()]"
@@ -282,7 +282,7 @@ onMounted(async () => {
   await traerProductos();
   await getProductos();
 
-  estado.categoriaSelectOpciones = await categoriaSelectOptions(true);
+  estado.categoriasParaSelect = await categoriaSelectOptions(true);
 
   // reload de la pagina productos
   let reloaded = localStorage.getItem('reloaded');
@@ -294,8 +294,6 @@ onMounted(async () => {
     localStorage.setItem('reloaded', 'true');
   }
   $socket.on('cambiosProductos', async (data: any) => {
-    console.log('first');
-    console.log(data);
     await actProductosDB();
   });
 });

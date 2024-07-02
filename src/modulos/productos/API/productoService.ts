@@ -41,7 +41,8 @@ export const productoService = {
     } catch (e) {
       throw {
         tipo: 'API',
-        error: getApiErrorCode(e),
+        code: getApiErrorCode(e),
+        detalle: e,
       };
     }
   },
@@ -302,7 +303,7 @@ export const productoService = {
   ): Promise<Producto | null> => {
     try {
       return extraerUno(
-        await GqlModificarProductoMedida({
+        await GqlModificarProductosMedidaEmpaque({
           busqueda: { _id: [productoID] },
           datos: {
             medida: medidaID,
@@ -388,7 +389,7 @@ export const productoService = {
     }
   },
 
-  agregarProveedorProducto: async (
+  agregarServicio: async (
     proveedorId: string,
     servicio: {
       marca: string;
@@ -396,18 +397,16 @@ export const productoService = {
       identificativo: string;
       precioConFactura: number;
       precioSinFactura: number;
-      preciosPorMayor: [
-        {
-          cantidadMin: number;
-          precioConFactura: number;
-          precioSinFactura: number;
-        },
-      ];
+      preciosPorMayor: {
+        cantidadMin: number;
+        precioConFactura: number;
+        precioSinFactura: number;
+      }[];
     },
   ): Promise<Entidad | null> => {
     try {
       return extraerUno(
-        await GqlModificarProveedorServicio({
+        await GqlModificarEntidadesServicio({
           busqueda: { _id: [proveedorId] },
           datos: {
             servicios: {
@@ -425,11 +424,10 @@ export const productoService = {
     }
   },
 
-  modificarProveedorProducto: async (
+  modificarServicioProducto: async (
     proveedorId: string,
     servicioId: string,
     servicio: {
-      marca: string;
       identificativo: string;
       precioConFactura: number;
       precioSinFactura: number;
@@ -437,7 +435,7 @@ export const productoService = {
   ): Promise<Entidad | null> => {
     try {
       return extraerUno(
-        await GqlModificarProveedorServicio({
+        await GqlModificarEntidadesServicio({
           busqueda: { _id: [proveedorId] },
           datos: {
             servicios: {
@@ -459,8 +457,14 @@ export const productoService = {
   buscarProveedoresProducto: async (productoID: string): Promise<Entidad[]> => {
     try {
       return extraer(
-        await GqlBuscarEntidadProveedoresProducto({
+        await GqlBuscarEntidadesServicios({
           busqueda: {
+            tipo: ['PROVEEDOR'],
+            servicios: {
+              producto: productoID,
+            },
+          },
+          filtro: {
             servicios: {
               producto: productoID,
             },

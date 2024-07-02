@@ -63,9 +63,7 @@ export const storeProducto = defineStore('producto', {
      * @retorne Producto[]
      */
     async getProductos(): Promise<Producto[]> {
-      console.log('first');
       this.productos = await localforage.getItem('productos');
-
       return this.productos as Producto[];
     },
     /**

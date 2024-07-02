@@ -44,11 +44,11 @@ export const getApiErrorCode = (err: any): string => {
       }
       return 'B' + codigo;
     } else {
-      console.warn(err);
+      console.log('B_ERROR_API', err);
       return 'B_ERROR_API';
     }
   } else {
-    console.warn(err);
+    console.log('B_ERROR', err);
     return 'B_ERROR';
   }
 };

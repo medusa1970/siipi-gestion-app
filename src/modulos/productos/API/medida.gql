@@ -9,8 +9,10 @@ query buscarMedidas(
     _id
     nombre
     tipoEmpaques {
+      _id
       nombre
       abreviacion
+      cantidad
     }
   }
 }
@@ -22,6 +24,12 @@ mutation crearMedidas(
   crearMedidas(datos: $datos, opciones: $opciones) {
     _id
     nombre
+    tipoEmpaques {
+      _id
+      nombre
+      abreviacion
+      cantidad
+    }
   }
 }
 

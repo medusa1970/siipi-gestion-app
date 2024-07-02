@@ -67,8 +67,6 @@ export const useAuth = {
           datos: [datos],
         }),
       );
-      console.log(datos);
-      console.log(nuevaPersona);
       return nuevaPersona;
     } catch (e) {
       throw getApiErrorCode(e);

@@ -21,7 +21,7 @@ export const useProducto = () => {
 
   const estado = reactive({
     productos: [] as Producto[],
-    categoriaSelectOpciones: [] as any[],
+    categoriasParaSelect: [] as any[],
 
     // modales
     modal: {
@@ -34,6 +34,9 @@ export const useProducto = () => {
 
   /** FUNCIONES */
   const crearProductoBasico = async () => {
+    if (estado.datos_crearProductoBasico.imagen === null) {
+      delete estado.datos_crearProductoBasico.imagen === null;
+    }
     let productoCreado;
     try {
       await loadingAsync(async () => {
@@ -94,13 +97,10 @@ export const useProducto = () => {
    * Traer productos de la base de datos local
    */
   const traerProductos = async () => {
-    console.log('first');
-    const productosAlmacenados = await localforage.getItem('productos');
-    console.log(productosAlmacenados);
-    if (!productosAlmacenados) {
-      const productos = await productoService.buscarProductos();
-      //si existe producto lo guardamos y si no le damos un []
-      await localforage.setItem('productos', productos ? productos : []);
+    let productos = await localforage.getItem<Producto[]>('productos');
+    if (!productos) {
+      productos = await productoService.buscarProductos();
+      await localforage.setItem('productos', productos);
     }
   };
 
@@ -143,6 +143,7 @@ export const useProducto = () => {
 
   const irEdicionProducto = (producto: Producto) => {
     productoStore.producto = producto;
+    console.log(estado.productos[0]);
     router.push('productos/detalleProducto');
   };
 

@@ -33,6 +33,7 @@ query productosBuscar(
         _id
         nombre
         abreviacion
+        cantidad
       }
     }
     empaques {
@@ -62,8 +63,42 @@ mutation productosCrearBasico(
   crearProductos(datos: $datos, opciones: $opciones) {
     _id
     _creado
+    _modificado
     nombre
     comentario
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
     categoria {
       _id
       nombre
@@ -171,6 +206,7 @@ mutation modificarProductosMedidaEmpaque(
     nombre
     medida {
       _id
+      nombre
     }
     empaques {
       _id
@@ -181,22 +217,6 @@ mutation modificarProductosMedidaEmpaque(
         nombre
       }
       cantidad
-    }
-  }
-}
-
-# MODIFICAR MEDIDA PRODUCTO
-mutation modificarProductoMedida(
-  $busqueda: BuscarProductoDto!
-  $datos: ModificarProductoDto!
-  $opciones: ModificarOpciones = {}
-) {
-  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
-    _id
-    nombre
-    medida {
-      _id
-      nombre
     }
   }
 }

@@ -24,7 +24,7 @@ mutation crearEntidadProveedor(
 }
 
 # ENTIDADES SERVICIOS
-mutation modificarProveedorServicio(
+mutation ModificarEntidadesServicio(
   $busqueda: BuscarEntidadDto!
   $datos: ModificarEntidadDto!
   $opciones: ModificarOpciones = {}
@@ -57,7 +57,7 @@ mutation modificarProveedorServicio(
 }
 
 # BUSCAR ENTIDADES TIPO PROVEEDOR DE UN PRODUCTO
-query buscarEntidadProveedoresProducto(
+query buscarEntidadesServicios(
   $busqueda: BuscarEntidadDto = {}
   $opciones: BuscarOpciones = {}
   $filtro: BuscarEntidadDto = {}

@@ -48,6 +48,7 @@
 
 <script setup>
 import { useProductoTab } from '@/modulos/ofertas/negocio/productosTab.composable';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 
 const {
   estado,
@@ -56,12 +57,14 @@ const {
   modificarOfertaProducto,
   ofertaStore,
 } = useProductoTab();
+const { actOfertasDB } = useOferta();
+const { $socket } = useNuxtApp();
 
 if (ofertaStore.oferta) {
   estado.datos_productoDeOferta = {
-    producto: ofertaStore.oferta.ingredientes[0].producto,
-    marca: ofertaStore.oferta.ingredientes[0].marca,
-    cantidad: ofertaStore.oferta.ingredientes[0].cantidad,
+    producto: ofertaStore.oferta?.ingredientes[0]?.producto,
+    marca: ofertaStore.oferta?.ingredientes[0]?.marca,
+    cantidad: ofertaStore.oferta?.ingredientes[0]?.cantidad,
   };
   // const { producto, marca, cantidad } = ofertaStore.oferta.ingredientes[0];
   // Object.assign(estado.datos_productoDeOferta, { producto, marca, cantidad });
@@ -70,6 +73,14 @@ if (ofertaStore.oferta) {
 onMounted(async () => {
   await traerProductos();
   estado.productosOpciones = productoSelectOptions();
+
+  $socket.on('cambiosOfertas', async (data) => {
+    console.log('first');
+    await actOfertasDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
 });
 </script>
 

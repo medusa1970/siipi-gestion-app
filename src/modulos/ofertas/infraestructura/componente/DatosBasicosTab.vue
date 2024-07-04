@@ -53,6 +53,8 @@ import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 
 const { estado, ofertaStore, modificarDatosBasicosOferta } =
   useDatosBasicosTab();
+const { actOfertasDB } = useOferta();
+const { $socket } = useNuxtApp();
 
 if (ofertaStore.oferta) {
   // estado.datos_ofertaBasica = ofertaStore.oferta;
@@ -64,6 +66,15 @@ if (ofertaStore.oferta) {
     imagen: ofertaStore.oferta.imagen,
   };
 }
+onMounted(async () => {
+  $socket.on('cambiosOfertas', async (data) => {
+    console.log('first');
+    await actOfertasDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
+});
 </script>
 
 <style lang="scss" scoped></style>

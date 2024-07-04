@@ -24,8 +24,11 @@
 
 <script setup>
 import { usePrecioTab } from '~/modulos/ofertas/negocio/preciosTab.composable';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 
 const { estado, modificarOfertaPrecio, ofertaStore } = usePrecioTab();
+const { actOfertasDB } = useOferta();
+const { $socket } = useNuxtApp();
 
 if (ofertaStore.oferta) {
   estado.datos_preciosOferta.precioSinFactura =
@@ -33,6 +36,18 @@ if (ofertaStore.oferta) {
   estado.datos_preciosOferta.precioConFactura =
     ofertaStore.oferta.precioConFactura;
 }
+
+onMounted(async () => {
+  // ofertaStore.obtenerOfertas();
+  $socket.on('cambiosOfertas', async (data) => {
+    console.log('first');
+    await actOfertasDB();
+  });
+});
+
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
+});
 </script>
 
 <style lang="scss" scoped></style>

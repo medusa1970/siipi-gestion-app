@@ -2,7 +2,7 @@
   <div>
     <Navigation label="Ofertas" icon="folder" />
     <h1 class="text-lg font-extrabold uppercase text-center">
-      Gestion de ofertas '{{ estado.catalogoSeleccionado?.nombre }}'
+      Gestion de ofertas '{{ ofertaStore.catalogoSeleccionado?.nombre }}'
     </h1>
     <Table
       :rows="estado.ofertasFiltradas"
@@ -14,7 +14,7 @@
 
       <template #dropdown>
         <q-select
-          v-model="estado.catalogoSeleccionado"
+          v-model="ofertaStore.catalogoSeleccionado"
           :options="estado.catalogos"
           option-label="nombre"
           label="Selecciona un catalogo"
@@ -210,8 +210,11 @@ const {
   irEdicionOfertas,
   categoriaSelectOptions,
   crearOferta,
+  actOfertasDB,
 } = useOferta();
 const ofertaStore = storeOferta();
+
+const { $socket } = useNuxtApp();
 
 onMounted(async () => {
   await traerOfertas();
@@ -219,6 +222,12 @@ onMounted(async () => {
   estado.categoriaOpciones = categoriaSelectOptions(true);
 
   // ofertaStore.obtenerOfertas();
+  $socket.on('cambiosOfertas', async (data: any) => {
+    await actOfertasDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
 });
 </script>
 <style scoped>

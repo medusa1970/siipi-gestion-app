@@ -123,7 +123,7 @@ export const useProducto = () => {
       'productos',
       productos ? productos : [],
     );
-    // if (res) console.log('Se actualizo la base de datos');
+    if (res) console.log('Se actualizo la base de datos de productos');
   };
 
   /**

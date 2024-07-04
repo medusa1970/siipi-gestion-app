@@ -12,8 +12,8 @@ interface OfertaStore {
   oferta: Oferta | null;
   // cache de la lista de los ofertas
   ofertas: Oferta[] | null;
-  catalogoElegido: any | null;
   catalogos: Catalogo[] | null;
+  catalogoSeleccionado: Catalogo | null;
   categoriaOpciones: any[] | null;
 }
 
@@ -21,7 +21,7 @@ export const storeOferta = defineStore('ofertas', {
   state: (): OfertaStore => ({
     oferta: null,
     ofertas: null,
-    catalogoElegido: null,
+    catalogoSeleccionado: null,
     catalogos: null,
     categoriaOpciones: null,
   }),
@@ -60,6 +60,6 @@ export const storeOferta = defineStore('ofertas', {
   },
 
   persist: {
-    paths: ['oferta', 'categoriaOpciones'], // Solo persiste 'myPersistentState'
+    paths: ['oferta', 'categoriaOpciones', 'catalogoSeleccionado'], // Solo persiste 'myPersistentState'
   },
 });

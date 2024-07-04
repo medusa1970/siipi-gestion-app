@@ -1,5 +1,5 @@
 <template>
-  <q-form>
+  <q-form @submit.prevent="modificarOfertaPrecio">
     <p>Entre los precios de la oferta:</p>
 
     <!-- precio sin factura -->
@@ -25,7 +25,14 @@
 <script setup>
 import { usePrecioTab } from '~/modulos/ofertas/negocio/preciosTab.composable';
 
-const { estado } = usePrecioTab();
+const { estado, modificarOfertaPrecio, ofertaStore } = usePrecioTab();
+
+if (ofertaStore.oferta) {
+  estado.datos_preciosOferta.precioSinFactura =
+    ofertaStore.oferta.precioSinFactura;
+  estado.datos_preciosOferta.precioConFactura =
+    ofertaStore.oferta.precioConFactura;
+}
 </script>
 
 <style lang="scss" scoped></style>

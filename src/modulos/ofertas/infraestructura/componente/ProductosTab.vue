@@ -1,5 +1,5 @@
 <template>
-  <q-form>
+  <q-form @submit.prevent="modificarOfertaProducto">
     <p>Entre los datos del producto en la oferta:</p>
 
     <!-- Producto -->
@@ -28,7 +28,7 @@
       :opciones="
         estado.datos_productoDeOferta.producto?.variedades?.map((variedad) => ({
           label: variedad.marca.nombre || 'Nombre no disponible',
-          value: variedad._id,
+          value: { _id: variedad.marca._id, nombre: variedad.marca.nombre },
           class: 'option',
         })) || []
       "
@@ -39,7 +39,7 @@
       label="Cantidad"
       @update="(v) => (estado.datos_productoDeOferta.cantidad = Number(v))"
       info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
-      :porDefecto="estado.datos_productoDeOferta.nombre"
+      :porDefecto="estado.datos_productoDeOferta.cantidad"
       :rules="[useRules.requerido(), useRules.numero()]"
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
@@ -49,7 +49,23 @@
 <script setup>
 import { useProductoTab } from '@/modulos/ofertas/negocio/productosTab.composable';
 
-const { estado, traerProductos, productoSelectOptions } = useProductoTab();
+const {
+  estado,
+  traerProductos,
+  productoSelectOptions,
+  modificarOfertaProducto,
+  ofertaStore,
+} = useProductoTab();
+
+if (ofertaStore.oferta) {
+  estado.datos_productoDeOferta = {
+    producto: ofertaStore.oferta.ingredientes[0].producto,
+    marca: ofertaStore.oferta.ingredientes[0].marca,
+    cantidad: ofertaStore.oferta.ingredientes[0].cantidad,
+  };
+  // const { producto, marca, cantidad } = ofertaStore.oferta.ingredientes[0];
+  // Object.assign(estado.datos_productoDeOferta, { producto, marca, cantidad });
+}
 
 onMounted(async () => {
   await traerProductos();

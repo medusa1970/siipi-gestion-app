@@ -55,14 +55,4 @@ export const useRules = {
       return true;
     }
   },
-  numero(mensaje: string = 'Debe ser un numero'): Function {
-    const numero = (val: any): String | true => {
-      if (!/^-?\d*([.]\d+)?$/.test(val)) {
-        return mensaje;
-      } else {
-        return true;
-      }
-    };
-    return numero;
-  },
 };

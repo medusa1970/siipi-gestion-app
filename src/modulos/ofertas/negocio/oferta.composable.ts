@@ -224,12 +224,10 @@ export const useOferta = () => {
   };
 
   const crearOferta = async () => {
-    console.log(estado.datos_ofertaBasica);
     const ofertaCreada = await ofertaService.crearOferta({
       ...estado.datos_ofertaBasica,
       catalogo: estado.catalogoSeleccionado._id,
     });
-    console.log(ofertaCreada);
 
     if (ofertaCreada) {
       ofertaStore.ofertas.push(ofertaCreada);

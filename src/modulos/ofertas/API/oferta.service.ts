@@ -42,4 +42,34 @@ export const ofertaService = {
         opciones: { populate: true },
       }),
     ),
+  /**
+   * Modifica una oferta con datos basicos
+   * @returns Oferta
+   */
+  modificarOfertaIngredienteSimple: async (
+    busqueda: BuscarOfertaDto,
+    datos: ModificarOfertaDto,
+  ) =>
+    extraerUno(
+      await GqlModificarOfertaIngredientes({
+        busqueda,
+        datos,
+        opciones: { populate: true },
+      }),
+    ),
+  /**
+   * Modifica una oferta con sus precios
+   * @returns Oferta
+   */
+  modificarOfertaPrecios: async (
+    busqueda: BuscarOfertaDto,
+    datos: ModificarOfertaDto,
+  ) =>
+    extraerUno(
+      await GqlModificarOfertaPrecios({
+        busqueda,
+        datos,
+        opciones: { populate: true },
+      }),
+    ),
 };

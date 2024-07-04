@@ -187,6 +187,7 @@
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
         :rules="[]"
+        :porDefecto="estado.datos_ofertaBasica.imagen"
       />
     </template>
   </Dialog>

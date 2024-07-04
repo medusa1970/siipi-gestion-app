@@ -17,8 +17,6 @@
       :porDefecto="estado.datos_ofertaBasica.abreviacion"
     />
 
-    <code>{{ estado.categoriaOpciones }}</code>
-
     <!-- Categoria -->
     <input-select
       label="Categoria"
@@ -57,9 +55,14 @@ const { estado, ofertaStore, modificarDatosBasicosOferta } =
   useDatosBasicosTab();
 
 if (ofertaStore.oferta) {
-  estado.datos_ofertaBasica = ofertaStore.oferta;
-  console.log(estado.datos_ofertaBasica);
+  // estado.datos_ofertaBasica = ofertaStore.oferta;
   estado.categoriaOpciones = ofertaStore.categoriaOpciones;
+  estado.datos_ofertaBasica = {
+    nombre: ofertaStore.oferta.nombre,
+    abreviacion: ofertaStore.oferta.abreviacion,
+    catalogo: ofertaStore.oferta.catalogo,
+    imagen: ofertaStore.oferta.imagen,
+  };
 }
 </script>
 

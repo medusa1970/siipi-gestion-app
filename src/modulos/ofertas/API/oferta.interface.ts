@@ -4,16 +4,21 @@ export interface Oferta {
   _creado?: string;
   nombre: string;
   abreviacion: string;
-  descripcion: string;
-  precio: number;
-  catalogo: string;
-  idIngrediente: string;
-  producto: {
-    _id: string;
-    nombre: string;
-    presentacionBasica: string;
-    presentaciones: null[];
-  };
+  catalogo: { _id: string; nombre: string };
+  ingredientes: {
+    tipo?: string;
+    producto: {
+      _id: string;
+      nombre: string;
+    };
+    marca: {
+      _id: string;
+      nombre: string;
+    };
+    cantidad: number;
+  }[];
+  precioSinFactura: number;
+  precioConFactura: number;
   cantidad: number;
   imagen: string;
 }

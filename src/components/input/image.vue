@@ -107,11 +107,7 @@ const props = withDefaults(
     // filled: true,
     dense: true,
     clearable: true,
-<<<<<<< HEAD
-    clase: 'mt-2 mb-1',
-=======
     clase: '',
->>>>>>> will-ofertas
     rules: [] as Function[],
     maxSizeKb: '500',
   },

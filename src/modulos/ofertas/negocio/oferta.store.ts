@@ -14,14 +14,16 @@ interface OfertaStore {
   ofertas: Oferta[] | null;
   catalogoElegido: any | null;
   catalogos: Catalogo[] | null;
+  categoriaOpciones: any[] | null;
 }
 
-export const storeOferta = defineStore('producto', {
+export const storeOferta = defineStore('ofertas', {
   state: (): OfertaStore => ({
     oferta: null,
     ofertas: null,
     catalogoElegido: null,
     catalogos: null,
+    categoriaOpciones: null,
   }),
 
   getters: {
@@ -58,6 +60,6 @@ export const storeOferta = defineStore('producto', {
   },
 
   persist: {
-    paths: ['oferta'], // Solo persiste 'myPersistentState'
+    paths: ['oferta', 'categoriaOpciones'], // Solo persiste 'myPersistentState'
   },
 });

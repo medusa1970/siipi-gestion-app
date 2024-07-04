@@ -11,8 +11,8 @@ export default [
   },
   {
     name: 'ofertasDetalles',
-    path: '/cathering/ofertas/detalleOferta',
-    file: '@/modulos/ofertas/infraestructura/paginas/detalleOferta.vue',
+    path: '/cathering/ofertas/ofertaDetalle',
+    file: '@/modulos/ofertas/infraestructura/paginas/ofertaDetalle.vue',
   },
   // {
   //   name: 'catalogos',

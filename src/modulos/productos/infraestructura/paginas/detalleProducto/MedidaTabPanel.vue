@@ -230,18 +230,22 @@ const selectTipoEmpaque = ref([]);
 
 onMounted(async () => {
   await buscarMedidas();
-  selectTipoEmpaque.value = toSelect(productoStore.producto.medida);
+  selectTipoEmpaque.value = toSelect(
+    productoStore.producto.medida.tipoEmpaques,
+  );
 });
 
 const handlePayloadVariedad = (payload: any) => {
   productoStore.producto.variedades.push(payload);
 };
+
 const handlePayloadMedida = (payload: any) => {};
+
 const handlePayloadTipoEmpaque = (payload: any) => {
-  estado.medida.tipoEmpaques.push(payload);
   productoStore.producto.medida.tipoEmpaques.push(payload);
   selectTipoEmpaque.value = toSelect(
     productoStore.producto.medida.tipoEmpaques,
   );
+  prellenarEmpaque(payload._id);
 };
 </script>

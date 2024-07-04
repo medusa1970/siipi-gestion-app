@@ -7,6 +7,7 @@ import type {
   Entidad,
   Marca,
   Medida,
+  ModificarServicioDto,
   Producto,
 } from '#gql';
 import type { CrearCategoriaDto } from '#gql';
@@ -427,11 +428,7 @@ export const productoService = {
   modificarServicioProducto: async (
     proveedorId: string,
     servicioId: string,
-    servicio: {
-      identificativo: string;
-      precioConFactura: number;
-      precioSinFactura: number;
-    },
+    servicio: ModificarServicioDto,
   ): Promise<Entidad | null> => {
     try {
       return extraerUno(

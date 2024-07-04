@@ -82,6 +82,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'cathering',
+});
+
 import MarcaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MarcaTabPanel.vue';
 import MedidaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MedidaTabPanel.vue';
 import ProveedorTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/ProveedorTabPanel.vue';

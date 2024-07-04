@@ -22,11 +22,17 @@ export const useDetalleProveedores = () => {
     identificativo: null as string,
     precioConFactura: null as number,
     precioSinFactura: null as number,
-    precios: [] as {
+    preciosPorMayor: [] as {
       cantidadMin: number;
       precioConFactura: number;
       precioSinFactura: number;
     }[],
+  };
+
+  const init_precioPorMayor = {
+    cantidadMin: null as number,
+    precioConFactura: null as number,
+    precioSinFactura: null as number,
   };
 
   /**
@@ -39,6 +45,7 @@ export const useDetalleProveedores = () => {
       show_crearServicioProducto: false,
       show_modificarServicioProducto: false,
       show_crearProveedor: false,
+      show_crearPrecioPorMayor: false,
     },
     serviciosProducto: [] as Servicio[],
     proveedores: [] as Entidad[],
@@ -48,6 +55,9 @@ export const useDetalleProveedores = () => {
       init_servicioProducto,
     ) as typeof init_servicioProducto,
     proveedoresParaSelect: [] as SelectOpcion[],
+    datos_preciosPorMayor: clone(
+      init_precioPorMayor,
+    ) as typeof init_precioPorMayor,
   });
 
   /**
@@ -91,6 +101,19 @@ export const useDetalleProveedores = () => {
   };
 
   /**
+   * Agregar precios por mayor
+   */
+  const agregarPrecio = () => {
+    console.log(estado.datos_servicioProducto);
+    console.log(estado.datos_preciosPorMayor);
+    estado.datos_servicioProducto.preciosPorMayor.push(
+      estado.datos_preciosPorMayor,
+    );
+    estado.modal.show_crearPrecioPorMayor = false;
+    estado.datos_preciosPorMayor = init_precioPorMayor;
+  };
+
+  /**
    * Proveedor >> agregar proveedores
    */
   const crearServicioProducto = async () => {
@@ -101,7 +124,7 @@ export const useDetalleProveedores = () => {
       identificativo: estado.datos_servicioProducto.identificativo,
       precioConFactura: estado.datos_servicioProducto.precioConFactura,
       precioSinFactura: estado.datos_servicioProducto.precioSinFactura,
-      preciosPorMayor: estado.datos_servicioProducto.precios,
+      preciosPorMayor: estado.datos_servicioProducto.preciosPorMayor,
     };
     // hacemos la consulta con manejo de errores
     let proveedor;
@@ -130,6 +153,7 @@ export const useDetalleProveedores = () => {
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Proveedor creado correctamente');
     estado.datos_servicioProducto = init_servicioProducto;
+    estado.datos_preciosPorMayor = init_precioPorMayor;
     estado.modal.show_crearServicioProducto = false;
   };
 
@@ -145,8 +169,10 @@ export const useDetalleProveedores = () => {
     estado.datos_servicioProducto.identificativo = servicio.identificativo;
     estado.datos_servicioProducto.precioSinFactura = servicio.precioSinFactura;
     estado.datos_servicioProducto.precioConFactura = servicio.precioConFactura;
-    estado.datos_servicioProducto.precios = servicio.preciosPorMayor;
+    estado.datos_servicioProducto.preciosPorMayor = servicio.preciosPorMayor;
     estado.datos_servicioProducto.proveedor = servicio.proveedor._id;
+    estado.datos_servicioProducto = init_servicioProducto;
+    estado.datos_preciosPorMayor = init_precioPorMayor;
   };
 
   const modificarServicioProducto = async () => {
@@ -155,7 +181,11 @@ export const useDetalleProveedores = () => {
       identificativo: estado.datos_servicioProducto.identificativo,
       precioConFactura: estado.datos_servicioProducto.precioConFactura,
       precioSinFactura: estado.datos_servicioProducto.precioSinFactura,
+      preciosPorMayor: {
+        reemplazar: estado.datos_servicioProducto.preciosPorMayor,
+      },
     };
+    console.log(datos);
     // hacemos la consulta con manejo de errores
     let proveedor;
     try {
@@ -192,6 +222,7 @@ export const useDetalleProveedores = () => {
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Proveedor modificado correctamente');
     estado.datos_servicioProducto = init_servicioProducto;
+    estado.datos_preciosPorMayor = init_precioPorMayor;
     estado.modal.show_modificarServicioProducto = false;
     estado.modal.show_crearServicioProducto = false;
   };
@@ -215,6 +246,7 @@ export const useDetalleProveedores = () => {
     estado,
     productoStore,
     authStore,
+    agregarPrecio,
     buscarProveedores,
     crearServicioProducto,
     modalModificarServicioProducto,

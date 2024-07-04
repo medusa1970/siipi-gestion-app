@@ -190,7 +190,7 @@ export const useDetalleMedida = () => {
     if (!empaque) {
       // return false;
     }
-    estado.resetEmpaque = 'Eligido ' + empaque.nombre;
+    estado.resetEmpaque = 'Eligido ' + (empaque.nombre ?? '');
     estado.datos_productoMedida.empaque.cantidad = empaque.cantidad;
     estado.datos_productoMedida.empaque.nombre = empaque.nombre;
     estado.datos_productoMedida.empaque.abreviacion = empaque.abreviacion;

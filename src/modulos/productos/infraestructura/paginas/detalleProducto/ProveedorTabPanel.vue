@@ -110,7 +110,7 @@
         label="Proveedor"
         v-if="!estado.modal.show_modificarServicioProducto"
         info="Elija un proveedor o crealo si no existe con el boton [+]"
-        :opciones="estado.proveedoresParaSelect"
+        :opciones="selectProveedores"
         @update="(v) => (estado.datos_servicioProducto.proveedor = v)"
         :porDefecto="
           estado.modal.show_modificarServicioProducto
@@ -181,7 +181,7 @@
         "
       />
 
-      <!-- <div class="flex justify-between items-center mt-2 mb-1">
+      <div class="flex justify-between items-center mt-2 mb-1">
         <h1 class="font-bold text-xs">PRECIOS POR MAYOR:</h1>
         <q-btn
           color="primary"
@@ -189,7 +189,7 @@
           dense
           no-caps
           padding="1px 6px"
-          @click="estado.modal.esCrearPrecio = true"
+          @click="estado.modal.show_crearPrecioPorMayor = true"
         />
       </div>
 
@@ -212,7 +212,8 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <tr
-            v-for="(precio, index) in estado.datos_servicioProducto.precios"
+            v-for="(precio, index) in estado.datos_servicioProducto
+              .preciosPorMayor"
             :key="index"
             class="[&>td]:border [&>td]:border-gray-400"
           >
@@ -231,13 +232,55 @@
             </td>
           </tr>
         </tbody>
-      </table>-->
+      </table>
     </template>
   </Dialog>
+
+  <!-- CREAR PRECIO -->
+  <Dialog2
+    v-model="estado.modal.show_crearPrecioPorMayor"
+    title="Agregar precio"
+    label-btn="Crear"
+    :handle-submit="agregarPrecio"
+  >
+    <template #inputsDialog>
+      <h1 class="text-center bg-gray-300 font-bold py-[2px]">AGREGAR PRECIO</h1>
+
+      <div class="flex show_crearPrecioPorMayorflex-col gap-2 mt-3">
+        <q-input
+          label="Cantidad *"
+          required
+          v-model.number="estado.datos_preciosPorMayor.cantidadMin"
+          type="number"
+          outlined
+          dense
+          clearable
+        />
+        <q-input
+          label="Precio sin factura *"
+          required
+          v-model.number="estado.datos_preciosPorMayor.precioSinFactura"
+          type="number"
+          outlined
+          dense
+          clearable
+        />
+        <q-input
+          v-model.number="estado.datos_preciosPorMayor.precioConFactura"
+          type="number"
+          label="Precio con factura"
+          outlined
+          dense
+          clearable
+        />
+      </div>
+    </template>
+  </Dialog2>
 </template>
 
 <script setup lang="ts">
 import { useDetalleProveedores } from '@/modulos/productos/negocio/detalle/proveedores.composable';
+import { toSelect } from '~/components/input/input.service';
 import agregarProveedorComp from '~/modulos/productos/infraestructura/selects/agregarProveedor.vue';
 const {
   estado,
@@ -247,24 +290,37 @@ const {
   modalModificarServicioProducto,
   modificarServicioProducto,
   buscarServiciosProducto,
+  agregarPrecio,
 } = useDetalleProveedores();
-
-const handlePayloadProveedor = (payload: any) => {
-  console.log('creado proveedor', payload);
-};
 
 onMounted(async () => {
   await buscarProveedores();
   await buscarServiciosProducto();
-  estado.proveedoresParaSelect = estado.proveedores.map((proveedor) => {
-    return {
-      label: proveedor.nombre,
-      value: proveedor._id,
-    };
-  });
+  selectProveedores.value = toSelect(estado.proveedores);
   productoStore.producto.variedades.map((variedad) => ({
     _id: variedad.marca._id,
     nombre: variedad.marca.nombre,
   }));
+  // estado.datos_servicioProducto = {
+  //   servicioID: null,
+  //   marca: null,
+  //   proveedor: null,
+  //   identificativo: 'identificativo',
+  //   precioConFactura: 15,
+  //   precioSinFactura: 42,
+  //   preciosPorMayor: [
+  //     {
+  //       cantidadMin: 12,
+  //       precioConFactura: 12,
+  //       precioSinFactura: 12,
+  //     },
+  //   ],
+  // };
 });
+
+const selectProveedores = ref([]);
+const handlePayloadProveedor = (payload: any) => {
+  estado.proveedores.push(payload);
+  selectProveedores.value = toSelect(estado.proveedores);
+};
 </script>

@@ -37,7 +37,7 @@ export const useOferta = () => {
       show_informacionOferta: false,
     },
 
-    datos_ofertaBasica: init_crearOfertaBasico,
+    datos_ofertaBasica: clone(init_crearOfertaBasico),
   });
 
   /** FUNCIONES */
@@ -238,12 +238,12 @@ export const useOferta = () => {
       catalogo: ofertaStore.catalogoSeleccionado._id,
     });
 
-    console.log(ofertaCreada);
     if (ofertaCreada) {
       // ofertaStore.ofertas.push(ofertaCreada);
       // estado.ofertasFiltradas.push(ofertaCreada);
 
       NotifySucessCenter('Oferta creada con exito');
+      estado.datos_ofertaBasica = init_crearOfertaBasico;
     }
     estado.modal.show_crearOfertaBasico = false;
   };

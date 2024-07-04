@@ -101,6 +101,8 @@
         ? modificarServicioProducto
         : crearServicioProducto
     "
+    :close-manual="estado.modal.show_modificarServicioProducto"
+    :handle-close="cerrarLimpiarModificarServicioProducto"
   >
     <template #inputsDialog>
       <div v-if="!estado.modal.show_modificarServicioProducto">
@@ -291,6 +293,7 @@ const {
   modificarServicioProducto,
   buscarServiciosProducto,
   agregarPrecio,
+  cerrarLimpiarModificarServicioProducto,
 } = useDetalleProveedores();
 
 onMounted(async () => {

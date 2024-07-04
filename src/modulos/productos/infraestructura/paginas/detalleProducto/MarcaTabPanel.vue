@@ -78,6 +78,8 @@
         ? modificarProductoMarca
         : crearProductoMarca
     "
+    :close-manual="estado.modal.show_modificarProductoMarca"
+    :handle-close="cerrarLimpiarModificarMarca"
   >
     <template #inputsDialog>
       <div v-if="estado.modal.show_modificarProductoMarca"></div>
@@ -185,6 +187,7 @@ const {
   modificarProductoMarca,
   crearProductoMarca,
   modalModificarProductoMarca,
+  cerrarLimpiarModificarMarca,
 } = useDetalleMarcas();
 
 const handlePayloadMarca = (payload) => {

@@ -187,6 +187,13 @@ export const useDetalleMarcas = () => {
     estado.modal.show_crearProductoMarca = false;
   };
 
+  const cerrarLimpiarModificarMarca = () => {
+    estado.modal.show_crearProductoMarca = false;
+    estado.modal.show_modificarProductoMarca = false;
+    // Limpiar formulario marca al cerrar el editor
+    estado.datos_productoMarca = init_productoMarca;
+  };
+
   return {
     productoStore,
     authStore,
@@ -196,5 +203,6 @@ export const useDetalleMarcas = () => {
     crearProductoMarca,
     modificarProductoMarca,
     modalModificarProductoMarca,
+    cerrarLimpiarModificarMarca,
   };
 };

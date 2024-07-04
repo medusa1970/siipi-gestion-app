@@ -172,6 +172,7 @@ type Ingrediente {
   _orden: Float
   tipo: String!
   producto: Producto
+  marca: Marca
   cantidad: Float
 }
 
@@ -193,7 +194,7 @@ type Precio {
   _orden: Float
   cantidadMin: Float!
   precioConFactura: Float
-  precioSinFactura: Float!
+  precioSinFactura: Float
 }
 
 type Oferta {
@@ -910,6 +911,7 @@ input BuscarIngredienteDto {
   _borrado: [BuscarFechaDto!]
   tipo: [String!]
   producto: [ID!]
+  marca: [ID!]
   cantidad: [Float!]
 }
 
@@ -1491,8 +1493,8 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-06-24T10:39:11.685Z"
-  servicios: [crearServicioProductoDto!]
+  saldoActualizacion: DateTime = "2024-07-04T02:04:57.555Z"
+  servicios: [CrearServicioDto!]
 }
 
 input CrearEmpleadoDto {
@@ -1574,7 +1576,7 @@ input CrearMenuDto {
   exepciones: [ID!]
 }
 
-input crearServicioProductoDto {
+input CrearServicioDto {
   _id: ID
   producto: ID!
   marca: ID
@@ -1590,7 +1592,7 @@ input CrearPrecioDto {
   _id: ID
   cantidadMin: Float!
   precioConFactura: Float
-  precioSinFactura: Float!
+  precioSinFactura: Float
 }
 
 input ModificarEntidadDto {
@@ -1796,16 +1798,16 @@ input EditarRefsDto {
 }
 
 input EditarServicioDto {
-  reemplazar: [crearServicioProductoDto!]
+  reemplazar: [CrearServicioDto!]
   buscar: BuscarServicioDto
-  modificar: modificarServicioProductoDto
+  modificar: ModificarServicioDto
   borrar: BuscarServicioDto
-  agregar: [crearServicioProductoDto!]
+  agregar: [CrearServicioDto!]
   skip: Float
   limit: Float
 }
 
-input modificarServicioProductoDto {
+input ModificarServicioDto {
   producto: ID
   marca: ID
   identificativo: String
@@ -1874,6 +1876,7 @@ input CrearIngredienteDto {
   _id: ID
   tipo: String!
   producto: ID
+  marca: ID
   cantidad: Float
 }
 
@@ -1919,6 +1922,7 @@ input EditarIngredienteDto {
 input ModificarIngredienteDto {
   tipo: String
   producto: ID
+  marca: ID
   cantidad: Float
 }
 

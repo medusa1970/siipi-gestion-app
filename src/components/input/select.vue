@@ -62,7 +62,8 @@
       </q-card-section>
       <q-card-section>
         <contenido-dialog
-          :opciones="listaOpciones"
+          :opcionesPariente="listaOpciones"
+          :param="dialogParam"
           @update:opciones="updateOpciones"
         />
       </q-card-section>
@@ -72,6 +73,7 @@
 
 <script setup lang="ts">
 import type { SelectOpcion } from './select.interface';
+import { ref } from 'vue';
 
 /**
  * emits
@@ -88,6 +90,11 @@ const emits = defineEmits<{
     event: 'error',
     errorFlag: boolean,
     errorMensaje: string | null,
+  ): void;
+  (
+    // cambió el valor del input
+    event: 'payload',
+    payload: Array<any>,
   ): void;
 }>();
 
@@ -107,6 +114,7 @@ const props = withDefaults(
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
+    dialogParam?: any; // el componiente adentro del dialogo de agregar nuevo elemento
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
     error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
     dense?: boolean;
@@ -131,12 +139,15 @@ const props = withDefaults(
  */
 
 const localModel = ref<string>(props.porDefecto); // contenido del input
-const listaOpciones = ref<SelectOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
+const listaOpciones = ref<SelectOpcion[]>(); // lista de opciones, copia de props.opciones para trabajar
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
 const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+onMounted(async () => {
+  listaOpciones.value = props.opciones;
+});
 
 /**
  * metodos
@@ -171,24 +182,29 @@ const handleChange = (valor: string | null) => {
 // al entrar un valor en el input, filtra las opciones (no-case)
 function filterFn(valor: string, update: Function) {
   update(() => {
-    const needle = valor.toLowerCase();
-    const opciones = props.opciones;
-    listaOpciones.value =
-      valor === ''
-        ? opciones
-        : opciones?.filter(
-            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
-          );
+    // const needle = valor.toLowerCase();
+    // const opciones = props.opciones;
+    // listaOpciones.value =
+    //   valor === ''
+    //     ? opciones
+    //     : opciones?.filter(
+    //         (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
+    //       );
   });
 }
 
 // agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(opciones: SelectOpcion[], posicion: number) {
+function updateOpciones(
+  objeto: any,
+  opciones: SelectOpcion[],
+  value: string,
+  payload: any,
+) {
   listaOpciones.value = opciones;
-  localModel.value = opciones[posicion].value;
-  handleChange(opciones[posicion].value);
-  activarValidacion();
+  localModel.value = value;
+  handleChange(value);
   showDialog.value = false;
+  emits('payload', objeto);
 }
 
 /**
@@ -196,9 +212,16 @@ function updateOpciones(opciones: SelectOpcion[], posicion: number) {
  */
 
 // update listaOpciones cuando props.opciones cambia
+// resuelve un bug donde las props se cargan despues de los reactives
+let once = true;
 watch(
   () => props.opciones,
-  async () => (listaOpciones.value = props.opciones),
+  async () => {
+    if (true) {
+      once = false;
+      listaOpciones.value = props.opciones;
+    }
+  },
   { immediate: false },
 );
 

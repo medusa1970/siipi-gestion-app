@@ -32,6 +32,8 @@
       @update="(v) => (estado.datos_productoMedida.medida = v)"
       :porDefecto="productoStore.producto.medida?._id"
       :rules="[useRules.requerido()]"
+      :dialog="agregarMedidaComp"
+      @payload="handlePayloadMedida"
     />
 
     <!-- deshabilitado si ya hay empaques-->
@@ -64,14 +66,6 @@
       ejemplo en tira o paquete de tal o tal marca.
     </p>
 
-    <!-- No se puede agregar empaque si no hay marca registrada -->
-    <div v-if="true || productoStore.producto.variedades?.length === 0">
-      <p>
-        Para poder agregar empaques, primero debes agregar por lo menos una
-        marca al producto.
-      </p>
-    </div>
-
     <Table :rows="productoStore.producto.empaques" :columns="columnaEmpaques">
       <template #dropdown>
         <q-btn
@@ -79,7 +73,6 @@
           icon="add"
           label="Agregar empaque"
           no-caps
-          :disable="productoStore.producto.variedades?.length === 0"
           @click="
             () => {
               estado.modal.show_modificarProductoEmpaque = false;
@@ -106,30 +99,6 @@
       </template>
     </Table>
   </div>
-
-  <!-- CREAR MEDIDA -->
-  <Dialog
-    v-model="estado.modal.show_crearMedida"
-    title="Crear medida"
-    label-btn="Crear"
-    :handle-submit="crearMedidaGlobal"
-  >
-    <template #inputsDialog>
-      <h1 class="text-center bg-gray-300 font-bold py-[2px]">CREAR MEDIDA</h1>
-
-      <div class="flex flex-col gap-2 mt-3">
-        <q-input
-          label="Nombre *"
-          required
-          v-model="estado.medida.nombre"
-          type="text"
-          outlined
-          dense
-          clearable
-        />
-      </div>
-    </template>
-  </Dialog>
 
   <!-- 
     MEDIDA & EMPAQUE PRODUCTO
@@ -169,6 +138,9 @@
             ? estado.datos_productoMedida.empaque.marca
             : null
         "
+        :dialog="agregarVariedadComp"
+        :dialogParam="productoStore.producto._id"
+        @payload="handlePayloadVariedad"
       />
 
       <div v-if="!estado.modal.show_modificarProductoEmpaque">
@@ -179,14 +151,12 @@
         <input-select
           label="Empaques preseleccionados"
           info="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
-          :opciones="
-            productoStore.producto.medida.tipoEmpaques.map((tipoEmpaque) => ({
-              value: tipoEmpaque._id,
-              label: tipoEmpaque.nombre,
-            }))
-          "
+          :opciones="selectTipoEmpaque"
           @update="(v) => prellenarEmpaque(v)"
           :watch="estado.resetEmpaque"
+          :dialog="agregarTipoEmpaqueComp"
+          :dialog-param="productoStore.producto.medida._id"
+          @payload="handlePayloadTipoEmpaque"
         />
       </div>
 
@@ -225,105 +195,53 @@
         :rules="[useRules.requerido(), useRules.numero()]"
         :porDefecto="
           estado.modal.show_modificarProductoEmpaque
-            ? estado.datos_productoMedida.empaque.cantidad
+            ? '' + estado.datos_productoMedida.empaque.cantidad
             : null
         "
-        :watch="estado.datos_productoMedida.empaque.cantidad"
+        :watch="'' + estado.datos_productoMedida.empaque.cantidad"
       />
     </template>
   </Dialog>
 
-  <!-- CREAR EMPAQUE GLOBAL-->
-  <Dialog
-    v-model="estado.modal.show_crearEmpaque"
-    title="Crear nombre de empaque"
-    label-btn="Crear"
-    :handle-submit="crearEmpaqueGlobal"
-  >
-    <template #inputsDialog>
-      <p>
-        Registra un nombre de empaque que se podrá reutilizar para registrar
-        empaques de productos.
-      </p>
-
-      <!-- nombre -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Nombre *"
-            required
-            class="w-full"
-            v-model="estado.empaque.nombre"
-            type="text"
-            filled
-            dense
-          />
-        </div>
-      </div>
-
-      <!-- abreviacion -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Abreviacion *"
-            required
-            class="w-full"
-            v-model="estado.empaque.abreviacion"
-            type="text"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
-          />
-        </div>
-      </div>
-
-      <!-- abreviacion -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            class="w-full"
-            v-model.number="estado.empaque.cantidad"
-            type="number"
-            label="cantidad en unidades basicas"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="La cantidad de unidades básicas del tipo de empaque (opcional) ; solo sirve para prellenar el formulario al crear un empaque del producto."
-          />
-        </div>
-      </div>
-    </template>
-  </Dialog>
-
-  <clg :v="x" />
+  <clg :v="estado" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 const x = ref('#');
 import { useDetalleMedida } from '@/modulos/productos/negocio/detalle/medida.composable';
 import { columnaEmpaques } from '@/modulos/productos/infraestructura/utils/columns';
+import agregarVariedadComp from '~/modulos/productos/infraestructura/selects/agregarVariedad.vue';
+import agregarMedidaComp from '~/modulos/productos/infraestructura/selects/agregarMedida.vue';
+import agregarTipoEmpaqueComp from '~/modulos/productos/infraestructura/selects/agregarTipoEmpaque.vue';
+import { toSelect } from '~/components/input/input.service';
 
 const {
   estado,
   productoStore,
   buscarMedidas,
-  crearMedidaGlobal,
   guardarMedidaBasicaProducto,
   crearProductoEmpaque,
   modificarProductoEmpaque,
   modalModificarProductoEmpaque,
-  crearEmpaqueGlobal,
   prellenarEmpaque,
 } = useDetalleMedida();
 
+const selectTipoEmpaque = ref([]);
+
 onMounted(async () => {
   await buscarMedidas();
+  selectTipoEmpaque.value = toSelect(productoStore.producto.medida);
 });
+
+const handlePayloadVariedad = (payload: any) => {
+  productoStore.producto.variedades.push(payload);
+};
+const handlePayloadMedida = (payload: any) => {};
+const handlePayloadTipoEmpaque = (payload: any) => {
+  estado.medida.tipoEmpaques.push(payload);
+  productoStore.producto.medida.tipoEmpaques.push(payload);
+  selectTipoEmpaque.value = toSelect(
+    productoStore.producto.medida.tipoEmpaques,
+  );
+};
 </script>

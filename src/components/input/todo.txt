@@ -1,2 +1,5 @@
 generaliser porDefecto
 v-if configurable
+generaliser emit error
+tester pasar ref como model
+unicidad model si hay 2 errores: se porta raro

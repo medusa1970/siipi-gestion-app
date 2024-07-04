@@ -10,3 +10,6 @@ export const extraerUno = function (objeto: { [key: string]: any }) {
   const [res] = extraer(objeto);
   return res;
 };
+export const clone = function (objeto: any) {
+  return JSON.parse(JSON.stringify(objeto));
+};

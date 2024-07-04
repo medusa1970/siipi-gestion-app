@@ -10,6 +10,7 @@
         :porDefecto="estado.datos_modificarProductoBasico.nombre"
         :rules="[useRules.requerido()]"
       />
+
       <!-- Categoria -->
       <input-select
         label="Categoria"
@@ -48,14 +49,13 @@
       <q-btn color="primary" label="Guardar" type="submit" no-caps />
     </q-form>
   </div>
-  <clg :v="productoStore.producto.medida?.tipoEmpaques" />
 </template>
 
 <script setup lang="ts">
 import { useDetalleBasico } from '@/modulos/productos/negocio/detalle/basico.composable';
-import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { UrlToBase64Image } from '~/components/input/input.service';
+import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
 const router = useRouter();
 const { estado, authStore, productoStore, modificarProductoBasico } =
   useDetalleBasico();
@@ -71,10 +71,6 @@ const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
 const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
-
-definePageMeta({
-  layout: 'cathering',
-});
 
 // si no hay producto, pagina equivocada y volvemos a lalista
 if (!productoStore.producto) {

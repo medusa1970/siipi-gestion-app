@@ -36,13 +36,13 @@ export const useDetalleMarcas = () => {
     },
     marcas: [] as Marca[], // lista de las marcas
     marca: null as Marca, // para crear marca al nivel global
-    datos_productoMarca: init_productoMarca,
+    datos_productoMarca: clone(init_productoMarca) as typeof init_productoMarca,
     marcasParaSelect: [] as SelectOpcion[],
     errorMarca: '',
   });
 
   /**
-   * ESTADO
+   * FUNCTIONES
    */
 
   /**
@@ -84,7 +84,7 @@ export const useDetalleMarcas = () => {
    */
 
   const crearProductoMarca = async () => {
-    // preparacion de los datos
+    // preparamos los datos
     const datos = {
       marca: estado.datos_productoMarca.marca,
       cantidadMin: estado.datos_productoMarca.cantidadMin,
@@ -96,7 +96,7 @@ export const useDetalleMarcas = () => {
         imagen: estado.datos_productoMarca.imagen,
       });
     }
-    // hacemos la consulta
+    // hacemos la consulta con manejo de errores
     let productoModificado;
     try {
       await loadingAsync(async () => {
@@ -115,11 +115,13 @@ export const useDetalleMarcas = () => {
       }
       return;
     }
-    NotifySucessCenter('Marca creado correctamente');
+    // ponemos al dia el productoStore
     const nuevaMarca = productoModificado.variedades.pop();
     productoStore.producto.variedades.push(nuevaMarca);
-    estado.modal.show_crearProductoMarca = false;
+    // Avisamos que todo bien y reinicializamos el dialog
+    NotifySucessCenter('Marca creado correctamente');
     estado.datos_productoMarca = init_productoMarca;
+    estado.modal.show_crearProductoMarca = false;
   };
 
   /**
@@ -143,7 +145,7 @@ export const useDetalleMarcas = () => {
    * Marcas >> Modificar una marca (icono lapiz)
    */
   const modificarProductoMarca = async () => {
-    // preparacion de los datos
+    // preparamos los datos
     const datos = {
       cantidadMax: estado.datos_productoMarca.cantidadMax,
       cantidadMin: estado.datos_productoMarca.cantidadMin,
@@ -153,37 +155,36 @@ export const useDetalleMarcas = () => {
         imagen: estado.datos_productoMarca.imagen,
       });
     }
-    // hacemos la consulta
-    let marcaModificada;
+    // hacemos la consulta con manejo de errores
+    let productoModificado;
     try {
-      marcaModificada = await productoService.modificarProductosMarca(
+      productoModificado = await productoService.modificarProductosMarca(
         productoStore.producto._id,
         estado.datos_productoMarca._id,
         datos,
       );
-      if (!marcaModificada) throw 'No se pudo modificar el producto';
+      if (!productoModificado) throw 'No se pudo modificar el producto';
     } catch (e) {
       NotifyError(`Error no tratado, ver consola`);
       console.log('error:', e);
       return;
     }
-    NotifySucessCenter('Marca modificado correctamente');
-    // encontrar index de la variedad modificada
-    const index = productoStore.producto.variedades.findIndex(
+    // ponemos al dia el productoStore
+    const indexStore = productoStore.producto.variedades.findIndex(
       (v) => v._id === estado.datos_productoMarca._id,
     );
-    if (index !== -1) {
-      // encontrar objeto variedad modificada
-      const variedadModificada = marcaModificada.variedades.find(
-        (v: any) => v._id === estado.datos_productoMarca._id,
-      );
-      // Si se encontró la variedad modificada, actualiza la variedad en el array con la variedad modificada
-      if (variedadModificada) {
-        productoStore.producto.variedades[index] = variedadModificada;
-      }
-      estado.modal.show_modificarProductoMarca = false;
-      estado.modal.show_crearProductoMarca = false;
+    const indexMod = productoModificado.variedades.findIndex(
+      (v) => v._id === estado.datos_productoMarca._id,
+    );
+    if (indexStore !== -1 && indexMod !== -1) {
+      productoStore.producto.variedades[indexStore] =
+        productoModificado.variedades[indexMod];
     }
+    // Avisamos que todo bien y reinicializamos el dialog
+    NotifySucessCenter('Marca modificado correctamente');
+    estado.datos_productoMarca = init_productoMarca;
+    estado.modal.show_modificarProductoMarca = false;
+    estado.modal.show_crearProductoMarca = false;
   };
 
   return {

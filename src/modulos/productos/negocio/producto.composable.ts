@@ -28,7 +28,7 @@ export const useProducto = () => {
       show_crearProductoBasico: false,
       show_informacionProducto: false,
     },
-    datos_crearProductoBasico: init_crearProductoBasico,
+    datos_crearProductoBasico: clone(init_crearProductoBasico),
     producto: {} as Producto,
   });
 
@@ -150,7 +150,6 @@ export const useProducto = () => {
    */
   const irEdicionProducto = (producto: Producto) => {
     productoStore.producto = producto;
-    console.log(estado.productos[0]);
     router.push('productos/detalleProducto');
   };
 

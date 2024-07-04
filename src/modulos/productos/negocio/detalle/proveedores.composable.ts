@@ -44,7 +44,9 @@ export const useDetalleProveedores = () => {
     proveedores: [] as Entidad[],
     errorProveedor: '',
     proveedor: null as Entidad, // de tipo proveedor
-    datos_servicioProducto: init_servicioProducto,
+    datos_servicioProducto: clone(
+      init_servicioProducto,
+    ) as typeof init_servicioProducto,
     proveedoresParaSelect: [] as SelectOpcion[],
   });
 
@@ -92,7 +94,7 @@ export const useDetalleProveedores = () => {
    * Proveedor >> agregar proveedores
    */
   const crearServicioProducto = async () => {
-    // preparacion de los datos
+    // preparamos los datos
     const datos = {
       producto: productoStore.producto._id,
       marca: estado.datos_servicioProducto.marca,
@@ -101,7 +103,7 @@ export const useDetalleProveedores = () => {
       precioSinFactura: estado.datos_servicioProducto.precioSinFactura,
       preciosPorMayor: estado.datos_servicioProducto.precios,
     };
-    // hacemos la consulta
+    // hacemos la consulta con manejo de errores
     let proveedor;
     try {
       await loadingAsync(async () => {
@@ -109,6 +111,7 @@ export const useDetalleProveedores = () => {
           estado.datos_servicioProducto.proveedor,
           datos,
         );
+        console.log(proveedor);
         if (!proveedor) throw 'No se pudo agregar el proveedor';
       });
     } catch (e) {
@@ -120,10 +123,13 @@ export const useDetalleProveedores = () => {
       }
       return;
     }
-    NotifySucessCenter('Proveedor creado correctamente');
+    // ponemos al dia el productoStore
     const nuevoServicio = proveedor.servicios.pop();
     Object.assign(nuevoServicio, { proveedor });
     estado.serviciosProducto.push(nuevoServicio);
+    // Avisamos que todo bien y reinicializamos el dialog
+    NotifySucessCenter('Proveedor creado correctamente');
+    estado.datos_servicioProducto = init_servicioProducto;
     estado.modal.show_crearServicioProducto = false;
   };
 
@@ -144,14 +150,13 @@ export const useDetalleProveedores = () => {
   };
 
   const modificarServicioProducto = async () => {
-    // preparacion de los datos
+    // preparamos los datos
     const datos = {
       identificativo: estado.datos_servicioProducto.identificativo,
       precioConFactura: estado.datos_servicioProducto.precioConFactura,
       precioSinFactura: estado.datos_servicioProducto.precioSinFactura,
     };
-    console.log(estado.datos_servicioProducto.proveedor);
-    // hacemos la consulta
+    // hacemos la consulta con manejo de errores
     let proveedor;
     try {
       await loadingAsync(async () => {
@@ -161,7 +166,7 @@ export const useDetalleProveedores = () => {
           datos,
         );
       });
-      if (!proveedor) throw 'No se pudo modificar el productoproveedor';
+      if (!proveedor) throw 'No se pudo modificar el producto';
     } catch (e) {
       if (isApiError(e, 'B206')) {
         estado.errorProveedor = 'Este proveedor ya existe';
@@ -171,8 +176,22 @@ export const useDetalleProveedores = () => {
       }
       return;
     }
+    // ponemos al dia el productoStore
+    const indexMod = estado.serviciosProducto.findIndex(
+      (v) => v._id === estado.datos_servicioProducto.servicioID,
+    );
+    const indexStore = proveedor.servicios.findIndex(
+      (v) => v._id === estado.datos_servicioProducto.servicioID,
+    );
+    if (indexStore !== -1 && indexMod !== -1) {
+      const servicio = proveedor.servicios[indexMod];
+      console.log('servicio:', indexStore, indexMod, proveedor.servicios);
+      Object.assign(servicio, { proveedor });
+      estado.serviciosProducto[indexStore] = servicio;
+    }
+    // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Proveedor modificado correctamente');
-    await buscarServiciosProducto();
+    estado.datos_servicioProducto = init_servicioProducto;
     estado.modal.show_modificarServicioProducto = false;
     estado.modal.show_crearServicioProducto = false;
   };

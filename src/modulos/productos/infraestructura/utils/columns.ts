@@ -113,7 +113,7 @@ export const columnaProveedores = [
     required: true,
     label: 'Precio C/F',
     align: 'center',
-    field: (row: any) => row.servicios[0].precioConFactura + 'Bs',
+    field: (row: any) => row.servicios[0].precioConFactura + ' Bs',
     sortable: true,
   },
   {
@@ -121,7 +121,7 @@ export const columnaProveedores = [
     required: true,
     label: 'Precio S/F',
     align: 'center',
-    field: (row: any) => row.servicios[0].precioSinFactura + 'Bs',
+    field: (row: any) => row.servicios[0].precioSinFactura + ' Bs',
     sortable: true,
   },
   {

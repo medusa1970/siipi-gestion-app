@@ -37,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 /**
  * emits
  */
@@ -62,7 +64,7 @@ const props = withDefaults(
   defineProps<{
     onUpdate: Function; // para que el @update sea obligatorio
     label: string; // label adentro del input
-    tipo?: 'text' | 'textarea' | 'password' | 'number';
+    tipo?: 'text' | 'textarea' | 'password';
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string; // valor seleccionado al iniciar

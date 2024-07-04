@@ -88,13 +88,7 @@
               :to="item.to"
             >
               <q-list class="q-pl-lg" v-if="item.subMenu.length > 0">
-                <q-item
-                  clickable
-                  v-for="i in item.subMenu"
-                  :key="i"
-                  :to="i.to"
-                  :active="active"
-                >
+                <q-item clickable v-for="i in item.subMenu" :key="i" :to="i.to">
                   <q-item-section>{{ i.label }}</q-item-section>
                   <q-item-section avatar>
                     <q-icon color="secondary" name="keyboard_arrow_right" />

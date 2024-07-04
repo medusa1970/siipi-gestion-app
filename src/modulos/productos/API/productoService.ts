@@ -1,4 +1,14 @@
-import type { Categoria, Entidad, Marca, Medida, Producto } from '#gql';
+import type {
+  Categoria,
+  CrearEmpaqueDto,
+  CrearMedidaDto,
+  CrearTipoEmpaqueDto,
+  CrearVariedadDto,
+  Entidad,
+  Marca,
+  Medida,
+  Producto,
+} from '#gql';
 import type { CrearCategoriaDto } from '#gql';
 import { extraerUno } from '~/utils/objeto';
 import type { CrearProductoBasico } from '../negocio/producto.interface';
@@ -147,12 +157,7 @@ export const productoService = {
    */
   crearProductosMarca: async (
     productoID: string,
-    productoMarca: {
-      imagen: { data: any; mimetype: string };
-      marca: string;
-      cantidadMax: number;
-      cantidadMin: number;
-    },
+    productoMarca: CrearVariedadDto,
   ): Promise<Producto | null> => {
     try {
       return extraerUno(
@@ -209,7 +214,7 @@ export const productoService = {
   /**
    * Crear una medida global
    */
-  crearMedida: async (datos: { nombre: string }): Promise<Medida | null> => {
+  crearMedida: async (datos: CrearMedidaDto): Promise<Medida | null> => {
     try {
       return extraerUno(await GqlCrearMedidas({ datos }));
     } catch (e) {
@@ -239,7 +244,7 @@ export const productoService = {
    */
   agregarEmpaqueMedida: async (
     medidaID: string,
-    empaque: { nombre: string; abreviacion: string; cantidad: number },
+    tipoEmpaque: CrearTipoEmpaqueDto,
   ): Promise<Medida | null> => {
     try {
       return extraerUno(
@@ -247,7 +252,7 @@ export const productoService = {
           busqueda: { _id: [medidaID] },
           datos: {
             tipoEmpaques: {
-              agregar: [empaque],
+              agregar: [tipoEmpaque],
             },
           },
         }),
@@ -324,12 +329,7 @@ export const productoService = {
    */
   agregarProductosMedidaEmpaque: async (
     productoID: string,
-    empaque: {
-      marca: string;
-      nombre: string;
-      abreviacion: string;
-      cantidad: number;
-    },
+    empaque: CrearEmpaqueDto,
   ): Promise<Producto | null> => {
     try {
       return extraerUno(
@@ -374,7 +374,7 @@ export const productoService = {
   crearEntidadProveedor: async (datos: {
     nombre: string;
     tipo?: string;
-    descripcion: string;
+    descripcion?: string;
   }): Promise<Entidad | null> => {
     const datosDefecto = { ...datos, tipo: 'PROVEEDOR' };
     try {

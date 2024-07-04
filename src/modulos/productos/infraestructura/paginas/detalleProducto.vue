@@ -101,10 +101,6 @@ const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
 const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
-
-definePageMeta({
-  layout: 'cathering',
-});
 </script>
 
 <style scoped>

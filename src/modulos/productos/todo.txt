@@ -1,16 +1,9 @@
-Averiguar limpieza de todos los formularios
-Averiguar todos los productoStore = ...
-Agregar un producto : en cabeza de lista?
-passer l'id a l'url, ir directamente a sus detalles
-No pasar opciones por ref a iniciar para que sea mas dinamica
-uso de estado.producto es realmente necesario cuando tenemos productoStore.producto ?
-verifier les infobulles
-precio por maior
-eliminar empaques, marcas
-popup creacion
+ProductoStore todos
 
-BUGS 
-identificativo de proveedor
-AgregarCategoria component
-Averiguar que los sockets solo son para la lista de productos
-modificar un empaque no pone el indexdb al dia, como borrar
+
+Eliminar empaques, marcas
+precio por maior
+verifier les infobulles
+
+
+reabilitar filtro

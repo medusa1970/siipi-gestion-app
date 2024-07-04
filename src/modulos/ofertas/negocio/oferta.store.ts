@@ -36,8 +36,6 @@ export const storeOferta = defineStore('producto', {
      */
     async getOfertas() {
       this.ofertas = await localforage.getItem('ofertas');
-      console.log(this.ofertas);
-
       return this.ofertas as Oferta[];
     },
     /**
@@ -56,7 +54,6 @@ export const storeOferta = defineStore('producto', {
     async actualizarOfertas() {
       const ofertasExistentes: any[] =
         (await localforage.getItem('ofertas')) || [];
-      console.log(ofertasExistentes);
     },
   },
 

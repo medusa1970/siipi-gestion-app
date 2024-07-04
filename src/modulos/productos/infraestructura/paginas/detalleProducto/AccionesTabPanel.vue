@@ -34,10 +34,6 @@ const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
 
-definePageMeta({
-  layout: 'cathering',
-});
-
 // si no hay producto, pagina equivocada y volvemos a lalista
 if (!productoStore.producto) {
   goTo(router, 'productos');

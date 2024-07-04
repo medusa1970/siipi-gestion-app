@@ -32,8 +32,9 @@ export const useDetalleBasico = () => {
       show_crearProductoBasico: false,
       show_informacionProducto: false,
     },
-
-    datos_modificarProductoBasico: init_modificarProductoBasico,
+    datos_modificarProductoBasico: clone(
+      init_modificarProductoBasico,
+    ) as typeof init_modificarProductoBasico,
     modProductoBasicoImagen: null,
     categoriasParaSelect: [] as SelectOpcion[],
   });
@@ -47,7 +48,7 @@ export const useDetalleBasico = () => {
    */
 
   const modificarProductoBasico = async () => {
-    // preparacion de los datos
+    // preparamos los datos
     const datos = {
       nombre: estado.datos_modificarProductoBasico.nombre,
       categoria: estado.datos_modificarProductoBasico.categoria,
@@ -58,11 +59,11 @@ export const useDetalleBasico = () => {
         imagen: estado.datos_modificarProductoBasico.imagen,
       });
     }
-    // hacemos la consulta
+    // hacemos la consulta con manejo de errores
     let productoModificado;
     try {
       await loadingAsync(async () => {
-        productoModificado = productoService.modificarProductoBasico(
+        productoModificado = await productoService.modificarProductoBasico(
           productoStore.producto._id,
           datos,
         );
@@ -73,8 +74,11 @@ export const useDetalleBasico = () => {
       console.log('error:', e);
       return;
     }
-
+    // Avisamos que todo bien
     NotifySucessCenter('Producto modificado correctamente');
+    // ponemos al dia el productoStore
+    Object.assign(productoStore.producto, productoModificado);
+    productoStore.producto.imagen = productoModificado.imagen;
   };
 
   return {

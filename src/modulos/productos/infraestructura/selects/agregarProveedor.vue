@@ -7,10 +7,10 @@
       :rules="[useRules.requerido()]"
     />
 
-    <input-select
-      label="Categoria"
-      :opciones="categoriasNivelUno"
-      @update="(v) => (pariente.value = v)"
+    <input-text
+      label="Descripcion"
+      @update="(v) => (descripcion.value = v)"
+      :error="descripcion.error"
       :rules="[useRules.requerido()]"
     />
 
@@ -23,11 +23,11 @@
  * Imports
  */
 
-import type { Categoria } from '#gql';
-import type { CrearCategoriaDto } from '#gql';
+import { productoService } from '~/modulos/productos/API/productoService';
+import type { CrearEntidadDto } from '#gql';
+import type { Entidad } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
 import { useProducto } from '~/modulos/productos/negocio/producto.composable';
-const productoService = useProducto();
 
 /**
  * Eventos
@@ -36,7 +36,7 @@ const productoService = useProducto();
 const emits = defineEmits<{
   (
     event: 'update:opciones',
-    objeto: Categoria, // el objeto que se creó
+    objeto: Entidad, // el objeto que se creó
     opciones: SelectOpcion[], // la lista de opciones puesta al día con ello
     value: String, // el valor del elemento a seleccionar (generalmente id del objeto)
   ): void;
@@ -58,13 +58,8 @@ const props = withDefaults(
  */
 
 const nombre = reactiveInput('');
-const pariente = reactiveInput('');
-const categoriasNivelUno = ref([]);
-onMounted(async () => {
-  categoriasNivelUno.value = await productoService.categoriaSelectOptions(
-    false,
-  );
-});
+const descripcion = reactiveInput('');
+onMounted(async () => {});
 
 /**
  * Submit
@@ -76,38 +71,31 @@ const formSubmit = async (datos: any) => {
   }
 
   // agregamos la categoria
-  let nuevaCategoria;
+  let nuevaEntidad;
   try {
-    nuevaCategoria = await productoService.crearCategoria({
+    nuevaEntidad = await productoService.crearEntidadProveedor({
       nombre: nombre.value,
-      pariente: pariente.value,
-    } as CrearCategoriaDto);
+      descripcion: descripcion.value,
+      tipo: 'PROVEEDOR',
+    } as CrearEntidadDto);
   } catch (e: any) {
     NotifyError(`Error no tratado: ${e}`);
     return false;
   }
-  NotifySucess(`Categoria creada con éxito`);
+  NotifySucess(`Proveedor creado con éxito`);
 
   // la nueva opcion que insertaremos en la lista
   const nuevaOpcion = {
-    label: nuevaCategoria.nombre,
-    value: nuevaCategoria._id,
+    label: nuevaEntidad.nombre,
+    value: nuevaEntidad._id,
     disable: false,
     class: 'option',
   };
 
-  // buscamos el index donde la insertaremos (antes de la categoria de nivel superior que sigue el pariente)
+  // insertamos en las opciones
   const opt = clone(props.opcionesPariente);
-  const indexPariente = categoriasNivelUno.value.findIndex(
-    (c) => c.value === pariente.value,
-  );
-  const idSiguiente = categoriasNivelUno.value[indexPariente + 1]?.value;
-  const index = idSiguiente
-    ? opt.findIndex((o) => o.value === idSiguiente)
-    : opt.length;
-
-  // insertamos la opcion y devolvemos todo via evento
-  opt.splice(index, 0, nuevaOpcion);
-  emits('update:opciones', nuevaCategoria, opt, nuevaCategoria._id);
+  opt.push(nuevaOpcion);
+  console.log(nuevaEntidad, opt, nuevaEntidad._id);
+  emits('update:opciones', nuevaEntidad, opt, nuevaEntidad._id);
 };
 </script>

@@ -95,6 +95,8 @@
         :porDefecto="estado.datos_productoMarca.marca"
         :error="estado.errorMarca"
         :rules="[useRules.requerido()]"
+        :dialog="agregarMarcaComp"
+        @payload="handlePayloadMarca"
       />
 
       <!-- Imagen -->
@@ -169,9 +171,11 @@
 </template>
 
 <script setup lang="ts">
+import agregarMarcaComp from '~/modulos/productos/infraestructura/selects/agregarMarca.vue';
 import { useDetalleMarcas } from '@/modulos/productos/negocio/detalle/marcas.composable';
 import { columnaMarca } from '@/modulos/productos/infraestructura/utils/columns';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { toSelect } from '~/components/input/input.service';
 
 const {
   estado,
@@ -183,17 +187,17 @@ const {
   modalModificarProductoMarca,
 } = useDetalleMarcas();
 
+const handlePayloadMarca = (payload) => {
+  estado.marcas.push(payload);
+  estado.marcasParaSelect = toSelect(estado.marcas);
+};
+
 const { estado: estadoProducto, actProductosDB } = useProducto();
 const { $socket } = useNuxtApp();
 
 onMounted(async () => {
   await buscarMarcas();
-  estado.marcasParaSelect = estado.marcas.map((marca) => {
-    return {
-      label: marca.nombre,
-      value: marca._id,
-    };
-  });
+  estado.marcasParaSelect = toSelect(estado.marcas);
   $socket.on('cambiosProductos', async (data) => {
     await actProductosDB();
   });

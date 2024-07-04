@@ -6,14 +6,6 @@
       :error="nombre.error"
       :rules="[useRules.requerido()]"
     />
-
-    <input-select
-      label="Categoria"
-      :opciones="categoriasNivelUno"
-      @update="(v) => (pariente.value = v)"
-      :rules="[useRules.requerido()]"
-    />
-
     <q-btn label="Crear" type="submit" />
   </q-form>
 </template>
@@ -23,11 +15,11 @@
  * Imports
  */
 
-import type { Categoria } from '#gql';
-import type { CrearCategoriaDto } from '#gql';
+import type { Medida } from '#gql';
+import type { CrearMedidaDto } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useProducto } from '~/modulos/productos/negocio/producto.composable';
-const productoService = useProducto();
+import { useProductoDetalle } from '~/modulos/productos/negocio/productoDetalle.composable';
+const useProducto = useProductoDetalle();
 
 /**
  * Eventos
@@ -36,7 +28,7 @@ const productoService = useProducto();
 const emits = defineEmits<{
   (
     event: 'update:opciones',
-    objeto: Categoria, // el objeto que se creó
+    objeto: Medida, // el objeto que se creó
     opciones: SelectOpcion[], // la lista de opciones puesta al día con ello
     value: String, // el valor del elemento a seleccionar (generalmente id del objeto)
   ): void;
@@ -58,13 +50,7 @@ const props = withDefaults(
  */
 
 const nombre = reactiveInput('');
-const pariente = reactiveInput('');
-const categoriasNivelUno = ref([]);
-onMounted(async () => {
-  categoriasNivelUno.value = await productoService.categoriaSelectOptions(
-    false,
-  );
-});
+onMounted(async () => {});
 
 /**
  * Submit
@@ -76,38 +62,27 @@ const formSubmit = async (datos: any) => {
   }
 
   // agregamos la categoria
-  let nuevaCategoria;
+  let nuevaMedida;
   try {
-    nuevaCategoria = await productoService.crearCategoria({
+    nuevaMedida = await useProducto.crearMedida({
       nombre: nombre.value,
-      pariente: pariente.value,
-    } as CrearCategoriaDto);
+    } as CrearMedidaDto);
   } catch (e: any) {
     NotifyError(`Error no tratado: ${e}`);
     return false;
   }
-  NotifySucess(`Categoria creada con éxito`);
+  NotifySucess(`Medida creada con éxito`);
 
   // la nueva opcion que insertaremos en la lista
   const nuevaOpcion = {
-    label: nuevaCategoria.nombre,
-    value: nuevaCategoria._id,
+    label: nuevaMedida.nombre,
+    value: nuevaMedida._id,
     disable: false,
-    class: 'option',
   };
 
   // buscamos el index donde la insertaremos (antes de la categoria de nivel superior que sigue el pariente)
   const opt = clone(props.opcionesPariente);
-  const indexPariente = categoriasNivelUno.value.findIndex(
-    (c) => c.value === pariente.value,
-  );
-  const idSiguiente = categoriasNivelUno.value[indexPariente + 1]?.value;
-  const index = idSiguiente
-    ? opt.findIndex((o) => o.value === idSiguiente)
-    : opt.length;
-
-  // insertamos la opcion y devolvemos todo via evento
-  opt.splice(index, 0, nuevaOpcion);
-  emits('update:opciones', nuevaCategoria, opt, nuevaCategoria._id);
+  opt.push(nuevaOpcion);
+  emits('update:opciones', nuevaMedida, opt, nuevaMedida._id);
 };
 </script>

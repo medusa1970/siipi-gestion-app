@@ -34,7 +34,7 @@
           required: true,
           label: 'Precio C/F',
           align: 'center',
-          field: (row) => row.precioConFactura + 'Bs',
+          field: (row) => row.precioConFactura + ' Bs',
           sortable: true,
         },
         {
@@ -42,7 +42,7 @@
           required: true,
           label: 'Precio S/F',
           align: 'center',
-          field: (row) => row.precioSinFactura + 'Bs',
+          field: (row) => row.precioSinFactura + ' Bs',
           sortable: true,
         },
         {
@@ -123,6 +123,8 @@
             ? []
             : [useRules.requerido()]
         "
+        :dialog="agregarProveedorComp"
+        @payload="handlePayloadProveedor"
       />
 
       <input-select
@@ -150,8 +152,9 @@
 
       <input-text
         label="Identificativo"
-        @update="(v) => estado.datos_servicioProducto.identificativo"
+        @update="(v) => (estado.datos_servicioProducto.identificativo = v)"
         info="La referencia del producto en el catalogo y las facturas del proveedor."
+        :porDefecto="estado.datos_servicioProducto.identificativo"
       />
 
       <input-text
@@ -231,56 +234,11 @@
       </table>-->
     </template>
   </Dialog>
-
-  <!-- CREAR PROVEEDOR ENTIDAD -->
-  <Dialog
-    v-model="estado.modal.show_crearProveedor"
-    title="Crear proveedor"
-    label-btn="Crear"
-    :handle-submit="crearProveedorGlobal"
-  >
-    <template #inputsDialog>
-      <p>Se agregará un proveedor a la lista global de proveedores.</p>
-      <!-- nombre -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Nombre *"
-            required
-            v-model="estado.proveedor.nombre"
-            type="text"
-            class="w-full"
-            filled
-            dense
-          />
-        </div>
-      </div>
-
-      <!-- descripcion -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            label="Descripcion *"
-            required
-            v-model="estado.proveedor.descripcion"
-            type="text"
-            class="w-full"
-            filled
-            dense
-          />
-        </div>
-        <div>
-          <BotonDetalle
-            mensaje="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
-          />
-        </div>
-      </div>
-    </template>
-  </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDetalleProveedores } from '@/modulos/productos/negocio/detalle/proveedores.composable';
+import agregarProveedorComp from '~/modulos/productos/infraestructura/selects/agregarProveedor.vue';
 const {
   estado,
   productoStore,
@@ -288,14 +246,16 @@ const {
   crearServicioProducto,
   modalModificarServicioProducto,
   modificarServicioProducto,
-  crearProveedorGlobal,
   buscarServiciosProducto,
 } = useDetalleProveedores();
+
+const handlePayloadProveedor = (payload: any) => {
+  console.log('creado proveedor', payload);
+};
 
 onMounted(async () => {
   await buscarProveedores();
   await buscarServiciosProducto();
-  console.log(estado.serviciosProducto[0]);
   estado.proveedoresParaSelect = estado.proveedores.map((proveedor) => {
     return {
       label: proveedor.nombre,

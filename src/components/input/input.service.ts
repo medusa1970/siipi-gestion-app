@@ -17,3 +17,13 @@ export async function UrlToBase64Image(url, callback) {
   });
   lector.readAsDataURL(blob);
 }
+
+// convertir coleccion a select
+export const toSelect = (coleccion) =>
+  coleccion.map((marca) => {
+    return {
+      label: marca.nombre,
+      value: marca._id,
+      disable: false,
+    };
+  });

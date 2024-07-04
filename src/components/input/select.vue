@@ -117,7 +117,7 @@ const props = withDefaults(
     // filled: true,
     dense: true,
     clearable: true,
-    clase: 'mt-5 mb-2',
+    clase: '',
     rules: [] as Function[],
   },
 );

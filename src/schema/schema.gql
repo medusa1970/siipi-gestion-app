@@ -172,6 +172,7 @@ type Ingrediente {
   _orden: Float
   tipo: String!
   producto: Producto
+  marca: Marca
   cantidad: Float
 }
 
@@ -193,7 +194,7 @@ type Precio {
   _orden: Float
   cantidadMin: Float!
   precioConFactura: Float
-  precioSinFactura: Float!
+  precioSinFactura: Float
 }
 
 type Oferta {
@@ -823,6 +824,7 @@ input BuscarIngredienteDto {
   _borrado: [BuscarFechaDto!]
   tipo: [String!]
   producto: [ID!]
+  marca: [ID!]
   cantidad: [Float!]
 }
 
@@ -1191,7 +1193,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-06-24T10:39:11.685Z"
+  saldoActualizacion: DateTime = "2024-07-04T02:07:45.168Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1290,7 +1292,7 @@ input CrearPrecioDto {
   _id: ID
   cantidadMin: Float!
   precioConFactura: Float
-  precioSinFactura: Float!
+  precioSinFactura: Float
 }
 
 input ModificarEntidadDto {
@@ -1574,6 +1576,7 @@ input CrearIngredienteDto {
   _id: ID
   tipo: String!
   producto: ID
+  marca: ID
   cantidad: Float
 }
 
@@ -1619,6 +1622,7 @@ input EditarIngredienteDto {
 input ModificarIngredienteDto {
   tipo: String
   producto: ID
+  marca: ID
   cantidad: Float
 }
 

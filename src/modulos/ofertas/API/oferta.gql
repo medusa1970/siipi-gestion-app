@@ -37,38 +37,43 @@ query buscarOfertas(
     }
   }
 }
-
 mutation crearOfertas(
   $datos: [CrearOfertaDto!]!
   $opciones: CrearOpciones = {}
 ) {
   crearOfertas(datos: $datos, opciones: $opciones) {
     _id
+    _creado
+    _modificado
     nombre
     abreviacion
-    descripcion
     catalogo {
       _id
       nombre
     }
     imagen {
-      cloudinaryUrl
+      cloudinaryUrl #no trae imagen
     }
   }
 }
 
-mutation modificarOfertas(
+mutation modificarOfertaBasica(
   $busqueda: BuscarOfertaDto!
   $datos: ModificarOfertaDto!
   $opciones: ModificarOpciones = {}
 ) {
   modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
     _id
+    _creado
+    _modificado
     nombre
-    descripcion
     abreviacion
+    catalogo {
+      _id
+      nombre
+    }
     imagen {
-      cloudinaryUrl
+      cloudinaryUrl #no trae imagen
     }
   }
 }
@@ -103,7 +108,6 @@ query catalogoArbol(
         _id
         nombre
         ofertas {
-          _id
           nombre
         }
         hijas {

@@ -92,14 +92,19 @@ const formSubmit = async (datos: any) => {
       cantidad: cantidad.value,
     } as CrearTipoEmpaqueDto);
     nuevoTipoEmpaque = medida.tipoEmpaques.pop();
-  } catch (e: any) {
-    if (isApiError(e, 'B206')) {
-      nombre.error = 'Este nombre o esta abreviacion ya esta registrado';
-      abreviacion.error = 'Este nombre o esta abreviacion ya esta registrado';
-    } else {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+  } catch (err) {
+    if (isApiBadRequest(err, 'duplicado')) {
+      for (const campo of err.detalle.campos) {
+        const [path] = campo;
+        if (ultimo(path.split('.')) === 'nombre') {
+          nombre.error = 'Este nombre ya esta registrado.';
+        } else if (ultimo(path.split('.')) === 'abreviacion') {
+          abreviacion.error = 'Esta abreviacion ya esta registrada.';
+        }
+      }
+      return;
     }
+    errFallBack(err);
     return;
   }
   NotifySucess(`Categoria creada con éxito`);

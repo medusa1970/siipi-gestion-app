@@ -12,5 +12,5 @@ export const extraerUno = function (objeto: { [key: string]: any }) {
   return res;
 };
 export const clone = function (objeto: any) {
-  return JSON.parse(JSON.stringify(objeto));
+  return JSON.parse(JSON.stringify(objeto)) as typeof objeto;
 };

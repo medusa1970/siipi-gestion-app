@@ -6,9 +6,6 @@ import type { Catalogo, Oferta } from '../API/oferta.interface';
 import type { CrearOfertaDto } from '#gql';
 import type { CrearOferta } from './oferta.interface.js';
 
-// import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
-// import type { Producto } from '~/modulos/productos/API/producto.interfaceApi';
-
 const init_crearOfertaBasico = {
   nombre: null as string,
   abreviacion: null as string,

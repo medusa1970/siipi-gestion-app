@@ -13,7 +13,6 @@
     input-debounce="0"
     :clearable="clearable"
     :dense="dense"
-    :disable="disable"
     :filled="filled"
     :outlined="outlined"
     :class="clase"
@@ -62,8 +61,7 @@
       </q-card-section>
       <q-card-section>
         <contenido-dialog
-          :opcionesPariente="listaOpciones"
-          :param="dialogParam"
+          :opciones="listaOpciones"
           @update:opciones="updateOpciones"
         />
       </q-card-section>
@@ -73,7 +71,6 @@
 
 <script setup lang="ts">
 import type { SelectOpcion } from './select.interface';
-import { ref } from 'vue';
 
 /**
  * emits
@@ -91,11 +88,6 @@ const emits = defineEmits<{
     errorFlag: boolean,
     errorMensaje: string | null,
   ): void;
-  (
-    // cambió el valor del input
-    event: 'payload',
-    payload: Array<any>,
-  ): void;
 }>();
 
 /**
@@ -109,16 +101,13 @@ const props = withDefaults(
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string; // valor seleccionado al iniciar
-    watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
-    dialogParam?: any; // el componiente adentro del dialogo de agregar nuevo elemento
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
     error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
     dense?: boolean;
-    disable?: boolean;
     outlined?: boolean;
     filled?: boolean;
     clearable?: boolean;
@@ -128,9 +117,8 @@ const props = withDefaults(
     // filled: true,
     dense: true,
     clearable: true,
-    clase: 'mt-2 mb-1',
+    clase: '',
     rules: [] as Function[],
-    disable: false,
   },
 );
 
@@ -139,15 +127,12 @@ const props = withDefaults(
  */
 
 const localModel = ref<string>(props.porDefecto); // contenido del input
-const listaOpciones = ref<SelectOpcion[]>(); // lista de opciones, copia de props.opciones para trabajar
+const listaOpciones = ref<SelectOpcion[]>(props.opciones); // lista de opciones, copia de props.opciones para trabajar
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
 const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
-onMounted(async () => {
-  listaOpciones.value = props.opciones;
-});
 
 /**
  * metodos
@@ -182,29 +167,24 @@ const handleChange = (valor: string | null) => {
 // al entrar un valor en el input, filtra las opciones (no-case)
 function filterFn(valor: string, update: Function) {
   update(() => {
-    // const needle = valor.toLowerCase();
-    // const opciones = props.opciones;
-    // listaOpciones.value =
-    //   valor === ''
-    //     ? opciones
-    //     : opciones?.filter(
-    //         (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
-    //       );
+    const needle = valor.toLowerCase();
+    const opciones = props.opciones;
+    listaOpciones.value =
+      valor === ''
+        ? opciones
+        : opciones?.filter(
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
+          );
   });
 }
 
 // agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(
-  objeto: any,
-  opciones: SelectOpcion[],
-  value: string,
-  payload: any,
-) {
+function updateOpciones(opciones: SelectOpcion[], posicion: number) {
   listaOpciones.value = opciones;
-  localModel.value = value;
-  handleChange(value);
+  localModel.value = opciones[posicion].value;
+  handleChange(opciones[posicion].value);
+  activarValidacion();
   showDialog.value = false;
-  emits('payload', objeto);
 }
 
 /**
@@ -212,16 +192,9 @@ function updateOpciones(
  */
 
 // update listaOpciones cuando props.opciones cambia
-// resuelve un bug donde las props se cargan despues de los reactives
-let once = true;
 watch(
   () => props.opciones,
-  async () => {
-    if (true) {
-      once = false;
-      listaOpciones.value = props.opciones;
-    }
-  },
+  async () => (listaOpciones.value = props.opciones),
   { immediate: false },
 );
 
@@ -235,16 +208,6 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false },
-);
-
-// modificar el valor desde el componiente padre
-watch(
-  () => props.watch,
-  () => {
-    localModel.value = props.watch;
-    activarValidacion();
-  },
   { immediate: false },
 );
 </script>

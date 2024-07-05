@@ -138,13 +138,12 @@ const formSubmit = async (datos: any) => {
       );
       if (!productoModificado) throw 'No se pudo modificar el producto';
     });
-  } catch (e) {
-    if (isApiError(e, 'B206')) {
+  } catch (err) {
+    if (isApiBadRequest(err, 'duplicado')) {
       marca.error = 'Esta marca ya esta registrada';
-    } else {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+      return;
     }
+    errFallBack(err);
     return;
   }
   const nuevaVariedad = productoModificado.variedades.pop();

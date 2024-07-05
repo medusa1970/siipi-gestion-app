@@ -69,9 +69,8 @@ export const useDetalleBasico = () => {
         );
       });
       if (!productoModificado) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+    } catch (err) {
+      errFallBack(err);
       return;
     }
     // Avisamos que todo bien

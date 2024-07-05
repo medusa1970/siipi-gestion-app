@@ -137,13 +137,12 @@ export const useDetalleProveedores = () => {
         console.log(proveedor);
         if (!proveedor) throw 'No se pudo agregar el proveedor';
       });
-    } catch (e) {
-      if (isApiError(e, 'B206')) {
+    } catch (err) {
+      if (isApiBadRequest(err, 'duplicado')) {
         estado.errorProveedor = 'Este proveedor ya existe';
-      } else {
-        NotifyError(`Error no tratado, ver consola`);
-        console.log('error:', e);
+        return;
       }
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore
@@ -197,13 +196,12 @@ export const useDetalleProveedores = () => {
         );
       });
       if (!proveedor) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      if (isApiError(e, 'B206')) {
+    } catch (err) {
+      if (isApiBadRequest(err, 'duplicado')) {
         estado.errorProveedor = 'Este proveedor ya existe';
-      } else {
-        NotifyError(`Error no tratado, ver consola`);
-        console.log('error:', e);
+        return;
       }
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore

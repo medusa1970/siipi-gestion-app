@@ -20,8 +20,8 @@ export const useAuth = {
           },
         }),
       );
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -36,8 +36,8 @@ export const useAuth = {
           useGqlToken(token),
         ),
       );
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -51,8 +51,8 @@ export const useAuth = {
         //@ts-ignore
         await GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
       );
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -68,8 +68,8 @@ export const useAuth = {
         }),
       );
       return nuevaPersona;
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -80,8 +80,8 @@ export const useAuth = {
   pedirRDC: async (correo: string): Promise<boolean> => {
     try {
       return extraer(await GqlAuthPedirRDC({ correo }));
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -96,8 +96,8 @@ export const useAuth = {
     try {
       // @ts-ignore contrasena puede ser null pero ts no lo detecta bien
       return extraer(await GqlAuthActuarRDC({ token, contrasena }));
-    } catch (e) {
-      throw getApiErrorCode(e);
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 };

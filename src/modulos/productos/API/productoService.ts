@@ -28,11 +28,8 @@ export const productoService = {
           },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -49,12 +46,8 @@ export const productoService = {
           opciones: { populate: true, aceptarInexistentes: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        code: getApiErrorCode(e),
-        detalle: e,
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -69,11 +62,8 @@ export const productoService = {
           busqueda: { nombre: ['CATEGORIA RAIZ'] },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -85,11 +75,8 @@ export const productoService = {
   ): Promise<Categoria | null> => {
     try {
       return extraerUno(await GqlProductosCrearCategoria({ categoria }));
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -113,11 +100,8 @@ export const productoService = {
           opciones: { populate: true, aceptarInexistentes: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -131,11 +115,8 @@ export const productoService = {
           opciones: { sort: 'nombre' },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -145,11 +126,8 @@ export const productoService = {
   crearMarca: async (datos: { nombre: string }): Promise<Marca | null> => {
     try {
       return extraerUno(await GqlCrearMarcas({ datos }));
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -172,11 +150,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -204,11 +179,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -218,11 +190,8 @@ export const productoService = {
   crearMedida: async (datos: CrearMedidaDto): Promise<Medida | null> => {
     try {
       return extraerUno(await GqlCrearMedidas({ datos }));
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -232,11 +201,8 @@ export const productoService = {
   buscarMedidas: async (): Promise<Medida[]> => {
     try {
       return extraer(await GqlBuscarMedidas());
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -258,11 +224,8 @@ export const productoService = {
           },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -292,11 +255,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -317,11 +277,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -344,11 +301,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -364,11 +318,8 @@ export const productoService = {
           },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -382,11 +333,8 @@ export const productoService = {
       return extraerUno(
         await GqlCrearEntidadProveedor({ datos: datosDefecto }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -417,11 +365,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -443,11 +388,8 @@ export const productoService = {
           opciones: { populate: true },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -468,11 +410,8 @@ export const productoService = {
           },
         }),
       );
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 
@@ -516,11 +455,8 @@ export const productoService = {
       );
       // retornamos el producto
       return producto;
-    } catch (e) {
-      throw {
-        tipo: 'API',
-        error: getApiErrorCode(e),
-      };
+    } catch (err) {
+      throw formatApiError(err);
     }
   },
 };

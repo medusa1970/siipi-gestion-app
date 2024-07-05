@@ -64,13 +64,12 @@ export const useDetalleMarcas = () => {
         });
       });
       if (!marcaNueva) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      if (isApiError(e, 'B206')) {
-        NotifyError(`Error 206`);
-      } else {
-        NotifyError(`Error no tratado, ver consola`);
-        console.log('error:', e);
+    } catch (err) {
+      if (isApiBadRequest(err, 'duplicado')) {
+        estado.errorMarca = 'Esta marca ya esta registrada.';
+        return;
       }
+      errFallBack(err);
       return;
     }
     NotifySucessCenter('Marca creado correctamente');
@@ -106,13 +105,12 @@ export const useDetalleMarcas = () => {
         );
         if (!productoModificado) throw 'No se pudo modificar el producto';
       });
-    } catch (e) {
-      if (isApiError(e, 'B206')) {
-        estado.errorMarca = 'Esta marca ya esta registrada';
-      } else {
-        NotifyError(`Error no tratado, ver consola`);
-        console.log('error:', e);
+    } catch (err) {
+      if (isApiBadRequest(err, 'duplicado')) {
+        estado.errorMarca = 'Esta marca ya esta registrada.';
+        return;
       }
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore
@@ -164,9 +162,8 @@ export const useDetalleMarcas = () => {
         datos,
       );
       if (!productoModificado) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+    } catch (err) {
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore

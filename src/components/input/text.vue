@@ -87,7 +87,7 @@ const props = withDefaults(
     autogrow: false,
     dense: true,
     clearable: true,
-    clase: 'mt-2 mb-1',
+    clase: '',
     rules: [] as Function[],
   },
 );
@@ -154,7 +154,6 @@ watch(
   () => props.watch,
   () => {
     localModel.value = props.watch;
-    console.log(props.watch);
     activarValidacion();
   },
   { immediate: false },

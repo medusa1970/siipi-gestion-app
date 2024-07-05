@@ -4,6 +4,15 @@
       <div class="flex justify-between">
         <h1 class="text-lg font-bold">{{ title }}</h1>
         <q-btn
+          v-if="closeManual"
+          icon="close"
+          flat
+          round
+          dense
+          @click="handleClose"
+        />
+        <q-btn
+          v-else
           icon="close"
           flat
           round
@@ -39,15 +48,19 @@ const props = withDefaults(
   defineProps<{
     title?: string;
     handleSubmit?: () => void;
+    handleClose?: () => void;
     cardBig?: boolean;
     labelBtn?: string;
     noBtn?: boolean;
+    closeManual?: boolean;
   }>(),
   {
     title: '',
     cardBig: false,
     labelBtn: '',
     noBtn: false,
+    closeManual: false,
+    handleClose: () => {},
     handleSubmit: () => {},
   },
 );

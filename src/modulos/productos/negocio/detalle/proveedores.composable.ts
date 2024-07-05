@@ -170,8 +170,6 @@ export const useDetalleProveedores = () => {
     estado.datos_servicioProducto.precioConFactura = servicio.precioConFactura;
     estado.datos_servicioProducto.preciosPorMayor = servicio.preciosPorMayor;
     estado.datos_servicioProducto.proveedor = servicio.proveedor._id;
-    estado.datos_servicioProducto = init_servicioProducto;
-    estado.datos_preciosPorMayor = init_precioPorMayor;
   };
 
   const modificarServicioProducto = async () => {
@@ -240,6 +238,14 @@ export const useDetalleProveedores = () => {
     estado.modal.show_crearProveedor = false;
   };
 
+  const cerrarLimpiarModificarServicioProducto = () => {
+    estado.modal.show_crearServicioProducto = false;
+    estado.modal.show_modificarServicioProducto = false;
+    // Limpiar formulario marca al cerrar el editor
+    estado.datos_servicioProducto = init_servicioProducto;
+    estado.datos_preciosPorMayor = init_precioPorMayor;
+  };
+
   return {
     estado,
     productoStore,
@@ -251,5 +257,6 @@ export const useDetalleProveedores = () => {
     modificarServicioProducto,
     crearProveedorGlobal,
     buscarServiciosProducto,
+    cerrarLimpiarModificarServicioProducto,
   };
 };

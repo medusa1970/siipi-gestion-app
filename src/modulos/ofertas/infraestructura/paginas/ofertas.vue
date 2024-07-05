@@ -2,7 +2,7 @@
   <div>
     <Navigation label="Ofertas" icon="folder" />
     <h1 class="text-lg font-extrabold uppercase text-center">
-      Gestion de ofertas '{{ estado.catalogoSeleccionado?.nombre }}'
+      Gestion de ofertas '{{ ofertaStore.catalogoSeleccionado?.nombre }}'
     </h1>
     <Table
       :rows="estado.ofertasFiltradas"
@@ -14,7 +14,7 @@
 
       <template #dropdown>
         <q-select
-          v-model="estado.catalogoSeleccionado"
+          v-model="ofertaStore.catalogoSeleccionado"
           :options="estado.catalogos"
           option-label="nombre"
           label="Selecciona un catalogo"
@@ -187,6 +187,7 @@
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
         :rules="[]"
+        :porDefecto="estado.datos_ofertaBasica.imagen"
       />
     </template>
   </Dialog>
@@ -209,8 +210,11 @@ const {
   irEdicionOfertas,
   categoriaSelectOptions,
   crearOferta,
+  actOfertasDB,
 } = useOferta();
 const ofertaStore = storeOferta();
+
+const { $socket } = useNuxtApp();
 
 onMounted(async () => {
   await traerOfertas();
@@ -218,6 +222,12 @@ onMounted(async () => {
   estado.categoriaOpciones = categoriaSelectOptions(true);
 
   // ofertaStore.obtenerOfertas();
+  $socket.on('cambiosOfertas', async (data: any) => {
+    await actOfertasDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
 });
 </script>
 <style scoped>

@@ -29,9 +29,12 @@ export const useDatosBasicosTab = () => {
       { _id: [ofertaStore.oferta._id] },
       { nombre, abreviacion, imagen, catalogo: catalogo._id },
     );
-    // console.log(ofertaModificada);
     if (ofertaModificada) {
       NotifySucessCenter('Oferta modificada correctamente');
+      ofertaStore.oferta.nombre = ofertaModificada.nombre;
+      ofertaStore.oferta.abreviacion = ofertaModificada.abreviacion;
+      ofertaStore.oferta.catalogo = ofertaModificada.catalogo;
+      ofertaStore.oferta.imagen = ofertaModificada.imagen;
     }
   };
 

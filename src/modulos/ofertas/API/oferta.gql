@@ -13,20 +13,23 @@ query buscarOfertas(
     _modificado
     nombre
     abreviacion
-    descripcion
     catalogo {
       _id
       nombre
     }
-    preparados {
-      producto {
-        _id
-      }
-      cantidad
-    }
+    # preparados {
+    #   producto {
+    #     _id
+    #   }
+    #   cantidad
+    # }
     ingredientes {
       tipo
       producto {
+        _id
+        nombre
+      }
+      marca {
         _id
         nombre
       }
@@ -35,6 +38,8 @@ query buscarOfertas(
     imagen {
       cloudinaryUrl
     }
+    precioSinFactura
+    precioConFactura
   }
 }
 mutation crearOfertas(
@@ -119,5 +124,45 @@ query catalogoArbol(
         }
       }
     }
+  }
+}
+
+# modifica/agrega un ingrediente simple de una oferta
+mutation modificarOfertaIngredientes(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _modificado
+    nombre
+    ingredientes {
+      tipo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+  }
+}
+
+# MODIFICAR PRECIOS DE OFERTA
+mutation modificarOfertaPrecios(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _modificado
+    nombre
+    precioSinFactura
+    precioConFactura
   }
 }

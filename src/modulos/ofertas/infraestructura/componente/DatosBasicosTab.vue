@@ -17,8 +17,6 @@
       :porDefecto="estado.datos_ofertaBasica.abreviacion"
     />
 
-    <code>{{ estado.categoriaOpciones }}</code>
-
     <!-- Categoria -->
     <input-select
       label="Categoria"
@@ -55,12 +53,28 @@ import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 
 const { estado, ofertaStore, modificarDatosBasicosOferta } =
   useDatosBasicosTab();
+const { actOfertasDB } = useOferta();
+const { $socket } = useNuxtApp();
 
 if (ofertaStore.oferta) {
-  estado.datos_ofertaBasica = ofertaStore.oferta;
-  console.log(estado.datos_ofertaBasica);
+  // estado.datos_ofertaBasica = ofertaStore.oferta;
   estado.categoriaOpciones = ofertaStore.categoriaOpciones;
+  estado.datos_ofertaBasica = {
+    nombre: ofertaStore.oferta.nombre,
+    abreviacion: ofertaStore.oferta.abreviacion,
+    catalogo: ofertaStore.oferta.catalogo,
+    imagen: ofertaStore.oferta.imagen,
+  };
 }
+onMounted(async () => {
+  $socket.on('cambiosOfertas', async (data) => {
+    console.log('first');
+    await actOfertasDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
+});
 </script>
 
 <style lang="scss" scoped></style>

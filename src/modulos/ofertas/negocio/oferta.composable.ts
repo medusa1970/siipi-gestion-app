@@ -34,7 +34,7 @@ export const useOferta = () => {
       show_informacionOferta: false,
     },
 
-    datos_ofertaBasica: init_crearOfertaBasico,
+    datos_ofertaBasica: clone(init_crearOfertaBasico),
   });
 
   /** FUNCIONES */
@@ -56,17 +56,25 @@ export const useOferta = () => {
    * desde el servidor
    */
   const actOfertasDB = async () => {
-    const ofertas = await extraer(
-      GqlBuscarOfertas({
+    const ofertas = extraer(
+      await GqlBuscarOfertas({
         opciones: {
           populate: true,
           sort: '-_modificado -_creado',
         },
       }),
     );
-    // console.log(ofertas);
     const res = await localforage.setItem('ofertas', ofertas ? ofertas : []);
-    if (res) console.log('Se actualizo la base de datos');
+    if (res) {
+      const catalogoIDS = encontrarYExtraerIds(
+        estado.catalogos,
+        ofertaStore.catalogoSeleccionado._id,
+      ); //@ts-ignore
+      estado.ofertasFiltradas = ofertas.filter((oferta: any) =>
+        catalogoIDS.includes(oferta.catalogo._id),
+      );
+      console.log('Se actualizo la base de datos de ofertas');
+    }
   };
   /**
    * Trae todos los catalogos de la BD y los guarda en el estado y store
@@ -80,10 +88,11 @@ export const useOferta = () => {
       await localforage.setItem('catalogos', catalogos);
     }
     ofertaStore.catalogos = estado.catalogos = catalogos;
-    estado.catalogoSeleccionado = catalogos[0];
+    if (ofertaStore.catalogoSeleccionado == null)
+      ofertaStore.catalogoSeleccionado = catalogos[0];
     const catalogoIDS = encontrarYExtraerIds(
       estado.catalogos,
-      estado.catalogoSeleccionado._id,
+      ofertaStore.catalogoSeleccionado._id,
     ); //@ts-ignore
     estado.ofertasFiltradas = estado.ofertas.filter((oferta: any) =>
       catalogoIDS.includes(oferta.catalogo._id),
@@ -169,7 +178,7 @@ export const useOferta = () => {
   const ctrlCatalogoCambios = (catalogo) => {
     const catalogoIDS = encontrarYExtraerIds(
       estado.catalogos,
-      estado.catalogoSeleccionado._id,
+      ofertaStore.catalogoSeleccionado._id,
     ); //@ts-ignore
     estado.ofertasFiltradas = estado.ofertas.filter((oferta: any) =>
       catalogoIDS.includes(oferta.catalogo._id),
@@ -188,17 +197,17 @@ export const useOferta = () => {
 
   const categoriaSelectOptions = (nivel2 = true) => {
     const options = [];
-    if (estado.catalogoSeleccionado.hijas.length == 0) {
+    if (ofertaStore.catalogoSeleccionado.hijas.length == 0) {
       options.push({
-        label: estado.catalogoSeleccionado.nombre,
+        label: ofertaStore.catalogoSeleccionado.nombre,
         value: {
-          _id: estado.catalogoSeleccionado._id,
-          nombre: estado.catalogoSeleccionado.nombre,
+          _id: ofertaStore.catalogoSeleccionado._id,
+          nombre: ofertaStore.catalogoSeleccionado.nombre,
         },
         class: 'option',
       });
     } else {
-      for (const cat of estado.catalogoSeleccionado.hijas) {
+      for (const cat of ofertaStore.catalogoSeleccionado.hijas) {
         options.push({
           label: `${cat.nombre} (${cat.hijas.length})`,
           disable: true,
@@ -221,18 +230,17 @@ export const useOferta = () => {
   };
 
   const crearOferta = async () => {
-    console.log(estado.datos_ofertaBasica);
     const ofertaCreada = await ofertaService.crearOferta({
       ...estado.datos_ofertaBasica,
-      catalogo: estado.catalogoSeleccionado._id,
+      catalogo: ofertaStore.catalogoSeleccionado._id,
     });
-    console.log(ofertaCreada);
 
     if (ofertaCreada) {
-      ofertaStore.ofertas.push(ofertaCreada);
-      estado.ofertasFiltradas.push(ofertaCreada);
+      // ofertaStore.ofertas.push(ofertaCreada);
+      // estado.ofertasFiltradas.push(ofertaCreada);
 
       NotifySucessCenter('Oferta creada con exito');
+      estado.datos_ofertaBasica = init_crearOfertaBasico;
     }
     estado.modal.show_crearOfertaBasico = false;
   };

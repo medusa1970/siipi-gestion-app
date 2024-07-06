@@ -111,6 +111,7 @@ export const useProducto = () => {
    * desde el servidor
    */
   const actProductosDB = async () => {
+    console.log('first');
     const productos = extraer(
       await GqlProductosBuscar({
         opciones: {
@@ -119,6 +120,8 @@ export const useProducto = () => {
         },
       }),
     );
+    console.log(productos);
+    estado.productos = productos;
     const res = await localforage.setItem(
       'productos',
       productos ? productos : [],

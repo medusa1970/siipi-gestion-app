@@ -95,6 +95,17 @@
           >
             <q-tooltip> Editar empaque </q-tooltip></q-btn
           >
+          <q-btn
+            color="red"
+            icon="delete"
+            round
+            dense
+            padding="1px"
+            size="10px"
+            @click="borrarProductoEmpaque(props.row)"
+          >
+            <q-tooltip> borrar empaque </q-tooltip></q-btn
+          >
         </q-td>
       </template>
     </Table>
@@ -203,7 +214,7 @@
     </template>
   </Dialog>
 
-  <clg :v="estado" />
+  <!-- <clg :v="estado" /> -->
 </template>
 
 <script setup lang="ts">
@@ -224,6 +235,7 @@ const {
   modificarProductoEmpaque,
   modalModificarProductoEmpaque,
   prellenarEmpaque,
+  borrarProductoEmpaque,
 } = useDetalleMedida();
 
 const selectTipoEmpaque = ref([]);

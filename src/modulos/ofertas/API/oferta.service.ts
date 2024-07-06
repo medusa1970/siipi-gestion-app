@@ -1,4 +1,9 @@
-import type { BuscarOfertaDto, CrearOfertaDto, ModificarOfertaDto } from '#gql';
+import type {
+  BuscarOfertaDto,
+  CrearOfertaDto,
+  ModificarOfertaDto,
+  Oferta,
+} from '#gql';
 
 export const ofertaService = {
   /**
@@ -72,4 +77,48 @@ export const ofertaService = {
         opciones: { populate: true },
       }),
     ),
+  /**
+   * Borrar un producto
+   */
+  borrarOferta: async (
+    ofertaID: string,
+    comentario: string = 'test comentario borrar',
+    token: any,
+  ): Promise<Oferta | null> => {
+    try {
+      // borramos el producto
+      const oferta = extraerUno(
+        await GqlBorrarOfertas({
+          busqueda: { _id: [ofertaID] },
+        }),
+      );
+
+      // en caso de que no se borró nada
+      if (!oferta) {
+        console.log('no se elimino el oferta', ofertaID);
+        return null;
+      }
+      // creamos la accion
+      const accion = extraerUno(
+        await GqlCrearAccion(
+          {
+            datos: {
+              // persona: va con el token
+              comentario: comentario,
+              oferta: oferta._id,
+              accion: 'borrado',
+            },
+            opciones: {
+              aceptarInexistentes: true,
+            },
+          },
+          token,
+        ),
+      );
+      // retornamos el oferta
+      return oferta;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
 };

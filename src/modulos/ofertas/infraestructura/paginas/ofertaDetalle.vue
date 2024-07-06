@@ -54,29 +54,7 @@
   -->
 
     <q-tab-panel name="acciones" animated>
-      <p>Indica el motivo por cual desea borrar este producto:</p>
-
-      <!-- Comentario -->
-      <div class="flex" style="justify-content: space-between; margin: 15px 0">
-        <div style="flex-grow: 1">
-          <q-input
-            class="w-full"
-            v-model="estado.motivoEliminacion"
-            type="textarea"
-            label="Motivo"
-            filled
-          />
-        </div>
-        <div>
-          <BotonDetalle mensaje="Se avisará el jefe de logistica." />
-        </div>
-      </div>
-      <q-btn
-        color="primary"
-        label="Confirmar"
-        :disable="estado.motivoEliminacion === ''"
-        no-caps
-      />
+      <AccionesTab />
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -86,6 +64,7 @@ import { useOfertaDetalle } from '@/modulos/ofertas/negocio/ofertaDetalle.compos
 import DatosBasicosTab from '@/modulos/ofertas/infraestructura/componente/DatosBasicosTab.vue';
 import ProductosTab from '@/modulos/ofertas/infraestructura/componente/ProductosTab.vue';
 import PreciosTab from '~/modulos/ofertas/infraestructura/componente/PreciosTab.vue';
+import AccionesTab from '~/modulos/ofertas/infraestructura/componente/AccionesTab.vue';
 
 const { estado, ofertaStore } = useOfertaDetalle();
 // layout

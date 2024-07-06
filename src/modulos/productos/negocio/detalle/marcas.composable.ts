@@ -191,6 +191,33 @@ export const useDetalleMarcas = () => {
     estado.datos_productoMarca = init_productoMarca;
   };
 
+  const borrarProductoMarca = (variedad: any) => {
+    $q.dialog({
+      title: `Eliminar ${variedad.marca.nombre}`,
+      message: 'No se puede deshacer.',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      const variedadBorrado = await productoService.borrarVariedadProducto(
+        { _id: [productoStore.producto._id] },
+        {
+          variedades: {
+            borrar: { _id: variedad._id },
+          },
+        },
+      );
+      console.log(variedadBorrado);
+      if (variedadBorrado) {
+        NotifySucessCenter('Empaque borrado correctamente');
+        productoStore.producto.variedades =
+          productoStore.producto.variedades.filter(
+            (e) => e._id !== variedad._id,
+          );
+        console.log(productoStore.producto.variedades);
+      }
+    });
+  };
+
   return {
     productoStore,
     authStore,
@@ -201,5 +228,6 @@ export const useDetalleMarcas = () => {
     modificarProductoMarca,
     modalModificarProductoMarca,
     cerrarLimpiarModificarMarca,
+    borrarProductoMarca,
   };
 };

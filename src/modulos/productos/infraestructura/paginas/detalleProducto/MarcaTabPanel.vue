@@ -56,6 +56,17 @@
             >
               <q-tooltip> Editar marca </q-tooltip></q-btn
             >
+            <q-btn
+              color="red"
+              icon="delete"
+              round
+              dense
+              padding="1px"
+              size="10px"
+              @click="borrarProductoMarca(props.row)"
+            >
+              <q-tooltip> borrar marca </q-tooltip></q-btn
+            >
           </q-td>
         </q-tr>
       </template>
@@ -188,6 +199,7 @@ const {
   crearProductoMarca,
   modalModificarProductoMarca,
   cerrarLimpiarModificarMarca,
+  borrarProductoMarca,
 } = useDetalleMarcas();
 
 const handlePayloadMarca = (payload) => {
@@ -201,8 +213,12 @@ const { $socket } = useNuxtApp();
 onMounted(async () => {
   await buscarMarcas();
   estado.marcasParaSelect = toSelect(estado.marcas);
+
   $socket.on('cambiosProductos', async (data) => {
     await actProductosDB();
   });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
 });
 </script>

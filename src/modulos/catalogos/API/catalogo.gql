@@ -1,0 +1,32 @@
+# Crea un catalogo en la base de datos
+mutation crearCatalogos(
+  $datos: [CrearCatalogoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearCatalogos(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+# modificar catalogo
+mutation modificarCatalogos(
+  $busqueda: BuscarCatalogoDto!
+  $datos: ModificarCatalogoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarCatalogos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+# borrar catalogo
+mutation borrarCatalogos(
+  $busqueda: BuscarCatalogoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarCatalogos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}

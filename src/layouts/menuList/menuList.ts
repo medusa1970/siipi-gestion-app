@@ -49,7 +49,7 @@ export const menuListCathering = [
       },
       {
         label: 'Catalogos de oferta',
-        to: '/cathering/ofertas/catalogos',
+        to: '/cathering/catalogos',
       },
     ],
   },

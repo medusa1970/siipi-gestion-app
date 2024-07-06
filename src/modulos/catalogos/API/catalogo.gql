@@ -30,3 +30,24 @@ mutation borrarCatalogos(
     nombre
   }
 }
+
+query categoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    hijas {
+      _id
+      nombre
+      hijas {
+        _id
+        nombre
+        productos {
+          _id
+        }
+      }
+    }
+  }
+}

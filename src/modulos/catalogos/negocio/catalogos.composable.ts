@@ -1,4 +1,5 @@
 import type { Catalogo } from '#gql';
+import { ofertaService } from '~/modulos/ofertas/API/oferta.service';
 import { catalogoService } from '../API/catalogo.service';
 import { useQuasar } from 'quasar';
 
@@ -90,6 +91,26 @@ export const useCatalogos = () => {
     });
   };
 
+  const obtenerTodasCategorias = async () => {
+    const [categoriaArbol] = await catalogoService.obtenerTodasCategorias();
+
+    const data = [
+      {
+        label: categoriaArbol.nombre,
+        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+        children: categoriaArbol.hijas.map((hija: any) => ({
+          icon: 'room_service',
+          label: hija.nombre,
+          children: hija.hijas.map((hija2: any) => ({
+            label: hija2.nombre,
+          })),
+        })),
+      },
+    ];
+    console.log(data);
+    // estado.props = data;
+  };
+
   return {
     estado,
     irCatalogoID,
@@ -99,5 +120,6 @@ export const useCatalogos = () => {
     modalModificarCatalogoCategoria,
     modificarCatalogoArbol,
     borrarCatalogoArbol,
+    obtenerTodasCategorias,
   };
 };

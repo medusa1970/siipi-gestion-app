@@ -9,7 +9,7 @@ export const menuListCathering = [
       },
       {
         label: 'Categorias de productos ',
-        to: '/cathering/productos/categorias',
+        to: '/cathering/categorias',
       },
       // {
       //   label: 'Proveedores',

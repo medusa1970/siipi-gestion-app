@@ -59,4 +59,16 @@ export const catalogoService = {
     );
     return catalogoBorrado;
   },
+  /**
+   * Busca todas las categorias en forma de arbol
+   * @returns Categoria[] (con sus hijas populadas)
+   */
+  obtenerTodasCategorias: async () => {
+    const arbol = extraer(
+      await GqlCategoriaArbol({
+        busqueda: { nombre: ['CATEGORIA RAIZ'] },
+      }),
+    );
+    return arbol;
+  },
 };

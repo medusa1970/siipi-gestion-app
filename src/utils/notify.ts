@@ -1,4 +1,13 @@
 import { Notify } from 'quasar';
+import NotificacionMP3 from '@/assets/mp3/notificacion.mp3';
+
+const sonido = new Audio(NotificacionMP3);
+// const playSonido = () => {
+//   sonido.play();
+//   setTimeout(() => {
+//     sonido.pause();
+//   }, 3000);
+// };
 
 export const NotifySucess = (message: string) =>
   Notify.create({ message, color: 'positive', icon: 'check' });
@@ -16,8 +25,9 @@ export const NotifyWarning = (message: string) =>
     timeout: 1500,
   });
 
-export const NotifySucessCenter = (message: string) =>
-  Notify.create({
+export const NotifySucessCenter = (message: string) => {
+  sonido.play();
+  return Notify.create({
     message,
     color: 'positive',
     icon: 'check',
@@ -25,3 +35,4 @@ export const NotifySucessCenter = (message: string) =>
     progress: true,
     timeout: 1000,
   });
+};

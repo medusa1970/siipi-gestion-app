@@ -1,0 +1,52 @@
+query stockBuscarEntidad(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    almacen {
+      _id
+      producto {
+        _id
+        nombre
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          abreviacion
+        }
+      }
+      cantidadLimite
+      lotes {
+        vencimiento
+        cantidad
+        bloque {
+          nombre
+        }
+      }
+    }
+  }
+}
+
+mutation stockModificarEntidad(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    almacen {
+      producto {
+        _id
+        nombre
+      }
+      cantidadLimite
+      lotes {
+        vencimiento
+        cantidad
+        bloque {
+          nombre
+        }
+      }
+    }
+  }
+}

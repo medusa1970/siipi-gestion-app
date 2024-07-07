@@ -72,9 +72,8 @@ export const useDetalleMedida = () => {
         estado.datos_productoMedida.medida,
       );
       if (!producto) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+    } catch (err) {
+      errFallBack(err);
       return;
     }
     // Avisamos que todo bien
@@ -105,9 +104,8 @@ export const useDetalleMedida = () => {
         datos,
       );
       if (!productoService) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+    } catch (err) {
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore
@@ -154,9 +152,8 @@ export const useDetalleMedida = () => {
         datos,
       );
       if (!productoEmpaque) throw 'No se pudo modificar el producto';
-    } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log('error:', e);
+    } catch (err) {
+      errFallBack(err);
       return;
     }
     // ponemos al dia el productoStore

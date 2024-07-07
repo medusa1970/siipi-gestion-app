@@ -1,6 +1,60 @@
 <template>
   <layout-common
-    :menuList="menuListCathering"
+    :menuList="[
+      {
+        icon: 'bi-box',
+        label: 'Logistica',
+        subMenu: [
+          {
+            label: 'Productos',
+            to: '/cathering/productos',
+          },
+          {
+            label: 'Categorias de productos ',
+            to: '/cathering/productos/categorias',
+          },
+        ],
+      },
+      {
+        icon: 'warehouse',
+        label: 'Almacen',
+        subMenu: [
+          {
+            label: 'Stock ',
+            to: '/stock',
+          },
+
+          {
+            label: 'Inventario',
+            to: '/inventario',
+          },
+        ],
+      },
+      {
+        icon: 'sell',
+        label: 'Venta',
+        subMenu: [
+          {
+            label: 'Ofertas',
+            to: '/cathering/ofertas',
+          },
+          {
+            label: 'Catalogos de oferta',
+            to: '/cathering/ofertas/catalogos',
+          },
+        ],
+      },
+      {
+        icon: 'people',
+        label: 'Administracion',
+        subMenu: [
+          {
+            label: 'Empleados',
+            to: '/cathering/empleados',
+          },
+        ],
+      },
+    ]"
     :portada-img="PortadaCathering"
     cathering
   >

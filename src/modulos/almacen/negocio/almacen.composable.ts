@@ -8,40 +8,13 @@ export const useAlmacen = () => {
   const store = storeAlmacen();
   const service = almacenService;
 
-  // inits
-  const init_crearEntidad = {
-    nombre: null as string,
-    tipo: null as string,
-    descripcion: null as string,
-  } as CrearEntidadDto;
-
   // reactivos
-  const estado = reactive({
-    crearEntidadData: clone(init_crearEntidad),
-  });
-
-  // crearEntidad
-  const crearEntidad = async () => {
-    let resultado: Entidad;
-    try {
-      await loadingAsync(async () => {
-        resultado = await almacenService.crearEntidad(estado.crearEntidadData);
-      });
-    } catch (err) {
-      if (isApiBadRequest(err, 'duplicado')) {
-        NotifyError('Ya existe una entidad con este nombre');
-      }
-      errFallBack(err);
-      return;
-    }
-    NotifySucessCenter('Entidad agregada correctamente');
-  };
+  const estado = reactive({});
 
   // exports
   return {
     estado,
     store,
     service,
-    crearEntidad,
   };
 };

@@ -83,15 +83,15 @@ mutation modificarOfertaBasica(
   }
 }
 
-mutation borrarOfertas(
-  $busqueda: BuscarOfertaDto!
-  $opciones: BorrarOpciones = {}
-) {
-  borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
-    _id
-    nombre
-  }
-}
+# mutation borrarOfertas(
+#   $busqueda: BuscarOfertaDto!
+#   $opciones: BorrarOpciones = {}
+# ) {
+#   borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
+#     _id
+#     nombre
+#   }
+# }
 
 query catalogoArbol(
   $busqueda: BuscarCatalogoDto!
@@ -105,6 +105,8 @@ query catalogoArbol(
     }
     hijas {
       _id
+      _creado
+      _modificado
       nombre
       ofertas {
         nombre
@@ -166,3 +168,21 @@ mutation modificarOfertaPrecios(
     precioConFactura
   }
 }
+
+# BORRAR OFERTAS o OFERTA
+mutation borrarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+# CREA UNA ACCION
+# mutation crearAccion($datos: CrearAccionDto!, $opciones: CrearOpciones = {}) {
+#   crearAcciones(datos: [$datos], opciones: $opciones) {
+#     _id
+#   }
+# }

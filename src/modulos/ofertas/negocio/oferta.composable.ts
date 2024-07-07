@@ -47,6 +47,7 @@ export const useOferta = () => {
     // console.log(ofertas);
     if (!ofertas) {
       ofertas = await ofertaService.buscarOfertas();
+
       await localforage.setItem('ofertas', ofertas);
     }
     ofertaStore.ofertas = estado.ofertas = ofertas;
@@ -64,7 +65,9 @@ export const useOferta = () => {
         },
       }),
     );
+    estado.ofertas = ofertas;
     const res = await localforage.setItem('ofertas', ofertas ? ofertas : []);
+
     if (res) {
       const catalogoIDS = encontrarYExtraerIds(
         estado.catalogos,
@@ -73,6 +76,7 @@ export const useOferta = () => {
       estado.ofertasFiltradas = ofertas.filter((oferta: any) =>
         catalogoIDS.includes(oferta.catalogo._id),
       );
+      console.log(estado.ofertasFiltradas);
       console.log('Se actualizo la base de datos de ofertas');
     }
   };

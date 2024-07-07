@@ -4,13 +4,14 @@ import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import type { Empaque, Entidad, Marca, Medida, Producto, Servicio } from '#gql';
 import { useQuasar } from 'quasar';
 import type { SelectOpcion } from '~/components/input/select.interface';
+import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 
 export const useDetalleMedida = () => {
   const productoStore = storeProducto();
   const authStore = useAuthStore();
   const router = useRouter();
   const $q = useQuasar();
-
+  const { actProductosDB } = useProducto();
   /**
    * INIT
    */
@@ -196,6 +197,39 @@ export const useDetalleMedida = () => {
     }, 1500);
   };
 
+  const borrarProductoEmpaque = (empaque) => {
+    // console.log(empaque);
+    // console.log(productoStore.producto._id);
+    // console.log(productoStore.producto.empaques);
+    $q.dialog({
+      title: `Eliminar ${empaque.nombre}`,
+      message: 'No se puede deshacer.',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      console.log('first');
+      const empaqueBorrado = await productoService.borrarEmpaqueProducto(
+        { _id: [productoStore.producto._id] },
+        {
+          empaques: {
+            borrar: { _id: empaque._id },
+          },
+        },
+      );
+      console.log(empaqueBorrado);
+      if (empaqueBorrado) {
+        NotifySucessCenter('Empaque borrado correctamente');
+
+        console.log(productoStore.producto.empaques);
+        productoStore.producto.empaques =
+          productoStore.producto.empaques.filter((e) => e._id !== empaque._id);
+        console.log(productoStore.producto.empaques);
+        // CAMBIAR LUEGO, A LO RAPIDO
+        await actProductosDB();
+      }
+    });
+  };
+
   return {
     estado,
     productoStore,
@@ -206,5 +240,6 @@ export const useDetalleMedida = () => {
     modificarProductoEmpaque,
     modalModificarProductoEmpaque,
     prellenarEmpaque,
+    borrarProductoEmpaque,
   };
 };

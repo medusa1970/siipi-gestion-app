@@ -1,4 +1,5 @@
 import type {
+  BuscarProductoDto,
   Categoria,
   CrearEmpaqueDto,
   CrearMedidaDto,
@@ -7,6 +8,7 @@ import type {
   Entidad,
   Marca,
   Medida,
+  ModificarProductoDto,
   ModificarServicioDto,
   Producto,
 } from '#gql';
@@ -457,6 +459,43 @@ export const productoService = {
       return producto;
     } catch (err) {
       throw formatApiError(err);
+    }
+  },
+
+  /**
+   * Borra un empaque de un prodcuto
+   */
+  borrarEmpaqueProducto: async (
+    busqueda: BuscarProductoDto,
+    datos: ModificarProductoDto,
+  ) => {
+    try {
+      const empaqueBorrado = extraerUno(
+        await GqlBorrarEmpaqueProducto({ busqueda, datos }),
+      );
+      return empaqueBorrado;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  /**
+   * Borra una variedad de un prodcuto
+   */
+  borrarVariedadProducto: async (
+    busqueda: BuscarProductoDto,
+    datos: ModificarProductoDto,
+  ) => {
+    try {
+      const variedadBorrado = extraerUno(
+        await GqlBorrarVariedadProducto({
+          busqueda,
+          datos,
+          opciones: { populate: true },
+        }),
+      );
+      return variedadBorrado;
+    } catch (error) {
+      console.log(error);
     }
   },
 };

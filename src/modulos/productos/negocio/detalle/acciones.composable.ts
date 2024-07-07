@@ -3,6 +3,7 @@ import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import { useQuasar } from 'quasar';
 import type { Producto } from '#gql';
+// import second from '@/modulos/productos/negocio/'
 
 export const useDetalleAcciones = () => {
   const productoStore = storeProducto();
@@ -28,12 +29,13 @@ export const useDetalleAcciones = () => {
           estado.motivoEliminacion,
           useGqlToken(authStore.token),
         )
-        .then(() => {
+        .then((res) => {
           estado.motivoEliminacion = '';
           NotifySucess('Producto eliminado correctamente');
+          // await act;
         });
       // getAllProductos();
-      router.push('/cathering/productos');
+      // router.push('/cathering/productos');
     });
   };
 

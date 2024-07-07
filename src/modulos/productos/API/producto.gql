@@ -233,3 +233,38 @@ mutation productosCrearCategoria(
     }
   }
 }
+
+# BORRA EMPAQUE DE UN PRODUCTO
+mutation borrarEmpaqueProducto(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    empaques {
+      _id
+      nombre
+    }
+  }
+}
+
+# BORRA una variedad de un producto
+mutation borrarVariedadProducto(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+    }
+  }
+}

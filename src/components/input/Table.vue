@@ -18,12 +18,13 @@
         style="padding: 0 10px"
         placeholder="Buscar"
         clearable
-        class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a]"
+        class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a] mr-3"
       >
         <template v-slot:prepend>
           <q-icon name="search" size="22px" class="text-[#010f1a]" />
         </template>
       </q-input>
+      <slot name="dropdown" />
     </template>
     <template #body="props">
       <q-tr :props="props" @click="props.expand = !props.expand">

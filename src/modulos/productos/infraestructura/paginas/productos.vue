@@ -25,7 +25,7 @@
   },
   {
     name: 'nombre',
-    required: true,
+    required: true,slot:true,
     label: 'Nombre',
     align: 'left',
     field: (row: any) => row.nombre,
@@ -77,11 +77,23 @@
             <q-item-section>
               <q-item-label>Modificar</q-item-label>
             </q-item-section>
+            Mates y concentrados
           </q-item>
         </q-list>
       </q-btn-dropdown>
     </template>
-
+    <template #body-cell-nombre="{ val, row }">
+      {{ val }}
+      <br />
+      <q-badge
+        v-for="variedad in row.variedades"
+        :key="variedad.name"
+        color="green"
+        class="mr-2 md lowercase"
+      >
+        {{ variedad.marca.nombre }}
+      </q-badge>
+    </template>
     <template #body-expand="{ row }">
       <div class="text-left">
         <pre>{{ row }}</pre>

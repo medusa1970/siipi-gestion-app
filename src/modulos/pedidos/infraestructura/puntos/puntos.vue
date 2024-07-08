@@ -1,0 +1,99 @@
+<template>
+  <div class="flex justify-center items-center">
+    <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="font-bold">Pedidos por Aceptar:</h1>
+
+        <span class="flex gap-2" v-if="estado.pedidosSinAceptar.length > 0">
+          <q-btn
+            class="text-orange-500"
+            icon="warning"
+            dense
+            size="11px"
+            flat
+            round
+            @click="mostrarEntidadSinPedidos"
+            ><q-tooltip class="no-print bg-gray-400-500"
+              >Entidades sin pedidos</q-tooltip
+            ></q-btn
+          >
+        </span>
+      </div>
+      <h1 v-if="estado.pedidosSinAceptar.length === 0">No hay pedidos😯...</h1>
+
+      <!-- 
+        PEDIDOS SIN ACEPTAR
+      -->
+      <Item
+        v-for="punto in estado.pedidosSinAceptar"
+        :key="punto._id"
+        :title="punto.comprador.nombre"
+        class="w-full max-sm:w-full"
+        :href="`listaPedidos/${punto._id}`"
+        :title2="formateadorFecha(punto.estado[0]._creado)"
+      >
+        <template v-slot:actions>
+          <div class="flex">
+            <q-btn
+              dense
+              round
+              icon="print"
+              flat
+              color="orange"
+              padding="4px"
+              size="12px"
+              class="no-print"
+              @click="imprimir(punto)"
+            />
+          </div>
+        </template>
+      </Item>
+
+      <!-- 
+        PEDIDOS ACEPTADOS
+      -->
+      <h1 class="font-bold">Pedidos Aceptados:</h1>
+      <h1 v-if="estado.pedidosAceptados.length === 0">No hay pedidos😯...</h1>
+      <Item
+        v-for="punto in estado.pedidosAceptados"
+        :key="punto._id"
+        :href="`listaPedidos/${punto._id}`"
+        :title="punto.comprador.nombre"
+        class="w-[400px] max-sm:w-full"
+        :title2="formateadorFecha(punto.estado[0]._creado)"
+      >
+        <template v-slot:actions>
+          <div class="flex">
+            <h1 class="text-orange-500 font-bold">
+              {{ punto.estadoItems }}
+            </h1>
+            <q-btn
+              dense
+              round
+              icon="print"
+              flat
+              color="orange"
+              padding="4px"
+              size="12px"
+              class="no-print"
+              @click="imprimir(punto)"
+              ><q-tooltip class="no-print bg-gray-400-500"
+                >Imprimir pedido</q-tooltip
+              ></q-btn
+            >
+          </div>
+        </template>
+      </Item>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { usePedidoPuntos } from '@/modulos/pedidos/infraestructura/puntos/puntos.composable';
+// Layout y metadata
+definePageMeta({
+  layout: 'cathering',
+});
+
+const { estado } = usePedidoPuntos();
+</script>

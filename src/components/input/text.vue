@@ -1,67 +1,161 @@
 <template>
   <q-input
-    type="text"
-    class="w-full"
+    :type="tipo !== 'password' ? tipo : isPwd ? 'password' : 'text'"
     v-model="localModel"
-    :label="label + (requerido ? '*' : '')"
-    :rules="requerido ? [obligatorio, ...rules] : rules"
-    :dense="!notDense"
-    :required="requerido"
-    filled
     @update:model-value="handleChange"
+    @blur="activarValidacion"
+    :label="label + (requerido ? '*' : '')"
+    :rules="rules"
+    :hint="hint"
+    debounce="400"
+    :autogrow="tipo === 'password' ? false : autogrow"
+    :clearable="clearable"
+    :dense="dense"
+    :filled="filled"
+    :outlined="outlined"
+    :class="clase"
+    bottom-slots
+    :error="errorFlag"
+    :errorMessage="errorMensaje"
   >
-    <template #after>
-      <BotonDetalle v-if="info.length > 0" :mensaje="info" />
+    <template #prepend v-if="icono">
+      <q-icon :name="icono" @click.stop.prevent />
+    </template>
+
+    <template #after v-if="info && info.length > 0">
+      <input-botonAyuda :mensaje="info" />
+    </template>
+
+    <template #append v-if="tipo === 'password'">
+      <q-icon
+        :name="isPwd ? 'visibility_off' : 'visibility'"
+        class="cursor-pointer"
+        @click="isPwd = !isPwd"
+      ></q-icon>
     </template>
   </q-input>
 </template>
 
-<script setup>
-import { obligatorio } from '@/helpers/validate.form';
+<script setup lang="ts">
+import { ref } from 'vue';
 
 /**
- * Refs
+ * emits
  */
-const localModel = ref('');
+
+const emits = defineEmits<{
+  (
+    // cambió el valor del input
+    event: 'update',
+    valor: string | null,
+  ): void;
+  (
+    // el input está en estado de error de validación
+    event: 'error',
+    errorFlag: boolean,
+    errorMessage: string | null,
+  ): void;
+}>();
 
 /**
- * Props
+ * props
  */
-defineProps({
-  // label del input
-  label: {
-    type: String,
-    default: 'Nombre',
+const props = withDefaults(
+  defineProps<{
+    onUpdate: Function; // para que el @update sea obligatorio
+    label: string; // label adentro del input
+    tipo?: 'text' | 'textarea' | 'password';
+    hint?: string; // texto de ayuda debajo del input
+    info?: string; // texto de ayuda en el boton de ayuda
+    porDefecto?: string; // valor seleccionado al iniciar
+    watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
+    rules?: any; // reglas de validacion
+    icono?: string; // icono a mostrar adentro a la isquierda antes del label
+    clase?: string; // clases css o tailwind
+    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
+    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    dense?: boolean;
+    outlined?: boolean;
+    filled?: boolean;
+    clearable?: boolean;
+    autogrow?: boolean;
+  }>(),
+  {
+    tipo: 'text',
+    outlined: true,
+    // filled: true,
+    autogrow: false,
+    dense: true,
+    clearable: true,
+    clase: '',
+    rules: [] as Function[],
   },
-  // texto del boton de informacion
-  info: {
-    type: String,
-    default: 'Escriba algo',
-  },
-  // reglas de validacion
-  rules: {
-    type: Array,
-    default: [],
-  },
-  // si el input es dense o no
-  notDense: {
-    type: Boolean,
-    default: false,
-  },
-  // si el campo es requerido o no
-  requerido: {
-    type: Boolean,
-    default: false,
-  },
-});
+);
 
 /**
- * Eventos
+ * refs, reactives y computed
  */
-const emits = defineEmits(['update']);
 
-// el valor cambió
-const handleChange = (newValue, oldValue) => {
-  emits('update', newValue, oldValue);
+const localModel = ref<string>(props.porDefecto); // contenido del input
+const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
+const errorMensaje = ref<string>(props.error); // el mensaje de error
+const isPwd = ref<boolean>(true); // si las letras son visibles o
+const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+
+/**
+ * metodos
+ */
+
+// metodo llamado cuando el valor del input cambia
+const handleChange = (valor: string | null) => {
+  activarValidacion();
+  emits('update', valor);
 };
+
+// activar o deactivar el error para el input (desactiva si param null)
+function setError(mensaje: string | null) {
+  //@ts-ignore
+  errorMensaje.value = mensaje;
+  errorFlag.value = mensaje !== null;
+  emits('error', errorFlag.value, errorMensaje.value);
+}
+
+// activar la validacíon del valor actual del input
+function activarValidacion() {
+  for (const regla of props.rules as Function[]) {
+    const resultado = regla(localModel.value);
+    if (resultado !== true) {
+      setError(resultado);
+      return; // solo el primer error se manda
+    }
+  }
+  setError(null);
+}
+
+/**
+ * watch y subscripciones
+ */
+
+// activar el error si llega un mensaje de error desde el componiente padre
+watch(
+  () => props.error,
+  () => setError(props.error),
+);
+
+// activar la validacion desde el componiente padre
+watch(
+  () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
+  () => activarValidacion(), // se activa la validacion
+  { immediate: false },
+);
+
+// modificar el valor desde el componiente padre
+watch(
+  () => props.watch,
+  () => {
+    localModel.value = props.watch;
+    activarValidacion();
+  },
+  { immediate: false },
+);
 </script>

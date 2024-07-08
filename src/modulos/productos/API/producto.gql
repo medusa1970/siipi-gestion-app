@@ -1,0 +1,327 @@
+#
+# PRODUCTOS
+#
+
+query productosBuscar(
+  $busqueda: BuscarProductoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarProductoDto = {}
+) {
+  buscarProductos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    variedades {
+      _id
+      _borrado
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      _borrado
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation productosCrearBasico(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation borrarProductos(
+  $busqueda: BuscarProductoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarProductos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+mutation crearAccion($datos: CrearAccionDto!, $opciones: CrearOpciones = {}) {
+  crearAcciones(datos: [$datos], opciones: $opciones) {
+    _id
+  }
+}
+
+query productosCategoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    # productos {
+    #   nombre
+    # }
+    hijas {
+      _id
+      nombre
+      # productos {
+      #   _id
+      #   nombre
+      # }
+      hijas {
+        _id
+        nombre
+        productos {
+          _id
+        }
+      }
+    }
+  }
+}
+
+<<<<<<< HEAD:src/queries/Productos.gql
+mutation crearCategorias(
+  $datos: [CrearCategoriaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearCategorias(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+mutation modificarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $datos: ModificarCategoriaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarCategorias(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+mutation borrarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarCategorias(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+# NUEVO
+mutation crearProductosBasicos(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    comentario
+    imagen {
+      archivoLocal
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+  }
+}
+
+=======
+>>>>>>> leo-auth:src/modulos/productos/API/producto.gql
+mutation modificarProductosBasicos(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    comentario
+    imagen {
+      archivoLocal
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+  }
+}
+
+mutation modificarProductosMarca(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadMin
+      cantidadMax
+      imagen {
+        archivoLocal
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation modificarProductosMedidaEmpaque(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    medida {
+      _id
+      nombre
+      abreviacion
+    }
+    empaques {
+      _id
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+  }
+}
+
+mutation productosCrearCategoria(
+  $categoria: CrearCategoriaDto!
+  $opciones: CrearOpciones = {}
+) {
+  crearCategorias(datos: [$categoria], opciones: $opciones) {
+    _id
+    nombre
+    pariente {
+      _id
+    }
+  }
+}
+
+# BORRA EMPAQUE DE UN PRODUCTO
+mutation borrarEmpaqueProducto(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    empaques {
+      _id
+      nombre
+    }
+  }
+}
+
+# BORRA una variedad de un producto
+mutation borrarVariedadProducto(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+    }
+  }
+}

@@ -36,12 +36,9 @@
 <script setup>
 defineProps({
   title: String,
-  nameDialog: String,
   handleSubmit: Function,
   cardBig: Boolean,
   labelBtn: String,
   noBtn: Boolean,
 });
 </script>
-
-<style lang="scss" scoped></style>

@@ -1,3 +1,9 @@
+# seguridad
+.env.dev
+.env.demo
+.env.main
+/privado
+
 # Nuxt dev/build outputs
 .output
 .data

@@ -1,0 +1,15 @@
+
+stock: 
+- Cantidad limite y venciminento limite con 2 valores por marca
+y configurables en detalles básicos
+- bug vencimiento negativo
+- mise en forme expands
+
+stock+inventario:
+- columna ultimo inventario + inventariar
+- filtro para mostrar solo los productos con alerta
+- poder ordenar por los campos siguientes y sus alertas respectivas
+  - cantidad
+  - vencimiento
+  - ultimo inventario
+

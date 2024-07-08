@@ -1,9 +1,9 @@
-import { authStore } from '@/stores/auth.store';
+import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 
-const useAuth = authStore();
+const authStore = useAuthStore();
+
 export default defineNuxtRouteMiddleware((to, from) => {
-  // console.log(useAuth.token);
-  if (!useAuth.token && to.path !== '/') {
-    return navigateTo('/');
+  if (!authStore.getUsuario && to.path !== '/') {
+    // return navigateTo('/');
   }
 });

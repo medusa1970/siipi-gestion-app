@@ -1,0 +1,35 @@
+query usuarioBuscarPersonas(
+  $busqueda: BuscarPersonaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPersonaDto = {}
+) {
+  buscarPersonas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation usuarioModificarPersonas(
+  $busqueda: BuscarPersonaDto!
+  $datos: ModificarPersonaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarPersonas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}

@@ -1,0 +1,87 @@
+query authConectar($datos: ConexionDto!) {
+  conectar(datos: $datos) {
+    token
+    personaId
+    usuario
+    nombre
+    apellido
+    correo
+    telefono
+    cloudinaryUrl
+    entidadId
+    entidadNombre
+    entidadTipo
+    cargos {
+      nombre
+    }
+    permisos
+  }
+}
+
+query authCambiarEntidad($datos: ConexionDto!) {
+  cambiarEntidad(datos: $datos) {
+    token
+    personaId
+    usuario
+    nombre
+    apellido
+    correo
+    telefono
+    cloudinaryUrl
+    entidadId
+    entidadNombre
+    entidadTipo
+    cargos {
+      nombre
+    }
+    permisos
+  }
+}
+
+query authEntidadesUsuarioConectado($opciones: BuscarOpciones = {}) {
+  entidadesUsuarioConectado(opciones: $opciones) {
+    _id
+    nombre
+    tipo
+    empleados {
+      persona {
+        _id
+        usuario
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        permiso
+        vencimiento
+      }
+    }
+  }
+}
+
+mutation authCrearPersonas(
+  $datos: [CrearPersonaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearPersonas(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    contrasena
+    nombre
+    apellido
+    telefono
+    correo
+    usuario
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+query authPedirRDC($correo: String!) {
+  pedirReinicioDeContrasena(correo: $correo)
+}
+
+query authActuarRDC($token: String!, $contrasena: String) {
+  actuarReinicioDeContrasena(token: $token, contrasena: $contrasena)
+}

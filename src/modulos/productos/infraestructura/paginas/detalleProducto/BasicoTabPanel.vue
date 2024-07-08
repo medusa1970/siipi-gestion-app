@@ -93,7 +93,7 @@ onMounted(async () => {
       },
     );
   } else {
-    estado.modProductoBasicoImagen = null;
+    estado.modProductoBasicoImagen = null;                                                                                                                                                                          
   }
 
   // sockets

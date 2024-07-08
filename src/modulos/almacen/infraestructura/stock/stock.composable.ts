@@ -122,9 +122,6 @@ export const useStock = () => {
     estado,
     store,
     service,
-    modalEditarCantidad,
-    guardarCantidad,
-    agregarListaInventario,
     obtenerTodoStock,
   };
 };

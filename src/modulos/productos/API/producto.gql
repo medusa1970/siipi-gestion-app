@@ -156,38 +156,6 @@ query productosCategoriaArbol(
   }
 }
 
-<<<<<<< HEAD:src/queries/Productos.gql
-mutation crearCategorias(
-  $datos: [CrearCategoriaDto!]!
-  $opciones: CrearOpciones = {}
-) {
-  crearCategorias(datos: $datos, opciones: $opciones) {
-    _id
-    nombre
-  }
-}
-
-mutation modificarCategorias(
-  $busqueda: BuscarCategoriaDto!
-  $datos: ModificarCategoriaDto!
-  $opciones: ModificarOpciones = {}
-) {
-  modificarCategorias(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
-    _id
-    nombre
-  }
-}
-
-mutation borrarCategorias(
-  $busqueda: BuscarCategoriaDto!
-  $opciones: BorrarOpciones = {}
-) {
-  borrarCategorias(busqueda: $busqueda, opciones: $opciones) {
-    _id
-    nombre
-  }
-}
-
 # NUEVO
 mutation crearProductosBasicos(
   $datos: [CrearProductoDto!]!
@@ -207,8 +175,6 @@ mutation crearProductosBasicos(
   }
 }
 
-=======
->>>>>>> leo-auth:src/modulos/productos/API/producto.gql
 mutation modificarProductosBasicos(
   $busqueda: BuscarProductoDto!
   $datos: ModificarProductoDto!

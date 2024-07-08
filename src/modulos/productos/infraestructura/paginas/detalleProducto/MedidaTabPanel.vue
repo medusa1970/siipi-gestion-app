@@ -225,6 +225,7 @@ import agregarVariedadComp from '~/modulos/productos/infraestructura/selects/agr
 import agregarMedidaComp from '~/modulos/productos/infraestructura/selects/agregarMedida.vue';
 import agregarTipoEmpaqueComp from '~/modulos/productos/infraestructura/selects/agregarTipoEmpaque.vue';
 import { toSelect } from '~/components/input/input.service';
+import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 
 const {
   estado,
@@ -237,15 +238,10 @@ const {
   prellenarEmpaque,
   borrarProductoEmpaque,
 } = useDetalleMedida();
+const { actProductosDB } = useProducto();
 
 const selectTipoEmpaque = ref([]);
-
-onMounted(async () => {
-  await buscarMedidas();
-  selectTipoEmpaque.value = toSelect(
-    productoStore.producto.medida.tipoEmpaques,
-  );
-});
+const { $socket } = useNuxtApp();
 
 const handlePayloadVariedad = (payload: any) => {
   productoStore.producto.variedades.push(payload);
@@ -260,4 +256,18 @@ const handlePayloadTipoEmpaque = (payload: any) => {
   );
   prellenarEmpaque(payload._id);
 };
+onMounted(async () => {
+  await buscarMedidas();
+  selectTipoEmpaque.value = toSelect(
+    productoStore.producto.medida.tipoEmpaques,
+  );
+  $socket.on('cambiosProductos', async (data) => {
+    console.log('first');
+    await actProductosDB();
+  });
+});
+
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
+});
 </script>

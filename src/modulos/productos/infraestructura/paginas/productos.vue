@@ -259,7 +259,6 @@ definePageMeta({
 const { $socket } = useNuxtApp();
 onMounted(async () => {
   estado.productos = await productoStore.getProductos();
-  console.log(estado.productos);
 
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 

@@ -225,7 +225,7 @@ export const useDetalleMedida = () => {
           productoStore.producto.empaques.filter((e) => e._id !== empaque._id);
         console.log(productoStore.producto.empaques);
         // CAMBIAR LUEGO, A LO RAPIDO
-        await actProductosDB();
+        // await actProductosDB();
       }
     });
   };

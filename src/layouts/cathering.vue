@@ -10,26 +10,17 @@
             to: '/cathering/productos',
           },
           {
-            label: 'Categorias de productos ',
-            to: '/cathering/productos/categorias',
+            label: 'Categorias de categorias ',
+            to: '/categorias',
           },
         ],
       },
-      {
-        icon: 'warehouse',
-        label: 'Stock',
-        to: '/stock',
-        subMenu: [
-          // {
-          //   label: 'Stock ',
-          //   to: '/stock',
-          // },
-          // {
-          //   label: 'Inventario',
-          //   to: '/inventario',
-          // },
-        ],
-      },
+      // {
+      //   icon: 'warehouse',
+      //   label: 'Stock',
+      //   to: '/stock',
+
+      // },
       {
         icon: 'sell',
         label: 'Venta',
@@ -44,6 +35,24 @@
           },
         ],
       },
+      // {
+      //   icon: 'description',
+      //   label: 'Pedidos',
+      //   subMenu: [
+      //     {
+      //       label: 'pedido puntos',
+      //       to: '/pedidos/puntos',
+      //     },
+      //     {
+      //       label: 'pedido global',
+      //       to: '/pedidos/global',
+      //     },
+      //     {
+      //       label: 'pedido historial',
+      //       to: '/pedidos/historial',
+      //     },
+      //   ],
+      // },
       {
         icon: 'people',
         label: 'Administracion',

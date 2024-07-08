@@ -208,7 +208,7 @@ export const useDetalleMarcas = () => {
       );
       console.log(variedadBorrado);
       if (variedadBorrado) {
-        NotifySucessCenter('Empaque borrado correctamente');
+        NotifySucessCenter('Marca borrado correctamente');
         productoStore.producto.variedades =
           productoStore.producto.variedades.filter(
             (e) => e._id !== variedad._id,

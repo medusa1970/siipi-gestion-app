@@ -9,9 +9,9 @@ export default [
     path: '/cathering/productos/:id',
     file: '@/modulos/productos/infraestructura/paginas/detalleProducto.vue',
   },
-  {
-    name: 'categorias',
-    path: '/cathering/productos/categorias',
-    file: '@/modulos/productos/infraestructura/paginas/categorias.vue',
-  },
+  // {
+  //   name: 'categorias',
+  //   path: '/cathering/productos/categorias',
+  //   file: '@/modulos/productos/infraestructura/paginas/categorias.vue',
+  // },
 ];

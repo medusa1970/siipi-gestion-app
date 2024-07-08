@@ -17,17 +17,17 @@
       },
       {
         icon: 'warehouse',
-        label: 'Almacen',
+        label: 'Stock',
+        to: '/stock',
         subMenu: [
-          {
-            label: 'Stock ',
-            to: '/stock',
-          },
-
-          {
-            label: 'Inventario',
-            to: '/inventario',
-          },
+          // {
+          //   label: 'Stock ',
+          //   to: '/stock',
+          // },
+          // {
+          //   label: 'Inventario',
+          //   to: '/inventario',
+          // },
         ],
       },
       {

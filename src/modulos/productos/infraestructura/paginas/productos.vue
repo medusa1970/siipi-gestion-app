@@ -57,23 +57,31 @@
     :defaultImage="ProductoImage"
   >
     <template #body-cell-actions="{ row }">
-      <q-btn
-        color="orange"
-        icon="edit"
-        round
-        dense
-        padding="1px"
-        size="10px"
+      <q-btn-dropdown
+        color="primary"
+        flat
+        dropdown-icon="menu"
+        size="sm"
         @click="
           (e) => {
             e.stopPropagation();
-            goTo(router, 'producto', { id: row._id });
           }
         "
       >
-        <q-tooltip> Editar producto </q-tooltip></q-btn
-      >
+        <q-list>
+          <q-item
+            clickable
+            v-close-popup
+            @click="goTo(router, 'producto', { id: row._id })"
+          >
+            <q-item-section>
+              <q-item-label>Modificar</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </template>
+
     <template #body-expand="{ row }">
       <div class="text-left">
         <pre>{{ row }}</pre>

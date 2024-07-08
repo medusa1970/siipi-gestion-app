@@ -61,6 +61,7 @@ export const storeProducto = defineStore('producto', {
           return;
         }
       }
+      this.productos = productos;
       return productos;
     },
 

@@ -25,7 +25,6 @@
       val="!inventario!"
     />
 
-    {{ filter }}
     <Table
       :watchFilter="filter"
       :rows="rowsParaMostrar"
@@ -49,7 +48,7 @@
           name: 'cantidad',
           slot: true,
           required: true,
-          label: 'Cantidad:',
+          label: 'Stock total',
           align: 'right',
           field: (row) => row.cantidadTotal,
           sortable: true,
@@ -58,7 +57,7 @@
           name: 'alertC',
           slot: true,
           required: true,
-          label: 'Comprar',
+          label: '',
           align: 'center',
           field: (row) => (row.alertaC !== null ? '!cantidad!' : null),
           sortable: true,
@@ -67,7 +66,7 @@
           name: 'alertV',
           slot: true,
           required: true,
-          label: 'Usar',
+          label: '',
           align: 'center',
           field: (row) => (row.alertaV !== null ? '!venciminento!' : null),
           sortable: true,
@@ -76,7 +75,7 @@
           name: 'alertI',
           slot: true,
           required: true,
-          label: 'Inventariar',
+          label: '',
           align: 'center',
           field: (row) => (row.alertaI !== null ? '!inventario!' : null),
           sortable: true,
@@ -103,36 +102,53 @@
         <div v-else>-</div>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn
+        <q-btn-dropdown
           color="primary"
-          icon="edit"
           flat
+          dropdown-icon="menu"
           size="sm"
-          class="p-1"
           @click="
             (e) => {
               e.stopPropagation();
-              goTo(router, 'producto', { id: row.producto._id });
             }
           "
         >
-          <q-tooltip> Editar producto </q-tooltip></q-btn
-        >
+          <q-list>
+            <q-item clickable v-close-popup @click="onItemClick">
+              <q-item-section>
+                <q-item-label>Hacer pedido</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup @click="onItemClick">
+              <q-item-section>
+                <q-item-label>Hacer inventario</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item
+              clickable
+              v-close-popup
+              @click="goTo(router, 'producto', { id: row.producto._id })"
+            >
+              <q-item-section>
+                <q-item-label>Modificar</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </template>
       <template #body-cell-alertC="{ val, row }">
-        {{ val === null ? 'null' : alertaC }}
         <div v-if="row.alertaC != null">
           <q-icon name="report" color="red" size="sm" />
         </div>
       </template>
       <template #body-cell-alertV="{ val, row }">
-        {{ val === null ? 'null' : alertaC }}
         <div v-if="row.alertaV != null">
           <q-icon name="report" color="red" size="sm" />
         </div>
       </template>
       <template #body-cell-alertI="{ val, row }">
-        {{ val === null ? 'null' : alertaC }}
         <div v-if="val">
           <q-icon name="report" color="red" size="sm" />
         </div>
@@ -172,7 +188,7 @@ const {
   agregarListaInventario,
   obtenerTodoStock,
 } = useStock();
-const filter = ref('q');
+const filter = ref('');
 
 const rowsParaMostrar = computed(() => {
   // if (estado.modal.isShowAlertProduct) {

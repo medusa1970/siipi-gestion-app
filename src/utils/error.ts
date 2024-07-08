@@ -6,7 +6,8 @@ export const errFallBack = (err) => {
 };
 
 export const formatApiError = (err) => {
-  return Object.assign(err.gqlErrors[0], { isApiError: true });
+  console.log(err);
+  return Object.assign(err.gqlErrors?.[0], { isApiError: true });
 };
 
 export const isApiError = (err, tipo = null, clave = null) => {

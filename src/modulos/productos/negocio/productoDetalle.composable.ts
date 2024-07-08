@@ -12,6 +12,7 @@ import { productoService } from '../API/productoService';
 export const useProductoDetalle = () => {
   const productoStore = storeProducto();
   const authStore = useAuthStore();
+  const service = productoService;
 
   const estado = reactive({
     producto: null as Producto,
@@ -34,5 +35,6 @@ export const useProductoDetalle = () => {
     crearMedida,
     productoStore,
     authStore,
+    service,
   };
 };

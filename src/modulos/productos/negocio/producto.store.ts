@@ -42,18 +42,6 @@ export const storeProducto = defineStore('producto', {
         return state.categoriaArbol as Categoria;
       };
     },
-
-    /**
-     * Retorna la lista de los productos
-     * Si no existe o si se indico refresh=true, lo obtiene de la API
-     * @retorne Producto[]
-     */
-    // getProductos: (state) => {
-    //   return async (refresh: boolean = false): Promise<Producto[]> => {
-    //     state.productos = await localforage.getItem('productos');
-    //     return state.productos as Producto[];
-    //   };
-    // },
   },
 
   actions: {
@@ -63,9 +51,19 @@ export const storeProducto = defineStore('producto', {
      * @retorne Producto[]
      */
     async getProductos(): Promise<Producto[]> {
-      this.productos = await localforage.getItem('productos');
-      return this.productos as Producto[];
+      let productos = (await localforage.getItem('productos')) as Producto[];
+      if (!productos) {
+        try {
+          productos = await productoService.buscarProductos();
+          await localforage.setItem('productos', productos);
+        } catch (err) {
+          errFallBack(err);
+          return;
+        }
+      }
+      return productos;
     },
+
     /**
      * Agrega un producto
      * @retorne Producto

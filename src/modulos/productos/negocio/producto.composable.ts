@@ -94,19 +94,6 @@ export const useProducto = () => {
   };
 
   /**
-   * Traer productos de la base de datos local y si no existe le carga
-   * productos al indexedDB
-   */
-  const traerProductos = async () => {
-    let productos = await localforage.getItem<Producto[]>('productos');
-    if (!productos) {
-      productos = await productoService.buscarProductos();
-      await localforage.setItem('productos', productos);
-    }
-    productoStore.productos = estado.productos = productos;
-  };
-
-  /**
    * Actualizar la base de datos local de productos si escucha un cambio
    * desde el servidor
    */
@@ -159,7 +146,6 @@ export const useProducto = () => {
   return {
     categoriaSelectOptions,
     crearProductoBasico,
-    traerProductos,
     actProductosDB,
     estado,
     mostrarInformacionProducto,

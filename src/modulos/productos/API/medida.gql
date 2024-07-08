@@ -8,6 +8,7 @@ query buscarMedidas(
   buscarMedidas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
     _id
     nombre
+    abreviacion
     tipoEmpaques {
       _id
       nombre
@@ -24,6 +25,7 @@ mutation crearMedidas(
   crearMedidas(datos: $datos, opciones: $opciones) {
     _id
     nombre
+    abreviacion
     tipoEmpaques {
       _id
       nombre
@@ -41,6 +43,7 @@ mutation modificarMedidas(
   modificarMedidas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
     _id
     nombre
+    abreviacion
     tipoEmpaques {
       _id
       nombre

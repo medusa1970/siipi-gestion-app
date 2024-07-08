@@ -18,6 +18,19 @@ import type { CrearProductoBasico } from '../negocio/producto.interface';
 
 export const productoService = {
   /**
+   * Buscar un producto
+   */
+  buscarProducto: async (productoId: string): Promise<Producto> => {
+    try {
+      return extraerUno(
+        await GqlProductosBuscar({ busqueda: { _id: [productoId] } }),
+      );
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  /**
    * Buscar todos los productos
    */
   buscarProductos: async (): Promise<Producto[]> => {

@@ -2,7 +2,7 @@
   <q-table
     flat
     :rows="rows"
-    row-key="key"
+    :rowKey="rowKey"
     :columns="columns"
     :defaultImage="defaultImage"
     :filter="filter"
@@ -10,7 +10,7 @@
   >
     <template #top>
       <q-input
-        v-model="filter2"
+        v-model="filter"
         borderless
         dense
         debounce="300"
@@ -29,7 +29,11 @@
       <q-tr :props="props" @click="props.expand = !props.expand">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
           <div v-if="col.slot">
-            <slot :name="`body-cell-${col.name}`" :row="props.row" />
+            <slot
+              :name="`body-cell-${col.name}`"
+              :val="col.value"
+              :row="props.row"
+            />
           </div>
           <div v-else-if="col.imagen">
             <q-img
@@ -50,29 +54,31 @@
       </q-tr>
     </template>
   </q-table>
-  <div v-show="false">{{ filter }}</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import ProductoImage from '@/assets/img/producto.png';
 const filter = ref('');
-const filter2 = ref('');
-watch(
-  () => filter2.value,
-  () => {
-    filter.value = filter2.value;
-  },
-);
 const props = withDefaults(
   defineProps<{
     rows: Array<any>;
     columns: Array<any>;
     defaultImage: any;
+    rowKey: string;
+    watchFilter: string;
   }>(),
   {
     defaultImage: ProductoImage,
+    rowKey: '_id',
   },
+);
+watch(
+  () => props.watchFilter,
+  () => {
+    filter.value = props.watchFilter;
+  },
+  { immediate: false },
 );
 </script>
 

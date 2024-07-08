@@ -46,19 +46,16 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useProductoTab } from '@/modulos/ofertas/negocio/productosTab.composable';
 import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 
-const {
-  estado,
-  traerProductos,
-  productoSelectOptions,
-  modificarOfertaProducto,
-  ofertaStore,
-} = useProductoTab();
+const { estado, productoSelectOptions, modificarOfertaProducto, ofertaStore } =
+  useProductoTab();
 const { actOfertasDB } = useOferta();
 const { $socket } = useNuxtApp();
+import { storeProducto } from '@/modulos/productos/negocio/producto.store';
+const productoStore = storeProducto();
 
 if (ofertaStore.oferta) {
   estado.datos_productoDeOferta = {
@@ -71,7 +68,7 @@ if (ofertaStore.oferta) {
 }
 
 onMounted(async () => {
-  await traerProductos();
+  estado.productos = await productoStore.getProductos();
   estado.productosOpciones = productoSelectOptions();
 
   $socket.on('cambiosOfertas', async (data) => {

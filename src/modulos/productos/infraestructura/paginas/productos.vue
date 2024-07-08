@@ -1,113 +1,85 @@
 <template>
-  <div>
-    <!--
-      BREADCRUMB
-      -->
+  <Navigation label="Productos" icon="list_alt" />
 
-    <Navigation label="Productos" icon="list_alt" />
+  <h1 class="text-lg font-extrabold uppercase text-center">
+    Gestion de productos
+  </h1>
 
-    <!--
-      TITLE
-      -->
-
-    <h1 class="text-lg font-extrabold uppercase text-center">
-      Gestion de productos
-    </h1>
-
-    <!--
-      TABLE
-      -->
-
-    <Table badge :rows="estado.productos" :columns="columnsProductos" dense>
-      <!-- BADGE -->
-      <template #dropdown>
-        <q-btn
-          icon-right="add"
-          color="green"
-          label="Crear producto"
-          no-caps
-          style="font-size: 14.5px"
-          padding="4px 10px"
-          @click="
-            () => {
-              estado.modal.show_crearProductoBasico = true;
-            }
-          "
-        />
-      </template>
-
-      <!-- BADGE -->
-      <template #rows-badge="{ props }">
-        <q-tr :props="props">
-          <q-td key="imagen" :props="props" class="cursor-pointer">
-            <q-img
-              v-if="props.row.imagen"
-              :src="props.row.imagen.cloudinaryUrl"
-              spinner-color="black"
-              class="cell-image"
-              width="40px"
-              height="40px"
-            />
-            <q-img
-              v-else
-              :src="ProductoImage"
-              spinner-color="black"
-              class="cell-image"
-              width="40px"
-              height="40px"
-            />
-          </q-td>
-          <q-td key="modificado" :props="props">
-            <h1 :class="props.row._modificado ? '' : 'text-green-800'">
-              {{ fechaHora(props.row._modificado ?? props.row._creado) }}
-            </h1>
-          </q-td>
-          <q-td key="nombre" :props="props">
-            {{ props.row.nombre }}
-          </q-td>
-          <q-td key="medida" :props="props">
-            {{ props.row.medida?.nombre ?? '(a ingresar)' }}
-          </q-td>
-          <q-td key="categoria" :props="props">
-            {{ props.row.categoria?.nombre ?? '(desconocido)' }}
-          </q-td>
-          <q-td key="actions" :props="props">
-            <q-btn
-              color="primary"
-              icon="visibility"
-              round
-              dense
-              padding="1px"
-              size="11px"
-              @click="
-                () => {
-                  mostrarInformacionProducto(props.row);
-                }
-              "
-            >
-              <q-tooltip> Ver informacion producto </q-tooltip>
-            </q-btn>
-
-            <q-btn
-              color="orange"
-              icon="edit"
-              round
-              dense
-              padding="1px"
-              size="10px"
-              @click="
-                () => {
-                  irEdicionProducto(props.row);
-                }
-              "
-            >
-              <q-tooltip> Editar producto </q-tooltip></q-btn
-            >
-          </q-td>
-        </q-tr>
-      </template>
-    </Table>
-  </div>
+  <Table
+    :rows="estado.productos"
+    :columns="[
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    imagen: true,
+    align: 'center',
+    field: (row: any) => row.imagen?.cloudinaryUrl,
+  },
+  {
+    name: 'modificado',
+    label: 'Modif.',
+    align: 'left',
+    field: (row: any) => row._modificado,
+    format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
+    sortable: true,
+  },
+  {
+    name: 'nombre',
+    required: true,
+    label: 'Nombre',
+    align: 'left',
+    field: (row: any) => row.nombre,
+    sortable: true,
+  },
+  {
+    name: 'medida',
+    required: true,
+    label: 'Unidad',
+    align: 'left',
+    field: (row: any) => row.medida?.abreviacion,
+    sortable: true,
+  },
+  {
+    name: 'categoria',
+    required: true,
+    label: 'categoria',
+    align: 'left',
+    field: (row: any) => row.categoria.nombre,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+    slot: true,
+  },
+]"
+    :defaultImage="ProductoImage"
+  >
+    <template #body-cell-actions="{ row }">
+      <q-btn
+        color="orange"
+        icon="edit"
+        round
+        dense
+        padding="1px"
+        size="10px"
+        @click="
+          (e) => {
+            e.stopPropagation();
+            goTo(router, 'producto', { id: row._id });
+          }
+        "
+      >
+        <q-tooltip> Editar producto </q-tooltip></q-btn
+      >
+    </template>
+    <template #body-expand="{ row }">
+      <div class="text-left">
+        <pre>{{ row }}</pre>
+      </div>
+    </template>
+  </Table>
 
   <!-- 
     MODAL
@@ -254,18 +226,18 @@
 </template>
 
 <script setup lang="ts">
-import { columnsProductos } from '@/modulos/productos/infraestructura/utils/columns';
+import Table from '@/components/input/Table.vue';
 import ProductoImage from '@/assets/img/producto.png';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
+const router = useRouter();
 const productoStore = storeProducto();
 
 const {
   estado,
   crearProductoBasico,
   actProductosDB,
-  traerProductos,
   categoriaSelectOptions,
   mostrarInformacionProducto,
   irEdicionProducto,
@@ -278,8 +250,8 @@ definePageMeta({
 
 const { $socket } = useNuxtApp();
 onMounted(async () => {
-  await traerProductos();
-  // await getProductos();
+  estado.productos = await productoStore.getProductos();
+  console.log(estado.productos);
 
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 
@@ -296,10 +268,6 @@ onMounted(async () => {
     await actProductosDB();
   });
 });
-
-// onBeforeMount(async () => {
-//   await traerProductos();
-// });
 
 onBeforeUnmount(() => {
   localStorage.removeItem('reloaded');

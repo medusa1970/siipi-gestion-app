@@ -79,6 +79,7 @@
       <AccionesTabPanel />
     </q-tab-panel>
   </q-tab-panels>
+  {{ params }}
 </template>
 
 <script setup lang="ts">
@@ -86,14 +87,26 @@ definePageMeta({
   layout: 'cathering',
 });
 
+import { useProductoDetalle } from '@/modulos/productos/negocio/productoDetalle.composable';
+const { estado, productoStore, authStore } = useProductoDetalle();
+const router = useRouter();
+const { params } = useRoute();
+
+await productoStore.getProductos();
+const producto = productoStore.productos.find((prod) => {
+  return prod._id === params.id;
+});
+if (producto) {
+  productoStore.producto = producto;
+} else {
+  goTo(router, 'productos');
+}
+
 import MarcaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MarcaTabPanel.vue';
 import MedidaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MedidaTabPanel.vue';
 import ProveedorTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/ProveedorTabPanel.vue';
 import AccionesTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/AccionesTabPanel.vue';
 import BasicoTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/BasicoTabPanel.vue';
-import { useProductoDetalle } from '@/modulos/productos/negocio/productoDetalle.composable';
-const { estado, productoStore, authStore } = useProductoDetalle();
-const router = useRouter();
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
@@ -105,6 +118,18 @@ const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
 const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
+
+onBeforeMount(async () => {
+  await productoStore.getProductos();
+  const producto = productoStore.productos.find((prod) => {
+    return prod._id === params.id;
+  });
+  if (producto) {
+    productoStore.producto = producto;
+  } else {
+    goTo(router, 'productos');
+  }
+});
 </script>
 
 <style scoped>

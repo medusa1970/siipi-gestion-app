@@ -1,8 +1,33 @@
 <template>
   <div>
     <Navigation label="Stock" icon="folder" />
+    Alertas
+    <q-radio color="orange" no-caps label="Todos" v-model="filter" val="" />
+    <q-radio
+      color="orange"
+      no-caps
+      label="Cantidad"
+      v-model="filter"
+      val="!cantidad!"
+    />
+    <q-radio
+      color="orange"
+      no-caps
+      label="Vencimiento"
+      v-model="filter"
+      val="!venciminento!"
+    />
+    <q-radio
+      color="orange"
+      no-caps
+      label="Inventario"
+      v-model="filter"
+      val="!inventario!"
+    />
 
-    <Table3
+    {{ filter }}
+    <Table
+      :watchFilter="filter"
       :rows="rowsParaMostrar"
       :columns="[
         {
@@ -30,26 +55,44 @@
           sortable: true,
         },
         {
-          name: 'venciminento',
+          name: 'alertC',
           slot: true,
           required: true,
-          label: 'Vence en:',
-          align: 'left',
-          field: (row) => row.alertaV,
+          label: 'Comprar',
+          align: 'center',
+          field: (row) => (row.alertaC !== null ? '!cantidad!' : null),
+          sortable: true,
+        },
+        {
+          name: 'alertV',
+          slot: true,
+          required: true,
+          label: 'Usar',
+          align: 'center',
+          field: (row) => (row.alertaV !== null ? '!venciminento!' : null),
+          sortable: true,
+        },
+        {
+          name: 'alertI',
+          slot: true,
+          required: true,
+          label: 'Inventariar',
+          align: 'center',
+          field: (row) => (row.alertaI !== null ? '!inventario!' : null),
           sortable: true,
         },
         {
           name: 'actions',
           label: 'Acciones',
           align: 'right',
+          slot: true,
         },
       ]"
-      :filter="filter"
       :defaultImage="ProductoImage"
     >
       <template #body-cell-venciminento="{ row }">
         <div v-if="row.alertaV !== null">
-          {{ Math.floor(row.alertaV) }} días
+          {{ Math.floor(row.alertaV[0]) }} días
           <div v-if="row.alertaV <= 2">
             <q-icon name="report" color="red" size="sm" />
           </div>
@@ -59,35 +102,51 @@
         </div>
         <div v-else>-</div>
       </template>
-      <template #body-cell-cantidad="{ row }">
-        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
-        <div v-if="row.alertaC">
+      <template #body-cell-actions="{ row }">
+        <q-btn
+          color="primary"
+          icon="edit"
+          flat
+          size="sm"
+          class="p-1"
+          @click="
+            (e) => {
+              e.stopPropagation();
+              goTo(router, 'producto', { id: row.producto._id });
+            }
+          "
+        >
+          <q-tooltip> Editar producto </q-tooltip></q-btn
+        >
+      </template>
+      <template #body-cell-alertC="{ val, row }">
+        {{ val === null ? 'null' : alertaC }}
+        <div v-if="row.alertaC != null">
           <q-icon name="report" color="red" size="sm" />
         </div>
       </template>
-      <template #body-expand="{ row }">
-        <div class="text-left">
-          <pre>{{ row.stock.lotes }}</pre>
+      <template #body-cell-alertV="{ val, row }">
+        {{ val === null ? 'null' : alertaC }}
+        <div v-if="row.alertaV != null">
+          <q-icon name="report" color="red" size="sm" />
         </div>
       </template>
-    </Table3>
+      <template #body-cell-alertI="{ val, row }">
+        {{ val === null ? 'null' : alertaC }}
+        <div v-if="val">
+          <q-icon name="report" color="red" size="sm" />
+        </div>
+      </template>
+      <template #body-cell-cantidad="{ val, row }">
+        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
+      </template>
+      <template #body-expand="{ row }">
+        <div class="text-left">
+          <pre>{{ row.stock }}</pre>
+        </div>
+      </template>
+    </Table>
   </div>
-
-  <!-- DIALOG -->
-  <Dialog
-    v-model="estado.modal.isShowCantidad"
-    title="Actualizar cantidad minima"
-    :handle-submit="guardarCantidad"
-  >
-    <template #inputsDialog>
-      <q-input
-        v-model.number="estado.producto.cantidadMinima"
-        type="text"
-        label="Cantidad Minima"
-        dense
-      />
-    </template>
-  </Dialog>
 </template>
 
 <script setup>
@@ -100,6 +159,9 @@ definePageMeta({
 import ProductoImage from '@/assets/img/producto.png';
 import { useStock } from './stock.composable';
 import { useAlmacen } from '@/modulos/almacen/negocio/almacen.composable';
+import Table from '@/components/input/Table.vue';
+import { ref } from 'vue';
+const router = useRouter();
 const almacen = useAlmacen();
 const {
   estado,
@@ -110,16 +172,7 @@ const {
   agregarListaInventario,
   obtenerTodoStock,
 } = useStock();
-
-// const { handleInputChange2 } = usePedido();
-const toggleModal = (key) => {
-  estado.modal[key] = !estado.modal[key];
-  Object.keys(estado.modal).forEach((modalKey) => {
-    if (modalKey !== key) {
-      estado.modal[modalKey] = false;
-    }
-  });
-};
+const filter = ref('q');
 
 const rowsParaMostrar = computed(() => {
   // if (estado.modal.isShowAlertProduct) {

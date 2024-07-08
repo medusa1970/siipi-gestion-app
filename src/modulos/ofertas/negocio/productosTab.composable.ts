@@ -17,14 +17,6 @@ export const useProductoTab = () => {
     productosOpciones: [] as any[],
   });
 
-  const traerProductos = async () => {
-    let productos = await localforage.getItem<Producto[]>('productos');
-    if (!productos) {
-      productos = await productoService.buscarProductos();
-      await localforage.setItem('productos', productos);
-    }
-    estado.productos = productos;
-  };
   const productoSelectOptions = () => {
     const options = [];
 
@@ -70,7 +62,6 @@ export const useProductoTab = () => {
 
   return {
     estado,
-    traerProductos,
     productoSelectOptions,
     modificarOfertaProducto,
     ofertaStore,

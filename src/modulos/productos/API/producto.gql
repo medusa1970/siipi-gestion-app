@@ -29,6 +29,7 @@ query productosBuscar(
     medida {
       _id
       nombre
+      abreviacion
       tipoEmpaques {
         _id
         nombre
@@ -82,6 +83,7 @@ mutation productosCrearBasico(
     medida {
       _id
       nombre
+      abreviacion
       tipoEmpaques {
         _id
         nombre
@@ -207,6 +209,7 @@ mutation modificarProductosMedidaEmpaque(
     medida {
       _id
       nombre
+      abreviacion
     }
     empaques {
       _id

@@ -5,8 +5,8 @@ export default [
     file: '@/modulos/productos/infraestructura/paginas/productos.vue',
   },
   {
-    name: 'productosDetalles',
-    path: '/cathering/productos/detalleProducto',
+    name: 'producto',
+    path: '/cathering/productos/:id',
     file: '@/modulos/productos/infraestructura/paginas/detalleProducto.vue',
   },
   {

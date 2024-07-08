@@ -7,7 +7,7 @@
         label="Nombre"
         @update="(v) => (estado.datos_modificarProductoBasico.nombre = v)"
         info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
-        :porDefecto="estado.datos_modificarProductoBasico.nombre"
+        :porDefecto="productoStore.producto.nombre"
         :rules="[useRules.requerido()]"
       />
 
@@ -16,7 +16,7 @@
         label="Categoria"
         info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
         @update="(v) => (estado.datos_modificarProductoBasico.categoria = v)"
-        :porDefecto="estado.datos_modificarProductoBasico.categoria"
+        :porDefecto="productoStore.producto.categoria._id"
         :rules="[useRules.requerido()]"
         :opciones="estado.categoriasParaSelect"
         :dialog="agregarCategoriaComp"
@@ -39,11 +39,11 @@
 
       <!-- Comentario -->
       <input-text
-        tipo="textarea"
         label="comentario"
-        info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
-        :porDefecto="estado.datos_modificarProductoBasico.comentario"
+        tipo="textarea"
         @update="(v) => (estado.datos_modificarProductoBasico.comentario = v)"
+        :porDefecto="productoStore.producto.comentario"
+        info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
       />
 
       <q-btn color="primary" label="Guardar" type="submit" no-caps />
@@ -72,11 +72,6 @@ const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
 
-// si no hay producto, pagina equivocada y volvemos a lalista
-if (!productoStore.producto) {
-  goTo(router, 'productos');
-}
-
 // inicializacion del formulario modif
 for (const key in estado.datos_modificarProductoBasico) {
   estado.datos_modificarProductoBasico[key] =
@@ -90,12 +85,16 @@ onMounted(async () => {
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 
   // recuperamos la imagen desde la url
-  await UrlToBase64Image(
-    productoStore.producto.imagen?.cloudinaryUrl,
-    (base64Data) => {
-      estado.modProductoBasicoImagen = base64Data;
-    },
-  );
+  if (productoStore.producto.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(
+      productoStore.producto.imagen?.cloudinaryUrl,
+      (base64Data) => {
+        estado.modProductoBasicoImagen = base64Data;
+      },
+    );
+  } else {
+    estado.modProductoBasicoImagen = null;
+  }
 
   // sockets
   $socket.on('cambiosProductos', async (data) => {

@@ -1,7 +1,7 @@
 import { storeAlmacen } from '../../negocio/almacen.store';
 import { almacenService } from '../../API/almacen.service';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-import type { Inventario } from '#gql';
+import type { Bloque, CrearInventarioLoteDto, Inventario } from '#gql';
 
 export const useInventario = () => {
   const store = storeAlmacen();
@@ -10,17 +10,16 @@ export const useInventario = () => {
 
   const estado = reactive({
     productosBloquesNull: [],
-    inventario: null as Inventario,
-    // {
-    //   producto: '',
-    //   lotes: [
-    //     {
-    //       vencimiento: '',
-    //       cantidad: '',
-    //       bloque: '',
-    //     },
-    //   ],
-    // },
+    inventario: {
+      producto: '',
+      lotes: [
+        {
+          vencimiento: '',
+          cantidad: '',
+          bloque: '',
+        },
+      ],
+    },
     countRetry: 0,
     diferencias: [],
   });
@@ -29,7 +28,13 @@ export const useInventario = () => {
    * obtenerProductosInventariar
    */
   const obtenerProductosInventariar = async () => {
-    const productos = await service.filaInventario(authStore.getNegocio._id);
+    let productos;
+    try {
+      productos = await service.filaInventario(authStore.getNegocio._id);
+    } catch (err) {
+      errFallBack(err);
+      return;
+    }
     estado.productosBloquesNull = productos;
   };
 
@@ -38,9 +43,10 @@ export const useInventario = () => {
    */
   const agregarFila = () => {
     estado.inventario.lotes.push({
-      vencimiento: '',
-      cantidad: '',
-      bloque: '',
+      _id: null,
+      vencimiento: null as Date,
+      cantidad: null as number,
+      bloque: null as Bloque,
     });
   };
 
@@ -115,10 +121,10 @@ export const useInventario = () => {
   const limpiarInputs = () => {
     estado.inventario.lotes = [
       {
-        vencimiento: '',
-        cantidad: '',
-        bloque: '',
-      },
+        vencimiento: null as Date,
+        cantidad: null as number,
+        bloque: null as Bloque,
+      } as CrearInventarioLoteDto,
     ];
   };
 

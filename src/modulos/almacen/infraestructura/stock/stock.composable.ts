@@ -10,7 +10,7 @@ export const useStock = () => {
 
   const estado = reactive({
     stocks: [] as {
-      key: String;
+      // key: String;
       stock: Stock;
       producto: Producto;
       cantidadTotal: Number;
@@ -42,10 +42,11 @@ export const useStock = () => {
       );
 
       // Alerta de cantidad global
-      const alertaC =
-        cantidadTotal < stock.cantidadLimite
+      let alertaC =
+        cantidadTotal <= stock.cantidadLimite
           ? cantidadTotal - stock.cantidadLimite
           : null;
+      if (alertaC > 0) alertaC = null;
 
       // Aleta de vencimiento en cada lote
       for (const lote of stock.lotes) {
@@ -62,12 +63,13 @@ export const useStock = () => {
 
       // Return
       return {
-        key: stock._id,
+        _id: stock._id,
         stock,
         producto: stock.producto,
         cantidadTotal,
         alertaC,
         alertaV,
+        alertaI: null,
       };
     });
   };

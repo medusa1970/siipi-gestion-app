@@ -71,6 +71,7 @@ const props = withDefaults(
   {
     defaultImage: ProductoImage,
     rowKey: '_id',
+    watchFilter: '',
   },
 );
 watch(

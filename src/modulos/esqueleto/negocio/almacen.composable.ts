@@ -24,14 +24,8 @@ export const useAlmacen = () => {
   const crearEntidad = async () => {
     let resultado: Entidad;
     try {
-      await loadingAsync(async () => {
-        resultado = await almacenService.crearEntidad(estado.crearEntidadData);
-      });
+      resultado = await almacenService.crearEntidad(estado.crearEntidadData);
     } catch (err) {
-      if (isApiBadRequest(err, 'duplicado')) {
-        NotifyError('Ya existe una entidad con este nombre');
-        return;
-      }
       errFallBack(err);
       return;
     }

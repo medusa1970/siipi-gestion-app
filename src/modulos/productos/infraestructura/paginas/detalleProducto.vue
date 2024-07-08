@@ -120,15 +120,15 @@ const soloAlmacenAdquisicion = ref(
 );
 
 onBeforeMount(async () => {
-  await productoStore.getProductos();
-  const producto = productoStore.productos.find((prod) => {
-    return prod._id === params.id;
-  });
-  if (producto) {
-    productoStore.producto = producto;
-  } else {
-    goTo(router, 'productos');
-  }
+  // await productoStore.getProductos();
+  // const producto = productoStore.productos.find((prod) => {
+  //   return prod._id === params.id;
+  // });
+  // if (producto) {
+  //   productoStore.producto = producto;
+  // } else {
+  //   goTo(router, 'productos');
+  // }
 });
 </script>
 

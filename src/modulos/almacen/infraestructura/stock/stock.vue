@@ -39,6 +39,7 @@
         {
           name: 'producto',
           required: true,
+          slot: true,
           label: 'Producto',
           align: 'left',
           field: (row) => row.stock.producto.nombre,
@@ -48,8 +49,8 @@
           name: 'cantidad',
           slot: true,
           required: true,
-          label: 'Stock total',
-          align: 'right',
+          label: 'Stock',
+          align: 'left',
           field: (row) => row.cantidadTotal,
           sortable: true,
         },
@@ -57,7 +58,7 @@
           name: 'alertC',
           slot: true,
           required: true,
-          label: '',
+          label: 'C.',
           align: 'center',
           field: (row) => (row.alertaC !== null ? '!cantidad!' : null),
           sortable: true,
@@ -66,7 +67,7 @@
           name: 'alertV',
           slot: true,
           required: true,
-          label: '',
+          label: 'V.',
           align: 'center',
           field: (row) => (row.alertaV !== null ? '!venciminento!' : null),
           sortable: true,
@@ -75,7 +76,7 @@
           name: 'alertI',
           slot: true,
           required: true,
-          label: '',
+          label: 'I.',
           align: 'center',
           field: (row) => (row.alertaI !== null ? '!inventario!' : null),
           sortable: true,
@@ -89,6 +90,18 @@
       ]"
       :defaultImage="ProductoImage"
     >
+      <template #body-cell-producto="{ val, row }">
+        {{ val }}
+        <br />
+        <q-badge
+          v-for="variedad in row.producto.variedades"
+          :key="variedad.name"
+          color="green"
+          class="mr-2 md lowercase"
+        >
+          {{ variedad.marca.nombre }}
+        </q-badge>
+      </template>
       <template #body-cell-venciminento="{ row }">
         <div v-if="row.alertaV !== null">
           {{ Math.floor(row.alertaV[0]) }} días
@@ -157,8 +170,29 @@
         {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
       </template>
       <template #body-expand="{ row }">
-        <div class="text-left">
-          <pre>{{ row.stock }}</pre>
+        <div class="flex">
+          <div
+            v-for="variedad in row.producto.variedades"
+            :key="variedad._id"
+            class="text-left"
+          >
+            <q-card style="width: 150px">
+              <q-card-section>
+                <div class="text-h6">{{ row.stock.lotes }}</div>
+                <div class="text-subtitle2">by John Doe</div>
+              </q-card-section> </q-card
+            >q-card>
+
+            <h3>{{ variedad.marca.nombre }}:</h3>
+            <div
+              v-for="lote in row.stock.lotes"
+              :key="lote._id"
+              class="text-left"
+            >
+              <h4>{{ lote.cantidad }}:</h4>
+              <pre>{{ lote }}</pre>
+            </div>
+          </div>
         </div>
       </template>
     </Table>

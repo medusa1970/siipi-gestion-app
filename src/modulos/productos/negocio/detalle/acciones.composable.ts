@@ -3,6 +3,7 @@ import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import { useQuasar } from 'quasar';
 import type { Producto } from '#gql';
+import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 // import second from '@/modulos/productos/negocio/'
 
 export const useDetalleAcciones = () => {
@@ -10,6 +11,7 @@ export const useDetalleAcciones = () => {
   const authStore = useAuthStore();
   const router = useRouter();
   const $q = useQuasar();
+  const { actProductosDB } = useProducto();
 
   const estado = reactive({
     producto: {} as Producto,
@@ -23,21 +25,36 @@ export const useDetalleAcciones = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      productoService
-        .borrarProducto(
-          productoStore.producto._id,
-          estado.motivoEliminacion,
-          useGqlToken(authStore.token),
-        )
-        .then((res) => {
-          estado.motivoEliminacion = '';
-          NotifySucess('Producto eliminado correctamente');
-          // await act;
-        });
+      const productoBorrado = await productoService.borrarProducto(
+        productoStore.producto._id,
+        estado.motivoEliminacion,
+        useGqlToken(authStore.token),
+      );
+
+      if (productoBorrado) {
+        estado.motivoEliminacion = '';
+        NotifySucess('Producto eliminado correctamente');
+        console.log(productoStore.producto._id);
+        productoStore.productos = productoStore.productos.filter(
+          (p) => p._id !== productoStore.producto._id,
+        );
+        // console.log(productoStore.productos);
+      }
+
       // getAllProductos();
       // router.push('/cathering/productos');
     });
   };
+  const { $socket } = useNuxtApp();
+  onMounted(() => {
+    $socket.on('cambiosProductos', async (data: any) => {
+      router.push('/cathering/productos');
+      await actProductosDB();
+    });
+  });
+  onBeforeUnmount(() => {
+    $socket.off('cambiosProductos');
+  });
 
   return {
     productoStore,

@@ -6,7 +6,7 @@
   </h1>
 
   <Table
-    :rows="estado.productos"
+    :rows="productoStore.productos"
     :columns="[
   {
     name: 'imagen',
@@ -344,7 +344,7 @@ definePageMeta({
 
 const { $socket } = useNuxtApp();
 onMounted(async () => {
-  estado.productos = await productoStore.getProductos();
+  productoStore.productos = await productoStore.getProductos();
 
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 

@@ -33,7 +33,7 @@ export const useDetalleAcciones = () => {
 
       if (productoBorrado) {
         estado.motivoEliminacion = '';
-        NotifySucess('Producto eliminado correctamente');
+        NotifySucessCenter('Producto eliminado correctamente');
         console.log(productoStore.producto._id);
         productoStore.productos = productoStore.productos.filter(
           (p) => p._id !== productoStore.producto._id,

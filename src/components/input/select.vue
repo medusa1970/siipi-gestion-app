@@ -7,9 +7,6 @@
     @clear="activarValidacion"
     :label="label + (requerido ? '*' : '')"
     :rules="rules"
-    use-input
-    fill-input
-    hide-selected
     input-debounce="0"
     :clearable="clearable"
     :dense="dense"
@@ -27,6 +24,10 @@
     map-options
     :dialog="dialog"
   >
+    <!-- use-input
+    fill-input
+    hide-selected -->
+
     <template #no-option>
       <q-item>
         <q-item-section class="text-grey"> No hay resultados </q-item-section>

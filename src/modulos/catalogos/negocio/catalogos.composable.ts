@@ -49,7 +49,7 @@ export const useCatalogos = () => {
     if (catalogoCreado) {
       obtenerCatalogoId(catalogoID);
       NotifySucessCenter('Categoria creada correctamente');
-      estado.datos_catalogoCategoria = init_catalogoCategoria;
+      estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     }
     estado.modal.show_agregarCategoriaCatalogo = false;
   };

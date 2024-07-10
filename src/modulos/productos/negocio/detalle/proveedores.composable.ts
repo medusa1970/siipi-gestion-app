@@ -110,7 +110,7 @@ export const useDetalleProveedores = () => {
       estado.datos_preciosPorMayor,
     );
     estado.modal.show_crearPrecioPorMayor = false;
-    estado.datos_preciosPorMayor = init_precioPorMayor;
+    estado.datos_preciosPorMayor = clone(init_precioPorMayor);
   };
 
   /**
@@ -151,8 +151,8 @@ export const useDetalleProveedores = () => {
     estado.serviciosProducto.push(nuevoServicio);
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Proveedor creado correctamente');
-    estado.datos_servicioProducto = init_servicioProducto;
-    estado.datos_preciosPorMayor = init_precioPorMayor;
+    estado.datos_servicioProducto = clone(init_servicioProducto);
+    estado.datos_preciosPorMayor = clone(init_precioPorMayor);
     estado.modal.show_crearServicioProducto = false;
   };
 
@@ -217,8 +217,8 @@ export const useDetalleProveedores = () => {
     }
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Proveedor modificado correctamente');
-    estado.datos_servicioProducto = init_servicioProducto;
-    estado.datos_preciosPorMayor = init_precioPorMayor;
+    estado.datos_servicioProducto = clone(init_servicioProducto);
+    estado.datos_preciosPorMayor = clone(init_precioPorMayor);
     estado.modal.show_modificarServicioProducto = false;
     estado.modal.show_crearServicioProducto = false;
   };
@@ -242,8 +242,8 @@ export const useDetalleProveedores = () => {
     estado.modal.show_crearServicioProducto = false;
     estado.modal.show_modificarServicioProducto = false;
     // Limpiar formulario marca al cerrar el editor
-    estado.datos_servicioProducto = init_servicioProducto;
-    estado.datos_preciosPorMayor = init_precioPorMayor;
+    estado.datos_servicioProducto = clone(init_servicioProducto);
+    estado.datos_preciosPorMayor = clone(init_precioPorMayor);
   };
 
   return {

@@ -348,7 +348,6 @@ const {
   actProductosDB,
   categoriaSelectOptions,
   mostrarInformacionProducto,
-  irEdicionProducto,
 } = useProducto();
 
 // layout

@@ -46,7 +46,9 @@ export const useProducto = () => {
         if (!productoCreado) throw 'No se pudo agregar el producto';
       });
     } catch (e) {
-      console.log(estado.datos_crearProductoBasico);
+      // if (isApiBadRequest(err, 'duplicado')) {
+      //   producto.error = 'Este producto ya esta registrada';
+      // }
       errFallBack(e);
       return;
     }
@@ -55,7 +57,7 @@ export const useProducto = () => {
     await productoStore.addProducto(productoCreado);
     estado.modal.show_crearProductoBasico = false;
     // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
-    // estado.datos_crearProductoBasico = init_crearProductoBasico;
+    // estado.datos_crearProductoBasico = clone(init_crearProductoBasico);
   };
 
   /**
@@ -132,22 +134,12 @@ export const useProducto = () => {
     estado.modal.show_informacionProducto = true;
   };
 
-  /**
-   * Redirige a la pagina de edicion de producto y alamcena los datos del
-   * producto en el store para lectura y cambios
-   */
-  const irEdicionProducto = (producto: Producto) => {
-    productoStore.producto = producto;
-    router.push('productos/detalleProducto');
-  };
-
   return {
     categoriaSelectOptions,
     crearProductoBasico,
     actProductosDB,
     estado,
     mostrarInformacionProducto,
-    irEdicionProducto,
     crearCategoria,
   };
 };

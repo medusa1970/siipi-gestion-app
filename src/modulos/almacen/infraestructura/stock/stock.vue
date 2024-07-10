@@ -182,41 +182,36 @@
       </template>
 
       <template #body-cell-actions="{ row }">
-        <q-btn-dropdown
-          color="primary"
-          flat
-          dropdown-icon="menu"
-          size="sm"
+        <q-btn-group
+          push
           @click="
             (e) => {
               e.stopPropagation();
             }
           "
         >
-          <q-list>
-            <q-item clickable v-close-popup @click="onItemClick">
-              <q-item-section>
-                <q-item-label>Hacer pedido</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-close-popup @click="onItemClick">
-              <q-item-section>
-                <q-item-label>Hacer inventario</q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item
-              clickable
-              v-close-popup
-              @click="goTo(router, 'producto', { id: row.producto._id })"
-            >
-              <q-item-section>
-                <q-item-label>Modificar</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+          <q-btn
+            class="p-1"
+            color="orange"
+            size="sm"
+            icon="shopping_cart"
+            @click=""
+          />
+          <q-btn
+            class="p-1"
+            color="green"
+            size="sm"
+            icon="list_alt"
+            @click=""
+          />
+          <q-btn
+            class="p-1"
+            color="black"
+            size="sm"
+            icon="edit"
+            @click="goTo(router, 'producto', { id: row.producto._id })"
+          />
+        </q-btn-group>
       </template>
 
       <template #body-expand="{ row }">
@@ -318,7 +313,7 @@ onMounted(async () => {
   await obtenerTodoStock();
   listaCategorias.value = await categoriaSelectOptions(true);
   listaMarcas.value = quitarDuplicados(
-    estado.stocks.reduce((accumulator, currentValue) => {
+    estado.stockfiltereds.reduce((accumulator, currentValue) => {
       const opciones = Object.values(currentValue.marcas).map((marca) => {
         return { label: marca.marca.nombre, value: marca.marca._id };
       });

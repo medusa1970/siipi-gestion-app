@@ -5,13 +5,12 @@ mise en forme expands
 click image agrandar
 permisos borrar
 empleado editar
+input select
 
 BUGS
 
-vencimiento negativo
-clone init
-input select nueva marca
 imagen nueva marca
 err no tratado al crear obj dupl
 boton agregar medida desaparecido ?
 productoStore vencimiento limite no persiste en el estado
+lista marcas

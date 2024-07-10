@@ -114,7 +114,7 @@ export const useDetalleMedida = () => {
     productoStore.producto.empaques.push(nuevaMedida);
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Medida&Empaque creado correctamente');
-    estado.datos_productoMedida.empaque = init_productoMedida.empaque;
+    estado.datos_productoMedida.empaque = clone(init_productoMedida.empaque);
     estado.modal.show_crearProductoEmpaque = false;
   };
 
@@ -173,7 +173,7 @@ export const useDetalleMedida = () => {
     );
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Marca modificado correctamente');
-    estado.datos_productoMedida.empaque = init_productoMedida.empaque;
+    estado.datos_productoMedida.empaque = clone(init_productoMedida.empaque);
     estado.modal.show_crearProductoEmpaque = false;
     estado.modal.show_modificarProductoEmpaque = false;
   };

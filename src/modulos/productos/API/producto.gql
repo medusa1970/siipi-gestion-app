@@ -13,6 +13,7 @@ query productosBuscar(
     _modificado
     nombre
     comentario
+    vencimientoLimite
     variedades {
       _id
       _borrado

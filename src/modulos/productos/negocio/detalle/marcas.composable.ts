@@ -125,7 +125,7 @@ export const useDetalleMarcas = () => {
     productoStore.producto.variedades.push(nuevaMarca);
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Marca creado correctamente');
-    estado.datos_productoMarca = init_productoMarca;
+    estado.datos_productoMarca = clone(init_productoMarca);
     estado.modal.show_crearProductoMarca = false;
   };
 
@@ -187,7 +187,7 @@ export const useDetalleMarcas = () => {
     }
     // Avisamos que todo bien y reinicializamos el dialog
     NotifySucessCenter('Marca modificado correctamente');
-    estado.datos_productoMarca = init_productoMarca;
+    estado.datos_productoMarca = clone(init_productoMarca);
     estado.modal.show_modificarProductoMarca = false;
     estado.modal.show_crearProductoMarca = false;
   };
@@ -196,7 +196,7 @@ export const useDetalleMarcas = () => {
     estado.modal.show_crearProductoMarca = false;
     estado.modal.show_modificarProductoMarca = false;
     // Limpiar formulario marca al cerrar el editor
-    estado.datos_productoMarca = init_productoMarca;
+    estado.datos_productoMarca = clone(init_productoMarca);
   };
 
   const borrarProductoMarca = (variedad: any) => {
@@ -244,6 +244,7 @@ export const useDetalleMarcas = () => {
     // ponemos al dia el productoStore
     productoStore.producto.vencimientoLimite =
       estado.datos_modificarVencimiento.vencimientoLimite;
+    console.log(productoStore.producto.vencimientoLimite);
   };
 
   return {

@@ -52,17 +52,16 @@ export const storeProducto = defineStore('producto', {
      */
     async getProductos(): Promise<Producto[]> {
       let productos = (await localforage.getItem('productos')) as Producto[];
-
       if (!productos) {
         try {
           productos = await productoService.buscarProductos();
-
           await localforage.setItem('productos', productos);
         } catch (err) {
           errFallBack(err);
           return;
         }
       }
+      console.log('p0', productos[0].vencimientoLimite);
       this.productos = productos;
       return productos;
     },

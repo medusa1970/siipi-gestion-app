@@ -45,6 +45,9 @@
       <ProductosTab />
     </q-tab-panel>
 
+    <!-- 
+    PRECIOS OFERTA 
+  -->
     <q-tab-panel name="precios" animated>
       <PreciosTab />
     </q-tab-panel>
@@ -52,7 +55,6 @@
     <!-- 
     ACCIONES BORRAR 
   -->
-
     <q-tab-panel name="acciones" animated>
       <AccionesTab />
     </q-tab-panel>

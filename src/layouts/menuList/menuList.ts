@@ -106,35 +106,23 @@ export const menuListCathering = [
 
 export const menuListPunto = [
   {
-    icon: 'people',
-    label: 'Empleados',
-    to: '/punto/empleados',
-    subMenu: [],
-  },
-  // {
-  //   icon: 'fact_check',
-  //   label: 'Menu',
-  //   to: '/punto/menu',
-  //   subMenu: [],
-  // },
-  {
     icon: 'warehouse',
-    label: 'Stock',
-    to: '/punto/stock',
-    subMenu: [],
-  },
-  {
-    icon: 'inventory_2',
-    label: 'Inventario',
+    label: 'Almacen',
     subMenu: [
       {
-        label: 'Lista Inventario',
-        to: '/punto/inventario',
+        label: 'Stock ',
+        to: '/cathering/stock',
       },
       {
-        label: 'Problemas Inventario',
-        to: '/punto/inventario/listaProblemas',
+        label: 'Adquisicion',
       },
+      {
+        label: 'Inventario',
+      },
+      // {
+      //   label: 'Despacho',
+      //   to: '/cathering/pedidos/despacharProductos',
+      // },
     ],
   },
   {
@@ -143,14 +131,70 @@ export const menuListPunto = [
     subMenu: [
       {
         label: 'Realizar pedido',
-        to: '/punto/pedidos/realizarPedido',
+        to: '/pedidos/realizar-pedido',
       },
       {
         label: 'ver pedidos',
-        to: '/punto/pedidos/listaPedidos',
+        to: '/pedidos/listaPedidos',
       },
     ],
   },
+  // {
+  //   icon: 'description',
+  //   label: 'Pedidos',
+  //   subMenu: [
+  //     {
+  //       label: 'ver pedidos',
+  //       to: '/cathering/pedidos/listaPedidos',
+  //     },
+  //   ],
+  // },
+  // {
+  //   icon: 'sell',
+  //   label: 'Areas',
+  //   subMenu: [
+  //     {
+  //       label: 'Panaderia',
+  //       to: '/cathering',
+  //     },
+  //     {
+  //       label: 'Reposteria',
+  //       to: '/cathering',
+  //     },
+  //   ],
+  // },
+
+  {
+    icon: 'people',
+    label: 'Administracion',
+    subMenu: [
+      // {
+      //   label: 'Datos de la empresa',
+      //   to: '/cathering',
+      // },
+      {
+        label: 'Empleados',
+        to: '/cathering/empleados',
+      },
+    ],
+  },
+  // {
+  //   icon: 'inventory_2',
+  //   label: 'Gestion',
+  //   subMenu: [
+  //     {
+  //       label: 'Problemas de inventario',
+  //       to: '/cathering/inventario/listaProblemas',
+  //     },
+  //   ],
+  // },
+  // {
+  //   icon: 'fact_check',
+  //   label: 'Menu',
+  //   to: '/punto/menu',
+  //   subMenu: [],
+  // },
+
   // {
   //   icon: 'point_of_sale',
   //   label: 'Caja',

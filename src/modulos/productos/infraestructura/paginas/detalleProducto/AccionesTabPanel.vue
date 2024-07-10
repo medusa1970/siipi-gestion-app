@@ -21,9 +21,11 @@
 <script setup lang="ts">
 import { useDetalleAcciones } from '@/modulos/productos/negocio/detalle/acciones.composable';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useRouter } from 'vue-router';
 
 const { estado, authStore, productoStore, borrarProducto } =
   useDetalleAcciones();
+const router = useRouter();
 // const { actProductosDB } = useProducto();
 
 // Verificacion de permisos

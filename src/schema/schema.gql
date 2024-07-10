@@ -89,6 +89,7 @@ type Medida {
   _borrado: DateTime
   _orden: Float
   nombre: String!
+  abreviacion: String!
   tipoEmpaques: [TipoEmpaque!]
 }
 
@@ -99,8 +100,9 @@ type Variedad {
   _borrado: DateTime
   _orden: Float
   marca: Marca!
-  cantidadMin: Float
-  cantidadMax: Float
+  cantidadLimite: [Float!]
+  inventarioLimite: [Float!]
+  cantidadMaxPedido: Float
   imagen: FileUpload
 }
 
@@ -117,6 +119,7 @@ type Producto {
   empaques: [Empaque!]
   variedades: [Variedad!]
   categoria: Categoria!
+  vencimientoLimite: [Float!]
 }
 
 type Bloque {
@@ -137,6 +140,7 @@ type InventarioLote {
   cantidad: Float!
   vencimiento: DateTime
   bloque: Bloque
+  marca: Marca!
   presentacion: String
   cantidadPresentacion: Float
 }
@@ -210,7 +214,7 @@ type Oferta {
   ingredientes: [Ingrediente!]
   preparados: [Preparado!]!
   imagen: FileUpload
-  precioSinFactura: Float!
+  precioSinFactura: Float
   precioConFactura: Float
   preciosPorMayor: [Precio!]!
   catalogo: Catalogo!
@@ -263,6 +267,7 @@ type StockLote {
   vencimiento: DateTime
   cantidad: Float!
   bloque: Bloque
+  marca: Marca!
 }
 
 type Stock {
@@ -273,8 +278,6 @@ type Stock {
   _orden: Float
   producto: Producto!
   lotes: [StockLote!]
-  cantidadLimite: Float
-  frequenciaInventario: Float
   desactivado: Boolean
 }
 
@@ -462,16 +465,13 @@ type Accion {
   persona: Persona!
   accion: String!
   producto: Producto
+  oferta: Oferta
   comentario: String!
 }
 
 type Query {
   contarEjemplos(busqueda: BuscarEjemploDto!, opciones: ContarOpciones): Float!
-  buscarEjemplos(
-    busqueda: BuscarEjemploDto!
-    opciones: BuscarOpciones
-    filtro: BuscarEjemploDto
-  ): [Ejemplo!]!
+  buscarEjemplos(busqueda: BuscarEjemploDto!, opciones: BuscarOpciones, filtro: BuscarEjemploDto): [Ejemplo!]!
   conectar(datos: ConexionDto!): ConexionResponse!
   cambiarEntidad(datos: ConexionDto!): ConexionResponse!
   pedirReinicioDeContrasena(correo: String!): Boolean!
@@ -480,120 +480,37 @@ type Query {
   entidadesUsuarioConectado(opciones: BuscarOpciones): [Entidad!]!
   testAut: String!
   contarAcciones(busqueda: BuscarAccionDto!, opciones: ContarOpciones): Float!
-  buscarAcciones(
-    busqueda: BuscarAccionDto!
-    opciones: BuscarOpciones
-    filtro: BuscarAccionDto
-  ): [Accion!]!
+  buscarAcciones(busqueda: BuscarAccionDto!, opciones: BuscarOpciones, filtro: BuscarAccionDto): [Accion!]!
   contarPersonas(busqueda: BuscarPersonaDto!, opciones: ContarOpciones): Float!
-  buscarPersonas(
-    busqueda: BuscarPersonaDto!
-    opciones: BuscarOpciones
-    filtro: BuscarPersonaDto
-  ): [Persona!]!
-  contarProductos(
-    busqueda: BuscarProductoDto!
-    opciones: ContarOpciones
-  ): Float!
-  buscarProductos(
-    busqueda: BuscarProductoDto!
-    opciones: BuscarOpciones
-    filtro: BuscarProductoDto
-  ): [Producto!]!
-  contarCategorias(
-    busqueda: BuscarCategoriaDto!
-    opciones: ContarOpciones
-  ): Float!
-  buscarCategorias(
-    busqueda: BuscarCategoriaDto!
-    opciones: BuscarOpciones
-    filtro: BuscarCategoriaDto
-  ): [Categoria!]!
-  categoriaArbol(
-    busqueda: BuscarCategoriaDto!
-    opciones: BuscarOpciones
-  ): Categoria!
+  buscarPersonas(busqueda: BuscarPersonaDto!, opciones: BuscarOpciones, filtro: BuscarPersonaDto): [Persona!]!
+  contarProductos(busqueda: BuscarProductoDto!, opciones: ContarOpciones): Float!
+  buscarProductos(busqueda: BuscarProductoDto!, opciones: BuscarOpciones, filtro: BuscarProductoDto): [Producto!]!
+  contarCategorias(busqueda: BuscarCategoriaDto!, opciones: ContarOpciones): Float!
+  buscarCategorias(busqueda: BuscarCategoriaDto!, opciones: BuscarOpciones, filtro: BuscarCategoriaDto): [Categoria!]!
+  categoriaArbol(busqueda: BuscarCategoriaDto!, opciones: BuscarOpciones): Categoria!
   contarEntidades(busqueda: BuscarEntidadDto!, opciones: ContarOpciones): Float!
-  buscarEntidades(
-    busqueda: BuscarEntidadDto!
-    opciones: BuscarOpciones
-    filtro: BuscarEntidadDto
-  ): [Entidad!]!
-  entidadLeerMenu(
-    busqueda: BuscarEntidadDto!
-    busquedaMenu: BuscarMenuDto!
-    opciones: BuscarOpciones
-  ): Catalogo!
-  entidadProductosMenu(
-    busqueda: BuscarEntidadDto!
-    busquedaMenu: BuscarMenuDto!
-    opciones: BuscarOpciones
-  ): [Producto!]!
-  filaInventario(
-    busqueda: BuscarEntidadDto!
-    opciones: BuscarOpciones
-  ): [Producto!]!
+  buscarEntidades(busqueda: BuscarEntidadDto!, opciones: BuscarOpciones, filtro: BuscarEntidadDto): [Entidad!]!
+  entidadLeerMenu(busqueda: BuscarEntidadDto!, busquedaMenu: BuscarMenuDto!, opciones: BuscarOpciones): Catalogo!
+  entidadProductosMenu(busqueda: BuscarEntidadDto!, busquedaMenu: BuscarMenuDto!, opciones: BuscarOpciones): [Producto!]!
+  filaInventario(busqueda: BuscarEntidadDto!, opciones: BuscarOpciones): [Producto!]!
   contarRoles(busqueda: BuscarRolDto!, opciones: ContarOpciones): Float!
-  buscarRoles(
-    busqueda: BuscarRolDto!
-    opciones: BuscarOpciones
-    filtro: BuscarRolDto
-  ): [Rol!]!
+  buscarRoles(busqueda: BuscarRolDto!, opciones: BuscarOpciones, filtro: BuscarRolDto): [Rol!]!
   contarOfertas(busqueda: BuscarOfertaDto!, opciones: ContarOpciones): Float!
-  buscarOfertas(
-    busqueda: BuscarOfertaDto!
-    opciones: BuscarOpciones
-    filtro: BuscarOfertaDto
-  ): [Oferta!]!
-  ofertaBuscarProductos(
-    busqueda: BuscarOfertaDto!
-    opciones: BuscarOpciones
-  ): [Producto!]!
+  buscarOfertas(busqueda: BuscarOfertaDto!, opciones: BuscarOpciones, filtro: BuscarOfertaDto): [Oferta!]!
+  ofertaBuscarProductos(busqueda: BuscarOfertaDto!, opciones: BuscarOpciones): [Producto!]!
   contarPedidos(busqueda: BuscarPedidoDto!, opciones: ContarOpciones): Float!
-  buscarPedidos(
-    busqueda: BuscarPedidoDto!
-    opciones: BuscarOpciones
-    filtro: BuscarPedidoDto
-  ): [Pedido!]!
-  leerEstadoPedido(
-    busqueda: BuscarPedidoDto!
-    opciones: BuscarOpciones
-  ): String!
-  contarCatalogos(
-    busqueda: BuscarCatalogoDto!
-    opciones: ContarOpciones
-  ): Float!
-  buscarCatalogos(
-    busqueda: BuscarCatalogoDto!
-    opciones: BuscarOpciones
-    filtro: BuscarCatalogoDto
-  ): [Catalogo!]!
-  catalogoOfertasRecursivo(
-    busqueda: BuscarCatalogoDto!
-    opciones: BuscarOpciones
-  ): [Oferta!]!
-  catalogoArbol(
-    busqueda: BuscarCatalogoDto!
-    opciones: BuscarOpciones
-  ): Catalogo!
+  buscarPedidos(busqueda: BuscarPedidoDto!, opciones: BuscarOpciones, filtro: BuscarPedidoDto): [Pedido!]!
+  leerEstadoPedido(busqueda: BuscarPedidoDto!, opciones: BuscarOpciones): String!
+  contarCatalogos(busqueda: BuscarCatalogoDto!, opciones: ContarOpciones): Float!
+  buscarCatalogos(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones, filtro: BuscarCatalogoDto): [Catalogo!]!
+  catalogoOfertasRecursivo(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones): [Oferta!]!
+  catalogoArbol(busqueda: BuscarCatalogoDto!, opciones: BuscarOpciones): Catalogo!
   contarMedidas(busqueda: BuscarMedidaDto!, opciones: ContarOpciones): Float!
-  buscarMedidas(
-    busqueda: BuscarMedidaDto!
-    opciones: BuscarOpciones
-    filtro: BuscarMedidaDto
-  ): [Medida!]!
+  buscarMedidas(busqueda: BuscarMedidaDto!, opciones: BuscarOpciones, filtro: BuscarMedidaDto): [Medida!]!
   contarMarcas(busqueda: BuscarMarcaDto!, opciones: ContarOpciones): Float!
-  buscarMarcas(
-    busqueda: BuscarMarcaDto!
-    opciones: BuscarOpciones
-    filtro: BuscarMarcaDto
-  ): [Marca!]!
+  buscarMarcas(busqueda: BuscarMarcaDto!, opciones: BuscarOpciones, filtro: BuscarMarcaDto): [Marca!]!
   contarTags(busqueda: BuscarTagDto!, opciones: ContarOpciones): Float!
-  buscarTags(
-    busqueda: BuscarTagDto!
-    opciones: BuscarOpciones
-    filtro: BuscarTagDto
-  ): [Tag!]!
+  buscarTags(busqueda: BuscarTagDto!, opciones: BuscarOpciones, filtro: BuscarTagDto): [Tag!]!
 }
 
 input BuscarEjemploDto {
@@ -639,6 +556,7 @@ input BuscarAccionDto {
   persona: [ID!]
   accion: [String!]
   producto: [ID!]
+  oferta: [ID!]
   comentario: [String!]
 }
 
@@ -675,6 +593,7 @@ input BuscarProductoDto {
   empaques: BuscarEmpaqueDto
   variedades: BuscarVariedadDto
   categoria: [ID!]
+  vencimientoLimite: [Float!]
 }
 
 input BuscarEmpaqueDto {
@@ -694,8 +613,9 @@ input BuscarVariedadDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   marca: ID
-  cantidadMin: [Float!]
-  cantidadMax: [Float!]
+  cantidadLimite: [Float!]
+  inventarioLimite: [Float!]
+  cantidadMaxPedido: [Float!]
   imagen: FileUploadBuscar
 }
 
@@ -765,8 +685,6 @@ input BuscarStockDto {
   _borrado: [BuscarFechaDto!]
   producto: [ID!]
   lotes: BuscarStockLoteDto
-  cantidadLimite: [Float!]
-  frequenciaInventario: [Float!]
   desactivado: Boolean
 }
 
@@ -778,6 +696,7 @@ input BuscarStockLoteDto {
   vencimiento: [BuscarFechaDto!]
   cantidad: [Float!]
   bloque: [ID!]
+  marca: [ID!]
 }
 
 input BuscarInventarioDto {
@@ -800,6 +719,7 @@ input BuscarInventarioLoteDto {
   cantidad: [Float!]
   vencimiento: [BuscarFechaDto!]
   bloque: [ID!]
+  marca: [ID!]
   presentacion: [String!]
   cantidadPresentacion: [Float!]
 }
@@ -977,6 +897,7 @@ input BuscarMedidaDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   nombre: [String!]
+  abreviacion: [String!]
   tipoEmpaques: BuscarTipoEmpaqueDto
 }
 
@@ -1009,303 +930,90 @@ input BuscarTagDto {
 
 type Mutation {
   PopulateEjemplos(opciones: PopulateOpciones): [Ejemplo!]!
-  crearEjemplos(
-    datos: [CrearEjemploDto!]!
-    opciones: CrearOpciones
-  ): [Ejemplo!]!
-  modificarEjemplos(
-    busqueda: BuscarEjemploDto!
-    datos: ModificarEjemploDto!
-    opciones: ModificarOpciones
-  ): [Ejemplo!]!
-  borrarEjemplos(
-    busqueda: BuscarEjemploDto!
-    opciones: BorrarOpciones
-  ): [Ejemplo!]!
-  eliminarEjemplos(
-    busqueda: BuscarEjemploDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverEjemplos(
-    busqueda: BuscarEjemploDto!
-    despuesDe: BuscarEjemploDto!
-    opciones: EliminarOpciones
-  ): Float!
+  crearEjemplos(datos: [CrearEjemploDto!]!, opciones: CrearOpciones): [Ejemplo!]!
+  modificarEjemplos(busqueda: BuscarEjemploDto!, datos: ModificarEjemploDto!, opciones: ModificarOpciones): [Ejemplo!]!
+  borrarEjemplos(busqueda: BuscarEjemploDto!, opciones: BorrarOpciones): [Ejemplo!]!
+  eliminarEjemplos(busqueda: BuscarEjemploDto!, opciones: EliminarOpciones): Float!
+  moverEjemplos(busqueda: BuscarEjemploDto!, despuesDe: BuscarEjemploDto!, opciones: EliminarOpciones): Float!
   PopulateAcciones(opciones: PopulateOpciones): [Accion!]!
   crearAcciones(datos: [CrearAccionDto!]!, opciones: CrearOpciones): [Accion!]!
-  modificarAcciones(
-    busqueda: BuscarAccionDto!
-    datos: ModificarAccionDto!
-    opciones: ModificarOpciones
-  ): [Accion!]!
-  borrarAcciones(
-    busqueda: BuscarAccionDto!
-    opciones: BorrarOpciones
-  ): [Accion!]!
-  eliminarAcciones(
-    busqueda: BuscarAccionDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverAcciones(
-    busqueda: BuscarAccionDto!
-    despuesDe: BuscarAccionDto!
-    opciones: EliminarOpciones
-  ): Float!
+  modificarAcciones(busqueda: BuscarAccionDto!, datos: ModificarAccionDto!, opciones: ModificarOpciones): [Accion!]!
+  borrarAcciones(busqueda: BuscarAccionDto!, opciones: BorrarOpciones): [Accion!]!
+  eliminarAcciones(busqueda: BuscarAccionDto!, opciones: EliminarOpciones): Float!
+  moverAcciones(busqueda: BuscarAccionDto!, despuesDe: BuscarAccionDto!, opciones: EliminarOpciones): Float!
   PopulatePersonas(opciones: PopulateOpciones): [Persona!]!
-  crearPersonas(
-    datos: [CrearPersonaDto!]!
-    opciones: CrearOpciones
-  ): [Persona!]!
-  modificarPersonas(
-    busqueda: BuscarPersonaDto!
-    datos: ModificarPersonaDto!
-    opciones: ModificarOpciones
-  ): [Persona!]!
-  borrarPersonas(
-    busqueda: BuscarPersonaDto!
-    opciones: BorrarOpciones
-  ): [Persona!]!
-  eliminarPersonas(
-    busqueda: BuscarPersonaDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverPersonas(
-    busqueda: BuscarPersonaDto!
-    despuesDe: BuscarPersonaDto
-    opciones: EliminarOpciones
-  ): Float!
+  crearPersonas(datos: [CrearPersonaDto!]!, opciones: CrearOpciones): [Persona!]!
+  modificarPersonas(busqueda: BuscarPersonaDto!, datos: ModificarPersonaDto!, opciones: ModificarOpciones): [Persona!]!
+  borrarPersonas(busqueda: BuscarPersonaDto!, opciones: BorrarOpciones): [Persona!]!
+  eliminarPersonas(busqueda: BuscarPersonaDto!, opciones: EliminarOpciones): Float!
+  moverPersonas(busqueda: BuscarPersonaDto!, despuesDe: BuscarPersonaDto, opciones: EliminarOpciones): Float!
   PopulateProductos(opciones: PopulateOpciones): [Producto!]!
-  crearProductos(
-    datos: [CrearProductoDto!]!
-    opciones: CrearOpciones
-  ): [Producto!]!
-  modificarProductos(
-    busqueda: BuscarProductoDto!
-    datos: ModificarProductoDto!
-    opciones: ModificarOpciones
-  ): [Producto!]!
-  borrarProductos(
-    busqueda: BuscarProductoDto!
-    opciones: BorrarOpciones
-  ): [Producto!]!
-  eliminarProductos(
-    busqueda: BuscarProductoDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverProductos(
-    busqueda: BuscarProductoDto!
-    despuesDe: BuscarProductoDto!
-    opciones: EliminarOpciones
-  ): Float!
+  crearProductos(datos: [CrearProductoDto!]!, opciones: CrearOpciones): [Producto!]!
+  modificarProductos(busqueda: BuscarProductoDto!, datos: ModificarProductoDto!, opciones: ModificarOpciones): [Producto!]!
+  borrarProductos(busqueda: BuscarProductoDto!, opciones: BorrarOpciones): [Producto!]!
+  eliminarProductos(busqueda: BuscarProductoDto!, opciones: EliminarOpciones): Float!
+  moverProductos(busqueda: BuscarProductoDto!, despuesDe: BuscarProductoDto!, opciones: EliminarOpciones): Float!
   PopulateCategorias(opciones: PopulateOpciones): [Categoria!]!
-  crearCategorias(
-    datos: [CrearCategoriaDto!]!
-    opciones: CrearOpciones
-  ): [Categoria!]!
-  modificarCategorias(
-    busqueda: BuscarCategoriaDto!
-    datos: ModificarCategoriaDto!
-    opciones: ModificarOpciones
-  ): [Categoria!]!
-  borrarCategorias(
-    busqueda: BuscarCategoriaDto!
-    opciones: BorrarOpciones
-  ): [Categoria!]!
-  eliminarCategorias(
-    busqueda: BuscarCategoriaDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverCategorias(
-    busqueda: BuscarCategoriaDto!
-    despuesDe: BuscarCategoriaDto!
-    opciones: EliminarOpciones
-  ): Float!
+  crearCategorias(datos: [CrearCategoriaDto!]!, opciones: CrearOpciones): [Categoria!]!
+  modificarCategorias(busqueda: BuscarCategoriaDto!, datos: ModificarCategoriaDto!, opciones: ModificarOpciones): [Categoria!]!
+  borrarCategorias(busqueda: BuscarCategoriaDto!, opciones: BorrarOpciones): [Categoria!]!
+  eliminarCategorias(busqueda: BuscarCategoriaDto!, opciones: EliminarOpciones): Float!
+  moverCategorias(busqueda: BuscarCategoriaDto!, despuesDe: BuscarCategoriaDto!, opciones: EliminarOpciones): Float!
   PopulateEntidades(opciones: PopulateOpciones): [Entidad!]!
-  crearEntidades(
-    datos: [CrearEntidadDto!]!
-    opciones: CrearOpciones
-  ): [Entidad!]!
-  modificarEntidades(
-    busqueda: BuscarEntidadDto!
-    datos: ModificarEntidadDto!
-    opciones: ModificarOpciones
-  ): [Entidad!]!
-  borrarEntidades(
-    busqueda: BuscarEntidadDto!
-    opciones: BorrarOpciones
-  ): [Entidad!]!
-  eliminarEntidades(
-    busqueda: BuscarEntidadDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverEntidades(
-    busqueda: BuscarEntidadDto!
-    despuesDe: BuscarEntidadDto!
-    opciones: EliminarOpciones
-  ): Float!
-  hacerInventario(
-    busqueda: BuscarEntidadDto!
-    datos: CrearInventarioDto!
-    opciones: BuscarOpciones
-    guardar: Boolean
-  ): Inventario!
+  crearEntidades(datos: [CrearEntidadDto!]!, opciones: CrearOpciones): [Entidad!]!
+  modificarEntidades(busqueda: BuscarEntidadDto!, datos: ModificarEntidadDto!, opciones: ModificarOpciones): [Entidad!]!
+  borrarEntidades(busqueda: BuscarEntidadDto!, opciones: BorrarOpciones): [Entidad!]!
+  eliminarEntidades(busqueda: BuscarEntidadDto!, opciones: EliminarOpciones): Float!
+  moverEntidades(busqueda: BuscarEntidadDto!, despuesDe: BuscarEntidadDto!, opciones: EliminarOpciones): Float!
+  hacerInventario(busqueda: BuscarEntidadDto!, datos: CrearInventarioDto!, opciones: BuscarOpciones, guardar: Boolean): Inventario!
   PopulateRoles(opciones: PopulateOpciones): [Rol!]!
   crearRoles(datos: [CrearRolDto!]!, opciones: CrearOpciones): [Rol!]!
-  modificarRoles(
-    busqueda: BuscarRolDto!
-    datos: ModificarRolDto!
-    opciones: ModificarOpciones
-  ): [Rol!]!
+  modificarRoles(busqueda: BuscarRolDto!, datos: ModificarRolDto!, opciones: ModificarOpciones): [Rol!]!
   borrarRoles(busqueda: BuscarRolDto!, opciones: BorrarOpciones): [Rol!]!
   eliminarRoles(busqueda: BuscarRolDto!, opciones: EliminarOpciones): Float!
-  moverRoles(
-    busqueda: BuscarRolDto!
-    despuesDe: BuscarRolDto!
-    opciones: EliminarOpciones
-  ): Float!
+  moverRoles(busqueda: BuscarRolDto!, despuesDe: BuscarRolDto!, opciones: EliminarOpciones): Float!
   PopulateOfertas(opciones: PopulateOpciones): [Oferta!]!
   crearOfertas(datos: [CrearOfertaDto!]!, opciones: CrearOpciones): [Oferta!]!
-  modificarOfertas(
-    busqueda: BuscarOfertaDto!
-    datos: ModificarOfertaDto!
-    opciones: ModificarOpciones
-  ): [Oferta!]!
-  borrarOfertas(
-    busqueda: BuscarOfertaDto!
-    opciones: BorrarOpciones
-  ): [Oferta!]!
-  eliminarOfertas(
-    busqueda: BuscarOfertaDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverOfertas(
-    busqueda: BuscarOfertaDto!
-    despuesDe: BuscarOfertaDto!
-    opciones: EliminarOpciones
-  ): Float!
+  modificarOfertas(busqueda: BuscarOfertaDto!, datos: ModificarOfertaDto!, opciones: ModificarOpciones): [Oferta!]!
+  borrarOfertas(busqueda: BuscarOfertaDto!, opciones: BorrarOpciones): [Oferta!]!
+  eliminarOfertas(busqueda: BuscarOfertaDto!, opciones: EliminarOpciones): Float!
+  moverOfertas(busqueda: BuscarOfertaDto!, despuesDe: BuscarOfertaDto!, opciones: EliminarOpciones): Float!
   PopulatePedidos(opciones: PopulateOpciones): [Pedido!]!
   crearPedidos(datos: [CrearPedidoDto!]!, opciones: CrearOpciones): [Pedido!]!
-  modificarPedidos(
-    busqueda: BuscarPedidoDto!
-    datos: ModificarPedidoDto!
-    opciones: ModificarOpciones
-  ): [Pedido!]!
-  borrarPedidos(
-    busqueda: BuscarPedidoDto!
-    opciones: BorrarOpciones
-  ): [Pedido!]!
-  eliminarPedidos(
-    busqueda: BuscarPedidoDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverPedidos(
-    busqueda: BuscarPedidoDto!
-    despuesDe: BuscarPedidoDto!
-    opciones: EliminarOpciones
-  ): Float!
+  modificarPedidos(busqueda: BuscarPedidoDto!, datos: ModificarPedidoDto!, opciones: ModificarOpciones): [Pedido!]!
+  borrarPedidos(busqueda: BuscarPedidoDto!, opciones: BorrarOpciones): [Pedido!]!
+  eliminarPedidos(busqueda: BuscarPedidoDto!, opciones: EliminarOpciones): Float!
+  moverPedidos(busqueda: BuscarPedidoDto!, despuesDe: BuscarPedidoDto!, opciones: EliminarOpciones): Float!
   iniciarPedido(datos: CrearPedidoDto!, opciones: CrearOpciones): Pedido!
-  agregarEstadoPedido(
-    busqueda: BuscarPedidoDto!
-    datos: CrearEstadoDto!
-    opciones: BuscarOpciones
-  ): Pedido!
-  cambiarEstadoItems(
-    busqueda: BuscarPedidoDto!
-    itemIds: [ID!]
-    estado: CrearItemEstadoDto!
-    opciones: BuscarOpciones
-  ): Pedido!
-  ajustarItem(
-    busqueda: BuscarPedidoDto!
-    itemId: ID!
-    nuevaCantidad: Float!
-    comentario: String
-    opciones: BuscarOpciones
-  ): Pedido!
-  cambiarEstadoItemsPorOfertas(
-    busqueda: BuscarPedidoDto!
-    ofertaIds: [ID!]
-    estado: CrearItemEstadoDto!
-    opciones: BuscarOpciones
-    tipo: String
-  ): [Pedido!]!
-  ajustarItemsPorOferta(
-    busqueda: BuscarPedidoDto!
-    ofertaId: ID!
-    estado: CrearItemEstadoDto!
-    opciones: BuscarOpciones
-  ): [Pedido!]!
+  agregarEstadoPedido(busqueda: BuscarPedidoDto!, datos: CrearEstadoDto!, opciones: BuscarOpciones): Pedido!
+  cambiarEstadoItems(busqueda: BuscarPedidoDto!, itemIds: [ID!], estado: CrearItemEstadoDto!, opciones: BuscarOpciones): Pedido!
+  ajustarItem(busqueda: BuscarPedidoDto!, itemId: ID!, nuevaCantidad: Float!, comentario: String, opciones: BuscarOpciones): Pedido!
+  cambiarEstadoItemsPorOfertas(busqueda: BuscarPedidoDto!, ofertaIds: [ID!], estado: CrearItemEstadoDto!, opciones: BuscarOpciones, tipo: String): [Pedido!]!
+  ajustarItemsPorOferta(busqueda: BuscarPedidoDto!, ofertaId: ID!, estado: CrearItemEstadoDto!, opciones: BuscarOpciones): [Pedido!]!
   PopulateCatalogos(opciones: PopulateOpciones): [Catalogo!]!
-  crearCatalogos(
-    datos: [CrearCatalogoDto!]!
-    opciones: CrearOpciones
-  ): [Catalogo!]!
-  modificarCatalogos(
-    busqueda: BuscarCatalogoDto!
-    datos: ModificarCatalogoDto!
-    opciones: ModificarOpciones
-  ): [Catalogo!]!
-  borrarCatalogos(
-    busqueda: BuscarCatalogoDto!
-    opciones: BorrarOpciones
-  ): [Catalogo!]!
-  eliminarCatalogos(
-    busqueda: BuscarCatalogoDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverCatalogos(
-    busqueda: BuscarCatalogoDto!
-    despuesDe: BuscarCatalogoDto!
-    opciones: EliminarOpciones
-  ): Float!
+  crearCatalogos(datos: [CrearCatalogoDto!]!, opciones: CrearOpciones): [Catalogo!]!
+  modificarCatalogos(busqueda: BuscarCatalogoDto!, datos: ModificarCatalogoDto!, opciones: ModificarOpciones): [Catalogo!]!
+  borrarCatalogos(busqueda: BuscarCatalogoDto!, opciones: BorrarOpciones): [Catalogo!]!
+  eliminarCatalogos(busqueda: BuscarCatalogoDto!, opciones: EliminarOpciones): Float!
+  moverCatalogos(busqueda: BuscarCatalogoDto!, despuesDe: BuscarCatalogoDto!, opciones: EliminarOpciones): Float!
   PopulateMedidas(opciones: PopulateOpciones): [Medida!]!
   crearMedidas(datos: [CrearMedidaDto!]!, opciones: CrearOpciones): [Medida!]!
-  modificarMedidas(
-    busqueda: BuscarMedidaDto!
-    datos: ModificarMedidaDto!
-    opciones: ModificarOpciones
-  ): [Medida!]!
-  borrarMedidas(
-    busqueda: BuscarMedidaDto!
-    opciones: BorrarOpciones
-  ): [Medida!]!
-  eliminarMedidas(
-    busqueda: BuscarMedidaDto!
-    opciones: EliminarOpciones
-  ): Float!
-  moverMedidas(
-    busqueda: BuscarMedidaDto!
-    despuesDe: BuscarMedidaDto!
-    opciones: EliminarOpciones
-  ): Float!
+  modificarMedidas(busqueda: BuscarMedidaDto!, datos: ModificarMedidaDto!, opciones: ModificarOpciones): [Medida!]!
+  borrarMedidas(busqueda: BuscarMedidaDto!, opciones: BorrarOpciones): [Medida!]!
+  eliminarMedidas(busqueda: BuscarMedidaDto!, opciones: EliminarOpciones): Float!
+  moverMedidas(busqueda: BuscarMedidaDto!, despuesDe: BuscarMedidaDto!, opciones: EliminarOpciones): Float!
   PopulateMarcas(opciones: PopulateOpciones): [Marca!]!
   crearMarcas(datos: [CrearMarcaDto!]!, opciones: CrearOpciones): [Marca!]!
-  modificarMarcas(
-    busqueda: BuscarMarcaDto!
-    datos: ModificarMarcaDto!
-    opciones: ModificarOpciones
-  ): [Marca!]!
+  modificarMarcas(busqueda: BuscarMarcaDto!, datos: ModificarMarcaDto!, opciones: ModificarOpciones): [Marca!]!
   borrarMarcas(busqueda: BuscarMarcaDto!, opciones: BorrarOpciones): [Marca!]!
   eliminarMarcas(busqueda: BuscarMarcaDto!, opciones: EliminarOpciones): Float!
-  moverMarcas(
-    busqueda: BuscarMarcaDto!
-    despuesDe: BuscarMarcaDto!
-    opciones: EliminarOpciones
-  ): Float!
+  moverMarcas(busqueda: BuscarMarcaDto!, despuesDe: BuscarMarcaDto!, opciones: EliminarOpciones): Float!
   PopulateTags(opciones: PopulateOpciones): [Tag!]!
   crearTags(datos: [CrearTagDto!]!, opciones: CrearOpciones): [Tag!]!
-  modificarTags(
-    busqueda: BuscarTagDto!
-    datos: ModificarTagDto!
-    opciones: ModificarOpciones
-  ): [Tag!]!
+  modificarTags(busqueda: BuscarTagDto!, datos: ModificarTagDto!, opciones: ModificarOpciones): [Tag!]!
   borrarTags(busqueda: BuscarTagDto!, opciones: BorrarOpciones): [Tag!]!
   eliminarTags(busqueda: BuscarTagDto!, opciones: EliminarOpciones): Float!
-  moverTags(
-    busqueda: BuscarTagDto!
-    despuesDe: BuscarTagDto!
-    opciones: EliminarOpciones
-  ): Float!
+  moverTags(busqueda: BuscarTagDto!, despuesDe: BuscarTagDto!, opciones: EliminarOpciones): Float!
 }
 
 input PopulateOpciones {
@@ -1353,6 +1061,7 @@ input CrearAccionDto {
   persona: ID
   accion: String!
   producto: ID
+  oferta: ID
   comentario: String!
 }
 
@@ -1361,6 +1070,7 @@ input ModificarAccionDto {
   persona: ID
   accion: String
   producto: ID
+  oferta: ID
   comentario: String
 }
 
@@ -1403,6 +1113,7 @@ input CrearProductoDto {
   empaques: [CrearEmpaqueDto!]
   variedades: [CrearVariedadDto!]
   categoria: ID!
+  vencimientoLimite: [Float!]
 }
 
 input CrearEmpaqueDto {
@@ -1416,8 +1127,9 @@ input CrearEmpaqueDto {
 input CrearVariedadDto {
   _id: ID
   marca: ID!
-  cantidadMin: Float
-  cantidadMax: Float
+  cantidadLimite: [Float!]
+  inventarioLimite: [Float!]
+  cantidadMaxPedido: Float
   imagen: FileUploadInput
 }
 
@@ -1429,6 +1141,7 @@ input ModificarProductoDto {
   empaques: EditarEmpaqueDto
   variedades: EditarVariedadDto
   categoria: ID
+  vencimientoLimite: EditarLimitesDto
 }
 
 input EditarEmpaqueDto {
@@ -1460,9 +1173,14 @@ input EditarVariedadDto {
 
 input ModificarVariedadDto {
   marca: ID
-  cantidadMin: Float
-  cantidadMax: Float
+  cantidadLimite: EditarLimitesDto
+  inventarioLimite: EditarLimitesDto
+  cantidadMaxPedido: Float
   imagen: FileUploadInput
+}
+
+input EditarLimitesDto {
+  reemplazar: [Float!]
 }
 
 input CrearCategoriaDto {
@@ -1493,7 +1211,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-04T02:07:45.168Z"
+  saldoActualizacion: DateTime = "2024-07-10T04:00:50.791Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1519,8 +1237,6 @@ input CrearStockDto {
   _id: ID
   producto: ID!
   lotes: [CrearStockLoteDto!]
-  cantidadLimite: Float
-  frequenciaInventario: Float
   desactivado: Boolean
 }
 
@@ -1529,6 +1245,7 @@ input CrearStockLoteDto {
   vencimiento: DateTime!
   cantidad: Float!
   bloque: ID
+  marca: ID!
 }
 
 input CrearInventarioDto {
@@ -1545,6 +1262,7 @@ input CrearInventarioLoteDto {
   cantidad: Float!
   vencimiento: DateTime
   bloque: ID
+  marca: ID!
   presentacion: String
   cantidadPresentacion: Float
 }
@@ -1671,8 +1389,6 @@ input EditarStockDto {
 input ModificarStockDto {
   producto: ID
   lotes: EditarStockLoteDto
-  cantidadLimite: Float
-  frequenciaInventario: Float
   desactivado: Boolean
 }
 
@@ -1690,6 +1406,7 @@ input ModificarStockLoteDto {
   vencimiento: DateTime
   cantidad: Float
   bloque: ID
+  marca: ID
 }
 
 input EditarInventarioDto {
@@ -1724,6 +1441,7 @@ input ModificarInventarioLoteDto {
   cantidad: Float
   vencimiento: DateTime
   bloque: ID
+  marca: ID
   presentacion: String
   cantidadPresentacion: Float
 }
@@ -1861,7 +1579,7 @@ input CrearOfertaDto {
   ingredientes: [CrearIngredienteDto!]
   imagen: FileUploadInput
   precioConFactura: Float
-  precioSinFactura: Float!
+  precioSinFactura: Float
   preciosPorMayor: [CrearPrecioDto!]
   catalogo: ID!
 }
@@ -2045,6 +1763,7 @@ input ModificarCatalogoDto {
 input CrearMedidaDto {
   _id: ID
   nombre: String!
+  abreviacion: String!
   tipoEmpaques: [CrearTipoEmpaqueDto!]
 }
 
@@ -2057,6 +1776,7 @@ input CrearTipoEmpaqueDto {
 
 input ModificarMedidaDto {
   nombre: String
+  abreviacion: String
   tipoEmpaques: EditarTipoEmpaqueDto
 }
 

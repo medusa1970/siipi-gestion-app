@@ -1,32 +1,41 @@
 import { storeAlmacen } from '../../negocio/almacen.store';
 import { almacenService } from '../../API/almacen.service';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-import type { Producto, Stock } from '#gql';
+import type { Categoria, Marca, Producto, Stock, StockLote } from '#gql';
+import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 
 export const useStock = () => {
   const store = storeAlmacen();
   const service = almacenService;
   const authStore = useAuthStore();
+  const productoStore = storeProducto();
 
   const estado = reactive({
     stocks: [] as {
-      // key: String;
+      _id: String;
       stock: Stock;
       producto: Producto;
-      cantidadTotal: Number;
+      primerVencimiento: Date;
+      cantidadTotal: number;
+      alertaCantidad: number;
+      alertaVencimiento: number;
+      diasVencimiento: number;
+      alertaInventario: number;
+      vencimientoLimite: [number, number];
+      marcas: {
+        [key: string]: {
+          marca: Marca;
+          cantidadTotal: number;
+          primerVencimiento: null;
+          alertaCantidad: number;
+          diasVencimiento: number;
+          alertaVencimiento: number;
+          cantidadLimite: [number, number];
+          inventarioLimite: [number, number];
+        };
+      };
     }[],
-    producto: {
-      id: '',
-      cantidadMinima: 0,
-    },
-    alerta: 0,
-    modal: {
-      isShowCantidad: false,
-      isShowAlertProduct: false,
-      isShowVencidos: false,
-      isShowAllProducts: false,
-    },
-    productosVencidos: [] as any[],
+    arbolCategorias: null as Categoria,
   });
 
   /**
@@ -35,87 +44,155 @@ export const useStock = () => {
   const obtenerTodoStock = async () => {
     const stocks = await service.stockEntidad(authStore.getNegocio._id);
     estado.stocks = stocks.map((stock: any) => {
-      // Cantidad Total
-      const cantidadTotal = stock.lotes.reduce(
-        (total: any, lote: any) => total + lote.cantidad,
-        0,
-      );
-
-      // Alerta de cantidad global
-      let alertaC =
-        cantidadTotal <= stock.cantidadLimite
-          ? cantidadTotal - stock.cantidadLimite
-          : null;
-      if (alertaC > 0) alertaC = null;
-
-      // Aleta de vencimiento en cada lote
-      for (const lote of stock.lotes) {
-        lote.alertaV = lote.vencimiento
-          ? diferenciaFechas(lote.vencimiento, new Date(), 'D')
-          : null;
-      }
-
-      // alerta de venciminento global
-      const vencimientos = stock.lotes
-        .map((lote) => lote.alertaV)
-        .filter((v) => v !== null);
-      const alertaV = vencimientos.length > 0 ? Math.min(vencimientos) : null;
-
-      // Return
-      return {
+      const res = {
         _id: stock._id,
         stock,
         producto: stock.producto,
-        cantidadTotal,
-        alertaC,
-        alertaV,
-        alertaI: null,
+        vencimientoLimite: stock.producto.vencimientoLimite,
+        cantidadTotal: 0,
+        primerVencimiento: null,
+        alertaCantidad: 0,
+        alertaVencimiento: 0,
+        diasVencimiento: null,
+        alertaInventario: 0,
+        marcas: {},
       };
+
+      // recorremos los lotes
+      for (const lote of stock.lotes) {
+        const id = lote.marca._id.toString();
+
+        // INICIALIZACION
+        const variedad = stock.producto.variedades.find(
+          (variedad: any) => variedad.marca._id === id,
+        );
+        if (!res.marcas[id]) {
+          Object.assign(res.marcas, {
+            [id]: {
+              marca: lote.marca,
+              cantidadLimite: variedad?.cantidadLimite,
+              inventarioLimite: variedad?.inventarioLimite,
+              cantidadTotal: 0,
+              alertaCantidad: 0,
+              primerVencimiento: null,
+              alertaVencimiento: 0,
+              diasVencimiento: null,
+              alertaInventario: 0,
+            },
+          });
+        }
+
+        // CANTIDAD
+        res.cantidadTotal += lote.cantidad;
+        res.marcas[id].cantidadTotal += lote.cantidad;
+
+        // VENCIMIENTO
+        if (lote.vencimiento && res.vencimientoLimite) {
+          // lote
+          lote.diasVencimiento = Math.floor(
+            diferenciaFechas(new Date(), lote.vencimiento, 'D'),
+          );
+          lote.alertaVencimiento =
+            lote.diasVencimiento <= Math.min(...res.vencimientoLimite)
+              ? 2
+              : lote.diasVencimiento <= Math.max(...res.vencimientoLimite)
+              ? 1
+              : 0;
+          // marca
+          if (res.marcas[id].diasVencimiento == null) {
+            res.marcas[id].diasVencimiento = lote.diasVencimiento;
+          } else {
+            res.marcas[id].diasVencimiento = Math.min(
+              res.marcas[id].diasVencimiento,
+              lote.diasVencimiento,
+            );
+          }
+          if (
+            res.marcas[id].primerVencimiento == null ||
+            new Date(lote.vencimiento).getTime() <
+              new Date(res.marcas[id].primerVencimiento).getTime()
+          ) {
+            res.marcas[id].primerVencimiento = lote.vencimiento;
+          }
+          // global
+          if (res.diasVencimiento == null) {
+            res.diasVencimiento = lote.diasVencimiento;
+          } else {
+            res.diasVencimiento = Math.min(
+              res.diasVencimiento,
+              lote.diasVencimiento,
+            );
+          }
+          res.alertaVencimiento = Math.max(
+            res.alertaVencimiento,
+            lote.alertaVencimiento,
+          );
+          if (
+            res.primerVencimiento == null ||
+            new Date(lote.vencimiento).getTime() <
+              new Date(res.primerVencimiento).getTime()
+          ) {
+            res.primerVencimiento = lote.vencimiento;
+          }
+        }
+      }
+
+      // alerta cantidad global
+      for (const id in res.marcas) {
+        const marca = res.marcas[id];
+        if (marca.cantidadLimite) {
+          marca.alertaCantidad =
+            marca.cantidadTotal <= Math.min(...marca.cantidadLimite)
+              ? 2
+              : marca.cantidadTotal <= Math.max(...marca.cantidadLimite)
+              ? 1
+              : 0;
+          res.alertaCantidad = Math.max(
+            res.alertaCantidad,
+            marca.alertaCantidad,
+          );
+        }
+      }
+
+      return res;
     });
   };
 
-  /**
-   * obtenerTodoStock
-   */
-  const modalEditarCantidad = (row: any) => {
-    estado.modal.isShowCantidad = true;
-    estado.producto.id = row.producto._id;
-    estado.producto.cantidadMinima = row.cantidadMinima;
-  };
-
-  /**
-   * guardarCantidad
-   */
-  const guardarCantidad = async () => {
-    await service.modificarCantidad(
-      authStore.getNegocio._id,
-      estado.producto.id,
-      estado.producto.cantidadMinima,
-    );
-    NotifySucess('Se actualizo correctamente');
-    estado.modal.isShowCantidad = false;
-    obtenerTodoStock();
-  };
-
-  /**
-   * agregarListaInventario
-   */
-  const agregarListaInventario = (row: any) => {
-    // console.log(row);
-    const data = {
-      id: row.producto.id,
-      nombre: row.producto.nombre,
-    };
-    const isInList = store.ListInventario.some((item) => {
-      return item.id === data.id;
-    });
-    // console.log(isInList);
-    if (!isInList) {
-      store.ListInventario.push(data);
-      NotifySucess('Se añadio a la lista de inventario');
-    } else {
-      NotifyError('Ya se encuentra en la lista de  inventario');
+  const categoriaSelectOptions = async () => {
+    const options = [];
+    if (!estado.arbolCategorias) {
+      estado.arbolCategorias = await productoStore.getCategoriaArbol();
     }
+    for (const cat of estado.arbolCategorias.hijas) {
+      options.push({
+        label: `${cat.nombre} (${cat.hijas.length})`,
+        value: cat._id,
+      });
+      for (const subcat of cat.hijas) {
+        options.push({
+          label: subcat.nombre,
+          value: subcat._id,
+          class: 'option',
+        });
+      }
+    }
+    return options;
+  };
+
+  const getCategoriaList = (categoriaID) => {
+    if (!estado.arbolCategorias) {
+      return [];
+    }
+    const lista = [];
+    for (const cat of estado.arbolCategorias.hijas) {
+      if (cat._id === categoriaID) {
+        for (const subcat of cat.hijas) {
+          lista.push(subcat._id);
+        }
+        return lista;
+      }
+    }
+    return [categoriaID];
   };
 
   return {
@@ -123,5 +200,7 @@ export const useStock = () => {
     store,
     service,
     obtenerTodoStock,
+    categoriaSelectOptions,
+    getCategoriaList,
   };
 };

@@ -27,39 +27,6 @@ export const almacenService = {
   },
 
   /**
-   * modifica la cantidad limite de un producto en el almacen
-   */
-  modificarCantidad: async (
-    negocioID: string,
-    productoID: string,
-    cantidadLimite: number,
-  ): Promise<Stock> => {
-    try {
-      const entidad = extraerUno(
-        await GqlAlmacenModificarEntidades({
-          busqueda: { _id: [negocioID] },
-          datos: {
-            almacen: {
-              buscar: {
-                producto: [productoID],
-              },
-              modificar: {
-                cantidadLimite,
-              },
-            },
-          },
-          opciones: { limit: 1, errorSiVacio: true },
-        }),
-      );
-      return entidad.almacen.find(
-        (stock) => stock.producto._id.toString() === productoID,
-      );
-    } catch (err) {
-      throw formatApiError(err);
-    }
-  },
-
-  /**
    * Realizar un inventario
    */
   realizarInventario: async (

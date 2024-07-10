@@ -140,11 +140,12 @@
           >
           <span class="flex gap-2 items-center"
             ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-            <p>{{ variedad.cantidadMin }}</p></span
-          >
+            <p>Limite : {{ variedad.cantidadLimite[0] }}</p>
+            <p>Aviso : {{ variedad.cantidadLimite[1] }}</p>
+          </span>
           <span class="flex gap-2 items-center"
             ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
-            <p>{{ variedad.cantidadMax }}</p></span
+            <p>{{ variedad.cantidadMaxPedido }}</p></span
           >
         </div>
         <h1 v-if="row.variedades.length == 0">Sin marcas ...</h1>
@@ -284,11 +285,12 @@
         >
         <span class="flex gap-2 items-center"
           ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-          <p>{{ variedad.cantidadMin }}</p></span
-        >
+          <p>Limite : {{ variedad.cantidadLimite[0] }}</p>
+          <p>Aviso : {{ variedad.cantidadLimite[1] }}</p>
+        </span>
         <span class="flex gap-2 items-center"
           ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
-          <p>{{ variedad.cantidadMax }}</p></span
+          <p>{{ variedad.cantidadMaxPedido }}</p></span
         >
       </div>
       <h1 v-if="estado.producto.variedades.length == 0">Sin marcas ...</h1>
@@ -357,7 +359,7 @@ definePageMeta({
 const { $socket } = useNuxtApp();
 onMounted(async () => {
   estado.productos = await productoStore.getProductos();
-
+  console.log(estado.productos);
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 
   // reload de la pagina productos

@@ -165,7 +165,7 @@ const previewImagenPerfil = ref(null);
 //@ts-ignore
 await UrlToBase64Image(
   authStore.getUsuario?.cloudinaryUrl,
-  (base64Data) => (previewImagenPerfil.value = base64Data),
+  (base64Data) => (previewImagenPerfil.value = null),
 );
 const editarPerfilSubmit = async () => {
   // preparacion de los datos

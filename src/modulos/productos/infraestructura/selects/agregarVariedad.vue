@@ -28,7 +28,13 @@
     <!-- Stock minimo -->
     <input-text
       label="Stock minimo antes de hacer pedido"
-      @update="(v) => (cantidadMin.value = Number(v))"
+      @update="(v) => (cantidadLimite.value[0] = Number(v))"
+      info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+      :rules="[useRules.requerido(), useRules.numero()]"
+    />
+    <input-text
+      label="Stock minimo antes de hacer pedido"
+      @update="(v) => (cantidadLimite.value[0] = Number(v))"
       info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
       :rules="[useRules.requerido(), useRules.numero()]"
     />
@@ -36,8 +42,23 @@
     <!-- Cantidad max en un pedido -->
     <input-text
       label="Cantidad max en un pedido"
-      @update="(v) => (cantidadMax.value = Number(v))"
+      @update="(v) => (cantidadMaxPedido.value = Number(v))"
       info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
+      :rules="[useRules.requerido(), useRules.numero()]"
+    />
+
+    <!-- dias inventario -->
+    <input-text
+      label="dias maximos entre 2 pedidos"
+      @update="(v) => (inventarioLimite.value[0] = Number(v))"
+      info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+      :rules="[useRules.requerido(), useRules.numero()]"
+    />
+
+    <input-text
+      label="dias maximos entre 2 pedidos + aviso"
+      @update="(v) => (inventarioLimite.value[1] = Number(v))"
+      info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
       :rules="[useRules.requerido(), useRules.numero()]"
     />
 
@@ -51,7 +72,6 @@ import type { SelectOpcion } from '~/components/input/select.interface';
 import { productoService } from '../../API/productoService';
 import agregarMarcaComp from '~/modulos/productos/infraestructura/selects/agregarMarca.vue';
 import type { Variedad } from '#gql';
-import type { Marca } from '#gql';
 
 /**
  * Eventos
@@ -84,8 +104,9 @@ const props = withDefaults(
 
 const marca = reactiveInput(null as string);
 const imagen = reactiveInput(null as { data: string; mimetype: string });
-const cantidadMin = reactiveInput(null as Number);
-const cantidadMax = reactiveInput(null as Number);
+const cantidadLimite = reactiveInput(null as [Number, Number]);
+const inventarioLimite = reactiveInput(null as [Number, Number]);
+const cantidadMaxPedido = reactiveInput(null as Number);
 
 const productoID = props.param;
 const marcasParaSelect = ref([]);
@@ -119,8 +140,8 @@ const formSubmit = async (datos: any) => {
   // agregamos la variedad
   const datosMod = {
     marca: marca.value,
-    cantidadMin: cantidadMin.value,
-    cantidadMax: cantidadMax.value,
+    cantidadLimite: cantidadLimite.value,
+    cantidadMaxPedido: cantidadMaxPedido.value,
   } as CrearVariedadDto;
   console.log(datosMod);
   if (imagen.value) {

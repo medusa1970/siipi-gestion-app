@@ -9,6 +9,11 @@ query stockBuscarEntidad(
       producto {
         _id
         nombre
+        vencimientoLimite
+        categoria {
+          _id
+          nombre
+        }
         imagen {
           cloudinaryUrl
         }
@@ -21,19 +26,24 @@ query stockBuscarEntidad(
             _id
             nombre
           }
-          cantidadMin
-          cantidadMax
+          inventarioLimite
+          cantidadLimite
+          cantidadMaxPedido
           imagen {
             archivoLocal
             cloudinaryUrl
           }
         }
       }
-      cantidadLimite
       lotes {
         vencimiento
         cantidad
+        marca {
+          _id
+          nombre
+        }
         bloque {
+          _id
           nombre
         }
       }
@@ -51,12 +61,17 @@ mutation stockModificarEntidad(
       producto {
         _id
         nombre
+        vencimientoLimite
       }
-      cantidadLimite
       lotes {
         vencimiento
         cantidad
+        marca {
+          _id
+          nombre
+        }
         bloque {
+          _id
           nombre
         }
       }

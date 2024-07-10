@@ -1,10 +1,93 @@
 <template>
   <div>
+    <p>
+      Entre el numero de dias entre 2 inventarios:
+      <input-botonAyuda mensaje="info" />
+    </p>
+    <!-- nombre -->
+    <div class="flex">
+      <input-text
+        style="width: 50%"
+        label="Alerta 1 vencimineto"
+        @update="
+          (v) =>
+            (estado.datos_modificarVencimiento.vencimientoLimite[0] = Number(v))
+        "
+        :porDefecto="'' + (productoStore.producto.vencimientoLimite?.[0] ?? 0)"
+        :rules="[useRules.requerido(), useRules.numero()]"
+      />
+      <input-text
+        style="width: 50%"
+        label="Alerta 2 vencimineto"
+        @update="
+          (v) =>
+            (estado.datos_modificarVencimiento.vencimientoLimite[1] = Number(v))
+        "
+        :porDefecto="'' + (productoStore.producto.vencimientoLimite?.[1] ?? 0)"
+        :rules="[useRules.requerido(), useRules.numero()]"
+      />
+      <div class="flex w-full justify-center">
+        <q-btn
+          color="primary"
+          label="Guardar"
+          dense
+          no-caps
+          padding="3px 20px"
+          @click="guardarVencimiento"
+        />
+      </div>
+    </div>
+    <br />
+
     <p>Seleccione las diferentes marcas con que viene el producto.</p>
 
     <Table
       :rows="productoStore.producto.variedades"
-      :columns="columnaMarca"
+      :columns="[
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    align: 'left',
+    field: (row: any) => row.imagen?.cloudinaryUrl,
+  },
+  {
+    name: 'marca',
+    required: true,
+    label: 'Marca',
+    align: 'left',
+    field: (row: any) => row.marca?.nombre,
+    sortable: true,
+  },
+  {
+    name: 'min',
+    required: true,
+    label: 'Limite cantidad',
+    align: 'center',
+    field: (row: any) => row.cantidadLimite,
+    sortable: true,
+  },
+  {
+    name: 'min',
+    required: true,
+    label: 'Limite inventario',
+    align: 'center',
+    field: (row: any) => row.inventarioLimite,
+    sortable: true,
+  },
+  {
+    name: 'max',
+    required: true,
+    label: 'Max',
+    align: 'center',
+    field: (row: any) => row.cantidadMaxPedido,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right',
+  },
+]"
       style="padding: 0"
       badge
     >
@@ -39,10 +122,13 @@
             {{ props.row.marca.nombre }}
           </q-td>
           <q-td key="min" :props="props">
-            {{ props.row.cantidadMin }}
+            {{ props.row.cantidadLimite }}
+          </q-td>
+          <q-td key="min" :props="props">
+            {{ props.row.inventarioLimite }}
           </q-td>
           <q-td key="max" :props="props">
-            {{ props.row.cantidadMax }}
+            {{ props.row.cantidadMaxPedido }}
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn
@@ -76,6 +162,7 @@
   <!-- PRODUCTO MARCA -->
   <Dialog
     v-model="estado.modal.show_crearProductoMarca"
+    :key="estado.modal.show_crearProductoMarca"
     :title="
       estado.modal.show_modificarProductoMarca
         ? 'Modificar marca'
@@ -128,19 +215,58 @@
       <!-- Stock minimo -->
       <input-text
         label="Stock minimo antes de hacer pedido"
-        @update="(v) => (estado.datos_productoMarca.cantidadMin = Number(v))"
+        @update="
+          (v) => (estado.datos_productoMarca.cantidadLimite[0] = Number(v))
+        "
         info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
         :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="'' + (estado.datos_productoMarca.cantidadMin ?? '')"
+        :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[0]"
+      />
+
+      <input-text
+        label="Stock minimo antes de hacer pedido (aviso)"
+        @update="
+          (v) => (estado.datos_productoMarca.cantidadLimite[1] = Number(v))
+        "
+        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+        :rules="[useRules.requerido(), useRules.numero()]"
+        :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[1]"
       />
 
       <!-- Cantidad max en un pedido -->
       <input-text
         label="Cantidad max en un pedido"
-        @update="(v) => (estado.datos_productoMarca.cantidadMax = Number(v))"
+        @update="
+          (v) => (estado.datos_productoMarca.cantidadMaxPedido = Number(v))
+        "
         info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
         :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="'' + (estado.datos_productoMarca.cantidadMax ?? '')"
+        :porDefecto="'' + (estado.datos_productoMarca.cantidadMaxPedido ?? '')"
+      />
+
+      <!-- Stock minimo -->
+      <input-text
+        label="dias maximos entre 2 pedidos"
+        @update="
+          (v) => (estado.datos_productoMarca.inventarioLimite[0] = Number(v))
+        "
+        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+        :rules="[useRules.requerido(), useRules.numero()]"
+        :porDefecto="
+          '' + (estado.datos_productoMarca.inventarioLimite?.[0] ?? '')
+        "
+      />
+
+      <input-text
+        label="dias maximos entre 2 pedidos + aviso"
+        @update="
+          (v) => (estado.datos_productoMarca.inventarioLimite[1] = Number(v))
+        "
+        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
+        :rules="[useRules.requerido(), useRules.numero()]"
+        :porDefecto="
+          '' + (estado.datos_productoMarca.inventarioLimite?.[1] ?? '')
+        "
       />
     </template>
   </Dialog>
@@ -186,7 +312,6 @@
 <script setup lang="ts">
 import agregarMarcaComp from '~/modulos/productos/infraestructura/selects/agregarMarca.vue';
 import { useDetalleMarcas } from '@/modulos/productos/negocio/detalle/marcas.composable';
-import { columnaMarca } from '@/modulos/productos/infraestructura/utils/columns';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
 import { toSelect } from '~/components/input/input.service';
 
@@ -200,6 +325,7 @@ const {
   modalModificarProductoMarca,
   cerrarLimpiarModificarMarca,
   borrarProductoMarca,
+  guardarVencimiento,
 } = useDetalleMarcas();
 
 const handlePayloadMarca = (payload) => {

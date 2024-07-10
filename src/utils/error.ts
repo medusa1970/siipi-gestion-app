@@ -1,7 +1,5 @@
 export const errFallBack = (err) => {
-  NotifyError(
-    'Se produjó un error, intente de nuevo. Si el problema persiste gracias por reportarlo.',
-  );
+  NotifyError('Se produjó un error, intente de nuevo o reportalo.');
   console.log('ERROR NO TRATADO', err);
 };
 

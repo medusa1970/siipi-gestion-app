@@ -1,20 +1,9 @@
-import type { CrearEntidadDto } from '#gql';
+import type { Categoria, CrearEntidadDto } from '#gql';
 
-export interface InventarioProps {
-  id: string;
-  nombre: string;
-}
-
-interface AlmacenStoreProps {
-  ListInventario: InventarioProps[];
-  ListInventarioPDF: Array<Object>;
-}
+interface AlmacenStoreProps {}
 
 export const storeAlmacen = defineStore('almacen', {
-  state: (): AlmacenStoreProps => ({
-    ListInventario: [],
-    ListInventarioPDF: [],
-  }),
+  state: (): AlmacenStoreProps => ({}),
 
   getters: {},
 

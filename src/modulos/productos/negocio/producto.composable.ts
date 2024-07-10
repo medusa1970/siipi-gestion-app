@@ -43,13 +43,11 @@ export const useProducto = () => {
         productoCreado = await productoService.crearProductoBasico(
           estado.datos_crearProductoBasico,
         );
-        if (!productoCreado) {
-          throw 'No se pudo agregar el producto';
-        }
+        if (!productoCreado) throw 'No se pudo agregar el producto';
       });
     } catch (e) {
-      NotifyError(`Error no tratado, ver consola`);
-      console.log(e);
+      console.log(estado.datos_crearProductoBasico);
+      errFallBack(e);
       return;
     }
 

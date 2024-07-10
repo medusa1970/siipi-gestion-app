@@ -32,9 +32,7 @@ export const useDetalleBasico = () => {
       show_crearProductoBasico: false,
       show_informacionProducto: false,
     },
-    datos_modificarProductoBasico: clone(
-      init_modificarProductoBasico,
-    ) as typeof init_modificarProductoBasico,
+    datos_modificarProductoBasico: clone(init_modificarProductoBasico),
     modProductoBasicoImagen: null,
     categoriasParaSelect: [] as SelectOpcion[],
   });

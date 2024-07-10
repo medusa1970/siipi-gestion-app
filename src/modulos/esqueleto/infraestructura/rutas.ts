@@ -1,7 +1,7 @@
 export default [
   {
-    name: 'inventario',
-    path: '/inventario',
-    file: '@/modulos/almacen/infraestructura/inventario/inventario.vue',
+    name: 'demo',
+    path: '/demo',
+    file: '@/modulos/almacen/infraestructura/stock/stock.vue',
   },
 ];

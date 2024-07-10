@@ -2,31 +2,63 @@
   <div>
     <Navigation label="Stock" icon="folder" />
     Alertas
-    <q-radio color="orange" no-caps label="Todos" v-model="filter" val="" />
+    <q-radio color="orange" no-caps label="Todos" v-model="alerta" val="" />
     <q-radio
       color="orange"
       no-caps
       label="Cantidad"
-      v-model="filter"
-      val="!cantidad!"
+      v-model="alerta"
+      val="cantidad"
     />
     <q-radio
       color="orange"
       no-caps
       label="Vencimiento"
-      v-model="filter"
-      val="!venciminento!"
+      v-model="alerta"
+      val="vencimiento"
     />
     <q-radio
       color="orange"
       no-caps
       label="Inventario"
-      v-model="filter"
-      val="!inventario!"
+      v-model="alerta"
+      val="inventario"
+    />
+    <q-select
+      v-model="categoriaSeleccionada"
+      :label="categoria"
+      use-input
+      fill-input
+      hide-selected
+      input-debounce="300"
+      clearable
+      outlined
+      dense
+      options-dense
+      :options="[
+        { label: 'Todas las categoria', value: null },
+        ...listaCategorias,
+      ]"
+      emit-value
+      map-options
+    />
+    <q-select
+      v-model="marcaSeleccionada"
+      :label="Marca"
+      use-input
+      fill-input
+      hide-selected
+      input-debounce="300"
+      clearable
+      outlined
+      dense
+      options-dense
+      :options="[{ label: 'Todas las marcas', value: null }, ...listaMarcas]"
+      emit-value
+      map-options
     />
 
     <Table
-      :watchFilter="filter"
       :rows="rowsParaMostrar"
       :columns="[
         {
@@ -42,43 +74,43 @@
           slot: true,
           label: 'Producto',
           align: 'left',
-          field: (row) => row.stock.producto.nombre,
+          field: (row) => row.producto.nombre,
           sortable: true,
         },
+        // {
+        //   name: 'cantidad',
+        //   slot: true,
+        //   required: true,
+        //   label: 'Stock',
+        //   align: 'left',
+        //   field: (row) => row.cantidadTotal,
+        //   sortable: true,
+        // },
         {
-          name: 'cantidad',
+          name: 'alertaCantidad',
           slot: true,
           required: true,
-          label: 'Stock',
-          align: 'left',
+          label: 'Cantidad',
+          align: 'center',
           field: (row) => row.cantidadTotal,
           sortable: true,
         },
         {
-          name: 'alertC',
+          name: 'alertaVencimiento',
           slot: true,
           required: true,
-          label: 'C.',
+          label: 'Vencimiento',
           align: 'center',
-          field: (row) => (row.alertaC !== null ? '!cantidad!' : null),
-          sortable: true,
-        },
-        {
-          name: 'alertV',
-          slot: true,
-          required: true,
-          label: 'V.',
-          align: 'center',
-          field: (row) => (row.alertaV !== null ? '!venciminento!' : null),
+          field: (row) => row.dias,
           sortable: true,
         },
         {
           name: 'alertI',
           slot: true,
           required: true,
-          label: 'I.',
+          label: 'Inventario',
           align: 'center',
-          field: (row) => (row.alertaI !== null ? '!inventario!' : null),
+          field: (row) => row.alertaInventario,
           sortable: true,
         },
         {
@@ -94,26 +126,61 @@
         {{ val }}
         <br />
         <q-badge
-          v-for="variedad in row.producto.variedades"
-          :key="variedad.name"
-          color="green"
-          class="mr-2 md lowercase"
-        >
-          {{ variedad.marca.nombre }}
+          v-for="marca in row.marcas"
+          :key="marca._id"
+          :color="
+            marca.alertaCantidad === 2
+              ? 'red'
+              : marca.alertaCantidad === 1
+              ? 'orange'
+              : 'green'
+          "
+          class="mr-1 lowercase"
+          >{{ marca.marca.nombre }} ({{ marca.cantidadTotal }})
         </q-badge>
       </template>
-      <template #body-cell-venciminento="{ row }">
-        <div v-if="row.alertaV !== null">
-          {{ Math.floor(row.alertaV[0]) }} días
-          <div v-if="row.alertaV <= 2">
+
+      <template #body-cell-cantidad="{ val, row }">
+        Total :
+        <br />
+        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
+      </template>
+
+      <template #body-cell-alertaVencimiento="{ row }">
+        <div v-if="row.alertaVencimiento > 0">
+          <q-icon
+            name="report"
+            :color="row.alertaVencimiento === 2 ? 'red' : 'orange'"
+            size="sm"
+          />
+          <br />
+        </div>
+        {{
+          row.diasVencimiento < 0
+            ? `hace ${-row.diasVencimiento} días`
+            : row.diasVencimiento > 0
+            ? `en ${row.diasVencimiento} días`
+            : 'hoy'
+        }}
+      </template>
+
+      <template #body-cell-alertaCantidad="{ val, row }">
+        <div v-if="row.alertaCantidad">
+          <div v-if="row.alertaCantidad === 2">
             <q-icon name="report" color="red" size="sm" />
           </div>
-          <div v-else-if="row.alertaV <= 5">
+          <div v-else-if="row.alertaCantidad === 1">
             <q-icon name="report" color="orange" size="sm" />
           </div>
         </div>
-        <div v-else>-</div>
+        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
       </template>
+      <template #body-cell-alertI="{ val, row }">
+        <div v-if="val">
+          <q-icon name="report" color="red" size="sm" />
+        </div>
+      </template>
+
       <template #body-cell-actions="{ row }">
         <q-btn-dropdown
           color="primary"
@@ -151,48 +218,41 @@
           </q-list>
         </q-btn-dropdown>
       </template>
-      <template #body-cell-alertC="{ val, row }">
-        <div v-if="row.alertaC != null">
-          <q-icon name="report" color="red" size="sm" />
-        </div>
-      </template>
-      <template #body-cell-alertV="{ val, row }">
-        <div v-if="row.alertaV != null">
-          <q-icon name="report" color="red" size="sm" />
-        </div>
-      </template>
-      <template #body-cell-alertI="{ val, row }">
-        <div v-if="val">
-          <q-icon name="report" color="red" size="sm" />
-        </div>
-      </template>
-      <template #body-cell-cantidad="{ val, row }">
-        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
-      </template>
+
       <template #body-expand="{ row }">
         <div class="flex">
-          <div
-            v-for="variedad in row.producto.variedades"
-            :key="variedad._id"
-            class="text-left"
+          <!--q-card
+            class="mr-3 mb-3"
+            v-for="marca in row.marcas"
+            :key="marca._id"
           >
-            <q-card style="width: 150px">
-              <q-card-section>
-                <div class="text-h6">{{ row.stock.lotes }}</div>
-                <div class="text-subtitle2">by John Doe</div>
-              </q-card-section> </q-card
-            >q-card>
-
-            <h3>{{ variedad.marca.nombre }}:</h3>
-            <div
-              v-for="lote in row.stock.lotes"
-              :key="lote._id"
-              class="text-left"
-            >
-              <h4>{{ lote.cantidad }}:</h4>
-              <pre>{{ lote }}</pre>
-            </div>
-          </div>
+            <q-card-section class="bg-blue-100">
+              <p>{{ marca.marca.nombre }}</p>
+              <p>total: {{ marca.cantidadTotal }}</p>
+              <p>alertaC: {{ marca.alertaCantidad }}</p>
+              <p>alertaV: {{ marca.alertaVencimiento }}</p>
+              <p>alertaI: {{ marca.alertaInventario }}</p>
+              <p>dias: {{ marca.diasVencimiento }}</p>
+              <p>limitC: {{ marca.cantidadLimite }}</p>
+            </q-card-section>
+          </q-card-->
+          <q-card
+            class="mr-3 mb-3"
+            v-for="lote in row.stock.lotes"
+            :key="lote._id"
+          >
+            <q-card-section>
+              <p>{{ lote.marca.nombre }}</p>
+              <p :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
+                Vencimiento: {{ fechaMes(lote.vencimiento) }}
+              </p>
+              <p>Cantidad: {{ lote.cantidad }}</p>
+              <p>Bloque: {{ lote.bloque }}</p>
+              <!--p>alerta: {{ lote.alertaVencimiento }}</p>
+              <p>dias: {{ lote.diasVencimiento }}</p>
+              <p>limitV: {{ row.producto.vencimientoLimite }}</p-->
+            </q-card-section>
+          </q-card>
         </div>
       </template>
     </Table>
@@ -213,32 +273,58 @@ import Table from '@/components/input/Table.vue';
 import { ref } from 'vue';
 const router = useRouter();
 const almacen = useAlmacen();
+const stock = useStock();
 const {
   estado,
   store,
   service,
-  modalEditarCantidad,
-  guardarCantidad,
-  agregarListaInventario,
+  getCategoriaList,
   obtenerTodoStock,
+  categoriaSelectOptions,
 } = useStock();
-const filter = ref('');
+
+const alerta = ref('');
+const listaCategorias = ref('');
+const categoriaSeleccionada = ref(null);
+const listaMarcas = ref([]);
+const marcaSeleccionada = ref(null);
 
 const rowsParaMostrar = computed(() => {
-  // if (estado.modal.isShowAlertProduct) {
-  //   return estado.productosEnAlerta;
-  // } else if (estado.modal.isShowVencidos) {
-  //   return estado.productosVencidos;
-  // } else if (estado.modal.isShowAllProducts) {
-  //   return estado.stocks;
-  // } else {
-  //   return estado.stocks;
-  // }
-  return estado.stocks;
+  let filtered = estado.stocks;
+  if (alerta.value === 'cantidad') {
+    filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
+  } else if (alerta.value === 'vencimiento') {
+    filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
+  } else if (alerta.value === 'inventario') {
+    filtered = filtered.filter((stock) => stock.alertaInventariar > 0);
+  }
+  if (categoriaSeleccionada.value != null) {
+    filtered = filtered.filter((stock) =>
+      getCategoriaList(categoriaSeleccionada.value).includes(
+        stock.producto.categoria._id,
+      ),
+    );
+  }
+  if (marcaSeleccionada.value != null) {
+    filtered = filtered.filter((stock) =>
+      Object.keys(stock.marcas).includes(marcaSeleccionada.value),
+    );
+  }
+  return filtered;
 });
 
 // Reactives y inicializaciones
-onMounted(() => {
-  obtenerTodoStock();
+onMounted(async () => {
+  await obtenerTodoStock();
+  listaCategorias.value = await categoriaSelectOptions(true);
+  listaMarcas.value = quitarDuplicados(
+    estado.stocks.reduce((accumulator, currentValue) => {
+      const opciones = Object.values(currentValue.marcas).map((marca) => {
+        return { label: marca.marca.nombre, value: marca.marca._id };
+      });
+      return [...accumulator, ...opciones];
+    }, []),
+    (a, b) => a.value === b.value,
+  );
 });
 </script>

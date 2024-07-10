@@ -20,8 +20,9 @@ query productosBuscar(
         _id
         nombre
       }
-      cantidadMin
-      cantidadMax
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
       imagen {
         archivoLocal
         cloudinaryUrl
@@ -75,8 +76,9 @@ mutation productosCrearBasico(
         _id
         nombre
       }
-      cantidadMin
-      cantidadMax
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
       imagen {
         archivoLocal
         cloudinaryUrl
@@ -184,6 +186,7 @@ mutation modificarProductosBasicos(
     _id
     nombre
     comentario
+    vencimientoLimite
     imagen {
       archivoLocal
       cloudinaryUrl
@@ -202,14 +205,16 @@ mutation modificarProductosMarca(
   modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
     _id
     nombre
+    vencimientoLimite
     variedades {
       _id
       marca {
         _id
         nombre
       }
-      cantidadMin
-      cantidadMax
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
       imagen {
         archivoLocal
         cloudinaryUrl

@@ -1,19 +1,17 @@
-Bugs whatsapp
-Bug will
+FUNCIONALIDADES
 
-agregarComponiente : options como props para modificarlas en el comp
-image input : cargar con imagen 
-
-
-
-
-
-CSS para productos incompletos
-Categoria sale como "object Object" al reinicializar
-averiguar si la foto vuelve a subir o no al editar
+venciminento limite, periodo inventariar
+mise en forme expands
+click image agrandar
 permisos borrar
-required on selects no funcionan due to estado default state
-poder agregar empaques sin tipo de empaque
 empleado editar
-accion producto
-quitar la consulta buscarMarcas al crear marca, igual empaque proveedor etc
+
+BUGS
+
+vencimiento negativo
+clone init
+input select nueva marca
+imagen nueva marca
+err no tratado al crear obj dupl
+boton agregar medida desaparecido ?
+productoStore vencimiento limite no persiste en el estado

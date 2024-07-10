@@ -58,7 +58,7 @@ export const productoService = {
       return extraerUno(
         await GqlProductosCrearBasico({
           datos: [datos],
-          opciones: { populate: true, aceptarInexistentes: true },
+          opciones: { populate: true },
         }),
       );
     } catch (err) {
@@ -177,10 +177,22 @@ export const productoService = {
     productoID: string,
     variedadID: string,
     productoMarca: {
-      cantidadMax: number;
-      cantidadMin: number;
+      cantidadMaxPedido: number;
+      cantidadLimite: [number, number];
+      inventarioLimite: [number, number];
     },
   ): Promise<Producto | null> => {
+    productoMarca = {
+      cantidadMaxPedido: productoMarca.cantidadMaxPedido,
+      cantidadLimite: {
+        //@ts-expect-error estamos cambiando el tipo a proposito
+        reemplazar: productoMarca.cantidadLimite,
+      },
+      inventarioLimite: {
+        //@ts-expect-error estamos cambiando el tipo a proposito
+        reemplazar: productoMarca.inventarioLimite,
+      },
+    };
     try {
       return extraerUno(
         await GqlModificarProductosMarca({
@@ -188,10 +200,34 @@ export const productoService = {
           datos: {
             variedades: {
               buscar: { _id: [variedadID] },
+              //@ts-expect-error esta bien no te preocupes
               modificar: productoMarca,
             },
           },
           opciones: { populate: true },
+        }),
+      );
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  /**
+   * Modificar un producto : agregar una marca
+   */
+  modificarProductoVencimiento: async (
+    productoID: string,
+    vencimientoLimite: [number, number],
+  ): Promise<Producto | null> => {
+    try {
+      return extraerUno(
+        await GqlModificarProductosBasicos({
+          busqueda: { _id: [productoID] },
+          datos: {
+            vencimientoLimite: {
+              reemplazar: vencimientoLimite,
+            },
+          },
         }),
       );
     } catch (err) {

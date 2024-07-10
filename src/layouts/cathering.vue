@@ -15,12 +15,21 @@
           },
         ],
       },
-      // {
-      //   icon: 'warehouse',
-      //   label: 'Stock',
-      //   to: '/stock',
-
-      // },
+      {
+        icon: 'warehouse',
+        label: 'Stock',
+        to: '/stock',
+        subMenu: [
+          {
+            label: 'Productos',
+            to: '/cathering/productos',
+          },
+          {
+            label: 'Categorias de categorias ',
+            to: '/categorias',
+          },
+        ],
+      },
       {
         icon: 'sell',
         label: 'Venta',

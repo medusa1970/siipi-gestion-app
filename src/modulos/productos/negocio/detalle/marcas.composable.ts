@@ -17,10 +17,14 @@ export const useDetalleMarcas = () => {
 
   const init_productoMarca = {
     _id: null as string,
-    cantidadMax: null as number,
-    cantidadMin: null as number,
+    cantidadMaxPedido: null as number,
+    cantidadLimite: [0, 0] as [number, number],
+    inventarioLimite: [0, 0] as [number, number],
     imagen: null as { data: string; mimetype: string },
     marca: null as string,
+  };
+  const init_modificarVencimiento = {
+    vencimientoLimite: [0, 0] as [number, number],
   };
 
   /**
@@ -36,7 +40,8 @@ export const useDetalleMarcas = () => {
     },
     marcas: [] as Marca[], // lista de las marcas
     marca: null as Marca, // para crear marca al nivel global
-    datos_productoMarca: clone(init_productoMarca) as typeof init_productoMarca,
+    datos_productoMarca: clone(init_productoMarca),
+    datos_modificarVencimiento: clone(init_modificarVencimiento),
     marcasParaSelect: [] as SelectOpcion[],
     errorMarca: '',
   });
@@ -83,11 +88,13 @@ export const useDetalleMarcas = () => {
    */
 
   const crearProductoMarca = async () => {
+    console.log('crearProductoMarca');
     // preparamos los datos
     const datos = {
       marca: estado.datos_productoMarca.marca,
-      cantidadMin: estado.datos_productoMarca.cantidadMin,
-      cantidadMax: estado.datos_productoMarca.cantidadMax,
+      cantidadLimite: estado.datos_productoMarca.cantidadLimite,
+      inventarioLimite: estado.datos_productoMarca.inventarioLimite,
+      cantidadMaxPedido: estado.datos_productoMarca.cantidadMaxPedido,
       imagen: estado.datos_productoMarca.imagen,
     };
     if (estado.datos_productoMarca.imagen) {
@@ -143,10 +150,10 @@ export const useDetalleMarcas = () => {
    * Marcas >> Modificar una marca (icono lapiz)
    */
   const modificarProductoMarca = async () => {
-    // preparamos los datos
     const datos = {
-      cantidadMax: estado.datos_productoMarca.cantidadMax,
-      cantidadMin: estado.datos_productoMarca.cantidadMin,
+      cantidadMaxPedido: estado.datos_productoMarca.cantidadMaxPedido,
+      cantidadLimite: estado.datos_productoMarca.cantidadLimite,
+      inventarioLimite: estado.datos_productoMarca.inventarioLimite,
     };
     if (estado.datos_productoMarca.imagen) {
       Object.assign(datos, {
@@ -166,6 +173,7 @@ export const useDetalleMarcas = () => {
       errFallBack(err);
       return;
     }
+
     // ponemos al dia el productoStore
     const indexStore = productoStore.producto.variedades.findIndex(
       (v) => v._id === estado.datos_productoMarca._id,
@@ -218,6 +226,26 @@ export const useDetalleMarcas = () => {
     });
   };
 
+  const guardarVencimiento = async () => {
+    // hacemos la consulta con manejo de errores
+    let producto;
+    try {
+      producto = await productoService.modificarProductoVencimiento(
+        productoStore.producto._id,
+        estado.datos_modificarVencimiento.vencimientoLimite,
+      );
+      if (!producto) throw 'No se pudo modificar el producto';
+    } catch (err) {
+      errFallBack(err);
+      return;
+    }
+    // Avisamos que todo bien
+    NotifySucess('Vencimiento guardado correctamente');
+    // ponemos al dia el productoStore
+    productoStore.producto.vencimientoLimite =
+      estado.datos_modificarVencimiento.vencimientoLimite;
+  };
+
   return {
     productoStore,
     authStore,
@@ -229,5 +257,6 @@ export const useDetalleMarcas = () => {
     modalModificarProductoMarca,
     cerrarLimpiarModificarMarca,
     borrarProductoMarca,
+    guardarVencimiento,
   };
 };

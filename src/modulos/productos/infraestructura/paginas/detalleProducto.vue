@@ -23,7 +23,12 @@
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
 
     <!-- Marcas -->
-    <q-tab v-if="soloAlmacen" name="marcas" icon="group" label="Marcas" />
+    <q-tab
+      v-if="soloAlmacen"
+      name="marcas"
+      icon="group"
+      label="Marcas & vencimiento"
+    />
 
     <!-- Medidas y empaques -->
     <q-tab
@@ -79,7 +84,6 @@
       <AccionesTabPanel />
     </q-tab-panel>
   </q-tab-panels>
-  {{ params }}
 </template>
 
 <script setup lang="ts">
@@ -92,6 +96,7 @@ const { estado, productoStore, authStore } = useProductoDetalle();
 const router = useRouter();
 const { params } = useRoute();
 
+// @ts-ignore
 await productoStore.getProductos();
 const producto = productoStore.productos.find((prod) => {
   return prod._id === params.id;

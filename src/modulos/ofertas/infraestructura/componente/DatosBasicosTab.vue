@@ -32,7 +32,7 @@
     />
 
     <!-- Imagen -->
-    <!-- {{ estado.datos_ofertaBasica }} -->
+    {{ estado.datos_ofertaBasica }}
     <input-image
       label="Imagen"
       @update="

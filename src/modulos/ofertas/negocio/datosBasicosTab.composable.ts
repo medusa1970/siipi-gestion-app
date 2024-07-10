@@ -16,6 +16,7 @@ export const useDatosBasicosTab = () => {
   const estado = reactive({
     datos_ofertaBasica: init_ofertaBasica,
     categoriaOpciones: [] as any[],
+    modOfertaBasicaImagen: null,
   });
 
   /**

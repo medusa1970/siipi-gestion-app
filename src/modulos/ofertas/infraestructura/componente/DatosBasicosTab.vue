@@ -44,6 +44,7 @@
       info="Por favor elija una foto para la oferta, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
       icono="photo_camera"
       :rules="[]"
+      :dataPreview="estado.modOfertaBasicaImagen"
     />
     <q-btn color="primary" label="Modificar" type="submit" no-caps />
   </q-form>
@@ -69,6 +70,18 @@ if (ofertaStore.oferta) {
   };
 }
 onMounted(async () => {
+  // recuperamos la imagen desde la url
+  if (ofertaStore.oferta.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(
+      ofertaStore.oferta.imagen?.cloudinaryUrl,
+      (base64Data) => {
+        estado.modOfertaBasicaImagen = base64Data;
+      },
+    );
+  } else {
+    estado.modOfertaBasicaImagen = null;
+  }
+
   $socket.on('cambiosOfertas', async (data) => {
     console.log('first');
     await actOfertasDB();

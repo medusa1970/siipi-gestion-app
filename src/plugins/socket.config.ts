@@ -10,7 +10,7 @@ declare module '#app' {
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const socket = io('http://localhost:3000');
+  const socket = io('https://siipi-gestion-production-f6a0.up.railway.app');
 
   nuxtApp.provide('socket', socket);
 });

@@ -7,51 +7,46 @@
   <!-- 
       Agregar / modificar medida basica, en caso que no existe o que no haya empaques
   -->
+
+  <!-- No se podrá agregar empaque si la medida basica no esta registrada -->
+  <div v-if="!productoStore.producto.medida">
+    <p>Para poder agregar empaques, primero debes definir la medida basica.</p>
+  </div>
+
+  <!-- Deshabilitado si ya hay empaques -->
+  <input-select
+    label="Medida basica"
+    :opciones="
+      estado.medidas.map((medida) => ({
+        value: medida._id,
+        label: medida.nombre,
+      }))
+    "
+    @update="(v) => (estado.datos_productoMedida.medida = v)"
+    :porDefecto="productoStore.producto.medida?._id"
+    :rules="[useRules.requerido()]"
+    :dialog="agregarMedidaComp"
+    @payload="handlePayloadMedida"
+    :disable="productoStore.producto.empaques.length > 0"
+  />
+
+  <!-- deshabilitado si ya hay empaques-->
   <div
+    class="!flex justify-center"
     v-if="
       !productoStore.producto.empaques ||
       productoStore.producto.empaques.length === 0
     "
   >
-    <!-- No se podrá agregar empaque si la medida basica no esta registrada -->
-    <div v-if="!productoStore.producto.medida">
-      <p>
-        Para poder agregar empaques, primero debes definir la medida basica.
-      </p>
-    </div>
-
-    <!-- Deshabilitado si ya hay empaques -->
-    <input-select
-      label="Medida basica"
-      :opciones="
-        estado.medidas.map((medida) => ({
-          value: medida._id,
-          label: medida.nombre,
-        }))
-      "
-      @update="(v) => (estado.datos_productoMedida.medida = v)"
-      :porDefecto="productoStore.producto.medida?._id"
-      :rules="[useRules.requerido()]"
-      :dialog="agregarMedidaComp"
-      @payload="handlePayloadMedida"
+    <q-btn
+      class="display-block mx-auto mt-1"
+      color="primary"
+      label="Guardar medida basica"
+      dense
+      no-caps
+      padding="3px 20px"
+      @click="guardarMedidaBasicaProducto"
     />
-
-    <!-- deshabilitado si ya hay empaques-->
-    <div class="!flex justify-center">
-      <q-btn
-        v-if="
-          !productoStore.producto.empaques ||
-          productoStore.producto.empaques.length === 0
-        "
-        class="display-block mx-auto mt-1"
-        color="primary"
-        label="Guardar medida basica"
-        dense
-        no-caps
-        padding="3px 20px"
-        @click="guardarMedidaBasicaProducto"
-      />
-    </div>
   </div>
 
   <!-- 

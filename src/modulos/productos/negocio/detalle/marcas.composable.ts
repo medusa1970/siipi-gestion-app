@@ -221,7 +221,7 @@ export const useDetalleMarcas = () => {
           productoStore.producto.variedades.filter(
             (e) => e._id !== variedad._id,
           );
-        console.log(productoStore.producto.variedades);
+        // console.log(productoStore.producto.variedades);
       }
     });
   };

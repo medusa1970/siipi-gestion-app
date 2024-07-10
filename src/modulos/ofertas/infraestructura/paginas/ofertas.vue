@@ -150,7 +150,7 @@
       <input-text
         label="Nombre"
         @update="(v) => (estado.datos_ofertaBasica.nombre = v)"
-        info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
+        info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear una nueva oferta."
         :porDefecto="estado.datos_ofertaBasica.nombre"
         :rules="[useRules.requerido()]"
       />
@@ -158,7 +158,7 @@
       <input-text
         label="Abreviación"
         @update="(v) => (estado.datos_ofertaBasica.abreviacion = v)"
-        info="Se debe modificar el abreviacion UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
+        info="Se debe modificar el abreviacion UNICAMENTE para corrigir su ortografia o mejorar su descriptividad."
         :porDefecto="estado.datos_ofertaBasica.abreviacion"
       />
 
@@ -173,6 +173,7 @@
         :porDefecto="estado.datos_ofertaBasica.catalogo"
         :rules="[useRules.requerido()]"
         :opciones="estado.categoriaOpciones"
+        info="Seleccione la categoria a la que pertenecera a esta oferta."
       />
 
       <!-- Imagen -->
@@ -184,7 +185,7 @@
               ? { data: base64Data, mimetype: mimetype }
               : null)
         "
-        info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+        info="Por favor elija una foto para esta oferta, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
         :rules="[]"
         :porDefecto="estado.datos_ofertaBasica.imagen"

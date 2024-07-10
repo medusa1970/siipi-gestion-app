@@ -14,4 +14,9 @@ export default [
     path: '/pedidos/historial',
     file: '@/modulos/pedidos/infraestructura/historial/historial.vue',
   },
+  {
+    name: 'realizar-pedido',
+    path: '/pedidos/realizar-pedido',
+    file: '@/modulos/pedidos/infraestructura/realizarPedido/realizar-pedido.vue',
+  },
 ];

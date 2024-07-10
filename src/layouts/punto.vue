@@ -1,6 +1,6 @@
 <template>
   <layout-common
-    :menuList="menuListCathering"
+    :menuList="menuListPunto"
     :portada-img="PortadaCathering"
     cathering
   >
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { menuListCathering } from './menuList/menuList';
+import { menuListPunto } from './menuList/menuList';
 import PortadaCathering from '@/assets/img/cookies.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';

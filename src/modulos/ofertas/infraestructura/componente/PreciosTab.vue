@@ -6,17 +6,17 @@
     <input-text
       label="Precio sin factura"
       @update="(v) => (estado.datos_preciosOferta.precioSinFactura = Number(v))"
-      info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
       :porDefecto="estado.datos_preciosOferta.precioSinFactura"
       :rules="[useRules.requerido(), useRules.numero()]"
+      info="Ingrese o modifique el precio sin factura de la oferta"
     />
     <!-- precio con factura -->
     <input-text
       label="Precio con factura"
       @update="(v) => (estado.datos_preciosOferta.precioConFactura = Number(v))"
-      info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
       :porDefecto="estado.datos_preciosOferta.precioConFactura"
       :rules="[useRules.requerido(), useRules.numero()]"
+      info="Ingrese o modifique el precio con factura de la oferta"
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
   </q-form>
@@ -40,7 +40,6 @@ if (ofertaStore.oferta) {
 onMounted(async () => {
   // ofertaStore.obtenerOfertas();
   $socket.on('cambiosOfertas', async (data) => {
-    console.log('first');
     await actOfertasDB();
   });
 });

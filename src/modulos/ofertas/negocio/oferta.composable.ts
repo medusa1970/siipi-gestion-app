@@ -236,13 +236,11 @@ export const useOferta = () => {
   const crearOferta = async () => {
     const ofertaCreada = await ofertaService.crearOferta({
       ...estado.datos_ofertaBasica,
-      catalogo: ofertaStore.catalogoSeleccionado._id,
+      catalogo: estado.datos_ofertaBasica.catalogo._id,
     });
+    // console.log(ofertaCreada);
 
     if (ofertaCreada) {
-      // ofertaStore.ofertas.push(ofertaCreada);
-      // estado.ofertasFiltradas.push(ofertaCreada);
-
       NotifySucessCenter('Oferta creada con exito');
       estado.datos_ofertaBasica = clone(init_crearOfertaBasico);
     }

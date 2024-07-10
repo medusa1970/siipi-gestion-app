@@ -20,7 +20,7 @@ export const storeProducto = defineStore('producto', {
   state: (): ProductoStoreProps => ({
     producto: null,
     categoriaArbol: null,
-    productos: null,
+    productos: [],
   }),
 
   getters: {

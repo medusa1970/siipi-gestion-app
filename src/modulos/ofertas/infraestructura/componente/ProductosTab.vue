@@ -13,6 +13,7 @@
       :porDefecto="estado.datos_productoDeOferta.producto?.nombre"
       :rules="[useRules.requerido()]"
       :opciones="estado.productosOpciones"
+      info="Seleccione el producto que se ofertara."
     />
 
     <!-- Producto marca -->
@@ -32,15 +33,16 @@
           class: 'option',
         })) || []
       "
+      info="Seleccione la marca del producto que se ofertara."
     />
 
     <!-- cantidad -->
     <input-text
       label="Cantidad"
       @update="(v) => (estado.datos_productoDeOferta.cantidad = Number(v))"
-      info="Se debe modificar el nombre UNICAMENTE para corrigir su ortografia o mejorar su descriptividad, caso contrario toca crear un nuevo producto."
       :porDefecto="estado.datos_productoDeOferta.cantidad"
       :rules="[useRules.requerido(), useRules.numero()]"
+      info="Ingrese la cantidad de producto que se ofertara."
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
   </q-form>
@@ -59,6 +61,7 @@ const productoStore = storeProducto();
 
 if (ofertaStore.oferta) {
   estado.datos_productoDeOferta = {
+    //@ts-expect-error
     producto: ofertaStore.oferta?.ingredientes[0]?.producto,
     marca: ofertaStore.oferta?.ingredientes[0]?.marca,
     cantidad: ofertaStore.oferta?.ingredientes[0]?.cantidad,

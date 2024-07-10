@@ -25,6 +25,17 @@
           </div>
         </q-toolbar-title>
         <usuarioMenu />
+        <q-btn
+          flat
+          round
+          color="primary"
+          icon="shopping_cart"
+          @click="toggleRightDrawer"
+        >
+          <q-badge class="rounded-full" rounded color="orange" floating>{{
+            pedidoStore.listaPedido.length
+          }}</q-badge>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -103,6 +114,76 @@
       </q-list>
     </q-drawer>
 
+    <q-drawer
+      v-model="rightDrawerOpen"
+      side="right"
+      class="colorBackground"
+      style=""
+    >
+      <!-- drawer content -->
+      <q-list>
+        <!-- SIDEBAR -->
+        <div class="text-white py-4 flex flex-col gap-4">
+          <h1 class="text-center font-extrabold">SIDE_BAR</h1>
+
+          <q-list class="shadow-[0_0px_5px] shadow-orange-300">
+            <q-expansion-item
+              switch-toggle-side
+              expand-separator
+              default-opened
+              class="[&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
+            >
+              <template v-slot:header>
+                <div class="flex items-center">
+                  <!-- uppercase font-bold line-clamp-1 -->
+                  <p class="font-semibold">
+                    Pedido productos ({{ pedidoStore.listaPedido.length }})
+                  </p>
+                </div>
+              </template>
+              <div class="p-2">
+                <div
+                  class="grid grid-cols-[70px_1fr_30px] gap-2 mb-2"
+                  v-for="producto in pedidoStore.listaPedido"
+                  :key="producto.id"
+                >
+                  <div>
+                    <input
+                      type="number"
+                      class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
+                      v-model.number="producto.cantidad"
+                      min="0"
+                      @input="
+                        producto.cantidad = Math.max(0, producto.cantidad)
+                      "
+                    />
+                  </div>
+                  <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
+                  <h1>{{ producto.nombre }}</h1>
+                  <q-btn
+                    color="red"
+                    icon="delete"
+                    flat
+                    dense
+                    rounded
+                    size="sm"
+                    @click="borrarProductoCarrito(producto.id)"
+                  />
+                </div>
+
+                <div
+                  v-if="pedidoStore.listaPedido.length > 0"
+                  class="flex gap-2 justify-center"
+                >
+                  <slot name="actionPedido" />
+                </div>
+              </div>
+            </q-expansion-item>
+          </q-list>
+        </div>
+      </q-list>
+    </q-drawer>
+
     <q-page-container>
       <div class="layoutContainer">
         <slot name="slot" />
@@ -130,29 +211,32 @@ import Portada from '@/assets/img/marco.png';
 import PortadaPunto from '@/assets/img/backPunto.png';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
+import { storePedido } from '@/modulos/pedidos/negocio/pedido.store';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const pedidoStore = storePedido();
+
 if (!authStore.getUsuario) {
   goTo(router, 'inicio');
 }
 
 const $q = useQuasar();
 const leftDrawerOpen = ref(false);
+const rightDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+function toggleRightDrawer() {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
+}
 
-// Crear un nuevo objeto Audio y asignarle la URL del archivo de sonido
-// Función para reproducir el sonido
-// const playSound = () => {
-//   const sonido = new Audio(RickRoll);
-//   sonido.play();
-//   setTimeout(() => {
-//     sonido.pause();
-//   }, 10000);
-// };
+const borrarProductoCarrito = (id) => {
+  pedidoStore.listaPedido = pedidoStore.listaPedido.filter(
+    (producto) => producto.id !== id,
+  );
+};
 </script>
 
 <style lang="scss">

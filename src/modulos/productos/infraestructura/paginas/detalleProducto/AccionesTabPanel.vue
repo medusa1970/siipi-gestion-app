@@ -21,11 +21,12 @@
 <script setup lang="ts">
 import { useDetalleAcciones } from '@/modulos/productos/negocio/detalle/acciones.composable';
 import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useRouter } from 'vue-router';
 
-const router = useRouter();
 const { estado, authStore, productoStore, borrarProducto } =
   useDetalleAcciones();
-const { actProductosDB } = useProducto();
+const router = useRouter();
+// const { actProductosDB } = useProducto();
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
@@ -41,17 +42,6 @@ const soloAlmacenAdquisicion = ref(
 if (!productoStore.producto) {
   goTo(router, 'productos');
 }
-
-const { $socket } = useNuxtApp();
-onMounted(() => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    await actProductosDB();
-    router.push('/cathering/productos');
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
-});
 </script>
 
 <style lang="scss" scoped></style>

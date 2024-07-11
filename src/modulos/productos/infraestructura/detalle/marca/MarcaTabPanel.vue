@@ -205,7 +205,7 @@
       <p>
         Alerta de que hay que inventariar
         <input-botonAyuda
-          mensaje="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
+          mensaje="Despues de hacer un inventario, cuando pasan el numero de días indicado en el primero campo, se mandara un recordatorio naranja, y un recordatorio rojo cuando pasan el numero de días indicado en el segundo campo."
         />
       </p>
       <div class="flex">

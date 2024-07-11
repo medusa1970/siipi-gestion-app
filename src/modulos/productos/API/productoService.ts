@@ -13,6 +13,7 @@ import type {
   Producto,
   CrearCategoriaDto,
   CrearProductoDto,
+  ModificarVariedadDto,
 } from '#gql';
 import { extraerUno } from '~/utils/objeto';
 
@@ -151,7 +152,7 @@ export const productoService = {
    */
   crearProductosMarca: async (
     productoID: string,
-    productoMarca: CrearVariedadDto,
+    datos: CrearVariedadDto,
   ): Promise<Producto | null> => {
     try {
       return extraerUno(
@@ -159,7 +160,7 @@ export const productoService = {
           busqueda: { _id: [productoID] },
           datos: {
             variedades: {
-              agregar: [productoMarca],
+              agregar: [datos],
             },
           },
           opciones: { populate: true },
@@ -176,25 +177,12 @@ export const productoService = {
   modificarProductosMarca: async (
     productoID: string,
     variedadID: string,
-    productoMarca: {
-      cantidadMaxPedido: number;
-      cantidadLimite: [number, number];
-      inventarioLimite: [number, number];
-      imagen?: any;
-    },
+    datos: ModificarVariedadDto,
   ): Promise<Producto | null> => {
-    productoMarca = {
-      cantidadMaxPedido: productoMarca.cantidadMaxPedido,
-      cantidadLimite: {
-        //@ts-expect-error estamos cambiando el tipo a proposito
-        reemplazar: productoMarca.cantidadLimite,
-      },
-      inventarioLimite: {
-        //@ts-expect-error estamos cambiando el tipo a proposito
-        reemplazar: productoMarca.inventarioLimite,
-      },
-      imagen: productoMarca.imagen,
-    };
+    //@ts-expect-error estamos cambiando el tipo a proposito
+    datos.cantidadLimite = { reemplazar: datos.cantidadLimite };
+    //@ts-expect-error estamos cambiando el tipo a proposito
+    datos.inventarioLimite = { reemplazar: datos.inventarioLimite };
     try {
       return extraerUno(
         await GqlModificarProductosMarca({
@@ -202,8 +190,7 @@ export const productoService = {
           datos: {
             variedades: {
               buscar: { _id: [variedadID] },
-              //@ts-expect-error estamos cambiando el tipo a proposito
-              modificar: productoMarca,
+              modificar: datos,
             },
           },
           opciones: { populate: true },

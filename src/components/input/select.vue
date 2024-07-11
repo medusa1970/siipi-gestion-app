@@ -21,6 +21,7 @@
     options-dense
     :options="listaOpciones"
     emit-value
+    no-options-label="Opción no encontrada"
     map-options
     :dialog="dialog"
   >

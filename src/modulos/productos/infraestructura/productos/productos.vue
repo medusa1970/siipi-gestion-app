@@ -93,11 +93,11 @@
       <br />
       <q-badge
         v-for="variedad in row.variedades"
-        :key="variedad.name"
+        :key="variedad._id"
         color="green"
-        class="mr-2 md lowercase"
+        class="mr-2 lowercase"
       >
-        {{ variedad.marca.nombre }}
+        {{ variedad.marca?.nombre }}
       </q-badge>
     </template>
     <template #body-expand="{ row }">

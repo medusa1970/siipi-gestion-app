@@ -188,8 +188,8 @@ export const useOferta = () => {
       catalogoIDS.includes(oferta.catalogo._id),
     );
     estado.categoriaOpciones = categoriaSelectOptions(true);
-
-    // console.log(estado.ofertasFiltradas);
+    // console.log(estado.datos_ofertaBasica.catalogo);
+    estado.datos_ofertaBasica.catalogo = null;
   };
 
   const irEdicionOfertas = (oferta: Oferta) => {

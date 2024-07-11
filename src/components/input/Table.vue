@@ -7,6 +7,9 @@
     :defaultImage="defaultImage"
     :filter="filter"
     class="border-none"
+    virtual-scroll
+    :rows-per-page-options="[50, 0]"
+    style="max-height: 500px; overflow-y: auto"
   >
     <template #top>
       <q-input

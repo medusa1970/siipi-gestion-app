@@ -1,5 +1,6 @@
 import { useAuth } from '~/modulos/main/API/useAuth';
 import type { ConexionResponse, Empleado, Entidad, Persona } from '#gql';
+import localforage from 'localforage';
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -133,6 +134,9 @@ export const useAuthStore = defineStore('auth', {
           negocios: negocios,
         },
       });
+
+      // TODO VACIAR INDEXDB
+      localforage.clear();
     },
 
     /**

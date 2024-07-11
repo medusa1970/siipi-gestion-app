@@ -180,6 +180,7 @@ export const productoService = {
       cantidadMaxPedido: number;
       cantidadLimite: [number, number];
       inventarioLimite: [number, number];
+      imagen?: any;
     },
   ): Promise<Producto | null> => {
     productoMarca = {
@@ -192,6 +193,7 @@ export const productoService = {
         //@ts-expect-error estamos cambiando el tipo a proposito
         reemplazar: productoMarca.inventarioLimite,
       },
+      imagen: productoMarca.imagen,
     };
     try {
       return extraerUno(

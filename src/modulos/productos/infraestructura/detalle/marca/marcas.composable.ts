@@ -159,11 +159,13 @@ export const useDetalleMarcas = () => {
     // hacemos la consulta con manejo de errores
     let productoModificado;
     try {
-      productoModificado = await productoService.modificarProductosMarca(
-        productoStore.producto._id,
-        estado.datos_productoMarca._id,
-        datos,
-      );
+      await loadingAsync(async () => {
+        productoModificado = await productoService.modificarProductosMarca(
+          productoStore.producto._id,
+          estado.datos_productoMarca._id,
+          datos,
+        );
+      });
       if (!productoModificado) throw 'No se pudo modificar el producto';
     } catch (err) {
       errFallBack(err);

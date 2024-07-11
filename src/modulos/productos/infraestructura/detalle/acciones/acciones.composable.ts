@@ -1,9 +1,9 @@
-import { productoService } from '../../API/productoService';
+import { productoService } from '../../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import { useQuasar } from 'quasar';
 import type { Producto } from '#gql';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 // import second from '@/modulos/productos/negocio/'
 
 export const useDetalleAcciones = () => {

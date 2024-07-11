@@ -1,10 +1,8 @@
 <template>
-  <Navigation label="Productos" icon="list_alt" />
-
-  <h1 class="text-lg font-extrabold uppercase text-center">
-    Gestion de productos
-  </h1>
-
+  <Navigation2
+    :nav="[{ label: 'productos', to: 'productos' }]"
+    titulo="Gestion de productos"
+  />
   <Table
     :rows="productoStore.productos"
     :columns="[
@@ -73,30 +71,22 @@
       />
     </template>
     <template #body-cell-actions="{ row }">
-      <q-btn-dropdown
-        color="primary"
-        flat
-        dropdown-icon="menu"
-        size="sm"
+      <q-btn-group
+        push
         @click="
           (e) => {
             e.stopPropagation();
           }
         "
       >
-        <q-list>
-          <q-item
-            clickable
-            v-close-popup
-            @click="goTo(router, 'producto', { id: row._id })"
-          >
-            <q-item-section>
-              <q-item-label>Modificar</q-item-label>
-            </q-item-section>
-            Mates y concentrados
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+        <q-btn
+          class="p-1"
+          color="black"
+          size="sm"
+          icon="edit"
+          @click="goTo(router, 'producto', { id: row._id })"
+        />
+      </q-btn-group>
     </template>
     <template #body-cell-nombre="{ val, row }">
       {{ val }}
@@ -212,6 +202,7 @@
         info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
         @update="(v) => (estado.datos_crearProductoBasico.nombre = v)"
         :rules="[useRules.requerido()]"
+        :error="estado.errorProducto"
       />
 
       <!-- Categoria -->
@@ -236,6 +227,41 @@
         "
         icono="photo_camera"
       />
+
+      <div class="">
+        <q-checkbox v-model="estado.datos_crearProductoBasico.puedeVencer" />
+        Puede vencer ?
+      </div>
+
+      <div v-if="estado.datos_crearProductoBasico.puedeVencer" class="flex">
+        <input-text
+          style="width: 50%"
+          label="Primer aviso"
+          @update="
+            (v) =>
+              (estado.datos_crearProductoBasico.vencimientoLimite[0] =
+                Number(v))
+          "
+          :porDefecto="
+            '' + (productoStore.producto.vencimientoLimite?.[0] ?? 0)
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+        />
+        <input-text
+          style="width: 50%"
+          label="Segundo aviso"
+          info="Cuando faltarán el número de días indicado en el primer campo, se lanzará una alerta naranja, y una alerta roja al llegar al números de días indicados en el segundo."
+          @update="
+            (v) =>
+              (estado.datos_crearProductoBasico.vencimientoLimite[1] =
+                Number(v))
+          "
+          :porDefecto="
+            '' + (productoStore.producto.vencimientoLimite?.[1] ?? 0)
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+        />
+      </div>
 
       <input-text
         tipo="textarea"
@@ -336,19 +362,14 @@
 <script setup lang="ts">
 import Table from '@/components/input/Table.vue';
 import ProductoImage from '@/assets/img/producto.png';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
 const router = useRouter();
 const productoStore = storeProducto();
 
-const {
-  estado,
-  crearProductoBasico,
-  actProductosDB,
-  categoriaSelectOptions,
-  mostrarInformacionProducto,
-} = useProducto();
+const { estado, crearProductoBasico, actProductosDB, categoriaSelectOptions } =
+  useProducto();
 
 // layout
 definePageMeta({

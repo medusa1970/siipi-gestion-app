@@ -98,7 +98,7 @@
               style="border: 0px; color: white"
               :to="item.to"
             >
-              <q-list class="q-pl-lg" v-if="item.subMenu.length > 0">
+              <q-list class="q-pl-lg" v-if="item.subMenu?.length > 0">
                 <q-item clickable v-for="i in item.subMenu" :key="i" :to="i.to">
                   <q-item-section>{{ i.label }}</q-item-section>
                   <q-item-section avatar>
@@ -255,7 +255,7 @@ const borrarProductoCarrito = (id) => {
 }
 .layoutContainer {
   // #002b3c #032541
-  padding: 0.5rem;
+  // padding: 0.5rem;
   // background-color: #071c2f;
 }
 

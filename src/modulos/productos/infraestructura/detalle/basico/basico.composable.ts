@@ -1,4 +1,4 @@
-import { productoService } from '../../API/productoService';
+import { productoService } from '../../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import type { Empaque, Entidad, Marca, Medida, Producto, Servicio } from '#gql';
@@ -19,6 +19,8 @@ export const useDetalleBasico = () => {
     nombre: null as string,
     categoria: null as string,
     comentario: null as string | null | undefined,
+    puedeVencer: false as boolean,
+    vencimientoLimite: [0, 0] as [number, number],
     imagen: null as { data: string; mimetype: string },
   };
 
@@ -51,6 +53,10 @@ export const useDetalleBasico = () => {
       nombre: estado.datos_modificarProductoBasico.nombre,
       categoria: estado.datos_modificarProductoBasico.categoria,
       comentario: estado.datos_modificarProductoBasico.comentario,
+      puedeVencer: estado.datos_modificarProductoBasico.puedeVencer,
+      vencimientoLimite: {
+        reemplazar: estado.datos_modificarProductoBasico.vencimientoLimite,
+      },
     };
     if (estado.datos_modificarProductoBasico.imagen) {
       Object.assign(datos, {

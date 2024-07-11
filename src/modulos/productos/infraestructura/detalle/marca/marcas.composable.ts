@@ -1,4 +1,4 @@
-import { productoService } from '../../API/productoService';
+import { productoService } from '../../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import type { Empaque, Entidad, Marca, Medida, Producto, Servicio } from '#gql';
@@ -23,9 +23,6 @@ export const useDetalleMarcas = () => {
     imagen: null as { data: string; mimetype: string },
     marca: null as string,
   };
-  const init_modificarVencimiento = {
-    vencimientoLimite: [0, 0] as [number, number],
-  };
 
   /**
    * ESTADO
@@ -41,7 +38,6 @@ export const useDetalleMarcas = () => {
     marcas: [] as Marca[], // lista de las marcas
     marca: null as Marca, // para crear marca al nivel global
     datos_productoMarca: clone(init_productoMarca),
-    datos_modificarVencimiento: clone(init_modificarVencimiento),
     marcasParaSelect: [] as SelectOpcion[],
     errorMarca: '',
   });
@@ -226,27 +222,6 @@ export const useDetalleMarcas = () => {
     });
   };
 
-  const guardarVencimiento = async () => {
-    // hacemos la consulta con manejo de errores
-    let producto;
-    try {
-      producto = await productoService.modificarProductoVencimiento(
-        productoStore.producto._id,
-        estado.datos_modificarVencimiento.vencimientoLimite,
-      );
-      if (!producto) throw 'No se pudo modificar el producto';
-    } catch (err) {
-      errFallBack(err);
-      return;
-    }
-    // Avisamos que todo bien
-    NotifySucess('Vencimiento guardado correctamente');
-    // ponemos al dia el productoStore
-    productoStore.producto.vencimientoLimite =
-      estado.datos_modificarVencimiento.vencimientoLimite;
-    console.log(productoStore.producto.vencimientoLimite);
-  };
-
   return {
     productoStore,
     authStore,
@@ -258,6 +233,5 @@ export const useDetalleMarcas = () => {
     modalModificarProductoMarca,
     cerrarLimpiarModificarMarca,
     borrarProductoMarca,
-    guardarVencimiento,
   };
 };

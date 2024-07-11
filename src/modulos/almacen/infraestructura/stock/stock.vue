@@ -1,222 +1,223 @@
 <template>
-  <div>
-    <Navigation label="Stock" icon="folder" />
-    Alertas
-    <q-radio color="orange" no-caps label="Todos" v-model="alerta" val="" />
-    <q-radio
-      color="orange"
-      no-caps
-      label="Cantidad"
-      v-model="alerta"
-      val="cantidad"
-    />
-    <q-radio
-      color="orange"
-      no-caps
-      label="Vencimiento"
-      v-model="alerta"
-      val="vencimiento"
-    />
-    <q-radio
-      color="orange"
-      no-caps
-      label="Inventario"
-      v-model="alerta"
-      val="inventario"
-    />
-    <q-select
-      v-model="categoriaSeleccionada"
-      :label="categoria"
-      use-input
-      fill-input
-      hide-selected
-      input-debounce="300"
-      clearable
-      outlined
-      dense
-      options-dense
-      :options="[
-        { label: 'Todas las categoria', value: null },
-        ...listaCategorias,
-      ]"
-      emit-value
-      map-options
-    />
-    <q-select
-      v-model="marcaSeleccionada"
-      :label="Marca"
-      use-input
-      fill-input
-      hide-selected
-      input-debounce="300"
-      clearable
-      outlined
-      dense
-      options-dense
-      :options="[{ label: 'Todas las marcas', value: null }, ...listaMarcas]"
-      emit-value
-      map-options
-    />
+  <Navigation2
+    :nav="[
+      {
+        label: 'stock',
+        to: 'stock',
+      },
+    ]"
+    titulo="Gestion de stock"
+  />
+  Alertas
+  <q-radio color="orange" no-caps label="Todos" v-model="alerta" val="" />
+  <q-radio
+    color="orange"
+    no-caps
+    label="Cantidad"
+    v-model="alerta"
+    val="cantidad"
+  />
+  <q-radio
+    color="orange"
+    no-caps
+    label="Vencimiento"
+    v-model="alerta"
+    val="vencimiento"
+  />
+  <q-radio
+    color="orange"
+    no-caps
+    label="Inventario"
+    v-model="alerta"
+    val="inventario"
+  />
+  <q-select
+    v-model="categoriaSeleccionada"
+    :label="categoria"
+    use-input
+    fill-input
+    hide-selected
+    input-debounce="300"
+    clearable
+    outlined
+    dense
+    options-dense
+    :options="[
+      { label: 'Todas las categoria', value: null },
+      ...listaCategorias,
+    ]"
+    emit-value
+    map-options
+  />
+  <q-select
+    v-model="marcaSeleccionada"
+    :label="Marca"
+    use-input
+    fill-input
+    hide-selected
+    input-debounce="300"
+    clearable
+    outlined
+    dense
+    options-dense
+    :options="[{ label: 'Todas las marcas', value: null }, ...listaMarcas]"
+    emit-value
+    map-options
+  />
 
-    <Table
-      :rows="rowsParaMostrar"
-      :columns="[
-        {
-          name: 'imagen',
-          label: 'Imagen',
-          imagen: true,
-          align: 'left',
-          field: (row) => row.producto.imagen?.cloudinaryUrl,
-        },
-        {
-          name: 'producto',
-          required: true,
-          slot: true,
-          label: 'Producto',
-          align: 'left',
-          field: (row) => row.producto.nombre,
-          sortable: true,
-        },
-        // {
-        //   name: 'cantidad',
-        //   slot: true,
-        //   required: true,
-        //   label: 'Stock',
-        //   align: 'left',
-        //   field: (row) => row.cantidadTotal,
-        //   sortable: true,
-        // },
-        {
-          name: 'alertaCantidad',
-          slot: true,
-          required: true,
-          label: 'Cantidad',
-          align: 'center',
-          field: (row) => row.cantidadTotal,
-          sortable: true,
-        },
-        {
-          name: 'alertaVencimiento',
-          slot: true,
-          required: true,
-          label: 'Vencimiento',
-          align: 'center',
-          field: (row) => row.dias,
-          sortable: true,
-        },
-        {
-          name: 'alertI',
-          slot: true,
-          required: true,
-          label: 'Inventario',
-          align: 'center',
-          field: (row) => row.alertaInventario,
-          sortable: true,
-        },
-        {
-          name: 'actions',
-          label: 'Acciones',
-          align: 'right',
-          slot: true,
-        },
-      ]"
-      :defaultImage="ProductoImage"
-    >
-      <template #body-cell-producto="{ val, row }">
-        {{ val }}
+  <Table
+    :rows="rowsParaMostrar"
+    :columns="[
+      {
+        name: 'imagen',
+        label: 'Imagen',
+        imagen: true,
+        align: 'left',
+        field: (row) => row.producto.imagen?.cloudinaryUrl,
+      },
+      {
+        name: 'producto',
+        required: true,
+        slot: true,
+        label: 'Producto',
+        align: 'left',
+        field: (row) => row.producto.nombre,
+        sortable: true,
+      },
+      // {
+      //   name: 'cantidad',
+      //   slot: true,
+      //   required: true,
+      //   label: 'Stock',
+      //   align: 'left',
+      //   field: (row) => row.cantidadTotal,
+      //   sortable: true,
+      // },
+      {
+        name: 'alertaCantidad',
+        slot: true,
+        required: true,
+        label: 'Cantidad',
+        align: 'center',
+        field: (row) => row.cantidadTotal,
+        sortable: true,
+      },
+      {
+        name: 'alertaVencimiento',
+        slot: true,
+        required: true,
+        label: 'Vencimiento',
+        align: 'center',
+        field: (row) => row.dias,
+        sortable: true,
+      },
+      {
+        name: 'alertI',
+        slot: true,
+        required: true,
+        label: 'Inventario',
+        align: 'center',
+        field: (row) => row.alertaInventario,
+        sortable: true,
+      },
+      {
+        name: 'actions',
+        label: 'Acciones',
+        align: 'right',
+        slot: true,
+      },
+    ]"
+    :defaultImage="ProductoImage"
+  >
+    <template #body-cell-producto="{ val, row }">
+      {{ val }}
+      <br />
+      <q-badge
+        v-for="marca in row.marcas"
+        :key="marca._id"
+        :color="
+          marca.alertaCantidad === 2
+            ? 'red'
+            : marca.alertaCantidad === 1
+            ? 'orange'
+            : 'green'
+        "
+        class="mr-1 lowercase"
+        >{{ marca.marca.nombre }} ({{ marca.cantidadTotal }})
+      </q-badge>
+    </template>
+
+    <template #body-cell-cantidad="{ val, row }">
+      Total :
+      <br />
+      {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
+    </template>
+
+    <template #body-cell-alertaVencimiento="{ row }">
+      <div v-if="row.alertaVencimiento > 0">
+        <q-icon
+          name="report"
+          :color="row.alertaVencimiento === 2 ? 'red' : 'orange'"
+          size="sm"
+        />
         <br />
-        <q-badge
-          v-for="marca in row.marcas"
-          :key="marca._id"
-          :color="
-            marca.alertaCantidad === 2
-              ? 'red'
-              : marca.alertaCantidad === 1
-              ? 'orange'
-              : 'green'
-          "
-          class="mr-1 lowercase"
-          >{{ marca.marca.nombre }} ({{ marca.cantidadTotal }})
-        </q-badge>
-      </template>
+      </div>
+      {{
+        row.diasVencimiento < 0
+          ? `hace ${-row.diasVencimiento} días`
+          : row.diasVencimiento > 0
+          ? `en ${row.diasVencimiento} días`
+          : 'hoy'
+      }}
+    </template>
 
-      <template #body-cell-cantidad="{ val, row }">
-        Total :
-        <br />
-        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
-      </template>
-
-      <template #body-cell-alertaVencimiento="{ row }">
-        <div v-if="row.alertaVencimiento > 0">
-          <q-icon
-            name="report"
-            :color="row.alertaVencimiento === 2 ? 'red' : 'orange'"
-            size="sm"
-          />
-          <br />
-        </div>
-        {{
-          row.diasVencimiento < 0
-            ? `hace ${-row.diasVencimiento} días`
-            : row.diasVencimiento > 0
-            ? `en ${row.diasVencimiento} días`
-            : 'hoy'
-        }}
-      </template>
-
-      <template #body-cell-alertaCantidad="{ val, row }">
-        <div v-if="row.alertaCantidad">
-          <div v-if="row.alertaCantidad === 2">
-            <q-icon name="report" color="red" size="sm" />
-          </div>
-          <div v-else-if="row.alertaCantidad === 1">
-            <q-icon name="report" color="orange" size="sm" />
-          </div>
-        </div>
-        {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
-      </template>
-      <template #body-cell-alertI="{ val, row }">
-        <div v-if="val">
+    <template #body-cell-alertaCantidad="{ val, row }">
+      <div v-if="row.alertaCantidad">
+        <div v-if="row.alertaCantidad === 2">
           <q-icon name="report" color="red" size="sm" />
         </div>
-      </template>
+        <div v-else-if="row.alertaCantidad === 1">
+          <q-icon name="report" color="orange" size="sm" />
+        </div>
+      </div>
+      {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
+    </template>
+    <template #body-cell-alertI="{ val, row }">
+      <div v-if="val">
+        <q-icon name="report" color="red" size="sm" />
+      </div>
+    </template>
 
-      <template #body-cell-actions="{ row }">
-        <q-btn-group
-          push
-          @click="
-            (e) => {
-              e.stopPropagation();
-            }
-          "
-        >
-          <q-btn
-            class="p-1"
-            color="orange"
-            size="sm"
-            icon="shopping_cart"
-            @click=""
-          />
-          <q-btn
-            class="p-1"
-            color="green"
-            size="sm"
-            icon="list_alt"
-            @click=""
-          />
-          <q-btn
-            class="p-1"
-            color="black"
-            size="sm"
-            icon="edit"
-            @click="goTo(router, 'producto', { id: row.producto._id })"
-          />
-        </q-btn-group>
-      </template>
+    <template #body-cell-actions="{ row }">
+      <q-btn-group
+        push
+        @click="
+          (e) => {
+            e.stopPropagation();
+          }
+        "
+      >
+        <q-btn
+          class="p-1"
+          color="orange"
+          size="sm"
+          icon="shopping_cart"
+          @click=""
+        />
+        <q-btn class="p-1" color="green" size="sm" icon="list_alt" @click="" />
+        <q-btn
+          class="p-1"
+          color="black"
+          size="sm"
+          icon="edit"
+          @click="goTo(router, 'producto', { id: row.producto._id })"
+        />
+      </q-btn-group>
+    </template>
 
-      <template #body-expand="{ row }">
-        <div class="flex">
-          <!--q-card
+    <template #body-expand="{ row }">
+      <div class="flex">
+        <!--q-card
             class="mr-3 mb-3"
             v-for="marca in row.marcas"
             :key="marca._id"
@@ -231,27 +232,26 @@
               <p>limitC: {{ marca.cantidadLimite }}</p>
             </q-card-section>
           </q-card-->
-          <q-card
-            class="mr-3 mb-3"
-            v-for="lote in row.stock.lotes"
-            :key="lote._id"
-          >
-            <q-card-section>
-              <p>{{ lote.marca.nombre }}</p>
-              <p :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
-                Vencimiento: {{ fechaMes(lote.vencimiento) }}
-              </p>
-              <p>Cantidad: {{ lote.cantidad }}</p>
-              <p>Bloque: {{ lote.bloque }}</p>
-              <!--p>alerta: {{ lote.alertaVencimiento }}</p>
+        <q-card
+          class="mr-3 mb-3"
+          v-for="lote in row.stock.lotes"
+          :key="lote._id"
+        >
+          <q-card-section>
+            <p>{{ lote.marca.nombre }}</p>
+            <p :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
+              Vencimiento: {{ fechaMes(lote.vencimiento) }}
+            </p>
+            <p>Cantidad: {{ lote.cantidad }}</p>
+            <p>Bloque: {{ lote.bloque }}</p>
+            <!--p>alerta: {{ lote.alertaVencimiento }}</p>
               <p>dias: {{ lote.diasVencimiento }}</p>
               <p>limitV: {{ row.producto.vencimientoLimite }}</p-->
-            </q-card-section>
-          </q-card>
-        </div>
-      </template>
-    </Table>
-  </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </template>
+  </Table>
 </template>
 
 <script setup>

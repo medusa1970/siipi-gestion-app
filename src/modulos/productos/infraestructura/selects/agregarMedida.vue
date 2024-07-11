@@ -18,7 +18,7 @@
 import type { Medida } from '#gql';
 import type { CrearMedidaDto } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useProductoDetalle } from '~/modulos/productos/negocio/productoDetalle.composable';
+import { useProductoDetalle } from '~/modulos/productos/infraestructura/detalle/productoDetalle.composable';
 const useProducto = useProductoDetalle();
 
 /**
@@ -86,3 +86,4 @@ const formSubmit = async (datos: any) => {
   emits('update:opciones', nuevaMedida, opt, nuevaMedida._id);
 };
 </script>
+~/modulos/productos/infraestructura/detalleProducto/acciones/productoDetalle.composable

@@ -2,7 +2,7 @@ export default [
   // {
   //   name: 'index',
   //   path: '/cathering',
-  //   file: '@/modulos/productos/infraestructura/paginas/index.vue',
+  //   file: '@/modulos/productos/infraestructura/index.vue',
   // },
   {
     name: 'ofertas',
@@ -17,6 +17,6 @@ export default [
   // {
   //   name: 'catalogos',
   //   path: '/cathering/ofertas/catalogos',
-  //   file: '@/modulos/productos/infraestructura/paginas/catalogos.vue',
+  //   file: '@/modulos/productos/infraestructura/catalogos.vue',
   // },
 ];

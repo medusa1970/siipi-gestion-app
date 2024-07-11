@@ -27,7 +27,7 @@ import { productoService } from '~/modulos/productos/API/productoService';
 import type { CrearEntidadDto } from '#gql';
 import type { Entidad } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useProducto } from '~/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 
 /**
  * Eventos

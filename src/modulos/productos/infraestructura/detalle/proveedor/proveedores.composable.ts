@@ -1,4 +1,4 @@
-import { productoService } from '../../API/productoService';
+import { productoService } from '../../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import type { Empaque, Entidad, Marca, Medida, Producto, Servicio } from '#gql';

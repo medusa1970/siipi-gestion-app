@@ -61,7 +61,6 @@ export const storeProducto = defineStore('producto', {
           return;
         }
       }
-      console.log('p0', productos[0].vencimientoLimite);
       this.productos = productos;
       return productos;
     },

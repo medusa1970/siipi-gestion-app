@@ -1,11 +1,18 @@
 <template>
-  <Navigation
-    label="Productos"
-    icon="list_alt"
-    :label2="productoStore.producto.nombre"
-    href="/cathering/productos"
+  <Navigation2
+    :nav="[
+      {
+        label: 'productos',
+        to: 'productos',
+      },
+      {
+        label: 'detalle',
+        to: 'producto',
+        params: { id: productoStore.producto._id },
+      },
+    ]"
+    :titulo="'Producto:   ' + productoStore.producto.nombre"
   />
-
   <!--
     TABS
     -->
@@ -23,12 +30,7 @@
     <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
 
     <!-- Marcas -->
-    <q-tab
-      v-if="soloAlmacen"
-      name="marcas"
-      icon="group"
-      label="Marcas & vencimiento"
-    />
+    <q-tab v-if="soloAlmacen" name="marcas" icon="group" label="Marcas" />
 
     <!-- Medidas y empaques -->
     <q-tab
@@ -91,7 +93,7 @@ definePageMeta({
   layout: 'cathering',
 });
 
-import { useProductoDetalle } from '@/modulos/productos/negocio/productoDetalle.composable';
+import { useProductoDetalle } from './productoDetalle.composable';
 const { estado, productoStore, authStore } = useProductoDetalle();
 const router = useRouter();
 const { params } = useRoute();
@@ -107,11 +109,11 @@ if (producto) {
   goTo(router, 'productos');
 }
 
-import MarcaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MarcaTabPanel.vue';
-import MedidaTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/MedidaTabPanel.vue';
-import ProveedorTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/ProveedorTabPanel.vue';
-import AccionesTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/AccionesTabPanel.vue';
-import BasicoTabPanel from '@/modulos/productos/infraestructura/paginas/detalleProducto/BasicoTabPanel.vue';
+import MarcaTabPanel from '../detalle/marca/MarcaTabPanel.vue';
+import MedidaTabPanel from '../detalle/medida/MedidaTabPanel.vue';
+import ProveedorTabPanel from '../detalle/proveedor/ProveedorTabPanel.vue';
+import AccionesTabPanel from '../detalle/acciones/AccionesTabPanel.vue';
+import BasicoTabPanel from '../detalle/basico/BasicoTabPanel.vue';
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {

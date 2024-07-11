@@ -1,10 +1,10 @@
-import { productoService } from '../../API/productoService';
+import { productoService } from '../../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import { useAuthStore } from '@/modulos/main/negocio/useAuthStore.js';
 import type { Empaque, Entidad, Marca, Medida, Producto, Servicio } from '#gql';
 import { useQuasar } from 'quasar';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 
 export const useDetalleMedida = () => {
   const productoStore = storeProducto();

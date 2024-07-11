@@ -1,18 +1,23 @@
 <template>
-  <Navigation
-    label="Catalogos"
-    icon="list_alt"
-    href="/cathering/catalogos"
-    label2="DetailCatalogo"
+  <Navigation2
+    :key="estado.catalogoSeleccionado"
+    :nav="[
+      { label: 'catalogos', to: 'catalogos' },
+      {
+        label: 'detalle',
+        to: 'catalogos-id',
+      },
+    ]"
+    titulo="Edicion de catalogo"
   />
-  <!-- TREE -->
+  <!-- TREE
   <h1 class="text-lg font-bold text-center">
     {{
       estado.catalogoSeleccionado
         ? estado.catalogoSeleccionado[0].nombre
         : 'cargando...'
     }}
-  </h1>
+  </h1> -->
 
   <div class="flex justify-center mt-4">
     <q-list
@@ -225,8 +230,9 @@ const {
 } = useCatalogos();
 
 const route = useRoute();
+const titulo = ref('');
 
-onMounted(() => {
+onBeforeMount(async () => {
   obtenerCatalogoId(route.params.id);
 });
 

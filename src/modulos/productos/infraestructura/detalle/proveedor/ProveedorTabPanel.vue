@@ -281,7 +281,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDetalleProveedores } from '@/modulos/productos/negocio/detalle/proveedores.composable';
+import { useDetalleProveedores } from './proveedores.composable';
 import { toSelect } from '~/components/input/input.service';
 import agregarProveedorComp from '~/modulos/productos/infraestructura/selects/agregarProveedor.vue';
 const {

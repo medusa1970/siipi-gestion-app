@@ -26,7 +26,7 @@
 import type { Categoria } from '#gql';
 import type { CrearCategoriaDto } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useProducto } from '~/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 const productoService = useProducto();
 
 /**

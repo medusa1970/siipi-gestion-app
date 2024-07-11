@@ -24,6 +24,18 @@ h6 {
   @apply text-sm;
 }
 
+#tituloPagina {
+  font-size: 16px;
+  font-weight: bolder;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-align: left;
+  margin: 15px;
+}
+#contenido {
+  padding: 0 15px;
+}
+
 // INVESTIGAR, la primera precarga no lee los estilos globales compartidos en las pages con clases.
 .cont-center {
   display: flex;

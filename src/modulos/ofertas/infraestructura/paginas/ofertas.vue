@@ -1,9 +1,9 @@
 <template>
+  <Navigation2
+    :nav="[{ label: 'ofertas', to: 'ofertas' }]"
+    titulo="Gestion de ofertas"
+  />
   <div>
-    <Navigation label="Ofertas" icon="folder" />
-    <h1 class="text-lg font-extrabold uppercase text-center">
-      Gestion de ofertas '{{ ofertaStore.catalogoSeleccionado?.nombre }}'
-    </h1>
     <Table
       :rows="estado.ofertasFiltradas"
       :columns="columnaOfertas"

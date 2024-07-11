@@ -3,46 +3,23 @@
     :menuList="[
       {
         icon: 'bi-box',
-        label: 'Logistica',
-        subMenu: [
-          {
-            label: 'Productos',
-            to: '/cathering/productos',
-          },
-          {
-            label: 'Categorias de categorias ',
-            to: '/categorias',
-          },
-        ],
+        label: 'Productos',
+        to: '/cathering/productos',
       },
       {
         icon: 'warehouse',
         label: 'Stock',
         to: '/stock',
-        subMenu: [
-          {
-            label: 'Productos',
-            to: '/cathering/productos',
-          },
-          {
-            label: 'Categorias de categorias ',
-            to: '/categorias',
-          },
-        ],
       },
       {
         icon: 'sell',
-        label: 'Venta',
-        subMenu: [
-          {
-            label: 'Ofertas',
-            to: '/cathering/ofertas',
-          },
-          {
-            label: 'Catalogos de oferta',
-            to: '/cathering/catalogos',
-          },
-        ],
+        label: 'Ofertas',
+        to: '/cathering/ofertas',
+      },
+      {
+        icon: 'sell',
+        label: 'Catalogos',
+        to: '/cathering/catalogos',
       },
       {
         icon: 'description',

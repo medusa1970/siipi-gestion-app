@@ -7,7 +7,7 @@ import type {
   Medida,
   Producto,
 } from '#gql';
-import { productoService } from '../API/productoService';
+import { productoService } from '../../API/productoService';
 
 export const useProductoDetalle = () => {
   const productoStore = storeProducto();

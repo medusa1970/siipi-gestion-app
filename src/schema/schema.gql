@@ -119,6 +119,7 @@ type Producto {
   empaques: [Empaque!]
   variedades: [Variedad!]
   categoria: Categoria!
+  puedeVencer: Boolean
   vencimientoLimite: [Float!]
 }
 
@@ -593,6 +594,7 @@ input BuscarProductoDto {
   empaques: BuscarEmpaqueDto
   variedades: BuscarVariedadDto
   categoria: [ID!]
+  puedeVencer: Boolean
   vencimientoLimite: [Float!]
 }
 
@@ -1113,6 +1115,7 @@ input CrearProductoDto {
   empaques: [CrearEmpaqueDto!]
   variedades: [CrearVariedadDto!]
   categoria: ID!
+  puedeVencer: Boolean
   vencimientoLimite: [Float!]
 }
 
@@ -1141,6 +1144,7 @@ input ModificarProductoDto {
   empaques: EditarEmpaqueDto
   variedades: EditarVariedadDto
   categoria: ID
+  puedeVencer: Boolean
   vencimientoLimite: EditarLimitesDto
 }
 
@@ -1211,7 +1215,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-10T04:00:50.791Z"
+  saldoActualizacion: DateTime = "2024-07-11T02:52:52.637Z"
   servicios: [CrearServicioDto!]
 }
 

@@ -1,8 +1,8 @@
 <template>
-  <Navigation label="Catalogos" icon="group" />
-  <h1 class="text-lg font-extrabold uppercase text-center">
-    Gestion de catalogos
-  </h1>
+  <Navigation2
+    :nav="[{ label: 'catalogos', to: 'catalogos' }]"
+    titulo="Gestion de catalogos"
+  />
   <q-btn
     color="primary"
     label="Crear catalogo"

@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { useDetalleAcciones } from '@/modulos/productos/negocio/detalle/acciones.composable';
+import { useDetalleAcciones } from './acciones.composable';
 import { useRouter } from 'vue-router';
-
+import { ref } from 'vue';
 const { estado, authStore, productoStore, borrarProducto } =
   useDetalleAcciones();
 const router = useRouter();

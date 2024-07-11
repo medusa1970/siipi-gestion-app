@@ -37,6 +37,43 @@
         icono="photo_camera"
       />
 
+      <div class="">
+        <q-checkbox
+          v-model="estado.datos_modificarProductoBasico.puedeVencer"
+        />
+        Puede vencer ?
+      </div>
+
+      <div v-if="estado.datos_modificarProductoBasico.puedeVencer" class="flex">
+        <input-text
+          style="width: 50%"
+          label="Primer aviso"
+          @update="
+            (v) =>
+              (estado.datos_modificarProductoBasico.vencimientoLimite[0] =
+                Number(v))
+          "
+          :porDefecto="
+            '' + (productoStore.producto.vencimientoLimite?.[0] ?? 0)
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+        />
+        <input-text
+          style="width: 50%"
+          label="Segundo aviso"
+          info="Cuando faltarán el número de días indicado en el primer campo, se lanzará una alerta naranja, y una alerta roja al llegar al números de días indicados en el segundo."
+          @update="
+            (v) =>
+              (estado.datos_modificarProductoBasico.vencimientoLimite[1] =
+                Number(v))
+          "
+          :porDefecto="
+            '' + (productoStore.producto.vencimientoLimite?.[1] ?? 0)
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+        />
+      </div>
+
       <!-- Comentario -->
       <input-text
         label="comentario"
@@ -52,16 +89,16 @@
 </template>
 
 <script setup lang="ts">
-import { useDetalleBasico } from '@/modulos/productos/negocio/detalle/basico.composable';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useDetalleBasico } from './basico.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 import { UrlToBase64Image } from '~/components/input/input.service';
-import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
+import agregarCategoriaComp from '../../selects/agregarCategoria.vue';
 const router = useRouter();
 const { estado, authStore, productoStore, modificarProductoBasico } =
   useDetalleBasico();
 const { categoriaSelectOptions, actProductosDB } = useProducto();
 const { $socket } = useNuxtApp();
-
+productoStore.producto;
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
   console.log('No tiene el acceso para esta pagina');
@@ -74,10 +111,18 @@ const soloAlmacenAdquisicion = ref(
 
 // inicializacion del formulario modif
 for (const key in estado.datos_modificarProductoBasico) {
-  estado.datos_modificarProductoBasico[key] =
-    key === 'categoria'
-      ? productoStore.producto[key]._id
-      : productoStore.producto[key];
+  if (key === 'categoria') {
+    estado.datos_modificarProductoBasico[key] = productoStore.producto[key]._id;
+  } else if (key === 'vencimientoLimite') {
+    console.log(productoStore.producto[key]);
+    estado.datos_modificarProductoBasico[key] = productoStore.producto[key] ?? [
+      0, 0,
+    ];
+  } else if (key === 'puedeVencer') {
+    estado.datos_modificarProductoBasico[key] =
+      productoStore.producto[key] ?? false;
+  } else
+    estado.datos_modificarProductoBasico[key] = productoStore.producto[key];
 }
 
 onMounted(async () => {
@@ -98,6 +143,7 @@ onMounted(async () => {
 
   // sockets
   $socket.on('cambiosProductos', async (data) => {
+    console.log('cambiosProductos');
     await actProductosDB();
   });
 });

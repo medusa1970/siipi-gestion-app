@@ -1,8 +1,7 @@
-import { productoService } from '../API/productoService';
+import { productoService } from '../../API/productoService';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import localforage from 'localforage';
 
-import type { CrearProductoBasico } from '~/modulos/productos/negocio/producto.interface';
 import type { Categoria, CrearCategoriaDto, Producto } from '#gql';
 
 export const useProducto = () => {
@@ -16,8 +15,10 @@ export const useProducto = () => {
     nombre: '',
     categoria: '',
     comentario: null,
+    puedeVencer: false,
+    vencimientoLimite: [0, 0] as [number, number],
     imagen: null,
-  } as CrearProductoBasico;
+  };
 
   const estado = reactive({
     productos: [] as Producto[],
@@ -30,6 +31,7 @@ export const useProducto = () => {
     },
     datos_crearProductoBasico: clone(init_crearProductoBasico),
     producto: {} as Producto,
+    errorProducto: '',
   });
 
   /** FUNCIONES */
@@ -45,11 +47,12 @@ export const useProducto = () => {
         );
         if (!productoCreado) throw 'No se pudo agregar el producto';
       });
-    } catch (e) {
-      // if (isApiBadRequest(err, 'duplicado')) {
-      //   producto.error = 'Este producto ya esta registrada';
-      // }
-      errFallBack(e);
+    } catch (err) {
+      if (isApiBadRequest(err, 'duplicado')) {
+        estado.errorProducto = 'Este producto ya esta registrado';
+        return;
+      }
+      errFallBack(err);
       return;
     }
 

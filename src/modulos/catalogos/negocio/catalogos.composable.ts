@@ -33,6 +33,7 @@ export const useCatalogos = () => {
       _id: [catalogoId],
     });
     if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
+    return catalogoArbol;
   };
 
   const modalCrearCatalogoCategoria = (datos: any) => {

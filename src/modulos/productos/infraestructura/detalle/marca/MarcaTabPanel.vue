@@ -1,44 +1,5 @@
 <template>
   <div>
-    <p>
-      Entre el numero de dias entre 2 inventarios:
-      <input-botonAyuda mensaje="info" />
-    </p>
-    <!-- nombre -->
-    <div class="flex">
-      <input-text
-        style="width: 50%"
-        label="Alerta 1 vencimineto"
-        @update="
-          (v) =>
-            (estado.datos_modificarVencimiento.vencimientoLimite[0] = Number(v))
-        "
-        :porDefecto="'' + (productoStore.producto.vencimientoLimite?.[0] ?? 0)"
-        :rules="[useRules.requerido(), useRules.numero()]"
-      />
-      <input-text
-        style="width: 50%"
-        label="Alerta 2 vencimineto"
-        @update="
-          (v) =>
-            (estado.datos_modificarVencimiento.vencimientoLimite[1] = Number(v))
-        "
-        :porDefecto="'' + (productoStore.producto.vencimientoLimite?.[1] ?? 0)"
-        :rules="[useRules.requerido(), useRules.numero()]"
-      />
-      <div class="flex w-full justify-center">
-        <q-btn
-          color="primary"
-          label="Guardar"
-          dense
-          no-caps
-          padding="3px 20px"
-          @click="guardarVencimiento"
-        />
-      </div>
-    </div>
-    <br />
-
     <p>Seleccione las diferentes marcas con que viene el producto.</p>
 
     <Table
@@ -189,8 +150,8 @@
       <input-select
         label="Marca"
         v-if="!estado.modal.show_modificarProductoMarca"
-        :opciones="estado.marcasParaSelect"
         info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+        :opciones="estado.marcasParaSelect"
         @update="(v) => (estado.datos_productoMarca.marca = v)"
         :porDefecto="estado.datos_productoMarca.marca"
         :error="estado.errorMarca"
@@ -213,60 +174,80 @@
       />
 
       <!-- Stock minimo -->
-      <input-text
-        label="Stock minimo antes de hacer pedido"
-        @update="
-          (v) => (estado.datos_productoMarca.cantidadLimite[0] = Number(v))
-        "
-        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-        :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[0]"
-      />
+      <p>
+        Alerta de cantidad baja en el stock
+        <input-botonAyuda
+          mensaje="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
+        />
+      </p>
+      <div class="flex">
+        <input-text
+          style="width: 50%"
+          label="Primer aviso"
+          @update="
+            (v) => (estado.datos_productoMarca.cantidadLimite[0] = Number(v))
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+          :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[0]"
+        />
+        <input-text
+          style="width: 50%"
+          label="Segundo aviso"
+          @update="
+            (v) => (estado.datos_productoMarca.cantidadLimite[1] = Number(v))
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+          :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[1]"
+        />
+      </div>
 
-      <input-text
-        label="Stock minimo antes de hacer pedido (aviso)"
-        @update="
-          (v) => (estado.datos_productoMarca.cantidadLimite[1] = Number(v))
-        "
-        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-        :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[1]"
-      />
+      <!-- Stock minimo -->
+      <p>
+        Alerta de que hay que inventariar
+        <input-botonAyuda
+          mensaje="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
+        />
+      </p>
+      <div class="flex">
+        <input-text
+          style="width: 50%"
+          label="Primer aviso"
+          @update="
+            (v) => (estado.datos_productoMarca.inventarioLimite[0] = Number(v))
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+          :porDefecto="
+            '' + (estado.datos_productoMarca.inventarioLimite?.[0] ?? '')
+          "
+        />
+
+        <input-text
+          style="width: 50%"
+          label="Segundo aviso"
+          @update="
+            (v) => (estado.datos_productoMarca.inventarioLimite[1] = Number(v))
+          "
+          :rules="[useRules.requerido(), useRules.numero()]"
+          :porDefecto="
+            '' + (estado.datos_productoMarca.inventarioLimite?.[1] ?? '')
+          "
+        />
+      </div>
 
       <!-- Cantidad max en un pedido -->
+      <p>
+        Cantidad maxima en un pedido de punto
+        <input-botonAyuda
+          mensaje="Para evitar errores como el million de Pinia =)"
+        />
+      </p>
       <input-text
-        label="Cantidad max en un pedido"
+        label="Cantidad maxima"
         @update="
           (v) => (estado.datos_productoMarca.cantidadMaxPedido = Number(v))
         "
-        info="Es la cantidad maxima que un punto puede pedir a produccion, para evitar errores inecesarias."
         :rules="[useRules.requerido(), useRules.numero()]"
         :porDefecto="'' + (estado.datos_productoMarca.cantidadMaxPedido ?? '')"
-      />
-
-      <!-- Stock minimo -->
-      <input-text
-        label="dias maximos entre 2 pedidos"
-        @update="
-          (v) => (estado.datos_productoMarca.inventarioLimite[0] = Number(v))
-        "
-        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-        :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="
-          '' + (estado.datos_productoMarca.inventarioLimite?.[0] ?? '')
-        "
-      />
-
-      <input-text
-        label="dias maximos entre 2 pedidos + aviso"
-        @update="
-          (v) => (estado.datos_productoMarca.inventarioLimite[1] = Number(v))
-        "
-        info="Es la cantidad en stock del producto debajo de la cual se alertará para avisar que se necesita hacer un nuevo pedido al proveedor."
-        :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="
-          '' + (estado.datos_productoMarca.inventarioLimite?.[1] ?? '')
-        "
       />
     </template>
   </Dialog>
@@ -311,8 +292,8 @@
 
 <script setup lang="ts">
 import agregarMarcaComp from '~/modulos/productos/infraestructura/selects/agregarMarca.vue';
-import { useDetalleMarcas } from '@/modulos/productos/negocio/detalle/marcas.composable';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useDetalleMarcas } from './marcas.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 import { toSelect } from '~/components/input/input.service';
 
 const {
@@ -325,7 +306,6 @@ const {
   modalModificarProductoMarca,
   cerrarLimpiarModificarMarca,
   borrarProductoMarca,
-  guardarVencimiento,
 } = useDetalleMarcas();
 
 const handlePayloadMarca = (payload) => {

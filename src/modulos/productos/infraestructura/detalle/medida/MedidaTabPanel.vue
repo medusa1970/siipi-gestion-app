@@ -1,111 +1,114 @@
 <template>
-  <p>
-    La medida básica es la forma en que se maneja el producto (por peso, unidad,
-    etc).
-  </p>
+  <div>
+    <p>
+      La medida básica es la forma en que se maneja el producto (por peso,
+      unidad, etc).
+    </p>
 
-  <!-- 
+    <!-- 
       Agregar / modificar medida basica, en caso que no existe o que no haya empaques
   -->
 
-  <!-- No se podrá agregar empaque si la medida basica no esta registrada -->
-  <div v-if="!productoStore.producto.medida">
-    <p>Para poder agregar empaques, primero debes definir la medida basica.</p>
-  </div>
+    <!-- No se podrá agregar empaque si la medida basica no esta registrada -->
+    <div v-if="!productoStore.producto.medida">
+      <p>
+        Para poder agregar empaques, primero debes definir la medida basica.
+      </p>
+    </div>
 
-  <!-- Deshabilitado si ya hay empaques -->
-  <input-select
-    label="Medida basica"
-    :opciones="
-      estado.medidas.map((medida) => ({
-        value: medida._id,
-        label: medida.nombre,
-      }))
-    "
-    @update="(v) => (estado.datos_productoMedida.medida = v)"
-    :porDefecto="productoStore.producto.medida?._id"
-    :rules="[useRules.requerido()]"
-    :dialog="agregarMedidaComp"
-    @payload="handlePayloadMedida"
-    :disable="productoStore.producto.empaques.length > 0"
-  />
-
-  <!-- deshabilitado si ya hay empaques-->
-  <div
-    class="!flex justify-center"
-    v-if="
-      !productoStore.producto.empaques ||
-      productoStore.producto.empaques.length === 0
-    "
-  >
-    <q-btn
-      class="display-block mx-auto mt-1"
-      color="primary"
-      label="Guardar medida basica"
-      dense
-      no-caps
-      padding="3px 20px"
-      @click="guardarMedidaBasicaProducto"
+    <!-- Deshabilitado si ya hay empaques -->
+    <input-select
+      label="Medida basica"
+      :opciones="
+        estado.medidas.map((medida) => ({
+          value: medida._id,
+          label: medida.nombre,
+        }))
+      "
+      @update="(v) => (estado.datos_productoMedida.medida = v)"
+      :porDefecto="productoStore.producto.medida?._id"
+      :rules="[useRules.requerido()]"
+      :dialog="agregarMedidaComp"
+      @payload="handlePayloadMedida"
+      :disable="productoStore.producto.empaques.length > 0"
     />
-  </div>
 
-  <!-- 
+    <!-- deshabilitado si ya hay empaques-->
+    <div
+      class="!flex justify-center"
+      v-if="
+        !productoStore.producto.empaques ||
+        productoStore.producto.empaques.length === 0
+      "
+    >
+      <q-btn
+        class="display-block mx-auto mt-1"
+        color="primary"
+        label="Guardar medida basica"
+        dense
+        no-caps
+        padding="3px 20px"
+        @click="guardarMedidaBasicaProducto"
+      />
+    </div>
+
+    <!-- 
       Agregar empaques, en caso de que ya exista la medida basica
   -->
 
-  <div v-if="productoStore.producto.medida">
-    <br />
+    <div v-if="productoStore.producto.medida">
+      <br />
 
-    <p>
-      Los empaques son la formas que llegan en producto en el almacén, por
-      ejemplo en tira o paquete de tal o tal marca.
-    </p>
+      <p>
+        Los empaques son la formas que llegan en producto en el almacén, por
+        ejemplo en tira o paquete de tal o tal marca.
+      </p>
 
-    <Table :rows="productoStore.producto.empaques" :columns="columnaEmpaques">
-      <template #dropdown>
-        <q-btn
-          color="primary"
-          icon="add"
-          label="Agregar empaque"
-          no-caps
-          @click="
-            () => {
-              estado.modal.show_modificarProductoEmpaque = false;
-              estado.modal.show_crearProductoEmpaque = true;
-            }
-          "
-        />
-      </template>
-
-      <template #body-cell-actions="{ props }">
-        <q-td :props="props" class="font-bold text-red-500">
+      <Table :rows="productoStore.producto.empaques" :columns="columnaEmpaques">
+        <template #dropdown>
           <q-btn
-            color="orange"
-            icon="edit"
-            round
-            dense
-            padding="1px"
-            size="10px"
-            @click="modalModificarProductoEmpaque(props.row)"
-          >
-            <q-tooltip> Editar empaque </q-tooltip></q-btn
-          >
-          <q-btn
-            color="red"
-            icon="delete"
-            round
-            dense
-            padding="1px"
-            size="10px"
-            @click="borrarProductoEmpaque(props.row)"
-          >
-            <q-tooltip> borrar empaque </q-tooltip></q-btn
-          >
-        </q-td>
-      </template>
-    </Table>
+            color="primary"
+            icon="add"
+            label="Agregar empaque"
+            no-caps
+            @click="
+              () => {
+                estado.modal.show_modificarProductoEmpaque = false;
+                estado.modal.show_crearProductoEmpaque = true;
+              }
+            "
+          />
+        </template>
+
+        <template #body-cell-actions="{ props }">
+          <q-td :props="props" class="font-bold text-red-500">
+            <q-btn
+              color="orange"
+              icon="edit"
+              round
+              dense
+              padding="1px"
+              size="10px"
+              @click="modalModificarProductoEmpaque(props.row)"
+            >
+              <q-tooltip> Editar empaque </q-tooltip></q-btn
+            >
+            <q-btn
+              color="red"
+              icon="delete"
+              round
+              dense
+              padding="1px"
+              size="10px"
+              @click="borrarProductoEmpaque(props.row)"
+            >
+              <q-tooltip> borrar empaque </q-tooltip></q-btn
+            >
+          </q-td>
+        </template>
+      </Table>
+    </div>
   </div>
-
   <!-- 
     MEDIDA & EMPAQUE PRODUCTO
   -->
@@ -214,13 +217,13 @@
 
 <script setup lang="ts">
 const x = ref('#');
-import { useDetalleMedida } from '@/modulos/productos/negocio/detalle/medida.composable';
+import { useDetalleMedida } from './medida.composable';
 import { columnaEmpaques } from '@/modulos/productos/infraestructura/utils/columns';
 import agregarVariedadComp from '~/modulos/productos/infraestructura/selects/agregarVariedad.vue';
 import agregarMedidaComp from '~/modulos/productos/infraestructura/selects/agregarMedida.vue';
 import agregarTipoEmpaqueComp from '~/modulos/productos/infraestructura/selects/agregarTipoEmpaque.vue';
 import { toSelect } from '~/components/input/input.service';
-import { useProducto } from '@/modulos/productos/negocio/producto.composable';
+import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 
 const {
   estado,

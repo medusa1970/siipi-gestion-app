@@ -1,11 +1,11 @@
 <template>
-  <Navigation
-    label="Ofertas"
-    icon="list_alt"
-    :label2="ofertaStore.oferta.nombre"
-    href="/cathering/ofertas"
+  <Navigation2
+    :nav="[
+      { label: 'ofertas', to: 'ofertas' },
+      { label: 'detalle', to: 'ofertasDetalles' },
+    ]"
+    :titulo="'Oferta: ' + ofertaStore.oferta.nombre"
   />
-
   <!--
     TABS
     -->

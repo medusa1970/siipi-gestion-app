@@ -11,10 +11,10 @@ import type {
   ModificarProductoDto,
   ModificarServicioDto,
   Producto,
+  CrearCategoriaDto,
+  CrearProductoDto,
 } from '#gql';
-import type { CrearCategoriaDto } from '#gql';
 import { extraerUno } from '~/utils/objeto';
-import type { CrearProductoBasico } from '../negocio/producto.interface';
 
 export const productoService = {
   /**
@@ -52,7 +52,7 @@ export const productoService = {
    * Crear una producto con datos basicos
    */
   crearProductoBasico: async (
-    datos: CrearProductoBasico,
+    datos: CrearProductoDto,
   ): Promise<Producto | null> => {
     try {
       return extraerUno(
@@ -200,7 +200,7 @@ export const productoService = {
           datos: {
             variedades: {
               buscar: { _id: [variedadID] },
-              //@ts-expect-error esta bien no te preocupes
+              //@ts-expect-error estamos cambiando el tipo a proposito
               modificar: productoMarca,
             },
           },

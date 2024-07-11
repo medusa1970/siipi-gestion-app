@@ -75,9 +75,6 @@ definePageMeta({
   layout: 'inicio',
   // middleware: ['auth'],
 });
-import Logo from '@/assets/img/logo.png';
-import { useRoute } from 'vue-router';
-import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
 import login from '../componientes/inicio/login.vue';
 import negocios from '../componientes/inicio/negocios.vue';

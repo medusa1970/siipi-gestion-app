@@ -109,7 +109,8 @@ export const useProducto = () => {
         },
       }),
     );
-    estado.productos = productos;
+    productoStore.productos = productos;
+    // estado.productos = productos;
     const res = await localforage.setItem(
       'productos',
       productos ? productos : [],

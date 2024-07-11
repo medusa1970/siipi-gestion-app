@@ -9,7 +9,7 @@
     class="border-none"
     virtual-scroll
     :rows-per-page-options="[50, 0]"
-    style="max-height: 500px; overflow-y: auto"
+    style="max-height: 550px"
   >
     <template #top>
       <q-input

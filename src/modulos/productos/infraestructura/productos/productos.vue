@@ -380,22 +380,20 @@ onMounted(async () => {
 
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
 
-  // reload de la pagina productos
-  let reloaded = localStorage.getItem('reloaded');
-  if (reloaded) {
-    console.log('Se ha recargado la pagina');
-    // await productoStore.actualizarProductos();
-  } else {
-    console.log('No se ha recargado la pagina');
-    localStorage.setItem('reloaded', 'true');
-  }
+  // let reloaded = localStorage.getItem('reloaded');
+  // if (reloaded) {
+  //   console.log('Se ha recargado la pagina');
+  // } else {
+  //   console.log('No se ha recargado la pagina');
+  //   localStorage.setItem('reloaded', 'true');
+  // }
   $socket.on('cambiosProductos', async (data: any) => {
     await actProductosDB();
   });
 });
 
 onBeforeUnmount(() => {
-  localStorage.removeItem('reloaded');
+  // localStorage.removeItem('reloaded');
   $socket.off('cambiosProductos');
 });
 </script>

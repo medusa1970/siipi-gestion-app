@@ -130,8 +130,7 @@
           >
           <span class="flex gap-2 items-center"
             ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-            <p>Limite : {{ variedad.cantidadLimite[0] }}</p>
-            <p>Aviso : {{ variedad.cantidadLimite[1] }}</p>
+            <p>{{ variedad.cantidadLimite }}</p>
           </span>
           <span class="flex gap-2 items-center"
             ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
@@ -311,8 +310,7 @@
         >
         <span class="flex gap-2 items-center"
           ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-          <p>Limite : {{ variedad.cantidadLimite[0] }}</p>
-          <p>Aviso : {{ variedad.cantidadLimite[1] }}</p>
+          <p>{{ variedad.cantidadLimite }}</p>
         </span>
         <span class="flex gap-2 items-center"
           ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>

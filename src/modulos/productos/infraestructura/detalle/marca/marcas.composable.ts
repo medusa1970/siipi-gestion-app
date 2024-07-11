@@ -84,14 +84,12 @@ export const useDetalleMarcas = () => {
    */
 
   const crearProductoMarca = async () => {
-    console.log('crearProductoMarca');
     // preparamos los datos
     const datos = {
       marca: estado.datos_productoMarca.marca,
       cantidadLimite: estado.datos_productoMarca.cantidadLimite,
       inventarioLimite: estado.datos_productoMarca.inventarioLimite,
       cantidadMaxPedido: estado.datos_productoMarca.cantidadMaxPedido,
-      imagen: estado.datos_productoMarca.imagen,
     };
     if (estado.datos_productoMarca.imagen) {
       Object.assign(datos, {

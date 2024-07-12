@@ -47,6 +47,7 @@ export const useDetalleMedida = () => {
       init_productoMedida,
     ) as typeof init_productoMedida,
     resetEmpaque: null,
+    selectTipoEmpaque: [],
   });
 
   /**

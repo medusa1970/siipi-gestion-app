@@ -25,7 +25,13 @@
           label: medida.nombre,
         }))
       "
-      @update="(v) => (estado.datos_productoMedida.medida = v)"
+      @update="
+        (v) => {
+          estado.datos_productoMedida.medida = v;
+          const medida = estado.medidas.find((medida) => medida._id === v);
+          estado.selectTipoEmpaque = toSelect(medida.tipoEmpaques);
+        }
+      "
       :porDefecto="productoStore.producto.medida?._id"
       :rules="[useRules.requerido()]"
       :dialog="agregarMedidaComp"
@@ -154,13 +160,13 @@
 
       <div v-if="!estado.modal.show_modificarProductoEmpaque">
         <p>
-          Si desea, seleccione un modelo de empaque
-          <br />para prellenar el formulario:
+          Si desea, seleccione un modelo de empaque para prellenar el
+          formulario:
         </p>
         <input-select
           label="Empaques preseleccionados"
           info="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
-          :opciones="selectTipoEmpaque"
+          :opciones="estado.selectTipoEmpaque"
           @update="(v) => prellenarEmpaque(v)"
           :watch="estado.resetEmpaque"
           :dialog="agregarTipoEmpaqueComp"
@@ -177,7 +183,7 @@
         :porDefecto="
           estado.modal.show_modificarProductoEmpaque
             ? estado.datos_productoMedida.empaque.nombre
-            : null
+            : ''
         "
         :watch="estado.datos_productoMedida.empaque.nombre"
       />
@@ -190,7 +196,7 @@
         :porDefecto="
           estado.modal.show_modificarProductoEmpaque
             ? estado.datos_productoMedida.empaque.abreviacion
-            : null
+            : ''
         "
         :watch="estado.datos_productoMedida.empaque.abreviacion"
       />
@@ -204,8 +210,8 @@
         :rules="[useRules.requerido(), useRules.numero()]"
         :porDefecto="
           estado.modal.show_modificarProductoEmpaque
-            ? '' + estado.datos_productoMedida.empaque.cantidad
-            : null
+            ? estado.datos_productoMedida.empaque.cantidad
+            : ''
         "
         :watch="'' + estado.datos_productoMedida.empaque.cantidad"
       />
@@ -238,7 +244,6 @@ const {
 } = useDetalleMedida();
 const { actProductosDB } = useProducto();
 
-const selectTipoEmpaque = ref([]);
 const { $socket } = useNuxtApp();
 
 const handlePayloadVariedad = (payload: any) => {
@@ -249,14 +254,14 @@ const handlePayloadMedida = (payload: any) => {};
 
 const handlePayloadTipoEmpaque = (payload: any) => {
   productoStore.producto.medida.tipoEmpaques.push(payload);
-  selectTipoEmpaque.value = toSelect(
+  estado.selectTipoEmpaque = toSelect(
     productoStore.producto.medida.tipoEmpaques,
   );
   prellenarEmpaque(payload._id);
 };
 onMounted(async () => {
   await buscarMedidas();
-  selectTipoEmpaque.value = toSelect(
+  estado.selectTipoEmpaque = toSelect(
     productoStore.producto.medida.tipoEmpaques,
   );
   $socket.on('cambiosProductos', async (data) => {

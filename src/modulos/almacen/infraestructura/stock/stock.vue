@@ -9,64 +9,6 @@
     titulo="Gestion de stock"
   />
 
-  <div style="width: 450px; border: none; padding: 0" class="mx-4">
-    <div id="radiosAlertas">
-      Mostrar
-      <q-radio
-        label="Todos"
-        v-model="estado.filtros.alerta"
-        color="orange"
-        no-caps
-        val=""
-      />
-      <q-radio
-        label="Stock bajo"
-        v-model="estado.filtros.alerta"
-        color="orange"
-        no-caps
-        val="cantidad"
-      />
-      <q-radio
-        color="orange"
-        no-caps
-        label="Por vencer"
-        v-model="estado.filtros.alerta"
-        val="vencimiento"
-      />
-      <q-radio
-        color="orange"
-        no-caps
-        label="Inventariar"
-        v-model="estado.filtros.alerta"
-        val="inventario"
-      />
-    </div>
-  </div>
-
-  <div style="border: none; padding: 0" class="mx-4">
-    <div class="flex w-full">
-      <input-text
-        clase="w-1/3"
-        label="Buscar"
-        @update="(v) => (estado.filtros.buscarFiltro = v)"
-        noSlot
-      />
-      <input-select
-        clase="w-1/3"
-        label="Categoria"
-        @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
-        :opciones="estado.listaCategorias"
-        noSlot
-      />
-      <input-select
-        clase="w-1/3"
-        label="Marca"
-        @update="(v) => (estado.filtros.marcaSeleccionada = v)"
-        :opciones="estado.listaMarcas"
-        noSlot
-      />
-    </div>
-  </div>
   <Table
     :rows="rowsParaMostrar"
     :columns="[
@@ -122,6 +64,62 @@
     ]"
     :defaultImage="ProductoImage"
   >
+    <template #dropdown>
+      <div id="radiosAlertas">
+        <q-radio
+          label="Todos"
+          v-model="estado.filtros.alerta"
+          color="orange"
+          no-caps
+          val=""
+        />
+        <q-radio
+          label="Stock bajo"
+          v-model="estado.filtros.alerta"
+          color="orange"
+          no-caps
+          val="cantidad"
+        />
+        <q-radio
+          color="orange"
+          no-caps
+          label="Por vencer"
+          v-model="estado.filtros.alerta"
+          val="vencimiento"
+        />
+        <q-radio
+          color="orange"
+          no-caps
+          label="Inventariar"
+          v-model="estado.filtros.alerta"
+          val="inventario"
+        />
+      </div>
+
+      <div class="flex w-full">
+        <input-text
+          clase="w-1/3"
+          label="Buscar"
+          @update="(v) => (estado.filtros.buscarFiltro = v)"
+          porDefecto=""
+          noSlot
+        />
+        <input-select
+          clase="w-1/3"
+          label="Categoria"
+          @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
+          :opciones="estado.listaCategorias"
+          noSlot
+        />
+        <input-select
+          clase="w-1/3"
+          label="Marca"
+          @update="(v) => (estado.filtros.marcaSeleccionada = v)"
+          :opciones="estado.listaMarcas"
+          noSlot
+        />
+      </div>
+    </template>
     <template #body-cell-producto="{ val, row }">
       {{ row.producto.nombre }}
       <br />
@@ -332,3 +330,10 @@ onMounted(async () => {
   );
 });
 </script>
+
+<style scoped>
+#radiosAlertas {
+  font-size: 12px;
+  margin: auto;
+}
+</style>

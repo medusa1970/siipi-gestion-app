@@ -7,24 +7,25 @@ permisos borrar
 empleado editar
 cantidadMax opcional
 
-BUGS
-
-error contrasena equivocada
-buscador a la derecha del titulo
-oferta creada dos veces
-
-- lista recorrer : vuelve al inicio
-- aviso imagen obligatoria para crear oferta
-- seleccion de tipo de empaques al cambiar de medida 
-
+TODO : 
+- error contrasena equivocada
 - atajo de crear oferta por empaques
 - precio undefined
 - pagina de gestion de marcas
 - pagina de gestion de medidas
+- cloudinary https
 
+WILL :
 
-DONE
+- lista recorrer : vuelve al inicio
+- aviso imagen obligatoria para crear oferta
+- oferta creada dos veces
+
+DONE:
 
 editar marca : visualizar marca
 busqueda en productos, y sin importar acentos etc.
 quitar la imagen de marca de producto
+bug modificar marca en popup
+campo cantidadMax a 0 por defecto
+seleccion de tipo de empaques al cambiar de medida 

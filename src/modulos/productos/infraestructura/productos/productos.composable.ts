@@ -6,9 +6,10 @@ import type { Categoria, CrearCategoriaDto, Producto } from '#gql';
 
 export const useProducto = () => {
   /** DECLARACIONES */
-  const productoStore = storeProducto();
   const { $socket } = useNuxtApp();
   const router = useRouter();
+  const service = productoService;
+  const store = storeProducto();
 
   /** REACTIVOS */
   const init_crearProductoBasico = {
@@ -23,6 +24,7 @@ export const useProducto = () => {
   const estado = reactive({
     productos: [] as Producto[],
     categoriasParaSelect: [] as any[],
+    arbolCategorias: null as Categoria,
 
     // modales
     modal: {
@@ -32,6 +34,13 @@ export const useProducto = () => {
     datos_crearProductoBasico: clone(init_crearProductoBasico),
     producto: {} as Producto,
     errorProducto: '',
+    listaCategorias: [],
+    listaMarcas: [],
+    filtros: {
+      categoriaSeleccionada: '',
+      marcaSeleccionada: '',
+      buscarFiltro: '',
+    },
   });
 
   /** FUNCIONES */
@@ -57,7 +66,7 @@ export const useProducto = () => {
     }
 
     NotifySucessCenter('Producto agregado correctamente');
-    await productoStore.addProducto(productoCreado);
+    await store.addProducto(productoCreado);
     estado.modal.show_crearProductoBasico = false;
     // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
     // estado.datos_crearProductoBasico = clone(init_crearProductoBasico);
@@ -69,7 +78,7 @@ export const useProducto = () => {
    */
   const categoriaSelectOptions = async (nivel2: boolean = true) => {
     const options = [];
-    const arbol = await productoStore.getCategoriaArbol();
+    const arbol = await store.getCategoriaArbol();
     for (const cat of arbol.hijas) {
       if (nivel2) {
         options.push({
@@ -96,6 +105,43 @@ export const useProducto = () => {
     return options;
   };
 
+  const categoriaSelectOptionsFiltro = async () => {
+    const options = [];
+    if (!estado.arbolCategorias) {
+      estado.arbolCategorias = await store.getCategoriaArbol();
+    }
+    for (const cat of estado.arbolCategorias.hijas) {
+      options.push({
+        label: `${cat.nombre} (${cat.hijas.length})`,
+        value: cat._id,
+      });
+      for (const subcat of cat.hijas) {
+        options.push({
+          label: subcat.nombre,
+          value: subcat._id,
+          class: 'option',
+        });
+      }
+    }
+    return options;
+  };
+
+  const getCategoriaList = (categoriaID) => {
+    if (!estado.arbolCategorias) {
+      return [];
+    }
+    const lista = [];
+    for (const cat of estado.arbolCategorias.hijas) {
+      if (cat._id === categoriaID) {
+        for (const subcat of cat.hijas) {
+          lista.push(subcat._id);
+        }
+        return lista;
+      }
+    }
+    return [categoriaID];
+  };
+
   /**
    * Actualizar la base de datos local de productos si escucha un cambio
    * desde el servidor
@@ -109,7 +155,7 @@ export const useProducto = () => {
         },
       }),
     );
-    productoStore.productos = productos;
+    store.productos = productos;
     // estado.productos = productos;
     const res = await localforage.setItem(
       'productos',
@@ -127,7 +173,7 @@ export const useProducto = () => {
     const categoriaCreada = await productoService.crearCategoria(datos);
     if (categoriaCreada) {
       // TODO Ajouter la categorie a l'arbol
-      // productoStore.addCategoria(categoriaCreada);
+      // store.addCategoria(categoriaCreada);
     }
     return categoriaCreada;
   };
@@ -138,10 +184,14 @@ export const useProducto = () => {
 
   return {
     categoriaSelectOptions,
+    categoriaSelectOptionsFiltro,
     crearProductoBasico,
     actProductosDB,
     estado,
+    store,
+    service,
     mostrarInformacionProducto,
     crearCategoria,
+    getCategoriaList,
   };
 };

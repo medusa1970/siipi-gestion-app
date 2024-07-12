@@ -1,22 +1,29 @@
+
 FUNCIONALIDADES
 
-venciminento limite, periodo inventariar
 mise en forme expands
 click image agrandar
 permisos borrar
 empleado editar
+input select
+cantidadMax opcional
 
 BUGS
 
-vencimiento negativo
-clone init
-input select nueva marca
-imagen nueva marca
-err no tratado al crear obj dupl
-boton agregar medida desaparecido ?
-productoStore vencimiento limite no persiste en el estado
-lista marcas
+error contrasena equivocada
+buscador a la derecha del titulo
+oferta creada dos veces
 
-1 cloudinary
-2 poner los textos para modificar alertar
-3
+- lista recorrer : vuelve al inicio
+- busqueda con maiuscua / acento
+- aviso imagen obligatoria para crear oferta
+- editar marca : visualizar marca
+- quitar la imagen de marca de producto
+- seleccion de tipo de empaques al cambiar de medida 
+
+- filtro de buscador
+- filtros en producto
+- atajo de crear oferta por empaques
+- precio undefined
+- pagina de gestion de marcas
+- pagina de gestion de medidas

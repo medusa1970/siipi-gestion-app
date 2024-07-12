@@ -8,63 +8,65 @@
     ]"
     titulo="Gestion de stock"
   />
-  Alertas
-  <q-radio color="orange" no-caps label="Todos" v-model="alerta" val="" />
-  <q-radio
-    color="orange"
-    no-caps
-    label="Cantidad"
-    v-model="alerta"
-    val="cantidad"
-  />
-  <q-radio
-    color="orange"
-    no-caps
-    label="Vencimiento"
-    v-model="alerta"
-    val="vencimiento"
-  />
-  <q-radio
-    color="orange"
-    no-caps
-    label="Inventario"
-    v-model="alerta"
-    val="inventario"
-  />
-  <q-select
-    v-model="categoriaSeleccionada"
-    :label="categoria"
-    use-input
-    fill-input
-    hide-selected
-    input-debounce="300"
-    clearable
-    outlined
-    dense
-    options-dense
-    :options="[
-      { label: 'Todas las categoria', value: null },
-      ...listaCategorias,
-    ]"
-    emit-value
-    map-options
-  />
-  <q-select
-    v-model="marcaSeleccionada"
-    :label="Marca"
-    use-input
-    fill-input
-    hide-selected
-    input-debounce="300"
-    clearable
-    outlined
-    dense
-    options-dense
-    :options="[{ label: 'Todas las marcas', value: null }, ...listaMarcas]"
-    emit-value
-    map-options
-  />
 
+  <div style="width: 450px; border: none; padding: 0" class="mx-4">
+    <div id="radiosAlertas">
+      Mostrar
+      <q-radio
+        label="Todos"
+        v-model="estado.filtros.alerta"
+        color="orange"
+        no-caps
+        val=""
+      />
+      <q-radio
+        label="Stock bajo"
+        v-model="estado.filtros.alerta"
+        color="orange"
+        no-caps
+        val="cantidad"
+      />
+      <q-radio
+        color="orange"
+        no-caps
+        label="Por vencer"
+        v-model="estado.filtros.alerta"
+        val="vencimiento"
+      />
+      <q-radio
+        color="orange"
+        no-caps
+        label="Inventariar"
+        v-model="estado.filtros.alerta"
+        val="inventario"
+      />
+    </div>
+  </div>
+
+  <div style="border: none; padding: 0" class="mx-4">
+    <div class="flex w-full">
+      <input-text
+        clase="w-1/3"
+        label="Buscar"
+        @update="(v) => (estado.filtros.buscarFiltro = v)"
+        noSlot
+      />
+      <input-select
+        clase="w-1/3"
+        label="Categoria"
+        @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
+        :opciones="estado.listaCategorias"
+        noSlot
+      />
+      <input-select
+        clase="w-1/3"
+        label="Marca"
+        @update="(v) => (estado.filtros.marcaSeleccionada = v)"
+        :opciones="estado.listaMarcas"
+        noSlot
+      />
+    </div>
+  </div>
   <Table
     :rows="rowsParaMostrar"
     :columns="[
@@ -84,15 +86,6 @@
         field: (row) => row.producto.nombre,
         sortable: true,
       },
-      // {
-      //   name: 'cantidad',
-      //   slot: true,
-      //   required: true,
-      //   label: 'Stock',
-      //   align: 'left',
-      //   field: (row) => row.cantidadTotal,
-      //   sortable: true,
-      // },
       {
         name: 'alertaCantidad',
         slot: true,
@@ -130,7 +123,7 @@
     :defaultImage="ProductoImage"
   >
     <template #body-cell-producto="{ val, row }">
-      {{ val }}
+      {{ row.producto.nombre }}
       <br />
       <q-badge
         v-for="marca in row.marcas"
@@ -254,7 +247,7 @@
   </Table>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Layout y metadata
 definePageMeta({
   layout: 'cathering',
@@ -268,42 +261,58 @@ import Table from '@/components/input/Table.vue';
 import { ref } from 'vue';
 const router = useRouter();
 const almacen = useAlmacen();
-const stock = useStock();
 const {
   estado,
   store,
   service,
   getCategoriaList,
   obtenerTodoStock,
-  categoriaSelectOptions,
+  categoriaSelectOptionsFiltro,
 } = useStock();
-
-const alerta = ref('');
-const listaCategorias = ref('');
-const categoriaSeleccionada = ref(null);
-const listaMarcas = ref([]);
-const marcaSeleccionada = ref(null);
 
 const rowsParaMostrar = computed(() => {
   let filtered = estado.stocks;
-  if (alerta.value === 'cantidad') {
+  // filtro por alertas
+  if (estado.filtros.alerta === 'cantidad') {
     filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
-  } else if (alerta.value === 'vencimiento') {
+  }
+  if (estado.filtros.alerta === 'vencimiento') {
     filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
-  } else if (alerta.value === 'inventario') {
+  }
+  if (estado.filtros.alerta === 'inventario') {
     filtered = filtered.filter((stock) => stock.alertaInventariar > 0);
   }
-  if (categoriaSeleccionada.value != null) {
+  // filtro por categoria
+  if (
+    estado.filtros.categoriaSeleccionada != null &&
+    estado.filtros.categoriaSeleccionada !== ''
+  ) {
     filtered = filtered.filter((stock) =>
-      getCategoriaList(categoriaSeleccionada.value).includes(
+      getCategoriaList(estado.filtros.categoriaSeleccionada).includes(
         stock.producto.categoria._id,
       ),
     );
   }
-  if (marcaSeleccionada.value != null) {
+  // filtro por marca
+  if (
+    estado.filtros.marcaSeleccionada != null &&
+    estado.filtros.marcaSeleccionada !== ''
+  ) {
     filtered = filtered.filter((stock) =>
-      Object.keys(stock.marcas).includes(marcaSeleccionada.value),
+      Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
     );
+  }
+  // filtro por buscar que no discrimine maiusculas de minusculas y acentos
+  if (estado.filtros.buscarFiltro != null) {
+    filtered = filtered.filter((stock) => {
+      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+      return regex.test(
+        stock.producto.nombre +
+          stock.producto.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, ''),
+      );
+    });
   }
   return filtered;
 });
@@ -311,9 +320,9 @@ const rowsParaMostrar = computed(() => {
 // Reactives y inicializaciones
 onMounted(async () => {
   await obtenerTodoStock();
-  listaCategorias.value = await categoriaSelectOptions(true);
-  listaMarcas.value = quitarDuplicados(
-    estado.stockfiltereds.reduce((accumulator, currentValue) => {
+  estado.listaCategorias = await categoriaSelectOptionsFiltro();
+  estado.listaMarcas = quitarDuplicados(
+    estado.stocks.reduce((accumulator, currentValue) => {
       const opciones = Object.values(currentValue.marcas).map((marca) => {
         return { label: marca.marca.nombre, value: marca.marca._id };
       });

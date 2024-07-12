@@ -14,13 +14,14 @@
     :filled="filled"
     :outlined="outlined"
     :class="clase"
-    bottom-slots
-    :error="errorFlag"
+    :bottom-slots="!noSlot"
+    :error="noSlot ? undefined : errorFlag"
     :errorMessage="errorMensaje"
     options-cover
     options-dense
     :options="listaOpciones"
     emit-value
+    input-select
     no-options-label="Opción no encontrada"
     map-options
     :dialog="dialog"
@@ -124,12 +125,14 @@ const props = withDefaults(
     outlined?: boolean;
     filled?: boolean;
     clearable?: boolean;
+    noSlot: boolean;
   }>(),
   {
     outlined: true,
     // filled: true,
     dense: true,
     clearable: true,
+    noSlot: false,
     clase: '',
     rules: [] as Function[],
     disable: false,

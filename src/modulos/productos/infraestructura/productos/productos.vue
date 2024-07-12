@@ -3,9 +3,35 @@
     :nav="[{ label: 'productos', to: 'productos' }]"
     titulo="Gestion de productos"
   />
+  <div style="border: none; padding: 0" class="mx-4">
+    <div class="flex w-full">
+      <input-text
+        clase="w-1/3"
+        label="Buscar"
+        @update="(v) => (estado.filtros.buscarFiltro = v)"
+        noSlot
+      />
+      <input-select
+        clase="w-1/3"
+        label="Categoria"
+        @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
+        :opciones="estado.listaCategorias"
+        noSlot
+      />
+      <input-select
+        clase="w-1/3"
+        label="Marca"
+        @update="(v) => (estado.filtros.marcaSeleccionada = v)"
+        :opciones="estado.listaMarcas"
+        noSlot
+      />
+    </div>
+  </div>
+
   <Table
-    :rows="productoStore.productos"
-    :columns="[
+    :rows="rowsParaMostrar"
+    :columns="
+    [
   {
     name: 'imagen',
     label: 'Imagen',
@@ -366,12 +392,56 @@ import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/ag
 const router = useRouter();
 const productoStore = storeProducto();
 
-const { estado, crearProductoBasico, actProductosDB, categoriaSelectOptions } =
-  useProducto();
+const {
+  estado,
+  service,
+  crearProductoBasico,
+  actProductosDB,
+  categoriaSelectOptions,
+  categoriaSelectOptionsFiltro,
+  getCategoriaList,
+} = useProducto();
 
 // layout
 definePageMeta({
   layout: 'cathering',
+});
+
+const rowsParaMostrar = computed(() => {
+  let filtered = productoStore.productos;
+  // filtro por categoria
+  if (
+    estado.filtros.categoriaSeleccionada != null &&
+    estado.filtros.categoriaSeleccionada !== ''
+  ) {
+    filtered = filtered.filter((producto) =>
+      getCategoriaList(estado.filtros.categoriaSeleccionada).includes(
+        producto.categoria._id,
+      ),
+    );
+  }
+  // filtro por marca
+  if (
+    estado.filtros.marcaSeleccionada != null &&
+    estado.filtros.marcaSeleccionada !== ''
+  ) {
+    filtered = filtered.filter((producto) =>
+      producto.variedades
+        .map((variedad) => variedad.marca._id)
+        .includes(estado.filtros.marcaSeleccionada),
+    );
+  }
+  // filtro por buscar que no discrimine maiusculas de minusculas y acentos
+  if (estado.filtros.buscarFiltro != null) {
+    filtered = filtered.filter((producto) => {
+      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+      return regex.test(
+        producto.nombre +
+          producto.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+      );
+    });
+  }
+  return filtered;
 });
 
 const { $socket } = useNuxtApp();
@@ -379,6 +449,12 @@ onMounted(async () => {
   productoStore.productos = await productoStore.getProductos();
 
   estado.categoriasParaSelect = await categoriaSelectOptions(true);
+
+  estado.listaCategorias = await categoriaSelectOptionsFiltro();
+  estado.listaMarcas = (await service.buscarMarcas()).map((marca) => ({
+    value: marca._id,
+    label: marca.nombre,
+  }));
 
   // let reloaded = localStorage.getItem('reloaded');
   // if (reloaded) {

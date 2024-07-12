@@ -14,8 +14,8 @@
     :filled="filled"
     :outlined="outlined"
     :class="clase"
-    bottom-slots
-    :error="errorFlag"
+    :bottom-slots="!noSlot"
+    :error="noSlot ? undefined : errorFlag"
     :errorMessage="errorMensaje"
   >
     <template #prepend v-if="icono">
@@ -79,6 +79,7 @@ const props = withDefaults(
     filled?: boolean;
     clearable?: boolean;
     autogrow?: boolean;
+    noSlot: boolean;
   }>(),
   {
     tipo: 'text',
@@ -86,6 +87,7 @@ const props = withDefaults(
     // filled: true,
     autogrow: false,
     dense: true,
+    noSlot: false,
     clearable: true,
     clase: '',
     rules: [] as Function[],

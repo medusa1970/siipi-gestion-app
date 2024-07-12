@@ -93,8 +93,6 @@ export function diferenciaFechas(
   fecha2: Date | string = new Date(),
   sensibilidad: Sensibilidad = 'D',
 ): number {
-  console.log(fecha2);
-  console.log(new Date(fecha1).getTime());
   return (
     (new Date(fecha2).getTime() - new Date(fecha1).getTime()) /
     factor(sensibilidad)

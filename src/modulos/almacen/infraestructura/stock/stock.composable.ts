@@ -36,6 +36,14 @@ export const useStock = () => {
       };
     }[],
     arbolCategorias: null as Categoria,
+    listaCategorias: [],
+    listaMarcas: [],
+    filtros: {
+      alerta: '',
+      categoriaSeleccionada: '',
+      marcaSeleccionada: '',
+      buscarFiltro: '',
+    },
   });
 
   /**
@@ -158,7 +166,7 @@ export const useStock = () => {
     });
   };
 
-  const categoriaSelectOptions = async () => {
+  const categoriaSelectOptionsFiltro = async () => {
     const options = [];
     if (!estado.arbolCategorias) {
       estado.arbolCategorias = await productoStore.getCategoriaArbol();
@@ -200,7 +208,7 @@ export const useStock = () => {
     store,
     service,
     obtenerTodoStock,
-    categoriaSelectOptions,
+    categoriaSelectOptionsFiltro,
     getCategoriaList,
   };
 };

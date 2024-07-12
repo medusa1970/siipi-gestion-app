@@ -188,7 +188,7 @@
             (v) => (estado.datos_productoMarca.cantidadLimite[0] = Number(v))
           "
           :rules="[useRules.requerido(), useRules.numero()]"
-          :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[0]"
+          :porDefecto="estado.datos_productoMarca.cantidadLimite?.[0] ?? 0"
         />
         <input-text
           style="width: 50%"
@@ -197,7 +197,7 @@
             (v) => (estado.datos_productoMarca.cantidadLimite[1] = Number(v))
           "
           :rules="[useRules.requerido(), useRules.numero()]"
-          :porDefecto="'' + estado.datos_productoMarca.cantidadLimite[1]"
+          :porDefecto="estado.datos_productoMarca.cantidadLimite?.[0] ?? 0"
         />
       </div>
 
@@ -216,9 +216,7 @@
             (v) => (estado.datos_productoMarca.inventarioLimite[0] = Number(v))
           "
           :rules="[useRules.requerido(), useRules.numero()]"
-          :porDefecto="
-            '' + (estado.datos_productoMarca.inventarioLimite?.[0] ?? '')
-          "
+          :porDefecto="estado.datos_productoMarca.inventarioLimite?.[0] ?? 0"
         />
 
         <input-text
@@ -228,9 +226,7 @@
             (v) => (estado.datos_productoMarca.inventarioLimite[1] = Number(v))
           "
           :rules="[useRules.requerido(), useRules.numero()]"
-          :porDefecto="
-            '' + (estado.datos_productoMarca.inventarioLimite?.[1] ?? '')
-          "
+          :porDefecto="estado.datos_productoMarca.inventarioLimite?.[1] ?? 0"
         />
       </div>
 
@@ -247,7 +243,7 @@
           (v) => (estado.datos_productoMarca.cantidadMaxPedido = Number(v))
         "
         :rules="[useRules.requerido(), useRules.numero()]"
-        :porDefecto="'' + (estado.datos_productoMarca.cantidadMaxPedido ?? '')"
+        :porDefecto="'' + (estado.datos_productoMarca.cantidadMaxPedido ?? 0)"
       />
     </template>
   </Dialog>

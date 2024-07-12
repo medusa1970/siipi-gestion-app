@@ -10,7 +10,9 @@
       />
     </q-breadcrumbs>
   </div>
-  <h1 v-if="titulo" id="tituloPagina">{{ titulo }}</h1>
+  <h1 class="!mx-3 !mt-2" v-if="titulo" id="tituloPagina">
+    {{ titulo }}
+  </h1>
 </template>
 
 <script setup lang="ts">

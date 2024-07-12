@@ -17,7 +17,6 @@
     :bottom-slots="!noSlot"
     :error="noSlot ? undefined : errorFlag"
     :errorMessage="errorMensaje"
-    options-cover
     options-dense
     :options="listaOpciones"
     emit-value

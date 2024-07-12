@@ -3,21 +3,6 @@
     :nav="[{ label: 'productos', to: 'productos' }]"
     titulo="Gestion de productos"
   />
-  <div style="text-align: right" class="mx-4">
-    <q-btn
-      icon-right="add"
-      color="green"
-      label="Crear producto"
-      no-caps
-      style="font-size: 14.5px"
-      padding="4px 10px"
-      @click="
-        () => {
-          estado.modal.show_crearProductoBasico = true;
-        }
-      "
-    />
-  </div>
 
   <Table
     :rows="rowsParaMostrar"
@@ -72,27 +57,39 @@
     :defaultImage="ProductoImage"
   >
     <template #dropdown>
-      <div class="flex w-full">
+      <div class="w-full grid grid-cols-[1fr_1fr_1fr_auto] gap-3">
         <input-text
-          clase="w-1/3"
+          class="col-span-1"
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           porDefecto=""
           noSlot
         />
         <input-select
-          clase="w-1/3"
+          class="col-span-1"
           label="Categoria"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="estado.listaCategorias"
           noSlot
         />
         <input-select
-          clase="w-1/3"
+          class="col-span-1"
           label="Marca"
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.listaMarcas"
           noSlot
+        />
+        <q-btn
+          class=""
+          icon="add"
+          color="green"
+          no-caps
+          padding="4px 10px"
+          @click="
+            () => {
+              estado.modal.show_crearProductoBasico = true;
+            }
+          "
         />
       </div>
     </template>

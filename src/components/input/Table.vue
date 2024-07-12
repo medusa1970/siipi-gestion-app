@@ -8,8 +8,8 @@
     :filter="filter"
     class="border-none"
     virtual-scroll
-    :rows-per-page-options="[50, 0]"
-    style="max-height: 550px"
+    :rows-per-page-options="[30]"
+    style="max-height: 600px; overflow-y: auto"
   >
     <template #top>
       <!-- slot para el boton de agregar -->
@@ -78,12 +78,14 @@ const props = withDefaults(
     rowKey: string;
     conBusqueda: boolean;
     watchFilter: string;
+    titulo: string;
   }>(),
   {
     defaultImage: ProductoImage,
     rowKey: '_id',
     watchFilter: '',
     conBusqueda: false,
+    titulo: '',
   },
 );
 watch(

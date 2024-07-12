@@ -5,12 +5,12 @@
     <Table
       :rows="productoStore.producto.variedades"
       :columns="[
-  {
-    name: 'imagen',
-    label: 'Imagen',
-    align: 'left',
-    field: (row: any) => row.imagen?.cloudinaryUrl,
-  },
+  // {
+  //   name: 'imagen',
+  //   label: 'Imagen',
+  //   align: 'left',
+  //   field: (row: any) => row.imagen?.cloudinaryUrl,
+  // },
   {
     name: 'marca',
     required: true,
@@ -149,7 +149,7 @@
       <!-- Marca -->
       <input-select
         label="Marca"
-        v-if="!estado.modal.show_modificarProductoMarca"
+        :disable="estado.modal.show_modificarProductoMarca"
         info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
         :opciones="estado.marcasParaSelect"
         @update="(v) => (estado.datos_productoMarca.marca = v)"
@@ -161,7 +161,7 @@
       />
 
       <!-- Imagen -->
-      <input-image
+      <!-- <input-image
         label="Imagen"
         @update="
           (base64Data, mimetype) =>
@@ -171,7 +171,7 @@
         "
         info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
         icono="photo_camera"
-      />
+      /> -->
 
       <!-- Stock minimo -->
       <p>

@@ -91,11 +91,11 @@ export const useDetalleMarcas = () => {
       inventarioLimite: estado.datos_productoMarca.inventarioLimite,
       cantidadMaxPedido: estado.datos_productoMarca.cantidadMaxPedido,
     };
-    if (estado.datos_productoMarca.imagen) {
-      Object.assign(datos, {
-        imagen: estado.datos_productoMarca.imagen,
-      });
-    }
+    // if (estado.datos_productoMarca.imagen) {
+    //   Object.assign(datos, {
+    //     imagen: estado.datos_productoMarca.imagen,
+    //   });
+    // }
     // hacemos la consulta con manejo de errores
     let productoModificado;
     try {
@@ -149,11 +149,11 @@ export const useDetalleMarcas = () => {
       cantidadLimite: estado.datos_productoMarca.cantidadLimite,
       inventarioLimite: estado.datos_productoMarca.inventarioLimite,
     };
-    if (estado.datos_productoMarca.imagen) {
-      Object.assign(datos, {
-        imagen: estado.datos_productoMarca.imagen,
-      });
-    }
+    // if (estado.datos_productoMarca.imagen) {
+    //   Object.assign(datos, {
+    //     imagen: estado.datos_productoMarca.imagen,
+    //   });
+    // }
     // hacemos la consulta con manejo de errores
     let productoModificado;
     try {

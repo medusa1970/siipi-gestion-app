@@ -25,11 +25,10 @@
     no-options-label="Opción no encontrada"
     map-options
     :dialog="dialog"
-  >
-    <!-- use-input
+    use-input
     fill-input
-    hide-selected -->
-
+    hide-selected
+  >
     <template #no-option>
       <q-item>
         <q-item-section class="text-grey"> No hay resultados </q-item-section>
@@ -45,7 +44,7 @@
     </template>
     <template #after>
       <q-btn
-        v-if="dialog"
+        v-if="dialog && !disable"
         size="12px"
         icon="add"
         color="primary"
@@ -187,14 +186,14 @@ const handleChange = (valor: string | null) => {
 // al entrar un valor en el input, filtra las opciones (no-case)
 function filterFn(valor: string, update: Function) {
   update(() => {
-    // const needle = valor.toLowerCase();
-    // const opciones = props.opciones;
-    // listaOpciones.value =
-    //   valor === ''
-    //     ? opciones
-    //     : opciones?.filter(
-    //         (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
-    //       );
+    const needle = valor.toLowerCase();
+    const opciones = props.opciones;
+    listaOpciones.value =
+      valor === ''
+        ? opciones
+        : opciones?.filter(
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
+          );
   });
 }
 
@@ -217,7 +216,7 @@ function updateOpciones(
  */
 
 // update listaOpciones cuando props.opciones cambia
-// resuelve un bug donde las props se cargan despues de los reactives
+// eso es para resuelver un bug donde las props se cargan despues de los reactives
 let once = true;
 watch(
   () => props.opciones,

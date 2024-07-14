@@ -83,52 +83,6 @@ mutation modificarOfertaBasica(
   }
 }
 
-# mutation borrarOfertas(
-#   $busqueda: BuscarOfertaDto!
-#   $opciones: BorrarOpciones = {}
-# ) {
-#   borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
-#     _id
-#     nombre
-#   }
-# }
-
-query catalogoArbol(
-  $busqueda: BuscarCatalogoDto!
-  $opciones: BuscarOpciones = {}
-) {
-  catalogoArbol(busqueda: $busqueda, opciones: $opciones) {
-    _id
-    nombre
-    ofertas {
-      nombre
-    }
-    hijas {
-      _id
-      _creado
-      _modificado
-      nombre
-      ofertas {
-        nombre
-      }
-      hijas {
-        _id
-        nombre
-        ofertas {
-          nombre
-        }
-        hijas {
-          _id
-          nombre
-          ofertas {
-            nombre
-          }
-        }
-      }
-    }
-  }
-}
-
 # modifica/agrega un ingrediente simple de una oferta
 mutation modificarOfertaIngredientes(
   $busqueda: BuscarOfertaDto!

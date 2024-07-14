@@ -1,0 +1,89 @@
+query buscarCategorias(
+  $busqueda: BuscarCategoriaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarCategoriaDto = {}
+) {
+  buscarCategorias(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    pariente {
+      _id
+    }
+    nombre
+  }
+}
+
+mutation crearCategorias(
+  $datos: [CrearCategoriaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearCategorias(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    pariente {
+      _id
+    }
+  }
+}
+
+mutation modificarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $datos: ModificarCategoriaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarCategorias(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    pariente {
+      _id
+    }
+  }
+}
+
+mutation borrarCategorias(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarCategorias(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    pariente {
+      _id
+    }
+  }
+}
+
+query categoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    productos {
+      nombre
+    }
+    hijas {
+      _id
+      nombre
+      productos {
+        _id
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        productos {
+          _id
+        }
+      }
+    }
+  }
+}

@@ -1,11 +1,14 @@
 
 FUNCIONALIDADES
 
+formXxx, valor del input va al formulario
+
 mise en forme expands
 click image agrandar
 permisos borrar
 empleado editar
 cantidadMax opcional
+imagen por defecto
 
 TODO : 
 - error contrasena equivocada

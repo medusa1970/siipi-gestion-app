@@ -278,7 +278,7 @@ const rowsParaMostrar = computed(() => {
     filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
   }
   if (estado.filtros.alerta === 'inventario') {
-    filtered = filtered.filter((stock) => stock.alertaInventariar > 0);
+    filtered = filtered.filter((stock) => stock.alertaInventario > 0);
   }
   // filtro por categoria
   if (

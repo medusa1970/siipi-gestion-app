@@ -104,6 +104,13 @@
       >
         <q-btn
           class="p-1"
+          color="orange"
+          size="sm"
+          icon="work"
+          @click="crearOferta"
+        />
+        <q-btn
+          class="p-1"
           color="black"
           size="sm"
           icon="edit"
@@ -199,6 +206,21 @@
       </div>
     </template>
   </Table>
+
+  <q-dialog v-model="estado.modal.show_crearOferta">
+    <q-card>
+      <q-card-section class="flex justify-between">
+        <div class="mt-2">Agregar un nuevo item</div>
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <crearOfertaComp
+          :producto="productoStore.producto"
+          @crear:oferta="handleOfertaCreada"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 
   <!-- 
     MODAL
@@ -386,6 +408,7 @@ import ProductoImage from '@/assets/img/producto.png';
 import { useProducto } from '@/modulos/productos/infraestructura/productos/productos.composable';
 import { storeProducto } from '@/modulos/productos/negocio/producto.store';
 import agregarCategoriaComp from '~/modulos/productos/infraestructura/selects/agregarCategoria.vue';
+import crearOfertaComp from '@/modulos/ofertas/infraestructura/agregarOferta.vue';
 const router = useRouter();
 const productoStore = storeProducto();
 
@@ -411,11 +434,11 @@ const rowsParaMostrar = computed(() => {
     estado.filtros.categoriaSeleccionada != null &&
     estado.filtros.categoriaSeleccionada !== ''
   ) {
-    filtered = filtered.filter((producto) =>
-      getCategoriaList(estado.filtros.categoriaSeleccionada).includes(
+    filtered = filtered.filter((producto) => {
+      return getCategoriaList(estado.filtros.categoriaSeleccionada).includes(
         producto.categoria._id,
-      ),
-    );
+      );
+    });
   }
   // filtro por marca
   if (
@@ -464,6 +487,17 @@ onMounted(async () => {
     await actProductosDB();
   });
 });
+
+/**
+ * Crear una oferta a partir del producto
+ */
+const crearOferta = (Producto) => {
+  estado.modal.show_crearOferta = true;
+};
+const handleOfertaCreada = (oferta) => {
+  console.log(oferta);
+  estado.modal.show_crearOferta = false;
+};
 
 onBeforeUnmount(() => {
   // localStorage.removeItem('reloaded');

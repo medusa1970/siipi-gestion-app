@@ -39,7 +39,6 @@
       icon="folder_copy"
       label="Medidas & Empaques"
     />
-
     <!-- Proveedores -->
     <q-tab
       v-if="soloAdquisicion"
@@ -47,6 +46,9 @@
       icon="query_stats"
       label="Proveedores"
     />
+
+    <!-- Proveedores -->
+    <q-tab v-if="soloAdquisicion" name="ofertas" icon="work" label="Ofertas" />
 
     <!-- Acciones -->
     <q-tab name="acciones" icon="delete" label="Borrar" />
@@ -79,6 +81,11 @@
     <!-- Proveedores -->
     <q-tab-panel name="proveedores" animated>
       <ProveedorTabPanel />
+    </q-tab-panel>
+
+    <!-- Ofertas -->
+    <q-tab-panel name="ofertas" animated>
+      <OfertasTabPanel />
     </q-tab-panel>
 
     <!-- Acciones -->
@@ -114,6 +121,7 @@ import MedidaTabPanel from '../detalle/medida/MedidaTabPanel.vue';
 import ProveedorTabPanel from '../detalle/proveedor/ProveedorTabPanel.vue';
 import AccionesTabPanel from '../detalle/acciones/AccionesTabPanel.vue';
 import BasicoTabPanel from '../detalle/basico/BasicoTabPanel.vue';
+import OfertasTabPanel from '../detalle/ofertas/OfertasTabPanel.vue';
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {

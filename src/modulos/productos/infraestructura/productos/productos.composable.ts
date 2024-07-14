@@ -26,8 +26,9 @@ export const useProducto = () => {
     categoriasParaSelect: [] as any[],
     arbolCategorias: null as Categoria,
 
-    // modales
+    // modfiltrosales
     modal: {
+      show_crearOferta: false,
       show_crearProductoBasico: false,
       show_informacionProducto: false,
     },
@@ -68,6 +69,7 @@ export const useProducto = () => {
     NotifySucessCenter('Producto agregado correctamente');
     await store.addProducto(productoCreado);
     estado.modal.show_crearProductoBasico = false;
+    goTo(router, 'producto', { id: productoCreado._id });
     // Object.assign(estado.datos_crearProductoBasico, init_crearProductoBasico);
     // estado.datos_crearProductoBasico = clone(init_crearProductoBasico);
   };

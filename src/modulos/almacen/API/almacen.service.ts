@@ -9,22 +9,10 @@ import type {
 } from '#gql';
 
 export const almacenService = {
-  /**
-   * Retorna el stock de una entidad
-   */
-  stockEntidad: async (entidadID: string): Promise<Stock[]> => {
-    try {
-      const entidad = extraerUno(
-        await GqlStockBuscarEntidad({
-          busqueda: { _id: [entidadID] },
-          opciones: { limit: 1, errorSiVacio: true },
-        }),
-      );
-      return entidad.almacen;
-    } catch (err) {
-      throw formatApiError(err);
-    }
-  },
+  // retorna el almacen de una entidad
+  stockEntidad: async (entidadID: string): Promise<Stock[]> =>
+    ((await buscarUno(GqlStockBuscarEntidad, entidadID, true)) as Entidad)
+      .almacen,
 
   /**
    * Realizar un inventario

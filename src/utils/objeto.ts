@@ -7,8 +7,8 @@ export const extraer = function (objeto: { [key: string]: any }) {
   return objeto[keys[0]];
 };
 export const extraerUno = function (objeto: { [key: string]: any }) {
-  const [res] = extraer(objeto);
-  return res;
+  const res = extraer(objeto);
+  return Array.isArray(res) ? res[0] : res;
 };
 export const clone = function (objeto: any) {
   return JSON.parse(JSON.stringify(objeto)) as typeof objeto;

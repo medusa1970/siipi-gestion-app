@@ -1,0 +1,245 @@
+query buscarProductos_basico(
+  $busqueda: BuscarProductoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarProductoDto = {}
+) {
+  buscarProductos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    imagen {
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
+      imagen {
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      _borrado
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation crearProductos_basico(
+  $datos: [CrearProductoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearProductos(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    imagen {
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
+      imagen {
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      _borrado
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation modificarProductos_basico(
+  $busqueda: BuscarProductoDto!
+  $datos: ModificarProductoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarProductos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    imagen {
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
+      imagen {
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      _borrado
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation borrarProductos_basico(
+  $busqueda: BuscarProductoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarProductos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    comentario
+    imagen {
+      cloudinaryUrl
+    }
+    categoria {
+      _id
+    }
+    variedades {
+      _id
+      marca {
+        _id
+        nombre
+      }
+      cantidadLimite
+      inventarioLimite
+      cantidadMaxPedido
+      imagen {
+        cloudinaryUrl
+      }
+    }
+    medida {
+      _id
+      nombre
+      abreviacion
+      tipoEmpaques {
+        _id
+        nombre
+        abreviacion
+        cantidad
+      }
+    }
+    empaques {
+      _id
+      _borrado
+      nombre
+      abreviacion
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+    categoria {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}

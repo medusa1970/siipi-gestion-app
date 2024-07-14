@@ -1,0 +1,144 @@
+query buscarEntidades_servicios(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+    servicios {
+      _id
+      identificativo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      precioConFactura
+      precioSinFactura
+      preciosPorMayor {
+        _id
+        cantidadMin
+        precioSinFactura
+        precioConFactura
+      }
+    }
+  }
+}
+
+mutation crearEntidades_servicios(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+    servicios {
+      _id
+      identificativo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      precioConFactura
+      precioSinFactura
+      preciosPorMayor {
+        _id
+        cantidadMin
+        precioSinFactura
+        precioConFactura
+      }
+    }
+  }
+}
+
+mutation modificarEntidades_servicios(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+    servicios {
+      _id
+      identificativo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      precioConFactura
+      precioSinFactura
+      preciosPorMayor {
+        _id
+        cantidadMin
+        precioSinFactura
+        precioConFactura
+      }
+    }
+  }
+}
+
+query contarEntidades_servicios(
+  $busqueda: BuscarEntidadDto!
+  $opciones: ContarOpciones = {}
+) {
+  contarEntidades(busqueda: $busqueda, opciones: $opciones)
+}
+
+mutation borrarEntidades_servicios(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarEntidades(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+    servicios {
+      _id
+      identificativo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      precioConFactura
+      precioSinFactura
+      preciosPorMayor {
+        _id
+        cantidadMin
+        precioSinFactura
+        precioConFactura
+      }
+    }
+  }
+}

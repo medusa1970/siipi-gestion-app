@@ -35,6 +35,12 @@ h6 {
 #contenido {
   padding: 0 15px;
 }
+.importante {
+  background-color: #f2fff2;
+  border: 1px solid #5555ff;
+  padding: 5px 30px;
+  margin: 0 0 10px 0;
+}
 
 // INVESTIGAR, la primera precarga no lee los estilos globales compartidos en las pages con clases.
 .cont-center {

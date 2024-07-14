@@ -26,7 +26,7 @@ const emits = defineEmits<{
  */
 
 const props = defineProps({
-  opciones: Array, // debe pasarlo el dropdown que llamó al componiente
+  opciones: Array<SelectOpcion>, // debe pasarlo el dropdown que llamó al componiente
 });
 
 /**
@@ -53,9 +53,10 @@ const formSubmit = async (datos: any) => {
   } as SelectOpcion;
 
   // logica para insertar la nueva opcion en la lista
-  const opciones = props.opciones as SelectOpcion[];
+  const opciones = props.opciones;
   const posicion = opciones.length;
   opciones.splice(posicion, 0, nuevaOpcion);
   emits('update:opciones', opciones, posicion);
 };
 </script>
+./select

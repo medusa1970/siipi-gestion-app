@@ -98,7 +98,9 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const localModel = ref<string>(String(props.porDefecto)); // contenido del input
+const localModel = ref<string>(
+  props.porDefecto ? String(props.porDefecto) : null,
+); // contenido del input
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o

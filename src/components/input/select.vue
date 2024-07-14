@@ -62,18 +62,15 @@
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
       <q-card-section>
-        <contenido-dialog
-          :opcionesPariente="listaOpciones"
-          :param="dialogParam"
-          @update:opciones="updateOpciones"
-        />
+        <contenido-dialog @crear:opcion="handleCrearOpcion" />
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import type { SelectOpcion } from './select.interface';
+import type { CrearOpcionEvent } from './select.interface';
+import type { SelectOpcion, selectOpcionCallback } from './select.interface';
 import { ref } from 'vue';
 
 /**
@@ -109,7 +106,7 @@ const props = withDefaults(
     label: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
-    porDefecto?: string; // valor seleccionado al iniciar
+    porDefecto?: any; // valor seleccionado al iniciar
     watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
@@ -142,14 +139,17 @@ const props = withDefaults(
  */
 
 const localModel = ref<string>(props.porDefecto); // contenido del input
-const listaOpciones = ref<SelectOpcion[]>(); // lista de opciones, copia de props.opciones para trabajar
+const opcionesSrc = ref<SelectOpcion[]>(null); // lista de opciones de referencia, copiada de las props para poder ser modificable
+const listaOpciones = ref<SelectOpcion[]>(null); // lista de opciones que se filtrara y se mostrara, diferente de opsionesSrc para no sobreescribir las modificaciones
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
 const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
-onMounted(async () => {
-  listaOpciones.value = props.opciones;
+
+onBeforeMount(async () => {
+  opcionesSrc.value = props.opciones;
+  listaOpciones.value = opcionesSrc.value;
 });
 
 /**
@@ -185,8 +185,15 @@ const handleChange = (valor: string | null) => {
 // al entrar un valor en el input, filtra las opciones (no-case)
 function filterFn(valor: string, update: Function) {
   update(() => {
+    // BUG incompatible con crear:opcion
+    // porque despues de crear:opcion, reinicializa listaOpciones a props.opciones
+    // y eso sobreescriobe el cambio
     const needle = valor.toLowerCase();
-    const opciones = props.opciones;
+    const opciones = opcionesSrc.value;
+    // opcionesSrc.value && opcionesSrc.value.length > 0
+    //   ? opcionesSrc.value
+    //   : props.opciones;
+    console.log(opcionesSrc.value);
     listaOpciones.value =
       valor === ''
         ? opciones
@@ -196,36 +203,37 @@ function filterFn(valor: string, update: Function) {
   });
 }
 
-// agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(
+// Se ha creado una nueva opcion via el boton [+]
+const handleCrearOpcion: CrearOpcionEvent = (
+  valor: string,
   objeto: any,
-  opciones: SelectOpcion[],
-  value: string,
-  payload: any,
-) {
-  listaOpciones.value = opciones;
-  localModel.value = value;
-  handleChange(value);
+  mutarOpciones: selectOpcionCallback,
+) => {
+  // el componiente hijo se encarga de insertar la nueva opcion en la lista
+  opcionesSrc.value = mutarOpciones(opcionesSrc.value);
+  listaOpciones.value = opcionesSrc.value;
+  // seleccionamos la nueva opcion
+  localModel.value = valor;
+  // actualizamos
+  handleChange(valor);
+  // cerramos el dialog
   showDialog.value = false;
+  // mandamos el objeto creado al componiente padre por si tiene algo que hacer con el
   emits('payload', objeto);
-}
+};
 
 /**
  * watch
  */
 
-// update listaOpciones cuando props.opciones cambia
-// eso es para resuelver un bug donde las props se cargan despues de los reactives
-let once = true;
+// update opcionesSrc cuando props.opciones cambia
 watch(
   () => props.opciones,
-  async () => {
-    if (true) {
-      once = false;
-      listaOpciones.value = props.opciones;
-    }
+  () => {
+    listaOpciones.value = props.opciones;
+    opcionesSrc.value = props.opciones;
   },
-  { immediate: false },
+  { immediate: true },
 );
 
 // activar el error si llega un mensaje de error desde el componiente padre

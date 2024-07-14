@@ -1,0 +1,46 @@
+query buscarMarcas(
+  $busqueda: BuscarMarcaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarMarcaDto = {}
+) {
+  buscarMarcas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+  }
+}
+
+mutation crearMarcas($datos: [CrearMarcaDto!]!, $opciones: CrearOpciones = {}) {
+  crearMarcas(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+  }
+}
+
+mutation modificarMarcas(
+  $busqueda: BuscarMarcaDto!
+  $datos: ModificarMarcaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarMarcas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+  }
+}
+
+mutation borrarMarcas(
+  $busqueda: BuscarMarcaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarMarcas(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+  }
+}

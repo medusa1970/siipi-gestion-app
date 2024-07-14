@@ -4,22 +4,22 @@
       {
         icon: 'bi-box',
         label: 'Productos',
-        to: '/cathering/productos',
+        to: 'productos',
       },
       {
         icon: 'warehouse',
         label: 'Stock',
-        to: '/stock',
+        to: 'stock',
       },
       {
         icon: 'sell',
         label: 'Ofertas',
-        to: '/cathering/ofertas',
+        to: 'ofertas',
       },
       {
         icon: 'sell',
         label: 'Catalogos',
-        to: '/cathering/catalogos',
+        to: 'catalogos',
       },
       {
         icon: 'description',
@@ -40,15 +40,40 @@
         ],
       },
       {
-        icon: 'people',
-        label: 'Administracion',
-        subMenu: [
-          {
-            label: 'Empleados',
-            to: '/cathering/empleados',
-          },
-        ],
+        icon: 'bi-box',
+        label: 'Productos2',
+        to: 'productos2',
       },
+      {
+        icon: 'warehouse',
+        label: 'Stock2',
+        to: 'stock2',
+      },
+      {
+        icon: 'tag',
+        label: 'Marcas2',
+        to: 'marcas2',
+      },
+      {
+        icon: 'tag',
+        label: 'Medidas2',
+        to: 'medidas2',
+      },
+      {
+        icon: 'tag',
+        label: 'Proveedores2',
+        to: 'proveedores2',
+      },
+      // {
+      //   icon: 'people',
+      //   label: 'Administracion',
+      //   subMenu: [
+      //     {
+      //       label: 'Empleados',
+      //       to: '/cathering/empleados',
+      //     },
+      //   ],
+      // },
     ]"
     :portada-img="PortadaCathering"
     cathering

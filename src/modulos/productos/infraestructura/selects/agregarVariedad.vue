@@ -143,7 +143,6 @@ const formSubmit = async (datos: any) => {
     cantidadLimite: cantidadLimite.value,
     cantidadMaxPedido: cantidadMaxPedido.value,
   } as CrearVariedadDto;
-  console.log(datosMod);
   if (imagen.value) {
     Object.assign(datos, {
       imagen: imagen.value,
@@ -161,7 +160,14 @@ const formSubmit = async (datos: any) => {
     });
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {
-      marca.error = 'Esta marca ya esta registrada';
+      for (const campo of err.detalle.campos) {
+        const [path] = campo;
+        if (ultimo(path.split('.')) === 'nombre') {
+          errorNombre = 'Este nombre ya esta registrado.';
+        } else if (ultimo(path.split('.')) === 'abreviacion') {
+          errorAbreviacion = 'Esta abreviacion ya esta registrada.';
+        }
+      }
       return;
     }
     errFallBack(err);

@@ -1,15 +1,28 @@
-# Crea un catalogo en la base de datos
+query buscarCatalogos(
+  $busqueda: BuscarCatalogoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarCatalogoDto = {}
+) {
+  buscarCatalogos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+  }
+}
+
 mutation crearCatalogos(
   $datos: [CrearCatalogoDto!]!
   $opciones: CrearOpciones = {}
 ) {
   crearCatalogos(datos: $datos, opciones: $opciones) {
     _id
+    _creado
+    _modificado
     nombre
   }
 }
 
-# modificar catalogo
 mutation modificarCatalogos(
   $busqueda: BuscarCatalogoDto!
   $datos: ModificarCatalogoDto!
@@ -17,35 +30,54 @@ mutation modificarCatalogos(
 ) {
   modificarCatalogos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
     _id
+    _creado
+    _modificado
     nombre
   }
 }
-# borrar catalogo
+
 mutation borrarCatalogos(
   $busqueda: BuscarCatalogoDto!
   $opciones: BorrarOpciones = {}
 ) {
   borrarCatalogos(busqueda: $busqueda, opciones: $opciones) {
     _id
+    _creado
+    _modificado
     nombre
   }
 }
 
-query categoriaArbol(
-  $busqueda: BuscarCategoriaDto!
+query CatalogoArbol(
+  $busqueda: BuscarCatalogoDto!
   $opciones: BuscarOpciones = {}
 ) {
-  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+  catalogoArbol(busqueda: $busqueda, opciones: $opciones) {
     _id
     nombre
+    ofertas {
+      nombre
+    }
     hijas {
       _id
+      _creado
+      _modificado
       nombre
+      ofertas {
+        nombre
+      }
       hijas {
         _id
         nombre
-        productos {
+        ofertas {
+          nombre
+        }
+        hijas {
           _id
+          nombre
+          ofertas {
+            nombre
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 export const errFallBack = (err) => {
-  NotifyError('Se produjó un error, intente de nuevo o reportalo.');
-  console.log('ERROR NO TRATADO', err);
+  NotifyError('Se produjó un error inesperado.');
+  console.log('El error inesperado:', err);
 };
 
 export const formatApiError = (err) => {

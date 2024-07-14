@@ -1,0 +1,57 @@
+query buscarEntidades_basico(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+  }
+}
+
+mutation crearEntidades_basico(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+  }
+}
+
+mutation modificarEntidades_basico(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+  }
+}
+
+mutation borrarEntidades_basico(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarEntidades(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    tipo
+    nombre
+    descripcion
+  }
+}

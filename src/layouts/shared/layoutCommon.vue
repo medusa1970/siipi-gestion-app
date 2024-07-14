@@ -17,11 +17,11 @@
             <h1 class="font-bold uppercase">
               {{ authStore.getNegocio?.nombre }}
             </h1>
-            <p class="text-sm capitalize">
+            <!-- <p class="text-sm capitalize">
               {{
                 `${authStore.getUsuarioNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
               }}
-            </p>
+            </p> -->
           </div>
         </q-toolbar-title>
         <usuarioMenu />
@@ -90,7 +90,11 @@
           </div>
         </q-item>
         <div id="vistas-objetos">
-          <q-list v-for="item in menuList" :key="item" clickable :to="item.to">
+          <q-list
+            v-for="item in menuList"
+            :key="item"
+            @click.prevent="goTo(router, item.to)"
+          >
             <q-expansion-item
               group="somegroup"
               :icon="item.icon"

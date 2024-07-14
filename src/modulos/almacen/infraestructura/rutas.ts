@@ -1,7 +1,7 @@
 export default [
   {
     name: 'stock',
-    path: '/stock',
+    path: '/cathering/stock',
     file: '@/modulos/almacen/infraestructura/stock/stock.vue',
   },
 ];

@@ -6,6 +6,10 @@ import type {
 } from '#gql';
 
 export const ofertaService = {
+  // crea una oferta
+  crearOferta2: async (datos: CrearOfertaDto): Promise<Oferta> =>
+    (await crearUno(GqlCrearOfertas, datos)) as Oferta,
+
   /**
    * Busca todas las ofertas
    * @returns Oferta[]
@@ -32,6 +36,7 @@ export const ofertaService = {
         opciones: { populate: true },
       }),
     ),
+
   /**
    * Modifica una oferta con datos basicos
    * @returns Oferta

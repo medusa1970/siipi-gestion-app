@@ -20,8 +20,8 @@ export const useStock = () => {
       alertaCantidad: number;
       alertaVencimiento: number;
       diasVencimiento: number;
-      alertaInventario: number;
       vencimientoLimite: [number, number];
+      alertaInventario: number;
       marcas: {
         [key: string]: {
           marca: Marca;

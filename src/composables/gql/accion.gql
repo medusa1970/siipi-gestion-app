@@ -1,0 +1,78 @@
+query buscarAcciones(
+  $busqueda: BuscarAccionDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarAccionDto = {}
+) {
+  buscarAcciones(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    _borrado
+    accion
+    producto {
+      _id
+    }
+    oferta {
+      _id
+    }
+    comentario
+  }
+}
+
+mutation crearAcciones(
+  $datos: [CrearAccionDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearAcciones(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    accion
+    producto {
+      _id
+    }
+    oferta {
+      _id
+    }
+    comentario
+  }
+}
+
+mutation modificarAcciones(
+  $busqueda: BuscarAccionDto!
+  $datos: ModificarAccionDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarAcciones(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    accion
+    producto {
+      _id
+    }
+    oferta {
+      _id
+    }
+    comentario
+  }
+}
+
+mutation borrarAcciones(
+  $busqueda: BuscarAccionDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarAcciones(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    accion
+    producto {
+      _id
+    }
+    oferta {
+      _id
+    }
+    comentario
+  }
+}

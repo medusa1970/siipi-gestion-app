@@ -1,5 +1,5 @@
 <template>
-  <q-btn :color="colorBtn" :icon="iconBtn" dense flat round :size="size"
+  <q-btn :color="colorBtn" :icon="iconBtn" dense round :size="size"
     ><q-popup-edit
       :cover="false"
       anchor="bottom right"
@@ -15,8 +15,8 @@
 <script setup>
 defineProps({
   mensaje: String,
-  colorBtn: { type: String, default: 'blue' },
-  iconBtn: { type: String, default: 'info' },
-  size: { type: String, default: '13px' },
+  colorBtn: { type: String, default: 'orange' },
+  iconBtn: { type: String, default: 'question_mark' },
+  size: { type: String, default: '8px' },
 });
 </script>

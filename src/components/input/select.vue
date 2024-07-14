@@ -28,6 +28,19 @@
     fill-input
     hide-selected
   >
+    <q-tooltip
+      v-model="tooltip"
+      class="text-white text-sm bg-blue-9"
+      style="pointer-events: none"
+      anchor="bottom middle"
+      self="top middle"
+      :offset="[0, 5]"
+      max-width="300px"
+      no-parent-event
+      @show="hideTooltip()"
+    >
+      {{ info }}
+    </q-tooltip>
     <template #no-option>
       <q-item>
         <q-item-section class="text-grey"> No hay resultados </q-item-section>
@@ -36,42 +49,42 @@
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
+    <template #after v-if="info && info.length > 0">
+      <q-btn
+        v-if="dialog && !disable"
+        size="12px"
+        icon="add"
+        color="green"
+        style="height: 16px; width: 16px"
+        @click="() => (showDialog = true)"
+      ></q-btn>
+      <q-icon name="help" @click="tooltip = !tooltip" />
+    </template>
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps" :class="scope.opt.class">
         <q-item-section>{{ scope.opt.label }}</q-item-section>
       </q-item>
     </template>
-    <template #after>
-      <q-btn
-        v-if="dialog && !disable"
-        size="12px"
-        icon="add"
-        color="primary"
-        round
-        style="height: 16px"
-        @click="() => (showDialog = true)"
-      ></q-btn>
-      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
-    </template>
   </q-select>
 
-  <q-dialog v-model="showDialog">
-    <q-card>
-      <q-card-section class="flex justify-between">
-        <div class="mt-2">Agregar un nuevo item</div>
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-      <q-card-section>
-        <contenido-dialog @crear:opcion="handleCrearOpcion" />
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+  <popup v-model="showDialog" titulo="Agregar un nuevo item">
+    <template #body>
+      <contenido-dialog @crear:opcion="handleCrearOpcion" />
+    </template>
+  </popup>
 </template>
 
 <script setup lang="ts">
 import type { CrearOpcionEvent } from './select.interface';
 import type { SelectOpcion, selectOpcionCallback } from './select.interface';
 import { ref } from 'vue';
+
+/**
+ * Tooltip
+ */
+const tooltip = ref(false);
+const hideTooltip = (seconds = 3) =>
+  setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
  * emits

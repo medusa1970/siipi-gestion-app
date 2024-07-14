@@ -194,7 +194,7 @@
     </template>
   </Tabla>
 
-  <popup titulo="Nueva Oferta" v-model="estado.modal.crearOferta">
+  <popup v-model="estado.modal.crearOferta" titulo="Nueva Oferta">
     <template #body>
       <crearOfertaComp
         :producto="store.producto"
@@ -203,7 +203,7 @@
     </template>
   </popup>
 
-  <popup titulo="Nuevo producto" v-model="estado.modal.formProductoBasico">
+  <popup v-model="estado.modal.formProductoBasico" titulo="Nuevo producto">
     <template #body>
       <crearProductoBasicoComp @crear:producto="handleProductoCreado" />
     </template>

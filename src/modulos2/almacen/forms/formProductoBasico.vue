@@ -73,7 +73,10 @@
       :porDefecto="estado.dataForm.comentario"
       @update="(v) => (estado.dataForm.comentario = v)"
     />
-    <q-btn :label="edicion != null ? 'Guardar' : 'Crear'" type="submit" />
+    <!-- Submit -->
+    <div class="text-center">
+      <q-btn label="Guardar" color="green" type="submit" />
+    </div>
   </q-form>
 </template>
 
@@ -176,11 +179,5 @@ const formSubmit = async () => {
   }
 };
 
-// manejar la categoria creada desde el boton + del select
-const handleCategoriaCreada = (categoria: any) => {
-  console.log('categoria creada via select:', categoria);
-  // logica para hacer algo aqui
-  // tal vez se querra mandar la marca al componiente padre para
-  // que él lo agregue al store, al estado o al indexdb ?
-};
+const handleCategoriaCreada = (categoria: any) => {};
 </script>

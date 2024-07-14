@@ -1,0 +1,160 @@
+<template>
+  <Tabla
+    :rows="rowsTabla"
+    :columns="[
+      {
+        name: 'proveedor',
+        required: true,
+        label: 'Proveedor',
+        align: 'left',
+        field: (row) => row.proveedor.nombre,
+        sortable: true,
+      },
+      {
+        name: 'marca',
+        required: true,
+        label: 'Marca',
+        align: 'center',
+        field: (row) => row.marca.nombre,
+        sortable: true,
+      },
+      {
+        name: 'identificativo',
+        required: true,
+        label: 'Identificativo',
+        align: 'center',
+        field: (row) => row.identificativo,
+        sortable: true,
+      },
+      {
+        name: 'precioConFactura',
+        required: true,
+        label: 'Precio C/F',
+        align: 'center',
+        field: (row) => row.precioConFactura + ' Bs',
+        sortable: true,
+      },
+      {
+        name: 'precioSinFactura',
+        required: true,
+        label: 'Precio S/F',
+        align: 'center',
+        field: (row) => row.precioSinFactura + ' Bs',
+        sortable: true,
+      },
+      {
+        name: 'actions',
+        label: 'Acciones',
+        align: 'right',
+        slot: true,
+      },
+    ]"
+  >
+    <template #dropdown>
+      <div class="flex">
+        <input-text
+          @update="(v) => (estado.filtros.buscarFiltro = v)"
+          class="col-span-1"
+          label="Buscar"
+          porDefecto=""
+          noSlot
+        />
+        <q-btn
+          @click="() => (estado.modal.formServicioCrear = true)"
+          icon="add"
+          color="green"
+          no-caps
+          padding="4px 10px"
+        />
+      </div>
+    </template>
+    <template #body-cell-actions="{ row }">
+      <q-btn-group push @click="(e) => e.stopPropagation()">
+        <q-btn
+          @click="
+            () => {
+              estado.servicio = row;
+              estado.entidadProveedorId = estado.servicio.proveedor._id;
+              estado.modal.formServicioModificar = true;
+            }
+          "
+          class="p-1"
+          color="black"
+          size="sm"
+          icon="edit"
+        />
+      </q-btn-group>
+    </template>
+    <template #body-expand="{ row }">
+      <pre>{{ row }}</pre>
+    </template>
+  </Tabla>
+
+  <popup
+    v-model="estado.modal.formServicioModificar"
+    titulo="Modificar el proveedor"
+  >
+    <template #body>
+      <formServicio
+        :productoId="store.producto._id"
+        :proveedorId="estado.entidadProveedorId"
+        :edicion="estado.servicio"
+        @modificar:servicio="handleServicioModificado"
+      />
+    </template>
+  </popup>
+
+  <popup
+    v-model="estado.modal.formServicioCrear"
+    titulo="Registrar nuevo proveedor"
+  >
+    <template #body>
+      <formServicio
+        :productoId="store.producto._id"
+        @crear:servicio="handleServicioCreado"
+      />
+    </template>
+  </popup>
+</template>
+
+<script setup lang="ts">
+import { useProductoServicios } from './productoServicios.composable';
+import formServicio from '@/modulos2/almacen/forms/formServicio.vue';
+const {
+  estado,
+  store,
+  getServiciosProducto,
+  handleServicioCreado,
+  handleServicioModificado,
+} = useProductoServicios();
+
+onMounted(async () => {
+  estado.servicios = await getServiciosProducto();
+});
+
+/**
+ * Rows para la tabla
+ */
+const rowsTabla = computed(() => {
+  let filtered = estado.servicios;
+  // filtro para buscar que no discrimine maiusculas de minusculas y acentos
+  if (estado.filtros.buscarFiltro != null) {
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    filtered = filtered.filter((servicio) => {
+      return regex.test(
+        servicio.proveedor?.nombre +
+          servicio.proveedor?.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '') +
+          servicio.marca.nombre +
+          servicio.marca.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, ''),
+      );
+    });
+  }
+  return filtered;
+});
+</script>
+
+<style lang="scss" scoped></style>

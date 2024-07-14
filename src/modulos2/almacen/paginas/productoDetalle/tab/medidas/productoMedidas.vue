@@ -132,8 +132,8 @@
   </Tabla>
 
   <popup
-    titulo="Modificar el empaque"
     v-model="estado.modal.formEmpaqueModificar"
+    titulo="Modificar el empaque"
   >
     <template #body>
       <formEmpaque
@@ -145,8 +145,8 @@
   </popup>
 
   <popup
-    titulo="Registrar nuevo empaque"
     v-model="estado.modal.formEmpaqueCrear"
+    titulo="Registrar nuevo empaque"
   >
     <template #body>
       <formEmpaque

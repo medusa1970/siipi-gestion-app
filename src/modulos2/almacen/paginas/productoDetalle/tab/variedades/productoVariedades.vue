@@ -67,8 +67,8 @@
   </Tabla>
 
   <popup
-    titulo="Modificar la marca"
     v-model="estado.modal.formVariedadModificar"
+    titulo="Modificar la marca"
   >
     <template #body>
       <crearVariedadComp
@@ -80,8 +80,8 @@
   </popup>
 
   <popup
-    titulo="Registrar nueva marca"
     v-model="estado.modal.formVariedadCrear"
+    titulo="Registrar nueva marca"
   >
     <template #body>
       <crearVariedadComp

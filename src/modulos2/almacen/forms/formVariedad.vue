@@ -15,39 +15,30 @@
     />
 
     <!-- Stock minimo -->
-    <p>
-      Alerta de cantidad baja en el stock
-      <input-botonAyuda
-        mensaje="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
-      />
-    </p>
+    <p>Alerta de cantidad baja en el stock</p>
     <div class="flex">
       <input-text
-        style="width: 50%"
+        style="width: 45%"
         label="Primer aviso"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
       />
       <input-text
-        style="width: 50%"
+        style="width: 55%"
         label="Segundo aviso"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[1] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
+        info="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
       />
     </div>
 
     <!-- Stock minimo -->
-    <p>
-      Alerta de que hay que inventariar
-      <input-botonAyuda
-        mensaje="Despues de hacer un inventario, cuando pasan el numero de días indicado en el primero campo, se mandara un recordatorio naranja, y un recordatorio rojo cuando pasan el numero de días indicado en el segundo campo."
-      />
-    </p>
+    <p>Alerta de que hay que inventariar</p>
     <div class="flex">
       <input-text
-        style="width: 50%"
+        style="width: 45%"
         label="Primer aviso"
         :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.inventarioLimite[0] = Number(v))"
@@ -55,29 +46,28 @@
       />
 
       <input-text
-        style="width: 50%"
+        style="width: 55%"
         label="Segundo aviso"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
         @update="(v) => (estado.dataForm.inventarioLimite[1] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
+        info="Despues de hacer un inventario, cuando pasan el numero de días indicado en el primero campo, se mandara un recordatorio naranja, y un recordatorio rojo cuando pasan el numero de días indicado en el segundo campo."
       />
     </div>
 
     <!-- Cantidad max en un pedido -->
-    <p>
-      Cantidad maxima en un pedido de punto
-      <input-botonAyuda
-        mensaje="Para evitar errores como el million de Pinias =)"
-      />
-    </p>
     <input-text
       label="Cantidad maxima"
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = Number(v))"
       :rules="[useRules.requerido(), useRules.numero()]"
+      info="Para evitar errores como el million de Pinias =)"
     />
 
-    <q-btn :label="edicion != null ? 'Guardar' : 'Crear'" type="submit" />
+    <!-- Submit -->
+    <div class="text-center">
+      <q-btn label="Guardar" color="green" type="submit" />
+    </div>
   </q-form>
 </template>
 
@@ -203,11 +193,5 @@ const formSubmit = async () => {
   }
 };
 
-// manejar la marca creada desde el boton + del select
-const handleMarcaCreada = (marca: any) => {
-  console.log('marca creada via select:', marca);
-  // logica para hacer algo aqui
-  // tal vez se querra mandar la marca al componiente padre para
-  // que él lo agregue al store, al estado o al indexdb ?
-};
+const handleMarcaCreada = (marca: any) => {};
 </script>

@@ -90,7 +90,7 @@ const soloAlmacenAdquisicion = ref(
 
 import MarcaTabPanel from './tab/variedades/productoVariedades.vue';
 import MedidaTabPanel from './tab/medidas/productoMedidas.vue';
-import ProveedorTabPanel from './tab/proveedores/productoProveedores.vue';
+import ProveedorTabPanel from './tab/proveedores/productoServicios.vue';
 import AccionesTabPanel from './tab/acciones/productoAcciones.vue';
 import BasicoTabPanel from './tab/basico/productoBasico.vue';
 import OfertasTabPanel from './tab/ofertas/productoOfertas.vue';

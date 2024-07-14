@@ -51,7 +51,11 @@
       info="Cantidad de empaques en unidades básicas"
       :rules="[useRules.requerido(), useRules.numero()]"
     />
-    <q-btn :label="edicion != null ? 'Guardar' : 'Crear'" type="submit" />
+
+    <!-- Submit -->
+    <div class="text-center">
+      <q-btn label="Guardar" color="green" type="submit" />
+    </div>
   </q-form>
 </template>
 
@@ -183,11 +187,5 @@ const formSubmit = async () => {
   }
 };
 
-// manejar la marca creada desde el boton + del select
-const handleMarcaCreada = (marca: any) => {
-  console.log('marca creada via select:', marca);
-  // logica para hacer algo aqui
-  // tal vez se querra mandar la marca al componiente padre para
-  // que él lo agregue al store, al estado o al indexdb ?
-};
+const handleMarcaCreada = (marca: any) => {};
 </script>

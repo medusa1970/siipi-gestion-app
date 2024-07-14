@@ -135,8 +135,13 @@ export const api = {
     d: ModificarEntidadDto,
     o: ModificarOpciones & { loading?: boolean } = {},
     t: any = null,
-  ): Promise<Entidad> =>
-    <Entidad>await mu(GqlModificarEntidades_servicios, t, b, d, o, o.loading),
+  ): Promise<Entidad> => {
+    console.log('d', d);
+    console.log('b', b);
+    return <Entidad>(
+      await mu(GqlModificarEntidades_servicios, t, b, d, o, o.loading)
+    );
+  },
   modificarEntidades_servicios: async (
     b: BuscarEntidadDto,
     d: ModificarEntidadDto,

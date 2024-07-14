@@ -379,7 +379,7 @@ export const productoService = {
   },
 
   agregarServicio: async (
-    proveedorId: string,
+    entidadProveedorId: string,
     servicio: {
       marca: string;
       producto: string;
@@ -396,7 +396,7 @@ export const productoService = {
     try {
       return extraerUno(
         await GqlModificarEntidadesServicio({
-          busqueda: { _id: [proveedorId] },
+          busqueda: { _id: [entidadProveedorId] },
           datos: {
             servicios: {
               agregar: [servicio],
@@ -411,14 +411,14 @@ export const productoService = {
   },
 
   modificarServicioProducto: async (
-    proveedorId: string,
+    entidadProveedorId: string,
     servicioId: string,
     servicio: ModificarServicioDto,
   ): Promise<Entidad | null> => {
     try {
       return extraerUno(
         await GqlModificarEntidadesServicio({
-          busqueda: { _id: [proveedorId] },
+          busqueda: { _id: [entidadProveedorId] },
           datos: {
             servicios: {
               buscar: { _id: [servicioId] },

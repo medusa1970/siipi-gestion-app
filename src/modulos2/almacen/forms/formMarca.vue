@@ -8,7 +8,10 @@
       :rules="[useRules.requerido()]"
       :error="estado.errorNombre"
     />
-    <q-btn :label="edicion != null ? 'Guardar' : 'Crear'" type="submit" />
+    <!-- Submit -->
+    <div class="text-center">
+      <q-btn label="Guardar" color="green" type="submit" />
+    </div>
   </q-form>
 </template>
 

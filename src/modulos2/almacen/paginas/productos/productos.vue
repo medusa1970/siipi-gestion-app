@@ -101,7 +101,12 @@
           size="sm"
         />
         <q-btn
-          @click="() => (estado.modal.crearOferta = true)"
+          @click="
+            () => {
+              estado.productoSeleccionado = row._id;
+              estado.modal.crearOferta = true;
+            }
+          "
           icon="add_business"
           class="p-1"
           color="orange"
@@ -199,16 +204,10 @@
 
   <popup v-model="estado.modal.crearOferta" titulo="Nueva Oferta">
     <template #body>
-      <crearOfertaComp
-        :producto="store.producto"
-        @crear:oferta="handleOfertaCreada"
+      <formOfertaProducto
+        :config="{ productoId: estado.productoSeleccionado }"
+        @crearObjeto="handleOfertaCreada"
       />
-    </template>
-  </popup>
-
-  <popup v-model="estado.modal.formProductoBasico" titulo="Nuevo producto">
-    <template #body>
-      <crearProductoBasicoComp @crear:producto="handleProductoCreado" />
     </template>
   </popup>
 </template>
@@ -221,8 +220,7 @@ definePageMeta({
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { useProductos } from './productos.composable';
 import ProductoImage from '@/assets/img/producto.png';
-import crearOfertaComp from '@/modulos/ofertas/infraestructura/agregarOferta.vue';
-import crearProductoBasicoComp from '@/modulos2/almacen/forms/formProductoBasico.vue';
+import formOfertaProducto from '@/modulos2/almacen/forms/formOfertaProducto.vue';
 const router = useRouter();
 const { $socket } = useNuxtApp();
 const { estado, store } = useProductos();

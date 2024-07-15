@@ -1,4 +1,4 @@
-import type { Categoria, Producto } from '#gql';
+import type { Catalogo, Categoria, Producto } from '#gql';
 import localforage from 'localforage';
 
 interface storeProps {
@@ -6,8 +6,9 @@ interface storeProps {
   producto: Producto | null;
   // cache de la lista de los productos
   productos: Producto[] | null;
-  // arbol de categorias
+  // arboles
   categoriaArbol: Categoria | null;
+  catalogoArbol: Catalogo | null;
   // si se tiene que refrescar el arbol (se agrego una categoria por cierto)
   refreshArbol: boolean;
 }
@@ -18,6 +19,7 @@ export const storeAlmacen = defineStore('almacen', {
     productos: [],
     refreshArbol: true,
     categoriaArbol: null,
+    catalogoArbol: null,
   }),
 
   getters: {
@@ -40,6 +42,28 @@ export const storeAlmacen = defineStore('almacen', {
           }
         }
         return state.categoriaArbol;
+      };
+    },
+    /**
+     * Retorna el arbol de catalogos
+     * Si no existe o si se indico refresh=true, lo obtiene de la API
+     * @retorne Catalogo con sus hijas populadas
+     */
+    getCatalogoArbol: (state) => {
+      return async (refresh: boolean = false): Promise<Catalogo> => {
+        if (state.catalogoArbol === null || state.refreshArbol) {
+          try {
+            state.catalogoArbol = await api.buscarArbolCatalogos({
+              nombre: ['CATALOGO RAIZ'],
+            });
+            state.refreshArbol = false;
+          } catch (err) {
+            errFallBack(err);
+            return null;
+          }
+        }
+        console.log(0, state.catalogoArbol);
+        return state.catalogoArbol;
       };
     },
   },

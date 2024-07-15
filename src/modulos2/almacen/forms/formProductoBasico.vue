@@ -91,7 +91,6 @@ import type {
 } from '~/components/input/select.interface';
 import formCategoria from './formCategoria.vue';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
-import type { CategoriaSelectOpcion } from '../almacen.interface';
 const { categoriaSelectOptions } = useAlmacen();
 
 // definicion de los emits

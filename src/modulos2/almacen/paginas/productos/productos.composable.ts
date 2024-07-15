@@ -21,6 +21,8 @@ export const useProductos = () => {
       formProductoBasico: false,
       crearOferta: false,
     },
+    // producto seleccionado para crear oferta
+    productoSeleccionado: null,
   });
 
   return {

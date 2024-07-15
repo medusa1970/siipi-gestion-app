@@ -10,6 +10,7 @@
       :rules="[useRules.requerido()]"
       :disable="edicion != null"
       :dialog="formVariedad"
+      @CrearObjeto="handleVariedadCreada"
     />
 
     <input-select2
@@ -109,13 +110,17 @@ onMounted(async () => {
     }),
   );
   estado.marcaOpciones = store.producto.variedades.map((variedad) => ({
-    value: variedad.marca._id,
+    value: variedad._id,
     label: variedad.marca.nombre,
   }));
 });
 
 // submision del formulario
 const formSubmit = async () => {
+  // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
+  estado.dataForm.marca = store.producto.variedades.find(
+    (v) => v._id === estado.dataForm.marca,
+  ).marca._id;
   try {
     // Modo edicion
     if (props.edicion) {
@@ -197,5 +202,10 @@ const prellenarEmpaque = async (empaqueId) => {
 const handleCrearTipoEmpaque = (v) => {
   store.producto.medida.tipoEmpaques.push(v);
   prellenarEmpaque(v._id);
+};
+
+// se ha creado una variedad
+const handleVariedadCreada = (v) => {
+  store.producto.variedades.push(v);
 };
 </script>

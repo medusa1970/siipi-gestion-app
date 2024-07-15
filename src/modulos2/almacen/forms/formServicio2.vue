@@ -137,6 +137,7 @@
 <script setup lang="ts">
 import type { Servicio } from '#gql';
 
+// definicion de los props
 const props = withDefaults(
   defineProps<{
     config?: { proveedorId?: string };
@@ -160,7 +161,6 @@ const {
 
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 const { store } = useAlmacen();
-// definicion de los props
 
 // Inicializaciones
 onMounted(async () => {

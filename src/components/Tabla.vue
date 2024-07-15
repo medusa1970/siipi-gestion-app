@@ -56,11 +56,11 @@
           </div>
         </q-td>
       </q-tr>
-      <!-- <q-tr v-show="props.expand" :props="props">
+      <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%">
           <slot name="body-expand" :row="props.row" />
         </q-td>
-      </q-tr> -->
+      </q-tr>
     </template>
   </q-table>
 </template>
@@ -106,5 +106,28 @@ watch(
   width: 50px;
   height: 50px;
   border-radius: 20%;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap; /* Prevent text from wrapping onto new lines */
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

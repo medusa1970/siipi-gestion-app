@@ -6,11 +6,11 @@
         label: 'Productos',
         to: 'productos',
       },
-      {
-        icon: 'warehouse',
-        label: 'Stock',
-        to: 'stock',
-      },
+      // {
+      //   icon: 'warehouse',
+      //   label: 'Stock',
+      //   to: 'stock',
+      // },
       {
         icon: 'sell',
         label: 'Ofertas',
@@ -21,49 +21,49 @@
         label: 'Catalogos',
         to: 'catalogos',
       },
-      {
-        icon: 'description',
-        label: 'Pedidos',
-        subMenu: [
-          {
-            label: 'pedido puntos',
-            to: '/pedidos/puntos',
-          },
-          {
-            label: 'pedido global',
-            to: '/pedidos/global',
-          },
-          {
-            label: 'pedido historial',
-            to: '/pedidos/historial',
-          },
-        ],
-      },
-      {
-        icon: 'bi-box',
-        label: 'Productos2',
-        to: 'productos2',
-      },
-      {
-        icon: 'warehouse',
-        label: 'Stock2',
-        to: 'stock2',
-      },
-      {
-        icon: 'tag',
-        label: 'Marcas2',
-        to: 'marcas2',
-      },
-      {
-        icon: 'tag',
-        label: 'Medidas2',
-        to: 'medidas2',
-      },
-      {
-        icon: 'tag',
-        label: 'Proveedores2',
-        to: 'proveedores2',
-      },
+      // {
+      //   icon: 'description',
+      //   label: 'Pedidos',
+      //   subMenu: [
+      //     {
+      //       label: 'pedido puntos',
+      //       to: '/pedidos/puntos',
+      //     },
+      //     {
+      //       label: 'pedido global',
+      //       to: '/pedidos/global',
+      //     },
+      //     {
+      //       label: 'pedido historial',
+      //       to: '/pedidos/historial',
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: 'bi-box',
+      //   label: 'Productos2',
+      //   to: 'productos2',
+      // },
+      // {
+      //   icon: 'warehouse',
+      //   label: 'Stock',
+      //   to: 'stock2',
+      // },
+      // {
+      //   icon: 'tag',
+      //   label: 'Marcas',
+      //   to: 'marcas2',
+      // },
+      // {
+      //   icon: 'tag',
+      //   label: 'Medidas',
+      //   to: 'medidas2',
+      // },
+      // {
+      //   icon: 'tag',
+      //   label: 'Proveedores2',
+      //   to: 'proveedores2',
+      // },
       // {
       //   icon: 'people',
       //   label: 'Administracion',

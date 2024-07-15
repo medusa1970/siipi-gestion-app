@@ -130,7 +130,7 @@
     </template>
   </Tabla>
 
-  <popup
+  <Popup
     v-model="estado.modal.formEmpaqueModificar"
     titulo="Modificar el empaque"
   >
@@ -140,22 +140,25 @@
         @modificarObjeto="handleEmpaqueModificado"
       />
     </template>
-  </popup>
+  </Popup>
 
-  <popup
+  <Popup
     v-model="estado.modal.formEmpaqueCrear"
     titulo="Registrar nuevo empaque"
   >
     <template #body>
       <formEmpaque @crearObjeto="handleEmpaqueCreado" />
     </template>
-  </popup>
+  </Popup>
 </template>
 
 <script setup lang="ts">
 import formMedida from '@/modulos2/almacen/forms/formMedida.vue';
 import formEmpaque from '@/modulos2/almacen/forms/formEmpaque.vue';
 import { useProductoMedidas } from './productoMedidas.composable';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { actProductosDB } = useAlmacen();
+const { $socket } = useNuxtApp();
 const {
   estado,
   store,
@@ -164,7 +167,7 @@ const {
   handleEmpaqueCreado,
 } = useProductoMedidas();
 
-// inicializacion
+//inicializaciones
 onMounted(async () => {
   // llenamos las opciones de medidas
   estado.medidas = await api.buscarMedidas({});
@@ -172,6 +175,13 @@ onMounted(async () => {
     value: medida._id,
     label: `${medida.nombre} (${medida.abreviacion})`,
   }));
+
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
 });
 
 const changeMedida = (v) => {

@@ -45,16 +45,19 @@
     </template>
   </Tabla>
 
-  <popup v-model="estado.modal.formCrearMarca" titulo="Nueva marca">
+  <dialog2 v-model="estado.modal.formCrearMarca" titulo="Nueva marca">
     <template #body>
       <formMarca @modificarObjeto="handleMarcaModificada" />
     </template>
-  </popup>
-  <popup v-model="estado.modal.formModificarMarca" titulo="Modificar una marca">
+  </dialog2>
+  <dialog2
+    v-model="estado.modal.formModificarMarca"
+    titulo="Modificar una marca"
+  >
     <template #body>
       <formMarca :edicion="estado.marca" @modificarObjeto="handleMarcaCreada" />
     </template>
-  </popup>
+  </dialog2>
 </template>
 
 <script setup lang="ts">
@@ -66,7 +69,7 @@ import MarcaImage from '@/assets/img/noHayMarca.png';
 import formMarca from '@/modulos2/almacen/forms/formMarca.vue';
 const { estado, store, rowsTabla, handleMarcaCreada, handleMarcaModificada } =
   useMarcas();
-const columnsTabla = ref([
+const columnsTabla = [
   {
     name: 'imagen',
     label: 'Imagen',
@@ -89,5 +92,5 @@ const columnsTabla = ref([
     align: 'center',
     slot: true,
   },
-]);
+];
 </script>

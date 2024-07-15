@@ -87,7 +87,7 @@ export const useAlmacen = () => {
       'productos',
       productos ? productos : [],
     );
-    // if (res) console.log('Se actualizo la base de datos de productos');
+    if (res) console.log('Se actualizo la base de datos de productos');
   };
 
   // exports

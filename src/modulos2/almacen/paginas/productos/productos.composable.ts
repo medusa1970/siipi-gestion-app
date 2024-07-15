@@ -25,8 +25,18 @@ export const useProductos = () => {
     productoSeleccionado: null,
   });
 
+  const handleProductoCreado = (producto) => {
+    NotifySucessCenter('Producto creado éxitosamente');
+    estado.modal.formProductoBasico = false;
+  };
+
+  const handleOfertaCreada = (oferta) => {
+    estado.modal.crearOferta = false;
+  };
   return {
     estado,
     store,
+    handleProductoCreado,
+    handleOfertaCreada,
   };
 };

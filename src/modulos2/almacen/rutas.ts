@@ -1,32 +1,32 @@
 export default [
   {
-    name: 'productos2',
+    name: 'productos',
     path: '/cathering/productos2',
     file: '@/modulos2/almacen/paginas/productos/productos.vue',
   },
   {
-    name: 'producto2',
+    name: 'producto',
     path: '/cathering/productos2/:id',
     file: '@/modulos2/almacen/paginas/productoDetalle/productoDetalle.vue',
   },
 
   {
-    name: 'stock2',
+    name: 'stock',
     path: '/cathering/stock2',
     file: '@/modulos2/almacen/paginas/stock/stock.vue',
   },
   {
-    name: 'marcas2',
+    name: 'marcas',
     path: '/cathering/marcas2',
     file: '@/modulos2/almacen/paginas/marcas/marcas.vue',
   },
   {
-    name: 'medidas2',
+    name: 'medidas',
     path: '/cathering/medidas2',
     file: '@/modulos2/almacen/paginas/medidas/medidas.vue',
   },
   {
-    name: 'proveedores2',
+    name: 'proveedores',
     path: '/cathering/proveedores2',
     file: '@/modulos2/almacen/paginas/proveedores/proveedores.vue',
   },

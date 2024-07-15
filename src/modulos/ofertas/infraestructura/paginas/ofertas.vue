@@ -38,6 +38,21 @@
           />
         </div>
       </template>
+
+      <template #body-cell-nombre="{ val, row }">
+        <h1 v-if="row.nombre" class="tooltip">
+          {{
+            row.nombre.length > 30
+              ? row.nombre.slice(0, 30) + '...'
+              : row.nombre
+          }}
+          <span
+            class="tooltiptext shadow-lg text-blue-500 font-semibold bg-white px-4 py-1"
+            >{{ row.nombre }}</span
+          >
+        </h1>
+      </template>
+
       <template #body-cell-catalogo="{ val, row }">
         <h1>{{ val.nombre }}</h1>
       </template>

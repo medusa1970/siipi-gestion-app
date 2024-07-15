@@ -1,19 +1,4 @@
 <template>
-  <Navigation2
-    :nav="[
-      {
-        label: 'productos',
-        to: 'productos',
-      },
-      {
-        label: 'detalle',
-        to: 'producto',
-        params: { id: store.producto._id },
-      },
-    ]"
-    :titulo="'Producto: ' + store.producto.nombre"
-  />
-
   <q-tabs
     v-model="estado.tab"
     inline-label
@@ -95,7 +80,7 @@ import AccionesTabPanel from './acciones/productoAcciones.vue';
 import BasicoTabPanel from './basico/productoBasico.vue';
 import OfertasTabPanel from './ofertas/productoOfertas.vue';
 
-onBeforeMount(async () => {
+onMounted(async () => {
   await store.getProductos();
   const producto = store.productos.find((prod) => {
     return prod._id === params.id;
@@ -109,4 +94,3 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped></style>
-./acciones/productoAcciones.vue./basico/productoBasico.vue./medidas/productoMedidas.vue./ofertas/productoOfertas.vue./proveedores/productoServicios.vue

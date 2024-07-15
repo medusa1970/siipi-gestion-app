@@ -77,21 +77,24 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(): Promise<Producto[]> {
-      let productos = (await localforage.getItem('productos')) as Producto[];
-      if (!productos) {
-        try {
-          productos = await api.buscarProductos_basico(
-            {},
-            { sort: '-_modificado -_creado' },
-          );
-          await localforage.setItem('productos', productos);
-        } catch (err) {
-          errFallBack(err);
-          return;
+      if (null != this.productos) {
+        let productos = (await localforage.getItem('productos')) as Producto[];
+        if (!productos) {
+          try {
+            productos = await api.buscarProductos_basico(
+              {},
+              { sort: '-_modificado -_creado' },
+            );
+            await localforage.setItem('productos', productos);
+          } catch (err) {
+            errFallBack(err);
+            return;
+          }
         }
+        this.productos = productos;
+        return productos;
       }
-      this.productos = productos;
-      return productos;
+      return this.productos;
     },
 
     /**
@@ -100,7 +103,6 @@ export const storeAlmacen = defineStore('almacen', {
     async traerMarcas(): Promise<Marca[]> {
       try {
         this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
-        console.log(this.marcas);
         return this.marcas;
       } catch (err) {
         errFallBack(err);

@@ -7,12 +7,6 @@
     :rows="rowsTablaProductos"
     :columns="
     [ 
-       {
-    name: 'actions',
-    label: '',
-    align: 'right',
-    slot: true,
-  },
 
   {
     name: 'imagen',
@@ -24,7 +18,8 @@
 
   {
     name: 'nombre',
-    required: true,slot:true,
+    required: true,
+    slot:true,
     label: 'Nombre',
     align: 'left',
     field: (row: any) => row.nombre,
@@ -54,6 +49,21 @@
     format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
     sortable: true,
   },
+  {
+    name: 'estado',
+    label: 'Estado',
+    align: 'right',
+    slot: true,
+    sortable: true,
+
+  },
+  {
+    name: 'acciones',
+    label: '',
+    align: 'center',
+    slot: true,
+  },
+
 
 ]"
     :defaultImage="ProductoImage"
@@ -91,7 +101,123 @@
         />
       </div>
     </template>
-    <template #body-cell-actions="{ row }">
+    <template #body-cell-estado="{ row }">
+      <q-badge
+        v-if="
+          row.imagen &&
+          row.categoria &&
+          row.variedades.length > 0 &&
+          // row.empaques.length > 0 &&
+          // row.comentario &&
+          row.medida
+        "
+        color="green"
+        class="mr-2 lowercase"
+      >
+        completo
+      </q-badge>
+      <q-badge v-else color="orange"> incompleto </q-badge>
+    </template>
+    <template #body-expand="{ row }">
+      <div
+        style="
+          display: grid;
+          grid-gap: 16px;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        "
+      >
+        <!-- IMAGEN -->
+        <div>
+          <q-img
+            v-if="row.imagen?.cloudinaryUrl"
+            :src="row.imagen?.cloudinaryUrl"
+            spinner-color="primary"
+            spinner-size="82px"
+            class="w-full h-auto object-cover"
+          />
+          <h1 v-else>No hay imagen...</h1>
+        </div>
+        <!-- DATOS BASICOS -->
+        <div>
+          <h1 class="text-center bg-gray-300 font-bold py-[2px]">
+            DATOS BASICOS
+          </h1>
+          <span class="flex gap-2 items-center"
+            ><h1 class="font-bold text-xs">NOMBRE:</h1>
+            <p>{{ row.nombre }}</p></span
+          >
+          <span class="flex gap-2 items-center"
+            ><h1 class="font-bold text-xs">COMENTARIO:</h1>
+            <p>{{ row.comentario }}</p></span
+          >
+          <span class="flex gap-2 items-center"
+            ><h1 class="font-bold text-xs">CATEGORIA:</h1>
+            <p>{{ row.categoria?.nombre }}</p></span
+          >
+        </div>
+        <!-- MARCAS -->
+        <div>
+          <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCAS</h1>
+          <div
+            v-for="variedad in row.variedades"
+            :key="variedad._id"
+            class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+          >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">MARCA:</h1>
+              <p>{{ variedad.marca.nombre }}</p></span
+            >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
+              <p>{{ variedad.cantidadLimite }}</p>
+            </span>
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
+              <p>{{ variedad.cantidadMaxPedido }}</p></span
+            >
+          </div>
+          <h1 v-if="row.variedades.length == 0">Sin marcas ...</h1>
+        </div>
+        <!-- MEDIDAS -->
+        <div>
+          <h1 class="text-center bg-gray-300 font-bold py-[2px]">
+            MEDIDA & EMPAQUES
+          </h1>
+          <span class="flex gap-2 items-center"
+            ><h1 class="font-bold text-xs">MEDIDA:</h1>
+            <p v-if="row.medida">
+              {{ row.medida?.nombre }}
+            </p>
+            <p v-else>sin medida basica...</p>
+          </span>
+          <div
+            v-for="empaque in row.empaques"
+            :key="empaque.nombre"
+            class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
+          >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">NOMBRE:</h1>
+              <p>{{ empaque.nombre }}</p></span
+            >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">ABREVIACION:</h1>
+              <p>{{ empaque.abreviacion }}</p></span
+            >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">CANTIDAD:</h1>
+              <p>{{ empaque.cantidad }}</p></span
+            >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">MARCA:</h1>
+              <p>{{ empaque.marca.nombre }}</p></span
+            >
+          </div>
+          <h1 v-if="row.empaques.length == 0">Sin empaques ...</h1>
+        </div>
+      </div>
+    </template>
+
+    <template #body-cell-acciones="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
           @click="goTo(router, 'producto2', { id: row._id })"
@@ -99,7 +225,9 @@
           class="p-1"
           color="black"
           size="sm"
-        />
+        >
+          <q-tooltip> Modificar </q-tooltip>
+        </q-btn>
         <q-btn
           @click="
             () => {
@@ -111,11 +239,21 @@
           class="p-1"
           color="orange"
           size="sm"
-        />
+        >
+          <q-tooltip> Crear oferta </q-tooltip>
+        </q-btn>
       </q-btn-group>
     </template>
     <template #body-cell-nombre="{ val, row }">
-      {{ val }}
+      <h1 v-if="row.nombre" class="tooltip">
+        {{
+          row.nombre.length > 30 ? row.nombre.slice(0, 30) + '...' : row.nombre
+        }}
+        <span
+          class="tooltiptext shadow-lg text-blue-500 font-semibold bg-white px-4 py-1"
+          >{{ row.nombre }}</span
+        >
+      </h1>
       <br />
       <q-badge
         v-for="variedad in row.variedades"
@@ -126,87 +264,22 @@
         {{ variedad.marca?.nombre }}
       </q-badge>
     </template>
-    <template #body-expand="{ row }">
-      <pre>{{ row }}</pre>
-      <!-- <div class="text-left">
-        <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-          DATOS BASICOS
-        </h1>
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">NOMBRE:</h1>
-          <p>{{ row.nombre }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">COMENTARIO:</h1>
-          <p>{{ row.comentario }}</p></span
-        >
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">CATEGORIA:</h1>
-          <p>{{ row.categoria?.nombre }}</p></span
-        >
-        <h1 class="text-center bg-gray-300 font-bold py-[2px]">MARCAS</h1>
-        <div
-          v-for="variedad in row.variedades"
-          :key="variedad._id"
-          class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-        >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">MARCA:</h1>
-            <p>{{ variedad.marca.nombre }}</p></span
-          >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-            <p>{{ variedad.cantidadLimite }}</p>
-          </span>
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>
-            <p>{{ variedad.cantidadMaxPedido }}</p></span
-          >
-        </div>
-        <h1 v-if="row.variedades.length == 0">Sin marcas ...</h1>
-
-        <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-          MEDIDA & EMPAQUES
-        </h1>
-        <span class="flex gap-2 items-center"
-          ><h1 class="font-bold text-xs">MEDIDA:</h1>
-          <p v-if="row.medida">
-            {{ row.medida?.nombre }}
-          </p>
-          <p v-else>sin medida basica...</p>
-        </span>
-        <div
-          v-for="empaque in row.empaques"
-          :key="empaque.nombre"
-          class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-        >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">NOMBRE:</h1>
-            <p>{{ empaque.nombre }}</p></span
-          >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">ABREVIACION:</h1>
-            <p>{{ empaque.abreviacion }}</p></span
-          >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">CANTIDAD:</h1>
-            <p>{{ empaque.cantidad }}</p></span
-          >
-          <span class="flex gap-2 items-center"
-            ><h1 class="font-bold text-xs">MARCA:</h1>
-            <p>{{ empaque.marca.nombre }}</p></span
-          >
-        </div>
-        <h1 v-if="row.empaques.length == 0">Sin empaques ...</h1>
-      </div> -->
-    </template>
   </Tabla>
 
-  <popup v-model="estado.modal.crearOferta" titulo="Nueva Oferta">
+  <Popup v-model="estado.modal.formProductoBasico" titulo="Nuevo producto">
     <template #body>
-      <formOfertaProducto @crearObjeto="handleOfertaCreada" />
+      <formProductoBasico @crearObjeto="handleProductoCreado" />
     </template>
-  </popup>
+  </Popup>
+
+  <Popup v-model="estado.modal.crearOferta" titulo="Nueva Oferta">
+    <template #body>
+      <formOfertaProducto
+        :config="{ productoId: estado.productoSeleccionado }"
+        @crearObjeto="handleOfertaCreada"
+      />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
@@ -217,10 +290,12 @@ definePageMeta({
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { useProductos } from './productos.composable';
 import ProductoImage from '@/assets/img/noHayProducto.png';
+import formProductoBasico from '@/modulos2/almacen/forms/formProductoBasico.vue';
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
 const router = useRouter();
 const { $socket } = useNuxtApp();
-const { estado, store } = useProductos();
+const { estado, store, handleProductoCreado, handleOfertaCreada } =
+  useProductos();
 const { actProductosDB, categoriaSelectOptionsFiltro } = useAlmacen();
 
 onMounted(async () => {
@@ -233,6 +308,7 @@ onMounted(async () => {
   $socket.on('cambiosProductos', async (data: any) => {
     await actProductosDB();
   });
+  store.producto = null;
 });
 onBeforeUnmount(() => {
   $socket.off('cambiosProductos');
@@ -275,21 +351,6 @@ const rowsTablaProductos = computed(() => {
   }
   return filtered;
 });
-
-/**
- * Crear un producto Basico
- */
-const handleProductoCreado = (producto) => {
-  NotifySucessCenter('Producto creado éxitosamente');
-  estado.modal.formProductoBasico = false;
-};
-
-/**
- * Crear una oferta a partir del producto
- */
-const handleOfertaCreada = (oferta) => {
-  estado.modal.crearOferta = false;
-};
 </script>
 
 <style scoped>

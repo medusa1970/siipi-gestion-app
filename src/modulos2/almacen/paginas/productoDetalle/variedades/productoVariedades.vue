@@ -66,7 +66,7 @@
     </template>
   </Tabla>
 
-  <popup
+  <Popup
     v-model="estado.modal.formVariedadModificar"
     titulo="Modificar la marca"
   >
@@ -76,23 +76,36 @@
         @modificarObjeto="handleVariedadModificada"
       />
     </template>
-  </popup>
+  </Popup>
 
-  <popup
+  <Popup
     v-model="estado.modal.formVariedadCrear"
     titulo="Registrar nueva marca"
   >
     <template #body>
       <formVariedad @crearObjeto="handleVariedadCreada" />
     </template>
-  </popup>
+  </Popup>
 </template>
 
 <script setup lang="ts">
 import formVariedad from '@/modulos2/almacen/forms/formVariedad.vue';
 import { useProductoVariedades } from './productoVariedades.composable';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { actProductosDB } = useAlmacen();
+const { $socket } = useNuxtApp();
 const { estado, store, handleVariedadCreada, handleVariedadModificada } =
   useProductoVariedades();
+
+//inicializaciones
+onMounted(async () => {
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
+});
 
 /**
  * Rows para la tabla

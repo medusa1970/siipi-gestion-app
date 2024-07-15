@@ -30,7 +30,9 @@
 <script setup lang="ts">
 import type { Marca } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import type { CategoriaSelectOpcion } from '../almacen.interface';
+// import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+// const { actProductosDB } = useAlmacen();
+// const { $socket } = useNuxtApp();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -59,10 +61,17 @@ const estado = reactive({
   errorNombre: '',
 });
 
-// Inicializaciones
-onMounted(async () => {
-  // nada por lo momento
-});
+// //
+// onMounted(async () => {
+//   $socket.on('cambiosProductos', async (data: any) => {
+//     console.log('socket on ok', data);
+//     await actProductosDB();
+//   });
+// });
+// onBeforeUnmount(() => {
+//   // localStorage.removeItem('reloaded');
+//   $socket.off('cambiosProductos');
+// });
 
 // submision del formulario
 const formSubmit = async () => {

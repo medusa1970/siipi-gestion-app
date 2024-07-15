@@ -22,8 +22,21 @@
 import { useProductoAcciones } from './productoAcciones.composable';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { actProductosDB } = useAlmacen();
+const { $socket } = useNuxtApp();
 const { estado, authStore, store, borrarProducto } = useProductoAcciones();
 const router = useRouter();
+
+//inicializaciones
+onMounted(async () => {
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
+});
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {

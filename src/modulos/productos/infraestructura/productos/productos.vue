@@ -100,32 +100,22 @@
       </div>
     </template>
     <template #body-cell-estado="{ row }">
+      [{{ row.imagen }}]
       <q-badge
-        :color="
+        v-if="
           row.imagen &&
-          row.comentario &&
           row.categoria &&
           row.variedades.length > 0 &&
-          row.medida &&
-          row.empaques.length > 0 &&
-          row.comentario
-            ? 'green'
-            : 'orange'
+          // row.empaques.length > 0 &&
+          // row.comentario &&
+          row.medida
         "
+        color="green"
         class="mr-2 lowercase"
       >
-        {{
-          row.imagen &&
-          row.comentario &&
-          row.categoria &&
-          row.variedades.length > 0 &&
-          row.medida &&
-          row.empaques.length > 0 &&
-          row.comentario
-            ? 'completo'
-            : 'incompleto'
-        }}
+        ? completo
       </q-badge>
+      <q-badge v-else color="orange"> incompleto </q-badge>
     </template>
     <template #body-cell-actions="{ row }">
       <q-btn-group
@@ -142,14 +132,18 @@
           size="sm"
           icon="work"
           @click="crearOferta"
-        />
+        >
+          <q-tooltip> Crear oferta </q-tooltip>
+        </q-btn>
         <q-btn
           class="p-1"
           color="black"
           size="sm"
           icon="edit"
           @click="goTo(router, 'producto', { id: row._id })"
-        />
+        >
+          <q-tooltip> Modificar </q-tooltip>
+        </q-btn>
       </q-btn-group>
     </template>
     <template #body-cell-nombre="{ val, row }">
@@ -546,6 +540,10 @@ onMounted(async () => {
   });
 });
 
+onBeforeUnmount(() => {
+  // localStorage.removeItem('reloaded');
+  $socket.off('cambiosProductos');
+});
 /**
  * Crear una oferta a partir del producto
  */

@@ -25,6 +25,7 @@ export const columnaOfertas = [
     align: 'left',
     field: (row: any) => row.nombre,
     sortable: true,
+    slot: true,
   },
   // {
   //   name: 'ingredientes',

@@ -9,6 +9,7 @@ const buscar = async (
   filtro: any,
   loading = false,
 ) => {
+  delete opciones.loading;
   if (!multiple) {
     busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;
@@ -62,6 +63,7 @@ const crear = async (
   opciones: any,
   loading = false,
 ) => {
+  delete opciones.loading;
   if (opciones.populate === undefined) opciones.populate = true;
   let resultado;
   try {
@@ -96,6 +98,7 @@ const modificar = async (
   opciones: any,
   loading = false,
 ) => {
+  delete opciones.loading;
   if (!multiple) {
     busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;
@@ -134,6 +137,7 @@ const borrar = async (
   opciones: any,
   loading = false,
 ) => {
+  delete opciones.loading;
   if (!multiple) {
     busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;

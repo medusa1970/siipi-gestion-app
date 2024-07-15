@@ -90,7 +90,7 @@
     </template>
   </Tabla>
 
-  <popup
+  <Popup
     v-model="estado.modal.formServicioModificar"
     titulo="Modificar el proveedor"
   >
@@ -103,21 +103,24 @@
         @modificarObjeto="handleServicioModificado"
       />
     </template>
-  </popup>
+  </Popup>
 
-  <popup
+  <Popup
     v-model="estado.modal.formServicioCrear"
     titulo="Registrar nuevo proveedor"
   >
     <template #body>
       <formServicio @crearObjeto="handleServicioCreado" />
     </template>
-  </popup>
+  </Popup>
 </template>
 
 <script setup lang="ts">
 import { useProductoServicios } from './productoServicios.composable';
 import formServicio from '@/modulos2/almacen/forms/formServicio.vue';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { actProductosDB } = useAlmacen();
+const { $socket } = useNuxtApp();
 const {
   estado,
   store,
@@ -126,8 +129,15 @@ const {
   handleServicioModificado,
 } = useProductoServicios();
 
+//inicializaciones
 onMounted(async () => {
   estado.servicios = await getServiciosProducto();
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
 });
 
 /**

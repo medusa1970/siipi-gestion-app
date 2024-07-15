@@ -146,6 +146,7 @@ const formSubmit = async () => {
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,
+        { loading: true },
       );
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
@@ -155,7 +156,9 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const producto = await api.crearProducto_basico(estado.dataForm);
+      const producto = await api.crearProducto_basico(estado.dataForm, {
+        loading: true,
+      });
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente

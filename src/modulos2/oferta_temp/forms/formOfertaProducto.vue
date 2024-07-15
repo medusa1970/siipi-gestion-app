@@ -1,4 +1,14 @@
 <template>
+  <div class="importante">
+    <div class="icon">
+      <q-icon name="engineering" color="black" size="30px" />
+    </div>
+    <div class="texto">
+      En construccion todavia! <br />Mañana por la mañanita se podrá guardar las
+      ofertas por aquí.
+    </div>
+  </div>
+
   <q-form @submit="formSubmit">
     <!-- Produit -->
     <input-select2
@@ -257,7 +267,7 @@ watch(
   ],
   () => {
     const p = estado.nombreOfertaPartes;
-    const u = estado.producto?.medida.abreviacion;
+    const u = estado.producto?.medida?.abreviacion;
     estado.dataForm.nombre = `${p.producto} ${p.marca} ${p.empaque} ${
       p.cantidad
     } ${p.cantidad !== '' ? u : ''}`.trim();

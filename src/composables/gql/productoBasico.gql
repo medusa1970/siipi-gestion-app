@@ -9,6 +9,8 @@ query buscarProductos_basico(
     _modificado
     nombre
     comentario
+    puedeVencer
+    vencimientoLimite
     imagen {
       cloudinaryUrl
     }
@@ -70,6 +72,8 @@ mutation crearProductos_basico(
     _modificado
     nombre
     comentario
+    puedeVencer
+    vencimientoLimite
     imagen {
       cloudinaryUrl
     }
@@ -132,6 +136,8 @@ mutation modificarProductos_basico(
     _modificado
     nombre
     comentario
+    puedeVencer
+    vencimientoLimite
     imagen {
       cloudinaryUrl
     }
@@ -193,6 +199,8 @@ mutation borrarProductos_basico(
     _modificado
     nombre
     comentario
+    puedeVencer
+    vencimientoLimite
     imagen {
       cloudinaryUrl
     }

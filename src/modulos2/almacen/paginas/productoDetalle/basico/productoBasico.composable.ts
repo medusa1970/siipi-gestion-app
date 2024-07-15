@@ -20,6 +20,7 @@ export const useProductoBasico = () => {
 
   const handleProductoModificado = (producto) => {
     NotifySucessCenter('Producto modificado correctamente');
+    store.producto = producto;
   };
 
   return {

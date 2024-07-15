@@ -99,7 +99,7 @@
     </div>
   </q-form>
 
-  <Popup v-model="estado.showFormPorMayor" titulo="Agregar precio por mayor">
+  <Dialog2 v-model="estado.showFormPorMayor" titulo="Agregar precio por mayor">
     <template #body>
       <q-form @submit="addPpmSubmit">
         <input-text2
@@ -131,7 +131,7 @@
         </div>
       </q-form>
     </template>
-  </Popup>
+  </Dialog2>
 </template>
 
 <script setup lang="ts">

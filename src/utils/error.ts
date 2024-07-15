@@ -1,6 +1,9 @@
 export const errFallBack = (err) => {
   NotifyError('Se produjó un error inesperado.');
-  console.log('El error inesperado:', err);
+  console.log(
+    'El error inesperado:',
+    err.mensaje ?? err.gqErrors?.[0].message ?? err,
+  );
 };
 
 export const formatApiError = (err) => {

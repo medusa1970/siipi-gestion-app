@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text
+    <input-text2
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -17,20 +17,14 @@
 
 <script setup lang="ts">
 import type { Marca } from '#gql';
-import type { selectOpcionCallback } from '~/components/input/select.interface';
-import type {} from '../almacen.interface';
+import type {
+  SelectOpcion,
+  selectOpcionCallback,
+} from '~/components/input/select.interface';
+import type { CategoriaSelectOpcion } from '../almacen.interface';
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:marca', marca: Marca): void;
-  (event: 'modificar:marca', marca: Marca): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -73,7 +67,7 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('modificar:marca', marca);
+      emits('modificarObjeto', marca);
     }
     // Modo creacion
     else {
@@ -82,12 +76,13 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('crear:marca', marca);
-      // ... y especialmente para un eventual input select para insertar la nueva opcion
-      emits('crear:opcion', marca._id, marca, (listaOpciones) => [
-        ...listaOpciones,
-        { label: marca.nombre, value: marca._id },
-      ]);
+      emits('crearObjeto', marca, {
+        selectValor: marca._id,
+        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => [
+          ...listaOpciones,
+          { label: marca.nombre, value: marca._id },
+        ],
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

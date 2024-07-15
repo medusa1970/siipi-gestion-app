@@ -227,7 +227,7 @@
     crearProductoBasico 
   -->
 
-  <Dialog2
+  <Popup
     v-model="estado.modal.show_crearProductoBasico"
     title="Crear producto"
     label-btn="Crear"
@@ -274,7 +274,7 @@
 
       <div class="">
         <q-checkbox v-model="estado.datos_crearProductoBasico.puedeVencer" />
-        Puede vencer ?
+        Este producto tiene fecha de vencimiento
       </div>
 
       <div v-if="estado.datos_crearProductoBasico.puedeVencer" class="flex">
@@ -314,7 +314,7 @@
         @update="(v) => (estado.datos_crearProductoBasico.comentario = v)"
       />
     </template>
-  </Dialog2>
+  </Popup>
 
   <!-- 
   VER INFORMACION PRODUCTO

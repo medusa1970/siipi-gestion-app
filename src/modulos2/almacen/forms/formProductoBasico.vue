@@ -1,14 +1,18 @@
 <template>
   <q-form @submit="formSubmit">
     <!--h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1-->
-    <p v-if="edicion === null" class="importante">
-      <q-icon name="info" color="blue" size="30px" />
-      Por favor, asegúrese bien que el producto todavía no existe ayudándose del
-      buscador arriba de la lista de productos.
-    </p>
+    <div v-if="edicion === null" class="importante">
+      <div class="icon">
+        <q-icon name="feedback" color="black" size="30px" />
+      </div>
+      <div class="texto">
+        Por favor, asegúrese bien que el producto todavía no existe ayudándose
+        del buscador arriba de la lista de productos.
+      </div>
+    </div>
 
     <!-- nombre -->
-    <input-text
+    <input-text2
       label="Nombre"
       info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
       :porDefecto="estado.dataForm.nombre"
@@ -18,7 +22,7 @@
     />
 
     <!-- Categoria -->
-    <input-select
+    <input-select2
       label="Categoria"
       :opciones="estado.catOpciones"
       info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
@@ -26,11 +30,10 @@
       @update="(v) => (estado.dataForm.categoria = v)"
       :rules="[useRules.requerido()]"
       :dialog="formCategoria"
-      @payload="handleCategoriaCreada"
     />
 
     <!-- Imagen -->
-    <input-image
+    <input-image2
       label="Imagen"
       info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
       @update="
@@ -44,11 +47,11 @@
 
     <div class="">
       <q-checkbox v-model="estado.dataForm.puedeVencer" />
-      Puede vencer ?
+      Este producto tiene fecha de vencimiento
     </div>
 
     <div v-if="estado.dataForm.puedeVencer" class="flex">
-      <input-text
+      <input-text2
         style="width: 50%"
         label="Primer aviso"
         :porDefecto="estado.dataForm.vencimientoLimite[0]"
@@ -56,7 +59,7 @@
         :rules="[useRules.requerido(), useRules.numero()]"
       />
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
-      <input-text
+      <input-text2
         style="width: 50%"
         label="Segundo aviso"
         info="Cuando faltarán el número de días indicado en el primer campo, se lanzará una alerta naranja, y una alerta roja al llegar al números de días indicados en el segundo."
@@ -66,7 +69,7 @@
       />
     </div>
 
-    <input-text
+    <input-text2
       tipo="textarea"
       label="comentario"
       info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
@@ -82,22 +85,17 @@
 
 <script setup lang="ts">
 import type { Producto } from '#gql';
-import type { selectOpcionCallback } from '~/components/input/select.interface';
+import type {
+  SelectOpcion,
+  selectOpcionCallback,
+} from '~/components/input/select.interface';
 import formCategoria from './formCategoria.vue';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+import type { CategoriaSelectOpcion } from '../almacen.interface';
 const { categoriaSelectOptions } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:producto', producto: Producto): void;
-  (event: 'modificar:producto', producto: Producto): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -153,7 +151,7 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('modificar:producto', producto);
+      emits('modificarObjeto', producto);
     }
     // Modo creacion
     else {
@@ -162,12 +160,13 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('crear:producto', producto);
-      // ... y especialmente para un eventual input select para insertar la nueva opcion
-      emits('crear:opcion', producto._id, producto, (listaOpciones) => [
-        ...listaOpciones,
-        { label: producto.nombre, value: producto._id },
-      ]);
+      emits('crearObjeto', producto, {
+        selectValor: producto._id,
+        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => [
+          ...listaOpciones,
+          { label: producto.nombre, value: producto._id },
+        ],
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {
@@ -178,6 +177,4 @@ const formSubmit = async () => {
     return;
   }
 };
-
-const handleCategoriaCreada = (categoria: any) => {};
 </script>

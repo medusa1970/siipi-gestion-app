@@ -154,7 +154,7 @@
             : null
         "
         :dialog="agregarVariedadComp"
-        :dialogParam="productoStore.producto._id"
+        :dialogConfig="productoStore.producto._id"
         @payload="handlePayloadVariedad"
       />
 
@@ -170,7 +170,7 @@
           @update="(v) => prellenarEmpaque(v)"
           :watch="estado.resetEmpaque"
           :dialog="agregarTipoEmpaqueComp"
-          :dialog-param="productoStore.producto.medida._id"
+          :dialogConfig="productoStore.producto.medida._id"
           @payload="handlePayloadTipoEmpaque"
         />
       </div>

@@ -108,7 +108,6 @@ export const useCatalogos = () => {
         })),
       },
     ];
-    console.log(data);
     // estado.props = data;
   };
 

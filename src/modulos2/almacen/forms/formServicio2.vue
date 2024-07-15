@@ -8,9 +8,8 @@
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
-      :dialog="formVariedad"
+      :dialog="formMarca"
       :disable="edicion != null"
-      @CrearObjeto="handleVariedadCreada"
     />
 
     <!-- Categoria -->
@@ -136,146 +135,36 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectOpcion } from '~/components/input/select.interface';
 import type { Servicio } from '#gql';
-import formVariedad from '@/modulos2/almacen/forms/formVariedad.vue';
-import formProveedor from '@/modulos2/almacen/forms/formProveedor.vue';
-import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
-const { store } = useAlmacen();
 
-// definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
-
-// definicion de los props
 const props = withDefaults(
   defineProps<{
     config?: { proveedorId?: string };
-    edicion: Servicio | null; // edicion si null, sino creacion
+    edicion: Servicio | null;
   }>(),
   {
     edicion: null,
   },
 );
 
-// datos por defecto del formulario
-const initForm = {
-  producto: store.producto._id,
-  proveedor: props.config?.proveedorId ?? '',
-  marca: props.edicion?.marca._id ?? '',
-  identificativo: props.edicion?.identificativo ?? '',
-  precioConFactura: props.edicion?.precioConFactura ?? '',
-  precioSinFactura: props.edicion?.precioSinFactura ?? '',
-  preciosPorMayor: props.edicion?.preciosPorMayor ?? [],
-};
-const initFormPorMayor = {
-  cantidadMin: 0,
-  precioConFactura: 0,
-  precioSinFactura: 0,
-};
+import formMarca from '@/modulos2/almacen/forms/formMarca.vue';
+import formProveedor from '@/modulos2/almacen/forms/formProveedor.vue';
+import { useFormServicio2 } from './formServicio2';
+const {
+  estado,
+  llenarMarcaOpciones,
+  llenarProveedorOpciones,
+  formSubmit,
+  addPpmSubmit,
+} = useFormServicio2(props);
 
-// definicion del estado
-const estado = reactive({
-  // valor de los inputs
-  dataForm: clone(initForm),
-  dataFormPorMayor: clone(initFormPorMayor),
-  // listas de opciones
-  marcaOpciones: [] as SelectOpcion[],
-  proveedorOpciones: [] as SelectOpcion[],
-  // los dialogs
-  showFormPorMayor: false,
-});
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { store } = useAlmacen();
+// definicion de los props
 
 // Inicializaciones
 onMounted(async () => {
-  // opciones de marcas
-  estado.marcaOpciones = store.producto.variedades.map((variedad) => ({
-    value: variedad._id, // ponemos la id de la variedad pero mas tarde seleccionaremos su marca
-    label: variedad.marca.nombre,
-  }));
-
-  // opciones de proveedores
-  try {
-    estado.proveedorOpciones = (
-      await api.buscarEntidades_basico({
-        tipo: ['PROVEEDOR'],
-      })
-    ).map((proveedor) => {
-      return {
-        value: proveedor._id,
-        label: proveedor.nombre,
-      };
-    });
-  } catch (err) {
-    errFallBack(err);
-    return;
-  }
+  await llenarMarcaOpciones();
+  await llenarProveedorOpciones();
 });
-
-// submision del formulario
-const formSubmit = async () => {
-  const proveedorId = estado.dataForm.proveedor;
-  // el proveedor no entra en llos datos para la consulta
-  const data = clone(estado.dataForm);
-  delete data.proveedor;
-  // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
-  data.marca = store.producto.variedades.find(
-    (v) => v._id === data.marca,
-  ).marca._id;
-  try {
-    // Modo edicion
-    if (props.edicion != null) {
-      // lanzamos la consulta
-      data.preciosPorMayor = { reemplazar: data.preciosPorMayor };
-      const proveedor = await api.modificarEntidad_servicios(proveedorId, {
-        servicios: {
-          buscar: {
-            _id: [props.edicion._id],
-          },
-          modificar: data,
-        },
-      });
-      const servicio = proveedor.servicios.find(
-        (s) => s._id === props.edicion._id,
-      );
-      // reinicializamos el formulario
-      estado.dataForm = clone(initForm);
-      // mandamos el resultado al componiente pariente
-      emits('modificarObjeto', servicio, { pariente: proveedor });
-    }
-    // Modo creacion
-    else {
-      // lanzamos la consulta
-      const proveedor = await api.modificarEntidad_servicios(proveedorId, {
-        servicios: {
-          agregar: data,
-        },
-      });
-      const servicio = ultimo(proveedor.servicios);
-      // reinicializamos el formulario
-      estado.dataForm = clone(initForm);
-      // mandamos el resultado al componiente pariente
-      emits('crearObjeto', servicio, {
-        pariente: proveedor,
-        selectValor: servicio._id,
-        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => [
-          ...listaOpciones,
-          { label: servicio.nombre, value: servicio._id },
-        ],
-      });
-    }
-  } catch (err) {
-    errFallBack(err);
-    return;
-  }
-};
-
-const addPpmSubmit = () => {
-  estado.showFormPorMayor = false;
-  estado.dataForm.preciosPorMayor.push(clone(estado.dataFormPorMayor));
-  estado.dataFormPorMayor = clone(initFormPorMayor);
-};
-
-const handleVariedadCreada = (v) => {
-  store.producto.variedades.push(v);
-};
 </script>

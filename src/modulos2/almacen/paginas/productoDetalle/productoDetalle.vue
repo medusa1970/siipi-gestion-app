@@ -80,7 +80,7 @@ const router = useRouter();
 
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
-  console.log('No tiene el acceso para esta pagina');
+  ('No tiene el acceso para esta pagina');
 }
 const soloAlmacen = ref(authStore.checkPermisos(['ALMACEN']));
 const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
@@ -88,12 +88,12 @@ const soloAlmacenAdquisicion = ref(
   authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
 );
 
-import MarcaTabPanel from './tab/variedades/productoVariedades.vue';
-import MedidaTabPanel from './tab/medidas/productoMedidas.vue';
-import ProveedorTabPanel from './tab/proveedores/productoServicios.vue';
-import AccionesTabPanel from './tab/acciones/productoAcciones.vue';
-import BasicoTabPanel from './tab/basico/productoBasico.vue';
-import OfertasTabPanel from './tab/ofertas/productoOfertas.vue';
+import MarcaTabPanel from './variedades/productoVariedades.vue';
+import MedidaTabPanel from './medidas/productoMedidas.vue';
+import ProveedorTabPanel from './proveedores/productoServicios.vue';
+import AccionesTabPanel from './acciones/productoAcciones.vue';
+import BasicoTabPanel from './basico/productoBasico.vue';
+import OfertasTabPanel from './ofertas/productoOfertas.vue';
 
 onBeforeMount(async () => {
   await store.getProductos();
@@ -109,3 +109,4 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped></style>
+./acciones/productoAcciones.vue./basico/productoBasico.vue./medidas/productoMedidas.vue./ofertas/productoOfertas.vue./proveedores/productoServicios.vue

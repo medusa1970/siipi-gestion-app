@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text
+    <input-text2
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -10,7 +10,7 @@
     />
 
     <!-- Categoria -->
-    <input-select
+    <input-select2
       label="Categoria pariente"
       :opciones="estado.parienteOpciones"
       info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
@@ -31,19 +31,10 @@ import type { Categoria } from '#gql';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import type { CategoriaSelectOpcion } from '../almacen.interface';
 import type { selectOpcionCallback } from '~/components/input/select.interface';
-const { categoriaSelectOptions } = useAlmacen();
+const { store, categoriaSelectOptions } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:categoria', categoria: Categoria): void;
-  (event: 'modificar:categoria', categoria: Categoria): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -88,30 +79,33 @@ const formSubmit = async () => {
       );
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
+      // refrescar el arbol
+      store.refreshArbol = true;
       // mandamos el resultado al componiente pariente
-      emits('modificar:categoria', categoria);
+      emits('modificarObjeto', categoria);
     }
     // Modo creacion
     else {
       // lanzamos la consulta
       const categoria = await api.crearCategoria(estado.dataForm);
       // reinicializamos el formulario
-      estado.dataForm = clone(initForm);
+      // estado.dataForm = clone(initForm);
+      for (const key in estado.dataForm) {
+        estado.dataForm[key] = null;
+      }
+      // refrescar el arbol
+      store.refreshArbol = true;
       // mandamos el resultado al componiente pariente
-      emits('crear:categoria', categoria);
-      // ... y especialmente para el input select para insertar la nueva opcion
-      emits(
-        'crear:opcion',
-        categoria._id,
-        categoria,
-        (listaOpciones: CategoriaSelectOpcion[]) => {
+      emits('crearObjeto', categoria, {
+        selectValor: categoria._id,
+        selectCallback: (listaOpciones: CategoriaSelectOpcion[]) => {
           const opcion: CategoriaSelectOpcion = {
             label: categoria.nombre,
             value: categoria._id,
             class: 'opcion',
           };
-
-          // tenemos que insertar la nueva opcion debajo del pariente correcto, no al final
+          // tenemos que insertar la nueva opcion debajo del
+          // pariente correcto, no al final
           const categoriasNivel1 = listaOpciones.filter(
             (opcion) => opcion.class === 'titulo',
           );
@@ -119,14 +113,13 @@ const formSubmit = async () => {
             (c) => c.value === categoria.pariente._id,
           );
           const parienteSiguiente = categoriasNivel1[indexPariente + 1]?.value;
-          console.log(categoriasNivel1);
           const index = parienteSiguiente
             ? listaOpciones.findIndex((o) => o.value === parienteSiguiente)
             : listaOpciones.length;
           listaOpciones.splice(index, 0, opcion);
           return listaOpciones;
         },
-      );
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

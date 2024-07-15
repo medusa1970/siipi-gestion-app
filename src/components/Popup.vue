@@ -5,7 +5,15 @@
         <div class="px-3 h-full text-white" style="font-size: 18px">
           {{ titulo }}
         </div>
-        <q-btn icon="close" color="green" round dense size="sm" v-close-popup />
+        <q-btn
+          icon="close"
+          color="white"
+          flat
+          round
+          dense
+          size="sm"
+          v-close-popup
+        />
       </q-card-section>
 
       <q-card-section>

@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- Marca -->
-    <input-select
+    <input-select2
       label="Marca"
       :opciones="estado.marcaOpciones"
       info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
@@ -11,20 +11,19 @@
       :error="estado.errorMarca"
       :disable="edicion != null"
       :dialog="formMarca"
-      @payload="handleMarcaCreada"
     />
 
     <!-- Stock minimo -->
     <p>Alerta de cantidad baja en el stock</p>
     <div class="flex">
-      <input-text
+      <input-text2
         style="width: 45%"
         label="Primer aviso"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
       />
-      <input-text
+      <input-text2
         style="width: 55%"
         label="Segundo aviso"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
@@ -37,7 +36,7 @@
     <!-- Stock minimo -->
     <p>Alerta de que hay que inventariar</p>
     <div class="flex">
-      <input-text
+      <input-text2
         style="width: 45%"
         label="Primer aviso"
         :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
@@ -45,7 +44,7 @@
         :rules="[useRules.requerido(), useRules.numero()]"
       />
 
-      <input-text
+      <input-text2
         style="width: 55%"
         label="Segundo aviso"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
@@ -56,7 +55,7 @@
     </div>
 
     <!-- Cantidad max en un pedido -->
-    <input-text
+    <input-text2
       label="Cantidad maxima"
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = Number(v))"
@@ -73,26 +72,17 @@
 
 <script setup lang="ts">
 import type { Variedad } from '#gql';
-import type { Producto } from '#gql';
 import formMarca from '@/modulos2/almacen/forms/formMarca.vue';
-import type { selectOpcionCallback } from '~/components/input/select.interface';
+import type { SelectOpcion } from '~/components/input/select.interface';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:variedad', variedad: Variedad, producto: Producto): void;
-  (event: 'modificar:variedad', variedad: Variedad, producto: Producto): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    productoID: string;
     edicion: Variedad | null;
   }>(),
   {
@@ -148,7 +138,7 @@ const formSubmit = async () => {
       estado.dataForm.inventarioLimite = {
         reemplazar: estado.dataForm.inventarioLimite,
       };
-      const producto = await api.modificarProducto_basico(props.productoID, {
+      const producto = await api.modificarProducto_basico(store.producto._id, {
         variedades: {
           buscar: {
             _id: [props.edicion?._id],
@@ -160,7 +150,7 @@ const formSubmit = async () => {
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
       emits(
-        'modificar:variedad',
+        'modificarObjeto',
         producto.variedades.find((v) => v._id === props.edicion?._id),
         producto,
       );
@@ -169,19 +159,25 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const producto = await api.modificarProducto_basico(props.productoID, {
+      const producto = await api.modificarProducto_basico(store.producto._id, {
         variedades: {
           agregar: [estado.dataForm],
         },
       });
+      const variedad = ultimo(producto.variedades);
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits(
-        'crear:variedad',
-        producto.variedades[producto.variedades.length - 1],
-        producto,
-      );
+      emits('crearObjeto', variedad, {
+        pariente: producto,
+        selectValor: variedad._id,
+        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => {
+          return [
+            ...listaOpciones,
+            { label: variedad.marca.nombre, value: variedad._id },
+          ];
+        },
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {
@@ -192,6 +188,4 @@ const formSubmit = async () => {
     return;
   }
 };
-
-const handleMarcaCreada = (marca: any) => {};
 </script>

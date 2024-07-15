@@ -97,7 +97,6 @@ export default defineNuxtConfig({
         const stats2 = await fs.promises.stat(filePath2);
         if (stats2.isDirectory()) {
           const fullPath2 = path.join(__dirname, '/', filePath2, '/rutas.ts');
-          console.log(fullPath2);
           if (fs.existsSync(fullPath2)) {
             const routes2 = await import(fullPath2);
             for (const route2 of routes2.default || []) {

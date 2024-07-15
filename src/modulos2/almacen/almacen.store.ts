@@ -8,12 +8,15 @@ interface storeProps {
   productos: Producto[] | null;
   // arbol de categorias
   categoriaArbol: Categoria | null;
+  // si se tiene que refrescar el arbol (se agrego una categoria por cierto)
+  refreshArbol: boolean;
 }
 
 export const storeAlmacen = defineStore('almacen', {
   state: (): storeProps => ({
     producto: null,
     productos: [],
+    refreshArbol: true,
     categoriaArbol: null,
   }),
 
@@ -25,11 +28,12 @@ export const storeAlmacen = defineStore('almacen', {
      */
     getCategoriaArbol: (state) => {
       return async (refresh: boolean = false): Promise<Categoria> => {
-        if (state.categoriaArbol === null || refresh) {
+        if (state.categoriaArbol === null || state.refreshArbol) {
           try {
             state.categoriaArbol = await api.buscarArbolCategorias({
               nombre: ['CATEGORIA RAIZ'],
             });
+            state.refreshArbol = false;
           } catch (err) {
             errFallBack(err);
             return null;

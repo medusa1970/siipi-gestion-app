@@ -3,7 +3,7 @@
     :type="tipo !== 'password' ? tipo : isPwd ? 'password' : 'text'"
     v-model="localModel"
     @update:model-value="handleChange"
-    @blur="activarValidacion"
+    @Blur="activarValidacion"
     :label="label + (requerido ? '*' : '')"
     :rules="rules"
     :hint="hint"
@@ -18,14 +18,25 @@
     :error="noSlot ? undefined : errorFlag"
     :errorMessage="errorMensaje"
   >
+    <q-tooltip
+      v-model="tooltip"
+      class="no-pointer-events text-white text-sm bg-blue-9"
+      anchor="bottom middle"
+      self="top middle"
+      :offset="[0, 5]"
+      max-width="300px"
+      no-parent-event
+      @show="hideTooltip()"
+    >
+      {{ info }}
+    </q-tooltip>
+
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
-
     <template #after v-if="info && info.length > 0">
-      <input-botonAyuda :mensaje="info" />
+      <q-icon name="help" @click="tooltip = !tooltip" />
     </template>
-
     <template #append v-if="tipo === 'password'">
       <q-icon
         :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -38,6 +49,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+/**
+ * Tooltip
+ */
+const tooltip = ref(false);
+const hideTooltip = (seconds = 3) =>
+  setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
  * emits
@@ -98,7 +116,9 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const localModel = ref<string>(String(props.porDefecto)); // contenido del input
+const localModel = ref<string>(
+  props.porDefecto ? String(props.porDefecto) : null,
+); // contenido del input
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o

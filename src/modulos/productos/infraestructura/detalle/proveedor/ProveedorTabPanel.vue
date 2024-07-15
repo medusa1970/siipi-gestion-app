@@ -239,7 +239,7 @@
   </Dialog>
 
   <!-- CREAR PRECIO -->
-  <Dialog2
+  <Popup
     v-model="estado.modal.show_crearPrecioPorMayor"
     title="Agregar precio"
     label-btn="Crear"
@@ -277,7 +277,7 @@
         />
       </div>
     </template>
-  </Dialog2>
+  </Popup>
 </template>
 
 <script setup lang="ts">

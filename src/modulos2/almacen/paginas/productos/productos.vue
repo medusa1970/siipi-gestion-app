@@ -6,7 +6,14 @@
   <Tabla
     :rows="rowsTablaProductos"
     :columns="
-    [
+    [ 
+       {
+    name: 'actions',
+    label: '',
+    align: 'right',
+    slot: true,
+  },
+
   {
     name: 'imagen',
     label: 'Imagen',
@@ -14,14 +21,7 @@
     align: 'center',
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
-  {
-    name: 'modificado',
-    label: 'Modif.',
-    align: 'left',
-    field: (row: any) => row._modificado,
-    format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
-    sortable: true,
-  },
+
   {
     name: 'nombre',
     required: true,slot:true,
@@ -47,31 +47,34 @@
     sortable: true,
   },
   {
-    name: 'actions',
-    label: 'Acciones',
-    align: 'right',
-    slot: true,
+    name: 'modificado',
+    label: 'Modif.',
+    align: 'left',
+    field: (row: any) => row._modificado,
+    format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
+    sortable: true,
   },
+
 ]"
     :defaultImage="ProductoImage"
   >
     <template #dropdown>
       <div class="w-full grid grid-cols-[1fr_1fr_1fr_auto] gap-3">
-        <input-text
+        <input-text2
           class="col-span-1"
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           porDefecto=""
           noSlot
         />
-        <input-select
+        <input-select2
           class="col-span-1"
           label="Categoria"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="estado.filtros.categoriaOpciones"
           noSlot
         />
-        <input-select
+        <input-select2
           class="col-span-1"
           label="Marca"
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
@@ -91,17 +94,17 @@
     <template #body-cell-actions="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
-          @click="() => (estado.modal.crearOferta = true)"
-          icon="work"
-          class="p-1"
-          color="orange"
-          size="sm"
-        />
-        <q-btn
           @click="goTo(router, 'producto2', { id: row._id })"
           icon="edit"
           class="p-1"
           color="black"
+          size="sm"
+        />
+        <q-btn
+          @click="() => (estado.modal.crearOferta = true)"
+          icon="add_business"
+          class="p-1"
+          color="orange"
           size="sm"
         />
       </q-btn-group>

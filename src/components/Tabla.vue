@@ -56,11 +56,11 @@
           </div>
         </q-td>
       </q-tr>
-      <q-tr v-show="props.expand" :props="props">
+      <!-- <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%">
           <slot name="body-expand" :row="props.row" />
         </q-td>
-      </q-tr>
+      </q-tr> -->
     </template>
   </q-table>
 </template>

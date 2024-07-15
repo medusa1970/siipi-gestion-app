@@ -41,7 +41,7 @@
         <q-checkbox
           v-model="estado.datos_modificarProductoBasico.puedeVencer"
         />
-        Puede vencer ?
+        Este producto tiene fecha de vencimiento
       </div>
 
       <div v-if="estado.datos_modificarProductoBasico.puedeVencer" class="flex">

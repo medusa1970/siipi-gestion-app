@@ -23,19 +23,15 @@ export const useProductoVariedades = () => {
     },
   });
 
-  const handleVariedadCreada = (variedad, producto) => {
+  const handleVariedadCreada = (variedad, { pariente: producto }) => {
     NotifySucessCenter('Producto creado éxitosamente');
     store.producto = producto;
-    console.log('la variedad creada:', variedad);
-    // TODO modificar productos y indexedDb
     estado.modal.formVariedadCrear = false;
   };
 
-  const handleVariedadModificada = (variedad, producto) => {
+  const handleVariedadModificada = (variedad, { pariente: producto }) => {
     NotifySucessCenter('Producto modificada éxitosamente');
     store.producto = producto;
-    console.log('la variedad modificada:', variedad);
-    // TODO modificar productos y indexedDb
     estado.modal.formVariedadModificar = false;
   };
 

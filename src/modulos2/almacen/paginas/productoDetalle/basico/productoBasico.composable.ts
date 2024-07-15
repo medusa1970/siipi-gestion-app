@@ -18,8 +18,13 @@ export const useProductoBasico = () => {
     catOpciones: [],
   });
 
+  const handleProductoModificado = (producto) => {
+    NotifySucessCenter('Producto modificado correctamente');
+  };
+
   return {
     store,
     estado,
+    handleProductoModificado,
   };
 };

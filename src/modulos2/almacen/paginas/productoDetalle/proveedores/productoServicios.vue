@@ -52,7 +52,7 @@
   >
     <template #dropdown>
       <div class="flex">
-        <input-text
+        <input-text2
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           class="col-span-1"
           label="Buscar"
@@ -96,10 +96,11 @@
   >
     <template #body>
       <formServicio
-        :productoId="store.producto._id"
-        :proveedorId="estado.entidadProveedorId"
+        :config="{
+          proveedorId: estado.entidadProveedorId,
+        }"
         :edicion="estado.servicio"
-        @modificar:servicio="handleServicioModificado"
+        @modificarObjeto="handleServicioModificado"
       />
     </template>
   </popup>
@@ -109,10 +110,7 @@
     titulo="Registrar nuevo proveedor"
   >
     <template #body>
-      <formServicio
-        :productoId="store.producto._id"
-        @crear:servicio="handleServicioCreado"
-      />
+      <formServicio @crearObjeto="handleServicioCreado" />
     </template>
   </popup>
 </template>

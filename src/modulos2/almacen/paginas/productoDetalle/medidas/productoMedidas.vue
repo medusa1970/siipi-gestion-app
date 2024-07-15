@@ -12,7 +12,7 @@
   <div v-if="!store.producto.medida">
     <p>Para poder agregar empaques, primero debes definir la medida basica.</p>
   </div>
-  <input-select
+  <input-select2
     :disable="store.producto.empaques.length > 0"
     label="Medida basica"
     :opciones="estado.medidaOpciones"
@@ -20,7 +20,6 @@
     :porDefecto="store.producto.medida?._id"
     :rules="[useRules.requerido()]"
     :dialog="formMedida"
-    @payload="HandleMedidaCreada"
   />
   <div
     class="!flex justify-center"
@@ -94,7 +93,7 @@
   >
     <template #dropdown>
       <div class="flex">
-        <input-text
+        <input-text2
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           class="col-span-1"
           label="Buscar"
@@ -137,9 +136,8 @@
   >
     <template #body>
       <formEmpaque
-        :productoID="store.producto._id"
         :edicion="estado.empaque"
-        @modificar:empaque="handleEmpaqueModificado"
+        @modificarObjeto="handleEmpaqueModificado"
       />
     </template>
   </popup>
@@ -149,10 +147,7 @@
     titulo="Registrar nuevo empaque"
   >
     <template #body>
-      <formEmpaque
-        :productoID="store.producto._id"
-        @crear:empaque="handleEmpaqueCreado"
-      />
+      <formEmpaque @crearObjeto="handleEmpaqueCreado" />
     </template>
   </popup>
 </template>
@@ -164,8 +159,6 @@ import { useProductoMedidas } from './productoMedidas.composable';
 const {
   estado,
   store,
-  HandleMedidaCreada,
-  HandleTipoEmpaqueCreado,
   formSubmit,
   handleEmpaqueModificado,
   handleEmpaqueCreado,

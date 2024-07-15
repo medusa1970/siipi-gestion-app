@@ -61,26 +61,21 @@ export const useProductoServicios = () => {
     return servicios;
   };
 
-  const handleServicioCreado = (servicio, proveedor) => {
+  const handleServicioCreado = (servicio, { pariente: proveedor }) => {
     NotifySucessCenter('Proveedor creado éxitosamente');
-    console.log('el servicio creado:', servicio);
-    // agregamos al servicio su proveedor, sin recursividad
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
-    estado.servicios.push(servicio);
+    estado.servicios.push(servicio); // agregarle su proveedor ?
     estado.modal.formServicioCrear = false;
   };
 
-  const handleServicioModificado = (servicio, proveedor) => {
+  const handleServicioModificado = (servicio, { pariente: proveedor }) => {
     NotifySucessCenter('Proveedor modificado éxitosamente');
-    console.log('el servicio modificado:', servicio);
-    // agregamos al servicio su proveedor, sin recursividad
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
-    console.log(servicio._id);
     estado.servicios = estado.servicios.map((s) =>
       s._id === servicio._id ? servicio : s,
-    );
+    ); // <-- agregarle su proveedor ?
     estado.modal.formServicioModificar = false;
   };
 

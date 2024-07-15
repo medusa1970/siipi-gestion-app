@@ -29,7 +29,7 @@
   >
     <template #dropdown>
       <div class="flex">
-        <input-text
+        <input-text2
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           class="col-span-1"
           label="Buscar"
@@ -71,10 +71,9 @@
     titulo="Modificar la marca"
   >
     <template #body>
-      <crearVariedadComp
-        :productoID="store.producto._id"
+      <formVariedad
         :edicion="estado.variedad"
-        @modificar:variedad="handleVariedadModificada"
+        @modificarObjeto="handleVariedadModificada"
       />
     </template>
   </popup>
@@ -84,16 +83,13 @@
     titulo="Registrar nueva marca"
   >
     <template #body>
-      <crearVariedadComp
-        :productoID="store.producto._id"
-        @crear:variedad="handleVariedadCreada"
-      />
+      <formVariedad @crearObjeto="handleVariedadCreada" />
     </template>
   </popup>
 </template>
 
 <script setup lang="ts">
-import crearVariedadComp from '@/modulos2/almacen/forms/formVariedad.vue';
+import formVariedad from '@/modulos2/almacen/forms/formVariedad.vue';
 import { useProductoVariedades } from './productoVariedades.composable';
 const { estado, store, handleVariedadCreada, handleVariedadModificada } =
   useProductoVariedades();

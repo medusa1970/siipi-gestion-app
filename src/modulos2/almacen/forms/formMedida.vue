@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text
+    <input-text2
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -9,7 +9,7 @@
       :error="estado.errorNombre"
     />
     <!-- abreviacion -->
-    <input-text
+    <input-text2
       label="Abreviacion"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
@@ -25,26 +25,14 @@
 
 <script setup lang="ts">
 import type { Medida } from '#gql';
-import type { selectOpcionCallback } from '~/components/input/select.interface';
-import type {} from '../almacen.interface';
+import type {
+  SelectOpcion,
+  selectOpcionCallback,
+} from '~/components/input/select.interface';
+import type { CategoriaSelectOpcion } from '../almacen.interface';
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:medida', medida: Medida): void;
-  (event: 'modificar:medida', medida: Medida): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -89,7 +77,7 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('modificar:medida', medida);
+      emits('modificarObjeto', medida);
     }
     // Modo creacion
     else {
@@ -98,12 +86,13 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('crear:medida', medida);
-      // ... y especialmente para un eventual input select para insertar la nueva opcion
-      emits('crear:opcion', medida._id, medida, (listaOpciones) => [
-        ...listaOpciones,
-        { label: medida.nombre, value: medida._id },
-      ]);
+      emits('crearObjeto', medida, {
+        selectValor: medida._id,
+        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => [
+          ...listaOpciones,
+          { label: medida.nombre, value: medida._id },
+        ],
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

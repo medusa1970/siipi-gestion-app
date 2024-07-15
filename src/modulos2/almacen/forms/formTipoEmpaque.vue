@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text
+    <input-text2
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -9,7 +9,7 @@
       :error="estado.errorNombre"
     />
     <!-- abreviacion -->
-    <input-text
+    <input-text2
       label="Abreviacion"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
@@ -17,11 +17,11 @@
       :error="estado.errorAbreviacion"
     />
     <!-- cantidad -->
-    <input-text
+    <input-text2
       label="Cantidad"
       :porDefecto="estado.dataForm.cantidad"
       @update="(v) => (estado.dataForm.cantidad = Number(v))"
-      :rules="[useRules.requerido()]"
+      :rules="[useRules.requerido(), useRules.numero()]"
     />
 
     <!-- Submit -->
@@ -33,29 +33,16 @@
 
 <script setup lang="ts">
 import type { TipoEmpaque } from '#gql';
-import type { Medida } from '#gql';
-import type { selectOpcionCallback } from '~/components/input/select.interface';
+import type { SelectOpcion } from '~/components/input/select.interface';
+import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits<{
-  (event: 'crear:tipoEmpaque', tipoEmpaque: TipoEmpaque, medida: Medida): void;
-  (
-    event: 'modificar:tipoEmpaque',
-    tipoEmpaque: TipoEmpaque,
-    medida: Medida,
-  ): void;
-  (
-    event: 'crear:opcion',
-    valor: string,
-    objeto: any,
-    callback: selectOpcionCallback,
-  ): void;
-}>();
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    medidaID: string;
     edicion: TipoEmpaque | null;
   }>(),
   {
@@ -96,7 +83,7 @@ const formSubmit = async () => {
       estado.dataForm.inventarioLimite = {
         reemplazar: estado.dataForm.inventarioLimite,
       };
-      const medida = await api.modificarMedida(props.medidaID, {
+      const medida = await api.modificarMedida(store.producto.medida._id, {
         tipoEmpaques: {
           buscar: {
             _id: [props.edicion?._id],
@@ -108,7 +95,7 @@ const formSubmit = async () => {
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
       emits(
-        'modificar:tipoEmpaque',
+        'modificarObjeto',
         medida.tipoEmpaques.find((v) => v._id === props.edicion?._id),
         medida,
       );
@@ -117,7 +104,7 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const medida = await api.modificarMedida(props.medidaID, {
+      const medida = await api.modificarMedida(store.producto.medida._id, {
         tipoEmpaques: {
           agregar: [estado.dataForm],
         },
@@ -126,12 +113,14 @@ const formSubmit = async () => {
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
-      emits('crear:tipoEmpaque', tipoEmpaque, medida);
-      // ... y especialmente para un eventual input select para insertar la nueva opcion
-      emits('crear:opcion', tipoEmpaque._id, tipoEmpaque, (listaOpciones) => [
-        ...listaOpciones,
-        { label: tipoEmpaque.nombre, value: tipoEmpaque._id },
-      ]);
+      emits('crearObjeto', tipoEmpaque, {
+        pariente: medida,
+        selectValor: tipoEmpaque._id,
+        selectCallback: (listaOpciones: SelectOpcion[]): SelectOpcion[] => [
+          ...listaOpciones,
+          { label: tipoEmpaque.nombre, value: tipoEmpaque._id },
+        ],
+      });
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

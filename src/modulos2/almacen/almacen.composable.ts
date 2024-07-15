@@ -32,9 +32,8 @@ export const useAlmacen = () => {
         }
       } else {
         options.push({
-          label: `${cat.nombre}`,
+          label: cat.nombre,
           value: cat._id,
-          disable: nivel2,
         });
       }
     }
@@ -53,6 +52,10 @@ export const useAlmacen = () => {
     const options = [];
     for (const cat of arbol.hijas) {
       const todas = [];
+      options.push(<CategoriaSelectOpcion>{
+        label: `${cat.nombre} (${cat.hijas.length})`,
+        value: todas,
+      });
       for (const subcat of cat.hijas) {
         options.push(<CategoriaSelectOpcion>{
           label: subcat.nombre,
@@ -61,10 +64,6 @@ export const useAlmacen = () => {
         });
         todas.push(subcat._id);
       }
-      options.push(<CategoriaSelectOpcion>{
-        label: `${cat.nombre} (${cat.hijas.length})`,
-        value: todas,
-      });
     }
     return options;
   };

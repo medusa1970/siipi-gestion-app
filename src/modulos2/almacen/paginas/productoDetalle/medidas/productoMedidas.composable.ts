@@ -36,43 +36,24 @@ export const useProductoMedidas = () => {
       return;
     }
     NotifySucess('Medida guardada correctamente');
-    store.producto.medida = estado.medidaId;
-    // estado.selectTipoEmpaque = toSelect(medida.tipoEmpaques);
+    store.producto.medida = producto.medida;
   };
 
-  const handleEmpaqueCreado = (empaque, producto) => {
+  const handleEmpaqueCreado = (empaque, { pariente: producto }) => {
     NotifySucessCenter('Empaque creado éxitosamente');
     store.producto = producto;
-    console.log('el empaque creada:', empaque);
-    // TODO modificar productos y indexedDb
     estado.modal.formEmpaqueCrear = false;
   };
 
-  const handleEmpaqueModificado = (empaque, producto) => {
+  const handleEmpaqueModificado = (empaque, { pariente: producto }) => {
     NotifySucessCenter('Empaque modificade éxitosamente');
     store.producto = producto;
-    console.log('el empaque modificada:', empaque);
-    // TODO modificar productos y indexedDb
     estado.modal.formEmpaqueModificar = false;
-  };
-
-  // manejar la marca creada desde el boton + del select
-  const HandleMedidaCreada = (medida: any) => {
-    console.log('Medida creada via select:', medida);
-    // ...
-  };
-
-  // manejar la marca creada desde el boton + del select
-  const HandleTipoEmpaqueCreado = (tipoEmpaque: any) => {
-    console.log('tipoEmpaque creado via select:', tipoEmpaque);
-    // ...
   };
 
   return {
     store,
     estado,
-    HandleMedidaCreada,
-    HandleTipoEmpaqueCreado,
     formSubmit,
     handleEmpaqueModificado,
     handleEmpaqueCreado,

@@ -28,8 +28,8 @@
       @update="
         (v) => {
           estado.datos_productoMedida.medida = v;
-          const medida = estado.medidas.find((medida) => medida._id === v);
-          estado.selectTipoEmpaque = toSelect(medida.tipoEmpaques);
+          const medida = estado.medidas.find((medida) => medida?._id === v);
+          estado.selectTipoEmpaque = toSelect(medida?.tipoEmpaques);
         }
       "
       :porDefecto="productoStore.producto.medida?._id"
@@ -253,16 +253,16 @@ const handlePayloadVariedad = (payload: any) => {
 const handlePayloadMedida = (payload: any) => {};
 
 const handlePayloadTipoEmpaque = (payload: any) => {
-  productoStore.producto.medida.tipoEmpaques.push(payload);
+  productoStore.producto.medida?.tipoEmpaques?.push(payload);
   estado.selectTipoEmpaque = toSelect(
-    productoStore.producto.medida.tipoEmpaques,
+    productoStore.producto.medida?.tipoEmpaques,
   );
   prellenarEmpaque(payload._id);
 };
 onMounted(async () => {
   await buscarMedidas();
   estado.selectTipoEmpaque = toSelect(
-    productoStore.producto.medida.tipoEmpaques,
+    productoStore.producto.medida?.tipoEmpaques,
   );
   $socket.on('cambiosProductos', async (data) => {
     console.log('first');

@@ -35,6 +35,11 @@ export const useOferta = () => {
     },
 
     datos_ofertaBasica: clone(init_crearOfertaBasico),
+
+    filtros: {
+      categoriaSeleccionada: '',
+      buscarFiltro: '',
+    },
   });
 
   /** FUNCIONES */

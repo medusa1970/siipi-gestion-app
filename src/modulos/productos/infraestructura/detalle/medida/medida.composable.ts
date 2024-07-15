@@ -84,7 +84,9 @@ export const useDetalleMedida = () => {
     const medida = estado.medidas.find(
       (medida) => medida._id === producto.medida._id,
     );
+    console.log(medida);
     productoStore.producto.medida = medida;
+    console.log(productoStore.producto);
   };
 
   /**

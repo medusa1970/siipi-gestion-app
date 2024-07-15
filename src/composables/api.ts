@@ -283,9 +283,7 @@ export const api = {
     f: BuscarProductoDto = {},
     t: any = null,
   ): Promise<Producto[]> =>
-    <Producto[]>(
-      await buscarVarios(GqlBuscarProductos_basico, t, b, o, f, o.loading)
-    ),
+    <Producto[]>await bv(GqlBuscarProductos_basico, t, b, o, f, o.loading),
   crearProducto_basico: async (
     d: CrearProductoDto,
     o: CrearOpciones & { loading?: boolean } = {},

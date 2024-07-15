@@ -112,6 +112,7 @@
 <script setup lang="ts">
 import type { Oferta } from '#gql';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+import { ofertaAbreviacion } from '../utils/oferta-utils';
 const { store } = useAlmacen();
 
 // definicion de los emits
@@ -241,8 +242,7 @@ watch(
 watch(
   () => estado.dataForm.nombre,
   () => {
-    estado.dataForm.abreviacion =
-      estado.dataForm.nombre.substring(0, 15) + '...';
+    estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
   },
   { immediate: true },
 );
@@ -261,8 +261,7 @@ watch(
     estado.dataForm.nombre = `${p.producto} ${p.marca} ${p.empaque} ${
       p.cantidad
     } ${p.cantidad !== '' ? u : ''}`.trim();
-    estado.dataForm.abreviacion =
-      estado.dataForm.nombre.substring(0, 15) + '...';
+    estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
   },
   { immediate: true },
 );

@@ -62,7 +62,6 @@ export const storeAlmacen = defineStore('almacen', {
             return null;
           }
         }
-        console.log(0, state.catalogoArbol);
         return state.catalogoArbol;
       };
     },

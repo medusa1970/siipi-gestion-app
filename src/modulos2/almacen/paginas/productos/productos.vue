@@ -220,7 +220,7 @@ definePageMeta({
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { useProductos } from './productos.composable';
 import ProductoImage from '@/assets/img/producto.png';
-import formOfertaProducto from '@/modulos2/almacen/forms/formOfertaProducto.vue';
+import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
 const router = useRouter();
 const { $socket } = useNuxtApp();
 const { estado, store } = useProductos();

@@ -220,7 +220,7 @@
     <template #body-cell-acciones="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
-          @click="goTo(router, 'producto2', { id: row._id })"
+          @click="goTo(router, 'producto', { id: row._id })"
           icon="edit"
           class="p-1"
           color="black"

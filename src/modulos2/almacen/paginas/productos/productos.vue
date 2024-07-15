@@ -204,10 +204,7 @@
 
   <popup v-model="estado.modal.crearOferta" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaProducto
-        :config="{ productoId: estado.productoSeleccionado }"
-        @crearObjeto="handleOfertaCreada"
-      />
+      <formOfertaProducto @crearObjeto="handleOfertaCreada" />
     </template>
   </popup>
 </template>
@@ -219,7 +216,7 @@ definePageMeta({
 
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { useProductos } from './productos.composable';
-import ProductoImage from '@/assets/img/producto.png';
+import ProductoImage from '@/assets/img/noHayProducto.png';
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
 const router = useRouter();
 const { $socket } = useNuxtApp();

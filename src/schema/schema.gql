@@ -44,6 +44,7 @@ type Marca {
   _borrado: DateTime
   _orden: Float
   nombre: String!
+  imagen: FileUpload
 }
 
 type Empaque {
@@ -919,6 +920,7 @@ input BuscarMarcaDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   nombre: [String!]
+  imagen: FileUploadBuscar
 }
 
 input BuscarTagDto {
@@ -1215,7 +1217,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-11T02:52:52.637Z"
+  saldoActualizacion: DateTime = "2024-07-15T14:41:07.328Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1803,10 +1805,12 @@ input ModificarTipoEmpaqueDto {
 input CrearMarcaDto {
   _id: ID
   nombre: String!
+  imagen: FileUploadInput
 }
 
 input ModificarMarcaDto {
   nombre: String
+  imagen: FileUploadInput
 }
 
 input CrearTagDto {

@@ -8,6 +8,9 @@ query buscarMarcas(
     _creado
     _modificado
     nombre
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -17,6 +20,9 @@ mutation crearMarcas($datos: [CrearMarcaDto!]!, $opciones: CrearOpciones = {}) {
     _creado
     _modificado
     nombre
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -30,6 +36,9 @@ mutation modificarMarcas(
     _creado
     _modificado
     nombre
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -42,5 +51,8 @@ mutation borrarMarcas(
     _creado
     _modificado
     nombre
+    imagen {
+      cloudinaryUrl
+    }
   }
 }

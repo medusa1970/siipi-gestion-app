@@ -8,6 +8,18 @@
       :rules="[useRules.requerido()]"
       :error="estado.errorNombre"
     />
+    <!-- Imagen -->
+    <input-image2
+      label="Imagen"
+      info="Logo de la marca."
+      @update="
+        (base64Data, mimetype) =>
+          (estado.dataForm.imagen = base64Data
+            ? { data: base64Data, mimetype: mimetype }
+            : null)
+      "
+      icono="photo_camera"
+    />
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />
@@ -17,10 +29,7 @@
 
 <script setup lang="ts">
 import type { Marca } from '#gql';
-import type {
-  SelectOpcion,
-  selectOpcionCallback,
-} from '~/components/input/select.interface';
+import type { SelectOpcion } from '~/components/input/select.interface';
 import type { CategoriaSelectOpcion } from '../almacen.interface';
 
 // definicion de los emits
@@ -39,6 +48,7 @@ const props = withDefaults(
 // datos por defecto del formulario
 const initForm = {
   nombre: props.edicion?.nombre ?? '',
+  imagen: null,
 };
 
 // definicion del estado

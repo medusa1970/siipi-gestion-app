@@ -1,11 +1,13 @@
-import type { Catalogo, Categoria, Producto } from '#gql';
+import type { Catalogo, Categoria, Marca, Producto } from '#gql';
 import localforage from 'localforage';
 
 interface storeProps {
-  // producto que se esta editando en el formulario detalle
-  producto: Producto | null;
-  // cache de la lista de los productos
+  // cache de las colecciones para las tablas
   productos: Producto[] | null;
+  marcas: Marca[] | null;
+  // Objeto corriente en la pagina de detalle
+  producto: Producto | null;
+  marca: Marca | null;
   // arboles
   categoriaArbol: Categoria | null;
   catalogoArbol: Catalogo | null;
@@ -15,8 +17,10 @@ interface storeProps {
 
 export const storeAlmacen = defineStore('almacen', {
   state: (): storeProps => ({
-    producto: null,
     productos: [],
+    marcas: null,
+    producto: null,
+    marca: null,
     refreshArbol: true,
     categoriaArbol: null,
     catalogoArbol: null,
@@ -89,9 +93,23 @@ export const storeAlmacen = defineStore('almacen', {
       this.productos = productos;
       return productos;
     },
+
+    /**
+     * Retorna la lista de los marcas de la base de datos
+     */
+    async traerMarcas(): Promise<Marca[]> {
+      try {
+        this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
+        console.log(this.marcas);
+        return this.marcas;
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+    },
   },
 
   persist: {
-    paths: ['producto'],
+    paths: ['producto', 'marcas'],
   },
 });

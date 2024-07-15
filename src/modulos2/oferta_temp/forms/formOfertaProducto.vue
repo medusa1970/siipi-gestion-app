@@ -128,7 +128,7 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  producto: props.config.productoId ?? '',
+  producto: props.config?.productoId ?? '',
   marca: '',
   cantidad: '',
   nombre: '',

@@ -4,6 +4,7 @@ export const errFallBack = (err) => {
     'El error inesperado:',
     err.mensaje ?? err.gqErrors?.[0].message ?? err,
   );
+  console.log(err);
 };
 
 export const formatApiError = (err) => {
@@ -14,7 +15,7 @@ export const isApiError = (err, tipo = null, clave = null) => {
   return (
     err.isApiError &&
     (err.tipo === null || err.tipo === tipo) &&
-    (clave === null || err.detalle.clave === clave)
+    (clave === null || err.detalle?.clave === clave)
   );
 };
 export const isApiInternalError = (err, clave = null) =>

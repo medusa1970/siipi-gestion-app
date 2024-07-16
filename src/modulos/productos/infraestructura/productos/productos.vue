@@ -100,7 +100,6 @@
       </div>
     </template>
     <template #body-cell-estado="{ row }">
-      [{{ row.imagen }}]
       <q-badge
         v-if="
           row.imagen &&

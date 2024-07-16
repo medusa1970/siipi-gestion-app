@@ -1,5 +1,3 @@
-import type {} from '#gql';
-
 const buscar = async (
   consulta: Function,
   token: any,
@@ -63,6 +61,7 @@ const crear = async (
   opciones: any,
   loading = false,
 ) => {
+  console.log(opciones.loading);
   delete opciones.loading;
   if (opciones.populate === undefined) opciones.populate = true;
   let resultado;

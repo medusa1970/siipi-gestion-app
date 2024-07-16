@@ -17,17 +17,17 @@ export default [
   },
   {
     name: 'marcas',
-    path: '/cathering/marcas2',
+    path: '/cathering/marcas',
     file: '@/modulos2/almacen/paginas/marcas/marcas.vue',
   },
   {
     name: 'medidas',
-    path: '/cathering/medidas2',
+    path: '/cathering/medidas',
     file: '@/modulos2/almacen/paginas/medidas/medidas.vue',
   },
   {
     name: 'proveedores',
-    path: '/cathering/proveedores2',
+    path: '/cathering/proveedores',
     file: '@/modulos2/almacen/paginas/proveedores/proveedores.vue',
   },
 ];

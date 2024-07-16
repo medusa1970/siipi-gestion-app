@@ -8,7 +8,6 @@
     ]"
     titulo="Gestion de marcas"
   />
-
   <Tabla :rows="rowsTabla" :columns="columnsTabla" :defaultImage="MarcaImage">
     <template #dropdown>
       <div class="w-full flex" style="align-items: center">
@@ -45,19 +44,19 @@
     </template>
   </Tabla>
 
-  <dialog2 v-model="estado.modal.formCrearMarca" titulo="Nueva marca">
+  <popup v-model="estado.modal.formCrearMarca" titulo="Nueva marca">
     <template #body>
-      <formMarca @modificarObjeto="handleMarcaModificada" />
+      <formMarca @crearObjeto="handleMarcaCreada" />
     </template>
-  </dialog2>
-  <dialog2
-    v-model="estado.modal.formModificarMarca"
-    titulo="Modificar una marca"
-  >
+  </popup>
+  <popup v-model="estado.modal.formModificarMarca" titulo="Modificar una marca">
     <template #body>
-      <formMarca :edicion="estado.marca" @modificarObjeto="handleMarcaCreada" />
+      <formMarca
+        :edicion="estado.marca"
+        @modificarObjeto="handleMarcaModificada"
+      />
     </template>
-  </dialog2>
+  </popup>
 </template>
 
 <script setup lang="ts">

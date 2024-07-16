@@ -162,6 +162,7 @@ export const useAuthStore = defineStore('auth', {
      * Logout
      */
     logout() {
+      localforage.clear();
       this.$patch({
         token: null,
         usuario: null,

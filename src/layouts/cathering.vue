@@ -49,21 +49,21 @@
       //   label: 'Stock',
       //   to: 'stock2',
       // },
-      // {
-      //   icon: 'tag',
-      //   label: 'Marcas',
-      //   to: 'marcas2',
-      // },
-      // {
-      //   icon: 'tag',
-      //   label: 'Medidas',
-      //   to: 'medidas2',
-      // },
-      // {
-      //   icon: 'tag',
-      //   label: 'Proveedores2',
-      //   to: 'proveedores2',
-      // },
+      {
+        icon: 'tag',
+        label: 'Marcas',
+        to: 'marcas',
+      },
+      {
+        icon: 'tag',
+        label: 'Medidas',
+        to: 'medidas',
+      },
+      {
+        icon: 'tag',
+        label: 'Proveedores',
+        to: 'proveedores',
+      },
       // {
       //   icon: 'people',
       //   label: 'Administracion',

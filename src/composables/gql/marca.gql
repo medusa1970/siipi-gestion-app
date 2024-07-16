@@ -10,7 +10,7 @@ query buscarMarcas(
     nombre
     imagen {
       cloudinaryUrl
-    }
+    } 
   }
 }
 

@@ -69,13 +69,10 @@ const estado = reactive({
 //
 onMounted(async () => {
   // recuperamos la imagen desde la url
-  if (props.edicion.imagen?.cloudinaryUrl) {
-    await UrlToBase64Image(
-      props.edicion.imagen?.cloudinaryUrl,
-      (base64Data) => {
-        estado.imagenPreview = base64Data;
-      },
-    );
+  if (props.edicion?.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
+      estado.imagenPreview = base64Data;
+    });
   } else {
     estado.imagenPreview = null;
   }
@@ -83,6 +80,9 @@ onMounted(async () => {
 
 // submision del formulario
 const formSubmit = async () => {
+  if (!estado.dataForm.imagen) {
+    delete estado.dataForm.imagen;
+  }
   try {
     // Modo edicion
     if (props.edicion) {
@@ -90,6 +90,7 @@ const formSubmit = async () => {
       const marca = await api.modificarMarca(
         props.edicion._id,
         estado.dataForm,
+        { loading: true },
       );
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
@@ -99,7 +100,7 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const marca = await api.crearMarca(estado.dataForm);
+      const marca = await api.crearMarca(estado.dataForm, { loading: true });
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente

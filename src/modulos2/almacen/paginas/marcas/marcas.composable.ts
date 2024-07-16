@@ -37,14 +37,17 @@ export const useMarcas = () => {
   });
 
   // se creó una marca
-  const handleMarcaCreada = (marca) => {
+  const handleMarcaCreada = async (marca) => {
+    NotifySucessCenter('Marca creada correctamente');
     estado.modal.formCrearMarca = false;
+    await store.traerMarcas();
   };
 
   // se modificcó una marca
   const handleMarcaModificada = async (marca) => {
-    await store.traerMarcas();
+    NotifySucessCenter('Marca modificada correctamente');
     estado.modal.formModificarMarca = false;
+    await store.traerMarcas();
   };
 
   return {

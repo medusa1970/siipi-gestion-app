@@ -156,6 +156,9 @@ const formSubmit = async () => {
       estado.dataForm.vencimientoLimite = {
         reemplazar: estado.dataForm.vencimientoLimite,
       };
+      console.log('modificando el producto');
+      console.log('props.edicion._id');
+      console.log('estado.dataForm');
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,

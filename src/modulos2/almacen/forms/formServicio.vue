@@ -217,13 +217,11 @@ const formSubmit = async () => {
   // el proveedor no entra en llos datos para la consulta
   const data = clone(estado.dataForm);
   delete data.proveedor;
-  // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
-  data.marca = store.producto.variedades.find(
-    (v) => v._id === data.marca,
-  ).marca._id;
+
   try {
     // Modo edicion
     if (props.edicion != null) {
+      delete data.marca;
       // lanzamos la consulta
       data.preciosPorMayor = { reemplazar: data.preciosPorMayor };
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
@@ -244,6 +242,10 @@ const formSubmit = async () => {
     }
     // Modo creacion
     else {
+      // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
+      data.marca = store.producto.variedades.find(
+        (v) => v._id === data.marca,
+      ).marca._id;
       // lanzamos la consulta
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
         servicios: {

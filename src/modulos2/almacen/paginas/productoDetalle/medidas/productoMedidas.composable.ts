@@ -47,8 +47,8 @@ export const useProductoMedidas = () => {
 
   const handleEmpaqueModificado = (empaque, { pariente: producto }) => {
     NotifySucessCenter('Empaque modificade éxitosamente');
-    store.producto = producto;
     estado.modal.formEmpaqueModificar = false;
+    // store.producto = producto;
   };
 
   return {

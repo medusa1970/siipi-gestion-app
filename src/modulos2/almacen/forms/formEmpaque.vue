@@ -118,9 +118,8 @@ onMounted(async () => {
 // submision del formulario
 const formSubmit = async () => {
   // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
-  estado.dataForm.marca = store.producto.variedades.find(
-    (v) => v._id === estado.dataForm.marca,
-  ).marca._id;
+  console.log('first');
+
   try {
     // Modo edicion
     if (props.edicion) {
@@ -133,18 +132,27 @@ const formSubmit = async () => {
           modificar: estado.dataForm,
         },
       });
+      // console.log(producto);
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
       emits(
         'modificarObjeto',
         producto.empaques.find((v) => v._id === props.edicion?._id),
+        (store.producto.empaques = producto.empaques),
         producto,
       );
+      // console.log(producto.empaques);
+      // console.log(store.producto.empaques);
     }
 
     // Modo creacion
     else {
+      // console.log(store.producto.variedades);
+      estado.dataForm.marca = store.producto.variedades.find(
+        (v) => v._id === estado.dataForm.marca,
+      ).marca._id;
+      // console.log(estado.dataForm);
       // lanzamos la consulta
       const producto = await api.modificarProducto_basico(store.producto._id, {
         empaques: {

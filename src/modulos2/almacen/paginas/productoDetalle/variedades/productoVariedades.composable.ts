@@ -30,9 +30,11 @@ export const useProductoVariedades = () => {
   };
 
   const handleVariedadModificada = (variedad, { pariente: producto }) => {
+    //ERROR llega undefined el producto revisar el emit,
+    // console.log(producto);
     NotifySucessCenter('Producto modificada éxitosamente');
-    store.producto = producto;
     estado.modal.formVariedadModificar = false;
+    // store.producto = producto;
   };
 
   return {

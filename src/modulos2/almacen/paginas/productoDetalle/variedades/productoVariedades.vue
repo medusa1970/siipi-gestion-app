@@ -49,12 +49,7 @@
     <template #body-cell-actions="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
-          @click="
-            () => {
-              estado.variedad = row;
-              estado.modal.formVariedadModificar = true;
-            }
-          "
+          @click="modalEditarMarca(row)"
           class="p-1"
           color="black"
           size="sm"
@@ -98,21 +93,15 @@ const { $socket } = useNuxtApp();
 const { estado, store, handleVariedadCreada, handleVariedadModificada } =
   useProductoVariedades();
 
-//inicializaciones
-onMounted(async () => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    await actProductosDB();
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
-});
-
 /**
  * Rows para la tabla
  */
 const rowsTabla = computed(() => {
-  let filtered = store.producto.variedades;
+  console.log(store.producto.variedades);
+  if (!store.producto.variedades) {
+    console.log('vacio');
+  }
+  let filtered = store.producto?.variedades;
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
     const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
@@ -126,6 +115,23 @@ const rowsTabla = computed(() => {
     });
   }
   return filtered;
+});
+
+const modalEditarMarca = (row: any) => {
+  console.log('ROW' + JSON.stringify(row));
+  estado.variedad = row;
+  console.log('ESTADO' + JSON.stringify(estado.variedad));
+  estado.modal.formVariedadModificar = true;
+};
+
+//inicializaciones
+onMounted(async () => {
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosProductos');
 });
 </script>
 

@@ -26,7 +26,7 @@
       <input-text2
         style="width: 55%"
         label="Segundo aviso"
-        :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
+        :porDefecto="estado.dataForm.cantidadLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[1] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
         info="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
@@ -146,12 +146,21 @@ const formSubmit = async () => {
           modificar: estado.dataForm,
         },
       });
+      // console.log(producto);
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
+
+      // SOLUCION TEMPORAL llena bien el store.producto
+      // if (producto) {
+      //   producto.variedades.find((v) => v._id === props.edicion?._id);
+      //   store.producto.variedades = producto.variedades;
+      // }
       // mandamos el resultado al componiente pariente
+      // ERROR, el producto esta mandandose undefined
       emits(
         'modificarObjeto',
         producto.variedades.find((v) => v._id === props.edicion?._id),
+        (store.producto.variedades = producto.variedades),
         producto,
       );
     }
@@ -187,5 +196,6 @@ const formSubmit = async () => {
     errFallBack(err);
     return;
   }
+  // console.log('first');
 };
 </script>

@@ -262,9 +262,9 @@ const {
 const ofertaStore = storeOferta();
 
 const rowsParaMostrar = computed(() => {
-  console.log(estado.ofertasFiltradas.length);
+  // console.log(estado.ofertasFiltradas.length);
   let filtered = estado.ofertasFiltradas;
-  console.log(filtered.length);
+  // console.log(filtered.length);
   // filtro por buscar que no discrimine maiusculas de minusculas y acentos
   if (estado.filtros.buscarFiltro != null) {
     filtered = filtered.filter((oferta) => {

@@ -1233,7 +1233,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-16T05:43:44.093Z"
+  saldoActualizacion: DateTime = "2024-07-16T07:56:13.959Z"
   servicios: [CrearServicioDto!]
 }
 

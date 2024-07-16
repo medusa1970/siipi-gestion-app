@@ -58,6 +58,7 @@ export const useProductoServicios = () => {
       servicios = [...servicios, ...serviciosConProveedores];
     }
     estado.servicios = servicios;
+    console.log(estado.servicios);
     return servicios;
   };
 

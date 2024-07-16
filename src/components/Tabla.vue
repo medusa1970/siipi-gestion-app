@@ -63,7 +63,6 @@
       </q-tr>
     </template>
   </q-table>
-  {{ props.disableExpand }} {{ foo }}
 </template>
 
 <script setup lang="ts">

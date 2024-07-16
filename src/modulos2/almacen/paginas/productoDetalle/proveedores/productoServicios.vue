@@ -1,6 +1,7 @@
 <template>
   <Tabla
     :rows="rowsTabla"
+    disableExpand
     :columns="[
       {
         name: 'proveedor',

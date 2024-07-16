@@ -12,6 +12,8 @@
     <input-image2
       label="Imagen"
       info="Logo de la marca."
+      :dataPreview="estado.imagenPreview"
+      :key="estado.imagenPreview"
       @update="
         (base64Data, mimetype) =>
           (estado.dataForm.imagen = base64Data
@@ -29,6 +31,7 @@
 
 <script setup lang="ts">
 import type { Marca } from '#gql';
+import { UrlToBase64Image } from '~/components/input/input.service';
 import type { SelectOpcion } from '~/components/input/select.interface';
 // import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 // const { actProductosDB } = useAlmacen();
@@ -59,19 +62,24 @@ const estado = reactive({
   dataForm: clone(initForm),
   //mensajes de error del formulario
   errorNombre: '',
+  // preview de la imagen en el input
+  imagenPreview: null,
 });
 
-// //
-// onMounted(async () => {
-//   $socket.on('cambiosProductos', async (data: any) => {
-//     console.log('socket on ok', data);
-//     await actProductosDB();
-//   });
-// });
-// onBeforeUnmount(() => {
-//   // localStorage.removeItem('reloaded');
-//   $socket.off('cambiosProductos');
-// });
+//
+onMounted(async () => {
+  // recuperamos la imagen desde la url
+  if (props.edicion.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(
+      props.edicion.imagen?.cloudinaryUrl,
+      (base64Data) => {
+        estado.imagenPreview = base64Data;
+      },
+    );
+  } else {
+    estado.imagenPreview = null;
+  }
+});
 
 // submision del formulario
 const formSubmit = async () => {

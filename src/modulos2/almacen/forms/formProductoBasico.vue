@@ -36,6 +36,8 @@
     <input-image2
       label="Imagen"
       info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+      :dataPreview="estado.imagenPreview"
+      :key="estado.imagenPreview"
       @update="
         (base64Data, mimetype) =>
           (estado.dataForm.imagen = base64Data
@@ -85,12 +87,10 @@
 
 <script setup lang="ts">
 import type { Producto } from '#gql';
-import type {
-  SelectOpcion,
-  selectOpcionCallback,
-} from '~/components/input/select.interface';
+import type { SelectOpcion } from '~/components/input/select.interface';
 import formCategoria from './formCategoria.vue';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+import { UrlToBase64Image } from '~/components/input/input.service';
 const { categoriaSelectOptions } = useAlmacen();
 
 // definicion de los emits
@@ -124,11 +124,24 @@ const estado = reactive({
   errorNombre: '',
   // lista de opciones para el select de categorias
   catOpciones: [],
+  // preview de la imagen en el input
+  imagenPreview: null,
 });
 
 // Inicializaciones
 onMounted(async () => {
   estado.catOpciones = await categoriaSelectOptions();
+  // recuperamos la imagen desde la url
+  if (props.edicion.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(
+      props.edicion.imagen?.cloudinaryUrl,
+      (base64Data) => {
+        estado.imagenPreview = base64Data;
+      },
+    );
+  } else {
+    estado.imagenPreview = null;
+  }
 });
 
 // submision del formulario

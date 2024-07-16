@@ -1,3 +1,6 @@
+# sockets
+/src/plugins/socket.config.ts
+
 # seguridad
 .env.dev
 .env.demo

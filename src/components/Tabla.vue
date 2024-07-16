@@ -56,13 +56,14 @@
           </div>
         </q-td>
       </q-tr>
-      <q-tr v-show="props.expand" :props="props">
+      <q-tr v-show="!disableExpand && props.expand" :props="props">
         <q-td colspan="100%">
           <slot name="body-expand" :row="props.row" />
         </q-td>
       </q-tr>
     </template>
   </q-table>
+  {{ props.disableExpand }} {{ foo }}
 </template>
 
 <script setup lang="ts">
@@ -79,6 +80,7 @@ const props = withDefaults(
     conBusqueda: boolean;
     watchFilter: string;
     titulo: string;
+    disableExpand: boolean;
   }>(),
   {
     defaultImage: ProductoImage,
@@ -86,6 +88,7 @@ const props = withDefaults(
     watchFilter: '',
     conBusqueda: false,
     titulo: '',
+    disableExpand: false,
   },
 );
 watch(
@@ -130,4 +133,4 @@ watch(
   visibility: visible;
   opacity: 1;
 }
-  </style>
+</style>

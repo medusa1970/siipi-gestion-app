@@ -3,6 +3,7 @@
     :nav="[{ label: 'productos', to: 'productos' }]"
     titulo="Gestion de productos"
   />
+
   <Tabla
     :rows="rowsTablaProductos"
     :columns="
@@ -25,41 +26,41 @@
     field: (row: any) => row.nombre,
     sortable: true,
   },
-  {
-    name: 'medida',
-    required: true,
-    label: 'Unidad',
-    align: 'left',
-    field: (row: any) => row.medida?.abreviacion,
-    sortable: true,
-  },
-  {
-    name: 'categoria',
-    required: true,
-    label: 'categoria',
-    align: 'left',
-    field: (row: any) => row.categoria.nombre,
-    sortable: true,
-  },
-  {
-    name: 'modificado',
-    label: 'Modif.',
-    align: 'left',
-    field: (row: any) => row._modificado,
-    format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
-    sortable: true,
-  },
+  // {
+  //   name: 'medida',
+  //   required: true,
+  //   label: 'Unidad',
+  //   align: 'left',
+  //   field: (row: any) => row.medida?.abreviacion,
+  //   sortable: true,
+  // },
+  // {
+  //   name: 'categoria',
+  //   required: true,
+  //   label: 'categoria',
+  //   align: 'left',
+  //   field: (row: any) => row.categoria.nombre,
+  //   sortable: true,
+  // },
+  // {
+  //   name: 'modificado',
+  //   label: 'Modif.',
+  //   align: 'left',
+  //   field: (row: any) => row._modificado,
+  //   format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
+  //   sortable: true,
+  // },
   {
     name: 'estado',
-    label: 'Estado',
+    label: 'Modif.',
     align: 'right',
+    field: (row: any) => row._modificado,
     slot: true,
     sortable: true,
-
   },
   {
     name: 'acciones',
-    label: '',
+    label: 'Accion',
     align: 'center',
     slot: true,
   },
@@ -102,6 +103,8 @@
       </div>
     </template>
     <template #body-cell-estado="{ row }">
+      {{ fechaMes(row._modificado ?? row._creado) }}
+      <br />
       <q-badge
         v-if="
           row.imagen &&
@@ -112,7 +115,6 @@
           row.medida
         "
         color="green"
-        class="mr-2 lowercase"
       >
         completo
       </q-badge>
@@ -245,7 +247,31 @@
       </q-btn-group>
     </template>
     <template #body-cell-nombre="{ val, row }">
-      <h1 v-if="row.nombre" class="tooltip">
+      <div
+        style="
+          font-size: 13px;
+          display: block;
+          word-wrap: break-word;
+          white-space: normal;
+        "
+      >
+        {{ row.nombre }}
+      </div>
+      <div class="flex">
+        <q-badge
+          v-for="variedad in row.variedades"
+          :key="variedad._id"
+          color="green"
+          class="mr-1 mb-1 lowercase"
+        >
+          {{ variedad.marca?.nombre }}
+        </q-badge>
+      </div>
+      <p style="white-space: normal">
+        <i> Por {{ row.medida?.abreviacion ?? 'a ingresar' }} </i> /
+        <i>Categoria: {{ row.categoria?.nombre ?? 'a ingresar' }} </i>
+      </p>
+      <!-- <h1 v-if="row.nombre" class="tooltip">
         {{
           row.nombre.length > 30 ? row.nombre.slice(0, 30) + '...' : row.nombre
         }}
@@ -253,16 +279,7 @@
           class="tooltiptext shadow-lg text-blue-500 font-semibold bg-white px-4 py-1"
           >{{ row.nombre }}</span
         >
-      </h1>
-      <br />
-      <q-badge
-        v-for="variedad in row.variedades"
-        :key="variedad._id"
-        color="green"
-        class="mr-2 lowercase"
-      >
-        {{ variedad.marca?.nombre }}
-      </q-badge>
+      </h1> -->
     </template>
   </Tabla>
 
@@ -319,6 +336,7 @@ onBeforeUnmount(() => {
  */
 const rowsTablaProductos = computed(() => {
   let filtered = store.productos;
+  if (!filtered) return [];
   // filtro por categoria
   if (
     estado.filtros.categoriaSeleccionada != null &&

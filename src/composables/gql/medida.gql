@@ -15,6 +15,9 @@ query buscarMedidas(
       abreviacion
       cantidad
     }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -33,6 +36,9 @@ mutation crearMedidas(
       nombre
       abreviacion
       cantidad
+    }
+    imagen {
+      cloudinaryUrl
     }
   }
 }
@@ -54,6 +60,9 @@ mutation modificarMedidas(
       abreviacion
       cantidad
     }
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -72,6 +81,9 @@ mutation borrarMedidas(
       nombre
       abreviacion
       cantidad
+    }
+    imagen {
+      cloudinaryUrl
     }
   }
 }

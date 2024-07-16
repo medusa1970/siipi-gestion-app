@@ -27,10 +27,15 @@ export const useMarcas = () => {
   // Rows para la tabla
   const rowsTabla = computed(() => {
     let rows = store.marcas;
-    if (rows && estado.filtros.buscar != null) {
+    if (!rows) return [];
+    if (estado.filtros.buscar != null) {
       const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
       rows = rows.filter((marca) => {
-        return regex.test(marca.nombre + sinAcentos(marca.nombre));
+        return (
+          regex.test(marca.nombre + sinAcentos(marca.nombre)) ||
+          regex.test(marca.descripcion ?? '') ||
+          regex.test(sinAcentos(marca.descripcion ?? ''))
+        );
       });
     }
     return rows;

@@ -3,6 +3,7 @@
     <!-- nombre -->
     <input-text2
       label="Nombre"
+      info="Info."
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
@@ -11,10 +12,25 @@
     <!-- descripcion -->
     <input-text2
       label="Descripcion"
+      tipo="textarea"
+      info="Info."
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
     />
-
+    <!-- Imagen -->
+    <input-image2
+      label="Imagen"
+      info="Logo de la marca."
+      :dataPreview="estado.imagenPreview"
+      :key="estado.imagenPreview"
+      @update="
+        (base64Data, mimetype) =>
+          (estado.dataForm.imagen = base64Data
+            ? { data: base64Data, mimetype: mimetype }
+            : null)
+      "
+      icono="photo_camera"
+    />
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />
@@ -24,11 +40,8 @@
 
 <script setup lang="ts">
 import type { Entidad } from '#gql';
-import type {
-  SelectOpcion,
-  selectOpcionCallback,
-} from '~/components/input/select.interface';
-import type { CategoriaSelectOpcion } from '../almacen.interface';
+import type { SelectOpcion } from '~/components/input/select.interface';
+import { UrlToBase64Image } from '~/components/input/input.service';
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -48,6 +61,7 @@ const initForm = {
   tipo: 'PROVEEDOR',
   nombre: props.edicion?.nombre ?? '',
   descripcion: props.edicion?.descripcion ?? '',
+  imagen: null,
 };
 
 // definicion del estado
@@ -56,15 +70,27 @@ const estado = reactive({
   dataForm: clone(initForm),
   //mensajes de error del formulario
   errorNombre: '',
+  // preview de la imagen en el input
+  imagenPreview: null,
 });
 
 // Inicializaciones
 onMounted(async () => {
-  // nada por lo momento
+  // recuperamos la imagen desde la url
+  if (props.edicion?.imagen?.cloudinaryUrl) {
+    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
+      estado.imagenPreview = base64Data;
+    });
+  } else {
+    estado.imagenPreview = null;
+  }
 });
 
 // submision del formulario
 const formSubmit = async () => {
+  if (!estado.dataForm.imagen) {
+    delete estado.dataForm.imagen;
+  }
   try {
     // Modo edicion
     if (props.edicion) {
@@ -72,6 +98,7 @@ const formSubmit = async () => {
       const proveedor = await api.modificarEntidad_basico(
         props.edicion._id,
         estado.dataForm,
+        { loading: true },
       );
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
@@ -81,7 +108,9 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const proveedor = await api.crearEntidad_basico(estado.dataForm);
+      const proveedor = await api.crearEntidad_basico(estado.dataForm, {
+        loading: true,
+      });
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente

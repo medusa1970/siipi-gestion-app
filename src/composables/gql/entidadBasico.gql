@@ -10,6 +10,9 @@ query buscarEntidades_basico(
     tipo
     nombre
     descripcion
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -24,6 +27,9 @@ mutation crearEntidades_basico(
     tipo
     nombre
     descripcion
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -39,6 +45,9 @@ mutation modificarEntidades_basico(
     tipo
     nombre
     descripcion
+    imagen {
+      cloudinaryUrl
+    }
   }
 }
 
@@ -53,5 +62,8 @@ mutation borrarEntidades_basico(
     tipo
     nombre
     descripcion
+    imagen {
+      cloudinaryUrl
+    }
   }
 }

@@ -1,13 +1,24 @@
-import type { Catalogo, Categoria, Marca, Producto } from '#gql';
+import type {
+  Catalogo,
+  Categoria,
+  Entidad,
+  Marca,
+  Medida,
+  Producto,
+} from '#gql';
 import localforage from 'localforage';
 
 interface storeProps {
   // cache de las colecciones para las tablas
   productos: Producto[] | null;
   marcas: Marca[] | null;
+  medidas: Medida[] | null;
+  proveedores: Entidad[] | null;
   // Objeto corriente en la pagina de detalle
   producto: Producto | null;
   marca: Marca | null;
+  medida: Medida | null;
+  proveedor: Entidad | null;
   // arboles
   categoriaArbol: Categoria | null;
   catalogoArbol: Catalogo | null;
@@ -17,10 +28,14 @@ interface storeProps {
 
 export const storeAlmacen = defineStore('almacen', {
   state: (): storeProps => ({
-    productos: [],
+    productos: null,
     marcas: null,
+    medidas: null,
+    proveedores: null,
     producto: null,
     marca: null,
+    medida: null,
+    proveedor: null,
     refreshArbol: true,
     categoriaArbol: null,
     catalogoArbol: null,
@@ -48,6 +63,7 @@ export const storeAlmacen = defineStore('almacen', {
         return state.categoriaArbol;
       };
     },
+
     /**
      * Retorna el arbol de catalogos
      * Si no existe o si se indico refresh=true, lo obtiene de la API
@@ -77,7 +93,7 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(): Promise<Producto[]> {
-      if (null != this.productos) {
+      if (!this.productos) {
         let productos = (await localforage.getItem('productos')) as Producto[];
         if (!productos) {
           try {
@@ -92,13 +108,12 @@ export const storeAlmacen = defineStore('almacen', {
           }
         }
         this.productos = productos;
-        return productos;
       }
       return this.productos;
     },
 
     /**
-     * Retorna la lista de los marcas de la base de datos
+     * Retorna la lista de las marcas de la base de datos
      */
     async traerMarcas(): Promise<Marca[]> {
       try {
@@ -109,9 +124,38 @@ export const storeAlmacen = defineStore('almacen', {
         return;
       }
     },
+
+    /**
+     * Retorna la lista de los proveedores de la base de datos
+     */
+    async traerProveedores(): Promise<Entidad[]> {
+      try {
+        this.proveedores = await api.buscarEntidades_basico(
+          { tipo: ['PROVEEDOR'] },
+          { sort: 'nombre' },
+        );
+        return this.proveedores;
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+    },
+
+    /**
+     * Retorna la lista de las medidas de la base de datos
+     */
+    async traerMedidas(): Promise<Medida[]> {
+      try {
+        this.medidas = await api.buscarMedidas({});
+        return this.medidas;
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+    },
   },
 
   persist: {
-    paths: ['producto', 'marcas'],
+    paths: ['producto', 'marcas', 'medidas', 'proveedores'],
   },
 });

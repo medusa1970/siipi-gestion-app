@@ -3,10 +3,19 @@
     <!-- nombre -->
     <input-text2
       label="Nombre"
+      info="Info."
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :error="estado.errorNombre"
+    />
+    <!-- descripcion -->
+    <input-text2
+      label="Descripcion"
+      tipo="textarea"
+      info="Info."
+      :porDefecto="estado.dataForm.descripcion"
+      @update="(v) => (estado.dataForm.descripcion = v)"
     />
     <!-- Imagen -->
     <input-image2
@@ -53,6 +62,7 @@ const props = withDefaults(
 // datos por defecto del formulario
 const initForm = {
   nombre: props.edicion?.nombre ?? '',
+  descripcion: props.edicion?.descripcion ?? '',
   imagen: null,
 };
 
@@ -66,7 +76,7 @@ const estado = reactive({
   imagenPreview: null,
 });
 
-//
+// Inicializaciones
 onMounted(async () => {
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {

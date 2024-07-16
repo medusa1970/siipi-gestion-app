@@ -1,5 +1,6 @@
 <template>
   <q-table
+    id="foo"
     flat
     :rows="rows"
     :rowKey="rowKey"
@@ -12,30 +13,16 @@
     style="max-height: 600px; overflow-y: auto"
   >
     <template #top>
-      <!-- slot para el boton de agregar -->
-      <slot name="dropdown" />
-
-      <!-- filtro de busqueda -->
-      <div v-if="conBusqueda">
-        <q-input
-          v-model="filter"
-          borderless
-          dense
-          debounce="300"
-          color="secondary"
-          style="padding: 0 10px"
-          placeholder="Buscar"
-          clearable
-          class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a] mr-3"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" size="22px" class="text-[#010f1a]" />
-          </template>
-        </q-input>
+      <div class="busqueda">
+        <slot name="dropdown" />
       </div>
     </template>
     <template #body="props">
-      <q-tr :props="props" @click="props.expand = !props.expand">
+      <q-tr
+        :class="1 == props.rowIndex % 2 ? 'odd' : 'even'"
+        :props="props"
+        @click="props.expand = !props.expand"
+      >
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
           <div v-if="col.slot">
             <slot
@@ -56,7 +43,11 @@
           </div>
         </q-td>
       </q-tr>
-      <q-tr v-show="!disableExpand && props.expand" :props="props">
+      <q-tr
+        :class="1 == props.rowIndex % 2 ? 'expand odd' : 'expand even'"
+        v-show="!disableExpand && props.expand"
+        :props="props"
+      >
         <q-td colspan="100%">
           <slot name="body-expand" :row="props.row" />
         </q-td>
@@ -100,10 +91,6 @@ watch(
 </script>
 
 <style>
-.q-table tbody tr:nth-child(odd) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-}
 .cell-image {
   width: 50px;
   height: 50px;
@@ -131,5 +118,45 @@ watch(
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.q-table th {
+  background-color: #777;
+  color: white;
+}
+.q-table tr.odd {
+  background-color: #e7e9eb;
+}
+.q-table tr.even {
+  background-color: #fff;
+  border: 2px solid blue;
+}
+
+/* .q-table tr.expand.odd {
+  background-color: #e7e9eb;
+}
+.q-table tr.expand.even {
+  background-color: #fff;
+} */
+.q-table tr.expand .q-card {
+  background-color: #f8f8f8;
+}
+
+/* QUASAR TABLE */
+.q-table thead,
+.q-table tr,
+.q-table th,
+.q-table td {
+  border: none;
+  /* @apply border-gray-400; */
+}
+.q-table {
+  @apply border-t-[1px]
+  /* border: 1px solid #f6921e; */
+  /* @apply border-[1px] border-gray-200; */;
+}
+.q-table tr th {
+  font-weight: bold;
+  text-transform: uppercase;
 }
 </style>

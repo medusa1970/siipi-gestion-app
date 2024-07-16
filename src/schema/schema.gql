@@ -20,6 +20,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ImageOutput {
+  base64: String
+  archivoLocal: String
+  cloudinaryUrl: String
+}
+
 type Persona {
   _id: ID!
   _creado: DateTime
@@ -31,6 +37,8 @@ type Persona {
   correo: String!
   telefono: String!
   imagen: FileUpload
+  avatar: ImageOutput
+  avatars: [ImageOutput!]
   usuario: String
   contrasena: String!
   rdcToken: String
@@ -44,6 +52,7 @@ type Marca {
   _borrado: DateTime
   _orden: Float
   nombre: String!
+  descripcion: String
   imagen: FileUpload
 }
 
@@ -92,6 +101,7 @@ type Medida {
   nombre: String!
   abreviacion: String!
   tipoEmpaques: [TipoEmpaque!]
+  imagen: FileUpload
 }
 
 type Variedad {
@@ -337,7 +347,7 @@ type Entidad {
   _orden: Float
   tipo: String!
   nombre: String!
-  descripcion: String!
+  descripcion: String
   imagen: FileUpload
   empleados: [Empleado!]!
   almacen: [Stock!]
@@ -902,6 +912,7 @@ input BuscarMedidaDto {
   nombre: [String!]
   abreviacion: [String!]
   tipoEmpaques: BuscarTipoEmpaqueDto
+  imagen: FileUploadBuscar
 }
 
 input BuscarTipoEmpaqueDto {
@@ -920,6 +931,7 @@ input BuscarMarcaDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   nombre: [String!]
+  descripcion: [String!]
   imagen: FileUploadBuscar
 }
 
@@ -1086,6 +1098,8 @@ input CrearPersonaDto {
   telefono: String!
   imagen: FileUploadInput
   usuario: String
+  avatar: String
+  avatars: [String!]
   contrasena: String!
   rdcToken: String
   rdcVencimiento: DateTime
@@ -1102,6 +1116,8 @@ input ModificarPersonaDto {
   correo: String
   telefono: String
   imagen: FileUploadInput
+  avatar: String
+  avatars: [String!]
   usuario: String
   contrasena: String
   rdcToken: String
@@ -1217,7 +1233,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-15T14:41:07.328Z"
+  saldoActualizacion: DateTime = "2024-07-16T05:43:44.093Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1771,6 +1787,7 @@ input CrearMedidaDto {
   nombre: String!
   abreviacion: String!
   tipoEmpaques: [CrearTipoEmpaqueDto!]
+  imagen: FileUploadInput
 }
 
 input CrearTipoEmpaqueDto {
@@ -1784,6 +1801,7 @@ input ModificarMedidaDto {
   nombre: String
   abreviacion: String
   tipoEmpaques: EditarTipoEmpaqueDto
+  imagen: FileUploadInput
 }
 
 input EditarTipoEmpaqueDto {
@@ -1805,11 +1823,13 @@ input ModificarTipoEmpaqueDto {
 input CrearMarcaDto {
   _id: ID
   nombre: String!
+  descripcion: String
   imagen: FileUploadInput
 }
 
 input ModificarMarcaDto {
   nombre: String
+  descripcion: String
   imagen: FileUploadInput
 }
 

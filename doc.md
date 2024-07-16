@@ -10,3 +10,4 @@
 - [PINIA](https://nuxt.com/modulos/pinia)
 - [VUEDRAGGABLE](https://sortablejs.github.io/Vue.Draggable/#/simple)
 - [GRAPHQL-CLIENT](https://nuxt-graphql-client.web.app/)
+  test

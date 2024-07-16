@@ -193,7 +193,7 @@ const changeMedida = (v) => {
  */
 const rowsTabla = computed(() => {
   let filtered = store.producto.empaques;
-  // filtro para buscar que no discrimine maiusculas de minusculas y acentos
+  if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
     const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
     filtered = filtered.filter((empaque) => {

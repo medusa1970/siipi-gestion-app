@@ -8,7 +8,12 @@
     ]"
     titulo="Gestion de marcas"
   />
-  <Tabla :rows="rowsTabla" :columns="columnsTabla" :defaultImage="MarcaImage">
+  <Tabla
+    disableExpand
+    :rows="rowsTabla"
+    :columns="columnsTabla"
+    :defaultImage="MarcaImage"
+  >
     <template #dropdown>
       <div class="w-full flex" style="align-items: center">
         <input-text2
@@ -25,6 +30,11 @@
           @click="() => (estado.modal.formCrearMarca = true)"
         />
       </div>
+    </template>
+    <template #body-cell-nombre="{ val, row }">
+      {{ val }}
+      <br />
+      <i>{{ row.descripcion }}</i>
     </template>
     <template #body-cell-actions="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
@@ -84,6 +94,7 @@ const columnsTabla = [
     align: 'left',
     field: (row: any) => row.nombre,
     sortable: true,
+    slot: true,
   },
   {
     name: 'actions',

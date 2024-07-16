@@ -60,24 +60,6 @@ h6 {
   height: 100vh;
 }
 
-/* QUASAR TABLE */
-.q-table thead,
-.q-table tr,
-.q-table th,
-.q-table td {
-  border: none;
-  /* @apply border-gray-400; */
-}
-.q-table {
-  @apply border-t-[1px]
-  /* border: 1px solid #f6921e; */
-  /* @apply border-[1px] border-gray-200; */;
-}
-.q-table tr th {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
 .test {
   display: flex;
   justify-content: center;

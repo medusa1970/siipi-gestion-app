@@ -146,7 +146,7 @@ onBeforeUnmount(() => {
  */
 const rowsTabla = computed(() => {
   let filtered = estado.servicios;
-  // filtro para buscar que no discrimine maiusculas de minusculas y acentos
+  if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
     const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
     filtered = filtered.filter((servicio) => {

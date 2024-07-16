@@ -1,5 +1,6 @@
 # sockets
-/src/plugins/socket.config.ts
+.vscode
+/src/plugins
 
 # seguridad
 .env.dev

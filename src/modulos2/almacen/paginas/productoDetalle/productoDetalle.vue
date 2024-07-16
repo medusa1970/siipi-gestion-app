@@ -1,4 +1,10 @@
 <template>
+  <Navigation2
+    :nav="[
+      { label: 'productos', to: 'productos' },
+      { label: store.producto?.nombre, to: 'productoDetalles' },
+    ]"
+  />
   <q-tabs
     v-model="estado.tab"
     inline-label
@@ -93,4 +99,10 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.q-tab {
+  padding: 0 10px;
+  margin-bottom: 0px;
+  /* border: 2px solid red; */
+}
+</style>

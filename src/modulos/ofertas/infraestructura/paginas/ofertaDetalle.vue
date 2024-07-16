@@ -2,9 +2,8 @@
   <Navigation2
     :nav="[
       { label: 'ofertas', to: 'ofertas' },
-      { label: 'detalle', to: 'ofertasDetalles' },
+      { label: ofertaStore.oferta.nombre, to: 'ofertasDetalles' },
     ]"
-    :titulo="'Oferta: ' + ofertaStore.oferta.nombre"
   />
   <!--
     TABS

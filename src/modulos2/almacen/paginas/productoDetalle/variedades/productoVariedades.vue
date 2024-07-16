@@ -61,9 +61,9 @@
         />
       </q-btn-group>
     </template>
-    <template #body-expand="{ row }">
+    <!-- <template #body-expand="{ row }">
       <pre>{{ row }}</pre>
-    </template>
+    </template> -->
   </Tabla>
 
   <Popup

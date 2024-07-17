@@ -28,13 +28,18 @@
         <q-btn
           flat
           round
-          color="primary"
+          color="white"
           icon="shopping_cart"
           @click="toggleRightDrawer"
         >
-          <q-badge class="rounded-full" rounded color="orange" floating>{{
-            pedidoStore.listaPedido.length
-          }}</q-badge>
+          <q-badge
+            v-if="pedidoStore.listaPedido.length > 0"
+            class="rounded-full"
+            rounded
+            color="orange"
+            floating
+            >{{ pedidoStore.listaPedido.length }}</q-badge
+          >
         </q-btn>
       </q-toolbar>
     </q-header>

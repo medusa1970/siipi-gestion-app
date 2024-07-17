@@ -1,5 +1,5 @@
 <template>
-  <div class="importante">
+  <!-- <div class="importante">
     <div class="icon">
       <q-icon name="engineering" color="black" size="30px" />
     </div>
@@ -7,7 +7,7 @@
       En construccion todavia! <br />Mañana por la mañanita se podrá guardar las
       ofertas por aquí.
     </div>
-  </div>
+  </div> -->
 
   <q-form @submit="formSubmit">
     <!-- Produit -->

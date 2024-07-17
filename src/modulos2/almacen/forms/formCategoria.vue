@@ -82,7 +82,7 @@ const formSubmit = async () => {
       // refrescar el arbol
       store.refreshArbol = true;
       // mandamos el resultado al componiente pariente
-      emits('modificarObjeto', categoria);
+      emits('modificarObjeto', { categoria });
     }
     // Modo creacion
     else {

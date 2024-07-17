@@ -110,16 +110,13 @@ onMounted(async () => {
     }),
   );
   estado.marcaOpciones = store.producto.variedades.map((variedad) => ({
-    value: variedad._id,
+    value: variedad.marca._id,
     label: variedad.marca.nombre,
   }));
 });
 
 // submision del formulario
 const formSubmit = async () => {
-  // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
-  console.log('first');
-
   try {
     // Modo edicion
     if (props.edicion) {
@@ -132,7 +129,6 @@ const formSubmit = async () => {
           modificar: estado.dataForm,
         },
       });
-      // console.log(producto);
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
       // mandamos el resultado al componiente pariente
@@ -148,11 +144,6 @@ const formSubmit = async () => {
 
     // Modo creacion
     else {
-      // console.log(store.producto.variedades);
-      estado.dataForm.marca = store.producto.variedades.find(
-        (v) => v._id === estado.dataForm.marca,
-      ).marca._id;
-      // console.log(estado.dataForm);
       // lanzamos la consulta
       const producto = await api.modificarProducto_basico(store.producto._id, {
         empaques: {

@@ -1,5 +1,6 @@
 <template>
-  <crearProductoBasicoComp
+  <!-- @vue-ignore -->
+  <formProductoBasico
     v-show="store.producto"
     :edicion="store.producto"
     :key="store.producto"
@@ -8,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import crearProductoBasicoComp from '@/modulos2/almacen/forms/formProductoBasico.vue';
+import formProductoBasico from '@/modulos2/almacen/forms/formProductoBasico.vue';
 import { useProductoBasico } from './productoBasico.composable';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 const { actProductosDB } = useAlmacen();

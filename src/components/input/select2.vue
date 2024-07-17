@@ -67,11 +67,11 @@
     </template>
   </q-select>
 
-  <dialog2 v-model="showDialog" titulo="Agregar un nuevo item">
+  <Popup v-model="showDialog" titulo="Agregar un nuevo item">
     <template #body>
       <contenido-dialog :config="dialogConfig" @crearObjeto="handleCrear" />
     </template>
-  </dialog2>
+  </Popup>
 </template>
 
 <script setup lang="ts">

@@ -189,7 +189,7 @@ const estado = reactive({
 onMounted(async () => {
   // opciones de marcas
   estado.marcaOpciones = store.producto.variedades.map((variedad) => ({
-    value: variedad._id, // ponemos la id de la variedad pero mas tarde seleccionaremos su marca
+    value: variedad.marca._id, // ponemos la id de la variedad pero mas tarde seleccionaremos su marca
     label: variedad.marca.nombre,
   }));
 
@@ -221,7 +221,6 @@ const formSubmit = async () => {
   try {
     // Modo edicion
     if (props.edicion != null) {
-      delete data.marca;
       // lanzamos la consulta
       data.preciosPorMayor = { reemplazar: data.preciosPorMayor };
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
@@ -242,10 +241,6 @@ const formSubmit = async () => {
     }
     // Modo creacion
     else {
-      // la opcion entrega una id de variedad, no de marca, seleccionamos la marca correspondiente
-      data.marca = store.producto.variedades.find(
-        (v) => v._id === data.marca,
-      ).marca._id;
       // lanzamos la consulta
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
         servicios: {

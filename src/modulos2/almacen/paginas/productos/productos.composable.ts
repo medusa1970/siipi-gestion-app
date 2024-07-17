@@ -20,6 +20,8 @@ export const useProductos = () => {
     modal: {
       formProductoBasico: false,
       crearOferta: false,
+      alertaIncompleto: false,
+      alertaIncompleto_params: [] as boolean[],
     },
     // producto seleccionado para crear oferta
     productoSeleccionado: null,

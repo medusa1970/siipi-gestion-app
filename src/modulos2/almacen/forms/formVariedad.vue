@@ -146,22 +146,13 @@ const formSubmit = async () => {
           modificar: estado.dataForm,
         },
       });
-      // console.log(producto);
       // reinicializamos el formulario
       estado.dataForm = clone(initForm);
 
-      // SOLUCION TEMPORAL llena bien el store.producto
-      // if (producto) {
-      //   producto.variedades.find((v) => v._id === props.edicion?._id);
-      //   store.producto.variedades = producto.variedades;
-      // }
-      // mandamos el resultado al componiente pariente
-      // ERROR, el producto esta mandandose undefined
       emits(
         'modificarObjeto',
         producto.variedades.find((v) => v._id === props.edicion?._id),
-        (store.producto.variedades = producto.variedades),
-        producto,
+        { pariente: producto },
       );
     }
 
@@ -196,6 +187,5 @@ const formSubmit = async () => {
     errFallBack(err);
     return;
   }
-  // console.log('first');
 };
 </script>

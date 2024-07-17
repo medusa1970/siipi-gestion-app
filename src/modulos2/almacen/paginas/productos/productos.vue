@@ -107,12 +107,9 @@
       <br />
       <q-badge
         v-if="
-          row.imagen &&
-          row.categoria &&
-          row.variedades.length > 0 &&
           // row.empaques.length > 0 &&
           // row.comentario &&
-          row.medida
+          row.imagen && row.categoria && row.variedades.length > 0 && row.medida
         "
         color="green"
       >
@@ -234,7 +231,22 @@
           @click="
             () => {
               estado.productoSeleccionado = row._id;
-              estado.modal.crearOferta = true;
+              estado.modal.alertaIncompleto_params = [
+                !row.imagen,
+                row.variedades.length === 0,
+                !row.medida,
+                !row.categoria,
+              ];
+              if (
+                estado.modal.alertaIncompleto_params.reduce(
+                  (a, c) => a || c,
+                  false,
+                )
+              ) {
+                estado.modal.alertaIncompleto = true;
+              } else {
+                estado.modal.crearOferta = true;
+              }
             }
           "
           icon="add_business"
@@ -255,9 +267,9 @@
           white-space: normal;
         "
       >
-        {{ row.nombre }}
+        <b>{{ row.nombre }}</b>
       </div>
-      <div class="flex">
+      <div class="flex" v-if="row.variedades?.length > 0">
         <q-badge
           v-for="variedad in row.variedades"
           :key="variedad._id"
@@ -267,9 +279,13 @@
           {{ variedad.marca?.nombre }}
         </q-badge>
       </div>
+      <div v-else><span class="aIngresar">Registrar una marca</span></div>
       <p style="white-space: normal">
-        <i> Por {{ row.medida?.abreviacion ?? 'a ingresar' }} </i> /
-        <i>Categoria: {{ row.categoria?.nombre ?? 'a ingresar' }} </i>
+        <span v-if="row.medida?.abreviacion"
+          >Por {{ row.medida.abreviacion }}</span
+        ><span v-else class="aIngresar">Elegir la medida</span> -
+        <span v-if="row.categoria?.nombre">En: {{ row.categoria.nombre }}</span
+        ><span v-else class="aIngresar">Elegir la categoria</span>
       </p>
       <!-- <h1 v-if="row.nombre" class="tooltip">
         {{
@@ -295,6 +311,44 @@
         :config="{ productoId: estado.productoSeleccionado }"
         @crearObjeto="handleOfertaCreada"
       />
+    </template>
+  </Popup>
+
+  <Popup
+    v-model="estado.modal.alertaIncompleto"
+    @close="console.log('ok')"
+    titulo="Producto incompleto"
+  >
+    <template #body>
+      <div>
+        Por favor entre los datos siguientes antes de crear una oferta :
+        <q-list>
+          <q-item v-if="estado.modal.alertaIncompleto_params[0]" v-ripple>
+            <q-item-section avatar>
+              <q-avatar color="green" text-color="white"> I </q-avatar>
+            </q-item-section>
+            <q-item-section>Suba una imagen</q-item-section>
+          </q-item>
+          <q-item v-if="estado.modal.alertaIncompleto_params[1]" v-ripple>
+            <q-item-section avatar>
+              <q-avatar color="green" text-color="white"> M </q-avatar>
+            </q-item-section>
+            <q-item-section>Registre por lo menos una marca</q-item-section>
+          </q-item>
+          <q-item v-if="estado.modal.alertaIncompleto_params[2]" v-ripple>
+            <q-item-section avatar>
+              <q-avatar color="green" text-color="white"> U </q-avatar>
+            </q-item-section>
+            <q-item-section>Elija una medida básica</q-item-section>
+          </q-item>
+          <q-item v-if="estado.modal.alertaIncompleto_params[3]" v-ripple>
+            <q-item-section avatar>
+              <q-avatar color="green" text-color="white"> C </q-avatar>
+            </q-item-section>
+            <q-item-section>Elija una categoria</q-item-section>
+          </q-item>
+        </q-list>
+      </div>
     </template>
   </Popup>
 </template>
@@ -394,5 +448,8 @@ const rowsTablaProductos = computed(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-transform: uppercase;
+}
+.aIngresar {
+  color: orange;
 }
 </style>

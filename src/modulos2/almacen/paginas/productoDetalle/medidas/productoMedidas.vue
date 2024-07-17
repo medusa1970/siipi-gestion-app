@@ -123,6 +123,15 @@
           size="sm"
           icon="edit"
         />
+        <q-btn
+          icon="delete"
+          class="p-1"
+          color="red"
+          size="sm"
+          @click="borrarProductoEmpaque(row)"
+        >
+          <q-tooltip> Eliminar empaque </q-tooltip>
+        </q-btn>
       </q-btn-group>
     </template>
     <!-- <template #body-expand="{ row }">
@@ -165,6 +174,7 @@ const {
   formSubmit,
   handleEmpaqueModificado,
   handleEmpaqueCreado,
+  borrarProductoEmpaque,
 } = useProductoMedidas();
 
 //inicializaciones

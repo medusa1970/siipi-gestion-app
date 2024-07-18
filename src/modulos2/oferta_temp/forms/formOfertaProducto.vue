@@ -8,15 +8,24 @@
       ofertas por aquí.
     </div>
   </div> -->
+  <pre>
+[ {{
+      dataForm.marca === ''
+        ? '[ES]'
+        : dataForm.marca === null
+        ? 'null'
+        : dataForm.marca
+    }}]</pre
+  >
 
   <q-form @submit="formSubmit">
     <!-- Produit -->
     <input-select2
       label="Producto"
       info="Info."
-      :opciones="estado.productoOpciones"
-      :porDefecto="estado.dataForm.producto"
-      @update="(v) => (estado.dataForm.producto = v)"
+      :opciones="productoOpciones"
+      :porDefecto="dataForm.producto"
+      @update="(v) => (dataForm.producto = v)"
       :rules="[useRules.requerido()]"
     />
 
@@ -24,10 +33,10 @@
     <input-select2
       label="Marca"
       info="Info."
-      :opciones="estado.variedadOpciones"
-      :porDefecto="estado.dataForm.marca"
-      @update="(v) => (estado.dataForm.marca = v)"
-      :watch="estado.dataForm.marca"
+      :opciones="variedadOpciones"
+      :porDefecto="dataForm.marca"
+      @update="(v) => (dataForm.marca = v)"
+      :watch="dataForm.marca"
       :rules="[useRules.requerido()]"
     />
 
@@ -36,17 +45,17 @@
       <input-select2
         style="width: 40%"
         label="Empaque preseleccionado"
-        :opciones="estado.empaqueOpciones"
+        :opciones="empaqueOpciones"
         @update="(v) => prellenarEmpaque(v)"
-        :watch="estado.resetEmpaque"
+        :watch="resetEmpaque"
       />
       <input-text2
         style="width: 50%"
         label="Cantidad"
         info="Si desea elija un empaque, o sino entre directamente a la cantidad."
-        :porDefecto="estado.dataForm.cantidad"
-        @update="(v) => (estado.dataForm.cantidad = Number(v))"
-        :watch="estado.dataForm.cantidad"
+        :porDefecto="dataForm.cantidad"
+        @update="(v) => (dataForm.cantidad = Number(v))"
+        :watch="dataForm.cantidad"
         :rules="[useRules.requerido(), useRules.numero()]"
       />
     </div>
@@ -55,31 +64,41 @@
     <input-text2
       label="Nombre"
       info="Info."
-      :porDefecto="estado.dataForm.nombre"
-      @update="(v) => (estado.dataForm.nombre = v)"
+      :porDefecto="dataForm.nombre"
+      @update="(v) => (dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
-      :error="estado.errorNombre"
-      :watch="estado.dataForm.nombre"
+      :error="errorNombre"
+      :watch="dataForm.nombre"
     />
 
     <!-- abreviacion -->
     <input-text2
       label="Abreviacion"
       info="Info."
-      :porDefecto="estado.dataForm.abreviacion"
-      @update="(v) => (estado.dataForm.abreviacion = v)"
+      :porDefecto="dataForm.abreviacion"
+      @update="(v) => (dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
-      :watch="estado.dataForm.abreviacion"
-      :error="estado.errorAbreviacion"
+      :watch="dataForm.abreviacion"
+      :error="errorAbreviacion"
+    />
+
+    <!-- descripcion -->
+    <input-text2
+      label="Descripcion"
+      info="Info."
+      autogrow
+      :porDefecto="dataForm.descripcion"
+      @update="(v) => (dataForm.descripcion = v)"
+      :watch="dataForm.descripcion"
     />
 
     <!-- Catalogo -->
     <input-select2
       label="Catalogo"
       info="Info."
-      :opciones="estado.catalogoOpciones"
-      :porDefecto="estado.dataForm.catalogo"
-      @update="(v) => (estado.dataForm.catalogo = v)"
+      :opciones="catalogoOpciones"
+      :porDefecto="dataForm.catalogo"
+      @update="(v) => (dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
     />
 
@@ -89,7 +108,7 @@
       info="Info."
       @update="
         (base64Data, mimetype) =>
-          (estado.dataForm.imagen = base64Data
+          (dataForm.imagen = base64Data
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
@@ -100,15 +119,15 @@
     <input-text2
       label="Precio con factura"
       info="Info."
-      :porDefecto="estado.dataForm.precioConFactura"
-      @update="(v) => (estado.dataForm.precioConFactura = Number(v))"
+      :porDefecto="dataForm.precioConFactura"
+      @update="(v) => (dataForm.precioConFactura = Number(v))"
       :rules="[useRules.numero()]"
     />
     <input-text2
       label="precio sin factura"
       info="Info."
-      :porDefecto="estado.dataForm.precioSinFactura"
-      @update="(v) => (estado.dataForm.precioSinFactura = Number(v))"
+      :porDefecto="dataForm.precioSinFactura"
+      @update="(v) => (dataForm.precioSinFactura = Number(v))"
       :rules="[useRules.numero()]"
     />
 
@@ -123,6 +142,8 @@
 import type { Oferta } from '#gql';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { ofertaAbreviacion } from '../utils/oferta-utils';
+import type { Producto } from '#gql';
+import type { CrearOfertaDto } from '#gql';
 const { store } = useAlmacen();
 
 // definicion de los emits
@@ -138,52 +159,52 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  producto: props.config?.productoId ?? '',
-  marca: '',
-  cantidad: '',
-  nombre: '',
-  abreviacion: '',
-  precioConFactura: '',
-  precioSinFactura: '',
-  imagen: '',
+  producto: props.config?.productoId,
+  marca: null,
+  cantidad: null,
+  nombre: null,
+  empaque: null,
+  abreviacion: null,
+  descripcion: null,
+  precioConFactura: null,
+  precioSinFactura: null,
+  imagen: null,
+  catalogo: null,
 };
 
-// definicion del estado
-const estado = reactive({
-  // valor de los inputs
-  dataForm: clone(initForm),
-  //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
-  // producto seleccionado
-  producto: null,
-  // opciones para seleccion
-  productoOpciones: [],
-  catalogoOpciones: [],
-  variedadOpciones: [],
-  empaqueOpciones: [],
-  // para el empaque
-  resetEmpaque: '',
-  // nombre de la oferta para constuirla dinamicamente
-  nombreOfertaPartes: {
-    producto: '',
-    marca: '',
-    empaque: '',
-    empaqueAbreviacion: '',
-    cantidad: '',
-  },
+// valor de los inputs
+const dataForm = ref<typeof initForm>(clone(initForm));
+//mensajes de error del formulario
+const errorNombre = ref('');
+const errorAbreviacion = ref('');
+// objetos seleccionados
+const producto = ref<Producto>(null);
+const oferta = ref<CrearOfertaDto>(null);
+// opciones para seleccion
+const productoOpciones = ref([]);
+const variedadOpciones = ref([]);
+const empaqueOpciones = ref([]);
+const catalogoOpciones = ref([]);
+// para el empaque
+const resetEmpaque = ref('');
+const nombreOfertaPartes = ref({
+  producto: '',
+  marca: '',
+  empaque: '',
+  empaqueAbreviacion: '',
+  cantidad: '',
 });
 
 // Inicializaciones
 onMounted(async () => {
-  estado.productoOpciones = store.productos.map((p) => {
+  productoOpciones.value = store.productos.map((p) => {
     return {
       value: p._id,
       label: p.nombre,
     };
   });
   const arbol = await store.getCatalogoArbol();
-  estado.catalogoOpciones = arbol.hijas.map((c) => {
+  catalogoOpciones.value = arbol.hijas.map((c) => {
     return {
       value: c._id,
       label: c.nombre,
@@ -191,103 +212,143 @@ onMounted(async () => {
   });
 });
 
-// ponemos al dia la lista de variedades cuando cambia el producto en el select
 watch(
-  () => estado.dataForm.producto,
+  () => dataForm.value.producto,
   () => {
     // producto
-    estado.producto = store.productos.find((p) => {
-      return p._id === estado.dataForm.producto;
+    producto.value = store.productos.find((p) => {
+      return p._id === dataForm.value.producto;
     });
-    if (!estado.producto) {
+    if (!producto.value) {
       return;
     }
-    estado.nombreOfertaPartes.producto = estado.producto.nombre;
+    nombreOfertaPartes.value.producto = producto.value.nombre;
     // marca
-    estado.variedadOpciones = estado.producto.variedades.map((variedad) => ({
+    variedadOpciones.value = producto.value.variedades.map((variedad) => ({
       value: variedad.marca._id,
       label: variedad.marca.nombre,
     }));
-    estado.dataForm.marca = null;
+    dataForm.value.marca = null;
   },
   { immediate: true },
 );
 
 watch(
-  () => estado.dataForm.marca,
+  () => dataForm.value.marca,
   () => {
+    console.log('cambio de marca:', dataForm.value.marca);
+
     // si se reinicializo la marca, reinicializemos tambien el empaque
-    if (estado.dataForm.marca === null) {
-      estado.dataForm.empaque = null;
+    if (dataForm.value.marca === '' || dataForm.value.marca == null) {
+      dataForm.value.empaque = '';
       return;
     }
     // recuperamos el nombre de la marca
     // HACK en vez de llamar la base de datos leemos directamente en las opciones
-    estado.nombreOfertaPartes.marca = estado.variedadOpciones.find(
-      (opcion) => opcion.value === estado.dataForm.marca,
-    ).label;
+    nombreOfertaPartes.value.marca =
+      variedadOpciones.value.find((opcion) => {
+        return opcion.value === dataForm.value.marca;
+      })?.label ?? '';
+
     // recuperamos los nuevos empaques del producto con esta marca...
-    const empaques = estado.producto.empaques.filter(
-      (empaque) => empaque.marca._id === estado.dataForm.marca,
+    const empaques = producto.value.empaques.filter(
+      (empaque) => empaque.marca._id === dataForm.value.marca,
     );
     // ... y lo transformamos en opcionSelect
-    estado.empaqueOpciones = empaques.map((empaque) => {
+    empaqueOpciones.value = empaques.map((empaque) => {
       return {
         value: empaque,
         label: empaque.nombre,
       };
     });
   },
-  { immediate: true },
+  { immediate: false },
 );
 
 watch(
-  () => estado.dataForm.cantidad,
+  () => dataForm.value.cantidad,
   () => {
-    estado.nombreOfertaPartes.cantidad = estado.dataForm.cantidad;
+    nombreOfertaPartes.value.cantidad = dataForm.value.cantidad;
   },
   { immediate: true },
 );
 
 watch(
-  () => estado.dataForm.nombre,
+  () => dataForm.value.nombre,
   () => {
-    estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
+    dataForm.value.abreviacion = ofertaAbreviacion(dataForm.value.nombre ?? '');
   },
   { immediate: true },
 );
 
 // constuccion dinmica del nombre de la oferta
 watch(
-  () => [
-    estado.nombreOfertaPartes.producto,
-    estado.nombreOfertaPartes.marca,
-    estado.nombreOfertaPartes.empaque,
-    estado.nombreOfertaPartes.cantidad,
-  ],
+  nombreOfertaPartes.value,
   () => {
-    const p = estado.nombreOfertaPartes;
-    const u = estado.producto?.medida?.abreviacion;
-    estado.dataForm.nombre = `${p.producto} ${p.marca} ${p.empaque} ${
-      p.cantidad
-    } ${p.cantidad !== '' ? u : ''}`.trim();
-    estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
+    const p = nombreOfertaPartes;
+    const u = producto?.value.medida?.abreviacion;
+    dataForm.value.nombre = `${p.value.producto} ${p.value.marca} ${
+      p.value.empaque
+    } ${p.value.cantidad} ${p.value.cantidad !== '' ? u : ''}`.trim();
+    dataForm.value.abreviacion = ofertaAbreviacion(dataForm.value.nombre);
   },
   { immediate: true },
 );
+/*
+watch(
+  () => nombreOfertaPartes.value.marca,
+  () => {
+    console.log('triggered2');
+  },
+  { immediate: true, deep: true },
+);
+
+*/
 
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async (empaque) => {
-  estado.resetEmpaque = 'Eligido ' + (empaque.nombre ?? '');
-  estado.dataForm.cantidad = empaque.cantidad;
-  estado.nombreOfertaPartes.cantidad = empaque.cantidad;
-  estado.nombreOfertaPartes.empaque = empaque.nombre;
-  estado.nombreOfertaPartes.empaqueAbreviacion = empaque.abreviacion;
+  resetEmpaque.value = 'Eligido ' + (empaque.nombre ?? '');
+  dataForm.value.cantidad = empaque.cantidad;
+  nombreOfertaPartes.value.cantidad = empaque.cantidad;
+  nombreOfertaPartes.value.empaque = empaque.nombre;
+  nombreOfertaPartes.value.empaqueAbreviacion = empaque.abreviacion;
   await setTimeout(() => {
-    estado.resetEmpaque = null;
+    resetEmpaque.value = null;
   }, 1500);
 };
 
 // submision del formulario
-const formSubmit = async () => {};
+const formSubmit = async () => {
+  if (!dataForm.value.imagen) {
+    delete dataForm.value.imagen;
+  }
+  try {
+    // preparamos la oferta
+    oferta.value = {
+      nombre: dataForm.value.nombre,
+      abreviacion: dataForm.value.abreviacion,
+      catalogo: dataForm.value.catalogo,
+      ingredientes: [
+        {
+          tipo: 'SIMPLE',
+          producto: null, //dataForm.value.producto,
+          marca: dataForm.value.marca,
+          cantidad: dataForm.value.cantidad,
+        },
+      ],
+      precioConFactura: dataForm.value.precioConFactura,
+      precioSinFactura: dataForm.value.precioSinFactura,
+      // preciosPorMayor: dataForm.value.preciosPorMayor,
+    };
+    // lanzamos la consulta
+    // const oferta = await api.crearOferta(dataForm,.value { loading: true });
+    // reinicializamos el formulario
+    dataForm.value = clone(initForm);
+    // mandamos el resultado al componiente pariente
+    // emits('crearObjeto', oferta);
+  } catch (err) {
+    errFallBack(err);
+    return;
+  }
+};
 </script>

@@ -1,0 +1,141 @@
+query buscarOfertas(
+  $busqueda: BuscarOfertaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarOfertaDto = {}
+) {
+  buscarOfertas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    descripcion
+    comentario
+    ingredientes {
+      tipo
+      producto {
+        _id
+      }
+      cantidad
+    }
+    imagen {
+      cloudinaryUrl
+    }
+    precioConFactura
+    precioSinFactura
+    preciosPorMayor {
+      cantidadMin
+      precioConFactura
+      precioSinFactura
+    }
+    catalogo {
+      _id
+    }
+  }
+}
+
+mutation crearOfertas(
+  $datos: [CrearOfertaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearOfertas(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    descripcion
+    comentario
+    ingredientes {
+      tipo
+      producto {
+        _id
+      }
+      cantidad
+    }
+    imagen {
+      cloudinaryUrl
+    }
+    precioConFactura
+    precioSinFactura
+    preciosPorMayor {
+      cantidadMin
+      precioConFactura
+      precioSinFactura
+    }
+    catalogo {
+      _id
+    }
+  }
+}
+
+mutation modificarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    descripcion
+    comentario
+    ingredientes {
+      tipo
+      producto {
+        _id
+      }
+      cantidad
+    }
+    imagen {
+      cloudinaryUrl
+    }
+    precioConFactura
+    precioSinFactura
+    preciosPorMayor {
+      cantidadMin
+      precioConFactura
+      precioSinFactura
+    }
+    catalogo {
+      _id
+    }
+  }
+}
+
+mutation borrarOfertas(
+  $busqueda: BuscarOfertaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarOfertas(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    descripcion
+    comentario
+    ingredientes {
+      tipo
+      producto {
+        _id
+      }
+      cantidad
+    }
+    imagen {
+      cloudinaryUrl
+    }
+    precioConFactura
+    precioSinFactura
+    preciosPorMayor {
+      cantidadMin
+      precioConFactura
+      precioSinFactura
+    }
+    catalogo {
+      _id
+    }
+  }
+}

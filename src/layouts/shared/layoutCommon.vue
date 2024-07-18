@@ -262,11 +262,6 @@ const borrarProductoCarrito = (id) => {
   // #231f20 011627
   background-color: #011627;
 }
-.layoutContainer {
-  // #002b3c #032541
-  // padding: 0.5rem;
-  // background-color: #071c2f;
-}
 
 // .q-drawer.q-drawer--right {
 //   width: 340px !important;

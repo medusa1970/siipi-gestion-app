@@ -7,6 +7,7 @@ import type {
   BuscarEntidadDto,
   BuscarMarcaDto,
   BuscarMedidaDto,
+  BuscarOfertaDto,
   BuscarOpciones,
   BuscarProductoDto,
   Catalogo,
@@ -17,6 +18,7 @@ import type {
   CrearEntidadDto,
   CrearMarcaDto,
   CrearMedidaDto,
+  CrearOfertaDto,
   CrearOpciones,
   CrearProductoDto,
   Entidad,
@@ -28,8 +30,10 @@ import type {
   ModificarEntidadDto,
   ModificarMarcaDto,
   ModificarMedidaDto,
+  ModificarOfertaDto,
   ModificarOpciones,
   ModificarProductoDto,
+  Oferta,
   Producto,
 } from '#gql';
 
@@ -558,4 +562,58 @@ export const api = {
     t: any = null,
   ): Promise<Medida[]> =>
     <Medida[]>await dv(GqlBorrarMedidas, t, b, o, o.loading),
+
+  /**
+   * Ofertas
+   */
+  buscarOferta: async (
+    b: string | BuscarOfertaDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarOfertaDto = {},
+    t: any = null,
+  ): Promise<Oferta> =>
+    <Oferta>await bu(GqlBuscarOfertas, t, b, o, f, o.loading),
+  buscarOfertas: async (
+    b: BuscarOfertaDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarOfertaDto = {},
+    t: any = null,
+  ): Promise<Oferta[]> =>
+    <Oferta[]>await buscarVarios(GqlBuscarOfertas, t, b, o, f, o.loading),
+  crearOferta: async (
+    d: CrearOfertaDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta> => <Oferta>await cu(GqlCrearOfertas, t, d, o, o.loading),
+  crearOfertas: async (
+    d: CrearOfertaDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta[]> =>
+    <Oferta[]>await cv(GqlCrearOfertas, t, d, o, o.loading),
+  modificarOferta: async (
+    b: string | BuscarOfertaDto,
+    d: ModificarOfertaDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta> =>
+    <Oferta>await mu(GqlModificarOfertas, t, b, d, o, o.loading),
+  modificarOfertas: async (
+    b: BuscarOfertaDto,
+    d: ModificarOfertaDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta[]> =>
+    <Oferta[]>await mv(GqlModificarOfertas, t, b, d, o, o.loading),
+  borrarOferta: async (
+    b: string | BuscarOfertaDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta> => <Oferta>await du(GqlBorrarOfertas, t, b, o, o.loading),
+  borrarOfertas: async (
+    b: BuscarOfertaDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Oferta[]> =>
+    <Oferta[]>await dv(GqlBorrarOfertas, t, b, o, o.loading),
 };

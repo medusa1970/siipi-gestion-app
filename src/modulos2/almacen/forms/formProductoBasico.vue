@@ -56,7 +56,7 @@
       <input-text2
         style="width: 50%"
         label="Primer aviso"
-        :porDefecto="estado.dataForm.vencimientoLimite[0]"
+        :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[0] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
       />
@@ -65,7 +65,7 @@
         style="width: 50%"
         label="Segundo aviso"
         info="Cuando faltarán el número de días indicado en el primer campo, se lanzará una alerta naranja, y una alerta roja al llegar al números de días indicados en el segundo."
-        :porDefecto="estado.dataForm.vencimientoLimite[1]"
+        :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[1] = Number(v))"
         :rules="[useRules.requerido(), useRules.numero()]"
       />

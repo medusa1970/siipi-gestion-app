@@ -4,7 +4,7 @@
       elevated
       :class="[
         'text-white ',
-        punto && 'bg-orange-600',
+        punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"
@@ -52,7 +52,7 @@
       style=""
       :class="[
         'text-white ',
-        punto && 'bg-orange-600',
+        punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"

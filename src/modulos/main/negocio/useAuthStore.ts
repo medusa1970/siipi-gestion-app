@@ -143,12 +143,15 @@ export const useAuthStore = defineStore('auth', {
      * Elegir negocio
      */
     async elegirNegocio(index: number) {
+      console.log(index);
       if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
         throw 'ERR_USUARIO_REQ';
       }
       try {
         const negocio = this.usuario.negocios[index];
+
         const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
+
         this.$patch({
           token,
           negocio,

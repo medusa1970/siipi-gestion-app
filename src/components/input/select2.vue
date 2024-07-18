@@ -4,7 +4,7 @@
     @update:model-value="handleChange"
     @filter="filterFn"
     @blur="activarValidacion"
-    @clear="activarValidacion"
+    @clear="handleClear"
     :label="label + (requerido ? '*' : '')"
     :rules="rules"
     input-debounce="0"
@@ -105,6 +105,10 @@ const emits = defineEmits<{
     // cambió el valor del input
     event: 'crearObjeto',
     objeti: any,
+  ): void;
+  (
+    // cleared
+    event: 'clear',
   ): void;
 }>();
 
@@ -221,6 +225,12 @@ const handleCrear = (objeto, { selectValor, selectCallback }) => {
   showDialog.value = false;
   // mandamos el objeto creado al componiente padre por si tiene algo que hacer con el
   emits('crearObjeto', objeto);
+};
+
+// Se ha creado una nueva opcion via el boton [+]
+const handleClear = () => {
+  activarValidacion();
+  emits('clear');
 };
 
 /**

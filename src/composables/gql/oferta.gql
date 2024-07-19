@@ -1,3 +1,7 @@
+#
+# OFERTAS
+#
+
 query buscarOfertas(
   $busqueda: BuscarOfertaDto = {}
   $opciones: BuscarOpciones = {}
@@ -9,28 +13,27 @@ query buscarOfertas(
     _modificado
     nombre
     abreviacion
-    descripcion
-    comentario
+    catalogo {
+      _id
+      nombre
+    }
     ingredientes {
       tipo
       producto {
         _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
       }
       cantidad
     }
     imagen {
       cloudinaryUrl
     }
-    precioConFactura
     precioSinFactura
-    preciosPorMayor {
-      cantidadMin
-      precioConFactura
-      precioSinFactura
-    }
-    catalogo {
-      _id
-    }
+    precioConFactura
   }
 }
 

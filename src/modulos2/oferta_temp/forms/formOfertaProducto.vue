@@ -128,8 +128,6 @@
       <q-btn label="Guardar" color="green" type="submit" />
     </div>
   </q-form>
-  [ {{ estado.dataForm.marca }} ] [ {{ estado.dataForm.marca === null }} ]
-  {{ estado.dataForm.marca === '' }} ]
 </template>
 
 <script setup lang="ts">
@@ -268,7 +266,7 @@ watch(
       estado.nombreOfertaPartes.empaque = '';
     }
   },
-  { immediate: true },
+  { immediate: false },
 );
 
 watch(
@@ -296,7 +294,7 @@ watch(
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async (empaque) => {
   if (!empaque) return;
-  estado.resetEmpaque = 'Eligido ' + (empaque.nombre ?? '');
+  console.log(empaque);
   estado.dataForm.cantidad = empaque.cantidad;
   estado.nombreOfertaPartes.cantidad = empaque.cantidad;
   estado.nombreOfertaPartes.empaque = empaque.nombre;
@@ -312,7 +310,6 @@ const formSubmit = async () => {
     delete estado.dataForm.imagen;
   }
   try {
-    console.log(estado.dataForm.catalogo);
     // preparamos lestadoa oferta
     estado.oferta = {
       nombre: estado.dataForm.nombre,
@@ -331,6 +328,7 @@ const formSubmit = async () => {
       precioSinFactura: estado.dataForm.precioSinFactura,
       // preciosPorMayor: estado.dataForm.preciosPorMayor,
     };
+
     // lanzamos la consulta
     const oferta = await api.crearOferta(estado.oferta, { loading: true });
     // reinicializamos el formulario

@@ -32,6 +32,7 @@ export const useOferta = () => {
     modal: {
       show_crearOfertaBasico: false,
       show_informacionOferta: false,
+      show_crearOfertaSimple: false,
     },
 
     datos_ofertaBasica: clone(init_crearOfertaBasico),
@@ -252,6 +253,11 @@ export const useOferta = () => {
     estado.modal.show_crearOfertaBasico = false;
   };
 
+  const handleOfertaCreada = (oferta) => {
+    NotifySucessCenter('Oferta creada éxitosamente');
+    estado.modal.show_crearOfertaSimple = false;
+  };
+
   return {
     estado,
     traerOfertas,
@@ -263,5 +269,6 @@ export const useOferta = () => {
     irEdicionOfertas,
     categoriaSelectOptions,
     crearOferta,
+    handleOfertaCreada,
   };
 };

@@ -2,7 +2,7 @@ import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import type { Categoria, Producto } from '#gql';
 
 export const useProductos = () => {
-  const { store } = useAlmacen();
+  const { store, productoIncompleto } = useAlmacen();
   const estado = reactive({
     // lista de los productos a recuperar del store (promisa resuelta)
     productos: null as Producto[],
@@ -15,6 +15,7 @@ export const useProductos = () => {
       marcaOpciones: [],
       marcaSeleccionada: '',
       buscarFiltro: '',
+      completud: 'todos',
     },
     // dialogs
     modal: {
@@ -34,6 +35,13 @@ export const useProductos = () => {
   const rowsTablaProductos = computed(() => {
     let filtered = store.productos;
     if (!filtered) return [];
+    // filtro por completo
+    if (estado.filtros.completud === 'soloCompletos') {
+      filtered = filtered.filter((producto) => !productoIncompleto(producto));
+    }
+    if (estado.filtros.completud == 'soloIncompletos') {
+      filtered = filtered.filter((producto) => productoIncompleto(producto));
+    }
     // filtro por categoria
     if (
       estado.filtros.categoriaSeleccionada != null &&

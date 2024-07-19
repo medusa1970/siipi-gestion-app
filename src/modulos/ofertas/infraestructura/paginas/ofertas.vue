@@ -35,10 +35,18 @@
           <q-btn
             icon-right="add"
             color="green"
-            label="Crear oferta"
+            label="Oferta básica"
             no-caps
             style="padding: 7px 15px"
             @click="() => (estado.modal.show_crearOfertaBasico = true)"
+          />
+          <q-btn
+            icon-right="add"
+            color="green"
+            label="Oferta completa"
+            no-caps
+            style="padding: 7px 15px"
+            @click="() => (estado.modal.show_crearOfertaSimple = true)"
           />
         </div>
       </template>
@@ -251,14 +259,19 @@
       />
     </template>
   </Dialog>
+
+  <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
+    <template #body>
+      <formOfertaProducto @crearObjeto="handleOfertaCreada" />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import Table from '@/components/input/Table.vue';
 import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable.js';
 import { columnaOfertas } from '../utils/columns';
-import Oferta from '@/assets/img/oferta.png';
 import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
+import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
 definePageMeta({
   layout: 'cathering',
 });
@@ -272,6 +285,7 @@ const {
   categoriaSelectOptions,
   crearOferta,
   actOfertasDB,
+  handleOfertaCreada,
 } = useOferta();
 const ofertaStore = storeOferta();
 

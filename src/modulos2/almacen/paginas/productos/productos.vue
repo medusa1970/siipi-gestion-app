@@ -14,7 +14,7 @@
         style="
           display: grid;
           grid-gap: 16px;
-          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
           width: 100%;
         "
       >
@@ -39,10 +39,19 @@
           noSlot
         />
 
+        <input-select2
+          label="Estado"
+          @update="(v) => (estado.filtros.completud = v)"
+          :opciones="[
+            { value: 'soloCompletos', label: 'solo completos' },
+            { value: 'soloIncompletos', label: 'solo incompletos' },
+          ]"
+          noSlot
+        />
+
         <q-btn
           style="width: 42px"
           class=""
-          label="Nuevo"
           icon="add"
           color="green"
           no-caps
@@ -56,14 +65,7 @@
     <template #body-cell-estado="{ row }">
       {{ fechaMes(row._modificado ?? row._creado) }}
       <br />
-      <q-badge
-        v-if="
-          // row.empaques.length > 0 &&
-          // row.comentario &&
-          row.imagen && row.categoria && row.variedades.length > 0 && row.medida
-        "
-        color="green"
-      >
+      <q-badge v-if="!productoIncompleto(row)" color="green">
         completo
       </q-badge>
       <q-badge v-else color="orange"> incompleto </q-badge>

@@ -4,6 +4,7 @@
     v-model="localModel"
     @update:model-value="handleChange"
     @Blur="activarValidacion"
+    @clear="activarValidacion"
     :label="label + (requerido ? '*' : '')"
     :rules="rules"
     :hint="hint"

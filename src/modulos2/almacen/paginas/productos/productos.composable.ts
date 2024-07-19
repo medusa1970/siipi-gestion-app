@@ -21,8 +21,9 @@ export const useProductos = () => {
       formProductoBasico: false,
       crearOferta: false,
       alertaIncompleto: false,
-      alertaIncompleto_params: [] as boolean[],
     },
+    // si el producto esta incompleto
+    productoIncompleto: null as string[] | null,
     // producto seleccionado para crear oferta
     productoSeleccionado: null,
   });

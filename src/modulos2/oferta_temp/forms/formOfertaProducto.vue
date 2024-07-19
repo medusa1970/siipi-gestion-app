@@ -1,5 +1,4 @@
 <template>
-  [ {{ parteMarca }}] [ {{ estado.dataForm.marca }}]
   <!-- <div class="importante">
     <div class="icon">
       <q-icon name="engineering" color="black" size="30px" />
@@ -9,6 +8,7 @@
       ofertas por aquí.
     </div>
   </div> -->
+
   <q-form @submit="formSubmit">
     <!-- Produit -->
     <input-select2
@@ -26,12 +26,12 @@
       info="Info."
       :opciones="estado.variedadOpciones"
       :porDefecto="estado.dataForm.marca"
-      @update="(v) => (estado.dataForm.marca = v ?? '')"
-      @clear="(v) => (estado.dataForm.marca = '')"
+      @update="(v) => (estado.dataForm.marca = v)"
       :watch="estado.dataForm.marca"
       :rules="[useRules.requerido()]"
     />
 
+    <p></p>
     <div class="flex">
       <input-select2
         style="width: 40%"
@@ -71,16 +71,6 @@
       :rules="[useRules.requerido()]"
       :watch="estado.dataForm.abreviacion"
       :error="estado.errorAbreviacion"
-    />
-
-    <!-- descripcion -->
-    <input-text2
-      label="Descripcion"
-      info="Info."
-      autogrow
-      :porDefecto="estado.dataForm.descripcion"
-      @update="(v) => (estado.dataForm.descripcion = v)"
-      :watch="estado.dataForm.descripcion"
     />
 
     <!-- Catalogo -->
@@ -127,12 +117,13 @@
       <q-btn label="Guardar" color="green" type="submit" />
     </div>
   </q-form>
+  {{ estado.oferta }}
 </template>
 
 <script setup lang="ts">
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 import { ofertaAbreviacion } from '../utils/oferta-utils';
-const { store } = useAlmacen();
+const { store, productoIncompleto } = useAlmacen();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -147,17 +138,14 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  producto: props.config?.productoId,
-  marca: null,
-  cantidad: null,
-  nombre: null,
-  empaque: null,
-  abreviacion: null,
-  descripcion: null,
-  precioConFactura: null,
-  precioSinFactura: null,
-  imagen: null,
-  catalogo: null,
+  producto: props.config?.productoId ?? '',
+  marca: '',
+  cantidad: '',
+  nombre: '',
+  abreviacion: '',
+  precioConFactura: '',
+  precioSinFactura: '',
+  imagen: '',
 };
 
 // definicion del estado
@@ -179,22 +167,24 @@ const estado = reactive({
   resetEmpaque: '',
   // nombre de la oferta para constuirla dinamicamente
   nombreOfertaPartes: {
+    producto: '',
+    marca: '',
     empaque: '',
     empaqueAbreviacion: '',
     cantidad: '',
   },
 });
-const parteProducto = ref('');
-const parteMarca = ref('');
 
 // Inicializaciones
 onMounted(async () => {
-  estado.productoOpciones = store.productos.map((p) => {
-    return {
-      value: p._id,
-      label: p.nombre,
-    };
-  });
+  estado.productoOpciones = store.productos
+    .filter((p) => !productoIncompleto(p))
+    .map((p) => {
+      return {
+        value: p._id,
+        label: p.nombre,
+      };
+    });
   const arbol = await store.getCatalogoArbol();
   estado.catalogoOpciones = arbol.hijas.map((c) => {
     return {
@@ -204,23 +194,25 @@ onMounted(async () => {
   });
 });
 
+// ponemos al dia la lista de variedades cuando cambia el producto en el select
 watch(
   () => estado.dataForm.producto,
   () => {
-    // producto
-    estado.producto = store.productos.find((p) => {
-      return p._id === estado.dataForm.producto;
-    });
-    if (!estado.producto) {
-      return;
-    }
-    parteProducto.value = estado.producto.nombre;
-    // marca
-    estado.variedadOpciones = estado.producto.variedades.map((variedad) => ({
-      value: variedad.marca._id,
-      label: variedad.marca.nombre,
-    }));
-    estado.dataForm.marca = null;
+    estado.producto = estado.dataForm.producto
+      ? store.productos.find((p) => {
+          return p._id === estado.dataForm.producto;
+        })
+      : null;
+    estado.nombreOfertaPartes.producto = estado.dataForm.producto
+      ? estado.producto.nombre
+      : '';
+    estado.variedadOpciones = estado.dataForm.producto
+      ? estado.producto.variedades.map((variedad) => ({
+          value: variedad.marca._id,
+          label: variedad.marca.nombre,
+        }))
+      : [];
+    // estado.dataForm.marca = null;
   },
   { immediate: true },
 );
@@ -228,41 +220,39 @@ watch(
 watch(
   () => estado.dataForm.marca,
   () => {
-    console.log('cambio de marca:', estado.dataForm.marca);
-
-    // si se reinicializo la marca, reinicializemos tambien el empaque
-    if (estado.dataForm.marca === '' || estado.dataForm.marca == null) {
-      estado.dataForm.empaque = '';
-      return;
-    }
     // recuperamos el nombre de la marca
-    // HACK en vez de llamar la base de datos leemos directamente en las opciones
-    parteMarca.value =
-      estado.variedadOpciones.find((opcion) => {
-        return opcion.value === estado.dataForm.marca;
-      })?.label ?? '';
-
-    // recuperamos los nuevos empaques del producto con esta marca...
-    const empaques = estado.producto?.empaques?.filter(
-      (empaque) => empaque.marca._id === estado.dataForm.marca,
-    );
-    // ... y lo transformamos en opcionSelect
+    estado.nombreOfertaPartes.marca = estado.dataForm.marca
+      ? estado.variedadOpciones.find(
+          (opcion) => opcion.value === estado.dataForm.marca,
+        ).label
+      : '';
+    // recuperamos los nuevos empaques del producto con esta marca
+    const empaques = estado.dataForm.marca
+      ? estado.producto.empaques.filter(
+          (empaque) => empaque.marca._id === estado.dataForm.marca,
+        )
+      : [];
     estado.empaqueOpciones = empaques.map((empaque) => {
       return {
         value: empaque,
         label: empaque.nombre,
       };
     });
+    estado.dataForm.empaque = null;
+    estado.dataForm.cantidad = null;
   },
-  { immediate: false, deep: true },
+  { immediate: true },
 );
 
 watch(
   () => estado.dataForm.cantidad,
   () => {
     estado.nombreOfertaPartes.cantidad = estado.dataForm.cantidad
-      ? ' ' + estado.dataForm.cantidad + estado.producto?.medida?.abreviacion
+      ? estado.dataForm.cantidad + ' ' + estado.producto?.medida?.abreviacion
       : '';
+    if (!estado.dataForm.cantidad) {
+      estado.nombreOfertaPartes.empaque = '';
+    }
   },
   { immediate: true },
 );
@@ -270,27 +260,21 @@ watch(
 watch(
   () => estado.dataForm.nombre,
   () => {
-    estado.dataForm.abreviacion = ofertaAbreviacion(
-      estado.dataForm.nombre ?? '',
-    );
+    estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
   },
   { immediate: true },
 );
 
 // constuccion dinmica del nombre de la oferta
 watch(
-  parteMarca,
+  () => estado.nombreOfertaPartes,
   () => {
-    console.log('ok');
     const p = estado.nombreOfertaPartes;
     estado.dataForm.nombre =
-      `${parteProducto.value} ${parteMarca.value} ${p.empaque} ${p.cantidad}`.replace(
-        '  ',
-        ' ',
-      );
+      `${p.producto} ${p.marca} ${p.empaque} ${p.cantidad}`.replace('  ', ' ');
     estado.dataForm.abreviacion = ofertaAbreviacion(estado.dataForm.nombre);
   },
-  { deep: true },
+  { immediate: true, deep: true },
 );
 
 // Prellenar el empaque con seleccionar un tipo de empaque
@@ -328,6 +312,7 @@ const formSubmit = async () => {
       precioSinFactura: estado.dataForm.precioSinFactura,
       // preciosPorMayor: estado.dataForm.preciosPorMayor,
     };
+    console.log(estado.oferta);
     // lanzamos la consulta
     // const oferta = await api.crearOferta(dataForm,estado. { loading: true });
     // reinicializamos el formulario

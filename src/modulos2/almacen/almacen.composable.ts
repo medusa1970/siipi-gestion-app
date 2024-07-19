@@ -1,6 +1,7 @@
 import type { CategoriaSelectOpcion } from '@/modulos2/almacen/almacen.interface';
 import { storeAlmacen } from './almacen.store';
 import localforage from 'localforage';
+import type { Producto } from '#gql';
 
 export const useAlmacen = () => {
   const store = storeAlmacen();
@@ -90,6 +91,18 @@ export const useAlmacen = () => {
     if (res) console.log('Se actualizo la base de datos de productos');
   };
 
+  /**
+   * Saber si un producto esta completo.
+   */
+  const productoIncompleto = (producto: Producto) => {
+    const res = [];
+    if (!producto.imagen) res.push('imagen');
+    if (producto.variedades.length === 0) res.push('variedad');
+    if (!producto.medida) res.push('medida');
+    if (!producto.categoria) res.push('categoria');
+    return res.length > 0 ? res : null;
+  };
+
   // exports
   return {
     estado,
@@ -97,5 +110,6 @@ export const useAlmacen = () => {
     actProductosDB,
     categoriaSelectOptions,
     categoriaSelectOptionsFiltro,
+    productoIncompleto,
   };
 };

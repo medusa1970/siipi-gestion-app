@@ -241,18 +241,8 @@
           @click="
             () => {
               estado.productoSeleccionado = row._id;
-              estado.modal.alertaIncompleto_params = [
-                !row.imagen,
-                row.variedades.length === 0,
-                !row.medida,
-                !row.categoria,
-              ];
-              if (
-                estado.modal.alertaIncompleto_params.reduce(
-                  (a, c) => a || c,
-                  false,
-                )
-              ) {
+              estado.productoIncompleto = productoIncompleto(row);
+              if (estado.productoIncompleto) {
                 estado.modal.alertaIncompleto = true;
               } else {
                 estado.modal.crearOferta = true;
@@ -324,34 +314,36 @@
     </template>
   </Popup>
 
-  <Popup
-    v-model="estado.modal.alertaIncompleto"
-    @close="console.log('ok')"
-    titulo="Producto incompleto"
-  >
+  <Popup v-model="estado.modal.alertaIncompleto" titulo="Producto incompleto">
     <template #body>
       <div>
         Por favor entre los datos siguientes antes de crear una oferta :
         <q-list>
-          <q-item v-if="estado.modal.alertaIncompleto_params[0]" v-ripple>
+          <q-item v-if="estado.productoIncompleto?.includes('imagen')" v-ripple>
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> I </q-avatar>
             </q-item-section>
             <q-item-section>Suba una imagen</q-item-section>
           </q-item>
-          <q-item v-if="estado.modal.alertaIncompleto_params[1]" v-ripple>
+          <q-item
+            v-if="estado.productoIncompleto?.includes('variedad')"
+            v-ripple
+          >
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> M </q-avatar>
             </q-item-section>
             <q-item-section>Registre por lo menos una marca</q-item-section>
           </q-item>
-          <q-item v-if="estado.modal.alertaIncompleto_params[2]" v-ripple>
+          <q-item v-if="estado.productoIncompleto?.includes('medida')" v-ripple>
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> U </q-avatar>
             </q-item-section>
             <q-item-section>Elija una medida básica</q-item-section>
           </q-item>
-          <q-item v-if="estado.modal.alertaIncompleto_params[3]" v-ripple>
+          <q-item
+            v-if="estado.productoIncompleto?.includes('categoria')"
+            v-ripple
+          >
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> C </q-avatar>
             </q-item-section>
@@ -386,7 +378,8 @@ const router = useRouter();
 const { $socket } = useNuxtApp();
 const { estado, store, handleProductoCreado, handleOfertaCreada } =
   useProductos();
-const { actProductosDB, categoriaSelectOptionsFiltro } = useAlmacen();
+const { actProductosDB, categoriaSelectOptionsFiltro, productoIncompleto } =
+  useAlmacen();
 
 onMounted(async () => {
   await store.getProductos();

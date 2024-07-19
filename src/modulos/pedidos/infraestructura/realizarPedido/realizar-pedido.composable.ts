@@ -8,6 +8,7 @@ export const useRealizarPedido = () => {
   const estado = reactive({
     catalogosOfertas: [] as any[],
     catalogoSeleccionado: {} as any,
+    catalogoSeleccionado2: {} as any,
     searchResults: [] as any[],
     filter: '',
   });
@@ -26,17 +27,6 @@ export const useRealizarPedido = () => {
     estado.catalogoSeleccionado2 = catalogoArbol.hijas[0];
   };
 
-  const obtenerListaOfertas = async () => {
-    const menus = await menuService.listarMenus(useAuth.negocioElegido._id);
-    // console.log(menus);
-
-    const ofertas = await ofertaService.catalogoRecursivo(
-      menus[0].catalogo._id,
-    );
-    estado.ListaOfertasPedido = ofertas;
-    // console.log(estado.ListaOfertasPedido);
-    // ofertaService.catalogoRecursivo()
-  };
   const searchCatalog = (searchTerm: string) => {
     const catalogo = estado.catalogoSeleccionado; //@ts-ignore
     if (!catalogo.hijas) {
@@ -72,7 +62,6 @@ export const useRealizarPedido = () => {
   return {
     estado,
     obtenerCatalogosProductos,
-    obtenerListaOfertas,
     searchCatalog,
     filter,
   };

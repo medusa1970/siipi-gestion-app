@@ -27,8 +27,7 @@ mutation iniciarPedido($datos: CrearPedidoDto!, $opciones: CrearOpciones = {}) {
   }
 }
 
-#
-
+# cambia de estado los items de un pedido
 mutation cambiarEstadoItems(
   $busqueda: BuscarPedidoDto = {}
   $itemIds: [ID!] = []
@@ -43,4 +42,66 @@ mutation cambiarEstadoItems(
   ) {
     _id
   }
+}
+
+# Busca todos los pedidos\
+query buscarPedidos(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPedidoDto = {}
+) {
+  buscarPedidos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+}
+
+# Lee el estado de un pedido
+query leerEstadoPedido(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  leerEstadoPedido(busqueda: $busqueda, opciones: $opciones)
 }

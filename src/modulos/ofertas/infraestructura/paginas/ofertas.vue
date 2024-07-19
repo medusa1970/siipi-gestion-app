@@ -93,9 +93,9 @@
         </p>
       </template>
 
-      <template #body-cell-catalogo="{ val, row }">
+      <!-- <template #body-cell-catalogo="{ val, row }">
         <h1>{{ val.nombre }}</h1>
-      </template>
+      </template> -->
 
       <template #body-cell-acciones="{ val, row }">
         <q-btn-group push @click="(e) => e.stopPropagation()">
@@ -192,36 +192,6 @@
       </template>
     </Tabla>
   </div>
-
-  <!-- <div
-              style="
-                display: grid;
-                grid-gap: 16px;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-              "
-            > -->
-  <!-- IMAGEN -->
-  <!-- <div>
-                <q-img
-                  v-if="props.row.imagen?.cloudinaryUrl"
-                  :src="props.row.imagen?.cloudinaryUrl"
-                  spinner-color="primary"
-                  spinner-size="82px"
-                  class="w-full h-auto object-cover"
-                />
-                <h1 v-else>No hay imagen...</h1>
-              </div> -->
-  <!-- DATOS BASICOS -->
-  <!-- <div>
-                <h1 class="text-center bg-gray-300 font-bold py-[2px]">
-                  DATOS BASICOS
-                </h1>
-                <span class="flex gap-2 items-center"
-                  ><h1 class="font-bold text-xs">NOMBRE:</h1>
-                  <p>{{ props.row.nombre }}</p></span
-                >
-              </div>
-            </div> -->
 
   <!-- OFERTA DATOS BASICOS -->
   <Dialog

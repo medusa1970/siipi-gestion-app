@@ -8,17 +8,12 @@ declare module '#app' {
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
-<<<<<<< HEAD
   const socketUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
       : 'siipi-gestion-production-f6a0.up.railway.app';
-=======
-  // const socketUrl = 'siipi-gestion-production-f6a0.up.railway.app';
-  const socketUrl = 'http://localhost:3000';
-  // const socketOptions = {};
->>>>>>> will-25
 
+  // console.log(socketUrl);
   const socket = io(socketUrl, {});
 
   // Manejador para el evento de conexión exitosa

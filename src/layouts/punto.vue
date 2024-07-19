@@ -64,7 +64,6 @@ const menuListPunto = [
     label: 'Mis pedidos',
     to: 'lista-pedidos',
   },
-
   {
     icon: 'people',
     label: 'Empleados',

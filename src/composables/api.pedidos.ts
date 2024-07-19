@@ -42,4 +42,22 @@ export const apiPedido = {
     }
     return extraer(resultado);
   },
+
+  pedidos_buscar: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarPedidoDto = {},
+    t: any = null,
+  ): Promise<Pedido[]> =>
+    <Pedido[]>(
+      await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, f, o.loading)
+    ),
+
+  pedido_leerEstado: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+
+    t: any = null,
+  ): Promise<Pedido[]> =>
+    <Pedido[]>await buscarUno(GqlBuscarPedidos, t, b, o, o.loading),
 };

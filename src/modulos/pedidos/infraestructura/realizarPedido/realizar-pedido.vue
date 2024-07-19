@@ -84,13 +84,8 @@ definePageMeta({
   layout: 'punto',
 });
 
-const {
-  estado,
-  obtenerCatalogosProductos,
-  obtenerListaOfertas,
-  filter,
-  searchCatalog,
-} = useRealizarPedido();
+const { estado, obtenerCatalogosProductos, filter, searchCatalog } =
+  useRealizarPedido();
 
 const pedidoStore = storePedido();
 
@@ -126,7 +121,6 @@ watch(filter, () => {
 
 onMounted(() => {
   obtenerCatalogosProductos();
-  obtenerListaOfertas();
 });
 </script>
 

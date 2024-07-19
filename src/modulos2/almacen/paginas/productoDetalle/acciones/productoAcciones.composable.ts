@@ -55,7 +55,7 @@ export const useProductoAcciones = () => {
         (p) => p._id !== store.producto._id,
       );
       store.producto = null;
-      goTo(router, 'productos2');
+      goTo(router, 'productos');
     });
   };
 

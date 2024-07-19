@@ -6,67 +6,7 @@
 
   <Tabla
     :rows="rowsTablaProductos"
-    :columns="
-    [ 
-
-  {
-    name: 'imagen',
-    label: 'Imagen',
-    imagen: true,
-    align: 'center',
-    field: (row: any) => row.imagen?.cloudinaryUrl,
-  },
-
-  {
-    name: 'nombre',
-    required: true,
-    slot:true,
-    label: 'Nombre',
-    align: 'left',
-    field: (row: any) => row.nombre,
-    sortable: true,
-  },
-  // {
-  //   name: 'medida',
-  //   required: true,
-  //   label: 'Unidad',
-  //   align: 'left',
-  //   field: (row: any) => row.medida?.abreviacion,
-  //   sortable: true,
-  // },
-  // {
-  //   name: 'categoria',
-  //   required: true,
-  //   label: 'categoria',
-  //   align: 'left',
-  //   field: (row: any) => row.categoria.nombre,
-  //   sortable: true,
-  // },
-  // {
-  //   name: 'modificado',
-  //   label: 'Modif.',
-  //   align: 'left',
-  //   field: (row: any) => row._modificado,
-  //   format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
-  //   sortable: true,
-  // },
-  {
-    name: 'estado',
-    label: 'Modif.',
-    align: 'right',
-    field: (row: any) => row._modificado,
-    slot: true,
-    sortable: true,
-  },
-  {
-    name: 'acciones',
-    label: 'Accion',
-    align: 'center',
-    slot: true,
-  },
-
-
-]"
+    :columns="columnsTablaProducto"
     :defaultImage="ProductoImage"
   >
     <template #dropdown>
@@ -80,7 +20,7 @@
       >
         <input-text2
           label="Buscar"
-          @update="(v) => (estado.filtros.buscarFiltro = v)"
+          @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           porDefecto=""
           noSlot
         />
@@ -102,6 +42,7 @@
         <q-btn
           style="width: 42px"
           class=""
+          label="Nuevo"
           icon="add"
           color="green"
           no-caps
@@ -356,14 +297,12 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/modulos/main/negocio/useAuthStore';
-import { layoutIndex } from '@/layouts/layout';
-
+// import { useAuthStore } from '@/modulos/main/negocio/useAuthStore';
+// import { layoutIndex } from '@/layouts/layout';
 // const storeAuth = useAuthStore();
 // console.log(storeAuth.negocio.tipo);
 // // Método computado para obtener el tipo de negocio
 // const negocioTipo = computed(() => storeAuth.negocio.tipo);
-
 definePageMeta({
   // layout: layoutIndex[negocioTipo.value],
   layout: 'cathering',
@@ -376,65 +315,96 @@ import formProductoBasico from '@/modulos2/almacen/forms/formProductoBasico.vue'
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
 const router = useRouter();
 const { $socket } = useNuxtApp();
-const { estado, store, handleProductoCreado, handleOfertaCreada } =
-  useProductos();
+const {
+  estado,
+  store,
+  rowsTablaProductos,
+  handleProductoCreado,
+  handleOfertaCreada,
+} = useProductos();
 const { actProductosDB, categoriaSelectOptionsFiltro, productoIncompleto } =
   useAlmacen();
 
+// mount
 onMounted(async () => {
+  // sockets on
+  $socket.on('cambiosProductos', async (data: any) => {
+    await actProductosDB();
+  });
+  // recuperacion del contenido
   await store.getProductos();
   estado.filtros.categoriaOpciones = await categoriaSelectOptionsFiltro();
   estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map((marca) => ({
     value: marca._id,
     label: marca.nombre,
   }));
-  $socket.on('cambiosProductos', async (data: any) => {
-    await actProductosDB();
-  });
   store.producto = null;
 });
+
+// unmount
 onBeforeUnmount(() => {
+  // sockets on
   $socket.off('cambiosProductos');
 });
 
-/**
- * Rows para la tabla
- */
-const rowsTablaProductos = computed(() => {
-  let filtered = store.productos;
-  if (!filtered) return [];
-  // filtro por categoria
-  if (
-    estado.filtros.categoriaSeleccionada != null &&
-    estado.filtros.categoriaSeleccionada !== ''
-  ) {
-    filtered = filtered.filter((producto) =>
-      estado.filtros.categoriaSeleccionada.includes(producto.categoria._id),
-    );
-  }
-  // filtro por marca
-  if (
-    estado.filtros.marcaSeleccionada != null &&
-    estado.filtros.marcaSeleccionada !== ''
-  ) {
-    filtered = filtered.filter((producto) =>
-      producto.variedades
-        .map((variedad) => variedad.marca._id)
-        .includes(estado.filtros.marcaSeleccionada),
-    );
-  }
-  // filtro por buscar que no discrimine maiusculas de minusculas y acentos
-  if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
-    filtered = filtered.filter((producto) => {
-      return regex.test(
-        producto.nombre +
-          producto.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
-      );
-    });
-  }
-  return filtered;
-});
+// configuracion de la tabla
+const columnsTablaProducto = ref([
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    imagen: true,
+    align: 'center',
+    field: (row: any) => row.imagen?.cloudinaryUrl,
+  },
+
+  {
+    name: 'nombre',
+    required: true,
+    slot: true,
+    label: 'Nombre',
+    align: 'left',
+    field: (row: any) => row.nombre,
+    sortable: true,
+  },
+  // {
+  //   name: 'medida',
+  //   required: true,
+  //   label: 'Unidad',
+  //   align: 'left',
+  //   field: (row: any) => row.medida?.abreviacion,
+  //   sortable: true,
+  // },
+  // {
+  //   name: 'categoria',
+  //   required: true,
+  //   label: 'categoria',
+  //   align: 'left',
+  //   field: (row: any) => row.categoria.nombre,
+  //   sortable: true,
+  // },
+  // {
+  //   name: 'modificado',
+  //   label: 'Modif.',
+  //   align: 'left',
+  //   field: (row: any) => row._modificado,
+  //   format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
+  //   sortable: true,
+  // },
+  {
+    name: 'estado',
+    label: 'Modif.',
+    align: 'right',
+    field: (row: any) => row._modificado,
+    slot: true,
+    sortable: true,
+  },
+  {
+    name: 'acciones',
+    label: 'Accion',
+    align: 'center',
+    slot: true,
+  },
+]);
 </script>
 
 <style scoped>

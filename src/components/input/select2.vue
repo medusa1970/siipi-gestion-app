@@ -6,12 +6,12 @@
     @blur="activarValidacion"
     @clear="handleClear"
     :label="label + (requerido ? '*' : '')"
-    :rules="rules"
     input-debounce="0"
     :clearable="clearable"
     :dense="dense"
     :disable="disable"
     :filled="filled"
+    :rules="rules"
     :outlined="outlined"
     :class="clase"
     :bottom-slots="!noSlot"
@@ -266,7 +266,15 @@ watch(
   () => {
     localModel.value = props.watch;
     activarValidacion();
+    emits('update', localModel.value);
   },
   { immediate: false },
+);
+watch(
+  () => props.watch,
+  () => {
+    emits('update', localModel.value);
+  },
+  { once: true, immediate: true },
 );
 </script>

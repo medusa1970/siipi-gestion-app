@@ -18,7 +18,11 @@
           />
           <q-select
             v-model="ofertaStore.catalogoSeleccionado"
-            :options="estado.catalogos"
+            :options="
+              estado.catalogos.filter(
+                (catalogo) => catalogo.nombre !== 'CATALOGO PROVEEDORES',
+              )
+            "
             option-label="nombre"
             label="Selecciona un catalogo"
             style="width: 170px"

@@ -1,12 +1,12 @@
 <template>
   <q-input
-    :type="tipo !== 'password' ? tipo : isPwd ? 'password' : 'text'"
+    :type="type"
     v-model="localModel"
     @update:model-value="handleChange"
     @Blur="activarValidacion"
-    @clear="activarValidacion"
+    @clear="handleClear"
     :label="label + (requerido ? '*' : '')"
-    :rules="rules"
+    :rules="reglas"
     :hint="hint"
     debounce="400"
     :autogrow="tipo === 'password' ? false : autogrow"
@@ -66,13 +66,17 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    valor: string | null,
+    valor: string | number | null,
   ): void;
   (
     // el input está en estado de error de validación
     event: 'error',
     errorFlag: boolean,
     errorMessage: string | null,
+  ): void;
+  (
+    // cleared
+    event: 'clear',
   ): void;
 }>();
 
@@ -83,7 +87,7 @@ const props = withDefaults(
   defineProps<{
     onUpdate: Function; // para que el @update sea obligatorio
     label: string; // label adentro del input
-    tipo?: 'text' | 'textarea' | 'password';
+    tipo?: 'text' | 'textarea' | 'password' | 'number';
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string | number; // valor seleccionado al iniciar
@@ -123,6 +127,19 @@ const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+const reglas = ref(
+  props.tipo === 'number' ? [...props.rules, useRules.numero()] : props.rules,
+);
+
+const type = ref<typeof props.tipo>(
+  props.tipo === 'password'
+    ? isPwd
+      ? 'password'
+      : 'text'
+    : props.tipo === 'textarea'
+    ? 'textarea'
+    : 'text',
+);
 
 /**
  * metodos
@@ -131,7 +148,17 @@ const requerido = props.rules.map((rule) => rule.name).includes('requerido');
 // metodo llamado cuando el valor del input cambia
 const handleChange = (valor: string | null) => {
   activarValidacion();
-  emits('update', valor);
+  emits(
+    'update',
+    props.tipo === 'number' && valor != null ? Number(valor) : valor,
+  );
+};
+
+// Se ha creado una nueva opcion via el boton [+]
+const handleClear = () => {
+  activarValidacion();
+  localModel.value = null;
+  emits('clear');
 };
 
 // activar o deactivar el error para el input (desactiva si param null)
@@ -144,7 +171,7 @@ function setError(mensaje: string | null) {
 
 // activar la validacíon del valor actual del input
 function activarValidacion() {
-  for (const regla of props.rules as Function[]) {
+  for (const regla of reglas.value as Function[]) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {
       setError(resultado);

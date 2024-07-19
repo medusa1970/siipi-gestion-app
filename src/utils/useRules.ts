@@ -1,7 +1,7 @@
 export const useRules = {
   numero(mensaje: string = 'Debe ser un numero'): Function {
     const numero = (val: any): String | true => {
-      if (!/^-?\d*([\.]\d+)?$/.test(val)) {
+      if (val != null && !/^-?\d*([\.]\d+)?$/.test(val)) {
         return mensaje;
       } else {
         return true;

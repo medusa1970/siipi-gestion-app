@@ -143,7 +143,6 @@ export const useAuthStore = defineStore('auth', {
      * Elegir negocio
      */
     async elegirNegocio(index: number) {
-      console.log(index);
       if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
         throw 'ERR_USUARIO_REQ';
       }

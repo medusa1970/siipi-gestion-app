@@ -8,6 +8,7 @@ import type {
   BuscarMarcaDto,
   BuscarMedidaDto,
   BuscarOpciones,
+  BuscarPedidoDto,
   BuscarProductoDto,
   Catalogo,
   Categoria,
@@ -18,6 +19,7 @@ import type {
   CrearMarcaDto,
   CrearMedidaDto,
   CrearOpciones,
+  CrearPedidoDto,
   CrearProductoDto,
   Entidad,
   Marca,
@@ -29,7 +31,9 @@ import type {
   ModificarMarcaDto,
   ModificarMedidaDto,
   ModificarOpciones,
+  ModificarPedidoDto,
   ModificarProductoDto,
+  Pedido,
   Producto,
 } from '#gql';
 

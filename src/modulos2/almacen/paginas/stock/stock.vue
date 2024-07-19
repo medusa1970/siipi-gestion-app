@@ -6,13 +6,13 @@
         to: 'stock2',
       },
     ]"
-    titulo="Gestion de stocks"
+    titulo="Gestion de stocksss"
   />
 </template>
 
-<script setup lang="ts">
+<script setup>
 definePageMeta({
-  layout: 'cathering',
+  layout: 'punto',
 });
 </script>
 

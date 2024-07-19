@@ -1,5 +1,5 @@
 <template>
-  <div :key="componentKey">testd</div>
+  <div>mis pedidos</div>
 </template>
 
 <script setup>

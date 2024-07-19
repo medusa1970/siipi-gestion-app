@@ -4,7 +4,7 @@
     titulo="Gestion de ofertas"
   />
   <div>
-    <Table :rows="rowsParaMostrar" :columns="columnaOfertas">
+    <Tabla :rows="rowsParaMostrar" :columns="columnaOfertas">
       <!-- AGREGAR -->
 
       <template #dropdown>
@@ -39,8 +39,30 @@
         </div>
       </template>
 
+      <template #body-cell-estado="{ row }">
+        {{ fechaMes(row._modificado ?? row._creado) }}
+        <br />
+        <q-badge
+          v-if="
+            // row.empaques.length > 0 &&
+            // row.comentario &&
+            row.nombre &&
+            row.abreviacion &&
+            row.catalogo &&
+            row.imagen &&
+            row.precioSinFactura &&
+            row.precioConFactura &&
+            row.ingredientes.length > 0
+          "
+          color="green"
+        >
+          completo
+        </q-badge>
+        <q-badge v-else color="orange"> incompleto </q-badge>
+      </template>
+
       <template #body-cell-nombre="{ val, row }">
-        <h1 v-if="row.nombre" class="tooltip">
+        <h1 v-if="row.nombre" class="tooltip font-semibold">
           {{
             row.nombre.length > 30
               ? row.nombre.slice(0, 30) + '...'
@@ -51,36 +73,54 @@
             >{{ row.nombre }}</span
           >
         </h1>
+        <div class="flex" v-if="row.ingredientes?.length > 0">
+          <div v-for="ingrediente in row.ingredientes" :key="ingrediente._id">
+            <q-badge color="green" class="mr-1 mb-1 lowercase">
+              {{ ingrediente.producto.nombre }}
+            </q-badge>
+            <q-badge color="orange" class="mr-1 mb-1 lowercase">
+              {{ ingrediente.marca ? ingrediente.marca?.nombre : 'Sin marca' }}
+            </q-badge>
+          </div>
+        </div>
+        <div v-else><span class="aIngresar">Registrar una marca</span></div>
+        <p style="white-space: normal">
+          <span v-if="row.precioSinFactura"
+            >precio S/F: <b>{{ row.precioSinFactura }}Bs</b></span
+          ><span v-else class="aIngresar">Sin precio S/F</span> -
+          <span v-if="row.catalogo">En: {{ row.catalogo?.nombre }}</span
+          ><span v-else class="aIngresar">Sin precio C/F</span>
+        </p>
       </template>
 
       <template #body-cell-catalogo="{ val, row }">
         <h1>{{ val.nombre }}</h1>
       </template>
-      <template #body-cell-actions="{ val, row }">
-        <q-btn
-          color="primary"
-          icon="visibility"
-          round
-          dense
-          padding="1px"
-          size="11px"
-          @click="() => {}"
-        >
-          <q-tooltip> Ver informacion producto </q-tooltip>
-        </q-btn>
 
-        <q-btn
-          color="orange"
-          icon="edit"
-          round
-          dense
-          padding="1px"
-          size="10px"
-          @click="() => irEdicionOfertas(row)"
-        >
-          <q-tooltip> Editar producto </q-tooltip></q-btn
-        >
+      <template #body-cell-acciones="{ val, row }">
+        <q-btn-group push @click="(e) => e.stopPropagation()">
+          <q-btn
+            color="black"
+            icon="visibility"
+            class="p-1"
+            size="sm"
+            @click="() => {}"
+          >
+            <q-tooltip> Ver informacion producto </q-tooltip>
+          </q-btn>
+
+          <q-btn
+            color="orange"
+            icon="edit"
+            class="p-1"
+            size="sm"
+            @click="() => irEdicionOfertas(row)"
+          >
+            <q-tooltip> Editar producto </q-tooltip></q-btn
+          >
+        </q-btn-group>
       </template>
+
       <template #body-expand="{ row }">
         <div
           style="
@@ -150,7 +190,7 @@
           </div>
         </div>
       </template>
-    </Table>
+    </Tabla>
   </div>
 
   <!-- <div

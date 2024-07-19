@@ -46,7 +46,6 @@ const router = useRouter();
 
 // elegir un negocio
 const elegirNegocio = async (index) => {
-  console.log(index);
   try {
     await authStore.elegirNegocio(index);
   } catch (e) {

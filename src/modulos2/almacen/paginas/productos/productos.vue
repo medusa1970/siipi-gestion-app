@@ -364,7 +364,16 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/modulos/main/negocio/useAuthStore';
+import { layoutIndex } from '@/layouts/layout';
+
+// const storeAuth = useAuthStore();
+// console.log(storeAuth.negocio.tipo);
+// // Método computado para obtener el tipo de negocio
+// const negocioTipo = computed(() => storeAuth.negocio.tipo);
+
 definePageMeta({
+  // layout: layoutIndex[negocioTipo.value],
   layout: 'cathering',
 });
 

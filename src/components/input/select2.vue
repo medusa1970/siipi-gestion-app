@@ -27,6 +27,7 @@
     use-input
     fill-input
     hide-selected
+    :bg-color="color"
   >
     <q-tooltip
       v-model="tooltip"
@@ -137,6 +138,7 @@ const props = withDefaults(
     filled?: boolean;
     clearable?: boolean;
     noSlot: boolean;
+    color?: string;
   }>(),
   {
     outlined: true,
@@ -147,6 +149,7 @@ const props = withDefaults(
     clase: '',
     rules: [] as Function[],
     disable: false,
+    color: '',
   },
 );
 

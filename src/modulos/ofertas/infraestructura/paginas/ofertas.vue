@@ -28,8 +28,7 @@
             style="width: 170px"
             dense
             filled
-            color="black"
-            bg-color="orange-5"
+            bg-color="grey-5"
             @update:model-value="ctrlCatalogoCambios"
           />
           <q-btn
@@ -181,7 +180,7 @@
             >
             <span class="flex gap-2 items-center"
               ><h1 class="font-bold text-xs">MARCA:</h1>
-              <p>{{ row.ingredientes[0]?.marca }}</p></span
+              <p>{{ row.ingredientes[0]?.marca?.nombre }}</p></span
             >
             <span class="flex gap-2 items-center"
               ><h1 class="font-bold text-xs">CANTIDAD:</h1>

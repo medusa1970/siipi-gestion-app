@@ -1,5 +1,5 @@
 <template>
-  <div :style="'background: ' + props.color">
+  <div :style="'background: ' + props.color" class="flex justify-between p-1">
     <q-breadcrumbs id="navigacion">
       <q-breadcrumbs-el icon="home" :to="getRoute(router, 'cathering')" />
       <q-breadcrumbs-el
@@ -10,9 +10,11 @@
       />
     </q-breadcrumbs>
   </div>
-  <h1 class="!mx-3 !mt-2" v-if="titulo" id="tituloPagina">
-    {{ titulo }}
-  </h1>
+  <div class="flex justify-center mt-2">
+    <h1 class="!m-0 pr-3 font-extrabold" v-if="titulo" id="tituloPagina">
+      {{ titulo }}
+    </h1>
+  </div>
 </template>
 
 <script setup lang="ts">

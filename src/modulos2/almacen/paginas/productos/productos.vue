@@ -30,6 +30,8 @@
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="estado.filtros.categoriaOpciones"
           noSlot
+          filled
+          color="grey-5"
         />
 
         <input-select2
@@ -37,6 +39,8 @@
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.filtros.marcaOpciones"
           noSlot
+          filled
+          color="grey-5"
         />
 
         <input-select2
@@ -47,6 +51,8 @@
             { value: 'soloIncompletos', label: 'solo incompletos' },
           ]"
           noSlot
+          filled
+          color="grey-5"
         />
 
         <q-btn

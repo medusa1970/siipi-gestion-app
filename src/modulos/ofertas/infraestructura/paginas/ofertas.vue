@@ -255,10 +255,10 @@
 
 <script setup lang="ts">
 import Table from '@/components/input/Table.vue';
-import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable.js';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 import { columnaOfertas } from '../utils/columns';
 import Oferta from '@/assets/img/oferta.png';
-import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
+import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store';
 definePageMeta({
   layout: 'cathering',
 });

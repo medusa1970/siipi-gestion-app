@@ -41,8 +41,6 @@
 
         <q-btn
           style="width: 42px"
-          class=""
-          label="Nuevo"
           icon="add"
           color="green"
           no-caps
@@ -313,6 +311,8 @@ import { useProductos } from './productos.composable';
 import ProductoImage from '@/assets/img/noHayProducto.png';
 import formProductoBasico from '@/modulos2/almacen/forms/formProductoBasico.vue';
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
+
 const router = useRouter();
 const { $socket } = useNuxtApp();
 const {
@@ -322,6 +322,8 @@ const {
   handleProductoCreado,
   handleOfertaCreada,
 } = useProductos();
+const { actOfertasDB } = useOferta();
+
 const { actProductosDB, categoriaSelectOptionsFiltro, productoIncompleto } =
   useAlmacen();
 
@@ -330,6 +332,10 @@ onMounted(async () => {
   // sockets on
   $socket.on('cambiosProductos', async (data: any) => {
     await actProductosDB();
+  });
+  // ofertaStore.obtenerOfertas();
+  $socket.on('cambiosOfertas', async (data: any) => {
+    await actOfertasDB();
   });
   // recuperacion del contenido
   await store.getProductos();
@@ -345,6 +351,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   // sockets on
   $socket.off('cambiosProductos');
+  $socket.off('cambiosOfertas');
 });
 
 // configuracion de la tabla

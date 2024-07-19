@@ -1,0 +1,46 @@
+# CREAR PEDIDO
+mutation crearPedido(
+  $datos: [CrearPedidoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearPedidos(datos: $datos, opciones: $opciones) {
+    _id
+  }
+}
+
+# INICIAR PEDIDO DESDE
+mutation iniciarPedido($datos: CrearPedidoDto!, $opciones: CrearOpciones = {}) {
+  iniciarPedido(datos: $datos, opciones: $opciones) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      oferta {
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+      }
+    }
+  }
+}
+
+#
+
+mutation cambiarEstadoItems(
+  $busqueda: BuscarPedidoDto = {}
+  $itemIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItems(
+    busqueda: $busqueda
+    itemIds: $itemIds
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+  }
+}

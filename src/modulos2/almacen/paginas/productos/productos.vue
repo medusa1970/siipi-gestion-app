@@ -70,36 +70,46 @@
     :defaultImage="ProductoImage"
   >
     <template #dropdown>
-      <div class="w-full grid grid-cols-[1fr_1fr_1fr_auto] gap-3">
+      <div
+        style="
+          display: grid;
+          grid-gap: 16px;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          width: 100%;
+        "
+      >
         <input-text2
-          class="col-span-1"
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v)"
           porDefecto=""
           noSlot
         />
+
         <input-select2
-          class="col-span-1"
           label="Categoria"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="estado.filtros.categoriaOpciones"
           noSlot
         />
+
         <input-select2
-          class="col-span-1"
           label="Marca"
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.filtros.marcaOpciones"
           noSlot
         />
+
         <q-btn
+          style="width: 42px"
           class=""
           icon="add"
           color="green"
           no-caps
           padding="4px 10px"
           @click="() => (estado.modal.formProductoBasico = true)"
-        />
+        >
+          <q-tooltip> Agregar producto </q-tooltip>
+        </q-btn>
       </div>
     </template>
     <template #body-cell-estado="{ row }">
@@ -354,7 +364,16 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/modulos/main/negocio/useAuthStore';
+import { layoutIndex } from '@/layouts/layout';
+
+// const storeAuth = useAuthStore();
+// console.log(storeAuth.negocio.tipo);
+// // Método computado para obtener el tipo de negocio
+// const negocioTipo = computed(() => storeAuth.negocio.tipo);
+
 definePageMeta({
+  // layout: layoutIndex[negocioTipo.value],
   layout: 'cathering',
 });
 

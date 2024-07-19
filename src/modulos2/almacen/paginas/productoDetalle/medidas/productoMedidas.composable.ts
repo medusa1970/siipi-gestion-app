@@ -1,9 +1,12 @@
 import type { Medida, TipoEmpaque } from '#gql';
 import type { SelectOpcion } from '~/components/input/select.interface';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
+import { useQuasar } from 'quasar';
 
 export const useProductoMedidas = () => {
   const { store, estado: estadoAlmacen } = useAlmacen();
+  const $q = useQuasar();
+
   const estado = reactive({
     // la variedad que se esta modificando
     empaque: null,
@@ -51,11 +54,42 @@ export const useProductoMedidas = () => {
     // store.producto = producto;
   };
 
+  const borrarProductoEmpaque = (empaque: any) => {
+    $q.dialog({
+      title: `Eliminar ${empaque.nombre}`,
+      message: 'No se puede deshacer.',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      try {
+        const productoEmpaque = await api.modificarProducto_basico(
+          store.producto._id,
+          {
+            empaques: {
+              borrar: { _id: empaque._id },
+            },
+          },
+          { loading: true },
+        );
+        if (productoEmpaque) {
+          NotifySucessCenter('Empaque borrado correctamente');
+
+          store.producto.empaques = store.producto.empaques.filter(
+            (e) => e._id !== empaque._id,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
   return {
     store,
     estado,
     formSubmit,
     handleEmpaqueModificado,
     handleEmpaqueCreado,
+    borrarProductoEmpaque,
   };
 };

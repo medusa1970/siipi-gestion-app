@@ -13,9 +13,9 @@
     style="max-height: 600px; overflow-y: auto"
   >
     <template #top>
-      <div class="busqueda">
-        <slot name="dropdown" />
-      </div>
+      <slot name="dropdown" />
+      <!-- <div class="busqueda">
+      </div> -->
     </template>
     <template #body="props">
       <q-tr

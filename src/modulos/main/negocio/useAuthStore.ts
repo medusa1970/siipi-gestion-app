@@ -148,7 +148,9 @@ export const useAuthStore = defineStore('auth', {
       }
       try {
         const negocio = this.usuario.negocios[index];
+
         const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
+
         this.$patch({
           token,
           negocio,

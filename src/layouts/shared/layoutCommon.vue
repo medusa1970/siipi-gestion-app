@@ -4,7 +4,7 @@
       elevated
       :class="[
         'text-white ',
-        punto && 'bg-orange-600',
+        punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"
@@ -52,7 +52,7 @@
       style=""
       :class="[
         'text-white ',
-        punto && 'bg-orange-600',
+        punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
         sede && 'colorBackground',
       ]"
@@ -133,9 +133,9 @@
       <q-list>
         <!-- SIDEBAR -->
         <div class="text-white py-4 flex flex-col gap-4">
-          <h1 class="text-center font-extrabold">SIDE_BAR</h1>
+          <h1 class="text-center font-extrabold">PEDIDOS</h1>
 
-          <q-list class="shadow-[0_0px_5px] shadow-orange-300">
+          <q-list>
             <q-expansion-item
               switch-toggle-side
               expand-separator
@@ -151,6 +151,9 @@
                 </div>
               </template>
               <div class="p-2">
+                <h1 v-if="pedidoStore.listaPedido.length == 0">
+                  No hay productos...
+                </h1>
                 <div
                   class="grid grid-cols-[70px_1fr_30px] gap-2 mb-2"
                   v-for="producto in pedidoStore.listaPedido"

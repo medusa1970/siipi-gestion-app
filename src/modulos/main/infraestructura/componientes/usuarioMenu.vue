@@ -204,6 +204,7 @@ const editarPerfilSubmit = async () => {
 
 const password = ref('');
 const elegirNegocio = (index: number, nombre: string) => {
+  console.log(index, nombre);
   // playSound();
   $q.dialog({
     title: `<strong>Entrar a ${nombre}</strong>`,
@@ -236,8 +237,9 @@ const elegirNegocio = (index: number, nombre: string) => {
       );
       if (!loginResponse) {
       } else {
-        authStore.elegirNegocio(index);
+        await authStore.elegirNegocio(index);
         authStore.token = loginResponse.token;
+
         password.value = '';
         NotifySucess(`Negocio elegido: ${nombre}`);
         showPerfil.value = false;

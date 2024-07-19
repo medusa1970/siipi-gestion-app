@@ -1,7 +1,7 @@
 export default [
   {
     name: 'productos',
-    path: '/cathering/productos2',
+    path: '/productos2',
     file: '@/modulos2/almacen/paginas/productos/productos.vue',
   },
   {

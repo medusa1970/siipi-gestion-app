@@ -55,6 +55,15 @@
           size="sm"
           icon="edit"
         />
+        <q-btn
+          icon="delete"
+          class="p-1"
+          color="red"
+          size="sm"
+          @click="borrarProductoMarca(row)"
+        >
+          <q-tooltip> Eliminar marca </q-tooltip>
+        </q-btn>
       </q-btn-group>
     </template>
     <!-- <template #body-expand="{ row }">
@@ -90,14 +99,18 @@ import { useProductoVariedades } from './productoVariedades.composable';
 import { useAlmacen } from '~/modulos2/almacen/almacen.composable';
 const { actProductosDB } = useAlmacen();
 const { $socket } = useNuxtApp();
-const { estado, store, handleVariedadCreada, handleVariedadModificada } =
-  useProductoVariedades();
+const {
+  estado,
+  store,
+  handleVariedadCreada,
+  handleVariedadModificada,
+  borrarProductoMarca,
+} = useProductoVariedades();
 
 /**
  * Rows para la tabla
  */
 const rowsTabla = computed(() => {
-  console.log(store.producto.variedades);
   if (!store.producto.variedades) {
     console.log('vacio');
   }
@@ -118,9 +131,9 @@ const rowsTabla = computed(() => {
 });
 
 const modalEditarMarca = (row: any) => {
-  console.log('ROW' + JSON.stringify(row));
+  // console.log('ROW' + JSON.stringify(row));
   estado.variedad = row;
-  console.log('ESTADO' + JSON.stringify(estado.variedad));
+  // console.log('ESTADO' + JSON.stringify(estado.variedad));
   estado.modal.formVariedadModificar = true;
 };
 

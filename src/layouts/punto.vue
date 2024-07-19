@@ -136,7 +136,7 @@ const realizarPedido = async () => {
     persistent: true,
   }).onOk(async () => {
     try {
-      const pedido = await api.pedidoIniciar(
+      const pedido = await apiPedido.pedidoIniciar(
         {
           comprador: authStore.negocio._id,
           vendedor: '65a5a9af08c1a906d83522d0',
@@ -145,7 +145,16 @@ const realizarPedido = async () => {
         { loading: true },
         authStore.token,
       );
-      // console.log(pedido);
+      if (pedido) {
+        const pedidoEstado = await apiPedido.pedidoConfirmarItems(
+          {
+            _id: pedido._id,
+          },
+          authStore.token,
+        );
+        NotifySucessCenter('Pedido realizado con éxito');
+        pedidoStore.listaPedido = [];
+      } else NotifyError('Error al realizar el pedido');
     } catch (err) {
       console.log(err);
       return;

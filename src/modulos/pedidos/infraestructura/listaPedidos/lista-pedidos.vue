@@ -28,25 +28,16 @@
           <Item
             v-for="punto in estado.pedidosEntidad"
             :key="punto._id"
-            :href="`listaPedidos/${punto._id}`"
+            :href="`pedido/${punto._id}`"
             :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
-            :title2="fechaDiaMes(punto.estado[0]?._creado)"
+            :title2="fechaDiaMes(punto._creado)"
           >
             <template v-slot:actions>
               <div class="flex">
                 <h1 class="text-orange-500 font-bold">
                   {{ punto.estadoItems }}
                 </h1>
-                <!-- <q-btn
-                  dense
-                  round
-                  icon="edit"
-                  flat
-                  color="blue"
-                  padding="4px"
-                  size="12px"
-                /> -->
                 <q-btn
                   dense
                   round

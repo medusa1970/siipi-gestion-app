@@ -104,17 +104,17 @@
       <template #body-cell-acciones="{ val, row }">
         <q-btn-group push @click="(e) => e.stopPropagation()">
           <q-btn
-            color="black"
+            color="green"
             icon="visibility"
             class="p-1"
             size="sm"
             @click="() => {}"
           >
-            <q-tooltip> Ver informacion producto </q-tooltip>
+            <q-tooltip> Ver informacion oferta </q-tooltip>
           </q-btn>
 
           <q-btn
-            color="orange"
+            color="black"
             icon="edit"
             class="p-1"
             size="sm"

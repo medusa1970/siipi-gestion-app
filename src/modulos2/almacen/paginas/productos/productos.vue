@@ -168,6 +168,15 @@
     <template #body-cell-acciones="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
+          color="green"
+          icon="visibility"
+          class="p-1"
+          size="sm"
+          @click="() => {}"
+        >
+          <q-tooltip> Ver informacion producto </q-tooltip>
+        </q-btn>
+        <q-btn
           @click="goTo(router, 'producto', { id: row._id })"
           icon="edit"
           class="p-1"

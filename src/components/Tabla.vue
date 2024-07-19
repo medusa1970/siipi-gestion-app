@@ -10,12 +10,10 @@
     class="border-none"
     virtual-scroll
     :rows-per-page-options="[30]"
-    style="max-height: 600px; overflow-y: auto"
+    style="max-height: 82.5vh; overflow-y: auto"
   >
     <template #top>
       <slot name="dropdown" />
-      <!-- <div class="busqueda">
-      </div> -->
     </template>
     <template #body="props">
       <q-tr

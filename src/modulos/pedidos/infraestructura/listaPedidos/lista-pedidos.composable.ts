@@ -17,7 +17,7 @@ export const listaPedidos = () => {
         {},
         authStore.token,
       );
-      // console.log(listaPedidos);
+      console.log(pedidos.length);
       //@ts-ignore
       estado.pedidosEntidad = await Promise.all(
         pedidos.map((pedido) =>

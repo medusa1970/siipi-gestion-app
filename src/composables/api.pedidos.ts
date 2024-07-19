@@ -18,20 +18,13 @@ export const apiPedido = {
   ): Promise<Pedido> =>
     await crearUno(GqlCrearPedido, useGqlToken(t), d, o, o.loading),
 
-  pedidoConfirmarItems: async (
-    busqueda: BuscarPedidoDto,
-    opciones: BuscarOpciones,
-    estado: CrearItemEstadoDto,
-    itemIds: string | string[],
-    token: any,
-  ) => {
-    opciones.populate = true;
+  pedidoConfirmarItems: async (busqueda: BuscarPedidoDto, token: any) => {
     let resultado;
     try {
       await loadingAsync(async () => {
         resultado = await GqlCambiarEstadoItems(
-          { busqueda, itemIds, estado, opciones },
-          token,
+          { busqueda, itemIds: [], estado: { estado: 'confirmado' } }, //@ts-expect-error
+          useGqlToken(token),
         );
       });
       if (!resultado) {
@@ -40,7 +33,7 @@ export const apiPedido = {
     } catch (err) {
       throw formatApiError(err);
     }
-    return extraer(resultado);
+    return extraerUno(resultado);
   },
 
   pedidos_buscar: async (

@@ -112,17 +112,17 @@
       <template #body-cell-acciones="{ val, row }">
         <q-btn-group push @click="(e) => e.stopPropagation()">
           <q-btn
-            color="black"
+            color="green"
             icon="visibility"
             class="p-1"
             size="sm"
             @click="() => {}"
           >
-            <q-tooltip> Ver informacion producto </q-tooltip>
+            <q-tooltip> Ver informacion oferta </q-tooltip>
           </q-btn>
 
           <q-btn
-            color="orange"
+            color="black"
             icon="edit"
             class="p-1"
             size="sm"
@@ -268,10 +268,12 @@
 </template>
 
 <script setup lang="ts">
-import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable.js';
+import Table from '@/components/input/Table.vue';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
 import { columnaOfertas } from '../utils/columns';
-import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store.js';
+import Oferta from '@/assets/img/oferta.png';
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
+import { storeOferta } from '@/modulos/ofertas/negocio/oferta.store';
 definePageMeta({
   layout: 'cathering',
 });

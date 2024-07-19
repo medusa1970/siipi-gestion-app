@@ -51,7 +51,6 @@
 
         <q-btn
           style="width: 42px"
-          class=""
           icon="add"
           color="green"
           no-caps
@@ -171,6 +170,15 @@
 
     <template #body-cell-acciones="{ row }">
       <q-btn-group push @click="(e) => e.stopPropagation()">
+        <q-btn
+          color="green"
+          icon="visibility"
+          class="p-1"
+          size="sm"
+          @click="() => {}"
+        >
+          <q-tooltip> Ver informacion producto </q-tooltip>
+        </q-btn>
         <q-btn
           @click="goTo(router, 'producto', { id: row._id })"
           icon="edit"
@@ -315,6 +323,8 @@ import { useProductos } from './productos.composable';
 import ProductoImage from '@/assets/img/noHayProducto.png';
 import formProductoBasico from '@/modulos2/almacen/forms/formProductoBasico.vue';
 import formOfertaProducto from '@/modulos2/oferta_temp/forms/formOfertaProducto.vue';
+import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
+
 const router = useRouter();
 const { $socket } = useNuxtApp();
 const {
@@ -324,6 +334,8 @@ const {
   handleProductoCreado,
   handleOfertaCreada,
 } = useProductos();
+const { actOfertasDB } = useOferta();
+
 const { actProductosDB, categoriaSelectOptionsFiltro, productoIncompleto } =
   useAlmacen();
 
@@ -332,6 +344,10 @@ onMounted(async () => {
   // sockets on
   $socket.on('cambiosProductos', async (data: any) => {
     await actProductosDB();
+  });
+  // ofertaStore.obtenerOfertas();
+  $socket.on('cambiosOfertas', async (data: any) => {
+    await actOfertasDB();
   });
   // recuperacion del contenido
   await store.getProductos();
@@ -347,6 +363,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   // sockets on
   $socket.off('cambiosProductos');
+  $socket.off('cambiosOfertas');
 });
 
 // configuracion de la tabla

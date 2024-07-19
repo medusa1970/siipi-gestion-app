@@ -238,7 +238,6 @@ const elegirNegocio = (index: number, nombre: string) => {
       if (!loginResponse) {
       } else {
         await authStore.elegirNegocio(index);
-        authStore.token = loginResponse.token;
 
         password.value = '';
         NotifySucess(`Negocio elegido: ${nombre}`);

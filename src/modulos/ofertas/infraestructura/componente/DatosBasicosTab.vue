@@ -41,10 +41,10 @@
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
+      :key="estado.modOfertaBasicaImagen"
+      :dataPreview="estado.modOfertaBasicaImagen"
       info="Por favor elija una foto para la oferta, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
       icono="photo_camera"
-      :rules="[]"
-      :dataPreview="estado.modOfertaBasicaImagen"
     />
     <q-btn color="primary" label="Modificar" type="submit" no-caps />
   </q-form>
@@ -53,6 +53,7 @@
 <script setup>
 import { useDatosBasicosTab } from '@/modulos/ofertas/negocio/datosBasicosTab.composable';
 import { useOferta } from '@/modulos/ofertas/negocio/oferta.composable';
+import { UrlToBase64Image } from '~/components/input/input.service';
 
 const { estado, ofertaStore, modificarDatosBasicosOferta } =
   useDatosBasicosTab();

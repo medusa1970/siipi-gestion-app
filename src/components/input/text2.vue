@@ -86,7 +86,7 @@ const props = withDefaults(
     tipo?: 'text' | 'textarea' | 'password';
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
-    porDefecto?: string; // valor seleccionado al iniciar
+    porDefecto?: string | number; // valor seleccionado al iniciar
     watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
@@ -117,9 +117,8 @@ const props = withDefaults(
  * refs, reactives y computed
  */
 
-const localModel = ref<string>(
-  props.porDefecto ? String(props.porDefecto) : null,
-); // contenido del input
+const valorInicial = props.porDefecto != null ? String(props.porDefecto) : null;
+const localModel = ref<string>(valorInicial);
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o

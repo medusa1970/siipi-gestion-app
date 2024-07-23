@@ -1,4 +1,5 @@
 <template>
+  <div>{{ process.env.DEPLOY }}</div>
   <layout-common
     :menuList="[
       {

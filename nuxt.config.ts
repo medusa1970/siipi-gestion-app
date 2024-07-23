@@ -46,6 +46,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      DeployStatus: process.env.DEPLOY,
       GQL_HOST: process.env.GRAPH_URI,
       'graphql-client': {
         codegen: {

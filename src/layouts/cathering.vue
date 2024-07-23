@@ -41,8 +41,8 @@
       // },
       // {
       //   icon: 'bi-box',
-      //   label: 'Productos2',
-      //   to: 'productos2',
+      //   label: 'Productos',
+      //   to: 'productos',
       // },
       // {
       //   icon: 'warehouse',
@@ -88,10 +88,11 @@
 import { menuListCathering } from './menuList/menuList';
 import PortadaCathering from '@/assets/img/cookies.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const router = useRouter();
 const authStore = useAuthStore();
 if (authStore.getNegocio?.tipo !== 'CATHERING') {
   goTo(router, 'inicio');
 }
 </script>
+~/modulos/main/useAuthStore

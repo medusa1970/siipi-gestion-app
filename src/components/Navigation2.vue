@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -54,3 +54,4 @@ const path = `/${authStore.negocio?.tipo.toLowerCase()}`;
   margin: 0;
 }
 </style>
+~/modulos/main/useAuthStore

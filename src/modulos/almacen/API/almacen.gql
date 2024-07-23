@@ -1,0 +1,220 @@
+query categoriaArbol(
+  $busqueda: BuscarCategoriaDto!
+  $opciones: BuscarOpciones = {}
+) {
+  categoriaArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    productos {
+      nombre
+    }
+    hijas {
+      _id
+      nombre
+      productos {
+        _id
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        productos {
+          _id
+        }
+      }
+    }
+  }
+}
+
+mutation HacerInventario(
+  $busqueda: BuscarEntidadDto!
+  $datos: CrearInventarioDto!
+  $guardar: Boolean = true
+  $opciones: BuscarOpciones = {}
+) {
+  hacerInventario(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: $opciones
+    guardar: $guardar
+  ) {
+    _id
+    producto {
+      _id
+    }
+    reporte
+    diferencias {
+      vencimiento
+      diferencia
+    }
+    lotes {
+      vencimiento
+      cantidad
+      bloque {
+        nombre
+      }
+    }
+  }
+}
+
+query productosMenu(
+  $busqueda: BuscarEntidadDto!
+  $busquedaMenu: BuscarMenuDto!
+  $opciones: BuscarOpciones = {}
+) {
+  entidadProductosMenu(
+    busqueda: $busqueda
+    busquedaMenu: $busquedaMenu
+    opciones: $opciones
+  ) {
+    _id
+    nombre
+  }
+}
+
+query filaInventario(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BuscarOpciones = {}
+) {
+  filaInventario(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+  }
+}
+
+mutation modificarEntidades_problemas(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    problemas {
+      _id
+      _creado
+      inventario {
+        _id
+      }
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        vencimiento
+        diferencia
+      }
+      fechaResolucion
+      reporte
+      resuelto
+    }
+  }
+}
+
+query buscarEntidades_problemas(
+  $busqueda: BuscarEntidadDto!
+  $filtro: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    problemas {
+      _id
+      _creado
+      inventario {
+        _id
+      }
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        vencimiento
+        diferencia
+      }
+      fechaResolucion
+      reporte
+      resuelto
+    }
+  }
+}
+
+query stockBuscarEntidad(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    almacen {
+      _id
+      producto {
+        _id
+        nombre
+        puedeVencer
+        vencimientoLimite
+        categoria {
+          _id
+          nombre
+        }
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          abreviacion
+        }
+        variedades {
+          _id
+          marca {
+            _id
+            nombre
+          }
+          inventarioLimite
+          cantidadLimite
+          cantidadMaxPedido
+          imagen {
+            archivoLocal
+            cloudinaryUrl
+          }
+        }
+      }
+      lotes {
+        vencimiento
+        cantidad
+        marca {
+          _id
+          nombre
+        }
+        bloque {
+          _id
+          nombre
+        }
+      }
+    }
+  }
+}
+
+mutation stockModificarEntidad(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    almacen {
+      producto {
+        _id
+        nombre
+        puedeVencer
+        vencimientoLimite
+      }
+      lotes {
+        vencimiento
+        cantidad
+        marca {
+          _id
+          nombre
+        }
+        bloque {
+          _id
+          nombre
+        }
+      }
+    }
+  }
+}

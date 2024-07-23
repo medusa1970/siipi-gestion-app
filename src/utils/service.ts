@@ -135,6 +135,8 @@ const borrar = async (
   opciones: any,
   loading = false,
 ) => {
+  console.log(opciones);
+  console.log(busqueda);
   delete opciones.loading;
   if (!multiple) {
     busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;

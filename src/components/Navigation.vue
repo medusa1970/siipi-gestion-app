@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { useAuthStore } from '~/modulos/main/';
 
 defineProps({
   label: String,
@@ -24,3 +24,4 @@ defineProps({
 const authStore = useAuthStore();
 const path = `/${authStore.negocio?.tipo.toLowerCase()}`;
 </script>
+~/modulos/main/useAuthStore

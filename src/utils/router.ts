@@ -9,12 +9,13 @@ export const getRoute = function (
   params: any = null,
 ) {
   const route = router.getRoutes().find((r: any) => r.name === routeName);
+  let path = '';
   if (route) {
-    return params ? replaceParamsInRoute(route.path, params) : route.path;
+    path = params ? replaceParamsInRoute(route.path, params) : route.path;
   } else {
     console.warn(`Ruta desconocida (${routeName}), redireccionando al inicio`);
-    return '/';
   }
+  return '/' + path.replace(/^(\/)+|(\/)+$/g, '');
 };
 
 export const goTo = function (
@@ -22,5 +23,7 @@ export const goTo = function (
   routeName: string,
   params: any = null,
 ) {
+  console.log('going to ', getRoute(router, routeName, params));
+  console.log(params);
   router.push(getRoute(router, routeName, params));
 };

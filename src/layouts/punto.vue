@@ -36,8 +36,8 @@
 <script setup>
 import PortadaCathering from '@/assets/img/cookies.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-import { storePedido } from '@/modulos/pedidos/negocio/pedido.store';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
@@ -174,3 +174,4 @@ const realizarPedido = async () => {
   });
 };
 </script>
+~/modulos/main/useAuthStore

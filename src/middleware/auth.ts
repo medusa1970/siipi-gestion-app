@@ -1,4 +1,4 @@
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 
 const authStore = useAuthStore();
 

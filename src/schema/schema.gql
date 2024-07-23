@@ -1,4 +1,3 @@
-# ------------------------------------------------------
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
@@ -1233,7 +1232,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-16T07:56:13.959Z"
+  saldoActualizacion: DateTime = "2024-07-19T18:06:24.554Z"
   servicios: [CrearServicioDto!]
 }
 

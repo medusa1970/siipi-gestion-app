@@ -382,14 +382,6 @@ export const api = {
     t: any = null,
   ): Promise<Categoria[]> =>
     <Categoria[]>await dv(GqlBorrarCategorias, t, b, o, o.loading),
-  buscarArbolCategorias: async (
-    b: BuscarCategoriaDto,
-    o: BuscarOpciones & { loading?: boolean } = {},
-    t: any = null,
-  ): Promise<Categoria> => {
-    o.limit = 0;
-    return <Categoria>await bu(GqlCategoriaArbol, t, b, o, null, o.loading);
-  },
 
   /**
    * Catalogos
@@ -446,14 +438,6 @@ export const api = {
     t: any = null,
   ): Promise<Catalogo[]> =>
     <Catalogo[]>await dv(GqlBorrarCatalogos, t, b, o, o.loading),
-  buscarArbolCatalogos: async (
-    b: BuscarCatalogoDto,
-    o: BuscarOpciones & { loading?: boolean } = {},
-    t: any = null,
-  ): Promise<Catalogo> => {
-    o.limit = 0;
-    return <Catalogo>await bu(GqlCatalogoArbol, t, b, o, null, o.loading);
-  },
 
   /**
    * Acciones

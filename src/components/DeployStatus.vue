@@ -1,12 +1,12 @@
 <template>
   <div class="deploy" :id="$config.public.DeployStatus">
-    {{ $config.public.DeployStatus }}
+    {{ $config.public.DeployStatus }}, API = {{ $config.public.GQL_HOST }}
   </div>
 </template>
 
 <style scoped>
 #LOCAL {
-  background: green;
+  background: darkmagenta;
 }
 #MAIN {
   display: none;

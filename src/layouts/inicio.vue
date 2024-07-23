@@ -1,4 +1,5 @@
 <template>
+  [DEV]
   <div class="m-auto max-w-xs h-full">
     <img style="width: 100%" :src="Logo" />
     <slot></slot>

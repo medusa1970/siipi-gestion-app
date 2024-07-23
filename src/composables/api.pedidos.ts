@@ -1,7 +1,6 @@
 import type {
   BuscarOpciones,
   BuscarPedidoDto,
-  CrearItemEstadoDto,
   CrearOpciones,
   CrearPedidoDto,
   Pedido,

@@ -218,12 +218,9 @@ defineProps({
 import { ref, watch, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
-import RickRoll from '@/assets/mp3/rickroll.mp3';
-import Portada from '@/assets/img/marco.png';
-import PortadaPunto from '@/assets/img/backPunto.png';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
-import usuarioMenu from '~/modulos/main/infraestructura/componientes/usuarioMenu.vue';
-import { storePedido } from '@/modulos/pedidos/negocio/pedido.store';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -270,4 +267,4 @@ const borrarProductoCarrito = (id) => {
 //   width: 340px !important;
 // }
 </style>
-~/modulos/main/API/authService
+~/modulos/main/API/authService ~/modulos/main/useAuthStore

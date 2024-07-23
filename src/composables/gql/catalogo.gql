@@ -47,39 +47,3 @@ mutation borrarCatalogos(
     nombre
   }
 }
-
-query CatalogoArbol(
-  $busqueda: BuscarCatalogoDto!
-  $opciones: BuscarOpciones = {}
-) {
-  catalogoArbol(busqueda: $busqueda, opciones: $opciones) {
-    _id
-    nombre
-    ofertas {
-      nombre
-    }
-    hijas {
-      _id
-      _creado
-      _modificado
-      nombre
-      ofertas {
-        nombre
-      }
-      hijas {
-        _id
-        nombre
-        ofertas {
-          nombre
-        }
-        hijas {
-          _id
-          nombre
-          ofertas {
-            nombre
-          }
-        }
-      }
-    }
-  }
-}

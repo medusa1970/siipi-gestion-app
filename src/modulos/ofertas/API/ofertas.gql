@@ -1,0 +1,103 @@
+query CatalogoArbol(
+  $busqueda: BuscarCatalogoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  catalogoArbol(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    nombre
+    ofertas {
+      nombre
+    }
+    hijas {
+      _id
+      _creado
+      _modificado
+      nombre
+      ofertas {
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        ofertas {
+          nombre
+        }
+        hijas {
+          _id
+          nombre
+          ofertas {
+            nombre
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation modificarOfertaBasica(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    abreviacion
+    catalogo {
+      _id
+      nombre
+    }
+    imagen {
+      cloudinaryUrl #no trae imagen
+    }
+  }
+}
+
+# modifica/agrega un ingrediente simple de una oferta
+mutation modificarOfertaIngredientes(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _modificado
+    nombre
+    ingredientes {
+      tipo
+      producto {
+        _id
+        nombre
+      }
+      marca {
+        _id
+        nombre
+      }
+      cantidad
+    }
+  }
+}
+
+# MODIFICAR PRECIOS DE OFERTA
+mutation modificarOfertaPrecios(
+  $busqueda: BuscarOfertaDto!
+  $datos: ModificarOfertaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarOfertas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _modificado
+    nombre
+    precioSinFactura
+    precioConFactura
+  }
+}
+
+# CREA UNA ACCION
+# mutation crearAccion($datos: CrearAccionDto!, $opciones: CrearOpciones = {}) {
+#   crearAcciones(datos: [$datos], opciones: $opciones) {
+#     _id
+#   }
+# }

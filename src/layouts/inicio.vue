@@ -7,6 +7,7 @@
 
 <script setup>
 import Logo from '@/assets/img/logo.png';
-import { useAuthStore } from '~/modulos/main/negocio/useAuthStore';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 </script>
+~/modulos/main/useAuthStore

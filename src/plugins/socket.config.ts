@@ -6,6 +6,7 @@ declare module '#app' {
     $socket: Socket;
   }
 }
+const debug = false;
 
 export default defineNuxtPlugin((nuxtApp) => {
   const socketUrl =
@@ -13,21 +14,22 @@ export default defineNuxtPlugin((nuxtApp) => {
       ? 'http://localhost:3000'
       : 'https://siipi-gestion-production-f6a0.up.railway.app';
   const socket = io(socketUrl, {});
+
   // Manejador para el evento de conexión exitosa
   socket.on('connect', () => {
-    console.log('Conectado a sockets exitosamente');
+    if (debug) console.log('Conectado a sockets exitosamente');
   });
 
   // Manejador para el evento de error de conexión
   socket.on('connect_error', (error) => {
-    console.log('Fallo al conectarse a sockets:', error);
+    if (debug) console.log('Fallo al conectarse a sockets:', error);
   });
 
   // Agregar un manejador para otros eventos podría ser útil para la depuración
   socket.on('disconnect', (reason) => {
-    console.log('Desconectado del socket:', reason);
+    if (debug) console.log('Desconectado del socket:', reason);
   });
 
-  console.log('providing socket', socketUrl, socket);
+  if (debug) console.log('providing socket', socketUrl, socket);
   nuxtApp.provide('socket', socket);
 });

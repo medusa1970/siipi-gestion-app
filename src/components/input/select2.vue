@@ -91,26 +91,14 @@ const hideTooltip = (seconds = 3) =>
  */
 
 const emits = defineEmits<{
-  (
-    // cambió el valor del input
-    event: 'update',
-    valor: string | null,
-  ): void;
-  (
-    // el input está en estado de error de validación
-    event: 'error',
-    errorFlag: boolean,
-    errorMensaje: string | null,
-  ): void;
-  (
-    // cambió el valor del input
-    event: 'crearObjeto',
-    objeti: any,
-  ): void;
-  (
-    // cleared
-    event: 'clear',
-  ): void;
+  // cambió el valor del input
+  (event: 'update', valor: string | null): void;
+  // el input está en estado de error de validación
+  (event: 'error', errorFlag: boolean, errorMensaje: string | null): void;
+  // cambió el valor del input
+  (event: 'crearObjeto', objeto: any, pariente?: any): void;
+  // cleared
+  (event: 'clear'): void;
 }>();
 
 /**
@@ -216,17 +204,11 @@ function filterFn(valor: string, update: Function) {
 }
 
 // Se ha creado una nueva opcion via el boton [+]
-const handleCrear = (objeto, { selectValor, selectCallback }) => {
-  // el componiente hijo se encarga de insertar la nueva opcion en la lista
-  opcionesSrc.value = selectCallback(opcionesSrc.value);
+const handleCrear = (objeto, pariente?) => {
   listaOpciones.value = opcionesSrc.value;
-  // seleccionamos la nueva opcion
-  localModel.value = selectValor;
-  // actualizamos
-  handleChange(selectValor);
-  // cerramos el dialog
+  localModel.value = objeto._id;
+  handleChange(objeto._id);
   showDialog.value = false;
-  // mandamos el objeto creado al componiente padre por si tiene algo que hacer con el
   emits('crearObjeto', objeto);
 };
 

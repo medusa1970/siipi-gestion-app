@@ -87,42 +87,15 @@ export default defineNuxtConfig({
   },
   hooks: {
     'pages:extend': async (pages: any) => {
-      /**
-       * new : xxx/rutas.ts
-       */
-      const modulosPath2 = './src/modulos2/';
-      const files2 = await fs.promises.readdir(modulosPath2);
-      for (const file2 of files2) {
-        const filePath2 = path.join(modulosPath2, file2);
-        const stats2 = await fs.promises.stat(filePath2);
-        if (stats2.isDirectory()) {
-          const fullPath2 = path.join(__dirname, '/', filePath2, '/rutas.ts');
-          if (fs.existsSync(fullPath2)) {
-            const routes2 = await import(fullPath2);
-            for (const route2 of routes2.default || []) {
-              // console.log(route.name);
-              pages.push(route2);
-            }
-          }
-        }
-      }
-
-      /**
-       * old : infraesrtructura/rutas.ts
-       */
       const modulosPath = './src/modulos/';
       const files = await fs.promises.readdir(modulosPath);
       for (const file of files) {
         const filePath = path.join(modulosPath, file);
         const stats = await fs.promises.stat(filePath);
         if (stats.isDirectory()) {
-          const fullPath = path.join(
-            __dirname,
-            '/',
-            filePath,
-            '/infraestructura/rutas.ts',
-          );
+          const fullPath = path.join(__dirname, '/', filePath, '/rutas.ts');
           if (fs.existsSync(fullPath)) {
+            //@ts-ignore
             const routes = await import(fullPath);
             for (const route of routes.default || []) {
               // console.log(route.name);
@@ -132,7 +105,7 @@ export default defineNuxtConfig({
         }
       }
       console.log(
-        '\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Creando las rutas dinamicas',
+        '\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Se han creado las rutas dinamicas',
       );
     },
   },

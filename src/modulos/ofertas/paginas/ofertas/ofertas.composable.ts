@@ -11,13 +11,7 @@ const init_crearOfertaBasico = {
 };
 
 export const useOferta = () => {
-  /** DECLARACIONES */
   const store = storeOferta();
-  const { $socket } = useNuxtApp();
-  const router = useRouter();
-
-  /** REACTIVOS */
-
   const estado = reactive({
     ofertas: [] as Oferta[],
 

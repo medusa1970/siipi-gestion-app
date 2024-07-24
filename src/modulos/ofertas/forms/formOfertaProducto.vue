@@ -8,7 +8,6 @@
       ofertas por aquí.
     </div>
   </div> -->
-
   <q-form @submit="formSubmit">
     <!-- Produit -->
     <input-select
@@ -36,12 +35,13 @@
       <input-select
         style="width: 40%"
         label="Empaque preseleccionado"
+        info="Info."
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
       />
       <input-text
-        style="width: 50%"
+        style="width: 40%"
         tipo="number"
         label="Cantidad"
         info="Si desea elija un empaque, o sino entre directamente la cantidad."
@@ -56,20 +56,20 @@
     <input-text
       label="Nombre"
       info="Info."
-      :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
-      :error="estado.errorNombre"
+      :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
+      :error="estado.errorNombre"
     />
 
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
       info="Info."
-      :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
+      :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
       :error="estado.errorAbreviacion"
     />
@@ -115,7 +115,7 @@
       :rules="[useRules.requerido()]"
     />
     <input-text
-      label="precio sin factura"
+      label="Precio sin factura"
       tipo="number"
       info="Info."
       :porDefecto="estado.dataForm.precioSinFactura"
@@ -147,36 +147,13 @@ const props = withDefaults(
   {},
 );
 
-// datos por defecto del formulario
-const initForm = {
-  producto: props.config?.productoId,
-  marca: null,
-  cantidad: null,
-  nombre: null,
-  abreviacion: null,
-  descripcion: null,
-  catalogo: null,
-  precioConFactura: null,
-  precioSinFactura: null,
-  imagen: null,
-};
-
-// definicion del estado
-const estado = reactive({
-  // valor de los inputs
-  dataForm: clone(initForm),
-  //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
-  // producto seleccionado
-  oferta: null,
-
-  // para el empaque
-  resetEmpaque: null,
-  nombreEmpaque: null,
+// producto seleccionado
+const producto = computed(() => {
+  if (!storeAlmacen.productos) return null;
+  return storeAlmacen.productos.find((p) => {
+    return p._id === estado.dataForm.producto;
+  });
 });
-
-// opciones
 
 const selectProducto = computed(() => {
   if (!storeAlmacen.productos) return [];
@@ -216,13 +193,6 @@ const selectCatalogo = computed(() => {
   return options;
 });
 
-const producto = computed(() => {
-  if (!storeAlmacen.productos) return null;
-  return storeAlmacen.productos.find((p) => {
-    return p._id === estado.dataForm.producto;
-  });
-});
-
 const selectVariedad = computed(() => {
   if (!producto.value) return [];
   return producto.value.variedades.map((variedad) => ({
@@ -241,32 +211,67 @@ const selectEmpaque = computed(() => {
     }));
 });
 
+// datos por defecto del formulario
+const initForm = {
+  producto: props.config?.productoId,
+  marca: null,
+  cantidad: null,
+  nombre: null,
+  abreviacion: null,
+  descripcion: null,
+  catalogo: null,
+  precioConFactura: null,
+  precioSinFactura: null,
+  imagen: null,
+};
+
+// definicion del estado
+const estado = reactive({
+  // valor de los inputs
+  dataForm: clone(initForm),
+  //mensajes de error del formulario
+  errorNombre: '',
+  errorAbreviacion: '',
+  // producto seleccionado
+  oferta: null,
+
+  // para el empaque
+  resetEmpaque: null,
+  nombreEmpaque: null,
+});
+
+// opciones
+
 // Inicializaciones
 onMounted(async () => {
   await storeAlmacen.getProductos();
   await store.getCatalogos();
 });
 
-const nombreOferta = computed(() => {
-  let nombre = producto.value?.nombre ?? '';
-  const marca = selectVariedad.value?.find(
-    (opcion) => opcion.value === estado.dataForm.marca,
-  )?.label;
-  if (marca) nombre += ' ' + marca;
-  if (estado.nombreEmpaque) nombre += ' ' + estado.nombreEmpaque;
-  if (estado.dataForm.cantidad && producto.value) {
-    nombre +=
-      ' ' + estado.dataForm.cantidad + ' ' + producto.value.medida.abreviacion;
-  }
-  estado.dataForm.nombre = nombre;
-  estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
-});
-
 watch(producto, (v) => {
-  if (!v) {
-    estado.dataForm.marca = null;
-  }
+  estado.dataForm.marca = null;
 });
+watch(
+  [producto, () => estado.dataForm.marca, () => estado.dataForm.cantidad],
+  (v) => {
+    let nombre = producto.value?.nombre ?? '';
+    const marca = selectVariedad.value?.find(
+      (opcion) => opcion.value === estado.dataForm.marca,
+    )?.label;
+    if (marca) nombre += ' ' + marca;
+    if (estado.nombreEmpaque) nombre += ' ' + estado.nombreEmpaque;
+    if (estado.dataForm.cantidad && producto.value) {
+      nombre +=
+        ' ' +
+        estado.dataForm.cantidad +
+        ' ' +
+        producto.value.medida.abreviacion;
+    }
+    estado.dataForm.nombre = nombre;
+    estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
+  },
+  { immediate: true },
+);
 watch(
   () => estado.dataForm.marca,
   (v) => {

@@ -276,6 +276,17 @@ onMounted(async () => {
   estado.ofertas = await store.getOfertas();
   await store.getCatalogos();
 });
+
+// sockets
+const { $socket } = useNuxtApp();
+onBeforeMount(() => {
+  $socket.on('cambiosOfertas', async (data: any) => {
+    await store.refreshOfertas();
+  });
+});
+onBeforeUnmount(() => {
+  $socket.off('cambiosOfertas');
+});
 </script>
 
 <style scoped>

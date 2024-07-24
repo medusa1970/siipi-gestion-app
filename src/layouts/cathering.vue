@@ -1,5 +1,5 @@
 <template>
-  <div>{{ process.env.DEPLOY }}</div>
+  <DeployStatus />
   <layout-common
     :menuList="[
       {
@@ -96,4 +96,3 @@ if (authStore.getNegocio?.tipo !== 'CATHERING') {
   goTo(router, 'inicio');
 }
 </script>
-~/modulos/main/useAuthStore

@@ -11,7 +11,7 @@
 
   <q-form @submit="formSubmit">
     <!-- Produit -->
-    <input-select2
+    <input-select
       label="Producto"
       info="Info."
       :opciones="selectProducto"
@@ -21,7 +21,7 @@
     />
 
     <!-- Marca -->
-    <input-select2
+    <input-select
       label="Marca"
       info="Info."
       :opciones="selectVariedad"
@@ -33,14 +33,14 @@
 
     <p></p>
     <div class="flex">
-      <input-select2
+      <input-select
         style="width: 40%"
         label="Empaque preseleccionado"
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
       />
-      <input-text2
+      <input-text
         style="width: 50%"
         tipo="number"
         label="Cantidad"
@@ -53,7 +53,7 @@
     </div>
 
     <!-- nombre -->
-    <input-text2
+    <input-text
       label="Nombre"
       info="Info."
       :porDefecto="estado.dataForm.nombre"
@@ -64,7 +64,7 @@
     />
 
     <!-- abreviacion -->
-    <input-text2
+    <input-text
       label="Abreviacion"
       info="Info."
       :porDefecto="estado.dataForm.abreviacion"
@@ -75,7 +75,7 @@
     />
 
     <!-- descripcion -->
-    <input-text2
+    <input-text
       label="Descripcion"
       info="Info."
       autogrow
@@ -83,7 +83,7 @@
       @update="(v) => (estado.dataForm.descripcion = v)"
     />
     <!-- Catalogo -->
-    <input-select2
+    <input-select
       label="Catalogo"
       info="Info."
       :opciones="selectCatalogo"
@@ -93,7 +93,7 @@
     />
 
     <!-- Imagen -->
-    <input-image2
+    <input-image
       label="Imagen"
       info="Info."
       @update="
@@ -106,7 +106,7 @@
     />
 
     <!-- Precios -->
-    <input-text2
+    <input-text
       label="Precio con factura"
       tipo="number"
       info="Info."
@@ -114,7 +114,7 @@
       @update="(v) => (estado.dataForm.precioConFactura = v)"
       :rules="[useRules.requerido()]"
     />
-    <input-text2
+    <input-text
       label="precio sin factura"
       tipo="number"
       info="Info."

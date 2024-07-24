@@ -12,7 +12,7 @@
   <div v-if="!store.producto.medida">
     <p>Para poder agregar empaques, primero debes definir la medida basica.</p>
   </div>
-  <input-select2
+  <input-select
     :disable="store.producto.empaques.length > 0"
     label="Medida basica"
     :opciones="estado.medidaOpciones"
@@ -93,7 +93,7 @@
   >
     <template #dropdown>
       <div class="flex">
-        <input-text2
+        <input-text
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           class="col-span-1"
           label="Buscar"

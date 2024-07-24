@@ -28,7 +28,7 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 
 const correo = reactiveInput();
 
@@ -36,15 +36,16 @@ const correo = reactiveInput();
  * Submit del formulario
  */
 const formSubmit = async (datos) => {
+  console.log(correo.value);
   try {
-    const res = await useAuth.pedirRDC(correo.value);
-  } catch (e) {
-    if (e === 'B106') {
+    const res = await apiAuth.pedirRDC(correo.value);
+  } catch (err) {
+    if (isApiNotFound(err, 'correo')) {
       correo.error = 'Email desconocido';
     } else {
-      NotifyError(`Error no tratado: ${e}`);
+      errFallBack(err);
     }
-    return false;
+    return;
   }
   emits('go', 'rdc2');
 };

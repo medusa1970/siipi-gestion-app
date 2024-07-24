@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text2
+    <input-text
       label="Nombre"
       info="Info."
       :porDefecto="estado.dataForm.nombre"
@@ -10,7 +10,7 @@
     />
 
     <!-- abreviacion -->
-    <input-text2
+    <input-text
       label="Abreviacion"
       info="Info."
       :porDefecto="estado.dataForm.abreviacion"
@@ -19,7 +19,7 @@
     />
 
     <!-- descripcion -->
-    <input-text2
+    <input-text
       label="Descripcion"
       info="Info."
       autogrow
@@ -27,7 +27,7 @@
       @update="(v) => (estado.dataForm.descripcion = v)"
     />
     <!-- Catalogo -->
-    <input-select2
+    <input-select
       label="Catalogo"
       info="Info."
       :opciones="estado.catalogoOpciones"
@@ -37,7 +37,7 @@
     />
 
     <!-- Imagen -->
-    <input-image2
+    <input-image
       label="Imagen"
       info="Info."
       icono="photo_camera"

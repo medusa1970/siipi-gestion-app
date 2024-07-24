@@ -25,16 +25,16 @@
         }}
       </q-btn>
     </div>
-  </div>
 
-  <div class="w-full text-center mt-4">
-    <q-btn
-      dense
-      no-caps
-      color="primary"
-      label="desconectarse"
-      @click="logout"
-    />
+    <div class="w-full text-center mt-4">
+      <q-btn
+        dense
+        no-caps
+        color="primary"
+        label="desconectarse"
+        @click="logout"
+      />
+    </div>
   </div>
 </template>
 
@@ -67,7 +67,7 @@ const elegirNegocio = async (index) => {
 // logout
 const logout = () => {
   authStore.logout();
-  emits('go', 'byebye');
+  emits('go', 'login'); // o 'byebye'
 };
 
 // colores para los botones

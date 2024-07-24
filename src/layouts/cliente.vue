@@ -1,4 +1,5 @@
 <template>
+  <DeployStatus />
   <layout-common
     :menuList="menuListCathering"
     :portada-img="PortadaCathering"
@@ -21,4 +22,3 @@ if (authStore.getNegocio?.tipo !== 'CLIENTELA') {
   goTo(router, 'inicio');
 }
 </script>
-~/modulos/main/useAuthStore

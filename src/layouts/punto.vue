@@ -1,4 +1,5 @@
 <template>
+  <DeployStatus />
   <layout-common
     :menuList="menuListPunto"
     :portada-img="PortadaCathering"
@@ -174,4 +175,3 @@ const realizarPedido = async () => {
   });
 };
 </script>
-~/modulos/main/useAuthStore

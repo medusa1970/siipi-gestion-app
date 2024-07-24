@@ -18,6 +18,19 @@
     :errorMessage="errorMensaje"
     counter
   >
+    <q-tooltip
+      v-model="tooltip"
+      class="no-pointer-events text-white text-sm bg-blue-9"
+      anchor="bottom middle"
+      self="top middle"
+      :offset="[0, 5]"
+      max-width="300px"
+      no-parent-event
+      @show="hideTooltip()"
+    >
+      {{ info }}
+    </q-tooltip>
+
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
@@ -49,13 +62,20 @@
     </template>
 
     <template #after v-if="info && info.length > 0">
-      <input-botonAyuda :mensaje="info" />
+      <q-icon name="help" @click="tooltip = !tooltip" />
     </template>
   </q-file>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+/**
+ * Tooltip
+ */
+const tooltip = ref(false);
+const hideTooltip = (seconds = 3) =>
+  setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
  * emits

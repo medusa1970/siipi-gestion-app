@@ -4,14 +4,14 @@
     @update:model-value="handleChange"
     @filter="filterFn"
     @blur="activarValidacion"
-    @clear="activarValidacion"
+    @clear="handleClear"
     :label="label + (requerido ? '*' : '')"
-    :rules="rules"
     input-debounce="0"
     :clearable="clearable"
     :dense="dense"
     :disable="disable"
     :filled="filled"
+    :rules="rules"
     :outlined="outlined"
     :class="clase"
     :bottom-slots="!noSlot"
@@ -27,7 +27,21 @@
     use-input
     fill-input
     hide-selected
+    :bg-color="color"
   >
+    <q-tooltip
+      v-model="tooltip"
+      class="text-white text-sm bg-blue-9"
+      style="pointer-events: none"
+      anchor="bottom middle"
+      self="top middle"
+      :offset="[0, 5]"
+      max-width="300px"
+      no-parent-event
+      @show="hideTooltip()"
+    >
+      {{ info }}
+    </q-tooltip>
     <template #no-option>
       <q-item>
         <q-item-section class="text-grey"> No hay resultados </q-item-section>
@@ -36,67 +50,55 @@
     <template #prepend v-if="icono">
       <q-icon :name="icono" @click.stop.prevent />
     </template>
+    <template #after v-if="info && info.length > 0">
+      <q-btn
+        v-if="dialog && !disable"
+        size="12px"
+        icon="add"
+        color="green"
+        style="height: 16px; width: 16px"
+        @click="() => (showDialog = true)"
+      ></q-btn>
+      <q-icon name="help" @click="tooltip = !tooltip" />
+    </template>
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps" :class="scope.opt.class">
         <q-item-section>{{ scope.opt.label }}</q-item-section>
       </q-item>
     </template>
-    <template #after>
-      <q-btn
-        v-if="dialog && !disable"
-        size="12px"
-        icon="add"
-        color="primary"
-        round
-        style="height: 16px"
-        @click="() => (showDialog = true)"
-      ></q-btn>
-      <input-botonAyuda v-if="info && info.length > 0" :mensaje="info" />
-    </template>
   </q-select>
 
-  <q-dialog v-model="showDialog">
-    <q-card>
-      <q-card-section class="flex justify-between">
-        <div class="mt-2">Agregar un nuevo item</div>
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-      <q-card-section>
-        <contenido-dialog
-          :opcionesPariente="listaOpciones"
-          :param="dialogParam"
-          @update:opciones="updateOpciones"
-        />
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+  <Popup v-model="showDialog" titulo="Agregar un nuevo item">
+    <template #body>
+      <contenido-dialog :config="dialogConfig" @crearObjeto="handleCrear" />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import type { SelectOpcion } from './select.interface';
+import type { SelectOpcion, selectOpcionCallback } from './select.interface';
 import { ref } from 'vue';
+
+/**
+ * Tooltip
+ */
+const tooltip = ref(false);
+const hideTooltip = (seconds = 3) =>
+  setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
  * emits
  */
 
 const emits = defineEmits<{
-  (
-    // cambió el valor del input
-    event: 'update',
-    valor: string | null,
-  ): void;
-  (
-    // el input está en estado de error de validación
-    event: 'error',
-    errorFlag: boolean,
-    errorMensaje: string | null,
-  ): void;
-  (
-    // cambió el valor del input
-    event: 'payload',
-    payload: Array<any>,
-  ): void;
+  // cambió el valor del input
+  (event: 'update', valor: string | null): void;
+  // el input está en estado de error de validación
+  (event: 'error', errorFlag: boolean, errorMensaje: string | null): void;
+  // cambió el valor del input
+  (event: 'crearObjeto', objeto: any, pariente?: any): void;
+  // cleared
+  (event: 'clear'): void;
 }>();
 
 /**
@@ -109,13 +111,13 @@ const props = withDefaults(
     label: string; // label adentro del input
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
-    porDefecto?: string; // valor seleccionado al iniciar
+    porDefecto?: any; // valor seleccionado al iniciar
     watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
     dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
-    dialogParam?: any; // el componiente adentro del dialogo de agregar nuevo elemento
+    dialogConfig?: any; //opciones para el componiente
     activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
     error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
     dense?: boolean;
@@ -123,7 +125,8 @@ const props = withDefaults(
     outlined?: boolean;
     filled?: boolean;
     clearable?: boolean;
-    noSlot: boolean;
+    noSlot?: boolean;
+    color?: string;
   }>(),
   {
     outlined: true,
@@ -134,6 +137,7 @@ const props = withDefaults(
     clase: '',
     rules: [] as Function[],
     disable: false,
+    color: '',
   },
 );
 
@@ -142,14 +146,17 @@ const props = withDefaults(
  */
 
 const localModel = ref<string>(props.porDefecto); // contenido del input
-const listaOpciones = ref<SelectOpcion[]>(); // lista de opciones, copia de props.opciones para trabajar
+const opcionesSrc = ref<SelectOpcion[]>(null); // lista de opciones de referencia, copiada de las props para poder ser modificable
+const listaOpciones = ref<SelectOpcion[]>(null); // lista de opciones que se filtrara y se mostrara, diferente de opsionesSrc para no sobreescribir las modificaciones
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
 const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
 const requerido = props.rules.map((rule) => rule.name).includes('requerido');
-onMounted(async () => {
-  listaOpciones.value = props.opciones;
+
+onBeforeMount(async () => {
+  opcionesSrc.value = props.opciones;
+  listaOpciones.value = opcionesSrc.value;
 });
 
 /**
@@ -186,7 +193,7 @@ const handleChange = (valor: string | null) => {
 function filterFn(valor: string, update: Function) {
   update(() => {
     const needle = valor.toLowerCase();
-    const opciones = props.opciones;
+    const opciones = opcionesSrc.value;
     listaOpciones.value =
       valor === ''
         ? opciones
@@ -196,36 +203,33 @@ function filterFn(valor: string, update: Function) {
   });
 }
 
-// agregar nuevo objeto : el resultado a agregar a las opciones del select
-function updateOpciones(
-  objeto: any,
-  opciones: SelectOpcion[],
-  value: string,
-  payload: any,
-) {
-  listaOpciones.value = opciones;
-  localModel.value = value;
-  handleChange(value);
+// Se ha creado una nueva opcion via el boton [+]
+const handleCrear = (objeto, pariente?) => {
+  listaOpciones.value = opcionesSrc.value;
+  localModel.value = objeto._id;
+  handleChange(objeto._id);
   showDialog.value = false;
-  emits('payload', objeto);
-}
+  emits('crearObjeto', objeto);
+};
+
+// Se ha creado una nueva opcion via el boton [+]
+const handleClear = () => {
+  activarValidacion();
+  emits('clear');
+};
 
 /**
  * watch
  */
 
-// update listaOpciones cuando props.opciones cambia
-// eso es para resuelver un bug donde las props se cargan despues de los reactives
-let once = true;
+// update opcionesSrc cuando props.opciones cambia
 watch(
   () => props.opciones,
-  async () => {
-    if (true) {
-      once = false;
-      listaOpciones.value = props.opciones;
-    }
+  () => {
+    listaOpciones.value = props.opciones;
+    opcionesSrc.value = props.opciones;
   },
-  { immediate: false },
+  { immediate: true },
 );
 
 // activar el error si llega un mensaje de error desde el componiente padre
@@ -247,7 +251,15 @@ watch(
   () => {
     localModel.value = props.watch;
     activarValidacion();
+    emits('update', localModel.value);
   },
   { immediate: false },
+);
+watch(
+  () => props.watch,
+  () => {
+    emits('update', localModel.value);
+  },
+  { once: true, immediate: true },
 );
 </script>

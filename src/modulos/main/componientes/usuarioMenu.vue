@@ -83,25 +83,25 @@
         <q-card-section>
           <input-text
             label="Nombre"
-            @update="(v) => (perfil.nombre = v)"
+            @update="(v) => (perfil.nombre = v as string)"
             :porDefecto="perfil.nombre"
             :rules="[useRules.requerido()]"
           />
           <input-text
             label="Apellido"
-            @update="(v) => (perfil.apellido = v)"
+            @update="(v) => (perfil.apellido = v as string)"
             :porDefecto="perfil.apellido"
             :rules="[useRules.requerido()]"
           />
           <input-text
             label="telefono"
-            @update="(v) => (perfil.telefono = v)"
+            @update="(v) => (perfil.telefono = v as string)"
             :porDefecto="perfil.telefono"
             :rules="[useRules.requerido()]"
           />
           <input-text
             label="email"
-            @update="(v) => (perfil.correo = v)"
+            @update="(v) => (perfil.correo = v as string)"
             :porDefecto="perfil.correo"
             :rules="[]"
           />
@@ -135,12 +135,10 @@
 <script setup lang="ts">
 // import { ModificarPersonaDto } from '#gql';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { useUsuarioService } from '~/modulos/main/API/useUsuarioService';
 import { UrlToBase64Image } from '~/components/input/input.service';
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 
 const authStore = useAuthStore();
-const usuarioService = useUsuarioService();
 const router = useRouter();
 const $q = useQuasar();
 
@@ -181,10 +179,7 @@ const editarPerfilSubmit = async () => {
   let persona = ref(null);
   try {
     loadingAsync(async () => {
-      persona.value = await usuarioService.editarPerfil(
-        authStore.getUsuarioId,
-        datos,
-      );
+      persona.value = await apiAuth.editarPerfil(authStore.getUsuarioId, datos);
       previewImagenPerfil.value = perfil.imagen?.data;
     }).then(() => {
       if (persona.value !== null) {
@@ -231,7 +226,7 @@ const elegirNegocio = (index: number, nombre: string) => {
 
     let loginResponse;
     try {
-      loginResponse = await useAuth.login(
+      loginResponse = await apiAuth.login(
         authStore.getUsuario?.usuario as string,
         password.value,
       );

@@ -1,6 +1,12 @@
-import type { ConexionResponse, CrearPersonaDto, Entidad, Persona } from '#gql';
+import type {
+  ConexionResponse,
+  CrearPersonaDto,
+  Entidad,
+  ModificarPersonaDto,
+  Persona,
+} from '#gql';
 
-export const useAuth = {
+export const apiAuth = {
   /**
    * Efectua un pedido de conexion por token jwt
    * @returns { persona, entidad, permisos, cargos }
@@ -99,5 +105,17 @@ export const useAuth = {
     } catch (err) {
       throw formatApiError(err);
     }
+  },
+
+  /**
+   * Editar el perfil de un usuario
+   */
+  editarPerfil: async (id: string, datos: ModificarPersonaDto) => {
+    const persona = await api.modificarPersona(id, datos);
+    if (persona) {
+      // @ts-ignore
+      authStore.editarPerfil(datos as Persona);
+    }
+    return persona;
   },
 };

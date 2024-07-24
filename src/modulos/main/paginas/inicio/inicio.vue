@@ -52,21 +52,6 @@
         </div>
       </div>
     </Transition>
-
-    <!-- byebye -->
-    <Transition name="fade">
-      <div class="w-full" v-if="page === 'byebye'">
-        <div class="w-full text-center mt-2">
-          <q-avatar color="green" round>
-            <q-icon name="waving_hand" color="white" size="md" />
-          </q-avatar>
-          <div class="mt-2 mb-2">Hasta luego !</div>
-        </div>
-        <div class="w-full text-center">
-          <q-btn label="volver" @click="page = 'login'" dense flat no-caps />
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 
@@ -90,7 +75,7 @@ const authStore = useAuthStore();
 
 const page = ref('login');
 if (authStore.getRecienDesconectado()) {
-  page.value = 'byebye';
+  page.value = 'login'; // o 'byebye'
 }
 
 /**

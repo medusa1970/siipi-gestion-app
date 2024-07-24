@@ -14,9 +14,11 @@
             label="Buscar"
             @update="(v) => (estado.filtros.buscarFiltro = v)"
             porDefecto=""
+            filled
+            color="grey-5"
             noSlot
           />
-          <input-select2
+          <input-select
             label="Catalogo"
             :opciones="selectCatalogoFiltro"
             @update="(v) => (estado.filtros.catalogoSeleccionado = v)"

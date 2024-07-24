@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- Marca -->
-    <input-select2
+    <input-select
       label="Marca"
       :opciones="selectMarca"
       info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
@@ -13,7 +13,7 @@
       @crearObjeto="handleVariedadCreada"
     />
 
-    <input-select2
+    <input-select
       label="Empaques preseleccionados"
       info="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
       :opciones="selectTipoEmpaques"
@@ -24,7 +24,7 @@
       @crearObjeto="handleCrearTipoEmpaque"
     />
 
-    <input-text2
+    <input-text
       label="Empaque"
       @update="(v) => (estado.dataForm.nombre = v)"
       :porDefecto="estado.dataForm.nombre"
@@ -33,7 +33,7 @@
       :rules="[useRules.requerido()]"
     />
 
-    <input-text2
+    <input-text
       label="Abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :porDefecto="estado.dataForm.abreviacion"
@@ -42,7 +42,7 @@
       :rules="[useRules.requerido()]"
     />
 
-    <input-text2
+    <input-text
       label="Cantidad en unidades básicas"
       tipo="number"
       @update="(v) => (estado.dataForm.cantidad = v)"

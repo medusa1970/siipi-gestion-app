@@ -1,4 +1,4 @@
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 import type { ConexionResponse, Empleado, Entidad, Persona } from '#gql';
 import localforage from 'localforage';
 
@@ -87,10 +87,10 @@ export const useAuthStore = defineStore('auth', {
       let loginResponse: ConexionResponse;
 
       try {
-        loginResponse = await useAuth.login(usuario, contrasena);
-        entidades = await useAuth.buscarEntidadesDeUsuario(loginResponse.token);
-      } catch (e) {
-        throw e;
+        loginResponse = await apiAuth.login(usuario, contrasena);
+        entidades = await apiAuth.buscarEntidadesDeUsuario(loginResponse.token);
+      } catch (err) {
+        throw err;
       }
 
       // negocios del usuario filtrando los empleados de las entidad
@@ -148,15 +148,13 @@ export const useAuthStore = defineStore('auth', {
       }
       try {
         const negocio = this.usuario.negocios[index];
-
-        const { token } = await useAuth.cambiarEntidad(negocio._id, this.token);
-
+        const { token } = await apiAuth.cambiarEntidad(negocio._id, this.token);
         this.$patch({
           token,
           negocio,
         });
-      } catch (e) {
-        throw e;
+      } catch (err) {
+        throw err;
       }
     },
 

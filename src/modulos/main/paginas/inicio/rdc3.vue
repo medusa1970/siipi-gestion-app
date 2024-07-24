@@ -9,14 +9,14 @@
 
     <q-form @submit="submit">
       <input-text
-        type="password"
+        tipo="password"
         label="Contraseña"
         @update="(v) => (password.value = v)"
         :rules="[useRules.requerido(), useRules.password]"
         icono="key"
       />
       <input-text
-        type="password"
+        tipo="password"
         label="Repetir"
         @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
@@ -35,7 +35,7 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 
@@ -50,13 +50,13 @@ const password2Rule = (p) => {
  */
 const formSubmit = async (datos) => {
   try {
-    const res = await useAuth.actuarRDC(
+    const res = await apiAuth.actuarRDC(
       authStore.cookie.rdcToken,
       password.value,
     );
-  } catch (e) {
-    NotifyError(`Error no tratado: ${e}`);
-    return false;
+  } catch (err) {
+    errFallBack(err);
+    return;
   }
   emits('go', 'rdc4');
 };

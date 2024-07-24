@@ -1,0 +1,77 @@
+query buscarPersonas(
+  $busqueda: BuscarPersonaDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPersonaDto = {}
+) {
+  buscarPersonas(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation crearPersonas(
+  $datos: [CrearPersonaDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearPersonas(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation modificarPersonas(
+  $busqueda: BuscarPersonaDto!
+  $datos: ModificarPersonaDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarPersonas(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}
+
+mutation borrarPersonas(
+  $busqueda: BuscarPersonaDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarPersonas(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    nombre
+    apellido
+    correo
+    telefono
+    apellido
+    imagen {
+      cloudinaryUrl
+    }
+  }
+}

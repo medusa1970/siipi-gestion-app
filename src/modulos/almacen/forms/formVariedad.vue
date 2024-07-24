@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- Marca -->
-    <input-select2
+    <input-select
       label="Marca"
       :opciones="selectMarca"
       info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
@@ -16,7 +16,7 @@
     <!-- Stock minimo -->
     <p>Alerta de cantidad baja en el stock</p>
     <div class="flex">
-      <input-text2
+      <input-text
         style="width: 45%"
         tipo="number"
         label="Primer aviso"
@@ -24,7 +24,7 @@
         @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
         :rules="[useRules.requerido()]"
       />
-      <input-text2
+      <input-text
         style="width: 55%"
         tipo="number"
         label="Segundo aviso"
@@ -38,7 +38,7 @@
     <!-- Stock minimo -->
     <p>Alerta de que hay que inventariar</p>
     <div class="flex">
-      <input-text2
+      <input-text
         style="width: 45%"
         tipo="number"
         label="Primer aviso"
@@ -47,7 +47,7 @@
         :rules="[useRules.requerido()]"
       />
 
-      <input-text2
+      <input-text
         style="width: 55%"
         tipo="number"
         label="Segundo aviso"
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Cantidad max en un pedido -->
-    <input-text2
+    <input-text
       label="Cantidad maxima"
       tipo="number"
       :porDefecto="estado.dataForm.cantidadMaxPedido"

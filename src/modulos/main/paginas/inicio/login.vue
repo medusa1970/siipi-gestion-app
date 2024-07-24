@@ -62,15 +62,15 @@ const password = reactiveInput();
 const formSubmit = async (datos) => {
   try {
     await authStore.login(usuario.value, password.value);
-  } catch (e) {
-    if (e === 'B102') {
+  } catch (err) {
+    if (isApiNotFound(err, 'usuario')) {
       usuario.error = 'Usuario inexistente';
-    } else if (e === 'B104') {
+    } else if (isApiBadRequest(err, 'password')) {
       password.error = 'Contraseña incorrecta';
     } else {
-      NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
+      errFallBack(err);
+      return;
     }
-    return false;
   }
 };
 </script>

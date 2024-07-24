@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text2
+    <input-text
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -10,7 +10,7 @@
     />
 
     <!-- Categoria -->
-    <input-select2
+    <input-select
       label="Categoria pariente"
       :opciones="selectCategoriaNivel1"
       info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."

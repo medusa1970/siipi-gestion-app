@@ -16,7 +16,7 @@
   >
     <template #dropdown>
       <div class="w-full flex" style="align-items: center">
-        <input-text2
+        <input-text
           label="Buscar"
           @update="(v) => (estado.filtros.buscar = v as string)"
           porDefecto=""

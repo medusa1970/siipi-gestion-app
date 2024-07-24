@@ -63,8 +63,8 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { useAuth } from '~/modulos/main/API/useAuth';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -83,7 +83,7 @@ const password2Rule = (p) =>
  */
 const submit = async () => {
   try {
-    const persona = await useAuth.registrar({
+    const persona = await apiAuth.registrar({
       nombre: nombre.value,
       apellido: apellido.value,
       usuario: usuario.value,
@@ -92,22 +92,17 @@ const submit = async () => {
       contrasena: password.value,
     });
     authStore.cookie.registrado = persona;
-  } catch (e) {
-    if (e.substring(0, 4) === 'B204') {
-      const dupkeys = e.substring(5).split(',');
-      if (dupkeys.includes('correo')) {
-        correo.error = 'Este email ya está registrado';
-      }
-      if (dupkeys.includes('telefono')) {
-        telefono.error = 'Este telefono ya está registrado';
-      }
-      if (dupkeys.includes('usuario')) {
-        usuario.error = 'Este usuario ya está registrado';
-      }
+  } catch (err) {
+    if (isApiNotFound(err, 'correo')) {
+      correo.error = 'Este email ya está registrado';
+    } else if (isApiBadRequest(err, 'correo')) {
+      telefono.error = 'Este telefono ya está registrado';
+    } else if (isApiBadRequest(err, 'correo')) {
+      usuario.error = 'Este usuario ya está registrado';
     } else {
-      NotifyError(`Error no tratado: ${e}`);
+      errFallBack(err);
+      return;
     }
-    return false;
   }
 
   // cambiar a la seccion siguiente

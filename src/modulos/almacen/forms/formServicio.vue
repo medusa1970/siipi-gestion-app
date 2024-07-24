@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- Variedad -->
-    <input-select2
+    <input-select
       label="Marca"
       :opciones="selectMarca"
       info="SelecInfo."
@@ -14,7 +14,7 @@
     />
 
     <!-- Categoria -->
-    <input-select2
+    <input-select
       label="Proveedor"
       :opciones="selectProveedor"
       info="Info."
@@ -26,20 +26,20 @@
     />
 
     <!-- Identificativo -->
-    <input-text2
+    <input-text
       label="Identificativo"
       :porDefecto="estado.dataForm.identificativo"
       @update="(v) => (estado.dataForm.identificativo = v)"
     />
 
     <!-- Precios -->
-    <input-text2
+    <input-text
       label="Precio con factura"
       tipo="number"
       :porDefecto="estado.dataForm.precioConFactura"
       @update="(v) => (estado.dataForm.precioConFactura = v)"
     />
-    <input-text2
+    <input-text
       label="precio sin factura"
       tipo="number"
       :porDefecto="estado.dataForm.precioSinFactura"
@@ -103,20 +103,20 @@
   <Popup v-model="estado.showFormPorMayor" titulo="Agregar precio por mayor">
     <template #body>
       <q-form @submit="addPpmSubmit">
-        <input-text2
+        <input-text
           tipo="number"
           label="Cantidad min."
           :porDefecto="estado.dataFormPorMayor.cantidadMin"
           @update="(v) => (estado.dataFormPorMayor.cantidadMin = v)"
           :rules="[useRules.requerido()]"
         />
-        <input-text2
+        <input-text
           label="Precio con factura"
           tipo="number"
           :porDefecto="estado.dataFormPorMayor.precioConFactura"
           @update="(v) => (estado.dataFormPorMayor.precioConFactura = v)"
         />
-        <input-text2
+        <input-text
           label="precio sin factura"
           tipo="number"
           :porDefecto="estado.dataFormPorMayor.precioSinFactura"

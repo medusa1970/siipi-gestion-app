@@ -18,7 +18,7 @@
           width: 100%;
         "
       >
-        <input-text2
+        <input-text
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           porDefecto=""
@@ -26,7 +26,7 @@
           filled
         />
 
-        <input-select2
+        <input-select
           label="Categoria"
           :opciones="selectCategoriaFiltro"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
@@ -35,7 +35,7 @@
           color="grey-5"
         />
 
-        <input-select2
+        <input-select
           label="Marca"
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.filtros.marcaOpciones"
@@ -44,7 +44,7 @@
           color="grey-5"
         />
 
-        <input-select2
+        <input-select
           label="Estado"
           @update="(v) => (estado.filtros.completud = v)"
           :opciones="[

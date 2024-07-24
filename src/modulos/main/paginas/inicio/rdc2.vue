@@ -28,7 +28,7 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { useAuth } from '~/modulos/main/API/useAuth';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
@@ -41,11 +41,12 @@ const codigo = reactiveInput();
 const formSubmit = async (datos) => {
   let codigoOk = null;
   try {
-    codigoOk = await useAuth.actuarRDC(codigo.value);
-  } catch (e) {
-    NotifyError(`Error no tratado: ${e}`);
-    return false;
+    codigoOk = await apiAuth.actuarRDC(codigo.value);
+  } catch (err) {
+    errFallBack(err);
+    return;
   }
+
   if (codigoOk) {
     authStore.cookie.rdcToken = codigo.value;
     emits('go', 'rdc3');

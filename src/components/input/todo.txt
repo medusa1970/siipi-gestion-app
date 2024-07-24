@@ -3,3 +3,4 @@ v-if configurable
 generaliser emit error
 tester pasar ref como model
 unicidad model si hay 2 errores: se porta raro
+2 errores consecutivos : el mensaje de error no reaparece (lo mismo que arriba ?)

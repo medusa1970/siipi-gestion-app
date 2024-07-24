@@ -12,7 +12,7 @@
     </div>
 
     <!-- nombre -->
-    <input-text2
+    <input-text
       label="Nombre"
       info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
       :porDefecto="estado.dataForm.nombre"
@@ -22,7 +22,7 @@
     />
 
     <!-- Categoria -->
-    <input-select2
+    <input-select
       label="Categoria"
       :opciones="selectCategoria"
       info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
@@ -33,7 +33,7 @@
     />
 
     <!-- Imagen -->
-    <input-image2
+    <input-image
       label="Imagen"
       info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
       :dataPreview="estado.imagenPreview"
@@ -53,7 +53,7 @@
     </div>
 
     <div v-if="estado.dataForm.puedeVencer" class="flex">
-      <input-text2
+      <input-text
         style="width: 50%"
         label="Primer aviso"
         tipo="number"
@@ -62,7 +62,7 @@
         :rules="[useRules.requerido()]"
       />
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
-      <input-text2
+      <input-text
         style="width: 50%"
         label="Segundo aviso"
         tipo="number"
@@ -73,7 +73,7 @@
       />
     </div>
 
-    <input-text2
+    <input-text
       tipo="textarea"
       label="comentario"
       info="Agregue cualquier información adicional que sea útil registrar junto con el producto."

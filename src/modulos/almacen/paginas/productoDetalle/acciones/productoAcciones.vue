@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>Indica el motivo por cual desea borrar este producto:</p>
-    <input-text2
+    <input-text
       tipo="textarea"
       label="Motivo"
       @update="(v) => (estado.motivoEliminacion = v as string)"

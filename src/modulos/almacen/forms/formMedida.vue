@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="formSubmit">
     <!-- nombre -->
-    <input-text2
+    <input-text
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
@@ -9,7 +9,7 @@
       :error="estado.errorNombre"
     />
     <!-- abreviacion -->
-    <input-text2
+    <input-text
       label="Abreviacion"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
@@ -17,7 +17,7 @@
       :error="estado.errorAbreviacion"
     />
     <!-- Imagen -->
-    <input-image2
+    <input-image
       label="Imagen"
       info="Logo de la marca."
       :dataPreview="estado.imagenPreview"

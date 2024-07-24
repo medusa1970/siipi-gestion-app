@@ -3,7 +3,7 @@
     <p>Entre los datos del producto en la oferta:</p>
 
     <!-- Producto -->
-    <input-select2
+    <input-select
       label="Producto"
       @update="(v) => (estado.datos_productoDeOferta.producto = v)"
       :porDefecto="estado.datos_productoDeOferta.producto?.nombre"
@@ -13,7 +13,7 @@
     />
 
     <!-- Producto marca -->
-    <input-select2
+    <input-select
       label="Marca"
       @update="(v) => (estado.datos_productoDeOferta.marca = v)"
       :porDefecto="estado.datos_productoDeOferta.marca?.nombre"
@@ -29,7 +29,7 @@
     />
 
     <!-- cantidad -->
-    <input-text2
+    <input-text
       label="Cantidad"
       tipo="number"
       @update="(v) => (estado.datos_productoDeOferta.cantidad = v as number)"

@@ -30,7 +30,7 @@
   >
     <template #dropdown>
       <div class="flex">
-        <input-text2
+        <input-text
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           class="col-span-1"
           label="Buscar"

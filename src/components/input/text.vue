@@ -17,8 +17,7 @@
     :class="clase"
     :bottom-slots="!noSlot"
     :error="noSlot ? undefined : errorFlag"
-    :errorMessage="errorMensaje"
-  >
+    :errorMessage="errorMensaje">
     <q-tooltip
       v-model="tooltip"
       class="no-pointer-events text-white text-sm bg-blue-9"
@@ -27,8 +26,7 @@
       :offset="[0, 5]"
       max-width="300px"
       no-parent-event
-      @show="hideTooltip()"
-    >
+      @show="hideTooltip()">
       {{ info }}
     </q-tooltip>
 
@@ -42,8 +40,7 @@
       <q-icon
         :name="isPwd ? 'visibility_off' : 'visibility'"
         class="cursor-pointer"
-        @click="isPwd = !isPwd"
-      ></q-icon>
+        @click="isPwd = !isPwd"></q-icon>
     </template>
   </q-input>
 </template>
@@ -66,17 +63,17 @@ const emits = defineEmits<{
   (
     // cambió el valor del input
     event: 'update',
-    valor: string | number | null,
+    valor: string | number | null
   ): void;
   (
     // el input está en estado de error de validación
     event: 'error',
     errorFlag: boolean,
-    errorMessage: string | null,
+    errorMessage: string | null
   ): void;
   (
     // cleared
-    event: 'clear',
+    event: 'clear'
   ): void;
 }>();
 
@@ -87,7 +84,7 @@ const props = withDefaults(
   defineProps<{
     onUpdate: Function; // para que el @update sea obligatorio
     label: string; // label adentro del input
-    tipo?: 'text' | 'textarea' | 'password' | 'number';
+    tipo?: 'text' | 'textarea' | 'password' | 'number' | 'decimal';
     hint?: string; // texto de ayuda debajo del input
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string | number; // valor seleccionado al iniciar
@@ -113,8 +110,8 @@ const props = withDefaults(
     noSlot: false,
     clearable: true,
     clase: '',
-    rules: [] as Function[],
-  },
+    rules: [] as Function[]
+  }
 );
 
 /**
@@ -126,9 +123,11 @@ const localModel = ref<string>(valorInicial);
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+const requerido = props.rules.map(rule => rule.name).includes('requerido');
 const reglas = ref(
-  props.tipo === 'number' ? [...props.rules, useRules.numero()] : props.rules,
+  props.tipo === 'number' || props.tipo === 'decimal'
+    ? [...props.rules, useRules.numero()]
+    : props.rules
 );
 
 const typet = computed(() =>
@@ -138,7 +137,7 @@ const typet = computed(() =>
       : 'text'
     : props.tipo === 'textarea'
     ? 'textarea'
-    : 'text',
+    : 'text'
 );
 
 /**
@@ -150,8 +149,23 @@ const handleChange = (valor: string | null) => {
   activarValidacion();
   emits(
     'update',
-    props.tipo === 'number' && valor != null ? Number(valor) : valor,
+    props.tipo === 'number' && valor != null ? Number(valor) : valor
   );
+  let processedValue: string | number | null = valor;
+
+  if (valor !== null && props.tipo === 'number') {
+    processedValue = Number(valor);
+  } else if (props.tipo === 'decimal') {
+    processedValue =
+      isNaN(parseFloat(valor)) || valor.includes('.') || valor.includes(',')
+        ? valor
+        : parseFloat(valor).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+  }
+
+  emits('update', processedValue);
 };
 
 // Se ha creado una nueva opcion via el boton [+]
@@ -189,14 +203,14 @@ function activarValidacion() {
 // activar el error si llega un mensaje de error desde el componiente padre
 watch(
   () => props.error,
-  () => setError(props.error),
+  () => setError(props.error)
 );
 
 // activar la validacion desde el componiente padre
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false },
+  { immediate: false }
 );
 
 // modificar el valor desde el componiente padre
@@ -206,6 +220,6 @@ watch(
     localModel.value = props.watch;
     activarValidacion();
   },
-  { immediate: false },
+  { immediate: false }
 );
 </script>

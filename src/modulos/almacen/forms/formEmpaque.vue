@@ -43,7 +43,6 @@
     <input-text
       label="Cantidad en unidades básicas"
       tipo="decimal"
-      @focus="isEditing = true"
       @update="v => (estado.dataForm.cantidad = v)"
       :porDefecto="estado.dataForm.cantidad"
       :watch="estado.dataForm.cantidad"
@@ -60,10 +59,9 @@
 <script setup lang="ts">
 import type { Empaque } from '#gql';
 import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
-import type { SelectOpcion } from '~/components/input/select.interface';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import formTipoEmpaque from '@/modulos/almacen/forms/formTipoEmpaque.vue';
-import { is } from 'quasar';
+
 const { store } = useAlmacen();
 
 // definicion de los emits
@@ -110,19 +108,6 @@ const selectMarca = computed(() => {
     label: variedad.marca.nombre
   }));
 });
-
-const isEditing = ref(false);
-// const formatNumero = value => {
-//   console.log(JSON.stringify(estado.dataForm.cantidad));
-//   if (isNaN(value)) {
-//     return value;
-//   }
-
-//   return parseFloat(value).toLocaleString('en-US', {
-//     minimumFractionDigits: 0,
-//     maximumFractionDigits: 2
-//   });
-// };
 
 // Inicializaciones
 onMounted(async () => {});

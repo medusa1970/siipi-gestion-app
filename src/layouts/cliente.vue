@@ -1,5 +1,4 @@
 <template>
-  <DeployStatus />
   <layout-common
     :menuList="menuListCathering"
     :portada-img="PortadaCathering"

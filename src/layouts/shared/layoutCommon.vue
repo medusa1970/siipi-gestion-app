@@ -10,6 +10,7 @@
       ]"
       style=""
     >
+      <DeployStatus />
       <q-toolbar class="h-[6vh]">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
         <q-toolbar-title class="navBar">

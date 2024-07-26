@@ -47,6 +47,15 @@
       icono="photo_camera"
     />
 
+    <!-- Tiempo de vida -->
+    <input-text
+      label="Tiempo de vida"
+      tipo="number"
+      info="Info."
+      :porDefecto="estado.dataForm.tiempoVida ?? 0"
+      @update="(v) => (estado.dataForm.tiempoVida = v)"
+    />
+
     <div class="">
       <q-checkbox v-model="estado.dataForm.puedeVencer" />
       Este producto tiene fecha de vencimiento
@@ -115,6 +124,7 @@ const initForm = {
   comentario: props.edicion?.comentario,
   puedeVencer: props.edicion?.puedeVencer ?? false,
   vencimientoLimite: props.edicion?.vencimientoLimite ?? [0, 0],
+  tiempoVida: props.edicion?.tiempoVida ?? null,
   imagen: null,
 };
 
@@ -166,6 +176,7 @@ const formSubmit = async () => {
   if (!estado.dataForm.imagen) {
     delete estado.dataForm.imagen;
   }
+  console.log(estado.dataForm);
   try {
     if (props.edicion) {
       estado.dataForm.vencimientoLimite = {

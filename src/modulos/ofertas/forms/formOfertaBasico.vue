@@ -66,11 +66,6 @@
       <q-btn label="Guardar" color="green" type="submit" />
     </div>
   </q-form>
-  <pre>
-    [{{ store.catalogoArbol }}]
-    [{{ estado.catalogoAncestro }}]
-
-  </pre>
 </template>
 
 <script setup lang="ts">
@@ -95,10 +90,10 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  nombre: props.edicion?.nombre,
-  catalogo: props.edicion?.catalogo?._id,
-  abreviacion: props.edicion?.abreviacion,
-  descripcion: props.edicion?.descripcion,
+  nombre: props.edicion?.nombre ?? null,
+  catalogo: props.edicion?.catalogo?._id ?? null,
+  abreviacion: props.edicion?.abreviacion ?? null,
+  descripcion: props.edicion?.descripcion ?? null,
   imagen: null,
 };
 

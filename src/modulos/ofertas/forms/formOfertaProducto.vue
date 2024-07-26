@@ -91,11 +91,19 @@
       label="Catalogo"
       info="Info."
       :opciones="selectCatalogo"
+      :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
+      :watch="estado.catalogoAncestro"
+      @update="(v) => (estado.catalogoAncestro = v)"
+      :rules="[useRules.requerido()]"
+    />
+    <input-select
+      label="Sub catalogo"
+      info="Info."
+      :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
+      :watch="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
-      :color="estado.dataForm.catalogo && 'orange-2'"
-      filled
     />
 
     <!-- Imagen -->
@@ -153,6 +161,36 @@ const props = withDefaults(
   {},
 );
 
+// datos por defecto del formulario
+const initForm = {
+  producto: props.config?.productoId,
+  marca: null,
+  cantidad: null,
+  nombre: null,
+  abreviacion: null,
+  descripcion: null,
+  catalogo: null,
+  precioConFactura: null,
+  precioSinFactura: null,
+  imagen: null,
+};
+
+// definicion del estado
+const estado = reactive({
+  // valor de los inputs
+  dataForm: clone(initForm),
+  catalogoAncestro: null as string, // catalogo seleccionado (solo el subcat va en el form)
+  //mensajes de error del formulario
+  errorNombre: '',
+  errorAbreviacion: '',
+  // producto seleccionado
+  oferta: null,
+
+  // para el empaque
+  resetEmpaque: null,
+  nombreEmpaque: null,
+});
+
 // producto seleccionado
 const producto = computed(() => {
   if (!storeAlmacen.productos) return null;
@@ -173,10 +211,27 @@ const selectProducto = computed(() => {
     });
 });
 
+// opciones
 const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
   let options = [];
   for (const cat of store.catalogoArbol.hijas) {
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+      options.push({
+        label: cat.nombre,
+        value: cat._id,
+      });
+    options = [...options];
+  }
+  return options;
+});
+
+// opciones
+const selectSubCatalogo = computed(() => {
+  const catalogo = store.getCatalogo(estado.catalogoAncestro);
+  if (!catalogo) return [];
+  let options = [];
+  for (const cat of catalogo.hijas) {
     const idsHijas = [];
     const hijas = [];
     for (const subcat of cat.hijas) {
@@ -199,6 +254,13 @@ const selectCatalogo = computed(() => {
   return options;
 });
 
+watch(
+  () => estado.catalogoAncestro,
+  () => {
+    estado.dataForm.catalogo = null;
+  },
+);
+
 const selectVariedad = computed(() => {
   if (!producto.value) return [];
   return producto.value.variedades.map((variedad) => ({
@@ -215,35 +277,6 @@ const selectEmpaque = computed(() => {
       value: empaque._id,
       label: empaque.nombre,
     }));
-});
-
-// datos por defecto del formulario
-const initForm = {
-  producto: props.config?.productoId,
-  marca: null,
-  cantidad: null,
-  nombre: null,
-  abreviacion: null,
-  descripcion: null,
-  catalogo: null,
-  precioConFactura: null,
-  precioSinFactura: null,
-  imagen: null,
-};
-
-// definicion del estado
-const estado = reactive({
-  // valor de los inputs
-  dataForm: clone(initForm),
-  //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
-  // producto seleccionado
-  oferta: null,
-
-  // para el empaque
-  resetEmpaque: null,
-  nombreEmpaque: null,
 });
 
 // Inicializaciones

@@ -1,5 +1,9 @@
 <template>
-  <div class="deploy" :id="$config.public.DeployStatus">
+  <div
+    class="deploy"
+    v-if="$config.public.DeployStatus !== 'MAIN'"
+    :id="$config.public.DeployStatus"
+  >
     {{ $config.public.DeployStatus }}, API = {{ $config.public.GQL_HOST }}
   </div>
 </template>

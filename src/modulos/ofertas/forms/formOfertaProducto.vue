@@ -15,9 +15,10 @@
       info="Info."
       :opciones="selectProducto"
       :porDefecto="estado.dataForm.producto"
-      @update="(v) => (estado.dataForm.producto = v)"
+      @update="v => (estado.dataForm.producto = v)"
       :rules="[useRules.requerido()]"
-    />
+      :color="estado.dataForm.producto && 'orange-2'"
+      filled />
 
     <!-- Marca -->
     <input-select
@@ -25,10 +26,9 @@
       info="Info."
       :opciones="selectVariedad"
       :porDefecto="estado.dataForm.marca"
-      @update="(v) => (estado.dataForm.marca = v)"
+      @update="v => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
-      :watch="estado.dataForm.marca"
-    />
+      :watch="estado.dataForm.marca" />
 
     <p></p>
     <div class="flex">
@@ -37,42 +37,54 @@
         label="Empaque preseleccionado"
         info="Info."
         :opciones="selectEmpaque"
-        @update="(v) => prellenarEmpaque(v)"
+        @update="v => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
-      />
+        color="grey-5"
+        filled />
       <input-text
         style="width: 40%"
         tipo="number"
         label="Cantidad"
         info="Si desea elija un empaque, o sino entre directamente la cantidad."
         :porDefecto="estado.dataForm.cantidad"
-        @update="(v) => (estado.dataForm.cantidad = v)"
+        @update="v => (estado.dataForm.cantidad = v)"
         :rules="[useRules.requerido()]"
-        :watch="estado.dataForm.cantidad"
-      />
+        :watch="estado.dataForm.cantidad" />
     </div>
 
     <!-- nombre -->
     <input-text
       label="Nombre"
       info="Info."
+<<<<<<< HEAD
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
       :error="estado.errorNombre"
     />
+=======
+      :porDefecto="estado.dataForm.nombre"
+      @update="v => (estado.dataForm.nombre = v)"
+      :rules="[useRules.requerido()]"
+      :error="estado.errorNombre"
+      :watch="estado.dataForm.nombre" />
+>>>>>>> dev-will
 
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
       info="Info."
+<<<<<<< HEAD
       @update="(v) => (estado.dataForm.abreviacion = v)"
+=======
+      :porDefecto="estado.dataForm.abreviacion"
+      @update="v => (estado.dataForm.abreviacion = v)"
+>>>>>>> dev-will
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
-      :error="estado.errorAbreviacion"
-    />
+      :error="estado.errorAbreviacion" />
 
     <!-- descripcion -->
     <input-text
@@ -80,17 +92,17 @@
       info="Info."
       autogrow
       :porDefecto="estado.dataForm.descripcion"
-      @update="(v) => (estado.dataForm.descripcion = v)"
-    />
+      @update="v => (estado.dataForm.descripcion = v)" />
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
       info="Info."
       :opciones="selectCatalogo"
       :porDefecto="estado.dataForm.catalogo ?? '75a4475e446a5885b05739c4'"
-      @update="(v) => (estado.dataForm.catalogo = v)"
+      @update="v => (estado.dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
-    />
+      :color="estado.dataForm.catalogo && 'orange-2'"
+      filled />
 
     <!-- Imagen -->
     <input-image
@@ -102,8 +114,7 @@
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
-      icono="photo_camera"
-    />
+      icono="photo_camera" />
 
     <!-- Precios -->
     <input-text
@@ -111,17 +122,15 @@
       tipo="number"
       info="Info."
       :porDefecto="estado.dataForm.precioConFactura"
-      @update="(v) => (estado.dataForm.precioConFactura = v)"
-      :rules="[useRules.requerido()]"
-    />
+      @update="v => (estado.dataForm.precioConFactura = v)"
+      :rules="[useRules.requerido()]" />
     <input-text
       label="Precio sin factura"
       tipo="number"
       info="Info."
       :porDefecto="estado.dataForm.precioSinFactura"
-      @update="(v) => (estado.dataForm.precioSinFactura = v)"
-      :rules="[useRules.requerido()]"
-    />
+      @update="v => (estado.dataForm.precioSinFactura = v)"
+      :rules="[useRules.requerido()]" />
 
     <!-- Submit -->
     <div class="text-center">
@@ -144,7 +153,7 @@ const props = withDefaults(
   defineProps<{
     config?: { productoId?: string };
   }>(),
-  {},
+  {}
 );
 
 // producto seleccionado
@@ -222,7 +231,7 @@ const initForm = {
   catalogo: null,
   precioConFactura: null,
   precioSinFactura: null,
-  imagen: null,
+  imagen: null
 };
 
 // definicion del estado
@@ -237,19 +246,95 @@ const estado = reactive({
 
   // para el empaque
   resetEmpaque: null,
-  nombreEmpaque: null,
+  nombreEmpaque: null
 });
 
 // opciones
 
+<<<<<<< HEAD
+=======
+const selectProducto = computed(() => {
+  if (!storeAlmacen.productos) return [];
+  return (
+    storeAlmacen.productos
+      // .filter((p) => !productoIncompleto(p))
+      .map(p => {
+        return {
+          value: p._id,
+          label: p.nombre
+        };
+      })
+  );
+});
+
+const selectCatalogo = computed(() => {
+  if (!store.catalogoArbol) return [];
+  return store.catalogoArbol.hijas
+    .filter(catalogo => catalogo.nombre !== 'CATALOGO PROVEEDORES')
+    .map(c => {
+      return {
+        value: c._id,
+        label: c.nombre
+      };
+    });
+});
+
+const producto = computed(() => {
+  if (!storeAlmacen.productos) return null;
+  return storeAlmacen.productos.find(p => {
+    return p._id === estado.dataForm.producto;
+  });
+});
+
+const selectVariedad = computed(() => {
+  if (!producto.value) return [];
+  return producto.value.variedades.map(variedad => ({
+    value: variedad.marca._id,
+    label: variedad.marca.nombre
+  }));
+});
+
+const selectEmpaque = computed(() => {
+  if (!estado.dataForm.marca || !producto.value?.empaques) return [];
+  return producto.value.empaques
+    .filter(empaque => empaque.marca._id === estado.dataForm.marca)
+    .map(empaque => ({
+      value: empaque._id,
+      label: empaque.nombre
+    }));
+});
+
+>>>>>>> dev-will
 // Inicializaciones
 onMounted(async () => {
   await storeAlmacen.getProductos();
   await store.getCatalogos();
 });
 
+<<<<<<< HEAD
 watch(producto, (v) => {
   estado.dataForm.marca = null;
+=======
+const nombreOferta = computed(() => {
+  let nombre = producto.value?.nombre ?? '';
+  const marca = selectVariedad.value?.find(
+    opcion => opcion.value === estado.dataForm.marca
+  )?.label;
+  if (marca) nombre += ' ' + marca;
+  if (estado.nombreEmpaque) nombre += ' ' + estado.nombreEmpaque;
+  if (estado.dataForm.cantidad && producto.value) {
+    nombre +=
+      ' ' + estado.dataForm.cantidad + ' ' + producto.value.medida.abreviacion;
+  }
+  estado.dataForm.nombre = nombre;
+  estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
+});
+
+watch(producto, v => {
+  if (!v) {
+    estado.dataForm.marca = null;
+  }
+>>>>>>> dev-will
 });
 watch(
   [producto, () => estado.dataForm.marca, () => estado.dataForm.cantidad],
@@ -274,16 +359,16 @@ watch(
 );
 watch(
   () => estado.dataForm.marca,
-  (v) => {
+  v => {
     if (!v) {
       estado.nombreEmpaque = '';
     }
-  },
+  }
 );
 
 // Prellenar el empaque con seleccionar un tipo de empaque
-const prellenarEmpaque = async (empaque) => {
-  const emp = producto.value?.empaques.find((e) => e._id === empaque);
+const prellenarEmpaque = async empaque => {
+  const emp = producto.value?.empaques.find(e => e._id === empaque);
   if (!emp) return;
   estado.dataForm.cantidad = emp.cantidad;
   estado.resetEmpaque = empaque;
@@ -310,11 +395,11 @@ const formSubmit = async () => {
           tipo: 'SIMPLE',
           producto: estado.dataForm.producto,
           marca: estado.dataForm.marca,
-          cantidad: estado.dataForm.cantidad,
-        },
+          cantidad: estado.dataForm.cantidad
+        }
       ],
       precioConFactura: estado.dataForm.precioConFactura,
-      precioSinFactura: estado.dataForm.precioSinFactura,
+      precioSinFactura: estado.dataForm.precioSinFactura
       // preciosPorMayor: estado.dataForm.preciosPorMayor,
     };
 

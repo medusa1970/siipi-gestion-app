@@ -4,12 +4,13 @@
     v-show="store.oferta"
     :edicion="store.oferta"
     :key="store.oferta"
-    @modificarObjeto="handleOfertaModificada"
+    @modificarObjeto="composable.handleOfertaModificada"
   />
 </template>
 
 <script setup>
 import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import { useDatosBasicosTab } from './datosBasicosTab.composable';
-const { store, handleOfertaModificada } = useDatosBasicosTab();
+const composable = useDatosBasicosTab();
+const { store } = composable;
 </script>

@@ -128,17 +128,6 @@ const {
   handleServicioModificado,
 } = useProductoServicios();
 
-//inicializaciones
-onMounted(async () => {
-  estado.servicios = await getServiciosProducto();
-  $socket.on('cambiosProductos', async (data: any) => {
-    await store.refreshProductos();
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
-});
-
 /**
  * Rows para la tabla
  */

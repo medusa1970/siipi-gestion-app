@@ -63,7 +63,6 @@ export const apiOfertas = {
 
       // en caso de que no se borró nada
       if (!oferta) {
-        console.log('no se elimino el oferta', ofertaID);
         return null;
       }
       // creamos la accion

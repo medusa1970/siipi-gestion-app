@@ -45,6 +45,7 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
+      this.productos = (await localforage.getItem('productos')) as Producto[];
       if (!this.productos || actualizarDB) {
         try {
           this.productos = await api.buscarProductos_basico(
@@ -60,14 +61,10 @@ export const storeAlmacen = defineStore('almacen', {
           return;
         }
       }
-      if (!this.productos) {
-        this.productos = (await localforage.getItem('productos')) as Producto[];
-      }
       return this.productos;
     },
     async refreshProductos() {
-      this.productos = null;
-      this.getProductos();
+      this.getProductos(true);
     },
 
     /**
@@ -116,7 +113,6 @@ export const storeAlmacen = defineStore('almacen', {
           return;
         }
       }
-      console.log(this.marcas);
       return this.marcas;
     },
     refreshMarcas(): void {

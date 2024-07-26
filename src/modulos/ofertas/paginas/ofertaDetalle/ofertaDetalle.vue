@@ -69,6 +69,7 @@ import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/Accion
 const { params } = useRoute();
 const router = useRouter();
 const { estado, store } = useOfertaDetalle();
+
 // layout
 definePageMeta({
   layout: 'cathering',

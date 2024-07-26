@@ -183,13 +183,6 @@ onMounted(async () => {
     value: medida._id,
     label: `${medida.nombre} (${medida.abreviacion})`,
   }));
-
-  $socket.on('cambiosProductos', async (data: any) => {
-    await store.refreshProductos();
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
 });
 
 const changeMedida = (v) => {

@@ -167,7 +167,6 @@ const formSubmit = async () => {
     delete estado.dataForm.imagen;
   }
   try {
-    // Modo edicion
     if (props.edicion) {
       estado.dataForm.vencimientoLimite = {
         reemplazar: estado.dataForm.vencimientoLimite,

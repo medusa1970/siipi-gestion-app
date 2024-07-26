@@ -126,7 +126,6 @@ const menuListPunto = [
 ];
 
 const realizarPedido = async () => {
-  console.log('first');
   const items = pedidoStore.listaPedido.map((p) => ({
     ofertaId: p.id,
     cantidad: parseInt(p.cantidad),

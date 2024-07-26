@@ -132,16 +132,6 @@ const modalEditarMarca = (row: any) => {
   // console.log('ESTADO' + JSON.stringify(estado.variedad));
   estado.modal.formVariedadModificar = true;
 };
-
-//inicializaciones
-onMounted(async () => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    await store.refreshProductos();
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
-});
 </script>
 
 <style lang="scss" scoped></style>

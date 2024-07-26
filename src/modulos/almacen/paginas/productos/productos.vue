@@ -333,7 +333,6 @@ import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 import type { CategoriaSelectOpcion } from '../../almacen.interface';
 const c = ref(null);
 const router = useRouter();
-const { $socket } = useNuxtApp();
 const {
   estado,
   store,
@@ -380,6 +379,7 @@ onMounted(async () => {
 });
 
 // sockets
+const { $socket } = useNuxtApp();
 onBeforeMount(() => {
   $socket.on('cambiosProductos', async (data: any) => {
     console.log('socket productos triggered');
@@ -390,7 +390,7 @@ onBeforeMount(() => {
   });
 });
 onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
+  // $socket.off('cambiosProductos');
   $socket.off('cambiosOfertas');
 });
 

@@ -170,7 +170,6 @@ function setError(mensaje: string | null) {
 
 // activar la validacíon del valor actual del input
 function activarValidacion() {
-  console.log('ok');
   for (const regla of reglas.value as Function[]) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {

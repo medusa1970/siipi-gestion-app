@@ -33,6 +33,7 @@ export const storeOferta = defineStore('ofertas', {
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB = false): Promise<Oferta[]> {
+      this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
       if (!this.ofertas || actualizarDB) {
         try {
           this.ofertas = await api.buscarOfertas(
@@ -48,14 +49,10 @@ export const storeOferta = defineStore('ofertas', {
           return;
         }
       }
-      if (!this.ofertas) {
-        this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
-      }
       return this.ofertas;
     },
     async refreshOfertas() {
-      this.ofertas = null;
-      this.getOfertas();
+      this.getOfertas(true);
     },
 
     /**
@@ -71,7 +68,7 @@ export const storeOferta = defineStore('ofertas', {
           return null;
         }
       }
-      // para recuperar la catalogo especifica
+      // para recuperar el catalogo especifica
       const f = (catalogo) => {
         if (catalogo._id === id) {
           return catalogo;

@@ -24,8 +24,8 @@ export const useProductoAcciones = () => {
       // borramos el producto
       try {
         await api.borrarProducto_basico(store.producto._id);
+        store.refreshProductos();
       } catch (err) {
-        console.log('BORRAR');
         errFallBack(err);
         return;
       }
@@ -45,7 +45,6 @@ export const useProductoAcciones = () => {
           useGqlToken(authStore.token),
         );
       } catch (err) {
-        console.log('CREAR');
         errFallBack(err);
         return;
       }
@@ -60,17 +59,6 @@ export const useProductoAcciones = () => {
       goTo(router, 'productos');
     });
   };
-
-  const { $socket } = useNuxtApp();
-  onMounted(() => {
-    $socket.on('cambiosProductos', async (data: any) => {
-      router.push('/cathering/productos');
-      await store.refreshProductos();
-    });
-  });
-  onBeforeUnmount(() => {
-    $socket.off('cambiosProductos');
-  });
 
   return {
     store,

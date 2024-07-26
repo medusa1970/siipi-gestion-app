@@ -228,6 +228,8 @@ watch(
   () => {
     listaOpciones.value = props.opciones;
     opcionesSrc.value = props.opciones;
+    localModel.value = null;
+    handleClear();
   },
   { immediate: true },
 );

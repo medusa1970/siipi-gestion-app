@@ -30,8 +30,8 @@
     <input-select
       label="Catalogo"
       info="Info."
-      :opciones="estado.catalogoOpciones"
-      :porDefecto="estado.dataForm.catalogo ?? '75a4475e446a5885b05739c4'"
+      :opciones="selectCatalogo"
+      :porDefecto="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
     />
@@ -94,17 +94,35 @@ const estado = reactive({
   imagenPreview: null,
 });
 
+// opciones
+const selectCatalogo = computed(() => {
+  if (!store.catalogoArbol) return [];
+  let options = [];
+  for (const cat of store.catalogoArbol.hijas) {
+    const idsHijas = [];
+    const hijas = [];
+    for (const subcat of cat.hijas) {
+      hijas.push({
+        label: subcat.nombre,
+        value: subcat._id,
+        class: 'option',
+      });
+      idsHijas.push(subcat._id);
+    }
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+      options.push({
+        label: cat.nombre,
+        value: cat._id,
+        disable: true,
+        class: 'title',
+      });
+    options = [...options, ...hijas];
+  }
+  return options;
+});
+
 // Inicializaciones
 onMounted(async () => {
-  const categoriaArbol = await apiOfertas.buscarArbolCatalogosRaiz();
-  estado.catalogoOpciones = categoriaArbol.hijas
-    .filter((catalogo) => catalogo.nombre !== 'CATALOGO PROVEEDORES')
-    .map((c) => {
-      return {
-        value: c._id,
-        label: c.nombre,
-      };
-    });
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
     await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
@@ -121,12 +139,23 @@ const formSubmit = async () => {
     delete estado.dataForm.imagen;
   }
   try {
-    const oferta = await api.crearOferta(estado.dataForm, { loading: true });
-    estado.dataForm = clone(initForm);
-    emits('crearObjeto', oferta);
+    // Modo edicion
+    if (props.edicion) {
+      const oferta = await api.modificarOferta(
+        props.edicion._id,
+        estado.dataForm,
+        { loading: true },
+      );
+      emits('modificarObjeto', oferta);
+    } else {
+      const oferta = await api.crearOferta(estado.dataForm, { loading: true });
+      emits('crearObjeto', oferta);
+    }
   } catch (err) {
     errFallBack(err);
     return;
   }
+  estado.dataForm = clone(initForm);
+  store.refreshOfertas();
 };
 </script>

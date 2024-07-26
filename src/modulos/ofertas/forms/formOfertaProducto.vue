@@ -180,28 +180,40 @@ const estado = reactive({
 
 const selectProducto = computed(() => {
   if (!storeAlmacen.productos) return [];
-  return (
-    storeAlmacen.productos
-      // .filter((p) => !productoIncompleto(p))
-      .map((p) => {
-        return {
-          value: p._id,
-          label: p.nombre,
-        };
-      })
-  );
+  return storeAlmacen.productos
+    .filter((p) => !productoIncompleto(p))
+    .map((p) => {
+      return {
+        value: p._id,
+        label: p.nombre,
+      };
+    });
 });
 
 const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
-  return store.catalogoArbol.hijas
-    .filter((catalogo) => catalogo.nombre !== 'CATALOGO PROVEEDORES')
-    .map((c) => {
-      return {
-        value: c._id,
-        label: c.nombre,
-      };
-    });
+  let options = [];
+  for (const cat of store.catalogoArbol.hijas) {
+    const idsHijas = [];
+    const hijas = [];
+    for (const subcat of cat.hijas) {
+      hijas.push({
+        label: subcat.nombre,
+        value: [subcat._id],
+        class: 'option',
+      });
+      idsHijas.push(subcat._id);
+    }
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+      options.push({
+        label: cat.nombre,
+        value: [...idsHijas, cat._id],
+        disable: true,
+        class: 'title',
+      });
+    options = [...options, ...hijas];
+  }
+  return options;
 });
 
 const producto = computed(() => {

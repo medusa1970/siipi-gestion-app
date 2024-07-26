@@ -199,8 +199,6 @@ const editarPerfilSubmit = async () => {
 
 const password = ref('');
 const elegirNegocio = (index: number, nombre: string) => {
-  console.log(index, nombre);
-  // playSound();
   $q.dialog({
     title: `<strong>Entrar a ${nombre}</strong>`,
     message: '¿Está seguro de cambiar de negocio?',

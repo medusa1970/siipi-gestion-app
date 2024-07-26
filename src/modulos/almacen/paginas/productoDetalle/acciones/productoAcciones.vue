@@ -26,16 +26,6 @@ const { $socket } = useNuxtApp();
 const { estado, authStore, store, borrarProducto } = useProductoAcciones();
 const router = useRouter();
 
-//inicializaciones
-onMounted(async () => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    await store.refreshProductos();
-  });
-});
-onBeforeUnmount(() => {
-  $socket.off('cambiosProductos');
-});
-
 // Verificacion de permisos
 if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
   console.log('No tiene el acceso para esta pagina');

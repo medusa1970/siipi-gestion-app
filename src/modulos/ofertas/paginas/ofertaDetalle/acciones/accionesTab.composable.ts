@@ -22,7 +22,6 @@ export const useAccionesTab = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      console.log('first');
       apiOfertas
         .borrarOfertaConMotivo(
           store.oferta._id,
@@ -30,7 +29,6 @@ export const useAccionesTab = () => {
           useGqlToken(authStore.token),
         )
         .then((res) => {
-          console.log(res);
           estado.motivoEliminacion = '';
           NotifySucess('Oferta eliminado correctamente');
           // await act;

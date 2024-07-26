@@ -201,25 +201,25 @@
 
   <Popup v-model="estado.modal.show_crearOfertaBasico" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaBasico @crearObjeto="handleOfertaBasicaCreada" />
+      <formOfertaBasico @crearObjeto="composable.handleOfertaBasicaCreada" />
     </template>
   </Popup>
 
   <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaProducto @crearObjeto="handleOfertaSimpleCreada" />
+      <formOfertaProducto @crearObjeto="composable.handleOfertaSimpleCreada" />
     </template>
   </Popup>
 </template>
 
 <script setup lang="ts">
-import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
-import { useOferta } from './ofertas.composable';
 import { columnaOfertas } from './columns';
+import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
+import { useOferta } from './ofertas.composable';
+const composable = useOferta();
+const { estado, store } = composable;
 const router = useRouter();
-const { estado, store, handleOfertaSimpleCreada, handleOfertaBasicaCreada } =
-  useOferta();
 definePageMeta({
   layout: 'cathering',
 });

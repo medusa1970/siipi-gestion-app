@@ -55,13 +55,11 @@ export const useProductoVariedades = () => {
           },
           { loading: true },
         );
-        console.log(productoVariedad);
         if (productoVariedad) {
           NotifySucessCenter('Marca borrado correctamente');
           store.producto.variedades = store.producto.variedades.filter(
             (e) => e._id !== variedad._id,
           );
-          // console.log(productoStore.producto.variedades);
         }
       } catch (error) {
         console.log(error);

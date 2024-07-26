@@ -36,7 +36,6 @@ const correo = reactiveInput();
  * Submit del formulario
  */
 const formSubmit = async (datos) => {
-  console.log(correo.value);
   try {
     const res = await apiAuth.pedirRDC(correo.value);
   } catch (err) {

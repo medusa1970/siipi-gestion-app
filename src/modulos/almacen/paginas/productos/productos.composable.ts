@@ -1,5 +1,5 @@
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-import type { Categoria, Producto } from '#gql';
+import type { Producto } from '#gql';
 
 export const useProductos = () => {
   const { store, productoIncompleto } = useAlmacen();
@@ -77,11 +77,11 @@ export const useProductos = () => {
     NotifySucessCenter('Producto creado éxitosamente');
     estado.modal.formProductoBasico = false;
   };
-
   const handleOfertaSimpleCreada = (oferta) => {
     NotifySucessCenter('Oferta creada éxitosamente');
     estado.modal.crearOferta = false;
   };
+
   return {
     estado,
     store,

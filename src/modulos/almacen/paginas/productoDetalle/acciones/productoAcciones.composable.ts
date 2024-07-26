@@ -24,11 +24,11 @@ export const useProductoAcciones = () => {
       // borramos el producto
       try {
         await api.borrarProducto_basico(store.producto._id);
-        store.refreshProductos();
       } catch (err) {
         errFallBack(err);
         return;
       }
+      await store.refreshProductos();
 
       // creamos la accion
       try {

@@ -121,7 +121,7 @@ const formSubmit = async () => {
     errFallBack(err);
     return;
   }
-  store.refreshMedidas();
+  await store.refreshMedidas();
   estado.dataForm = clone(initForm);
 };
 </script>

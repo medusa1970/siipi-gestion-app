@@ -106,4 +106,3 @@ onMounted(async () => {
   /* border: 2px solid red; */
 }
 </style>
-~/modulos/main/useAuthStore

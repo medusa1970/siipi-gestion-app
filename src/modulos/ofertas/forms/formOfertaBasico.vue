@@ -155,7 +155,7 @@ const formSubmit = async () => {
     errFallBack(err);
     return;
   }
+  await store.refreshOfertas();
   estado.dataForm = clone(initForm);
-  store.refreshOfertas();
 };
 </script>

@@ -112,7 +112,7 @@ const formSubmit = async () => {
     return;
   }
   // reinicializamos el formulario
-  store.refreshMarcas();
+  await store.refreshMarcas();
   estado.dataForm = clone(initForm);
 };
 </script>

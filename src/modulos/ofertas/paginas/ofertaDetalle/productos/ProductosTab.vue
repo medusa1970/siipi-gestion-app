@@ -86,4 +86,3 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped></style>
-~/modulos/ofertas/paginas/ofertas/ofertas.composable

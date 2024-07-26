@@ -63,12 +63,12 @@ const props = withDefaults(
   defineProps<{
     rows: Array<any>;
     columns: Array<any>;
-    defaultImage: any;
-    rowKey: string;
-    conBusqueda: boolean;
-    watchFilter: string;
-    titulo: string;
-    disableExpand: boolean;
+    defaultImage?: any;
+    rowKey?: string;
+    conBusqueda?: boolean;
+    watchFilter?: string;
+    titulo?: string;
+    disableExpand?: boolean;
   }>(),
   {
     defaultImage: ProductoImage,

@@ -91,7 +91,7 @@
       label="Catalogo"
       info="Info."
       :opciones="selectCatalogo"
-      :porDefecto="estado.dataForm.catalogo ?? '75a4475e446a5885b05739c4'"
+      :porDefecto="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
       :color="estado.dataForm.catalogo && 'orange-2'"
@@ -182,7 +182,7 @@ const selectCatalogo = computed(() => {
     for (const subcat of cat.hijas) {
       hijas.push({
         label: subcat.nombre,
-        value: [subcat._id],
+        value: subcat._id,
         class: 'option',
       });
       idsHijas.push(subcat._id);
@@ -190,7 +190,7 @@ const selectCatalogo = computed(() => {
     if (cat.nombre !== 'CATALOGO PROVEEDORES')
       options.push({
         label: cat.nombre,
-        value: [...idsHijas, cat._id],
+        value: cat._id,
         disable: true,
         class: 'title',
       });
@@ -319,18 +319,16 @@ const formSubmit = async () => {
       ],
       precioConFactura: estado.dataForm.precioConFactura,
       precioSinFactura: estado.dataForm.precioSinFactura,
-      // preciosPorMayor: estado.dataForm.preciosPorMayor,
+      preciosPorMayor: estado.dataForm.preciosPorMayor,
     };
 
-    // lanzamos la consulta
     const oferta = await api.crearOferta(estado.oferta, { loading: true });
-    // reinicializamos el formulario
-    estado.dataForm = clone(initForm);
-    // mandamos el resultado al componiente pariente
     emits('crearObjeto', oferta);
   } catch (err) {
     errFallBack(err);
     return;
   }
+  await store.refreshOfertas();
+  estado.dataForm = clone(initForm);
 };
 </script>

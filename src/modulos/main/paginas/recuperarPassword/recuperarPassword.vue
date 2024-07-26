@@ -88,4 +88,3 @@ const actualizarContraseña = async () => {
   }
 };
 </script>
-~/modulos/main/API/authService

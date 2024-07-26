@@ -125,10 +125,10 @@ const errorMensaje = ref<string>(props.error); // el mensaje de error
 const isPwd = ref<boolean>(true); // si las letras son visibles o
 const requerido = props.rules.map(rule => rule.name).includes('requerido');
 const reglas = ref(
-  props.tipo === 'number'
-    ? [...props.rules, useRules.numero()]
-    : props.rules || props.tipo === 'decimal'
+  props.tipo === 'decimal'
     ? [...props.rules, useRules.decimal()]
+    : props.tipo === 'number'
+    ? [...props.rules, useRules.numero()]
     : props.rules
 );
 

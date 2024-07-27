@@ -1,35 +1,52 @@
 import type { Catalogo } from '#gql';
+import { catalogoService } from './catalogo.service';
 import { useQuasar } from 'quasar';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
+import { storeOferta } from '@/modulos/ofertas/ofertas.store';
 
 const init_catalogoCategoria = {
   _id: null as string,
-  nombre: null as string,
+  nombre: null as string
 };
 
 export const useCatalogos = () => {
+  const ofertaStore = storeOferta();
   const router = useRouter();
   const $q = useQuasar();
 
   const estado = reactive({
     catalogoSeleccionado: null as Catalogo[],
+    catalogos: [] as Catalogo[],
 
     modal: {
       show_agregarCatalogo: false,
       show_agregarCategoriaCatalogo: false,
-      show_modificarCategoriaCatalogo: false,
+      show_modificarCategoriaCatalogo: false
     },
 
-    datos_catalogoCategoria: clone(init_catalogoCategoria),
+    datos_catalogoCategoria: clone(init_catalogoCategoria)
   });
+
+  /**
+   * Trae todos los catalogos de la BD y los guarda en el estado y store
+   */
+  const traerCatalagoso = async () => {
+    const { catalogoArbol: catalogos } = await GqlCatalogoArbol({
+      busqueda: { nombre: ['CATALOGO RAIZ'] }
+    });
+    //@ts-ignore
+    if (catalogos) ofertaStore.catalogos = estado.catalogos = catalogos?.hijas;
+
+    if (ofertaStore.catalogoSeleccionado == null)
+      ofertaStore.catalogoSeleccionado = catalogos[0];
+  };
 
   const irCatalogoID = (id: string) => {
     router.push(`catalogos/${id}`);
   };
 
   const obtenerCatalogoId = async (catalogoId: string) => {
-    const catalogoArbol = await api.buscarCatalogo({
-      _id: [catalogoId],
+    const catalogoArbol = await catalogoService.buscarCatalogoID({
+      _id: [catalogoId]
     });
     if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
     return catalogoArbol;
@@ -42,9 +59,9 @@ export const useCatalogos = () => {
   };
 
   const crearCatalogoArbol = async (catalogoID: string) => {
-    const catalogoCreado = await api.crearCatalogo({
+    const catalogoCreado = await catalogoService.crearCatalogo({
       nombre: estado.datos_catalogoCategoria.nombre,
-      pariente: estado.datos_catalogoCategoria._id,
+      pariente: estado.datos_catalogoCategoria._id
     });
     if (catalogoCreado) {
       obtenerCatalogoId(catalogoID);
@@ -60,9 +77,9 @@ export const useCatalogos = () => {
     estado.datos_catalogoCategoria.nombre = datos.nombre;
   };
   const modificarCatalogoArbol = async (catalogoID: string) => {
-    const catalogoModificado = await api.modificarCatalogo(
+    const catalogoModificado = await catalogoService.modificarCatalogo(
       { _id: [estado.datos_catalogoCategoria._id] },
-      { nombre: estado.datos_catalogoCategoria.nombre },
+      { nombre: estado.datos_catalogoCategoria.nombre }
     );
     if (catalogoModificado) {
       NotifySucessCenter('Catalogo modificado correctamente');
@@ -79,10 +96,10 @@ export const useCatalogos = () => {
           : ''
       }?`,
       cancel: true,
-      persistent: true,
+      persistent: true
     }).onOk(async () => {
-      const catalogoBorrada = await api.borrarCatalogo({
-        _id: [row._id],
+      const catalogoBorrada = await catalogoService.borrarCatalogo({
+        _id: [row._id]
       });
       if (catalogoBorrada) {
         NotifySucessCenter('Catalogo eliminada correctamente');
@@ -92,7 +109,7 @@ export const useCatalogos = () => {
   };
 
   const obtenerTodasCategorias = async () => {
-    const categoriaArbol = await apiOfertas.buscarArbolCatalogosRaiz();
+    const [categoriaArbol] = await catalogoService.obtenerTodasCategorias();
 
     const data = [
       {
@@ -102,16 +119,17 @@ export const useCatalogos = () => {
           icon: 'room_service',
           label: hija.nombre,
           children: hija.hijas.map((hija2: any) => ({
-            label: hija2.nombre,
-          })),
-        })),
-      },
+            label: hija2.nombre
+          }))
+        }))
+      }
     ];
     // estado.props = data;
   };
 
   return {
     estado,
+    traerCatalagoso,
     irCatalogoID,
     obtenerCatalogoId,
     crearCatalogoArbol,
@@ -119,6 +137,6 @@ export const useCatalogos = () => {
     modalModificarCatalogoCategoria,
     modificarCatalogoArbol,
     borrarCatalogoArbol,
-    obtenerTodasCategorias,
+    obtenerTodasCategorias
   };
 };

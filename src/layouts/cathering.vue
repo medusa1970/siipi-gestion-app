@@ -7,11 +7,11 @@
         label: 'Productos',
         to: 'productos'
       },
-      {
-        icon: 'sell',
-        label: 'Categorias',
-        to: 'categorias'
-      },
+      // {
+      //   icon: 'sell',
+      //   label: 'Categorias',
+      //   to: 'categorias'
+      // },
       // {
       //   icon: 'warehouse',
       //   label: 'Stock',

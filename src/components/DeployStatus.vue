@@ -1,7 +1,7 @@
 <template>
   <div
     class="deploy"
-    v-if="$config.public.DeployStatus !== 'MAIN'"
+    v-if="$config.public.DeployStatus !== 'PROD'"
     :id="$config.public.DeployStatus"
   >
     !!! --- {{ $config.public.DeployStatus }} --- API =
@@ -13,7 +13,7 @@
 #LOCAL {
   background: darkmagenta;
 }
-#MAIN {
+#PROD {
   display: none;
 }
 #DEV {

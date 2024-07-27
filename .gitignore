@@ -4,7 +4,7 @@
 
 # seguridad
 .env.dev
-.env.demo
+.env.local
 .env.main
 /privado
 

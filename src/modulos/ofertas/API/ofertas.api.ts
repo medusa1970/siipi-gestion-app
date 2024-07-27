@@ -1,14 +1,4 @@
-import type {
-  BuscarCatalogoDto,
-  BuscarOfertaDto,
-  BuscarOpciones,
-  Catalogo,
-  CrearCatalogoDto,
-  CrearOfertaDto,
-  ModificarCatalogoDto,
-  ModificarOfertaDto,
-  Oferta,
-} from '#gql';
+import type { BuscarCatalogoDto, BuscarOpciones, Catalogo, Oferta } from '#gql';
 
 export const apiOfertas = {
   /**

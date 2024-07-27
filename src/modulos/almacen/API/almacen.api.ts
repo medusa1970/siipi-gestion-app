@@ -2,8 +2,6 @@ import type {
   BuscarCategoriaDto,
   BuscarOpciones,
   Categoria,
-  CrearEntidadDto,
-  CrearOpciones,
   Entidad,
   Inventario,
   Problema,

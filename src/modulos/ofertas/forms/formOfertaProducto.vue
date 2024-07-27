@@ -49,7 +49,6 @@
         tipo="number"
         label="Cantidad"
         info="Info #49"
-        info="Si desea elija un empaque, o sino entre directamente la cantidad."
         :porDefecto="estado.dataForm.cantidad"
         @update="(v) => (estado.dataForm.cantidad = v)"
         :rules="[useRules.requerido()]"

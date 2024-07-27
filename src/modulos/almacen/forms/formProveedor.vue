@@ -109,7 +109,7 @@ const formSubmit = async () => {
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe una proveedor con este nombre';
+      estado.errorNombre = 'Ya existe un proveedor con este nombre';
       return;
     }
     errFallBack(err);

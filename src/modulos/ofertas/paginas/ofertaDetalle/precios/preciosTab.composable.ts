@@ -1,28 +1,66 @@
+import type { Precio } from '#gql';
 import { storeOferta } from '@/modulos/ofertas/ofertas.store';
 
 export const usePrecioTab = () => {
+  const $q = useQuasar();
   const store = storeOferta();
 
   const estado = reactive({
-    datos_preciosOferta: {
-      precioSinFactura: null as number,
-      precioConFactura: null as number,
-      precios: [] as any[],
+    precios: [] as any[],
+    // precio que se esta modificando, o oferta
+    configEdit: null as Precio,
+    modal: {
+      formCrearPrecio: false,
+      formModificarPrecio: false,
     },
   });
 
-  //Modificar precio de la oferta
-  const modificarOfertaPrecio = async () => {
-    delete estado.datos_preciosOferta.precios;
-    const ofertaModificada = await api.modificarOferta(
-      { _id: [store.oferta._id] },
-      estado.datos_preciosOferta,
-    );
-    if (ofertaModificada) {
-      NotifySucessCenter('Precio modificado correctamente');
-      store.oferta = ofertaModificada;
-    }
+  const borrarOfertaPrecio = async (precio) => {
+    $q.dialog({
+      title: `Eliminar este precio ?`,
+      message: 'No se puede deshacer.',
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      let oferta;
+      try {
+        oferta = await api.modificarOferta(
+          store.oferta._id,
+          {
+            preciosPorMayor: {
+              borrar: { _id: precio._id },
+            },
+          },
+          { loading: true },
+        );
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+      NotifySucessCenter('Precio borrado correctamente');
+      store.oferta.preciosPorMayor = oferta.preciosPorMayor;
+      await store.refreshOfertas();
+    });
   };
 
-  return { estado, modificarOfertaPrecio, store };
+  const handlePrecioCreado = async (precio, oferta) => {
+    NotifySucessCenter('Precio creado correctamente');
+    estado.modal.formCrearPrecio = false;
+    store.oferta = oferta;
+    await store.refreshOfertas();
+  };
+  const handlePrecioModificado = async (precio, oferta) => {
+    NotifySucessCenter('Precio modificado correctamente');
+    estado.modal.formModificarPrecio = false;
+    store.oferta = oferta;
+    await store.refreshOfertas();
+  };
+
+  return {
+    estado,
+    borrarOfertaPrecio,
+    handlePrecioCreado,
+    handlePrecioModificado,
+    store,
+  };
 };

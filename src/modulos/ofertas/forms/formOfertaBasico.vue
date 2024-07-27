@@ -153,7 +153,7 @@ const selectSubCatalogo = computed(() => {
 watch(
   () => estado.catalogoAncestro,
   () => {
-    if (!estado.catalogoAncestroHack) estado.dataForm.catalogo = null;
+    if (estado.catalogoAncestroHack) estado.dataForm.catalogo = null;
     estado.catalogoAncestroHack = false;
   },
 );

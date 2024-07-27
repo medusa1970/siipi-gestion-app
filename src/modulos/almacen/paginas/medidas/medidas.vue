@@ -86,6 +86,7 @@ import MedidaImage from '@/assets/img/noHayMedida.png';
 import formMedida from '@/modulos/almacen/forms/formMedida.vue';
 const { estado, store, rowsTabla, handleMedidaCreada, handleMedidaModificada } =
   useMedidas();
+
 const columnsTabla = [
   {
     name: 'imagen',

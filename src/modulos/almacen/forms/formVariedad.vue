@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+      info="Info #33"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
@@ -17,9 +17,10 @@
     <p>Alerta de cantidad baja en el stock</p>
     <div class="flex">
       <input-text
-        style="width: 45%"
-        tipo="number"
         label="Primer aviso"
+        info="Info #34"
+        tipo="number"
+        style="width: 45%"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
         :rules="[useRules.requerido()]"
@@ -28,10 +29,10 @@
         style="width: 55%"
         tipo="number"
         label="Segundo aviso"
+        info="Info #35"
         :porDefecto="estado.dataForm.cantidadLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[1] = v)"
         :rules="[useRules.requerido()]"
-        info="Cuando el stock del producto baja debajo del primer valor, se lanzara una alerta naranja, y una alerta roja cuando baje debajo del segundo valor."
       />
     </div>
 
@@ -42,6 +43,7 @@
         style="width: 45%"
         tipo="number"
         label="Primer aviso"
+        info="Info #36"
         :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.inventarioLimite[0] = v)"
         :rules="[useRules.requerido()]"
@@ -51,10 +53,10 @@
         style="width: 55%"
         tipo="number"
         label="Segundo aviso"
+        info="Info #37"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
         @update="(v) => (estado.dataForm.inventarioLimite[1] = v)"
         :rules="[useRules.requerido()]"
-        info="Despues de hacer un inventario, cuando pasan el numero de días indicado en el primero campo, se mandara un recordatorio naranja, y un recordatorio rojo cuando pasan el numero de días indicado en el segundo campo."
       />
     </div>
 
@@ -65,7 +67,7 @@
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = v)"
       :rules="[useRules.requerido()]"
-      info="Para evitar errores como el million de Pinias =)"
+      info="Info #38"
     />
 
     <!-- Submit -->

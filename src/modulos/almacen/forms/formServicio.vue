@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="SelecInfo."
+      info="Info #18"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
@@ -16,8 +16,8 @@
     <!-- Categoria -->
     <input-select
       label="Proveedor"
+      info="Info #19"
       :opciones="selectProveedor"
-      info="Info."
       :porDefecto="estado.dataForm.proveedor"
       @update="(v) => (estado.dataForm.proveedor = v)"
       :rules="[useRules.requerido()]"
@@ -28,6 +28,7 @@
     <!-- Identificativo -->
     <input-text
       label="Identificativo"
+      info="Info #20"
       :porDefecto="estado.dataForm.identificativo"
       @update="(v) => (estado.dataForm.identificativo = v)"
     />
@@ -35,12 +36,14 @@
     <!-- Precios -->
     <input-text
       label="Precio con factura"
+      info="Info #21"
       tipo="number"
       :porDefecto="estado.dataForm.precioConFactura"
       @update="(v) => (estado.dataForm.precioConFactura = v)"
     />
     <input-text
       label="precio sin factura"
+      info="Info #22"
       tipo="number"
       :porDefecto="estado.dataForm.precioSinFactura"
       @update="(v) => (estado.dataForm.precioSinFactura = v)"
@@ -106,6 +109,7 @@
         <input-text
           tipo="number"
           label="Cantidad min."
+          info="Info #23"
           :porDefecto="estado.dataFormPorMayor.cantidadMin"
           @update="(v) => (estado.dataFormPorMayor.cantidadMin = v)"
           :rules="[useRules.requerido()]"
@@ -113,12 +117,14 @@
         <input-text
           label="Precio con factura"
           tipo="number"
+          info="Info #24"
           :porDefecto="estado.dataFormPorMayor.precioConFactura"
           @update="(v) => (estado.dataFormPorMayor.precioConFactura = v)"
         />
         <input-text
           label="precio sin factura"
           tipo="number"
+          info="Info #25"
           :porDefecto="estado.dataFormPorMayor.precioSinFactura"
           @update="(v) => (estado.dataFormPorMayor.precioSinFactura = v)"
         />

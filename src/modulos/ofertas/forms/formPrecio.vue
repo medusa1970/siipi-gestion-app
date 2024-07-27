@@ -5,7 +5,7 @@
       v-if="!props.edicion || !props.edicion.hasOwnProperty('_esOferta')"
       tipo="number"
       label="Cantidad min."
-      info="Info."
+      info="Info #50"
       :porDefecto="estado.dataForm.cantidadMin"
       @update="(v) => (estado.dataForm.cantidadMin = v)"
       :rules="[useRules.requerido(), rule2]"
@@ -14,9 +14,9 @@
     <!-- Precios -->
     <div class="flex">
       <input-text
-        label="precio sin factura"
+        label="Precio sin factura"
         tipo="decimal"
-        info="Info."
+        info="Info #51"
         :porDefecto="estado.dataForm.precioSinFactura"
         @update="(v) => (estado.dataForm.precioSinFactura = v)"
         :watch="estado.watchSin"
@@ -41,7 +41,7 @@
         label="Precio con factura"
         tipo="decimal"
         :porDefecto="estado.dataForm.precioConFactura"
-        info="Info."
+        info="Info #52"
         @update="(v) => (estado.dataForm.precioConFactura = v)"
         :watch="estado.watchCon"
         :rules="[useRules.requerido()]"

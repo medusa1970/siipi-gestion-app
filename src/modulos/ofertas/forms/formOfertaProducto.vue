@@ -12,7 +12,7 @@
     <!-- Produit -->
     <input-select
       label="Producto"
-      info="Info."
+      info="Info #46"
       :opciones="selectProducto"
       :porDefecto="estado.dataForm.producto"
       @update="(v) => (estado.dataForm.producto = v)"
@@ -24,7 +24,7 @@
     <!-- Marca -->
     <input-select
       label="Marca"
-      info="Info."
+      info="Info #47"
       :opciones="selectVariedad"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
@@ -37,7 +37,7 @@
       <input-select
         style="width: 40%"
         label="Empaque preseleccionado"
-        info="Info."
+        info="Info #48"
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
@@ -48,6 +48,7 @@
         style="width: 40%"
         tipo="number"
         label="Cantidad"
+        info="Info #49"
         info="Si desea elija un empaque, o sino entre directamente la cantidad."
         :porDefecto="estado.dataForm.cantidad"
         @update="(v) => (estado.dataForm.cantidad = v)"
@@ -59,7 +60,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info."
+      info="Info #40"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.nombre"
@@ -70,7 +71,7 @@
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
-      info="Info."
+      info="Info #41"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.abreviacion"
@@ -81,7 +82,7 @@
     <!-- descripcion -->
     <input-text
       label="Descripcion"
-      info="Info."
+      info="Info #42"
       autogrow
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
@@ -89,7 +90,7 @@
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
-      info="Info."
+      info="Info #43"
       :opciones="selectCatalogo"
       :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
@@ -98,7 +99,7 @@
     />
     <input-select
       label="Sub catalogo"
-      info="Info."
+      info="Info #44"
       :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.dataForm.catalogo"
@@ -109,7 +110,7 @@
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Info."
+      info="Info #45"
       @update="
         (base64Data, mimetype) =>
           (estado.dataForm.imagen = base64Data
@@ -123,7 +124,7 @@
     <input-text
       label="Precio con factura"
       tipo="number"
-      info="Info."
+      info="Info #46"
       :porDefecto="estado.dataForm.precioConFactura"
       @update="(v) => (estado.dataForm.precioConFactura = v)"
       :rules="[useRules.requerido()]"
@@ -131,7 +132,7 @@
     <input-text
       label="Precio sin factura"
       tipo="number"
-      info="Info."
+      info="Info #47"
       :porDefecto="estado.dataForm.precioSinFactura"
       @update="(v) => (estado.dataForm.precioSinFactura = v)"
       :rules="[useRules.requerido()]"

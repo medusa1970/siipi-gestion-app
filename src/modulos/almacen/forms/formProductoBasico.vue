@@ -14,7 +14,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Por favor antes de crear un producto, asegúrese que no existe todavá. Ayúdese del buscador de la tabla."
+      info="Info #1"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
@@ -25,7 +25,7 @@
     <input-select
       label="Categoria"
       :opciones="selectCategoria"
-      info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+      info="Info #2"
       :porDefecto="estado.dataForm.categoria"
       @update="(v) => (estado.dataForm.categoria = v)"
       :rules="[useRules.requerido()]"
@@ -35,7 +35,7 @@
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Por favor elija una foto del producto solo, que se distinga claramente ante un fondo claro y unido. Prefiera un formato cuadrado."
+      info="Info #3"
       :dataPreview="estado.imagenPreview"
       :key="estado.imagenPreview"
       @update="
@@ -51,7 +51,7 @@
     <input-text
       label="Tiempo de vida"
       tipo="number"
-      info="Info."
+      info="Info #4"
       :porDefecto="estado.dataForm.tiempoVida ?? 0"
       @update="(v) => (estado.dataForm.tiempoVida = v)"
     />
@@ -66,6 +66,7 @@
         style="width: 50%"
         label="Primer aviso"
         tipo="number"
+        info="Info #5"
         :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[0] = v)"
         :rules="[useRules.requerido()]"
@@ -75,7 +76,7 @@
         style="width: 50%"
         label="Segundo aviso"
         tipo="number"
-        info="Cuando faltarán el número de días indicado en el primer campo, se lanzará una alerta naranja, y una alerta roja al llegar al números de días indicados en el segundo."
+        info="Info #6"
         :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[1] = v)"
         :rules="[useRules.requerido()]"
@@ -85,7 +86,7 @@
     <input-text
       tipo="textarea"
       label="comentario"
-      info="Agregue cualquier información adicional que sea útil registrar junto con el producto."
+      info="Info #7"
       :porDefecto="estado.dataForm.comentario"
       @update="(v) => (estado.dataForm.comentario = v)"
     />

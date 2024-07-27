@@ -3,7 +3,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info."
+      info="Info #40"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
@@ -12,7 +12,7 @@
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
-      info="Info."
+      info="Info #41"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
@@ -21,7 +21,7 @@
     <!-- descripcion -->
     <input-text
       label="Descripcion"
-      info="Info."
+      info="Info #42"
       autogrow
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
@@ -29,7 +29,7 @@
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
-      info="Info."
+      info="Info #43"
       :opciones="selectCatalogo"
       :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
@@ -38,7 +38,7 @@
     />
     <input-select
       label="Sub catalogo"
-      info="Info."
+      info="Info #44"
       :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.dataForm.catalogo"
@@ -49,7 +49,7 @@
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Info."
+      info="Info #45"
       icono="photo_camera"
       :dataPreview="estado.imagenPreview"
       :key="estado.imagenPreview"

@@ -9,7 +9,7 @@
       :porDefecto="estado.dataForm.producto?.nombre"
       :rules="[useRules.requerido()]"
       :opciones="estado.productosOpciones"
-      info="Seleccione el producto que se ofertara."
+      info="Info #53"
     />
 
     <!-- Producto marca -->
@@ -20,7 +20,7 @@
       :watch="estado.dataForm.marca"
       :rules="[useRules.requerido()]"
       :opciones="selectVariedad"
-      info="Seleccione la marca del producto que se ofrecera."
+      info="Info #54"
     />
 
     <!-- cantidad -->
@@ -30,7 +30,7 @@
       @update="(v) => (estado.dataForm.cantidad = v as number)"
       :porDefecto="estado.dataForm.cantidad"
       :rules="[useRules.requerido()]"
-      info="Ingrese la cantidad de producto que se ofertara."
+      info="Info #54"
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
   </q-form>

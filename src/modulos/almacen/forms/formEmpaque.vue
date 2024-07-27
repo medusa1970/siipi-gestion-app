@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+      info="Info #28"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
@@ -15,7 +15,7 @@
 
     <input-select
       label="Empaques preseleccionados"
-      info="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
+      info="Info #29"
       :opciones="selectTipoEmpaques"
       @update="(v) => prellenarEmpaque(v)"
       :watch="estado.resetEmpaque"
@@ -28,10 +28,10 @@
 
     <input-text
       label="Empaque"
+      info="Info #30"
       @update="(v) => (estado.dataForm.nombre = v)"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
-      info="Nombre del empaque"
       :rules="[useRules.requerido()]"
     />
 
@@ -40,17 +40,17 @@
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
-      info="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
+      info="Info #31"
       :rules="[useRules.requerido()]"
     />{{ store.producto.medida.nombre }}
 
     <input-text
       label="Cantidad en unidades básicas"
+      info="Info #32"
       :tipo="store.producto.medida.nombre === 'unidad' ? 'number' : 'decimal'"
       @update="(v) => (estado.dataForm.cantidad = v)"
       :porDefecto="estado.dataForm.cantidad"
       :watch="estado.dataForm.cantidad"
-      info="Cantidad de empaques en unidades básicas"
       :rules="[useRules.requerido()]"
     />
 

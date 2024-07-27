@@ -3,7 +3,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info."
+      info="Info #15"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
@@ -13,14 +13,14 @@
     <input-text
       label="Descripcion"
       tipo="textarea"
-      info="Info."
+      info="Info #16"
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
     />
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Logo de la marca."
+      info="Info #17"
       :dataPreview="estado.imagenPreview"
       :key="estado.imagenPreview"
       @update="

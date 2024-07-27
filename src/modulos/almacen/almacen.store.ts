@@ -1,11 +1,4 @@
-import type {
-  Catalogo,
-  Categoria,
-  Entidad,
-  Marca,
-  Medida,
-  Producto,
-} from '#gql';
+import type { Categoria, Entidad, Marca, Medida, Producto } from '#gql';
 import localforage from 'localforage';
 import { apiAlmacen } from '@/modulos/almacen/API/almacen.api';
 
@@ -71,7 +64,6 @@ export const storeAlmacen = defineStore('almacen', {
      * Retorna el arbol de categoria
      */
     async getCategorias(id: string = null): Promise<Categoria> {
-      // recuperar el arbol raiz
       if (this.categoriaArbol === null) {
         try {
           this.categoriaArbol = await apiAlmacen.buscarArbolCategoriasRaiz();
@@ -80,7 +72,14 @@ export const storeAlmacen = defineStore('almacen', {
           return null;
         }
       }
-      // para recuperar la categoria especifica
+      return id == null ? this.categoriaArbol : this.getCategoria(id);
+    },
+    refreshCategorias(): void {
+      this.categoriaArbol = null;
+      this.getCategorias();
+    },
+    getCategoria(id: string): Categoria {
+      if (this.categoriaArbol === null) return null;
       const f = (categoria) => {
         if (categoria._id === id) {
           return categoria;
@@ -90,16 +89,11 @@ export const storeAlmacen = defineStore('almacen', {
             if (res) return res;
           }
         } else {
-          return 'null';
+          return null;
         }
       };
-      return id === null ? this.categoriaArbol : f(this.categoriaArbol);
+      return f(this.categoriaArbol);
     },
-    refreshCategorias(): void {
-      this.categoriaArbol = null;
-      this.getCategorias();
-    },
-
     /**
      * Retorna la lista de las marcas de la base de datos
      */

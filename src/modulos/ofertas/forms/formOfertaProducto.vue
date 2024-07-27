@@ -15,10 +15,11 @@
       info="Info #46"
       :opciones="selectProducto"
       :porDefecto="estado.dataForm.producto"
-      @update="v => (estado.dataForm.producto = v)"
+      @update="(v) => (estado.dataForm.producto = v)"
       :rules="[useRules.requerido()]"
       :color="estado.dataForm.producto && 'orange-2'"
-      filled />
+      filled
+    />
 
     <!-- Marca -->
     <input-select
@@ -26,9 +27,10 @@
       info="Info #47"
       :opciones="selectVariedad"
       :porDefecto="estado.dataForm.marca"
-      @update="v => (estado.dataForm.marca = v)"
+      @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
-      :watch="estado.dataForm.marca" />
+      :watch="estado.dataForm.marca"
+    />
 
     <p></p>
     <div class="flex">
@@ -37,40 +39,45 @@
         label="Empaque preseleccionado"
         info="Info #48"
         :opciones="selectEmpaque"
-        @update="v => prellenarEmpaque(v)"
+        @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
         color="grey-5"
-        filled />
+        filled
+      />
       <input-text
         style="width: 40%"
         tipo="number"
         label="Cantidad"
+        info="Info #49"
         info="Si desea elija un empaque, o sino entre directamente la cantidad."
         :porDefecto="estado.dataForm.cantidad"
-        @update="v => (estado.dataForm.cantidad = v)"
+        @update="(v) => (estado.dataForm.cantidad = v)"
         :rules="[useRules.requerido()]"
-        :watch="estado.dataForm.cantidad" />
+        :watch="estado.dataForm.cantidad"
+      />
     </div>
 
     <!-- nombre -->
     <input-text
       label="Nombre"
       info="Info #40"
-      @update="v => (estado.dataForm.nombre = v)"
+      @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
-      :error="estado.errorNombre" />
+      :error="estado.errorNombre"
+    />
 
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
       info="Info #41"
-      @update="v => (estado.dataForm.abreviacion = v)"
+      @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
-      :error="estado.errorAbreviacion" />
+      :error="estado.errorAbreviacion"
+    />
 
     <!-- descripcion -->
     <input-text
@@ -78,7 +85,8 @@
       info="Info #42"
       autogrow
       :porDefecto="estado.dataForm.descripcion"
-      @update="v => (estado.dataForm.descripcion = v)" />
+      @update="(v) => (estado.dataForm.descripcion = v)"
+    />
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
@@ -86,16 +94,18 @@
       :opciones="selectCatalogo"
       :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
-      @update="v => (estado.catalogoAncestro = v)"
-      :rules="[useRules.requerido()]" />
+      @update="(v) => (estado.catalogoAncestro = v)"
+      :rules="[useRules.requerido()]"
+    />
     <input-select
       label="Sub catalogo"
       info="Info #44"
       :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.dataForm.catalogo"
-      @update="v => (estado.dataForm.catalogo = v)"
-      :rules="[useRules.requerido()]" />
+      @update="(v) => (estado.dataForm.catalogo = v)"
+      :rules="[useRules.requerido()]"
+    />
 
     <!-- Imagen -->
     <input-image
@@ -107,7 +117,8 @@
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
-      icono="photo_camera" />
+      icono="photo_camera"
+    />
 
     <!-- Precios -->
     <input-text
@@ -115,15 +126,17 @@
       tipo="number"
       info="Info #46"
       :porDefecto="estado.dataForm.precioConFactura"
-      @update="v => (estado.dataForm.precioConFactura = v)"
-      :rules="[useRules.requerido()]" />
+      @update="(v) => (estado.dataForm.precioConFactura = v)"
+      :rules="[useRules.requerido()]"
+    />
     <input-text
       label="Precio sin factura"
       tipo="number"
       info="Info #47"
       :porDefecto="estado.dataForm.precioSinFactura"
-      @update="v => (estado.dataForm.precioSinFactura = v)"
-      :rules="[useRules.requerido()]" />
+      @update="(v) => (estado.dataForm.precioSinFactura = v)"
+      :rules="[useRules.requerido()]"
+    />
 
     <!-- Submit -->
     <div class="text-center">
@@ -146,7 +159,7 @@ const props = withDefaults(
   defineProps<{
     config?: { productoId?: string };
   }>(),
-  {}
+  {},
 );
 
 // datos por defecto del formulario
@@ -160,7 +173,7 @@ const initForm = {
   catalogo: null,
   precioConFactura: null,
   precioSinFactura: null,
-  imagen: null
+  imagen: null,
 };
 
 // definicion del estado
@@ -176,13 +189,13 @@ const estado = reactive({
 
   // para el empaque
   resetEmpaque: null,
-  nombreEmpaque: null
+  nombreEmpaque: null,
 });
 
 // producto seleccionado
 const producto = computed(() => {
   if (!storeAlmacen.productos) return null;
-  return storeAlmacen.productos.find(p => {
+  return storeAlmacen.productos.find((p) => {
     return p._id === estado.dataForm.producto;
   });
 });
@@ -190,11 +203,11 @@ const producto = computed(() => {
 const selectProducto = computed(() => {
   if (!storeAlmacen.productos) return [];
   return storeAlmacen.productos
-    .filter(p => !productoIncompleto(p))
-    .map(p => {
+    .filter((p) => !productoIncompleto(p))
+    .map((p) => {
       return {
         value: p._id,
-        label: p.nombre
+        label: p.nombre,
       };
     });
 });
@@ -207,7 +220,7 @@ const selectCatalogo = computed(() => {
     if (cat.nombre !== 'CATALOGO PROVEEDORES')
       options.push({
         label: cat.nombre,
-        value: cat._id
+        value: cat._id,
       });
     options = [...options];
   }
@@ -226,7 +239,7 @@ const selectSubCatalogo = computed(() => {
       hijas.push({
         label: subcat.nombre,
         value: subcat._id,
-        class: 'option'
+        class: 'option',
       });
       idsHijas.push(subcat._id);
     }
@@ -235,7 +248,7 @@ const selectSubCatalogo = computed(() => {
         label: cat.nombre,
         value: cat._id,
         disable: true,
-        class: 'title'
+        class: 'title',
       });
     options = [...options, ...hijas];
   }
@@ -246,24 +259,24 @@ watch(
   () => estado.catalogoAncestro,
   () => {
     estado.dataForm.catalogo = null;
-  }
+  },
 );
 
 const selectVariedad = computed(() => {
   if (!producto.value) return [];
-  return producto.value.variedades.map(variedad => ({
+  return producto.value.variedades.map((variedad) => ({
     value: variedad.marca._id,
-    label: variedad.marca.nombre
+    label: variedad.marca.nombre,
   }));
 });
 
 const selectEmpaque = computed(() => {
   if (!estado.dataForm.marca || !producto.value?.empaques) return [];
   return producto.value.empaques
-    .filter(empaque => empaque.marca._id === estado.dataForm.marca)
-    .map(empaque => ({
+    .filter((empaque) => empaque.marca._id === estado.dataForm.marca)
+    .map((empaque) => ({
       value: empaque._id,
-      label: empaque.nombre
+      label: empaque.nombre,
     }));
 });
 
@@ -273,15 +286,15 @@ onMounted(async () => {
   await store.getCatalogos();
 });
 
-watch(producto, v => {
+watch(producto, (v) => {
   estado.dataForm.marca = null;
 });
 watch(
   [producto, () => estado.dataForm.marca, () => estado.dataForm.cantidad],
-  v => {
+  (v) => {
     let nombre = producto.value?.nombre ?? '';
     const marca = selectVariedad.value?.find(
-      opcion => opcion.value === estado.dataForm.marca
+      (opcion) => opcion.value === estado.dataForm.marca,
     )?.label;
     if (marca) nombre += ' ' + marca;
     if (estado.nombreEmpaque) nombre += ' ' + estado.nombreEmpaque;
@@ -295,20 +308,20 @@ watch(
     estado.dataForm.nombre = nombre;
     estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
   },
-  { immediate: true }
+  { immediate: true },
 );
 watch(
   () => estado.dataForm.marca,
-  v => {
+  (v) => {
     if (!v) {
       estado.nombreEmpaque = '';
     }
-  }
+  },
 );
 
 // Prellenar el empaque con seleccionar un tipo de empaque
-const prellenarEmpaque = async empaque => {
-  const emp = producto.value?.empaques.find(e => e._id === empaque);
+const prellenarEmpaque = async (empaque) => {
+  const emp = producto.value?.empaques.find((e) => e._id === empaque);
   if (!emp) return;
   estado.dataForm.cantidad = emp.cantidad;
   estado.resetEmpaque = empaque;
@@ -335,12 +348,12 @@ const formSubmit = async () => {
           tipo: 'SIMPLE',
           producto: estado.dataForm.producto,
           marca: estado.dataForm.marca,
-          cantidad: estado.dataForm.cantidad
-        }
+          cantidad: estado.dataForm.cantidad,
+        },
       ],
       precioConFactura: estado.dataForm.precioConFactura,
       precioSinFactura: estado.dataForm.precioSinFactura,
-      preciosPorMayor: estado.dataForm.preciosPorMayor
+      preciosPorMayor: estado.dataForm.preciosPorMayor,
     };
 
     const oferta = await api.crearOferta(estado.oferta, { loading: true });

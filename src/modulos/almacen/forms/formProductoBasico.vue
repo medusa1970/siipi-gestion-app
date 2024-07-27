@@ -16,10 +16,9 @@
       label="Nombre"
       info="Info #1"
       :porDefecto="estado.dataForm.nombre"
-      @update="(v) => (estado.dataForm.nombre = v)"
+      @update="v => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
-      :error="estado.errorNombre"
-    />
+      :error="estado.errorNombre" />
 
     <!-- Categoria -->
     <input-select
@@ -27,10 +26,9 @@
       :opciones="selectCategoria"
       info="Info #2"
       :porDefecto="estado.dataForm.categoria"
-      @update="(v) => (estado.dataForm.categoria = v)"
+      @update="v => (estado.dataForm.categoria = v)"
       :rules="[useRules.requerido()]"
-      :dialog="formCategoria"
-    />
+      :dialog="formCategoria" />
 
     <!-- Imagen -->
     <input-image
@@ -44,17 +42,16 @@
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
-      icono="photo_camera"
-    />
+      icono="photo_camera" />
 
     <!-- Tiempo de vida -->
-    <input-text
+    <!-- <input-text
       label="Tiempo de vida"
       tipo="number"
       info="Info #4"
       :porDefecto="estado.dataForm.tiempoVida ?? 0"
       @update="(v) => (estado.dataForm.tiempoVida = v)"
-    />
+    /> -->
 
     <div class="">
       <q-checkbox v-model="estado.dataForm.puedeVencer" />
@@ -68,9 +65,8 @@
         tipo="number"
         info="Info #5"
         :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
-        @update="(v) => (estado.dataForm.vencimientoLimite[0] = v)"
-        :rules="[useRules.requerido()]"
-      />
+        @update="v => (estado.dataForm.vencimientoLimite[0] = v)"
+        :rules="[useRules.requerido()]" />
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
       <input-text
         style="width: 50%"
@@ -78,9 +74,8 @@
         tipo="number"
         info="Info #6"
         :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"
-        @update="(v) => (estado.dataForm.vencimientoLimite[1] = v)"
-        :rules="[useRules.requerido()]"
-      />
+        @update="v => (estado.dataForm.vencimientoLimite[1] = v)"
+        :rules="[useRules.requerido()]" />
     </div>
 
     <input-text
@@ -88,8 +83,7 @@
       label="comentario"
       info="Info #7"
       :porDefecto="estado.dataForm.comentario"
-      @update="(v) => (estado.dataForm.comentario = v)"
-    />
+      @update="v => (estado.dataForm.comentario = v)" />
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />
@@ -114,8 +108,8 @@ const props = withDefaults(
     edicion: Producto | null; // edicion si producto no es null, sino creacion
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
@@ -125,15 +119,15 @@ const initForm = {
   comentario: props.edicion?.comentario,
   puedeVencer: props.edicion?.puedeVencer ?? false,
   vencimientoLimite: props.edicion?.vencimientoLimite ?? [0, 0],
-  tiempoVida: props.edicion?.tiempoVida ?? null,
-  imagen: null,
+  // tiempoVida: props.edicion?.tiempoVida ?? null,
+  imagen: null
 };
 
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
   errorNombre: '',
-  imagenPreview: null,
+  imagenPreview: null
 });
 
 // opciones
@@ -145,13 +139,13 @@ const selectCategoria = computed(() => {
         label: `${cat.nombre} (${cat.hijas.length})`,
         value: cat._id,
         disable: true,
-        class: 'titulo',
+        class: 'titulo'
       });
       for (const subcat of cat.hijas) {
         options.push(<CategoriaSelectOpcion>{
           label: subcat.nombre,
           value: subcat._id,
-          class: 'option',
+          class: 'option'
         });
       }
     }
@@ -164,7 +158,7 @@ onMounted(async () => {
   await store.getCategorias();
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
-    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
+    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, base64Data => {
       estado.imagenPreview = base64Data;
     });
   } else {
@@ -181,17 +175,17 @@ const formSubmit = async () => {
   try {
     if (props.edicion) {
       estado.dataForm.vencimientoLimite = {
-        reemplazar: estado.dataForm.vencimientoLimite,
+        reemplazar: estado.dataForm.vencimientoLimite
       };
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
       emits('modificarObjeto', producto);
     } else {
       const producto = await api.crearProducto_basico(estado.dataForm, {
-        loading: true,
+        loading: true
       });
       emits('crearObjeto', producto);
     }

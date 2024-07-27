@@ -12,7 +12,7 @@
     <!-- Produit -->
     <input-select
       label="Producto"
-      info="Info."
+      info="Info #46"
       :opciones="selectProducto"
       :porDefecto="estado.dataForm.producto"
       @update="(v) => (estado.dataForm.producto = v)"
@@ -24,7 +24,7 @@
     <!-- Marca -->
     <input-select
       label="Marca"
-      info="Info."
+      info="Info #47"
       :opciones="selectVariedad"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
@@ -37,7 +37,7 @@
       <input-select
         style="width: 40%"
         label="Empaque preseleccionado"
-        info="Info."
+        info="Info #48"
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
@@ -48,6 +48,7 @@
         style="width: 40%"
         tipo="number"
         label="Cantidad"
+        info="Info #49"
         info="Si desea elija un empaque, o sino entre directamente la cantidad."
         :porDefecto="estado.dataForm.cantidad"
         @update="(v) => (estado.dataForm.cantidad = v)"
@@ -59,7 +60,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info."
+      info="Info #40"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.nombre"
@@ -70,7 +71,7 @@
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
-      info="Info."
+      info="Info #41"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
       :porDefecto="estado.dataForm.abreviacion"
@@ -81,7 +82,7 @@
     <!-- descripcion -->
     <input-text
       label="Descripcion"
-      info="Info."
+      info="Info #42"
       autogrow
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
@@ -89,19 +90,27 @@
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
-      info="Info."
+      info="Info #43"
       :opciones="selectCatalogo"
+      :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
+      :watch="estado.catalogoAncestro"
+      @update="(v) => (estado.catalogoAncestro = v)"
+      :rules="[useRules.requerido()]"
+    />
+    <input-select
+      label="Sub catalogo"
+      info="Info #44"
+      :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
+      :watch="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
       :rules="[useRules.requerido()]"
-      :color="estado.dataForm.catalogo && 'orange-2'"
-      filled
     />
 
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Info."
+      info="Info #45"
       @update="
         (base64Data, mimetype) =>
           (estado.dataForm.imagen = base64Data
@@ -115,7 +124,7 @@
     <input-text
       label="Precio con factura"
       tipo="number"
-      info="Info."
+      info="Info #46"
       :porDefecto="estado.dataForm.precioConFactura"
       @update="(v) => (estado.dataForm.precioConFactura = v)"
       :rules="[useRules.requerido()]"
@@ -123,7 +132,7 @@
     <input-text
       label="Precio sin factura"
       tipo="number"
-      info="Info."
+      info="Info #47"
       :porDefecto="estado.dataForm.precioSinFactura"
       @update="(v) => (estado.dataForm.precioSinFactura = v)"
       :rules="[useRules.requerido()]"
@@ -153,6 +162,36 @@ const props = withDefaults(
   {},
 );
 
+// datos por defecto del formulario
+const initForm = {
+  producto: props.config?.productoId,
+  marca: null,
+  cantidad: null,
+  nombre: null,
+  abreviacion: null,
+  descripcion: null,
+  catalogo: null,
+  precioConFactura: null,
+  precioSinFactura: null,
+  imagen: null,
+};
+
+// definicion del estado
+const estado = reactive({
+  // valor de los inputs
+  dataForm: clone(initForm),
+  catalogoAncestro: null as string, // catalogo seleccionado (solo el subcat va en el form)
+  //mensajes de error del formulario
+  errorNombre: '',
+  errorAbreviacion: '',
+  // producto seleccionado
+  oferta: null,
+
+  // para el empaque
+  resetEmpaque: null,
+  nombreEmpaque: null,
+});
+
 // producto seleccionado
 const producto = computed(() => {
   if (!storeAlmacen.productos) return null;
@@ -173,10 +212,27 @@ const selectProducto = computed(() => {
     });
 });
 
+// opciones
 const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
   let options = [];
   for (const cat of store.catalogoArbol.hijas) {
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+      options.push({
+        label: cat.nombre,
+        value: cat._id,
+      });
+    options = [...options];
+  }
+  return options;
+});
+
+// opciones
+const selectSubCatalogo = computed(() => {
+  const catalogo = store.getCatalogo(estado.catalogoAncestro);
+  if (!catalogo) return [];
+  let options = [];
+  for (const cat of catalogo.hijas) {
     const idsHijas = [];
     const hijas = [];
     for (const subcat of cat.hijas) {
@@ -199,6 +255,13 @@ const selectCatalogo = computed(() => {
   return options;
 });
 
+watch(
+  () => estado.catalogoAncestro,
+  () => {
+    estado.dataForm.catalogo = null;
+  },
+);
+
 const selectVariedad = computed(() => {
   if (!producto.value) return [];
   return producto.value.variedades.map((variedad) => ({
@@ -215,35 +278,6 @@ const selectEmpaque = computed(() => {
       value: empaque._id,
       label: empaque.nombre,
     }));
-});
-
-// datos por defecto del formulario
-const initForm = {
-  producto: props.config?.productoId,
-  marca: null,
-  cantidad: null,
-  nombre: null,
-  abreviacion: null,
-  descripcion: null,
-  catalogo: null,
-  precioConFactura: null,
-  precioSinFactura: null,
-  imagen: null,
-};
-
-// definicion del estado
-const estado = reactive({
-  // valor de los inputs
-  dataForm: clone(initForm),
-  //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
-  // producto seleccionado
-  oferta: null,
-
-  // para el empaque
-  resetEmpaque: null,
-  nombreEmpaque: null,
 });
 
 // Inicializaciones

@@ -41,13 +41,13 @@ export const useProveedores = () => {
     return rows;
   });
 
-  // se creó una proveedor
+  // se creó un proveedor
   const handleProveedorCreado = async (proveedor) => {
     NotifySucessCenter('Proveedor creado correctamente');
     estado.modal.formCrearProveedor = false;
   };
 
-  // se modificcó una proveedor
+  // se modificcó un proveedor
   const handleProveedorModificado = async (proveedor) => {
     NotifySucessCenter('Proveedor modificado correctamente');
     estado.modal.formModificarProveedor = false;

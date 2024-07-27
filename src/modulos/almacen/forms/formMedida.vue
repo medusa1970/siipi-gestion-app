@@ -4,6 +4,7 @@
     <input-text
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
+      info="Info #12"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
       :error="estado.errorNombre"
@@ -11,6 +12,7 @@
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
+      info="Info #13"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :rules="[useRules.requerido()]"
@@ -19,7 +21,7 @@
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Logo de la marca."
+      info="Info #14"
       :dataPreview="estado.imagenPreview"
       :key="estado.imagenPreview"
       @update="

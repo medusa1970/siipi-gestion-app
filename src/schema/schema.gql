@@ -1,3 +1,4 @@
+# ------------------------------------------------------
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
@@ -131,6 +132,7 @@ type Producto {
   categoria: Categoria!
   puedeVencer: Boolean
   vencimientoLimite: [Float!]
+  tiempoVida: Float
 }
 
 type Bloque {
@@ -606,6 +608,7 @@ input BuscarProductoDto {
   categoria: [ID!]
   puedeVencer: Boolean
   vencimientoLimite: [Float!]
+  tiempoVida: [Float!]
 }
 
 input BuscarEmpaqueDto {
@@ -1134,6 +1137,7 @@ input CrearProductoDto {
   categoria: ID!
   puedeVencer: Boolean
   vencimientoLimite: [Float!]
+  tiempoVida: Float
 }
 
 input CrearEmpaqueDto {
@@ -1163,6 +1167,7 @@ input ModificarProductoDto {
   categoria: ID
   puedeVencer: Boolean
   vencimientoLimite: EditarLimitesDto
+  tiempoVida: Float
 }
 
 input EditarEmpaqueDto {
@@ -1232,7 +1237,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-19T18:06:24.554Z"
+  saldoActualizacion: DateTime = "2024-07-26T20:44:15.476Z"
   servicios: [CrearServicioDto!]
 }
 

@@ -62,7 +62,6 @@ export const storeOferta = defineStore('ofertas', {
      * Retorna el arbol de catalogo
      */
     async getCatalogos(id: string = null): Promise<Catalogo> {
-      // recuperar el arbol raiz
       if (this.catalogoArbol === null) {
         try {
           this.catalogoArbol = await apiOfertas.buscarArbolCatalogosRaiz();
@@ -71,7 +70,14 @@ export const storeOferta = defineStore('ofertas', {
           return null;
         }
       }
-      // para recuperar el catalogo especifica
+      return id == null ? this.catalogoArbol : this.getCatalogo(id);
+    },
+    refreshCatalogos(): void {
+      this.catalogoArbol = null;
+      this.getCatalogos();
+    },
+    getCatalogo(id: string): Catalogo {
+      if (this.catalogoArbol === null) return null;
       const f = catalogo => {
         if (catalogo._id === id) {
           return catalogo;
@@ -81,14 +87,10 @@ export const storeOferta = defineStore('ofertas', {
             if (res) return res;
           }
         } else {
-          return 'null';
+          return null;
         }
       };
-      return id === null ? this.catalogoArbol : f(this.catalogoArbol);
-    },
-    refreshCatalogos(): void {
-      this.catalogoArbol = null;
-      this.getCatalogos();
+      return f(this.catalogoArbol);
     }
   },
 

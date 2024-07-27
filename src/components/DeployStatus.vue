@@ -1,6 +1,11 @@
 <template>
-  <div class="deploy" :id="$config.public.DeployStatus">
-    {{ $config.public.DeployStatus }}, API = {{ $config.public.GQL_HOST }}
+  <div
+    class="deploy"
+    v-if="$config.public.DeployStatus !== 'MAIN'"
+    :id="$config.public.DeployStatus"
+  >
+    !!! --- {{ $config.public.DeployStatus }} --- API =
+    {{ $config.public.GQL_HOST }} --- !!!
   </div>
 </template>
 
@@ -15,9 +20,9 @@
   background: darkblue;
 }
 .deploy {
-  padding: 0;
   color: white;
   font-style: bold;
   font-size: 17px;
+  text-align: center;
 }
 </style>

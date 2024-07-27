@@ -3,6 +3,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
+      info="Info #26"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       :rules="[useRules.requerido()]"
@@ -13,7 +14,7 @@
     <input-select
       label="Categoria pariente"
       :opciones="selectCategoriaNivel1"
-      info="La categoría existe solamente a fines de ubicar facilmente el producto en administracion. Para crear una nueva categoria, vaya al menu Logistica > Categorías."
+      info="Info #27"
       :porDefecto="estado.dataForm.pariente"
       @update="(v) => (estado.dataForm.pariente = v)"
       :rules="[useRules.requerido()]"

@@ -5,7 +5,7 @@
       tipo="textarea"
       label="Motivo"
       @update="(v) => (estado.motivoEliminacion = v as string)"
-      info="Se avisará el jefe de logistica."
+      info="Info #39"
       :rules="[useRules.requerido()]"
     />
     <q-btn

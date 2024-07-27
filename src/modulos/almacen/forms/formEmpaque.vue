@@ -4,50 +4,55 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Seleccione una marca entre todas las marcas que se registraron globalmente en la empresa. Si la marca que quiere agregar no existe, puede crearla via el boton [+]"
+      info="Info #28"
       :porDefecto="estado.dataForm.marca"
-      @update="v => (estado.dataForm.marca = v)"
+      @update="(v) => (estado.dataForm.marca = v)"
       :rules="[useRules.requerido()]"
       :disable="edicion != null"
       :dialog="formVariedad"
-      @crearObjeto="handleVariedadCreada" />
+      @crearObjeto="handleVariedadCreada"
+    />
 
     <input-select
       label="Empaques preseleccionados"
-      info="La medida básica viene con nombres de empaque predefinidos, seleccione uno o creelo si no existe."
+      info="Info #29"
       :opciones="selectTipoEmpaques"
-      @update="v => prellenarEmpaque(v)"
+      @update="(v) => prellenarEmpaque(v)"
       :watch="estado.resetEmpaque"
       :dialog="formTipoEmpaque"
       :dialogConfig="store.producto.medida._id"
       @crearObjeto="handleCrearTipoEmpaque"
       color="grey-5"
-      filled />
+      filled
+    />
 
     <input-text
       label="Empaque"
-      @update="v => (estado.dataForm.nombre = v)"
+      info="Info #30"
+      @update="(v) => (estado.dataForm.nombre = v)"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
-      info="Nombre del empaque"
-      :rules="[useRules.requerido()]" />
+      :rules="[useRules.requerido()]"
+    />
 
     <input-text
       label="Abreviacion"
-      @update="v => (estado.dataForm.abreviacion = v)"
+      @update="(v) => (estado.dataForm.abreviacion = v)"
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
-      info="La abreviacion debe tener entre 1 o 3 caracteres idealmente, por ejemplo TIR, DL, 12a, etc..."
-      :rules="[useRules.requerido()]" />
+      info="Info #31"
+      :rules="[useRules.requerido()]"
+    />{{ store.producto.medida.nombre }}
 
     <input-text
       label="Cantidad en unidades básicas"
-      tipo="decimal"
-      @update="v => (estado.dataForm.cantidad = v)"
+      info="Info #32"
+      :tipo="store.producto.medida.nombre === 'unidad' ? 'number' : 'decimal'"
+      @update="(v) => (estado.dataForm.cantidad = v)"
       :porDefecto="estado.dataForm.cantidad"
       :watch="estado.dataForm.cantidad"
-      info="Cantidad de empaques en unidades básicas"
-      :rules="[useRules.requerido()]" />
+      :rules="[useRules.requerido()]"
+    />
 
     <!-- Submit -->
     <div class="text-center">
@@ -73,8 +78,8 @@ const props = withDefaults(
     edicion: Empaque | null;
   }>(),
   {
-    edicion: null
-  }
+    edicion: null,
+  },
 );
 
 // datos por defecto del formulario
@@ -82,7 +87,7 @@ const initForm = {
   marca: props.edicion?.marca._id,
   nombre: props.edicion?.nombre,
   abreviacion: props.edicion?.abreviacion,
-  cantidad: props.edicion?.cantidad
+  cantidad: props.edicion?.cantidad,
 };
 
 // definicion del estado
@@ -90,22 +95,22 @@ const estado = reactive({
   dataForm: clone(initForm),
   errorNombre: '',
   errorAbreviacion: '',
-  resetEmpaque: ''
+  resetEmpaque: '',
 });
 
 // opciones
 const selectTipoEmpaques = computed(() => {
   if (!store.producto.medida.tipoEmpaques) return [];
-  return store.producto.medida.tipoEmpaques.map(tipo => ({
+  return store.producto.medida.tipoEmpaques.map((tipo) => ({
     value: tipo._id,
-    label: tipo.nombre
+    label: tipo.nombre,
   }));
 });
 const selectMarca = computed(() => {
   if (!store.producto.variedades) return [];
-  return store.producto.variedades.map(variedad => ({
+  return store.producto.variedades.map((variedad) => ({
     value: variedad.marca._id,
-    label: variedad.marca.nombre
+    label: variedad.marca.nombre,
   }));
 });
 
@@ -119,21 +124,21 @@ const formSubmit = async () => {
       const producto = await api.modificarProducto_basico(store.producto._id, {
         empaques: {
           buscar: {
-            _id: [props.edicion?._id]
+            _id: [props.edicion?._id],
           },
-          modificar: estado.dataForm
-        }
+          modificar: estado.dataForm,
+        },
       });
       emits(
         'modificarObjeto',
-        producto.empaques.find(v => v._id === props.edicion?._id),
-        producto
+        producto.empaques.find((v) => v._id === props.edicion?._id),
+        producto,
       );
     } else {
       const producto = await api.modificarProducto_basico(store.producto._id, {
         empaques: {
-          agregar: [estado.dataForm]
-        }
+          agregar: [estado.dataForm],
+        },
       });
       emits('crearObjeto', ultimo(producto.empaques), producto);
     }
@@ -158,9 +163,9 @@ const formSubmit = async () => {
 };
 
 // Prellenar el empaque con seleccionar un tipo de empaque
-const prellenarEmpaque = async empaqueId => {
+const prellenarEmpaque = async (empaqueId) => {
   const empaque = store.producto.medida.tipoEmpaques.find(
-    tipoE => tipoE._id === empaqueId
+    (tipoE) => tipoE._id === empaqueId,
   );
   if (!empaque) {
     return false;
@@ -175,13 +180,13 @@ const prellenarEmpaque = async empaqueId => {
 };
 
 // se ha creado un empaque
-const handleCrearTipoEmpaque = tipoEmpaque => {
+const handleCrearTipoEmpaque = (tipoEmpaque) => {
   store.producto.medida.tipoEmpaques.push(tipoEmpaque);
   prellenarEmpaque(tipoEmpaque._id);
 };
 
 // se ha creado una variedad
-const handleVariedadCreada = variedad => {
+const handleVariedadCreada = (variedad) => {
   store.producto.variedades.push(variedad);
 };
 </script>

@@ -61,7 +61,7 @@
   </popup>
   <popup
     v-model="estado.modal.formModificarProveedor"
-    titulo="Modificar una proveedor"
+    titulo="Modificar un proveedor"
   >
     <template #body>
       <formProveedor

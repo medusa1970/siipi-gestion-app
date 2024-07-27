@@ -1,7 +1,8 @@
 export const useRules = {
-  numero(mensaje: string = 'Debe ser un numero'): Function {
+  numero(mensaje: string = 'Debe ser un numero intero'): Function {
     const numero = (val: any): String | true => {
-      if (val != null && !/^-?\d*([\.]\d+)?$/.test(val)) {
+      if (!val) return true;
+      if (!/^(\d{1,3}(,?\d{3})*)?$/.test(val)) {
         return mensaje;
       } else {
         return true;
@@ -9,16 +10,44 @@ export const useRules = {
     };
     return numero;
   },
+  // numero(mensaje: string = 'Debe ser un numero intero'): Function {
+  //   const numero = (val: any): String | true => {
+  //     if (!val) return true;
+  //     const n = Number(val);
+  //     if (Number.isNaN(n) || n !== Math.round(n)) {
+  //       return mensaje;
+  //     } else {
+  //       return true;
+  //     }
+  //   };
+  //   return numero;
+  // },
+  // decimal2(
+  //   mensaje: string = 'Debe ser un numero con 2 decimales max.',
+  // ): Function {
+  //   const decimal2 = (val: any): String | true => {
+  //     if (!val) return true;
+  //     const n = Number(val);
+  //     if (Number.isNaN(n) || n * 100 !== Math.round(n * 100)) {
+  //       return mensaje;
+  //     } else {
+  //       return true;
+  //     }
+  //   };
+  //   return decimal2;
+  // },
 
-  decimal(mensaje: string = 'Debe ser un numero'): Function {
-    const numero = (val: any): String | true => {
-      if (val != null && !/^(\d{1,3}(,\d{3})*(\.\d+)?)?$/.test(val)) {
+  decimal(
+    mensaje: string = 'Debe ser un numero con 2 decimales max',
+  ): Function {
+    const decimal = (val: any): String | true => {
+      if (val != null && !/^(\d{1,3}(,?\d{3})*(\.\d{1,2})?)?$/.test(val)) {
         return mensaje;
       } else {
         return true;
       }
     };
-    return numero;
+    return decimal;
   },
 
   requerido(mensaje: string = 'Campo requerido'): Function {
@@ -65,5 +94,5 @@ export const useRules = {
     } else {
       return true;
     }
-  }
+  },
 };

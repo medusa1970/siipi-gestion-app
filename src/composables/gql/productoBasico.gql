@@ -10,6 +10,7 @@ query buscarProductos_basico(
     nombre
     comentario
     puedeVencer
+    tiempoVida
     vencimientoLimite
     imagen {
       cloudinaryUrl
@@ -73,6 +74,7 @@ mutation crearProductos_basico(
     nombre
     comentario
     puedeVencer
+    tiempoVida
     vencimientoLimite
     imagen {
       cloudinaryUrl
@@ -137,6 +139,7 @@ mutation modificarProductos_basico(
     nombre
     comentario
     puedeVencer
+    tiempoVida
     vencimientoLimite
     imagen {
       cloudinaryUrl
@@ -200,6 +203,7 @@ mutation borrarProductos_basico(
     nombre
     comentario
     puedeVencer
+    tiempoVida
     vencimientoLimite
     imagen {
       cloudinaryUrl

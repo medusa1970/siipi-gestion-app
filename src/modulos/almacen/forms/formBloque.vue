@@ -40,9 +40,12 @@
 
 <script setup lang="ts">
 import type { Entidad } from '#gql';
+import type { Bloque } from '#gql';
 import { UrlToBase64Image } from '~/components/input/input.service';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+const authStore = useAuthStore();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -50,7 +53,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Entidad | null; // edicion si null, sino creacion
+    edicion: Bloque | null;
   }>(),
   {
     edicion: null,
@@ -59,7 +62,6 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  tipo: 'PROVEEDOR',
   nombre: props.edicion?.nombre,
   descripcion: props.edicion?.descripcion,
   imagen: null,
@@ -72,8 +74,18 @@ const estado = reactive({
   imagenPreview: null,
 });
 
+// opciones
+const selectBloque = computed(() => {
+  const bloques = store.entidad.bloques ?? [];
+  return bloques.map((bloque) => ({
+    value: bloque._id,
+    label: bloque.nombre,
+  }));
+});
+
 // Inicializaciones
 onMounted(async () => {
+  await store.getEntidad();
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
     await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
@@ -90,31 +102,43 @@ const formSubmit = async () => {
     delete estado.dataForm.imagen;
   }
   try {
-    // Modo edicion
     if (props.edicion) {
-      const proveedor = await api.modificarEntidad_basico(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true },
+      const entidad = await api.modificarEntidad_bloques(
+        authStore.negocio._id,
+        {
+          bloques: {
+            buscar: {
+              _id: [props.edicion._id],
+            },
+            modificar: estado.dataForm,
+          },
+        },
       );
-      emits('modificarObjeto', proveedor);
-    }
-    // Modo creacion
-    else {
-      const proveedor = await api.crearEntidad_basico(estado.dataForm, {
-        loading: true,
-      });
-      emits('crearObjeto', proveedor);
+      emits(
+        'modificarObjeto',
+        entidad.bloques.find((v) => v._id === props.edicion?._id),
+        entidad,
+      );
+    } else {
+      const entidad = await api.modificarEntidad_bloques(
+        authStore.negocio._id,
+        {
+          bloques: {
+            agregar: [estado.dataForm],
+          },
+        },
+      );
+      emits('crearObjeto', ultimo(entidad.bloques), entidad);
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe un proveedor con este nombre';
+      estado.errorNombre = 'Este bloque ya esta registrada';
       return;
     }
     errFallBack(err);
     return;
   }
-  await store.refreshProveedores();
+  await store.refreshProductos();
   estado.dataForm = clone(initForm);
 };
 </script>

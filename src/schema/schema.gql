@@ -142,6 +142,8 @@ type Bloque {
   _borrado: DateTime
   _orden: Float
   nombre: String!
+  descripcion: String
+  imagen: FileUpload
 }
 
 type InventarioLote {
@@ -152,7 +154,7 @@ type InventarioLote {
   _orden: Float
   cantidad: Float!
   vencimiento: DateTime
-  bloque: Bloque
+  bloque: ID
   marca: Marca!
   presentacion: String
   cantidadPresentacion: Float
@@ -263,9 +265,9 @@ type Problema {
   _modificado: DateTime
   _borrado: DateTime
   _orden: Float
-  inventario: Inventario
+  inventario: ID
   producto: Producto!
-  diferencias: Diferencia
+  diferencias: [Diferencia!]
   resuelto: Boolean
   fechaResolucion: DateTime
   reporte: String
@@ -279,7 +281,7 @@ type StockLote {
   _orden: Float
   vencimiento: DateTime
   cantidad: Float!
-  bloque: Bloque
+  bloque: ID
   marca: Marca!
 }
 
@@ -754,6 +756,8 @@ input BuscarBloqueDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   nombre: [String!]
+  descripcion: [String!]
+  imagen: FileUploadBuscar
 }
 
 input BuscarProblemaDto {
@@ -1237,7 +1241,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-26T20:44:15.476Z"
+  saldoActualizacion: DateTime = "2024-07-28T04:11:46.030Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1302,6 +1306,8 @@ input CrearDiferenciaDto {
 input CrearBloqueDto {
   _id: ID
   nombre: String!
+  descripcion: String
+  imagen: FileUploadInput
 }
 
 input CrearProblemaDto {
@@ -1499,6 +1505,8 @@ input EditarBloqueDto {
 
 input ModificarBloqueDto {
   nombre: String
+  descripcion: String
+  imagen: FileUploadInput
 }
 
 input EditarProblemaDto {

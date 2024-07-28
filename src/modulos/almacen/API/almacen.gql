@@ -50,9 +50,7 @@ mutation HacerInventario(
     lotes {
       vencimiento
       cantidad
-      bloque {
-        nombre
-      }
+      bloque
     }
   }
 }
@@ -91,9 +89,7 @@ mutation modificarEntidades_problemas(
     problemas {
       _id
       _creado
-      inventario {
-        _id
-      }
+      inventario
       producto {
         _id
         nombre
@@ -118,9 +114,7 @@ query buscarEntidades_problemas(
     problemas {
       _id
       _creado
-      inventario {
-        _id
-      }
+      inventario
       producto {
         _id
         nombre
@@ -181,10 +175,7 @@ query stockBuscarEntidad(
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }
@@ -210,10 +201,7 @@ mutation stockModificarEntidad(
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }

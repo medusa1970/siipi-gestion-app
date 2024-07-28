@@ -1,0 +1,77 @@
+query buscarEntidades_bloques(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    bloques {
+      _id
+      nombre
+      descripcion
+      imagen {
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation crearEntidades_bloques(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    bloques {
+      _id
+      nombre
+      descripcion
+      imagen {
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation modificarEntidades_bloques(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    bloques {
+      _id
+      nombre
+      descripcion
+      imagen {
+        cloudinaryUrl
+      }
+    }
+  }
+}
+
+mutation borrarEntidades_bloques(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarEntidades(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    bloques {
+      _id
+      nombre
+      descripcion
+      imagen {
+        cloudinaryUrl
+      }
+    }
+  }
+}

@@ -30,7 +30,7 @@
       @update="(v) => (estado.dataForm.cantidad = v as number)"
       :porDefecto="estado.dataForm.cantidad"
       :rules="[useRules.requerido()]"
-      info="Info #54"
+      info="Info #55"
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
   </q-form>

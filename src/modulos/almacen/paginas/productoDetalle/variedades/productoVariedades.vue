@@ -27,7 +27,8 @@
     align: 'right',
     slot: true,
   },
-]">
+]"
+  >
     <template #dropdown>
       <div class="flex">
         <input-text
@@ -35,13 +36,15 @@
           class="col-span-1"
           label="Buscar"
           porDefecto=""
-          noSlot />
+          noSlot
+        />
         <q-btn
           @click="() => (estado.modal.formVariedadCrear = true)"
           icon="add"
           color="green"
           no-caps
-          padding="4px 10px" />
+          padding="4px 10px"
+        />
       </div>
     </template>
     <template #body-cell-alertas="{ row }">
@@ -52,19 +55,21 @@
       </div>
     </template>
     <template #body-cell-actions="{ row }">
-      <q-btn-group push @click="e => e.stopPropagation()">
+      <q-btn-group push @click="(e) => e.stopPropagation()">
         <q-btn
           @click="modalEditarMarca(row)"
           class="p-1"
           color="black"
           size="sm"
-          icon="edit" />
+          icon="edit"
+        />
         <q-btn
           icon="delete"
           class="p-1"
           color="red"
           size="sm"
-          @click="borrarProductoMarca(row)">
+          @click="borrarProductoMarca(row)"
+        >
           <q-tooltip> Eliminar marca </q-tooltip>
         </q-btn>
       </q-btn-group>
@@ -76,17 +81,20 @@
 
   <Popup
     v-model="estado.modal.formVariedadModificar"
-    titulo="Modificar la marca">
+    titulo="Modificar la marca"
+  >
     <template #body>
       <formVariedad
         :edicion="estado.variedad"
-        @modificarObjeto="handleVariedadModificada" />
+        @modificarObjeto="handleVariedadModificada"
+      />
     </template>
   </Popup>
 
   <Popup
     v-model="estado.modal.formVariedadCrear"
-    titulo="Registrar nueva marca">
+    titulo="Registrar nueva marca"
+  >
     <template #body>
       <formVariedad @crearObjeto="handleVariedadCreada" />
     </template>
@@ -103,7 +111,7 @@ const {
   store,
   handleVariedadCreada,
   handleVariedadModificada,
-  borrarProductoMarca
+  borrarProductoMarca,
 } = useProductoVariedades();
 
 /**
@@ -114,10 +122,12 @@ const rowsTabla = computed(() => {
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
     const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
-    filtered = filtered.filter(variedad => {
+    filtered = filtered.filter((variedad) => {
       return regex.test(
         variedad.marca.nombre +
-          variedad.marca.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          variedad.marca.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, ''),
       );
     });
   }
@@ -125,9 +135,7 @@ const rowsTabla = computed(() => {
 });
 
 const modalEditarMarca = (row: any) => {
-  // console.log('ROW' + JSON.stringify(row));
   estado.variedad = row;
-  // console.log('ESTADO' + JSON.stringify(estado.variedad));
   estado.modal.formVariedadModificar = true;
 };
 </script>

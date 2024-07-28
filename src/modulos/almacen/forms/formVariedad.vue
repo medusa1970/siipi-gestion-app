@@ -20,13 +20,13 @@
         label="Primer aviso"
         info="Info #34"
         tipo="number"
-        style="width: 45%"
+        style="width: 50%"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
         :rules="[useRules.requerido()]"
       />
       <input-text
-        style="width: 55%"
+        style="width: 50%"
         tipo="number"
         label="Segundo aviso"
         info="Info #35"
@@ -37,12 +37,12 @@
     </div>
 
     <!-- Stock minimo -->
-    <p>Alerta de que hay que inventariar</p>
+    <p>Cada cuantos días se tiene que inventariar?</p>
     <div class="flex">
       <input-text
-        style="width: 45%"
+        style="width: 50%"
         tipo="number"
-        label="Primer aviso"
+        label="Inventariar cada X días"
         info="Info #36"
         :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.inventarioLimite[0] = v)"
@@ -50,9 +50,9 @@
       />
 
       <input-text
-        style="width: 55%"
+        style="width: 50%"
         tipo="number"
-        label="Segundo aviso"
+        label="Avisar X días antes"
         info="Info #37"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
         @update="(v) => (estado.dataForm.inventarioLimite[1] = v)"

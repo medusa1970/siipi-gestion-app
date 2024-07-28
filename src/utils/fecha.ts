@@ -45,7 +45,6 @@ export const plazo24hrs = (fecha: any) => {
   //10min
   //@ts-ignore
   // const diferencia = (fechaActual - fechaPedido) / 1000 / 60;
-  // console.log(diferencia);
   // return diferencia <= 10;
 
   //24hrs

@@ -177,7 +177,6 @@ const formSubmit = async () => {
   if (!estado.dataForm.imagen) {
     delete estado.dataForm.imagen;
   }
-  console.log(estado.dataForm);
   try {
     if (props.edicion) {
       estado.dataForm.vencimientoLimite = {

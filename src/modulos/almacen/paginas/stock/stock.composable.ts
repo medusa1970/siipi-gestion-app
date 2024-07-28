@@ -1,4 +1,4 @@
-import type { Categoria, Marca, Producto, Stock } from '#gql';
+import type { Bloque, Categoria, Marca, Producto, Stock } from '#gql';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 
@@ -6,35 +6,15 @@ export const useStock = () => {
   const authStore = useAuthStore();
   const { store } = useAlmacen();
   const estado = reactive({
-    stocks: [] as {
-      _id: String;
-      stock: Stock;
-      producto: Producto;
-      primerVencimiento: Date;
-      cantidadTotal: number;
-      alertaCantidad: number;
-      alertaVencimiento: number;
-      diasVencimiento: number;
-      vencimientoLimite: [number, number];
-      alertaInventario: number;
-      marcas: {
-        [key: string]: {
-          marca: Marca;
-          cantidadTotal: number;
-          primerVencimiento: null;
-          alertaCantidad: number;
-          diasVencimiento: number;
-          alertaVencimiento: number;
-          cantidadLimite: [number, number];
-          inventarioLimite: [number, number];
-        };
-      };
-    }[],
+    stocks: [],
     filtros: {
-      alerta: '',
-      categoriaSeleccionada: '',
-      marcaSeleccionada: '',
+      alerta: null,
+      categoriaSeleccionada: null,
+      marcaSeleccionada: null,
       buscarFiltro: '',
+    },
+    modal: {
+      formInventario: false,
     },
   });
 
@@ -43,117 +23,169 @@ export const useStock = () => {
    */
   const obtenerTodoStock = async () => {
     const entidad = await api.buscarEntidad_almacen(authStore.getNegocio._id);
+
     estado.stocks = entidad.almacen.map((stock: any) => {
+      // inicializacion res para este stock
       const res = {
         _id: stock._id,
         stock,
         producto: stock.producto,
-        vencimientoLimite: stock.producto.vencimientoLimite,
-        cantidadTotal: 0,
-        primerVencimiento: null,
-        alertaCantidad: 0,
-        alertaVencimiento: 0,
-        diasVencimiento: null,
-        alertaInventario: 0,
         marcas: {},
+
+        // cantidad
+        cantidadTotal: 0,
+        alertaCantidad: 0,
+
+        // vencimiento
+        diasAviso1HastaVencer: Math.min(
+          ...(stock.producto.vencimientoLimite ?? 0),
+        ),
+        diasAviso2HastaVencer: Math.max(
+          ...(stock.producto.vencimientoLimite ?? 0),
+        ),
+        diasHastaProximoVencimiento: null, // dias entre hoy y próxima alerta
+        alertaVencimiento: 0,
+
+        // inventario
+        fechaUltimoInventario: stock.lotes?.[0]._creado,
+        diasDesdeUltimoInventario: Math.floor(
+          diferenciaFechas(
+            new Date('2024-07-09'), // stock.lotes?.[0]._creado,
+            new Date(),
+            'D',
+          ),
+        ),
+        diasHastaProximoInventario: null,
+        diasHastaProximoAviso: null,
+        alertaInventario: 0,
       };
 
-      // recorremos los lotes
+      // Inicializacion de las marcas
       for (const lote of stock.lotes) {
-        const id = lote.marca._id.toString();
-
-        // INICIALIZACION
+        const marcaId = lote.marca._id.toString();
         const variedad = stock.producto.variedades.find(
-          (variedad: any) => variedad.marca._id === id,
+          (variedad: any) => variedad.marca._id === marcaId,
         );
-        if (!res.marcas[id]) {
+        if (!res.marcas[marcaId]) {
           Object.assign(res.marcas, {
-            [id]: {
+            [marcaId]: {
               marca: lote.marca,
-              cantidadLimite: variedad?.cantidadLimite,
-              inventarioLimite: variedad?.inventarioLimite,
+
+              //cantidad
+              cantidadLimite: variedad?.cantidadLimite ?? [0, 0],
               cantidadTotal: 0,
               alertaCantidad: 0,
-              primerVencimiento: null,
-              alertaVencimiento: 0,
-              diasVencimiento: null,
+
+              // inventario
               alertaInventario: 0,
+              diasMaxEntreInventarios: variedad?.inventarioLimite?.[0] ?? 0,
+              diasHastaProximoAviso: variedad?.inventarioLimite?.[1] ?? 0,
+              diasHastaProximoInventario: null, // dias hasta que toque el proximo inventario
             },
           });
         }
+      }
 
-        // CANTIDAD
+      // Alerta de inventario por marca y res
+      for (const marcaId in res.marcas) {
+        const marca = res.marcas[marcaId];
+        if (marca.diasMaxEntreInventarios <= 0) continue;
+
+        // alerta marca
+        marca.diasHastaProximoInventario =
+          marca.diasMaxEntreInventarios - res.diasDesdeUltimoInventario;
+        marca.alertaInventario = 0;
+        if (marca.diasHastaProximoInventario <= marca.diasHastaProximoAviso) {
+          marca.alertaInventario = 1;
+        }
+        if (marca.diasHastaProximoInventario <= 0) {
+          marca.alertaInventario = 2;
+        }
+
+        // alerta res
+        if (res.diasHastaProximoInventario == null) {
+          res.diasHastaProximoInventario = marca.diasHastaProximoInventario;
+        } else {
+          res.diasHastaProximoInventario = Math.min(
+            res.diasHastaProximoInventario,
+            marca.diasHastaProximoInventario,
+          );
+        }
+        if (res.alertaInventario == null) {
+          res.alertaInventario = marca.alertaInventario;
+        } else {
+          res.alertaInventario = Math.max(
+            res.alertaInventario,
+            marca.alertaInventario,
+          );
+        }
+      }
+
+      // cantidad total y alerta de cantidad por marca y res
+      for (const lote of stock.lotes) {
+        const marcaId = lote.marca._id.toString();
+        // ajustamos las cantidad
         res.cantidadTotal += lote.cantidad;
-        res.marcas[id].cantidadTotal += lote.cantidad;
-
-        // VENCIMIENTO
-        if (lote.vencimiento && res.vencimientoLimite) {
-          // lote
-          lote.diasVencimiento = Math.floor(
-            diferenciaFechas(new Date(), lote.vencimiento, 'D'),
-          );
-          lote.alertaVencimiento =
-            lote.diasVencimiento <= Math.min(...res.vencimientoLimite)
-              ? 2
-              : lote.diasVencimiento <= Math.max(...res.vencimientoLimite)
-              ? 1
-              : 0;
-          // marca
-          if (res.marcas[id].diasVencimiento == null) {
-            res.marcas[id].diasVencimiento = lote.diasVencimiento;
-          } else {
-            res.marcas[id].diasVencimiento = Math.min(
-              res.marcas[id].diasVencimiento,
-              lote.diasVencimiento,
-            );
-          }
-          if (
-            res.marcas[id].primerVencimiento == null ||
-            new Date(lote.vencimiento).getTime() <
-              new Date(res.marcas[id].primerVencimiento).getTime()
-          ) {
-            res.marcas[id].primerVencimiento = lote.vencimiento;
-          }
-          // global
-          if (res.diasVencimiento == null) {
-            res.diasVencimiento = lote.diasVencimiento;
-          } else {
-            res.diasVencimiento = Math.min(
-              res.diasVencimiento,
-              lote.diasVencimiento,
-            );
-          }
-          res.alertaVencimiento = Math.max(
-            res.alertaVencimiento,
-            lote.alertaVencimiento,
-          );
-          if (
-            res.primerVencimiento == null ||
-            new Date(lote.vencimiento).getTime() <
-              new Date(res.primerVencimiento).getTime()
-          ) {
-            res.primerVencimiento = lote.vencimiento;
-          }
+        res.marcas[marcaId].cantidadTotal += lote.cantidad;
+        // max y min segun la configuracion de marca
+        const max = Math.max(...res.marcas[marcaId].cantidadLimite);
+        const min = Math.min(...res.marcas[marcaId].cantidadLimite);
+        // si no hay limite configurado salimos
+        if (Math.max(min, max) <= 0) {
+          continue;
         }
+        // dias hasta que toque el inventario (sale negativo si ya pasó)
+        res.marcas[marcaId].diasInventario =
+          Math.floor(
+            diferenciaFechas(res.fechaUltimoInventario, new Date(), 'D'),
+          ) + max;
+        // alerta de marca
+        lote.alertaCantidad = 0;
+        if (max > 0 && lote.alertaCantidad <= max) lote.cantidadTotal = 1;
+        if (min > 0 && lote.alertaCantidad <= min) lote.cantidadTotal = 2;
+        // alerta res
+        res.alertaCantidad = Math.max(
+          res.alertaCantidad,
+          res.marcas[marcaId].alertaCantidad,
+        );
       }
 
-      // alerta cantidad global
-      for (const id in res.marcas) {
-        const marca = res.marcas[id];
-        if (marca.cantidadLimite) {
-          marca.alertaCantidad =
-            marca.cantidadTotal <= Math.min(...marca.cantidadLimite)
-              ? 2
-              : marca.cantidadTotal <= Math.max(...marca.cantidadLimite)
-              ? 1
-              : 0;
-          res.alertaCantidad = Math.max(
-            res.alertaCantidad,
-            marca.alertaCantidad,
+      // alerta de vencimiento por lote y res
+      for (const lote of stock.lotes) {
+        if (!stock.producto.puedeVencer || !lote.vencimiento) continue;
+
+        // dias hasta el vencimiento (sale negativo si ya pasó)
+        lote.diasHastaVencimiento = Math.floor(
+          diferenciaFechas(new Date(), lote.vencimiento, 'D'),
+        );
+
+        lote.alertaVencimiento = 0;
+        if (
+          res.diasAviso2HastaVencer > 0 &&
+          lote.diasHastaVencimiento <= res.diasAviso2HastaVencer
+        ) {
+          lote.alertaVencimiento = 1;
+        }
+        if (
+          res.diasAviso1HastaVencer > 0 &&
+          lote.diasHastaVencimiento <= res.diasAviso1HastaVencer
+        ) {
+          lote.alertaVencimiento = 2;
+        }
+
+        if (res.diasHastaProximoVencimiento == null) {
+          res.diasHastaProximoVencimiento = lote.diasHastaVencimiento;
+        } else {
+          lote.diasHastaVencimiento = Math.min(
+            res.diasHastaProximoVencimiento,
+            lote.diasHastaVencimiento,
           );
         }
+        res.alertaVencimiento = Math.max(
+          res.alertaVencimiento,
+          lote.alertaVencimiento,
+        );
       }
-
       return res;
     });
   };
@@ -198,15 +230,79 @@ export const useStock = () => {
     return options;
   });
 
+  // rows para la tabla
+  const rowsParaMostrar = computed(() => {
+    let filtered = estado.stocks;
+    // filtro por alertas
+    if (estado.filtros.alerta === 'cantidad') {
+      filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
+    }
+    if (estado.filtros.alerta === 'vencimiento') {
+      filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
+    }
+    if (estado.filtros.alerta === 'inventario') {
+      filtered = filtered.filter((stock) => stock.alertaInventario > 0);
+    }
+    // filtro por categoria
+    if (
+      estado.filtros.categoriaSeleccionada != null &&
+      estado.filtros.categoriaSeleccionada !== ''
+    ) {
+      filtered = filtered;
+      // .filter((stock) =>
+      //   store
+      //     .getCategoria(estado.filtros.categoriaSeleccionada)
+      //     .includes(stock.producto.categoria._id),
+      // );
+    }
+    // filtro por marca
+    if (
+      estado.filtros.marcaSeleccionada != null &&
+      estado.filtros.marcaSeleccionada !== ''
+    ) {
+      filtered = filtered.filter((stock) =>
+        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
+      );
+    }
+    // filtro por buscar que no discrimine maiusculas de minusculas y acentos
+    if (estado.filtros.buscarFiltro != null) {
+      filtered = filtered.filter((stock) => {
+        const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+        return regex.test(
+          stock.producto.nombre +
+            stock.producto.nombre
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, ''),
+        );
+      });
+    }
+    return filtered;
+  });
+
   // Inicializaciones
   onMounted(async () => {
+    await store.getEntidad();
     await store.getCategorias();
+    await obtenerTodoStock();
   });
+
+  // se hizo un inventario
+  const handleInventario = async (inventario) => {
+    NotifySucessCenter('Inventario hecho');
+    estado.modal.formInventario = false;
+  };
+
+  const getBloque = (id): Bloque => {
+    return store.entidad.bloques.find((b) => b._id === id);
+  };
 
   return {
     estado,
     store,
     obtenerTodoStock,
+    handleInventario,
+    getBloque,
+    rowsParaMostrar,
     selectCategoriaFiltro,
     selectMarcaFiltro,
   };

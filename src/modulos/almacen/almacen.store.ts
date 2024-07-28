@@ -1,6 +1,7 @@
 import type { Categoria, Entidad, Marca, Medida, Producto } from '#gql';
 import localforage from 'localforage';
 import { apiAlmacen } from '@/modulos/almacen/API/almacen.api';
+import { useAuthStore } from '../main/useAuthStore';
 
 interface storeProps {
   productos: Producto[] | null;
@@ -14,6 +15,7 @@ interface storeProps {
   marca: Marca | null;
   medida: Medida | null;
   proveedor: Entidad | null;
+  entidad: Entidad | null; // entidad corriente
 }
 
 export const storeAlmacen = defineStore('almacen', {
@@ -23,7 +25,7 @@ export const storeAlmacen = defineStore('almacen', {
     medidas: null,
     proveedores: null,
     categoriaArbol: null,
-
+    entidad: null,
     producto: null,
     marca: null,
     medida: null,
@@ -56,8 +58,8 @@ export const storeAlmacen = defineStore('almacen', {
       }
       return this.productos;
     },
-    async refreshProductos() {
-      this.getProductos(true);
+    async refreshProductos(): Promise<void> {
+      await this.getProductos(true);
     },
 
     /**
@@ -74,9 +76,9 @@ export const storeAlmacen = defineStore('almacen', {
       }
       return id == null ? this.categoriaArbol : this.getCategoria(id);
     },
-    refreshCategorias(): void {
+    async refreshCategorias(): Promise<void> {
       this.categoriaArbol = null;
-      this.getCategorias();
+      await this.getCategorias();
     },
     getCategoria(id: string): Categoria {
       if (this.categoriaArbol === null) return null;
@@ -94,6 +96,7 @@ export const storeAlmacen = defineStore('almacen', {
       };
       return f(this.categoriaArbol);
     },
+
     /**
      * Retorna la lista de las marcas de la base de datos
      */
@@ -109,9 +112,9 @@ export const storeAlmacen = defineStore('almacen', {
       }
       return this.marcas;
     },
-    refreshMarcas(): void {
+    async refreshMarcas(): Promise<void> {
       this.marcas = null;
-      this.getMarcas();
+      await this.getMarcas();
     },
 
     /**
@@ -132,9 +135,9 @@ export const storeAlmacen = defineStore('almacen', {
       }
       return this.proveedores;
     },
-    refreshProveedores(): void {
+    async refreshProveedores(): Promise<void> {
       this.proveedores = null;
-      this.getProveedores();
+      await await this.getProveedores();
     },
 
     /**
@@ -152,9 +155,31 @@ export const storeAlmacen = defineStore('almacen', {
       }
       return this.medidas;
     },
-    refreshMedidas(): void {
+    async refreshMedidas(): Promise<void> {
       this.medidas = null;
-      this.getMedidas();
+      await this.getMedidas();
+    },
+
+    /**
+     * Retorna la entidad con sus bloques
+     */
+    async getEntidad(): Promise<Entidad> {
+      if (this.entidad == null) {
+        try {
+          this.entidad = await api.buscarEntidad_bloques(
+            useAuthStore().negocio._id,
+          );
+          return this.entidad;
+        } catch (err) {
+          errFallBack(err);
+          return;
+        }
+      }
+      return this.entidad;
+    },
+    async refreshEntidad(): Promise<void> {
+      this.entidad = null;
+      await this.getEntidad();
     },
   },
 

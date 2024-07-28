@@ -171,7 +171,6 @@ onMounted(async () => {
       );
     };
     for (const catalogo of store.catalogoArbol.hijas) {
-      console.log('checking ' + catalogo.nombre);
       if (f(props.edicion?.catalogo?._id, catalogo)) {
         estado.catalogoAncestroHack = true;
         estado.catalogoAncestro = catalogo._id;

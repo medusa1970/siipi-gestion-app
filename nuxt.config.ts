@@ -99,7 +99,6 @@ export default defineNuxtConfig({
             //@ts-ignore
             const routes = await import(fullPath);
             for (const route of routes.default || []) {
-              // console.log(route.name);
               pages.push(route);
             }
           }

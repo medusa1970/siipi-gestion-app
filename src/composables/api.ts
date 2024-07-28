@@ -123,9 +123,7 @@ export const api = {
     f: BuscarEntidadDto = {},
     t: any = null,
   ): Promise<Entidad[]> =>
-    <Entidad[]>(
-      await buscarVarios(GqlBuscarEntidades_servicios, t, b, o, f, o.loading)
-    ),
+    <Entidad[]>await bv(GqlBuscarEntidades_servicios, t, b, o, f, o.loading),
   crearEntidad_servicios: async (
     d: CrearEntidadDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -182,9 +180,7 @@ export const api = {
     f: BuscarEntidadDto = {},
     t: any = null,
   ): Promise<Entidad[]> =>
-    <Entidad[]>(
-      await buscarVarios(GqlBuscarEntidades_almacen, t, b, o, f, o.loading)
-    ),
+    <Entidad[]>await bv(GqlBuscarEntidades_almacen, t, b, o, f, o.loading),
   crearEntidad_almacen: async (
     d: CrearEntidadDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -225,6 +221,62 @@ export const api = {
     <Entidad[]>await dv(GqlBorrarEntidades_almacen, t, b, o, o.loading),
 
   /**
+   * Entidades / almacen
+   */
+  buscarEntidad_bloques: async (
+    b: string | BuscarEntidadDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarEntidadDto = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await bu(GqlBuscarEntidades_bloques, t, b, o, f, o.loading),
+  buscarEntidades_bloques: async (
+    b: BuscarEntidadDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarEntidadDto = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await bv(GqlBuscarEntidades_bloques, t, b, o, f, o.loading),
+  crearEntidad_bloques: async (
+    d: CrearEntidadDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await cu(GqlCrearEntidades_bloques, t, d, o, o.loading),
+  crearEntidades_bloques: async (
+    d: CrearEntidadDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await cv(GqlCrearEntidades_bloques, t, d, o, o.loading),
+  modificarEntidad_bloques: async (
+    b: string | BuscarEntidadDto,
+    d: ModificarEntidadDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await mu(GqlModificarEntidades_bloques, t, b, d, o, o.loading),
+  modificarEntidades_bloques: async (
+    b: BuscarEntidadDto,
+    d: ModificarEntidadDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await mv(GqlModificarEntidades_bloques, t, b, d, o, o.loading),
+  borrarEntidad_bloques: async (
+    b: string | BuscarEntidadDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await du(GqlBorrarEntidades_bloques, t, b, o, o.loading),
+  borrarEntidades_bloques: async (
+    b: BuscarEntidadDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await dv(GqlBorrarEntidades_bloques, t, b, o, o.loading),
+
+  /**
    * Marcas
    */
   buscarMarca: async (
@@ -239,7 +291,7 @@ export const api = {
     f: BuscarMarcaDto = {},
     t: any = null,
   ): Promise<Marca[]> =>
-    <Marca[]>await buscarVarios(GqlBuscarMarcas, t, b, o, f, o.loading),
+    <Marca[]>await bv(GqlBuscarMarcas, t, b, o, f, o.loading),
   crearMarca: async (
     d: CrearMarcaDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -347,7 +399,7 @@ export const api = {
     f: BuscarCategoriaDto = {},
     t: any = null,
   ): Promise<Categoria[]> =>
-    <Categoria[]>await buscarVarios(GqlBuscarCategorias, t, b, o, f, o.loading),
+    <Categoria[]>await bv(GqlBuscarCategorias, t, b, o, f, o.loading),
   crearCategoria: async (
     d: CrearCategoriaDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -403,7 +455,7 @@ export const api = {
     f: BuscarCatalogoDto = {},
     t: any = null,
   ): Promise<Catalogo[]> =>
-    <Catalogo[]>await buscarVarios(GqlBuscarCatalogos, t, b, o, f, o.loading),
+    <Catalogo[]>await bv(GqlBuscarCatalogos, t, b, o, f, o.loading),
   crearCatalogo: async (
     d: CrearCatalogoDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -459,7 +511,7 @@ export const api = {
     f: BuscarPersonaDto = {},
     t: any = null,
   ): Promise<Persona[]> =>
-    <Persona[]>await buscarVarios(GqlBuscarPersonas, t, b, o, f, o.loading),
+    <Persona[]>await bv(GqlBuscarPersonas, t, b, o, f, o.loading),
   crearPersona: async (
     d: CrearPersonaDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -515,7 +567,7 @@ export const api = {
     f: BuscarAccionDto = {},
     t: any = null,
   ): Promise<Accion[]> =>
-    <Accion[]>await buscarVarios(GqlBuscarAcciones, t, b, o, f, o.loading),
+    <Accion[]>await bv(GqlBuscarAcciones, t, b, o, f, o.loading),
   crearAccion: async (
     d: CrearAccionDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -569,7 +621,7 @@ export const api = {
     f: BuscarMedidaDto = {},
     t: any = null,
   ): Promise<Medida[]> =>
-    <Medida[]>await buscarVarios(GqlBuscarMedidas, t, b, o, f, o.loading),
+    <Medida[]>await bv(GqlBuscarMedidas, t, b, o, f, o.loading),
   crearMedida: async (
     d: CrearMedidaDto,
     o: CrearOpciones & { loading?: boolean } = {},
@@ -623,7 +675,7 @@ export const api = {
     f: BuscarOfertaDto = {},
     t: any = null,
   ): Promise<Oferta[]> =>
-    <Oferta[]>await buscarVarios(GqlBuscarOfertas, t, b, o, f, o.loading),
+    <Oferta[]>await bv(GqlBuscarOfertas, t, b, o, f, o.loading),
   crearOferta: async (
     d: CrearOfertaDto,
     o: CrearOpciones & { loading?: boolean } = {},

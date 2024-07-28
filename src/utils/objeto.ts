@@ -7,6 +7,7 @@ export const extraer = function (objeto: { [key: string]: any }) {
   return objeto[keys[0]];
 };
 export const extraerUno = function (objeto: { [key: string]: any }) {
+  console.log({ objeto });
   const res = extraer(objeto);
   return Array.isArray(res) ? res[0] : res;
 };

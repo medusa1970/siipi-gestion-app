@@ -383,7 +383,6 @@ const { $socket } = useNuxtApp();
 onBeforeMount(() => {
   $socket.on('cambiosProductos', async (data: any) => {
     console.log('socket productos triggered');
-    await store.refreshProductos();
   });
   $socket.on('cambiosOfertas', async (data: any) => {
     await storeOfertas.refreshProductos();

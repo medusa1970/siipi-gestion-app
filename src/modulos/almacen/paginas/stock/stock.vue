@@ -10,8 +10,66 @@
   />
 
   <Tabla
-    :rows="rowsParaMostrar"
-    :columns="columnsTabla"
+    :rows="composable.rowsParaMostrar.value"
+    :columns="[
+      {
+        name: 'imagen',
+        label: 'Imagen',
+        imagen: true,
+        align: 'left',
+        field: (row) => row.producto.imagen?.cloudinaryUrl,
+      },
+      {
+        name: 'producto',
+        required: true,
+        slot: true,
+        label: 'Producto',
+        align: 'left',
+        field: (row) => row.producto.nombre,
+        sortable: true,
+      },
+      // {
+      //   name: 'cantidad',
+      //   slot: true,
+      //   label: 'Cantidad',
+      //   align: 'left',
+      //   field: (row) => row.producto.nombre,
+      //   sortable: true,
+      // },
+      {
+        name: 'alertaCantidad',
+        slot: true,
+        required: true,
+        label: 'Cantidad',
+        align: 'center',
+        field: (row) => row.cantidadTotal,
+        sortable: true,
+      },
+      {
+        name: 'alertaVencimiento',
+        slot: true,
+        required: true,
+        label: 'Vencimiento',
+        align: 'center',
+        field: (row) => row.dias,
+        sortable: true,
+      },
+      {
+        name: 'alertaInventario',
+        slot: true,
+        required: true,
+        label: 'Inventario',
+        align: 'center',
+        field: (row) => row.alertaInventario,
+        sortable: true,
+      },
+      {
+        name: 'actions',
+        label: 'Acciones',
+        align: 'right',
+        slot: true,
+      },
+    ]"
     :defaultImage="ProductoImage"
   >
     <template #dropdown>
@@ -93,39 +151,63 @@
       {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
     </template>
 
-    <template #body-cell-alertaVencimiento="{ row }">
-      <div v-if="row.alertaVencimiento > 0">
-        <q-icon
-          name="report"
-          :color="row.alertaVencimiento === 2 ? 'red' : 'orange'"
-          size="sm"
-        />
-        <br />
-      </div>
-      {{
-        row.diasVencimiento < 0
-          ? `hace ${-row.diasVencimiento} días`
-          : row.diasVencimiento > 0
-          ? `en ${row.diasVencimiento} días`
-          : 'hoy'
-      }}
-    </template>
-
+    <!-- Alerta cantidad -->
     <template #body-cell-alertaCantidad="{ val, row }">
-      <div v-if="row.alertaCantidad">
-        <div v-if="row.alertaCantidad === 2">
-          <q-icon name="report" color="red" size="sm" />
-        </div>
-        <div v-else-if="row.alertaCantidad === 1">
-          <q-icon name="report" color="orange" size="sm" />
-        </div>
-      </div>
-      {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
-    </template>
-    <template #body-cell-alertI="{ val, row }">
-      <div v-if="val">
+      <div v-if="row.alertaCantidad === 2">
         <q-icon name="report" color="red" size="sm" />
       </div>
+      <div v-else-if="row.alertaCantidad === 1">
+        <q-icon name="report" color="orange" size="sm" />
+      </div>
+      <div>{{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}</div>
+    </template>
+
+    <!-- Alerta Vencimiento -->
+    <template #body-cell-alertaVencimiento="{ row }">
+      <div v-if="row.alertaVencimiento === 1">
+        <q-icon name="report" color="orange" size="sm" />
+      </div>
+      <div v-else-if="row.alertaVencimiento === 2">
+        <q-icon name="report" color="red" size="sm" />
+      </div>
+      <div>
+        {{
+          !row.producto.puedeVencer
+            ? 'No vence'
+            : row.diasAviso1HastaVencer === 0
+            ? 'Sin alerta'
+            : row.diasHastaProximoVencimiento < 0
+            ? `Vencido desde ${-row.diasHastaProximoVencimiento} días`
+            : row.diasHastaProximoVencimiento > 0
+            ? `Vence en ${row.diasHastaProximoVencimiento} días`
+            : 'Vence hoy'
+        }}
+      </div>
+    </template>
+
+    <!-- alerta Inventario -->
+    <template #body-cell-alertaInventario="{ val, row }">
+      <!-- <div v-if="row.stock.lotes.find((l) => !l.bloque)">
+        <q-icon name="report" color="blue" size="sm" />
+      </div> -->
+      <div v-if="row.alertaInventario === 1">
+        <q-icon name="report" color="orange" size="sm" />
+      </div>
+      <div v-else-if="row.alertaInventario === 2">
+        <q-icon name="report" color="red" size="sm" />
+      </div>
+      <div v-if="row.diasHastaProximoInventario != null">
+        {{
+          row.diasHastaProximoInventario < 0
+            ? `Atrasado ${-row.diasHastaProximoInventario} días`
+            : row.diasHastaProximoInventario >= 2
+            ? `Toca en ${row.diasHastaProximoInventario} días`
+            : row.diasHastaProximoInventario === 1
+            ? `Toca mañana`
+            : 'Toca hoy'
+        }}
+      </div>
+      <div v-else>Sin limite de tiempo</div>
     </template>
 
     <template #body-cell-actions="{ row }">
@@ -144,7 +226,18 @@
           icon="shopping_cart"
           @click=""
         />
-        <q-btn class="p-1" color="green" size="sm" icon="list_alt" @click="" />
+        <q-btn
+          class="p-1"
+          color="green"
+          size="sm"
+          icon="list_alt"
+          @click="
+            {
+              producto = row.stock.producto;
+              estado.modal.formInventario = true;
+            }
+          "
+        />
         <q-btn
           class="p-1"
           color="black"
@@ -156,6 +249,16 @@
     </template>
 
     <template #body-expand="{ row }">
+      <p>
+        Ultimo inventario:
+        <span v-if="row.fechaUltimoInventario == null">Nunca</span>
+        <span v-else-if="row.diasDesdeUltimoInventario === 0">hoy</span>
+        <span v-else
+          >hace {{ row.diasDesdeUltimoInventario }} día{{
+            row.diasInventario > 1 ? 's' : ''
+          }}</span
+        >
+      </p>
       <div class="flex">
         <!--q-card
             class="mr-3 mb-3"
@@ -179,11 +282,17 @@
         >
           <q-card-section>
             <p>{{ lote.marca.nombre }}</p>
-            <p :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
+            <p
+              v-if="row.producto.puedeVencer"
+              :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''"
+            >
               Vencimiento: {{ fechaMes(lote.vencimiento) }}
             </p>
             <p>Cantidad: {{ lote.cantidad }}</p>
-            <p>Bloque: {{ lote.bloque }}</p>
+            <p v-if="lote.bloque">
+              Bloque: {{ composable.getBloque(lote.bloque)?.nombre }}
+            </p>
+            <p v-else>Sin bloque</p>
             <!--p>alerta: {{ lote.alertaVencimiento }}</p>
               <p>dias: {{ lote.diasVencimiento }}</p>
               <p>limitV: {{ row.producto.vencimientoLimite }}</p-->
@@ -192,122 +301,29 @@
       </div>
     </template>
   </Tabla>
+
+  <Popup v-model="estado.modal.formInventario" titulo="Hacer un inventario">
+    <template #body>
+      <formInventario
+        :producto
+        @hacerInventario="composable.handleInventario"
+      />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
 // layout
-definePageMeta({
-  layout: 'cathering',
-});
-
+definePageMeta({ layout: 'cathering' });
 // import composable, store & estado
 import { useStock } from './stock.composable';
 const composable = useStock();
 const { estado, store } = composable;
 // Otros imports
+import formInventario from '@/modulos/almacen/forms/formInventario.vue';
 import ProductoImage from '@/assets/img/producto.png';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-
-// rows para la tabla
-const rowsParaMostrar = computed(() => {
-  let filtered = estado.stocks;
-  // filtro por alertas
-  if (estado.filtros.alerta === 'cantidad') {
-    filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
-  }
-  if (estado.filtros.alerta === 'vencimiento') {
-    filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
-  }
-  if (estado.filtros.alerta === 'inventario') {
-    filtered = filtered.filter((stock) => stock.alertaInventario > 0);
-  }
-  // filtro por categoria
-  if (
-    estado.filtros.categoriaSeleccionada != null &&
-    estado.filtros.categoriaSeleccionada !== ''
-  ) {
-    filtered = filtered;
-    // .filter((stock) =>
-    //   store
-    //     .getCategoria(estado.filtros.categoriaSeleccionada)
-    //     .includes(stock.producto.categoria._id),
-    // );
-  }
-  // filtro por marca
-  if (
-    estado.filtros.marcaSeleccionada != null &&
-    estado.filtros.marcaSeleccionada !== ''
-  ) {
-    filtered = filtered.filter((stock) =>
-      Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
-    );
-  }
-  // filtro por buscar que no discrimine maiusculas de minusculas y acentos
-  if (estado.filtros.buscarFiltro != null) {
-    filtered = filtered.filter((stock) => {
-      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
-      return regex.test(
-        stock.producto.nombre +
-          stock.producto.nombre
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, ''),
-      );
-    });
-  }
-  return filtered;
-});
-
-// cloumnas para la tabla
-const columnsTabla = [
-  {
-    name: 'imagen',
-    label: 'Imagen',
-    imagen: true,
-    align: 'left',
-    field: (row) => row.producto.imagen?.cloudinaryUrl,
-  },
-  {
-    name: 'producto',
-    required: true,
-    slot: true,
-    label: 'Producto',
-    align: 'left',
-    field: (row) => row.producto.nombre,
-    sortable: true,
-  },
-  {
-    name: 'alertaCantidad',
-    slot: true,
-    required: true,
-    label: 'Cantidad',
-    align: 'center',
-    field: (row) => row.cantidadTotal,
-    sortable: true,
-  },
-  {
-    name: 'alertaVencimiento',
-    slot: true,
-    required: true,
-    label: 'Vencimiento',
-    align: 'center',
-    field: (row) => row.dias,
-    sortable: true,
-  },
-  {
-    name: 'alertI',
-    slot: true,
-    required: true,
-    label: 'Inventario',
-    align: 'center',
-    field: (row) => row.alertaInventario,
-    sortable: true,
-  },
-  {
-    name: 'actions',
-    label: 'Acciones',
-    align: 'right',
-    slot: true,
-  },
-];
+// producto seleccionado al hacer click en una accion
+const producto = ref(null);
 </script>

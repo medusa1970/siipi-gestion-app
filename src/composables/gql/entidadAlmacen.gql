@@ -37,16 +37,14 @@ query buscarEntidades_almacen(
         }
       }
       lotes {
+        _creado
         vencimiento
         cantidad
         marca {
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }
@@ -90,16 +88,14 @@ mutation crearEntidades_almacen(
         }
       }
       lotes {
+        _creado
         vencimiento
         cantidad
         marca {
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }
@@ -144,16 +140,14 @@ mutation modificarEntidades_almacen(
         }
       }
       lotes {
+        _creado
         vencimiento
         cantidad
         marca {
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }
@@ -204,16 +198,14 @@ mutation borrarEntidades_almacen(
         }
       }
       lotes {
+        _creado
         vencimiento
         cantidad
         marca {
           _id
           nombre
         }
-        bloque {
-          _id
-          nombre
-        }
+        bloque
       }
     }
   }

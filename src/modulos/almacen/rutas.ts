@@ -34,4 +34,9 @@ export default [
     path: '/cathering/stock',
     file: '@/modulos/almacen/paginas/stock/stock.vue',
   },
+  {
+    name: 'bloques',
+    path: '/cathering/bloques',
+    file: '@/modulos/almacen/paginas/bloques/bloques.vue',
+  },
 ];

@@ -60,7 +60,7 @@ export const apiAlmacen = {
     mensaje: string = 'se hizo',
   ): Promise<Inventario> => {
     try {
-      const entidad = extraerUno(
+      const inventario = extraerUno(
         await GqlHacerInventario({
           busqueda: { _id: [negocioID] },
           guardar,
@@ -71,7 +71,7 @@ export const apiAlmacen = {
           },
         }),
       );
-      return entidad.inventarios[0];
+      return inventario;
     } catch (err) {
       throw formatApiError(err);
     }

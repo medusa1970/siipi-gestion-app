@@ -5,7 +5,7 @@ export const inputConfig = {
   dense: true,
   clase: '',
   color: 'green-10',
-  bgColorLleno: 'lime-5',
+  bgColorLleno: 'light-green-3',
   bgColorVacio: 'lime-2',
 };
 

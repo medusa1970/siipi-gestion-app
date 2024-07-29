@@ -1,8 +1,25 @@
 <template>
   <div>
-    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <h3 v-if="!labelAdentro">
+      {{ label + (requerido ? ' *' : '') }}
+
+      <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
+        <q-tooltip
+          v-model="tooltip"
+          class="no-pointer-events text-white text-sm bg-blue-9"
+          anchor="bottom left"
+          self="top left"
+          :offset="[0, 0]"
+          max-width="300px"
+          no-parent-event
+          @show="hideTooltip()"
+        >
+          {{ info }}
+        </q-tooltip></q-icon
+      >
+    </h3>
     <q-file
-      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
       v-model="archivo"
       @update:model-value="handleChange"
       @rejected="handleReject"
@@ -22,19 +39,6 @@
       :color="inputConfig.color"
       :bg-color="archivo ? inputConfig.bgColorLleno : inputConfig.bgColorVacio"
     >
-      <q-tooltip
-        v-model="tooltip"
-        class="no-pointer-events text-white text-sm bg-blue-9"
-        anchor="bottom middle"
-        self="top middle"
-        :offset="[0, 5]"
-        max-width="300px"
-        no-parent-event
-        @show="hideTooltip()"
-      >
-        {{ info }}
-      </q-tooltip>
-
       <template #prepend v-if="icono">
         <q-icon :name="icono" @click.stop.prevent />
       </template>
@@ -63,10 +67,6 @@
 
       <template #before v-if="imagen">
         <q-img :src="imagen" style="width: 50px" />
-      </template>
-
-      <template #after v-if="info && info.length > 0">
-        <q-icon name="help" @click="tooltip = !tooltip" />
       </template>
     </q-file>
   </div>

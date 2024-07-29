@@ -1,8 +1,24 @@
 <template>
   <div>
-    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <h3 class="inputTitle" v-if="!labelAdentro">
+      {{ label + (requerido ? ' *' : '') }}
+      <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
+        <q-tooltip
+          v-model="tooltip"
+          class="no-pointer-events text-white text-sm bg-blue-9"
+          anchor="bottom left"
+          self="top left"
+          :offset="[0, 5]"
+          max-width="300px"
+          no-parent-event
+          @show="hideTooltip()"
+        >
+          {{ info }}
+        </q-tooltip></q-icon
+      >
+    </h3>
     <q-input
-      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
       :type="tipo"
       v-model="localModel"
       @update:model-value="handleChange"
@@ -27,23 +43,8 @@
           : inputConfig.bgColorVacio
       "
     >
-      <q-tooltip
-        v-model="tooltip"
-        class="no-pointer-events text-white text-sm bg-blue-9"
-        anchor="bottom middle"
-        self="top middle"
-        :offset="[0, 5]"
-        max-width="300px"
-        no-parent-event
-        @show="hideTooltip()"
-      >
-        {{ info }}
-      </q-tooltip>
       <template #prepend v-if="icono">
         <q-icon :name="icono" @click.stop.prevent />
-      </template>
-      <template #after v-if="info && info.length > 0">
-        <q-icon name="help" @click="tooltip = !tooltip" />
       </template>
       <template #append v-if="tipo === 'password'">
         <q-icon

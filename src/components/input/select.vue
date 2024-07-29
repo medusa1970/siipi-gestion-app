@@ -1,8 +1,24 @@
 <template>
   <div>
-    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <h3 class="inputTitle" v-if="!labelAdentro">
+      {{ label + (requerido ? ' *' : '') }}
+      <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
+        <q-tooltip
+          v-model="tooltip"
+          class="no-pointer-events text-white text-sm bg-blue-9"
+          anchor="bottom left"
+          self="top left"
+          :offset="[0, 5]"
+          max-width="300px"
+          no-parent-event
+          @show="hideTooltip()"
+        >
+          {{ info }}
+        </q-tooltip></q-icon
+      >
+    </h3>
     <q-select
-      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
       v-model="localModel"
       @update:model-value="handleChange"
       @filter="filterFn"
@@ -37,19 +53,6 @@
           : inputConfig.bgColorVacio)
       "
     >
-      <q-tooltip
-        v-model="tooltip"
-        class="text-white text-sm bg-blue-9"
-        style="pointer-events: none"
-        anchor="bottom middle"
-        self="top middle"
-        :offset="[0, 5]"
-        max-width="300px"
-        no-parent-event
-        @show="hideTooltip()"
-      >
-        {{ info }}
-      </q-tooltip>
       <template #no-option>
         <q-item>
           <q-item-section class="text-grey"> No hay resultados </q-item-section>
@@ -67,7 +70,6 @@
           style="height: 16px; width: 16px"
           @click="() => (showDialog = true)"
         ></q-btn>
-        <q-icon name="help" @click="tooltip = !tooltip" />
       </template>
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps" :class="scope.opt.class">

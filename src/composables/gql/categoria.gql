@@ -23,9 +23,6 @@ mutation crearCategorias(
     _creado
     _modificado
     nombre
-    pariente {
-      _id
-    }
   }
 }
 
@@ -39,9 +36,6 @@ mutation modificarCategorias(
     _creado
     _modificado
     nombre
-    pariente {
-      _id
-    }
   }
 }
 
@@ -54,8 +48,5 @@ mutation borrarCategorias(
     _creado
     _modificado
     nombre
-    pariente {
-      _id
-    }
   }
 }

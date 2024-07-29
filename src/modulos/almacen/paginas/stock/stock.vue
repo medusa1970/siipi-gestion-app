@@ -104,22 +104,26 @@
         />
       </div>
 
-      <div class="flex w-full">
+      <div
+        style="
+          display: grid;
+          grid-gap: 16px;
+          grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+          width: 100%;
+        "
+      >
         <input-text
-          clase="w-1/3"
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           noSlot
         />
         <input-select
-          clase="w-1/3"
           label="Categoria"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="composable.selectCategoriaFiltro.value"
           noSlot
         />
         <input-select
-          clase="w-1/3"
           label="Marca"
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="composable.selectMarcaFiltro.value"

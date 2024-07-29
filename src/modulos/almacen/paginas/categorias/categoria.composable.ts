@@ -50,14 +50,15 @@ export const useCategoria = () => {
   };
 
   const crearCategoriaArbol = async () => {
-    const { crearCategorias } = await GqlCrearCategorias({
-      datos: {
+    const categoriaCreada = await api.crearCategoria(
+      {
         nombre: estado.datos_categoria.nombre,
         pariente: estado.datos_categoria._id
       },
-      opciones: { populate: true }
-    });
-    if (crearCategorias) {
+      { populate: true },
+      { loading: true }
+    );
+    if (categoriaCreada) {
       await buscarCategorias();
       NotifySucessCenter('Categoria creada correctamente');
       estado.datos_categoria = clone(init_categoria);
@@ -73,12 +74,13 @@ export const useCategoria = () => {
   };
 
   const modificarCategoriaArbol = async () => {
-    const { modificarCategorias } = await GqlModificarCategorias({
-      busqueda: { _id: estado.datos_categoria._id },
-      datos: { nombre: estado.datos_categoria.nombre },
-      opciones: { populate: true }
-    });
-    if (modificarCategorias) {
+    const categoriaModificada = await api.modificarCategoria(
+      { _id: estado.datos_categoria._id },
+      { nombre: estado.datos_categoria.nombre },
+      { populate: true },
+      { loading: true }
+    );
+    if (categoriaModificada) {
       await buscarCategorias();
       NotifySucessCenter('Categoria modificada correctamente');
 
@@ -100,10 +102,9 @@ export const useCategoria = () => {
       cancel: true,
       persistent: true
     }).onOk(async () => {
-      const { borrarCategorias } = await GqlBorrarCategorias({
-        busqueda: { _id: row._id }
-      });
-      if (borrarCategorias) {
+      const categoriaBorrada = await api.borrarCategoria({ _id: row._id });
+
+      if (categoriaBorrada) {
         NotifySucessCenter('Categoria eliminada correctamente');
         await buscarCategorias();
       }

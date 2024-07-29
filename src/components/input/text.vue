@@ -86,10 +86,6 @@ const emits = defineEmits<{
     errorMessage: string | null,
     valor: any,
   ): void;
-  (
-    // cleared
-    event: 'clear',
-  ): void;
 }>();
 
 /**
@@ -105,6 +101,7 @@ const props = withDefaults(
     info?: string; // texto de ayuda en el boton de ayuda
     porDefecto?: string | number; // valor seleccionado al iniciar
     watch?: string | number; // ref de la cual se hara un watch de los cambios para cambiar el input
+    forceWatch?: boolean; // forzar el watch para seguir sus cambios mismo si no cambia
     rules?: any; // reglas de validacion
     icono?: string; // icono a mostrar adentro a la isquierda antes del label
     clase?: string; // clases css o tailwind
@@ -129,6 +126,7 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
+    forceWatch: null,
   },
 );
 
@@ -209,7 +207,7 @@ const handleChange = (valor: string | null) => {
 const handleClear = () => {
   activarValidacion();
   localModel.value = null;
-  emits('clear');
+  emits('update', null);
 };
 
 // input pierde el focus
@@ -261,7 +259,7 @@ watch(
 
 // modificar el valor desde el componiente padre segun la prop 'watch'
 watch(
-  () => props.watch,
+  () => [props.watch, props.forceWatch],
   () => {
     localModel.value = tipar(props.watch);
     handleChange(localModel.value);

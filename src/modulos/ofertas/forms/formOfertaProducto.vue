@@ -118,22 +118,64 @@
     />
 
     <!-- Precios -->
-    <input-text
-      label="Precio con factura"
-      tipo="number"
-      info="Info #46"
-      :porDefecto="estado.dataForm.precioConFactura"
-      @update="(v) => (estado.dataForm.precioConFactura = v)"
-      :rules="[useRules.requerido()]"
-    />
-    <input-text
-      label="Precio sin factura"
-      tipo="number"
-      info="Info #47"
-      :porDefecto="estado.dataForm.precioSinFactura"
-      @update="(v) => (estado.dataForm.precioSinFactura = v)"
-      :rules="[useRules.requerido()]"
-    />
+
+    <div class="flex">
+      <input-text
+        class="flex-grow"
+        label="Precio sin factura"
+        tipo="decimal"
+        info="Info #47"
+        :porDefecto="estado.dataForm.precioSinFactura"
+        @update="(v) => (estado.dataForm.precioSinFactura = v)"
+        :rules="[useRules.requerido()]"
+        :watch="estado.watchSin"
+        :forceWatch="estado.forceWatchSin"
+      />
+      <q-btn
+        icon="calculate"
+        size="lg"
+        :disable="!estado.dataForm.precioConFactura"
+        :color="colorCalculateSin"
+        flat
+        dense
+        @click="
+          estado.forceWatchSin = !estado.forceWatchSin;
+          estado.watchSin = estado.dataForm.precioConFactura * (100 / 113);
+        "
+      /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
+        >calcular sin factura -13%</q-tooltip
+      >
+    </div>
+
+    <div class="flex">
+      <input-text
+        class="flex-grow"
+        label="Precio con factura"
+        tipo="decimal"
+        info="Info #46"
+        :porDefecto="estado.dataForm.precioConFactura"
+        @update="(v) => (estado.dataForm.precioConFactura = v)"
+        :rules="[useRules.requerido()]"
+        :watch="estado.watchCon"
+        :forceWatch="estado.forceWatchCon"
+      />
+      <q-btn
+        icon="calculate"
+        size="lg"
+        flat
+        dense
+        :disable="!estado.dataForm.precioSinFactura"
+        :color="colorCalculateCon"
+        @click="
+          {
+            estado.forceWatchCon = !estado.forceWatchCon;
+            estado.watchCon = estado.dataForm.precioSinFactura * (113 / 100);
+          }
+        "
+      /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
+        >calcular con factura +13%</q-tooltip
+      >
+    </div>
 
     <!-- Submit -->
     <div class="text-center">
@@ -187,7 +229,21 @@ const estado = reactive({
   // para el empaque
   resetEmpaque: null,
   nombreEmpaque: null,
+
+  // para calculadora de precios
+  watchSin: null as number,
+  watchCon: null as number,
+  forceWatchCon: false,
+  forceWatchSin: false,
 });
+
+// color de los botones calduladoras
+const colorCalculateSin = computed(() =>
+  estado.dataForm.precioConFactura ? 'orange' : 'orange-4',
+);
+const colorCalculateCon = computed(() =>
+  estado.dataForm.precioSinFactura ? 'orange' : 'orange-4',
+);
 
 // producto seleccionado
 const producto = computed(() => {

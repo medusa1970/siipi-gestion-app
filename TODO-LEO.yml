@@ -1,20 +1,20 @@
-TODO : 
-expands
-images por defecto
-bug guardar medida
-click image agrandar
-permisos borrar
-empleado editar
-cantidadMax opcional
-imagen por defecto
-cloudinary https
-pagina de gestion de marcas
-pagina de gestion de medidas
-error contrasena equivocada
+varios
+- que se cierre un producto al abrir otro
+- ofertas de un producto (pestaña)
 
-WILL :
+varios chicos 
+- boton ojo tiene que abrir el expand
+- icono categoria
+- numero de ofertas entre parentesis en la busqueda por catalogo
+- 'categoria' -> catalogo en expand de oferta
 
-- precio undefined
-- lista recorrer : vuelve al inicio
-- aviso imagen obligatoria para crear oferta
-- oferta creada dos veces
+funcionalidades
+- borrar medidas si no usada
+- ofertas completas
+
+bugs
+- bug watch after clear on inputs
+- login input adentro
+- bug agregar marca en formulario de registrar proveedor
+precios por mayor en el expand oferta proveedores
+no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica

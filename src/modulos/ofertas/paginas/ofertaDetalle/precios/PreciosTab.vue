@@ -94,13 +94,13 @@ const columnsTabla = [
     name: 'precioSinFactura',
     label: 'Precio sin factura',
     field: (row) => row.precioSinFactura,
-    format: (value) => `${value} bs`,
+    format: (value) => (value != null ? `${value} bs` : 'a ingresar'),
   },
   {
     name: 'precioConFactura',
     label: 'Precio con factura',
     field: (row) => row.precioConFactura,
-    format: (value) => `${value} bs`,
+    format: (value) => (value != null ? `${value} bs` : 'a ingresar'),
   },
   {
     name: 'actions',

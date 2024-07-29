@@ -4,32 +4,32 @@
       {
         icon: 'bi-box',
         label: 'Productos',
-        to: 'productos'
+        to: 'productos',
       },
       {
-        icon: 'sell',
+        icon: 'category',
         label: 'Categorias',
-        to: 'categorias'
+        to: 'categorias',
       },
       {
         icon: 'warehouse',
         label: 'Stock',
-        to: 'stock'
+        to: 'stock',
       },
       {
-        icon: 'warehouse',
+        icon: 'shelves',
         label: 'Bloques',
-        to: 'bloques'
+        to: 'bloques',
       },
       {
-        icon: 'sell',
+        icon: 'menu_book',
         label: 'Ofertas',
-        to: 'ofertas'
+        to: 'ofertas',
       },
       {
         icon: 'sell',
         label: 'Catalogos',
-        to: 'catalogos'
+        to: 'catalogos',
       },
       // {
       //   icon: 'description',
@@ -60,20 +60,20 @@
       //   to: 'stock2',
       // },
       {
-        icon: 'tag',
+        icon: 'storefront',
         label: 'Marcas',
-        to: 'marcas'
+        to: 'marcas',
       },
       {
-        icon: 'tag',
+        icon: 'balance',
         label: 'Medidas',
-        to: 'medidas'
+        to: 'medidas',
       },
       {
-        icon: 'tag',
+        icon: 'hail',
         label: 'Proveedores',
-        to: 'proveedores'
-      }
+        to: 'proveedores',
+      },
       // {
       //   icon: 'people',
       //   label: 'Administracion',
@@ -86,7 +86,8 @@
       // },
     ]"
     :portada-img="PortadaCathering"
-    cathering>
+    cathering
+  >
     <template #slot>
       <slot />
     </template>

@@ -1,12 +1,12 @@
 export const inputConfig = {
   labelAdentro: false,
-  outlined: false,
-  filled: true,
+  outlined: true,
+  filled: false,
   dense: true,
   clase: '',
-  color: 'green-10',
-  bgColorLleno: 'light-green-3',
-  bgColorVacio: 'lime-2',
+  color: 'black',
+  bgColorLleno: 'blue-grey-2',
+  bgColorVacio: 'grey-1',
 };
 
 export async function UrlToBase64Image(url, callback) {

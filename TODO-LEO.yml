@@ -7,6 +7,10 @@ varios chicos
 - icono categoria
 - numero de ofertas entre parentesis en la busqueda por catalogo
 - 'categoria' -> catalogo en expand de oferta
+- precios por mayor en el expand oferta proveedores
+- pasar categorias / catalogos lista a tabla
+- espacio entre inputs
+- precio con y sin factura calculadora en form oferta producto
 
 funcionalidades
 - borrar medidas si no usada
@@ -16,5 +20,5 @@ bugs
 - bug watch after clear on inputs
 - login input adentro
 - bug agregar marca en formulario de registrar proveedor
-precios por mayor en el expand oferta proveedores
-no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
+- no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
+

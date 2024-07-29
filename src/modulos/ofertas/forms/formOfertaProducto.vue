@@ -17,8 +17,6 @@
       :porDefecto="estado.dataForm.producto"
       @update="(v) => (estado.dataForm.producto = v)"
       :rules="[useRules.requerido()]"
-      :color="estado.dataForm.producto && 'orange-2'"
-      filled
     />
 
     <!-- Marca -->
@@ -32,19 +30,16 @@
       :watch="estado.dataForm.marca"
     />
 
-    <p></p>
-    <div class="flex">
+    <div style="display: grid; grid-gap: 16px; width: 100%">
       <input-select
-        style="width: 40%"
         label="Empaque preseleccionado"
         info="Info #48"
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
-        color="grey-5"
+        color="grey-6"
       />
       <input-text
-        style="width: 40%"
         tipo="number"
         label="Cantidad"
         info="Info #49"

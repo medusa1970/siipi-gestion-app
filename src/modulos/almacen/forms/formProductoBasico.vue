@@ -64,7 +64,7 @@
     <div v-if="estado.dataForm.puedeVencer" class="flex">
       <input-text
         style="width: 50%"
-        label="Primer aviso"
+        label="Aviso suave debajo de X"
         tipo="number"
         info="Info #5"
         :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
@@ -74,7 +74,7 @@
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
       <input-text
         style="width: 50%"
-        label="Segundo aviso"
+        label="Aviso fuerte debajo de Y"
         tipo="number"
         info="Info #6"
         :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"

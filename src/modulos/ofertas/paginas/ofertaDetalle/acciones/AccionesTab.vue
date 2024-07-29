@@ -5,12 +5,12 @@
     <!-- Comentario -->
     <div class="flex" style="justify-content: space-between; margin: 15px 0">
       <div style="flex-grow: 1">
-        <q-input
-          class="w-full"
-          v-model="estado.motivoEliminacion"
-          type="textarea"
+        <input-text
+          tipo="textarea"
           label="Motivo"
-          filled
+          @update="(v) => (estado.motivoEliminacion = v)"
+          info="Info #39"
+          :rules="[useRules.requerido()]"
         />
       </div>
       <div>

@@ -95,6 +95,7 @@
       <div class="flex">
         <input-text
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+          labelAdentro
           class="col-span-1"
           label="Buscar"
           porDefecto=""

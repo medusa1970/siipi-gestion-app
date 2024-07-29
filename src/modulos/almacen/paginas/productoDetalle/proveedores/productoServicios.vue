@@ -54,9 +54,10 @@
     <template #dropdown>
       <div class="flex">
         <input-text
+          label="Buscar"
+          labelAdentro
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           class="col-span-1"
-          label="Buscar"
           porDefecto=""
           noSlot
         />

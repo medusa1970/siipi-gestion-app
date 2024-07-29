@@ -1,7 +1,5 @@
 <template>
   <q-form @submit.prevent="submitForm">
-    <p>Entre los datos del producto en la oferta:</p>
-
     <!-- Producto -->
     <input-select
       label="Producto"

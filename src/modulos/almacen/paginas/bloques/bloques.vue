@@ -42,6 +42,7 @@
       <div class="w-full flex" style="align-items: center">
         <input-text
           label="Buscar"
+          labelAdentro
           @update="(v) => (estado.filtros.buscar = v as string)"
           porDefecto=""
           noSlot

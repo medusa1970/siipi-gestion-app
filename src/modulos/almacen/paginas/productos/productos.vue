@@ -20,12 +20,14 @@
       >
         <input-text
           label="Buscar"
+          labelAdentro
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           noSlot
         />
 
         <input-select
           label="Categoria"
+          labelAdentro
           :opciones="selectCategoriaFiltro"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           noSlot
@@ -33,6 +35,7 @@
 
         <input-select
           label="Marca"
+          labelAdentro
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.filtros.marcaOpciones"
           noSlot
@@ -40,6 +43,7 @@
 
         <input-select
           label="Estado"
+          labelAdentro
           @update="(v) => (estado.filtros.completud = v)"
           :opciones="[
             { value: 'soloCompletos', label: 'solo completos' },

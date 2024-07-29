@@ -1,56 +1,63 @@
 <template>
-  <q-input
-    :type="tipo"
-    v-model="localModel"
-    @update:model-value="handleChange"
-    @Blur="handleBlur"
-    @clear="handleClear"
-    :label="label + (requerido ? '*' : '')"
-    :rules="reglas"
-    :hint="hint"
-    debounce="300"
-    :autogrow="tipo === 'password' ? false : autogrow"
-    :clearable="clearable"
-    :dense="dense"
-    :filled="filled"
-    :outlined="outlined"
-    :class="clase"
-    :bottom-slots="!noSlot"
-    :error="noSlot ? undefined : errorFlag"
-    :errorMessage="errorMensaje"
-    color="green-10"
-    :bg-color="localModel && localModel !== '' ? 'lime-5' : 'lime-2'"
-  >
-    <q-tooltip
-      v-model="tooltip"
-      class="no-pointer-events text-white text-sm bg-blue-9"
-      anchor="bottom middle"
-      self="top middle"
-      :offset="[0, 5]"
-      max-width="300px"
-      no-parent-event
-      @show="hideTooltip()"
+  <div>
+    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <q-input
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      :type="tipo"
+      v-model="localModel"
+      @update:model-value="handleChange"
+      @Blur="handleBlur"
+      @clear="handleClear"
+      :rules="reglas"
+      :hint="hint"
+      debounce="300"
+      :autogrow="tipo === 'password' ? false : autogrow"
+      :clearable="clearable"
+      :dense="dense"
+      :filled="filled"
+      :outlined="outlined"
+      :class="clase"
+      :bottom-slots="!noSlot"
+      :error="noSlot ? undefined : errorFlag"
+      :errorMessage="errorMensaje"
+      :color="inputConfig.color"
+      :bg-color="
+        localModel && localModel !== ''
+          ? inputConfig.bgColorLleno
+          : inputConfig.bgColorVacio
+      "
     >
-      {{ info }}
-    </q-tooltip>
-
-    <template #prepend v-if="icono">
-      <q-icon :name="icono" @click.stop.prevent />
-    </template>
-    <template #after v-if="info && info.length > 0">
-      <q-icon name="help" @click="tooltip = !tooltip" />
-    </template>
-    <template #append v-if="tipo === 'password'">
-      <q-icon
-        :name="isPwd ? 'visibility_off' : 'visibility'"
-        class="cursor-pointer"
-        @click="isPwd = !isPwd"
-      ></q-icon>
-    </template>
-  </q-input>
+      <q-tooltip
+        v-model="tooltip"
+        class="no-pointer-events text-white text-sm bg-blue-9"
+        anchor="bottom middle"
+        self="top middle"
+        :offset="[0, 5]"
+        max-width="300px"
+        no-parent-event
+        @show="hideTooltip()"
+      >
+        {{ info }}
+      </q-tooltip>
+      <template #prepend v-if="icono">
+        <q-icon :name="icono" @click.stop.prevent />
+      </template>
+      <template #after v-if="info && info.length > 0">
+        <q-icon name="help" @click="tooltip = !tooltip" />
+      </template>
+      <template #append v-if="tipo === 'password'">
+        <q-icon
+          :name="isPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isPwd = !isPwd"
+        ></q-icon>
+      </template>
+    </q-input>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { inputConfig } from './input.service';
 import { ref } from 'vue';
 
 /**
@@ -108,17 +115,19 @@ const props = withDefaults(
     clearable?: boolean;
     autogrow?: boolean;
     noSlot?: boolean;
+    labelAdentro: boolean;
   }>(),
   {
     tipo: 'text',
-    // outlined: true,
-    filled: true,
     autogrow: false,
-    dense: true,
     noSlot: false,
     clearable: true,
-    clase: '',
     rules: [] as Function[],
+    filled: inputConfig.filled,
+    dense: inputConfig.dense,
+    outlined: inputConfig.outlined,
+    clase: inputConfig.clase,
+    labelAdentro: inputConfig.labelAdentro,
   },
 );
 

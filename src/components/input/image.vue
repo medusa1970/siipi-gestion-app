@@ -1,76 +1,80 @@
 <template>
-  <q-file
-    v-model="archivo"
-    @update:model-value="handleChange"
-    @rejected="handleReject"
-    @blur="activarValidacion"
-    @clear="handleClear"
-    :label="label + (requerido ? '*' : '')"
-    :hint="hint?.replace('{maxSizeKb}', maxSizeKb)"
-    :accept="accept"
-    :max-total-size="Number(maxSizeKb) * 1024"
-    :dense="dense"
-    :filled="filled"
-    :outlined="outlined"
-    :class="clase"
-    bottom-slots
-    :error="errorFlag"
-    :errorMessage="errorMensaje"
-    counter
-    color="green-10"
-    :bg-color="archivo ? 'lime-5' : 'lime-2'"
-  >
-    <q-tooltip
-      v-model="tooltip"
-      class="no-pointer-events text-white text-sm bg-blue-9"
-      anchor="bottom middle"
-      self="top middle"
-      :offset="[0, 5]"
-      max-width="300px"
-      no-parent-event
-      @show="hideTooltip()"
+  <div>
+    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <q-file
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      v-model="archivo"
+      @update:model-value="handleChange"
+      @rejected="handleReject"
+      @blur="activarValidacion"
+      @clear="handleClear"
+      :hint="hint?.replace('{maxSizeKb}', maxSizeKb)"
+      :accept="accept"
+      :max-total-size="Number(maxSizeKb) * 1024"
+      :dense="dense"
+      :filled="filled"
+      :outlined="outlined"
+      :class="clase"
+      bottom-slots
+      :error="errorFlag"
+      :errorMessage="errorMensaje"
+      counter
+      :color="inputConfig.color"
+      :bg-color="archivo ? inputConfig.bgColorLleno : inputConfig.bgColorVacio"
     >
-      {{ info }}
-    </q-tooltip>
+      <q-tooltip
+        v-model="tooltip"
+        class="no-pointer-events text-white text-sm bg-blue-9"
+        anchor="bottom middle"
+        self="top middle"
+        :offset="[0, 5]"
+        max-width="300px"
+        no-parent-event
+        @show="hideTooltip()"
+      >
+        {{ info }}
+      </q-tooltip>
 
-    <template #prepend v-if="icono">
-      <q-icon :name="icono" @click.stop.prevent />
-    </template>
+      <template #prepend v-if="icono">
+        <q-icon :name="icono" @click.stop.prevent />
+      </template>
 
-    <template #append>
-      <q-btn
-        @click="handleClear"
-        icon="clear"
-        size="xs"
-        color="grey-6"
-        unelevated
-        dense
-        round
-      />
-      <q-btn
-        v-if="dataPreview || dataInicial"
-        @click="handleRefresh"
-        icon="refresh"
-        size="xs"
-        color="grey-6"
-        unelevated
-        dense
-        round
-      />
-    </template>
+      <template #append>
+        <q-btn
+          @click="handleClear"
+          icon="clear"
+          size="xs"
+          color="grey-6"
+          unelevated
+          dense
+          round
+        />
+        <q-btn
+          v-if="dataPreview || dataInicial"
+          @click="handleRefresh"
+          icon="refresh"
+          size="xs"
+          color="grey-6"
+          unelevated
+          dense
+          round
+        />
+      </template>
 
-    <template #before v-if="imagen">
-      <q-img :src="imagen" style="width: 50px" />
-    </template>
+      <template #before v-if="imagen">
+        <q-img :src="imagen" style="width: 50px" />
+      </template>
 
-    <template #after v-if="info && info.length > 0">
-      <q-icon name="help" @click="tooltip = !tooltip" />
-    </template>
-  </q-file>
+      <template #after v-if="info && info.length > 0">
+        <q-icon name="help" @click="tooltip = !tooltip" />
+      </template>
+    </q-file>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { inputConfig } from './input.service';
 
 /**
  * Tooltip
@@ -123,15 +127,17 @@ const props = withDefaults(
     clearable?: boolean;
     dataInicial?: string; // valor seleccionado al iniciar
     dataPreview?: string; // valor mostrado al iniciar, sin seleccionar
+    labelAdentro: boolean;
   }>(),
   {
-    // outlined: true,
-    filled: true,
-    dense: true,
     clearable: true,
-    clase: '',
     rules: [] as Function[],
     maxSizeKb: '500',
+    filled: inputConfig.filled,
+    dense: inputConfig.dense,
+    outlined: inputConfig.outlined,
+    clase: inputConfig.clase,
+    labelAdentro: inputConfig.labelAdentro,
   },
 );
 

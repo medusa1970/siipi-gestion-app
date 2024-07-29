@@ -1,3 +1,14 @@
+export const inputConfig = {
+  labelAdentro: false,
+  outlined: false,
+  filled: true,
+  dense: true,
+  clase: '',
+  color: 'green-10',
+  bgColorLleno: 'lime-5',
+  bgColorVacio: 'lime-2',
+};
+
 export async function UrlToBase64Image(url, callback) {
   // downloading image
   let response;

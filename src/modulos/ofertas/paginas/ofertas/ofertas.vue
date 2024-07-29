@@ -8,32 +8,42 @@
       <!-- AGREGAR -->
 
       <template #dropdown>
-        <div class="flex gap-3">
+        <div
+          style="
+            display: grid;
+            grid-gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            width: 100%;
+          "
+        >
           <input-text
-            class="col-span-1"
             label="Buscar"
+            labelAdentro
             @update="(v) => (estado.filtros.buscarFiltro = v)"
-            porDefecto=""
-            filled
+            noSlot
           />
+
           <input-select
             label="Catalogo"
+            labelAdentro
             :opciones="selectCatalogoFiltro"
             @update="(v) => (estado.filtros.catalogoSeleccionado = v)"
             :porDefecto="estado.filtros.catalogoSeleccionado"
             noSlot
           />
+
           <q-btn
-            icon-right="add"
+            icon="add"
+            label="Oferta básica"
             color="green"
             no-caps
             padding="4px 10px"
             @click="() => (estado.modal.show_crearOfertaBasico = true)"
           />
           <q-btn
-            icon-right="add"
+            icon="add"
             color="green"
-            label="Oferta completa"
+            label="Oferta avanzada"
             no-caps
             style="padding: 7px 15px"
             @click="() => (estado.modal.show_crearOfertaSimple = true)"

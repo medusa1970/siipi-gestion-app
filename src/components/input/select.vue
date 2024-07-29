@@ -1,73 +1,81 @@
 <template>
-  <q-select
-    v-model="localModel"
-    @update:model-value="handleChange"
-    @filter="filterFn"
-    @blur="activarValidacion"
-    @clear="handleClear"
-    :label="label + (requerido ? '*' : '')"
-    input-debounce="0"
-    :clearable="clearable"
-    :dense="dense"
-    :disable="disable"
-    :filled="filled"
-    :rules="rules"
-    :outlined="outlined"
-    :class="clase"
-    :bottom-slots="!noSlot"
-    :error="noSlot ? undefined : errorFlag"
-    :errorMessage="errorMensaje"
-    options-dense
-    :options="listaOpciones"
-    emit-value
-    input-select
-    no-options-label="Opción no encontrada"
-    map-options
-    :dialog="dialog"
-    use-input
-    fill-input
-    hide-selected
-    :color="color ?? 'green-10'"
-    :bg-color="color ?? (localModel && localModel !== '' ? 'lime-5' : 'lime-2')"
-  >
-    <q-tooltip
-      v-model="tooltip"
-      class="text-white text-sm bg-blue-9"
-      style="pointer-events: none"
-      anchor="bottom middle"
-      self="top middle"
-      :offset="[0, 5]"
-      max-width="300px"
-      no-parent-event
-      @show="hideTooltip()"
+  <div>
+    <h3 v-if="!labelAdentro">{{ label + (requerido ? ' *' : '') }}</h3>
+    <q-select
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : null"
+      v-model="localModel"
+      @update:model-value="handleChange"
+      @filter="filterFn"
+      @blur="activarValidacion"
+      @clear="handleClear"
+      input-debounce="0"
+      :clearable="clearable"
+      :dense="dense"
+      :disable="disable"
+      :filled="filled"
+      :rules="rules"
+      :outlined="outlined"
+      :class="clase"
+      :bottom-slots="!noSlot"
+      :error="noSlot ? undefined : errorFlag"
+      :errorMessage="errorMensaje"
+      options-dense
+      :options="listaOpciones"
+      emit-value
+      input-select
+      no-options-label="Opción no encontrada"
+      map-options
+      :dialog="dialog"
+      use-input
+      fill-input
+      hide-selected
+      :color="color ?? inputConfig.color"
+      :bg-color="
+        color ??
+        (localModel && localModel !== ''
+          ? inputConfig.bgColorLleno
+          : inputConfig.bgColorVacio)
+      "
     >
-      {{ info }}
-    </q-tooltip>
-    <template #no-option>
-      <q-item>
-        <q-item-section class="text-grey"> No hay resultados </q-item-section>
-      </q-item>
-    </template>
-    <template #prepend v-if="icono">
-      <q-icon :name="icono" @click.stop.prevent />
-    </template>
-    <template #after v-if="info && info.length > 0">
-      <q-btn
-        v-if="dialog && !disable"
-        size="12px"
-        icon="add"
-        color="green"
-        style="height: 16px; width: 16px"
-        @click="() => (showDialog = true)"
-      ></q-btn>
-      <q-icon name="help" @click="tooltip = !tooltip" />
-    </template>
-    <template v-slot:option="scope">
-      <q-item v-bind="scope.itemProps" :class="scope.opt.class">
-        <q-item-section>{{ scope.opt.label }}</q-item-section>
-      </q-item>
-    </template>
-  </q-select>
+      <q-tooltip
+        v-model="tooltip"
+        class="text-white text-sm bg-blue-9"
+        style="pointer-events: none"
+        anchor="bottom middle"
+        self="top middle"
+        :offset="[0, 5]"
+        max-width="300px"
+        no-parent-event
+        @show="hideTooltip()"
+      >
+        {{ info }}
+      </q-tooltip>
+      <template #no-option>
+        <q-item>
+          <q-item-section class="text-grey"> No hay resultados </q-item-section>
+        </q-item>
+      </template>
+      <template #prepend v-if="icono">
+        <q-icon :name="icono" @click.stop.prevent />
+      </template>
+      <template #after v-if="info && info.length > 0">
+        <q-btn
+          v-if="dialog && !disable"
+          size="12px"
+          icon="add"
+          color="green"
+          style="height: 16px; width: 16px"
+          @click="() => (showDialog = true)"
+        ></q-btn>
+        <q-icon name="help" @click="tooltip = !tooltip" />
+      </template>
+      <template v-slot:option="scope">
+        <q-item v-bind="scope.itemProps" :class="scope.opt.class">
+          <q-item-section>{{ scope.opt.label }}</q-item-section>
+        </q-item>
+      </template>
+    </q-select>
+  </div>
 
   <Popup v-model="showDialog" titulo="Agregar un nuevo item">
     <template #body>
@@ -77,7 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectOpcion, selectOpcionCallback } from './select.interface';
+import { inputConfig } from './input.service';
+import type { SelectOpcion } from './select.interface';
 import { ref } from 'vue';
 
 /**
@@ -128,17 +137,19 @@ const props = withDefaults(
     clearable?: boolean;
     noSlot?: boolean;
     color?: string;
+    labelAdentro: boolean;
   }>(),
   {
-    // outlined: true,
-    filled: true,
-    dense: true,
     clearable: true,
     noSlot: false,
-    clase: '',
     rules: [] as Function[],
     disable: false,
     color: null,
+    filled: inputConfig.filled,
+    dense: inputConfig.dense,
+    outlined: inputConfig.outlined,
+    clase: inputConfig.clase,
+    labelAdentro: inputConfig.labelAdentro,
   },
 );
 

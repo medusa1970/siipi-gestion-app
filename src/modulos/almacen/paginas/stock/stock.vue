@@ -114,17 +114,20 @@
       >
         <input-text
           label="Buscar"
+          labelAdentro
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           noSlot
         />
         <input-select
           label="Categoria"
+          labelAdentro
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           :opciones="composable.selectCategoriaFiltro.value"
           noSlot
         />
         <input-select
           label="Marca"
+          labelAdentro
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="composable.selectMarcaFiltro.value"
           noSlot

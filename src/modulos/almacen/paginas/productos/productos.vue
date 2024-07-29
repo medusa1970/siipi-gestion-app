@@ -21,9 +21,7 @@
         <input-text
           label="Buscar"
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
-          porDefecto=""
           noSlot
-          filled
         />
 
         <input-select
@@ -31,8 +29,6 @@
           :opciones="selectCategoriaFiltro"
           @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
           noSlot
-          filled
-          color="grey-5"
         />
 
         <input-select
@@ -40,8 +36,6 @@
           @update="(v) => (estado.filtros.marcaSeleccionada = v)"
           :opciones="estado.filtros.marcaOpciones"
           noSlot
-          filled
-          color="grey-5"
         />
 
         <input-select
@@ -52,8 +46,6 @@
             { value: 'soloIncompletos', label: 'solo incompletos' },
           ]"
           noSlot
-          filled
-          color="grey-5"
         />
 
         <q-btn

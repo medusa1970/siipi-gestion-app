@@ -18,6 +18,8 @@
     :bottom-slots="!noSlot"
     :error="noSlot ? undefined : errorFlag"
     :errorMessage="errorMensaje"
+    color="green-10"
+    :bg-color="localModel && localModel !== '' ? 'lime-5' : 'lime-2'"
   >
     <q-tooltip
       v-model="tooltip"
@@ -109,8 +111,8 @@ const props = withDefaults(
   }>(),
   {
     tipo: 'text',
-    outlined: true,
-    // filled: true,
+    // outlined: true,
+    filled: true,
     autogrow: false,
     dense: true,
     noSlot: false,
@@ -257,3 +259,19 @@ watch(
   { immediate: false },
 );
 </script>
+
+<style scoped>
+/* .q-field .q-icon.text-negative,
+.q-field .q-field__control.text-negative,
+.q-field div[role='alert'] {
+  color: #ff5722 !important;
+}
+.q-field--filled.q-field--highlighted .q-field__control::before {
+  opacity: 0;
+  background: transparent;
+}
+.q-field .q-field__label {
+  color: #000 !important;
+  opacity: 60% !important;
+} */
+</style>

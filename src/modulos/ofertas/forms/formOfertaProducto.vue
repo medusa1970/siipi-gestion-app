@@ -42,7 +42,6 @@
         @update="(v) => prellenarEmpaque(v)"
         :watch="estado.resetEmpaque"
         color="grey-5"
-        filled
       />
       <input-text
         style="width: 40%"

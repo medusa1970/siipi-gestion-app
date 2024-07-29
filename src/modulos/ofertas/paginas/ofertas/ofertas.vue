@@ -15,8 +15,6 @@
             @update="(v) => (estado.filtros.buscarFiltro = v)"
             porDefecto=""
             filled
-            color="grey-5"
-            noSlot
           />
           <input-select
             label="Catalogo"
@@ -24,8 +22,6 @@
             @update="(v) => (estado.filtros.catalogoSeleccionado = v)"
             :porDefecto="estado.filtros.catalogoSeleccionado"
             noSlot
-            filled
-            color="grey-5"
           />
           <q-btn
             icon-right="add"

@@ -23,7 +23,6 @@
       :dialogConfig="store.producto.medida._id"
       @crearObjeto="handleCrearTipoEmpaque"
       color="grey-5"
-      filled
     />
 
     <input-text

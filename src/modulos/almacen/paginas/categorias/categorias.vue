@@ -7,9 +7,17 @@
 </template>
 
 <script setup>
+import { useCategoria } from './categoria.composable';
+
 // layout
 definePageMeta({
   layout: 'cathering'
+});
+
+const { buscarCategorias } = useCategoria();
+
+onMounted(() => {
+  buscarCategorias();
 });
 </script>
 

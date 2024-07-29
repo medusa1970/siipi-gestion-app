@@ -30,9 +30,11 @@
       :watch="estado.dataForm.marca"
     />
 
-    <div style="display: grid; grid-gap: 16px; width: 100%">
+    <div class="flex">
       <input-select
         label="Empaque preseleccionado"
+        class="flex-grow"
+        style="margin-right: 16px"
         info="Info #48"
         :opciones="selectEmpaque"
         @update="(v) => prellenarEmpaque(v)"
@@ -40,6 +42,8 @@
         color="grey-6"
       />
       <input-text
+        class="flex-grow"
+        style="margin-left: 16px"
         tipo="number"
         label="Cantidad"
         info="Info #49"

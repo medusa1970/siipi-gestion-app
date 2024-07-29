@@ -63,8 +63,9 @@
 
     <div v-if="estado.dataForm.puedeVencer" class="flex">
       <input-text
-        style="width: 50%"
-        label="Aviso suave debajo de X"
+        class="flex-grow"
+        style="margin-right: 16px"
+        label="Avisar debajo de X"
         tipo="number"
         info="Info #5"
         :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
@@ -73,7 +74,8 @@
       />
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
       <input-text
-        style="width: 50%"
+        class="flex-grow"
+        style="margin-left: 16px"
         label="Aviso fuerte debajo de Y"
         tipo="number"
         info="Info #6"
@@ -142,7 +144,7 @@ const selectCategoria = computed(() => {
   if (store.categoriaArbol) {
     for (const cat of store.categoriaArbol.hijas) {
       options.push(<CategoriaSelectOpcion>{
-        label: `${cat.nombre} (${cat.hijas.length})`,
+        label: cat.nombre,
         value: cat._id,
         disable: true,
         class: 'titulo',

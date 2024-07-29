@@ -17,16 +17,18 @@
     <p>Alerta de cantidad baja en el stock</p>
     <div class="flex">
       <input-text
+        class="flex-grow"
+        style="margin-right: 16px"
         label="Primer aviso"
         info="Info #34"
         tipo="number"
-        style="width: 50%"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
         :rules="[useRules.requerido()]"
       />
       <input-text
-        style="width: 50%"
+        class="flex-grow"
+        style="margin-left: 16px"
         tipo="number"
         label="Segundo aviso"
         info="Info #35"
@@ -40,7 +42,8 @@
     <p>Cada cuantos días se tiene que inventariar?</p>
     <div class="flex">
       <input-text
-        style="width: 50%"
+        class="flex-grow"
+        style="margin-right: 16px"
         tipo="number"
         label="Inventariar cada X días"
         info="Info #36"
@@ -50,7 +53,8 @@
       />
 
       <input-text
-        style="width: 50%"
+        class="flex-grow"
+        style="margin-left: 16px"
         tipo="number"
         label="Avisar X días antes"
         info="Info #37"

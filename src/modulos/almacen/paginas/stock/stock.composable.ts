@@ -206,7 +206,7 @@ export const useStock = () => {
           idsHijas.push(subcat._id);
         }
         options.push({
-          label: `${cat.nombre} (${cat.hijas.length})`,
+          label: cat.nombre,
           value: [...idsHijas, cat._id],
         });
         options = [...options, ...hijas];

@@ -172,7 +172,7 @@
     </template>
 
     <template #body-cell-acciones="{ row }">
-      <q-btn-group push @click="(e) => e.stopPropagation()">
+      <q-btn-group push>
         <q-btn
           color="green"
           icon="visibility"
@@ -183,7 +183,12 @@
           <q-tooltip> Ver informacion producto </q-tooltip>
         </q-btn>
         <q-btn
-          @click="goTo(router, 'producto', { id: row._id })"
+          @click="
+            (e) => {
+              e.stopPropagation();
+              goTo(router, 'producto', { id: row._id });
+            }
+          "
           icon="edit"
           class="p-1"
           color="black"
@@ -193,7 +198,8 @@
         </q-btn>
         <q-btn
           @click="
-            () => {
+            (e) => {
+              e.stopPropagation();
               estado.productoSeleccionado = row._id;
               estado.productoIncompleto = productoIncompleto(row);
               if (estado.productoIncompleto) {
@@ -354,7 +360,7 @@ const selectCategoriaFiltro = computed(() => {
         idsHijas.push(subcat._id);
       }
       options.push(<CategoriaSelectOpcion>{
-        label: `${cat.nombre} (${cat.hijas.length})`,
+        label: cat.nombre,
         value: idsHijas,
       });
       options = [...options, ...hijas];

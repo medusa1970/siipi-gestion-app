@@ -1,6 +1,6 @@
 <template>
   <q-dialog>
-    <q-card>
+    <q-card style="min-width: 450px">
       <q-card-section class="bg-amber-500 p-2 flex justify-between">
         <div class="px-3 h-full text-white" style="font-size: 18px">
           {{ titulo }}

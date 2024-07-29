@@ -110,14 +110,8 @@
       </template> -->
 
       <template #body-cell-acciones="{ val, row }">
-        <q-btn-group push @click="(e) => e.stopPropagation()">
-          <q-btn
-            color="green"
-            icon="visibility"
-            class="p-1"
-            size="sm"
-            @click="() => {}"
-          >
+        <q-btn-group push>
+          <q-btn color="green" icon="visibility" class="p-1" size="sm">
             <q-tooltip> Ver informacion oferta </q-tooltip>
           </q-btn>
 
@@ -126,7 +120,12 @@
             icon="edit"
             class="p-1"
             size="sm"
-            @click="goTo(router, 'oferta', { id: row._id })"
+            @click="
+              (e) => {
+                e.stopPropagation();
+                goTo(router, 'oferta', { id: row._id });
+              }
+            "
           >
             <q-tooltip> Editar producto </q-tooltip></q-btn
           >
@@ -166,7 +165,7 @@
               <p>{{ row.abreviacion }}</p></span
             >
             <span class="flex gap-2 items-center"
-              ><h1 class="font-bold text-xs">CATEGORIA:</h1>
+              ><h1 class="font-bold text-xs">CATALOGO:</h1>
               <p>{{ row.catalogo.nombre }}</p></span
             >
           </div>
@@ -246,7 +245,7 @@ const selectCatalogoFiltro = computed(() => {
         idsHijas.push(subcat._id);
       }
       options.push({
-        label: `${cat.nombre} (${cat.hijas.length})`,
+        label: cat.nombre,
         value: [...idsHijas, cat._id],
       });
       options = [...options, ...hijas];

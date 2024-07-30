@@ -2,7 +2,11 @@
   <Navigation2
     :nav="[
       { label: 'productos', to: 'productos' },
-      { label: store.producto?.nombre, to: 'productoDetalles' },
+      {
+        label: store.producto?.nombre,
+        to: 'producto',
+        params: { id: store.producto?._id },
+      },
     ]"
   />
   <q-tabs

@@ -87,7 +87,7 @@
 
     <input-text
       tipo="textarea"
-      label="comentario"
+      label="Comentario"
       info="Info #7"
       :porDefecto="estado.dataForm.comentario"
       @update="(v) => (estado.dataForm.comentario = v)"

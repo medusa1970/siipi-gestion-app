@@ -3,12 +3,10 @@ varios
 - ofertas de un producto (pestaña)
 - precios por mayor en el expand oferta proveedores
 
-- bug agregar marca en formulario de registrar proveedor
 - no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
 - recarga de inventario
+tiempo de vida & cie nullable
 
 - pasar categorias / catalogos lista a tabla
 - ofertas completas
 - borrar medidas si no usada
-
-registrar variedad no mostrar marcas usadas

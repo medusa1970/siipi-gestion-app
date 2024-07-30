@@ -91,8 +91,43 @@
             {{ precio.precioSinFactura }}
           </td>
           <td class="whitespace-nowrap text-center">
-            <q-btn color="primary" icon="edit" dense size="10px" flat />
-            <q-btn color="red" icon="delete" dense size="10px" flat />
+            <q-btn
+              color="primary"
+              icon="edit"
+              dense
+              size="10px"
+              flat
+              @click="
+                () => {
+                  ppmIndexEdit = index;
+                  estado.dataFormPorMayor.cantidadMin =
+                    estado.dataForm.preciosPorMayor[index].cantidadMin;
+                  estado.dataFormPorMayor.precioSinFactura =
+                    estado.dataForm.preciosPorMayor[index].precioSinFactura;
+                  estado.dataFormPorMayor.precioConFactura =
+                    estado.dataForm.preciosPorMayor[index].precioConFactura;
+                  estado.showFormPorMayor = true;
+                }
+              "
+            />
+            <q-btn
+              color="red"
+              icon="delete"
+              dense
+              size="10px"
+              flat
+              @click="
+                () => {
+                  $q.dialog({
+                    message: '¿Estas seguro de borrar este precio?',
+                    cancel: true,
+                    persistent: true,
+                  }).onOk(() => {
+                    estado.dataForm.preciosPorMayor.splice(index, 1);
+                  });
+                }
+              "
+            />
           </td>
         </tr>
       </tbody>
@@ -123,7 +158,7 @@
           @update="(v) => (estado.dataFormPorMayor.precioConFactura = v)"
         />
         <input-text
-          label="precio sin factura"
+          label="Precio sin factura"
           tipo="number"
           info="Info #25"
           :porDefecto="estado.dataFormPorMayor.precioSinFactura"
@@ -247,9 +282,17 @@ const formSubmit = async () => {
   estado.dataForm = clone(initForm);
 };
 
+const ppmIndexEdit = ref(null);
 const addPpmSubmit = () => {
   estado.showFormPorMayor = false;
-  estado.dataForm.preciosPorMayor.push(clone(estado.dataFormPorMayor));
+  if (ppmIndexEdit.value) {
+    estado.dataForm.preciosPorMayor[ppmIndexEdit.value] = clone(
+      estado.dataFormPorMayor,
+    );
+    ppmIndexEdit.value = null;
+  } else {
+    estado.dataForm.preciosPorMayor.push(clone(estado.dataFormPorMayor));
+  }
   estado.dataFormPorMayor = clone(initFormPorMayor);
 };
 

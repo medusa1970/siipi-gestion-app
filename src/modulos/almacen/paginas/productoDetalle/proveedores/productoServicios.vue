@@ -58,7 +58,6 @@
           labelAdentro
           @update="(v) => (estado.filtros.buscarFiltro = v as string)"
           class="col-span-1"
-          porDefecto=""
           noSlot
         />
         <q-btn

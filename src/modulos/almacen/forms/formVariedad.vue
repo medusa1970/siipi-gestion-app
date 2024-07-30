@@ -24,7 +24,7 @@
         tipo="number"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
       <input-text
         class="flex-grow"
@@ -34,7 +34,7 @@
         info="Info #35"
         :porDefecto="estado.dataForm.cantidadLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[1] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
     </div>
 
@@ -49,7 +49,7 @@
         info="Info #36"
         :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.inventarioLimite[0] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
 
       <input-text
@@ -60,7 +60,7 @@
         info="Info #37"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
         @update="(v) => (estado.dataForm.inventarioLimite[1] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
     </div>
 
@@ -70,7 +70,7 @@
       tipo="number"
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       info="Info #38"
     />
 
@@ -93,7 +93,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Variedad | null;
+    edicion?: Variedad;
   }>(),
   {
     edicion: null,

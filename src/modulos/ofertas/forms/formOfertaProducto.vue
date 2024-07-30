@@ -49,7 +49,7 @@
         info="Info #49"
         :porDefecto="estado.dataForm.cantidad"
         @update="(v) => (estado.dataForm.cantidad = v)"
-        :rules="[useRules.requerido()]"
+        requerido
         :watch="estado.dataForm.cantidad"
       />
     </div>
@@ -59,7 +59,7 @@
       label="Nombre"
       info="Info #40"
       @update="(v) => (estado.dataForm.nombre = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
       :error="estado.errorNombre"
@@ -70,7 +70,7 @@
       label="Abreviacion"
       info="Info #41"
       @update="(v) => (estado.dataForm.abreviacion = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
       :error="estado.errorAbreviacion"
@@ -127,7 +127,7 @@
         info="Info #47"
         :porDefecto="estado.dataForm.precioSinFactura"
         @update="(v) => (estado.dataForm.precioSinFactura = v)"
-        :rules="[useRules.requerido()]"
+        requerido
         :watch="estado.watchSin"
         :forceWatch="estado.forceWatchSin"
       />
@@ -140,7 +140,7 @@
         dense
         @click="
           estado.forceWatchSin = !estado.forceWatchSin;
-          estado.watchSin = estado.dataForm.precioConFactura * (100 / 113);
+          estado.watchSin = estado.dataForm.precioConFactura * (100 / 116);
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
         >calcular sin factura -13%</q-tooltip
@@ -155,7 +155,7 @@
         info="Info #46"
         :porDefecto="estado.dataForm.precioConFactura"
         @update="(v) => (estado.dataForm.precioConFactura = v)"
-        :rules="[useRules.requerido()]"
+        requerido
         :watch="estado.watchCon"
         :forceWatch="estado.forceWatchCon"
       />
@@ -169,7 +169,7 @@
         @click="
           {
             estado.forceWatchCon = !estado.forceWatchCon;
-            estado.watchCon = estado.dataForm.precioSinFactura * (113 / 100);
+            estado.watchCon = estado.dataForm.precioSinFactura * (116 / 100);
           }
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"

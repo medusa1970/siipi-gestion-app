@@ -10,9 +10,11 @@
     <q-form @submit="formSubmit">
       <input-text
         label="Correo electronico"
+        labelAdentro
         @update="(v) => (correo.value = v)"
         :error="correo.error"
-        :rules="[useRules.requerido(), useRules.correo()]"
+        requerido
+        :rules="[useRules.correo()]"
         icono="email"
       />
       <div class="w-full text-center">

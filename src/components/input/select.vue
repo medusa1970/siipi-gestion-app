@@ -18,22 +18,23 @@
       >
     </h3>
     <q-select
+      ref="inputRef"
       :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
       v-model="localModel"
       @update:model-value="handleChange"
       @filter="filterFn"
-      @blur="activarValidacion"
+      @blur="handleBlur"
       @clear="handleClear"
+      lazy-rules="ondemand"
       input-debounce="0"
       :clearable="clearable"
       :dense="dense"
       :disable="disable"
       :filled="filled"
-      :rules="rules"
+      :rules="reglasValidacion"
       :outlined="outlined"
-      :class="clase"
       :bottom-slots="!noSlot"
-      :error="noSlot ? undefined : errorFlag"
+      :error="false"
       :errorMessage="errorMensaje"
       options-dense
       :options="listaOpciones"
@@ -81,7 +82,7 @@
 
   <Popup v-model="showDialog" titulo="Agregar un nuevo item">
     <template #body>
-      <contenido-dialog :config="dialogConfig" @crearObjeto="handleCrear" />
+      <props.dialog :config="dialogConfig" @crearObjeto="handleCrear" />
     </template>
   </Popup>
 </template>
@@ -89,84 +90,165 @@
 <script setup lang="ts">
 import { inputConfig } from './input.service';
 import type { SelectOpcion } from './select.interface';
+import { validacion } from './input.validacion';
 import { ref } from 'vue';
 
 /**
- * Tooltip
+ * El tooltip tiene el texto de ayuda ;
+ * Cuando aparece se llama a esta funcion para ocultarlo despues de un tiempo
  */
+
 const tooltip = ref(false);
 const hideTooltip = (seconds = 3) =>
   setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
- * emits
+ * Definicion y tipado de los eventos que puede emitir este componiente
  */
 
 const emits = defineEmits<{
-  // cambió el valor del input
-  (event: 'update', valor: string | null): void;
-  // el input está en estado de error de validación
-  (event: 'error', errorFlag: boolean, errorMensaje: string | null): void;
-  // cambió el valor del input
-  (event: 'crearObjeto', objeto: any, pariente?: any): void;
-  // cleared
-  (event: 'clear'): void;
+  (
+    event: 'update', // cambió el valor del input
+    valor: string | null, // el valor
+  ): void;
+
+  (
+    event: 'error', // el input está en estado de error de validación
+    errorFlag: boolean, // true si hay un error activa
+    errorMensaje: string | null, // el mensaje de error
+    valor: any, // el valor que ha provocado el error
+  ): void;
+
+  (
+    event: 'crearObjeto', // se ha creado un objeto via el boton [+]
+    objeto: any, // el objeto creado
+    pariente?: any, // si el objeto es un subdoc de un documento, el mismo documento
+  ): void;
 }>();
 
 /**
- * props
+ * Definicion de todos los parametros
  */
+
 const props = withDefaults(
   defineProps<{
-    onUpdate: Function; // para que el @update sea obligatorio
-    opciones: SelectOpcion[]; // lista de opciones del select
+    // Solo declaramos onUpdate para que el @update sea obligatorio
+    onUpdate: Function;
+
+    // la lista de las opciones del select
+    opciones: SelectOpcion[];
+
+    // El titulo del input;
+    // si labelAdentro esta a true, se muestra adentro, sino arriba
     label: string; // label adentro del input
-    hint?: string; // texto de ayuda debajo del input
-    info?: string; // texto de ayuda en el boton de ayuda
-    porDefecto?: any; // valor seleccionado al iniciar
-    watch?: string; // ref de la cual se hara un watch de los cambios para cambiar el input
-    rules?: any; // reglas de validacion
-    icono?: string; // icono a mostrar adentro a la isquierda antes del label
-    clase?: string; // clases css o tailwind
-    dialog?: object; // el componiente adentro del dialogo de agregar nuevo elemento
-    dialogConfig?: any; //opciones para el componiente
-    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
-    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
-    dense?: boolean;
+    labelAdentro?: boolean;
+
+    // Un mensaje de error a mostrar si el input es requerido, o un simple boolean si
+    // se quiere mostrar un mensaje de error por defecto
+    // (no podemos usar required que trae su propria validacion)
+    requerido?: boolean | string;
+
+    // si el input esta desabilitado
     disable?: boolean;
+
+    // un texto de ayuda a mostrar debajo del input
+    hint?: string;
+
+    // un texto de ayuda a mostrar en una popup al lado del input
+    info?: string;
+
+    // el valor por defecto al cargar el input
+    porDefecto?: string;
+
+    // Una referencia que cuando cambia su valor, se actualiza el input con el mismo
+    // forceWatch permite activar el watch mismo si el valor de watch no ha cambiado
+    watch?: string;
+    forceWatch?: boolean;
+
+    // reglas de validacion de la forma (val: any): String | true
+    rules?: any;
+
+    // una referencia que cuando cambia su valor, activa la validacion del input
+    activarValidacion?: boolean;
+
+    // un mensaje de error personalizado; al cambiar su valor automaticamente el
+    // input entra en estado de error y se emite un evento 'error'
+    error?: string;
+
+    // mostrar la crucecita para borrar el valor del input
+    clearable?: boolean;
+
+    // formulario a incluir en el popup al hacer clic en el boton [+]
+    // se puede pasar parametros para ello via dialogConfig
+    dialog?: object;
+    dialogConfig?: any;
+
+    // visual
+    icono?: string; // icono a mostrar adentro a la isquierda antes del label
+    dense?: boolean;
     outlined?: boolean;
     filled?: boolean;
-    clearable?: boolean;
     noSlot?: boolean;
+
+    // color para reemplazar el color por defecto
     color?: string;
-    labelAdentro: boolean;
   }>(),
   {
     clearable: true,
     noSlot: false,
-    rules: [] as Function[],
     disable: false,
+    rules: [] as Function[],
     color: null,
     filled: inputConfig.filled,
     dense: inputConfig.dense,
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
+    forceWatch: null,
   },
 );
 
 /**
- * refs, reactives y computed
+ * Definicion de las refs
  */
 
-const localModel = ref<string>(props.porDefecto); // contenido del input
-const opcionesSrc = ref<SelectOpcion[]>(null); // lista de opciones de referencia, copiada de las props para poder ser modificable
-const listaOpciones = ref<SelectOpcion[]>(null); // lista de opciones que se filtrara y se mostrara, diferente de opsionesSrc para no sobreescribir las modificaciones
-const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
-const errorMensaje = ref<string>(props.error); // el mensaje de error
-const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
-const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+// ref del input para acceder a sus metodos de validacion
+const inputRef = ref(null);
+
+// la ref que contiene el valor del input
+const localModel = ref<string>(props.porDefecto);
+
+// un boolean que controla si setiene que mostrar o no el mensaje error, y
+// el dicho mensaje
+const errorFlag = ref<boolean>(false);
+const errorMensaje = ref<string>(props.error);
+
+// agregamos las reglas de validacion especificas
+let reglasValidacion = props.rules ?? [];
+if (props.requerido) {
+  reglasValidacion = [
+    validacion.requerido(
+      typeof props.requerido === 'string' ? props.requerido : undefined,
+    ),
+    ...reglasValidacion,
+  ];
+}
+
+// para mostrar o esconder el modal [+]
+const showDialog = ref<boolean>(false);
+
+// necesitamos pasar al select una copia de props.opciones porque la queremos poder
+// filtrar segun lo que se esta buscando en el input
+const listaOpciones = ref<SelectOpcion[]>(null);
+
+// tambien necesitamos guardar una copia de las opciones originales para poder reiniciar
+// el filtro ; tenemos que guardar una copia de props.opciones porque ademas
+// le queremos poder agregar nuevos elementos via el boton [+]
+const opcionesSrc = ref<SelectOpcion[]>(null);
+
+/**
+ * Inicializacion de las opciones
+ */
 
 onBeforeMount(async () => {
   opcionesSrc.value = props.opciones;
@@ -174,20 +256,23 @@ onBeforeMount(async () => {
 });
 
 /**
- * metodos
+ * Activa el error con el mensaje pasado por parametro,
+ * o bien lo desactiva si es null
  */
 
-// activar o deactivar el error para el input (desactiva si param null)
 function setError(mensaje: string | null) {
-  //@ts-ignore
   errorMensaje.value = mensaje;
-  errorFlag.value = mensaje !== null;
-  emits('error', errorFlag.value, errorMensaje.value);
+  errorFlag.value = mensaje != null;
+  emits('error', errorFlag.value, errorMensaje.value, localModel.value);
 }
 
-// activar la validacíon del valor actual del input
+/**
+ * Activa la validacíon del valor actual del input
+ * y si corresponde, muestra un mensaje de error
+ */
+
 function activarValidacion() {
-  for (const regla of props.rules) {
+  for (const regla of reglasValidacion) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {
       setError(resultado);
@@ -197,13 +282,22 @@ function activarValidacion() {
   setError(null);
 }
 
-// metodo llamado cuando el valor del input cambia
+/**
+ * Este metodo se ejecuta cada vez que cambia el valor del input
+ * Si el cambio no produce error de validacion, se emite el nuevo valor
+ * Nota : el valor del input es un string pero el valor emitido en el evento puede ser number
+ */
+
 const handleChange = (valor: string | null) => {
-  activarValidacion(); // activar la validacion con el valor actual del input
-  emits('update', valor); // emitir el cambio al componiente padre
+  inputRef.value.resetValidation();
+  activarValidacion();
+  emits('update', valor);
 };
 
-// al entrar un valor en el input, filtra las opciones (no-case)
+/**
+ * funcion de filtrar las opciones del select al buscar en el input
+ */
+
 function filterFn(valor: string, update: Function) {
   update(() => {
     const needle = valor.toLowerCase();
@@ -217,8 +311,11 @@ function filterFn(valor: string, update: Function) {
   });
 }
 
-// Se ha creado una nueva opcion via el boton [+]
-const handleCrear = (objeto, pariente?) => {
+/**
+ * metodo llamado cuando se ha creado una nueva opcion via el boton [+]
+ */
+
+const handleCrear = (objeto) => {
   listaOpciones.value = opcionesSrc.value;
   localModel.value = objeto._id;
   handleChange(objeto._id);
@@ -226,17 +323,29 @@ const handleCrear = (objeto, pariente?) => {
   emits('crearObjeto', objeto);
 };
 
-// Se ha creado una nueva opcion via el boton [+]
+/**
+ * Este metodo se ejecuta cada vez que se presiona el boton de borrar (x)
+ * en caso de que clearable esta a true
+ */
+
 const handleClear = () => {
-  activarValidacion();
-  emits('clear');
+  // activarValidacion();
+  localModel.value = null;
+  emits('update', null);
 };
 
 /**
- * watch
+ * Este metodo se ejecuta cada vez que el input pierde el focus
  */
 
-// update opcionesSrc cuando props.opciones cambia
+const handleBlur = () => {
+  // activarValidacion();
+};
+
+/**
+ * Se pueden cambiar las opciones dinamicamente desde el componiente padre
+ */
+
 watch(
   () => props.opciones,
   () => {
@@ -248,22 +357,37 @@ watch(
   { immediate: true },
 );
 
-// activar el error si llega un mensaje de error desde el componiente padre
+/**
+ * Se puede pasar un mensaje de error personalizado desde el componiente padre
+ * sin tener que pasar por la validacion aquí, pasando ese mensaje por la prop 'error'
+ */
+
 watch(
   () => props.error,
   () => setError(props.error),
 );
 
-// activar la validacion desde el componiente padre
+/**
+ * También se puede forzar la activacion de la validacion desde el componiente padre
+ * cambiando el valor de la prop 'activarValidacion'
+ */
+
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
   { immediate: false },
 );
 
-// modificar el valor desde el componiente padre
+/**
+ * El input puede también recibir un valor directamente del componiente padre pasandolo
+ * por la prop 'watch'. La primera vez, lo hace sin validacion.
+ * La prop 'forceWatch' sirve para forzar este cambio en caso de que
+ * el valor de la prop tiene que ser la misma dos veces seguida (la funcion watch solo
+ * detecta los cambios reales).
+ */
+
 watch(
-  () => props.watch,
+  () => [props.watch, props.forceWatch],
   () => {
     localModel.value = props.watch;
     activarValidacion();

@@ -18,24 +18,26 @@
       >
     </h3>
     <q-input
-      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
+      ref="inputRef"
       :type="tipo"
+      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
+      :hint="hint"
+      :requerido="requerido"
+      :rules="reglasValidacion"
+      :clearable="clearable"
       v-model="localModel"
       @update:model-value="handleChange"
-      @Blur="handleBlur"
+      @blur="handleBlur"
       @clear="handleClear"
-      :rules="reglas"
-      :hint="hint"
+      lazy-rules="ondemand"
       debounce="300"
+      :error="noSlot ? undefined : errorFlag"
+      :errorMessage="errorMensaje"
       :autogrow="tipo === 'password' ? false : autogrow"
-      :clearable="clearable"
       :dense="dense"
       :filled="filled"
       :outlined="outlined"
-      :class="clase"
       :bottom-slots="!noSlot"
-      :error="noSlot ? undefined : errorFlag"
-      :errorMessage="errorMensaje"
       :color="inputConfig.color"
       :bg-color="
         localModel && localModel !== ''
@@ -48,9 +50,9 @@
       </template>
       <template #append v-if="tipo === 'password'">
         <q-icon
-          :name="isPwd ? 'visibility_off' : 'visibility'"
+          :name="esconderLetras ? 'visibility_off' : 'visibility'"
           class="cursor-pointer"
-          @click="isPwd = !isPwd"
+          @click="esconderLetras = !esconderLetras"
         ></q-icon>
       </template>
     </q-input>
@@ -59,10 +61,12 @@
 
 <script setup lang="ts">
 import { inputConfig } from './input.service';
+import { validacion } from './input.validacion';
 import { ref } from 'vue';
 
 /**
- * Tooltip
+ * El tooltip tiene el texto de ayuda ;
+ * Cuando aparece se llama a esta funcion para ocultarlo despues de un tiempo
  */
 
 const tooltip = ref(false);
@@ -70,53 +74,89 @@ const hideTooltip = (seconds = 3) =>
   setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
- * emits
+ * Definicion y tipado de los eventos que puede emitir este componiente
  */
 
 const emits = defineEmits<{
   (
-    // cambió el valor del input
-    event: 'update',
-    valor: string | number | null,
+    event: 'update', // si cambió el valor del input
+    valor: string | number | null, // el valor
   ): void;
   (
-    // el input está en estado de error de validación
-    event: 'error',
-    errorFlag: boolean,
-    errorMessage: string | null,
-    valor: any,
+    event: 'error', // si estado de error de validación cambió
+    errorFlag: boolean, // true si hay un error activa
+    errorMessage: string | null, // el mensaje de error
+    valor: any, // el valor que ha provocado el error
   ): void;
 }>();
 
 /**
- * props
+ * Definicion de todos los parametros
  */
 
 const props = withDefaults(
   defineProps<{
-    onUpdate: Function; // solo se declara para que el @update sea obligatorio
-    label: string; // label adentro del input
-    tipo?: 'text' | 'textarea' | 'password' | 'number' | 'decimal';
-    hint?: string; // texto de ayuda debajo del input
-    info?: string; // texto de ayuda en el boton de ayuda
-    porDefecto?: string | number; // valor seleccionado al iniciar
-    watch?: string | number; // ref de la cual se hara un watch de los cambios para cambiar el input
-    forceWatch?: boolean; // forzar el watch para seguir sus cambios mismo si no cambia
-    rules?: any; // reglas de validacion
-    icono?: string; // icono a mostrar adentro a la isquierda antes del label
-    clase?: string; // clases css o tailwind
-    activarValidacion?: boolean; // cambiar en el comp. pariente para forzar validacion
-    error?: string; // cambiar en el comp. oariente para mostrar un error personalizado
+    // Solo declaramos onUpdate para que el @update sea obligatorio
+    onUpdate: Function;
+
+    // El titulo del input;
+    // si labelAdentro esta a true, se muestra adentro, sino arriba
+    label: string;
+    labelAdentro?: boolean;
+
+    // Un mensaje de error a mostrar si el input es requerido, o un simple boolean si
+    // se quiere mostrar un mensaje de error por defecto
+    // (no podemos usar required que trae su propria validacion)
+    requerido?: boolean | string;
+
+    // el tipo del input
+    tipo?:
+      | 'text' // texto simple (por defecto)
+      | 'textarea' // textarea
+      | 'password' // contraseña con letras escondidas
+      | 'number' // numero intero
+      | 'decimal'; // numero con dos decimales
+
+    // un texto de ayuda a mostrar debajo del input
+    hint?: string;
+
+    // un texto de ayuda a mostrar en una popup al lado del input
+    info?: string;
+
+    // el valor por defecto al cargar el input
+    porDefecto?: string | number;
+
+    // Una referencia que cuando cambia su valor, se actualiza el input con el mismo
+    // forceWatch permite activar el watch mismo si el valor de watch no ha cambiado
+    watch?: string | number;
+    forceWatch?: boolean;
+
+    // reglas de validacion de la forma (val: any): String | true
+    rules?: any;
+
+    // una referencia que cuando cambia su valor, activa la validacion del input
+    activarValidacion?: boolean;
+
+    // un mensaje de error personalizado; al cambiar su valor automaticamente el
+    // input entra en estado de error y se emite un evento 'error'
+    error?: string;
+
+    // mostrar la crucecita para borrar el valor del input
+    clearable?: boolean;
+
+    // si el tamaño del input en altura es dinamico
+    autogrow?: boolean;
+
+    // visual
+    icono?: string; // icono en prepend
     dense?: boolean;
     outlined?: boolean;
     filled?: boolean;
-    clearable?: boolean;
-    autogrow?: boolean;
-    noSlot?: boolean;
-    labelAdentro: boolean;
+    noSlot?: boolean; // ya no se mostraron mensajes de error pero queda mas compacto
   }>(),
   {
     tipo: 'text',
+    requerido: false,
     autogrow: false,
     noSlot: false,
     clearable: true,
@@ -131,10 +171,11 @@ const props = withDefaults(
 );
 
 /**
- * para mostrar el valor con decimales y comas si es un numero
+ * si el tipo es number o decimal, convierte el valor en locale en-US
+ * con el buen numero de decimales y las comas entre los millares
  */
 
-const tipar = (valor) => {
+const numeroConComas = (valor) => {
   let res = null;
   if (valor != null) {
     switch (props.tipo) {
@@ -157,29 +198,44 @@ const tipar = (valor) => {
 };
 
 /**
- * refs, reactives y computed
+ * Definicion de las refs
  */
 
-const localModel = ref<string>(tipar(props.porDefecto));
-const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
-const errorMensaje = ref<string>(props.error); // el mensaje de error
-const isPwd = ref<boolean>(true); // si las letras son visibles o
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
-const reglas = ref(
-  props.tipo === 'decimal'
-    ? [...props.rules, useRules.decimal()]
-    : props.tipo === 'number'
-    ? [...props.rules, useRules.numero()]
-    : props.rules,
-);
+// ref del input para acceder a sus metodos de validacion
+const inputRef = ref(null);
 
-/**
- * tipo que debemos pasar a q-input
- */
+// la ref que contiene el valor del input
+const localModel = ref<string>(numeroConComas(props.porDefecto));
 
+// un boolean que controla si setiene que mostrar o no el mensaje error, y
+// el dicho mensaje
+const errorFlag = ref<boolean>(false);
+const errorMensaje = ref<string>(props.error);
+
+// si el input es de tipo password, controla si las letras son visibles o no
+const esconderLetras = ref<boolean>(true);
+
+// agregamos las reglas de vlaidacion especificas segun el tipo del input
+let reglasValidacion = props.rules ?? [];
+if (props.tipo === 'decimal') {
+  reglasValidacion = [validacion.decimal(), ...reglasValidacion];
+}
+if (props.tipo === 'number') {
+  reglasValidacion = [validacion.numero(), ...reglasValidacion];
+}
+if (props.requerido) {
+  reglasValidacion = [
+    validacion.requerido(
+      typeof props.requerido === 'string' ? props.requerido : undefined,
+    ),
+    ...reglasValidacion,
+  ];
+}
+
+// calculo del tipo extacto a pasar a q-input
 const tipo = computed(() =>
   props.tipo === 'password'
-    ? isPwd.value
+    ? esconderLetras.value
       ? 'password'
       : 'text'
     : props.tipo === 'textarea'
@@ -188,47 +244,60 @@ const tipo = computed(() =>
 );
 
 /**
- * manejadores de eventos
+ * Este metodo se ejecuta cada vez que cambia el valor del input
+ * Si el cambio no produce error de validacion, se emite el nuevo valor
+ * Nota : el valor del input es un string pero el valor emitido en el evento puede ser number
  */
 
-// valor del input cambia : emitemos el nuevo valor (si es correcto)
 const handleChange = (valor: string | null) => {
+  inputRef.value.resetValidation();
   if (activarValidacion()) {
     if (props.tipo === 'number' || props.tipo === 'decimal') {
-      valor = valor.replace(',', '');
-      emits('update', valor == null ? null : Number(valor));
+      emits('update', valor == null ? null : Number(valor.replace(',', '')));
     } else {
       emits('update', valor);
     }
   }
 };
 
-// input se reinicia con la cruz
+/**
+ * Este metodo se ejecuta cada vez que se presiona el boton de borrar (x)
+ * en caso de que clearable esta a true
+ */
+
 const handleClear = () => {
-  activarValidacion();
+  // activarValidacion();
   localModel.value = null;
   emits('update', null);
 };
 
-// input pierde el focus
-const handleBlur = () => {
-  activarValidacion();
+/**
+ * Este metodo se ejecuta cada vez que el input pierde el focus
+ */
+
+const handleBlur = (e) => {
+  setError(null);
+  // activarValidacion();
 };
 
 /**
- * Errores y validacion
+ * Activa el error con el mensaje pasado por parametro,
+ * o bien lo desactiva si es null
  */
 
-// activar o deactivar el error para el input (desactiva si param null)
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje !== null;
   emits('error', errorFlag.value, errorMensaje.value, localModel.value);
 }
 
-// activar la validacíon del valor actual del input
+/**
+ * Activa la validacíon del valor actual del input
+ * y si corresponde, muestra un mensaje de error
+ */
+
 function activarValidacion() {
-  for (const regla of reglas.value as Function[]) {
+  for (const regla of reglasValidacion as Function[]) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {
       setError('//'); // para que se detecte un cambio
@@ -241,29 +310,48 @@ function activarValidacion() {
 }
 
 /**
- * watch y subscripciones
+ * Se puede pasar un mensaje de error personalizado desde el componiente padre
+ * sin tener que pasar por la validacion aquí, pasando ese mensaje por la prop 'error'
  */
 
-// activar el error si llega un mensaje de error desde el componiente padre
 watch(
   () => props.error,
   () => setError(props.error),
 );
 
-// activar la validacion desde el componiente padre
+/**
+ * También se puede forzar la activacion de la validacion desde el componiente padre
+ * cambiando el valor de la prop 'activarValidacion'
+ */
+
 watch(
-  () => props.activarValidacion, // si cambia la ref validate en el componiente padre...
-  () => activarValidacion(), // ... entonces se activa la validacion
+  () => props.activarValidacion,
+  () => activarValidacion(),
   { immediate: false },
 );
 
-// modificar el valor desde el componiente padre segun la prop 'watch'
+/**
+ * El input puede también recibir un valor directamente del componiente padre pasandolo
+ * por la prop 'watch'. La primera vez, lo hace sin validacion.
+ *  La prop 'forceWatch' sirve para forzar este cambio en caso de que
+ * el valor de la prop tiene que ser la misma dos veces seguida (la funcion watch solo
+ * detecta los cambios reales).
+ */
+
 watch(
   () => [props.watch, props.forceWatch],
   () => {
-    localModel.value = tipar(props.watch);
+    localModel.value = numeroConComas(props.watch);
+    activarValidacion();
     handleChange(localModel.value);
   },
   { immediate: false },
+);
+watch(
+  () => props.watch,
+  () => {
+    emits('update', localModel.value);
+  },
+  { once: true, immediate: true },
 );
 </script>

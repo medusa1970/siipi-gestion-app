@@ -17,7 +17,7 @@
       info="Info #1"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :error="estado.errorNombre"
     />
 
@@ -70,7 +70,7 @@
         info="Info #5"
         :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[0] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
       <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
       <input-text
@@ -81,7 +81,7 @@
         info="Info #6"
         :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.vencimientoLimite[1] = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
     </div>
 
@@ -113,7 +113,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Producto | null; // edicion si producto no es null, sino creacion
+    edicion?: Producto; // edicion si producto no es null, sino creacion
   }>(),
   {
     edicion: null,

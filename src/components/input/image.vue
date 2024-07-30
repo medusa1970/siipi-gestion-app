@@ -127,7 +127,7 @@ const props = withDefaults(
     clearable?: boolean;
     dataInicial?: string; // valor seleccionado al iniciar
     dataPreview?: string; // valor mostrado al iniciar, sin seleccionar
-    labelAdentro: boolean;
+    labelAdentro?: boolean;
   }>(),
   {
     clearable: true,

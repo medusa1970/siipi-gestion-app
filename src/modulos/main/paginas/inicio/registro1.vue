@@ -10,42 +10,52 @@
     <q-form @submit="submit">
       <input-text
         label="Nombre"
+        labelAdentro
         @update="(v) => (nombre.value = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
       <input-text
         label="Apellido"
+        labelAdentro
         @update="(v) => (apellido.value = v)"
-        :rules="[useRules.requerido()]"
+        requerido
       />
       <input-text
         label="Usuario"
+        labelAdentro
         @update="(v) => (usuario.value = v)"
         :error="usuario.error"
-        :rules="[useRules.requerido()]"
+        requerido
       />
       <input-text
         label="Correo"
+        labelAdentro
         @update="(v) => (correo.value = v)"
         :error="correo.error"
-        :rules="[useRules.requerido(), useRules.correo()]"
+        requerido
+        :rules="[useRules.correo()]"
       />
       <input-text
         label="Telefono"
+        labelAdentro
         @update="(v) => (telefono.value = v)"
         :error="telefono.value"
-        :rules="[useRules.requerido(), useRules.telefono()]"
+        requerido
+        :rules="[useRules.telefono()]"
       />
       <input-text
         type="password"
         label="Contraseña"
+        labelAdentro
         @update="(v) => (password.value = v)"
-        :rules="[useRules.requerido(), useRules.password]"
+        requerido
+        :rules="[useRules.password]"
         icono="key"
       />
       <input-text
         type="password"
         label="Repetir"
+        labelAdentro
         @update="(v) => (password2.value = v)"
         :rules="[password2Rule]"
         icono="key"

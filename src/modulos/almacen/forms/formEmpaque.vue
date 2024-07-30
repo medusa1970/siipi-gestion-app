@@ -31,7 +31,7 @@
       @update="(v) => (estado.dataForm.nombre = v)"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <input-text
@@ -40,8 +40,8 @@
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
       info="Info #31"
-      :rules="[useRules.requerido()]"
-    />{{ store.producto.medida.nombre }}
+      requerido
+    />
 
     <input-text
       label="Cantidad en unidades básicas"
@@ -50,7 +50,7 @@
       @update="(v) => (estado.dataForm.cantidad = v)"
       :porDefecto="estado.dataForm.cantidad"
       :watch="estado.dataForm.cantidad"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Submit -->
@@ -74,7 +74,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Empaque | null;
+    edicion?: Empaque;
   }>(),
   {
     edicion: null,

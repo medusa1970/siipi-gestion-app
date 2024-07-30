@@ -10,9 +10,10 @@
     <q-form @submit="formSubmit">
       <input-text
         label="Código recibido por mail"
+        labelAdentro
         @update="(v) => (codigo.value = v)"
         :error="codigo.error"
-        :rules="[useRules.requerido()]"
+        requerido
         icono="key"
       />
       <div class="mt-1 w-full text-center">

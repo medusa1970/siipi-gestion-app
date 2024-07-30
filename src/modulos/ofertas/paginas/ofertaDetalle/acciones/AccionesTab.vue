@@ -10,7 +10,7 @@
           label="Motivo"
           @update="(v) => (estado.motivoEliminacion = v)"
           info="Info #39"
-          :rules="[useRules.requerido()]"
+          requerido
         />
       </div>
       <div>

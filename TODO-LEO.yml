@@ -1,19 +1,13 @@
 varios
 - que se cierre un producto al abrir otro
 - ofertas de un producto (pestaña)
-
-varios chicos 
 - precios por mayor en el expand oferta proveedores
-- pasar categorias / catalogos lista a tabla
-- precio con y sin factura calculadora en form oferta producto
 
-funcionalidades
-- borrar medidas si no usada
-- ofertas completas
-
-bugs
-- bug watch after clear on inputs
-- login input adentro
 - bug agregar marca en formulario de registrar proveedor
 - no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
+- recarga de inventario
+infobulle
 
+- pasar categorias / catalogos lista a tabla
+- ofertas completas
+- borrar medidas si no usada

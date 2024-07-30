@@ -112,7 +112,7 @@
           info="Info #23"
           :porDefecto="estado.dataFormPorMayor.cantidadMin"
           @update="(v) => (estado.dataFormPorMayor.cantidadMin = v)"
-          :rules="[useRules.requerido()]"
+          requerido
         />
         <input-text
           label="Precio con factura"
@@ -152,7 +152,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 const props = withDefaults(
   defineProps<{
     config?: { proveedorId?: string };
-    edicion: Servicio | null; // edicion si null, sino creacion
+    edicion?: Servicio;
   }>(),
   {
     edicion: null,

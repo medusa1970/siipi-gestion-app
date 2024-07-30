@@ -6,7 +6,7 @@
       info="Info #26"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :error="estado.errorNombre"
     />
 
@@ -38,7 +38,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Categoria | null; // edicion si null, sino creacion
+    edicion?: Categoria;
   }>(),
   {
     edicion: null,

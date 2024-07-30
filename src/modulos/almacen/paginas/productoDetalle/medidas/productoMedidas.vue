@@ -98,7 +98,6 @@
           labelAdentro
           class="col-span-1"
           label="Buscar"
-          porDefecto=""
           noSlot
         />
         <q-btn

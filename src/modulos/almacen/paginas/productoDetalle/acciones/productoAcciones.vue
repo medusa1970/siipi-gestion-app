@@ -6,7 +6,7 @@
       label="Motivo"
       @update="(v) => (estado.motivoEliminacion = v as string)"
       info="Info #39"
-      :rules="[useRules.requerido()]"
+      requerido
     />
     <q-btn
       color="primary"

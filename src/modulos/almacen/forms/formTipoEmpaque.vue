@@ -5,7 +5,7 @@
       label="Nombre"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :error="estado.errorNombre"
     />
     <!-- abreviacion -->
@@ -13,7 +13,7 @@
       label="Abreviacion"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :error="estado.errorAbreviacion"
     />
     <!-- cantidad -->
@@ -22,7 +22,7 @@
       tipo="number"
       :porDefecto="estado.dataForm.cantidad"
       @update="(v) => (estado.dataForm.cantidad = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Submit -->
@@ -44,7 +44,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: TipoEmpaque | null;
+    edicion?: TipoEmpaque;
   }>(),
   {
     edicion: null,

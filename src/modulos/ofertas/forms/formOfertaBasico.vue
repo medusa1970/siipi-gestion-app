@@ -6,7 +6,7 @@
       info="Info #40"
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- abreviacion -->
@@ -15,7 +15,7 @@
       info="Info #41"
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- descripcion -->
@@ -26,6 +26,7 @@
       :porDefecto="estado.dataForm.descripcion"
       @update="(v) => (estado.dataForm.descripcion = v)"
     />
+
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
@@ -33,8 +34,15 @@
       :opciones="selectCatalogo"
       :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
-      @update="(v) => (estado.catalogoAncestro = v)"
-      :rules="[useRules.requerido()]"
+      @update="
+        (v) => {
+          estado.catalogoAncestro = v;
+          if (estado.catalogoAncestroHack) {
+            estado.dataForm.catalogo = null;
+          }
+        }
+      "
+      requerido
     />
     <input-select
       label="Sub catalogo"
@@ -43,7 +51,7 @@
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Imagen -->
@@ -81,7 +89,7 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Oferta | null; // edicion si producto no es null, sino creacion
+    edicion?: Oferta; // edicion si producto no es null, sino creacion
   }>(),
   {
     edicion: null,
@@ -101,7 +109,7 @@ const initForm = {
 const estado = reactive({
   dataForm: clone(initForm),
   catalogoAncestro: null as string, // catalogo seleccionado (solo el subcat va en el form)
-  catalogoAncestroHack: false, // no borrar el subcatalogo si true
+  catalogoAncestroHack: false, // no borrar el subcatalogo si true, eso pasara solo la primera vez
   catalogoOpciones: [],
   subCatalogoOpciones: [],
   imagenPreview: null,
@@ -149,14 +157,6 @@ const selectSubCatalogo = computed(() => {
   }
   return options;
 });
-
-watch(
-  () => estado.catalogoAncestro,
-  () => {
-    if (estado.catalogoAncestroHack) estado.dataForm.catalogo = null;
-    estado.catalogoAncestroHack = false;
-  },
-);
 
 // Inicializaciones
 onMounted(async () => {

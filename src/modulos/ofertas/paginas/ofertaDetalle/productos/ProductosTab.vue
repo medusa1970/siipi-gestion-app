@@ -27,7 +27,7 @@
       tipo="number"
       @update="(v) => (estado.dataForm.cantidad = v as number)"
       :porDefecto="estado.dataForm.cantidad"
-      :rules="[useRules.requerido()]"
+      requerido
       info="Info #55"
     />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />

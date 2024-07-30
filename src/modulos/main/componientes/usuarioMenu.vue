@@ -85,25 +85,25 @@
             label="Nombre"
             @update="(v) => (perfil.nombre = v as string)"
             :porDefecto="perfil.nombre"
-            :rules="[useRules.requerido()]"
+            requerido
           />
           <input-text
             label="Apellido"
             @update="(v) => (perfil.apellido = v as string)"
             :porDefecto="perfil.apellido"
-            :rules="[useRules.requerido()]"
+            requerido
           />
           <input-text
             label="telefono"
             @update="(v) => (perfil.telefono = v as string)"
             :porDefecto="perfil.telefono"
-            :rules="[useRules.requerido()]"
+            requerido
           />
           <input-text
             label="email"
             @update="(v) => (perfil.correo = v as string)"
             :porDefecto="perfil.correo"
-            :rules="[]"
+            requerido
           />
           <input-image
             label="inagen"

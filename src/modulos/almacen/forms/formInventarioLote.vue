@@ -7,7 +7,7 @@
       :tipo="props.producto.medida.nombre === 'unidad' ? 'number' : 'decimal'"
       @update="(v) => (dataForm.cantidad = v as number)"
       :porDefecto="dataForm.cantidad"
-      :rules="[useRules.requerido()]"
+      requerido
     />
     <!-- vencimiento -->
     <input-text
@@ -63,7 +63,7 @@ const emits = defineEmits(['crearLote']);
 const props = withDefaults(
   defineProps<{
     producto: Producto;
-    edicion?: Lote | null;
+    edicion?: Lote;
   }>(),
   {
     edicion: null,

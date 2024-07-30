@@ -4,25 +4,25 @@
     <input-text
       v-if="!props.edicion || !props.edicion.hasOwnProperty('_esOferta')"
       tipo="number"
+      requerido
       label="Cantidad min."
       info="Info #50"
       :porDefecto="estado.dataForm.cantidadMin"
       @update="(v) => (estado.dataForm.cantidadMin = v)"
-      :rules="[useRules.requerido(), rule2]"
     />
 
     <!-- Precios -->
     <div class="flex">
       <input-text
+        tipo="decimal"
+        requerido
         class="flex-grow"
         label="Precio sin factura"
-        tipo="decimal"
         info="Info #51"
         :porDefecto="estado.dataForm.precioSinFactura"
         @update="(v) => (estado.dataForm.precioSinFactura = v)"
         :watch="estado.watchSin"
         :forceWatch="estado.forceWatchSin"
-        :rules="[useRules.requerido()]"
       />
       <q-btn
         icon="calculate"
@@ -33,7 +33,7 @@
         dense
         @click="
           estado.forceWatchSin = !estado.forceWatchSin;
-          estado.watchSin = estado.dataForm.precioConFactura * (100 / 113);
+          estado.watchSin = estado.dataForm.precioConFactura * (100 / 116);
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
         >calcular sin factura -13%</q-tooltip
@@ -49,7 +49,7 @@
         @update="(v) => (estado.dataForm.precioConFactura = v)"
         :watch="estado.watchCon"
         :forceWatch="estado.forceWatchCon"
-        :rules="[useRules.requerido()]"
+        requerido="Debe entrar un precio con factura"
       />
       <q-btn
         icon="calculate"
@@ -61,7 +61,7 @@
         @click="
           {
             estado.forceWatchCon = !estado.forceWatchCon;
-            estado.watchCon = estado.dataForm.precioSinFactura * (113 / 100);
+            estado.watchCon = estado.dataForm.precioSinFactura * (116 / 100);
           }
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
@@ -88,10 +88,9 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    edicion: Precio | Oferta | null;
+    edicion?: Precio | Oferta;
   }>(),
   {
-    edicionOferta: null,
     edicion: null,
   },
 );

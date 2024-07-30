@@ -11,8 +11,10 @@
       <input-text
         tipo="password"
         label="Contraseña"
+        labelAdentro
         @update="(v) => (password.value = v)"
-        :rules="[useRules.requerido(), useRules.password]"
+        requerido
+        :rules="[useRules.password]"
         icono="key"
       />
       <input-text

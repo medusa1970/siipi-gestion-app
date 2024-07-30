@@ -10,18 +10,20 @@
     <q-form @submit="formSubmit">
       <input-text
         label="Usuario"
+        labelAdentro
         @update="(v) => (usuario.value = v)"
         :error="usuario.error"
-        :rules="[useRules.requerido('El usuario es obligatorio')]"
+        requerido="El usuario es obligatorio"
         default="lionel"
         icono="person"
       />
       <input-text
         tipo="password"
         label="Contraseña"
+        labelAdentro
         @update="(v) => (password.value = v)"
         :error="password.error"
-        :rules="[useRules.requerido()]"
+        requerido
         default="Siipi123"
         icono="key"
       />

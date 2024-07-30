@@ -11,6 +11,7 @@
       :dialog="formVariedad"
       :disable="edicion != null"
       @CrearObjeto="handleVariedadCreada"
+      :watch="estado.dataForm.marca"
     />
 
     <!-- Categoria -->
@@ -254,5 +255,6 @@ const addPpmSubmit = () => {
 
 const handleVariedadCreada = (variedad) => {
   store.producto.variedades.push(variedad);
+  estado.dataForm.marca = variedad.marca._id;
 };
 </script>

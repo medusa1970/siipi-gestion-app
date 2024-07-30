@@ -19,7 +19,7 @@
       <input-text
         class="flex-grow"
         style="margin-right: 16px"
-        label="Primer aviso"
+        label="Avisar a la cantidad X"
         info="Info #34"
         tipo="number"
         :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
@@ -30,7 +30,7 @@
         class="flex-grow"
         style="margin-left: 16px"
         tipo="number"
-        label="Segundo aviso"
+        label="Avisar a la cantidad Y"
         info="Info #35"
         :porDefecto="estado.dataForm.cantidadLimite?.[1] ?? 0"
         @update="(v) => (estado.dataForm.cantidadLimite[1] = v)"
@@ -56,7 +56,7 @@
         class="flex-grow"
         style="margin-left: 16px"
         tipo="number"
-        label="Avisar X días antes"
+        label="Avisar Y días antes"
         info="Info #37"
         :porDefecto="estado.dataForm.inventarioLimite?.[1]"
         @update="(v) => (estado.dataForm.inventarioLimite[1] = v)"
@@ -158,6 +158,7 @@ const formSubmit = async () => {
         },
       });
       emits('crearObjeto', ultimo(producto.variedades), producto);
+      console.log(ultimo(producto.variedades));
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

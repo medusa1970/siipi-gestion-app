@@ -6,9 +6,9 @@ varios
 - bug agregar marca en formulario de registrar proveedor
 - no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
 - recarga de inventario
-infobulle
 
 - pasar categorias / catalogos lista a tabla
 - ofertas completas
 - borrar medidas si no usada
 
+registrar variedad no mostrar marcas usadas

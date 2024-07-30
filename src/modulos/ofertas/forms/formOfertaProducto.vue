@@ -140,7 +140,7 @@
         dense
         @click="
           estado.forceWatchSin = !estado.forceWatchSin;
-          estado.watchSin = estado.dataForm.precioConFactura * (100 / 116);
+          estado.watchSin = estado.dataForm.precioConFactura * (100 / 113);
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
         >calcular sin factura -13%</q-tooltip
@@ -169,7 +169,7 @@
         @click="
           {
             estado.forceWatchCon = !estado.forceWatchCon;
-            estado.watchCon = estado.dataForm.precioSinFactura * (116 / 100);
+            estado.watchCon = estado.dataForm.precioSinFactura * (113 / 100);
           }
         "
       /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"

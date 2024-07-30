@@ -13,23 +13,24 @@
       ref="inputRef"
       :type="tipo"
       :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
+      v-model="localModel"
       :hint="hint"
       :requerido="requerido"
       :rules="reglasValidacion"
       :clearable="clearable"
-      v-model="localModel"
+      :disable="disable"
       @update:model-value="handleChange"
-      @blur="handleBlur"
       @clear="handleClear"
+      @blur="handleBlur"
       lazy-rules="ondemand"
       debounce="300"
       :error="noSlot ? undefined : errorFlag"
       :errorMessage="errorMensaje"
-      :autogrow="tipo === 'password' ? false : autogrow"
-      :dense="dense"
-      :filled="filled"
-      :outlined="outlined"
       :bottom-slots="!noSlot"
+      :dense="dense"
+      :outlined="outlined"
+      :filled="filled"
+      :autogrow="tipo === 'password' ? false : autogrow"
       :color="inputConfig.color"
       :bg-color="
         localModel && localModel !== ''
@@ -120,6 +121,9 @@ const props = withDefaults(
     // se quiere mostrar un mensaje de error por defecto
     // (no podemos usar required que trae su propria validacion)
     requerido?: boolean | string;
+
+    // si el input esta desabilitado
+    disable?: boolean;
 
     // el tipo del input
     tipo?:
@@ -262,7 +266,7 @@ const tipo = computed(() =>
  */
 
 const handleChange = (valor: string | null) => {
-  inputRef.value.resetValidation();
+  if (inputRef.value) inputRef.value.resetValidation();
   if (activarValidacion()) {
     if (props.tipo === 'number' || props.tipo === 'decimal') {
       emits('update', valor == null ? null : Number(valor.replace(',', '')));
@@ -278,7 +282,6 @@ const handleChange = (valor: string | null) => {
  */
 
 const handleClear = () => {
-  // activarValidacion();
   localModel.value = null;
   emits('update', null);
 };
@@ -289,7 +292,6 @@ const handleClear = () => {
 
 const handleBlur = (e) => {
   setError(null);
-  // activarValidacion();
 };
 
 /**
@@ -305,16 +307,16 @@ function setError(mensaje: string | null) {
 
 /**
  * Activa la validacíon del valor actual del input
- * y si corresponde, muestra un mensaje de error
+ * y si corresponde, muestra un mensaje de error.
+ * Solo el primer error se manda
  */
 
 function activarValidacion() {
   for (const regla of reglasValidacion as Function[]) {
     const resultado = regla(localModel.value);
     if (resultado !== true) {
-      setError('//'); // para que se detecte un cambio
       setError(resultado);
-      return false; // solo el primer error se manda
+      return false;
     }
   }
   setError(null);
@@ -354,16 +356,16 @@ watch(
   () => [props.watch, props.forceWatch],
   () => {
     localModel.value = numeroConComas(props.watch);
-    activarValidacion();
     handleChange(localModel.value);
   },
   { immediate: false },
 );
-watch(
-  () => props.watch,
-  () => {
-    emits('update', localModel.value);
-  },
-  { once: true, immediate: true },
-);
+// watch(
+//   () => props.watch,
+//   () => {
+//     console.log('once:', props.label, localModel.value, '/', props.watch);
+//     emits('update', localModel.value);
+//   },
+//   { once: true, immediate: true },
+// );
 </script>

@@ -13,31 +13,38 @@
       ref="inputRef"
       :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
       v-model="localModel"
+      :hint="hint"
+      :requerido="requerido"
+      :rules="reglasValidacion"
+      :clearable="clearable"
+      :disable="disable"
       @update:model-value="handleChange"
-      @filter="filterFn"
-      @blur="handleBlur"
       @clear="handleClear"
+      @blur="handleBlur"
+      @filter="filterFn"
+      @input-value="
+        (v) => {
+          // console.log(`${props.label}=${v === '' ? '<empty string>' : v}`);
+        }
+      "
       lazy-rules="ondemand"
       input-debounce="0"
-      :clearable="clearable"
-      :dense="dense"
-      :disable="disable"
-      :filled="filled"
-      :rules="reglasValidacion"
-      :outlined="outlined"
-      :bottom-slots="!noSlot"
-      :error="false"
+      :error="noSlot ? undefined : errorFlag"
       :errorMessage="errorMensaje"
+      :bottom-slots="!noSlot"
+      :dense="dense"
+      :outlined="outlined"
+      :filled="filled"
       options-dense
       :options="listaOpciones"
       emit-value
       input-select
       no-options-label="Opción no encontrada"
       map-options
-      :dialog="dialog"
       use-input
       fill-input
       hide-selected
+      :dialog="dialog"
       :color="color ?? inputConfig.color"
       :bg-color="
         color ??
@@ -226,7 +233,7 @@ const props = withDefaults(
 const inputRef = ref(null);
 
 // la ref que contiene el valor del input
-const localModel = ref<string>(props.porDefecto);
+const localModel = ref<string | null>(props.porDefecto);
 
 // un boolean que controla si setiene que mostrar o no el mensaje error, y
 // el dicho mensaje
@@ -299,7 +306,7 @@ function activarValidacion() {
  */
 
 const handleChange = (valor: string | null) => {
-  inputRef.value.resetValidation();
+  if (inputRef.value) inputRef.value.resetValidation();
   activarValidacion();
   emits('update', valor);
 };
@@ -390,7 +397,7 @@ watch(
 
 /**
  * El input puede también recibir un valor directamente del componiente padre pasandolo
- * por la prop 'watch'. La primera vez, lo hace sin validacion.
+ * por la prop 'watch'.
  * La prop 'forceWatch' sirve para forzar este cambio en caso de que
  * el valor de la prop tiene que ser la misma dos veces seguida (la funcion watch solo
  * detecta los cambios reales).
@@ -400,16 +407,15 @@ watch(
   () => [props.watch, props.forceWatch],
   () => {
     localModel.value = props.watch;
-    activarValidacion();
     emits('update', localModel.value);
   },
   { immediate: false },
 );
-watch(
-  () => props.watch,
-  () => {
-    emits('update', localModel.value);
-  },
-  { once: true, immediate: true },
-);
+// watch(
+//   () => props.watch,
+//   () => {
+//     emits('update', localModel.value);
+//   },
+//   { once: true, immediate: true },
+// );
 </script>

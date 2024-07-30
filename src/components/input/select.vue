@@ -2,20 +2,12 @@
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
       {{ label + (requerido ? ' *' : '') }}
-      <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
-        <q-tooltip
-          v-model="tooltip"
-          class="no-pointer-events text-white text-sm bg-blue-9"
-          anchor="bottom left"
-          self="top left"
-          :offset="[0, 5]"
-          max-width="300px"
-          no-parent-event
-          @show="hideTooltip()"
-        >
-          {{ info }}
-        </q-tooltip></q-icon
-      >
+      <q-icon
+        name="help"
+        color="blue"
+        size="20px"
+        @click="tooltip = !tooltip"
+      />
     </h3>
     <q-select
       ref="inputRef"
@@ -54,6 +46,19 @@
           : inputConfig.bgColorVacio)
       "
     >
+      <q-tooltip
+        v-model="tooltip"
+        class="no-pointer-events text-white text-sm bg-blue-9"
+        anchor="bottom middle"
+        self="top middle"
+        :offset="[0, -15]"
+        max-width="300px"
+        no-parent-event
+        @show="hideTooltip()"
+      >
+        {{ info }}
+      </q-tooltip>
+
       <template #no-option>
         <q-item>
           <q-item-section class="text-grey"> No hay resultados </q-item-section>
@@ -71,6 +76,11 @@
           style="height: 16px; width: 16px"
           @click="() => (showDialog = true)"
         ></q-btn>
+        <q-icon
+          v-if="labelAdentro && info && info.length > 0"
+          name="help"
+          @click="tooltip = !tooltip"
+        />
       </template>
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps" :class="scope.opt.class">

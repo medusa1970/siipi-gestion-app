@@ -1,0 +1,118 @@
+<template>
+  <Navigation2
+    :nav="[
+      {
+        label: 'empleados',
+        to: 'empleados',
+      },
+    ]"
+    titulo="Gestion de empleados"
+  />
+  <div id="pageContainer">
+    <Tabla
+      disableExpand
+      :rows="composable.rowsTabla.value"
+      :columns="[
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    imagen: true,
+    style: 'margin:5px; padding: 5px',
+    align: 'center',
+    field: (row: any) => row.persona.imagen?.cloudinaryUrl,
+  },
+  {
+    name: 'nombre',
+    label: 'Nombre',
+    style: 'margin:5px; padding: 5px;',
+    align: 'left',
+    field: (row: any) => row.persona.nombre + ' ' +row.persona.apellido ,
+    sortable: true,
+  },
+  {
+    name: 'cargo',
+    label: 'Cargo',
+    style: 'margin:5px; padding: 5px;',
+    align: 'left',
+    field: (row: any) => row.cargos[0].nombre,
+    sortable: true,
+  },  {
+    name: 'permisos',
+    label: 'Permisos',
+    style: 'margin:5px; padding: 5px;',
+    align: 'left',
+    field: (row: any) => row.permisos.map(p => p.permiso).join(', '),
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: '',
+    align: 'center',
+    slot: true,
+  },
+]"
+      :defaultImage="EmpleadoImage"
+    >
+      <template #dropdown>
+        <div class="w-full flex" style="align-items: center">
+          <input-text
+            label="Buscar"
+            labelAdentro
+            @update="(v) => (estado.filtros.buscar = v as string)"
+            noSlot
+          />
+          <q-btn
+            size="12px"
+            icon="add"
+            color="green"
+            style="height: 16px; width: 16px; margin: 5px 10px"
+            @click="() => (estado.modal.formCrearEmpleado = true)"
+          />
+        </div>
+      </template>
+      <template #body-cell-nombre="{ val, row }">
+        {{ val }}
+        <br />
+        <i>{{ row.descripcion }}</i>
+      </template>
+      <template #body-cell-actions="{ row }">
+        <q-btn-group push @click="(e) => e.stopPropagation()">
+          <q-btn
+            @click="
+              (e) => {
+                e.stopPropagation();
+                console.log(getRoute(router, 'empleado', { id: row._id }));
+                goTo(router, 'empleado', { id: row._id });
+              }
+            "
+            icon="edit"
+            class="p-1"
+            color="black"
+            size="sm"
+          >
+            <q-tooltip> Modificar </q-tooltip>
+          </q-btn>
+        </q-btn-group>
+      </template>
+    </Tabla>
+  </div>
+</template>
+
+<script setup lang="ts">
+// layout
+definePageMeta({ layout: 'cathering' });
+// import composable, store & estado
+import { useEmpleados } from './empleados.composable';
+const composable = useEmpleados();
+const { estado, store } = composable;
+// Otros imports
+const router = useRouter();
+import EmpleadoImage from '@/assets/img/noHayEmpleado.png';
+import formEmpleado from '@/modulos/empresa/forms/formEmpleado.vue';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  await store.getEmpleados();
+});
+</script>

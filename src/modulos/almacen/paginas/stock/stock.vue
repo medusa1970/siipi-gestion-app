@@ -181,7 +181,7 @@
         {{
           !row.producto.puedeVencer
             ? 'No vence'
-            : row.diasAviso1HastaVencer === 0
+            : row.vencimientoAvisoSuave === 0
             ? 'Sin alerta'
             : row.diasHastaProximoVencimiento < 0
             ? `Vencido desde ${-row.diasHastaProximoVencimiento} días`
@@ -300,9 +300,6 @@
               Bloque: {{ composable.getBloque(lote.bloque)?.nombre }}
             </p>
             <p v-else>Sin bloque</p>
-            <!--p>alerta: {{ lote.alertaVencimiento }}</p>
-              <p>dias: {{ lote.diasVencimiento }}</p>
-              <p>limitV: {{ row.producto.vencimientoLimite }}</p-->
           </q-card-section>
         </q-card>
       </div>
@@ -328,7 +325,7 @@ const composable = useStock();
 const { estado, store } = composable;
 // Otros imports
 import formInventario from '@/modulos/almacen/forms/formInventario.vue';
-import ProductoImage from '@/assets/img/producto.png';
+import ProductoImage from '@/assets/img/noHayProducto.png';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 // producto seleccionado al hacer click en una accion

@@ -221,6 +221,62 @@ export const api = {
     <Entidad[]>await dv(GqlBorrarEntidades_almacen, t, b, o, o.loading),
 
   /**
+   * Entidades / empleados
+   */
+  buscarEntidad_empleados: async (
+    b: string | BuscarEntidadDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarEntidadDto = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await bu(GqlBuscarEntidades_empleados, t, b, o, f, o.loading),
+  buscarEntidades_empleados: async (
+    b: BuscarEntidadDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarEntidadDto = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await bv(GqlBuscarEntidades_empleados, t, b, o, f, o.loading),
+  crearEntidad_empleados: async (
+    d: CrearEntidadDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await cu(GqlCrearEntidades_empleados, t, d, o, o.loading),
+  crearEntidades_empleados: async (
+    d: CrearEntidadDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await cv(GqlCrearEntidades_empleados, t, d, o, o.loading),
+  modificarEntidad_empleados: async (
+    b: string | BuscarEntidadDto,
+    d: ModificarEntidadDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await mu(GqlModificarEntidades_empleados, t, b, d, o, o.loading),
+  modificarEntidades_empleados: async (
+    b: BuscarEntidadDto,
+    d: ModificarEntidadDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await mv(GqlModificarEntidades_empleados, t, b, d, o, o.loading),
+  borrarEntidad_empleados: async (
+    b: string | BuscarEntidadDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad> =>
+    <Entidad>await du(GqlBorrarEntidades_empleados, t, b, o, o.loading),
+  borrarEntidades_empleados: async (
+    b: BuscarEntidadDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null,
+  ): Promise<Entidad[]> =>
+    <Entidad[]>await dv(GqlBorrarEntidades_empleados, t, b, o, o.loading),
+
+  /**
    * Entidades / almacen
    */
   buscarEntidad_bloques: async (

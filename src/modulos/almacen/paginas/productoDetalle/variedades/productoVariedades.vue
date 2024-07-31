@@ -18,7 +18,8 @@
     label: 'Alertas',
     align: 'left',
     slot:true,
-    field: (row: any) => row.cantidadLimite + row.inventarioLimite + row.cantidadMaxPedido,
+    field: (row: any) => ''+ row.cantidadAvisoSuave + row.cantidadAvisoFuerte
+      + row.inventarioAviso + row.inventarioPeriodo + row.cantidadMaxPedido,
     sortable: true,
   },
   {
@@ -49,9 +50,20 @@
     </template>
     <template #body-cell-alertas="{ row }">
       <div class="space-y-[-4px]">
-        <h1><b>stock:</b> {{ row.cantidadLimite }}</h1>
-        <h1><b>inventario:</b> {{ row.inventarioLimite }}</h1>
-        <h1><b>cantidad max:</b> {{ row.cantidadMaxPedido }}</h1>
+        <h1 v-if="row.cantidadAvisoFuerte">
+          <b>stock:</b> Avisar cuando baja debajo de
+          {{ row.cantidadAvisoSuave }} y
+          {{ row.cantidadAvisoFuerte }}
+        </h1>
+        <h1 v-if="row.inventarioPeriodo">
+          <b>inventario:</b> hacer inventario cada
+          {{ row.inventarioPeriodo }} dias, avisar
+          {{ row.inventarioAviso }} dias antes
+        </h1>
+        <h1 v-if="row.cantidadMaxPedido">
+          <b>cantidad max:</b> El punto no puede perid mas de
+          {{ row.cantidadMaxPedido }} a la vez
+        </h1>
       </div>
     </template>
     <template #body-cell-actions="{ row }">

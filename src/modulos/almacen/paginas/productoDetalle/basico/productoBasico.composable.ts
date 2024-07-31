@@ -2,11 +2,12 @@ import type { CrearProductoDto } from '#gql';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 const initForm = {
-  nombre: '',
-  categoria: '',
-  comentario: '',
+  nombre: null,
+  categoria: null,
+  comentario: null,
   puedeVencer: false,
-  vencimientoLimite: [0, 0] as [number, number],
+  vencimentoAlertaSuave: null,
+  vencimentoAlertaFuerte: null,
   imagen: null,
 } as CrearProductoDto;
 
@@ -14,7 +15,7 @@ export const useProductoBasico = () => {
   const { store, estado: estadoAlmacen } = useAlmacen();
   const estado = reactive({
     dataForm: clone(initForm),
-    errorNombre: '',
+    errorNombre: null,
     catOpciones: [],
   });
 

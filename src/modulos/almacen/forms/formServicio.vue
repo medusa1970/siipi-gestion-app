@@ -243,7 +243,7 @@ onMounted(async () => {
 // submision del formulario
 const formSubmit = async () => {
   const proveedorId = estado.dataForm.proveedor;
-  // el proveedor no entra en llos datos para la consulta
+  // el proveedor no entra en los datos para la consulta
   const data = clone(estado.dataForm);
   delete data.proveedor;
 

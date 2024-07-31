@@ -73,12 +73,6 @@ const formSubmit = async () => {
   try {
     // Modo edicion
     if (props.edicion) {
-      estado.dataForm.cantidadLimite = {
-        reemplazar: estado.dataForm.cantidadLimite,
-      };
-      estado.dataForm.inventarioLimite = {
-        reemplazar: estado.dataForm.inventarioLimite,
-      };
       const medida = await api.modificarMedida(store.producto.medida._id, {
         tipoEmpaques: {
           buscar: {

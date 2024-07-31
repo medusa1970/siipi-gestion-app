@@ -3,10 +3,11 @@ varios
 - ofertas de un producto (pestaña)
 - precios por mayor en el expand oferta proveedores
 
-- no se puede modificar precios por mayor de proveedor + averiguar que se modifica borra bien la oferta automatica
+- averiguar que se modifica/borra bien la oferta automatica
 - recarga de inventario
-tiempo de vida & cie nullable
 
 - pasar categorias / catalogos lista a tabla
 - ofertas completas
 - borrar medidas si no usada
+
+todos los busquedores con stringify

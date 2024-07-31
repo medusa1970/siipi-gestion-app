@@ -123,7 +123,9 @@
             >
             <span class="flex gap-2 items-center"
               ><h1 class="font-bold text-xs">CANTIDAD MINIMA:</h1>
-              <p>{{ variedad.cantidadLimite }}</p>
+              <p>
+                {{ row.cantidadAvisoSuave }} / {{ row.cantidadAvisoFuerte }}
+              </p>
             </span>
             <span class="flex gap-2 items-center"
               ><h1 class="font-bold text-xs">CANTIDAD MAXIMA:</h1>

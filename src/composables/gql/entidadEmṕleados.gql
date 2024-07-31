@@ -1,0 +1,137 @@
+query buscarEntidades_empleados(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    empleados {
+      _id
+      persona {
+        _id
+        _creado
+        nombre
+        apellido
+        usuario
+        telefono
+        correo
+        imagen {
+          cloudinaryUrl
+        }
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        _creado
+        permiso
+        vencimiento
+      }
+    }
+  }
+}
+
+mutation crearEntidades_empleados(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    empleados {
+      _id
+      persona {
+        _id
+        _creado
+        nombre
+        apellido
+        usuario
+        telefono
+        correo
+        imagen {
+          cloudinaryUrl
+        }
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        _creado
+        permiso
+        vencimiento
+      }
+    }
+  }
+}
+
+mutation modificarEntidades_empleados(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    empleados {
+      _id
+      persona {
+        _id
+        _creado
+        nombre
+        apellido
+        usuario
+        telefono
+        correo
+        imagen {
+          cloudinaryUrl
+        }
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        _creado
+        permiso
+        vencimiento
+      }
+    }
+  }
+}
+
+mutation borrarEntidades_empleados(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarEntidades(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    empleados {
+      _id
+      persona {
+        _id
+        _creado
+        nombre
+        apellido
+        usuario
+        telefono
+        correo
+        imagen {
+          cloudinaryUrl
+        }
+      }
+      cargos {
+        nombre
+      }
+      permisos {
+        _creado
+        permiso
+        vencimiento
+      }
+    }
+  }
+}

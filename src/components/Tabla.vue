@@ -56,9 +56,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import ProductoImage from '@/assets/img/producto.png';
 const filter = ref('');
-const rs = ref('');
 const props = withDefaults(
   defineProps<{
     rows: Array<any>;
@@ -71,7 +69,7 @@ const props = withDefaults(
     disableExpand?: boolean;
   }>(),
   {
-    defaultImage: ProductoImage,
+    defaultImage: null,
     rowKey: '_id',
     watchFilter: '',
     conBusqueda: false,

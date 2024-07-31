@@ -10,7 +10,8 @@ query buscarEntidades_almacen(
         _id
         nombre
         puedeVencer
-        vencimientoLimite
+        vencimientoAvisoFuerte
+        vencimientoAvisoSuave
         categoria {
           _id
           nombre
@@ -27,8 +28,10 @@ query buscarEntidades_almacen(
             _id
             nombre
           }
-          inventarioLimite
-          cantidadLimite
+          inventarioPeriodo
+          inventarioAviso
+          cantidadAvisoFuerte
+          cantidadAvisoSuave
           cantidadMaxPedido
           imagen {
             archivoLocal
@@ -61,7 +64,8 @@ mutation crearEntidades_almacen(
         _id
         nombre
         puedeVencer
-        vencimientoLimite
+        vencimientoAvisoFuerte
+        vencimientoAvisoSuave
         categoria {
           _id
           nombre
@@ -78,8 +82,11 @@ mutation crearEntidades_almacen(
             _id
             nombre
           }
-          inventarioLimite
-          cantidadLimite
+          inventarioPeriodo
+          inventarioAviso
+          cantidadAvisoFuerte
+          cantidadAvisoSuave
+          cantidadMaxPedido
           cantidadMaxPedido
           imagen {
             archivoLocal
@@ -113,7 +120,8 @@ mutation modificarEntidades_almacen(
         _id
         nombre
         puedeVencer
-        vencimientoLimite
+        vencimientoAvisoFuerte
+        vencimientoAvisoSuave
         categoria {
           _id
           nombre
@@ -130,8 +138,11 @@ mutation modificarEntidades_almacen(
             _id
             nombre
           }
-          inventarioLimite
-          cantidadLimite
+          inventarioPeriodo
+          inventarioAviso
+          cantidadAvisoFuerte
+          cantidadAvisoSuave
+          cantidadMaxPedido
           cantidadMaxPedido
           imagen {
             archivoLocal
@@ -171,7 +182,8 @@ mutation borrarEntidades_almacen(
         _id
         nombre
         puedeVencer
-        vencimientoLimite
+        vencimientoAvisoFuerte
+        vencimientoAvisoSuave
         categoria {
           _id
           nombre
@@ -188,8 +200,11 @@ mutation borrarEntidades_almacen(
             _id
             nombre
           }
-          inventarioLimite
-          cantidadLimite
+          inventarioPeriodo
+          inventarioAviso
+          cantidadAvisoFuerte
+          cantidadAvisoSuave
+          cantidadMaxPedido
           cantidadMaxPedido
           imagen {
             archivoLocal

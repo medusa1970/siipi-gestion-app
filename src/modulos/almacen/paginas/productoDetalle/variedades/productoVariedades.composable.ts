@@ -2,10 +2,12 @@ import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import { useQuasar } from 'quasar';
 
 const initFormCrear = {
-  marca: '',
-  cantidadLimite: [0, 0],
-  inventarioLimite: [0, 0],
-  cantidadMaxPedido: 0,
+  marca: null,
+  inventarioPeriodo: null,
+  inventarioAviso: null,
+  cantidadAvisoFuerte: null,
+  cantidadAvisoSuave: null,
+  cantidadMaxPedido: null,
 };
 
 export const useProductoVariedades = () => {

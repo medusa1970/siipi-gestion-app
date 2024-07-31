@@ -52,13 +52,15 @@
       label="Tiempo de vida"
       tipo="number"
       info="Info #4"
-      :porDefecto="estado.dataForm.tiempoVida ?? 0"
+      :porDefecto="estado.dataForm.tiempoVida"
       @update="(v) => (estado.dataForm.tiempoVida = v)"
     />
 
+    <h3>Fecha de vencimiento</h3>
     <div class="">
-      <q-checkbox v-model="estado.dataForm.puedeVencer" />
-      Este producto tiene fecha de vencimiento
+      <q-checkbox v-model="estado.dataForm.puedeVencer">
+        Este producto puede vencer</q-checkbox
+      >
     </div>
 
     <div v-if="estado.dataForm.puedeVencer" class="flex">
@@ -68,20 +70,17 @@
         label="Avisar debajo de X"
         tipo="number"
         info="Info #5"
-        :porDefecto="estado.dataForm.vencimientoLimite?.[0] ?? 0"
-        @update="(v) => (estado.dataForm.vencimientoLimite[0] = v)"
-        requerido
+        :porDefecto="estado.dataForm.vencimientoAvisoSuave"
+        @update="(v) => (estado.dataForm.vencimientoAvisoSuave = v)"
       />
-      <!-- :porDefecto="'' + (store.producto.vencimientoLimite?.[0] ?? 0)" -->
       <input-text
         class="flex-grow"
         style="margin-left: 16px"
         label="Aviso fuerte debajo de Y"
         tipo="number"
         info="Info #6"
-        :porDefecto="estado.dataForm.vencimientoLimite?.[1] ?? 0"
-        @update="(v) => (estado.dataForm.vencimientoLimite[1] = v)"
-        requerido
+        :porDefecto="estado.dataForm.vencimientoAvisoFuerte"
+        @update="(v) => (estado.dataForm.vencimientoAvisoFuerte = v)"
       />
     </div>
 
@@ -126,7 +125,8 @@ const initForm = {
   categoria: props.edicion?.categoria?._id,
   comentario: props.edicion?.comentario,
   puedeVencer: props.edicion?.puedeVencer ?? false,
-  vencimientoLimite: props.edicion?.vencimientoLimite ?? [0, 0],
+  vencimientoAvisoSuave: props.edicion?.vencimientoAvisoSuave,
+  vencimientoAvisoFuerte: props.edicion?.vencimientoAvisoFuerte,
   tiempoVida: props.edicion?.tiempoVida ?? null,
   imagen: null,
 };
@@ -181,9 +181,6 @@ const formSubmit = async () => {
   }
   try {
     if (props.edicion) {
-      estado.dataForm.vencimientoLimite = {
-        reemplazar: estado.dataForm.vencimientoLimite,
-      };
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,

@@ -9,6 +9,7 @@
       info="Info #50"
       :porDefecto="estado.dataForm.cantidadMin"
       @update="(v) => (estado.dataForm.cantidadMin = v)"
+      :rules="[rule2]"
     />
 
     <!-- Precios -->

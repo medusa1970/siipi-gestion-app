@@ -31,6 +31,31 @@
         label: 'Catalogos',
         to: 'catalogos',
       },
+      {
+        icon: 'storefront',
+        label: 'Marcas',
+        to: 'marcas',
+      },
+      {
+        icon: 'balance',
+        label: 'Medidas',
+        to: 'medidas',
+      },
+      {
+        icon: 'hail',
+        label: 'Proveedores',
+        to: 'proveedores',
+      },
+      {
+        icon: 'group',
+        label: 'Empleados',
+        to: 'empleados',
+      },
+      {
+        icon: 'money',
+        label: 'Tesoreria',
+        to: 'tesoreria',
+      },
       // {
       //   icon: 'description',
       //   label: 'Pedidos',
@@ -49,41 +74,6 @@
       //     },
       //   ],
       // },
-      // {
-      //   icon: 'bi-box',
-      //   label: 'Productos',
-      //   to: 'productos',
-      // },
-      // {
-      //   icon: 'warehouse',
-      //   label: 'Stock',
-      //   to: 'stock2',
-      // },
-      {
-        icon: 'storefront',
-        label: 'Marcas',
-        to: 'marcas',
-      },
-      {
-        icon: 'balance',
-        label: 'Medidas',
-        to: 'medidas',
-      },
-      {
-        icon: 'hail',
-        label: 'Proveedores',
-        to: 'proveedores',
-      },
-      // {
-      //   icon: 'people',
-      //   label: 'Administracion',
-      //   subMenu: [
-      //     {
-      //       label: 'Empleados',
-      //       to: '/cathering/empleados',
-      //     },
-      //   ],
-      // },
     ]"
     :portada-img="PortadaCathering"
     cathering
@@ -95,12 +85,11 @@
 </template>
 
 <script setup>
-import { menuListCathering } from './menuList/menuList';
 import PortadaCathering from '@/assets/img/cookies.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-const router = useRouter();
 const authStore = useAuthStore();
+const router = useRouter();
 if (authStore.getNegocio?.tipo !== 'CATHERING') {
   goTo(router, 'inicio');
 }

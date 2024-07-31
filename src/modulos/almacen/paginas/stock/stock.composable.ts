@@ -37,12 +37,6 @@ export const useStock = () => {
         alertaCantidad: 0,
 
         // vencimiento
-        diasAviso1HastaVencer: Math.min(
-          ...(stock.producto.vencimientoLimite ?? 0),
-        ),
-        diasAviso2HastaVencer: Math.max(
-          ...(stock.producto.vencimientoLimite ?? 0),
-        ),
         diasHastaProximoVencimiento: null, // dias entre hoy y próxima alerta
         alertaVencimiento: 0,
 
@@ -56,7 +50,7 @@ export const useStock = () => {
           ),
         ),
         diasHastaProximoInventario: null,
-        diasHastaProximoAviso: null,
+        inventarioAviso: null,
         alertaInventario: 0,
       };
 
@@ -72,14 +66,15 @@ export const useStock = () => {
               marca: lote.marca,
 
               //cantidad
-              cantidadLimite: variedad?.cantidadLimite ?? [0, 0],
+              cantidadAvisoSuave: variedad?.cantidadAvisoSuave,
+              cantidadAvisoFuerte: variedad?.cantidadAvisoFuerte,
               cantidadTotal: 0,
               alertaCantidad: 0,
 
               // inventario
               alertaInventario: 0,
-              diasMaxEntreInventarios: variedad?.inventarioLimite?.[0] ?? 0,
-              diasHastaProximoAviso: variedad?.inventarioLimite?.[1] ?? 0,
+              inventarioPeriodo: variedad?.inventarioPeriodo,
+              inventarioAviso: variedad?.inventarioAviso,
               diasHastaProximoInventario: null, // dias hasta que toque el proximo inventario
             },
           });
@@ -89,13 +84,13 @@ export const useStock = () => {
       // Alerta de inventario por marca y res
       for (const marcaId in res.marcas) {
         const marca = res.marcas[marcaId];
-        if (marca.diasMaxEntreInventarios <= 0) continue;
+        if (marca.inventarioPeriodo <= 0) continue;
 
         // alerta marca
         marca.diasHastaProximoInventario =
-          marca.diasMaxEntreInventarios - res.diasDesdeUltimoInventario;
+          marca.inventarioPeriodo - res.diasDesdeUltimoInventario;
         marca.alertaInventario = 0;
-        if (marca.diasHastaProximoInventario <= marca.diasHastaProximoAviso) {
+        if (marca.diasHastaProximoInventario <= marca.inventarioAviso) {
           marca.alertaInventario = 1;
         }
         if (marca.diasHastaProximoInventario <= 0) {
@@ -161,14 +156,14 @@ export const useStock = () => {
 
         lote.alertaVencimiento = 0;
         if (
-          res.diasAviso2HastaVencer > 0 &&
-          lote.diasHastaVencimiento <= res.diasAviso2HastaVencer
+          stock.producto.vencimientoAvisoFuerte &&
+          lote.diasHastaVencimiento < stock.producto.vencimientoAvisoFuerte
         ) {
           lote.alertaVencimiento = 1;
         }
         if (
-          res.diasAviso1HastaVencer > 0 &&
-          lote.diasHastaVencimiento <= res.diasAviso1HastaVencer
+          stock.producto.vencimientoAvisoSuave &&
+          lote.diasHastaVencimiento <= stock.producto.vencimientoAvisoSuave
         ) {
           lote.alertaVencimiento = 2;
         }

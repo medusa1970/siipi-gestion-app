@@ -7,10 +7,10 @@
       info="Info #33"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
-      :rules="[useRules.requerido()]"
       :error="estado.errorMarca"
       :disable="edicion != null"
       :dialog="formMarca"
+      requerido
     />
 
     <!-- Stock minimo -->
@@ -22,9 +22,8 @@
         label="Avisar a la cantidad X"
         info="Info #34"
         tipo="number"
-        :porDefecto="estado.dataForm.cantidadLimite?.[0] ?? 0"
-        @update="(v) => (estado.dataForm.cantidadLimite[0] = v)"
-        requerido
+        :porDefecto="estado.dataForm.cantidadAvisoFuerte"
+        @update="(v) => (estado.dataForm.cantidadAvisoFuerte = v)"
       />
       <input-text
         class="flex-grow"
@@ -32,9 +31,8 @@
         tipo="number"
         label="Avisar a la cantidad Y"
         info="Info #35"
-        :porDefecto="estado.dataForm.cantidadLimite?.[1] ?? 0"
-        @update="(v) => (estado.dataForm.cantidadLimite[1] = v)"
-        requerido
+        :porDefecto="estado.dataForm.cantidadAvisoSuave"
+        @update="(v) => (estado.dataForm.cantidadAvisoSuave = v)"
       />
     </div>
 
@@ -47,20 +45,17 @@
         tipo="number"
         label="Inventariar cada X días"
         info="Info #36"
-        :porDefecto="estado.dataForm.inventarioLimite?.[0] ?? 0"
-        @update="(v) => (estado.dataForm.inventarioLimite[0] = v)"
-        requerido
+        :porDefecto="estado.dataForm.inventarioPeriodo"
+        @update="(v) => (estado.dataForm.inventarioPeriodo = v)"
       />
-
       <input-text
         class="flex-grow"
         style="margin-left: 16px"
         tipo="number"
         label="Avisar Y días antes"
         info="Info #37"
-        :porDefecto="estado.dataForm.inventarioLimite?.[1]"
-        @update="(v) => (estado.dataForm.inventarioLimite[1] = v)"
-        requerido
+        :porDefecto="estado.dataForm.inventarioAviso"
+        @update="(v) => (estado.dataForm.inventarioAviso = v)"
       />
     </div>
 
@@ -70,7 +65,6 @@
       tipo="number"
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = v)"
-      requerido
       info="Info #38"
     />
 
@@ -103,9 +97,11 @@ const props = withDefaults(
 // datos por defecto del formulario
 const initForm = {
   marca: props.edicion?.marca._id,
-  cantidadLimite: props.edicion?.cantidadLimite ?? [0, 0],
-  inventarioLimite: props.edicion?.inventarioLimite ?? [0, 0],
-  cantidadMaxPedido: props.edicion?.cantidadMaxPedido ?? 0,
+  inventarioPeriodo: props.edicion?.inventarioPeriodo,
+  inventarioAviso: props.edicion?.inventarioAviso,
+  cantidadAvisoFuerte: props.edicion?.cantidadAvisoFuerte,
+  cantidadAvisoSuave: props.edicion?.cantidadAvisoSuave,
+  cantidadMaxPedido: props.edicion?.cantidadMaxPedido,
 };
 
 // definicion del estado
@@ -132,12 +128,6 @@ onMounted(async () => {
 const formSubmit = async () => {
   try {
     if (props.edicion) {
-      estado.dataForm.cantidadLimite = {
-        reemplazar: estado.dataForm.cantidadLimite,
-      };
-      estado.dataForm.inventarioLimite = {
-        reemplazar: estado.dataForm.inventarioLimite,
-      };
       const producto = await api.modificarProducto_basico(store.producto._id, {
         variedades: {
           buscar: {
@@ -158,7 +148,6 @@ const formSubmit = async () => {
         },
       });
       emits('crearObjeto', ultimo(producto.variedades), producto);
-      console.log(ultimo(producto.variedades));
     }
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

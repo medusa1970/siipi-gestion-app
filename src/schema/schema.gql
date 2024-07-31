@@ -111,8 +111,10 @@ type Variedad {
   _borrado: DateTime
   _orden: Float
   marca: Marca!
-  cantidadLimite: [Float!]
-  inventarioLimite: [Float!]
+  cantidadAvisoSuave: Float
+  cantidadAvisoFuerte: Float
+  inventarioPeriodo: Float
+  inventarioAviso: Float
   cantidadMaxPedido: Float
   imagen: FileUpload
 }
@@ -131,7 +133,8 @@ type Producto {
   variedades: [Variedad!]
   categoria: Categoria!
   puedeVencer: Boolean
-  vencimientoLimite: [Float!]
+  vencimientoAvisoFuerte: Float
+  vencimientoAvisoSuave: Float
   tiempoVida: Float
 }
 
@@ -166,6 +169,7 @@ type Diferencia {
   _modificado: DateTime
   _borrado: DateTime
   _orden: Float
+  marca: Marca!
   vencimiento: DateTime
   diferencia: Float!
 }
@@ -609,7 +613,8 @@ input BuscarProductoDto {
   variedades: BuscarVariedadDto
   categoria: [ID!]
   puedeVencer: Boolean
-  vencimientoLimite: [Float!]
+  vencimientoAvisoFuerte: [Float!]
+  vencimientoAvisoSuave: [Float!]
   tiempoVida: [Float!]
 }
 
@@ -630,8 +635,10 @@ input BuscarVariedadDto {
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
   marca: ID
-  cantidadLimite: [Float!]
-  inventarioLimite: [Float!]
+  cantidadAvisoSuave: [Float!]
+  cantidadAvisoFuerte: [Float!]
+  inventarioPeriodo: [Float!]
+  inventarioAviso: [Float!]
   cantidadMaxPedido: [Float!]
   imagen: FileUploadBuscar
 }
@@ -746,6 +753,7 @@ input BuscarDiferenciaDto {
   _creado: [BuscarFechaDto!]
   _modificado: [BuscarFechaDto!]
   _borrado: [BuscarFechaDto!]
+  marca: [ID!]
   vencimiento: [BuscarFechaDto!]
   diferencia: [Float!]
 }
@@ -1140,7 +1148,8 @@ input CrearProductoDto {
   variedades: [CrearVariedadDto!]
   categoria: ID!
   puedeVencer: Boolean
-  vencimientoLimite: [Float!]
+  vencimientoAvisoFuerte: Float
+  vencimientoAvisoSuave: Float
   tiempoVida: Float
 }
 
@@ -1155,8 +1164,10 @@ input CrearEmpaqueDto {
 input CrearVariedadDto {
   _id: ID
   marca: ID!
-  cantidadLimite: [Float!]
-  inventarioLimite: [Float!]
+  cantidadAvisoSuave: Float
+  cantidadAvisoFuerte: Float
+  inventarioPeriodo: Float
+  inventarioAviso: Float
   cantidadMaxPedido: Float
   imagen: FileUploadInput
 }
@@ -1170,7 +1181,8 @@ input ModificarProductoDto {
   variedades: EditarVariedadDto
   categoria: ID
   puedeVencer: Boolean
-  vencimientoLimite: EditarLimitesDto
+  vencimientoAvisoFuerte: Float
+  vencimientoAvisoSuave: Float
   tiempoVida: Float
 }
 
@@ -1204,7 +1216,10 @@ input EditarVariedadDto {
 input ModificarVariedadDto {
   marca: ID
   cantidadLimite: EditarLimitesDto
-  inventarioLimite: EditarLimitesDto
+  cantidadAvisoSuave: Float
+  cantidadAvisoFuerte: Float
+  inventarioPeriodo: Float
+  inventarioAviso: Float
   cantidadMaxPedido: Float
   imagen: FileUploadInput
 }
@@ -1241,7 +1256,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-07-28T04:11:46.030Z"
+  saldoActualizacion: DateTime = "2024-07-30T17:21:56.923Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1299,6 +1314,7 @@ input CrearInventarioLoteDto {
 
 input CrearDiferenciaDto {
   _id: ID
+  marca: ID!
   vencimiento: DateTime
   diferencia: Float!
 }
@@ -1489,6 +1505,7 @@ input EditarDiferenciaDto {
 }
 
 input ModificarDiferenciaDto {
+  marca: ID
   vencimiento: DateTime
   diferencia: Float
 }

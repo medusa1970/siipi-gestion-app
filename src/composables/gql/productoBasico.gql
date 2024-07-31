@@ -11,7 +11,8 @@ query buscarProductos_basico(
     comentario
     puedeVencer
     tiempoVida
-    vencimientoLimite
+    vencimientoAvisoFuerte
+    vencimientoAvisoSuave
     imagen {
       cloudinaryUrl
     }
@@ -24,8 +25,10 @@ query buscarProductos_basico(
         _id
         nombre
       }
-      cantidadLimite
-      inventarioLimite
+      inventarioPeriodo
+      inventarioAviso
+      cantidadAvisoFuerte
+      cantidadAvisoSuave
       cantidadMaxPedido
       imagen {
         cloudinaryUrl
@@ -75,7 +78,8 @@ mutation crearProductos_basico(
     comentario
     puedeVencer
     tiempoVida
-    vencimientoLimite
+    vencimientoAvisoFuerte
+    vencimientoAvisoSuave
     imagen {
       cloudinaryUrl
     }
@@ -88,8 +92,10 @@ mutation crearProductos_basico(
         _id
         nombre
       }
-      cantidadLimite
-      inventarioLimite
+      inventarioPeriodo
+      inventarioAviso
+      cantidadAvisoFuerte
+      cantidadAvisoSuave
       cantidadMaxPedido
       imagen {
         cloudinaryUrl
@@ -140,7 +146,8 @@ mutation modificarProductos_basico(
     comentario
     puedeVencer
     tiempoVida
-    vencimientoLimite
+    vencimientoAvisoFuerte
+    vencimientoAvisoSuave
     imagen {
       cloudinaryUrl
     }
@@ -153,8 +160,10 @@ mutation modificarProductos_basico(
         _id
         nombre
       }
-      cantidadLimite
-      inventarioLimite
+      inventarioPeriodo
+      inventarioAviso
+      cantidadAvisoFuerte
+      cantidadAvisoSuave
       cantidadMaxPedido
       imagen {
         cloudinaryUrl
@@ -204,7 +213,8 @@ mutation borrarProductos_basico(
     comentario
     puedeVencer
     tiempoVida
-    vencimientoLimite
+    vencimientoAvisoFuerte
+    vencimientoAvisoSuave
     imagen {
       cloudinaryUrl
     }
@@ -217,8 +227,10 @@ mutation borrarProductos_basico(
         _id
         nombre
       }
-      cantidadLimite
-      inventarioLimite
+      inventarioPeriodo
+      inventarioAviso
+      cantidadAvisoFuerte
+      cantidadAvisoSuave
       cantidadMaxPedido
       imagen {
         cloudinaryUrl

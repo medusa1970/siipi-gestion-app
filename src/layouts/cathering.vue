@@ -7,7 +7,7 @@
         to: 'productos'
       },
       {
-        icon: 'sell',
+        icon: 'bi-box',
         label: 'Categorias',
         to: 'categorias'
       },
@@ -30,6 +30,16 @@
         icon: 'sell',
         label: 'Catalogos',
         to: 'catalogos'
+      },
+      {
+        icon: 'shopping_cart',
+        label: 'ListaPedidos',
+        to: 'listaPedidos'
+      },
+      {
+        icon: 'shopping_cart',
+        label: 'pedidosGlobal',
+        to: 'pedidosGlobal'
       },
       // {
       //   icon: 'description',

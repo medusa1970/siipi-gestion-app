@@ -1,58 +1,50 @@
 <template>
-  <Navigation2
-    :nav="[
-      {
-        label: 'marcas',
-        to: 'marcas',
-      },
-    ]"
-    titulo="Gestion de marcas"
-  />
-  <Tabla
-    disableExpand
-    :rows="rowsTabla"
-    :columns="columnsTabla"
-    :defaultImage="MarcaImage"
-  >
-    <template #dropdown>
-      <div class="w-full flex" style="align-items: center">
-        <input-text
-          label="Buscar"
-          labelAdentro
-          @update="(v) => (estado.filtros.buscar = v as string)"
-          noSlot
-        />
-        <q-btn
-          size="12px"
-          icon="add"
-          color="green"
-          style="height: 16px; width: 16px; margin: 5px 10px"
-          @click="() => (estado.modal.formCrearMarca = true)"
-        />
-      </div>
-    </template>
-    <template #body-cell-nombre="{ val, row }">
-      {{ val }}
-      <br />
-      <i>{{ row.descripcion }}</i>
-    </template>
-    <template #body-cell-actions="{ row }">
-      <q-btn-group push @click="(e) => e.stopPropagation()">
-        <q-btn
-          @click="
-            () => {
-              estado.marca = row;
-              estado.modal.formModificarMarca = true;
-            }
-          "
-          icon="edit"
-          class="p-1"
-          color="black"
-          size="sm"
-        />
-      </q-btn-group>
-    </template>
-  </Tabla>
+  <NuxtLayout name="cathering">
+    <Tabla
+      disableExpand
+      :rows="rowsTabla"
+      :columns="columnsTabla"
+      :defaultImage="MarcaImage"
+    >
+      <template #dropdown>
+        <div class="w-full flex" style="align-items: center">
+          <input-text
+            label="Buscar"
+            labelAdentro
+            @update="(v) => (estado.filtros.buscar = v as string)"
+            noSlot
+          />
+          <q-btn
+            size="12px"
+            icon="add"
+            color="green"
+            style="height: 16px; width: 16px; margin: 5px 10px"
+            @click="() => (estado.modal.formCrearMarca = true)"
+          />
+        </div>
+      </template>
+      <template #body-cell-nombre="{ val, row }">
+        {{ val }}
+        <br />
+        <i>{{ row.descripcion }}</i>
+      </template>
+      <template #body-cell-actions="{ row }">
+        <q-btn-group push @click="(e) => e.stopPropagation()">
+          <q-btn
+            @click="
+              () => {
+                estado.marca = row;
+                estado.modal.formModificarMarca = true;
+              }
+            "
+            icon="edit"
+            class="p-1"
+            color="black"
+            size="sm"
+          />
+        </q-btn-group>
+      </template> </Tabla
+  ></NuxtLayout>
 
   <popup v-model="estado.modal.formCrearMarca" titulo="Nueva marca">
     <template #body>
@@ -70,36 +62,47 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "cathering",
+import { useMarcas } from './marcas.composable';
+const {
+  estado,
+  store,
+  authStore,
+  router,
+  rowsTabla,
+  handleMarcaCreada,
+  handleMarcaModificada,
+} = useMarcas();
+
+import MarcaImage from '@/assets/img/noHayMarca.png';
+import formMarca from '@/modulos/almacen/forms/formMarca.vue';
+
+provide('infoPagina', {
+  titulo: 'Gestion de marcas',
+  camino: [{ label: 'marcas', to: 'marcas' }],
 });
-import { useMarcas } from "./marcas.composable";
-import MarcaImage from "@/assets/img/noHayMarca.png";
-import formMarca from "@/modulos/almacen/forms/formMarca.vue";
-const { estado, store, rowsTabla, handleMarcaCreada, handleMarcaModificada } =
-  useMarcas();
+
 const columnsTabla = [
   {
-    name: "imagen",
-    label: "Imagen",
+    name: 'imagen',
+    label: 'Imagen',
     imagen: true,
-    style: "width:50px; margin:5px; padding: 5px",
-    align: "center",
+    style: 'width:50px; margin:5px; padding: 5px',
+    align: 'center',
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
-    name: "nombre",
-    label: "Nombre",
-    style: "width:50px; margin:5px; padding: 5px; width:100%",
-    align: "left",
+    name: 'nombre',
+    label: 'Nombre',
+    style: 'width:50px; margin:5px; padding: 5px; width:100%',
+    align: 'left',
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true,
   },
   {
-    name: "actions",
-    label: "",
-    align: "center",
+    name: 'actions',
+    label: '',
+    align: 'center',
     slot: true,
   },
 ];

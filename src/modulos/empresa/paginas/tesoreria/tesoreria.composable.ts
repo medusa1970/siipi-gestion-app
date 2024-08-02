@@ -6,11 +6,11 @@ import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 export const permisosTesoreria = ['LOGISTICA'];
 
 /**
- * Composable para empresa/tesoreria
+ * Composable
  */
 export const useTesoreria = () => {
-  const { store, authStore, router } = useEmpresa();
-  if (!authStore.autorizar(permisosTesoreria)) goTo(router, '/noAutorizado');
+  const { store, authStore, estadoEmpresa, router } = useEmpresa();
+  if (!authStore.autorizar(permisosTesoreria)) goTo(router, 'noAutorizado');
 
   const estado = reactive({});
 

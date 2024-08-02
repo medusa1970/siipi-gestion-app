@@ -2,7 +2,7 @@ import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 import { TipoPermiso } from '~/schema/permisos';
 
 export const useEmpleadoPermisos = () => {
-  const { store, authStore, router } = useEmpresa();
+  const { store, authStore, estadoEmpresa, router } = useEmpresa();
 
   // inicializacion del formulario con cada permiso posible
   const initForm = () => {

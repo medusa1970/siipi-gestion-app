@@ -1,13 +1,26 @@
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosProductoDetalle = ['LOGISTICA'];
+
+/**
+ * Composable
+ */
 export const useProductoDetalle = () => {
-  const { store } = useAlmacen();
+  const { store, authStore, router } = useAlmacen();
+  if (!authStore.autorizar(permisosProductoDetalle))
+    goTo(router, 'noAutorizado');
+
   const estado = reactive({
-    tab: "datosBasicos",
+    tab: 'datosBasicos',
   });
 
   return {
-    store,
     estado,
+    store,
+    authStore,
+    router,
   };
 };

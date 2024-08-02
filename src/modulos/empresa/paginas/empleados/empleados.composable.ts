@@ -11,7 +11,7 @@ export const permisosEmpleados = ['ADQUISICION', 'ALMACEN'];
  */
 export const useEmpleados = () => {
   const { store, authStore, router } = useEmpresa();
-  if (!authStore.autorizar(permisosEmpleados)) goTo(router, '/noAutorizado');
+  if (!authStore.autorizar(permisosEmpleados)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     // lista de las empleados a recuperar del store (promisa resuelta)

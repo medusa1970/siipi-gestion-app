@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <Navigation2
-      :nav="[{ label: 'categorias', to: 'categorias' }]"
-      titulo="Gestion de categorias"
-    />
-
+  <NuxtLayout name="cathering">
     <!-- ARBOL -->
     <div class="flex justify-center mt-4">
       <q-list
@@ -118,7 +113,7 @@
         </q-expansion-item>
       </q-list>
     </div>
-  </div>
+  </NuxtLayout>
 
   <!-- DIALOGOS -->
   <!-- MODAL CATEGORIA -->
@@ -199,16 +194,13 @@
 </template>
 
 <script setup>
-import { useCategoria } from "./categoria.composable";
-
-// layout
-definePageMeta({
-  layout: "cathering",
-});
-
+import { useCategoria } from './categoria.composable';
 const {
-  buscarCategorias,
   estado,
+  store,
+  authStore,
+  router,
+  buscarCategorias,
   modalCrearCategoria,
   crearCategoriaArbol,
   modalModificarCategoria,
@@ -216,8 +208,13 @@ const {
   borrarCategoriaArbol,
 } = useCategoria();
 
-onMounted(() => {
-  buscarCategorias();
+provide('infoPagina', {
+  titulo: 'Gestion de categorias',
+  camino: [{ label: 'categorias', to: 'categorias' }],
+});
+
+onMounted(async () => {
+  await buscarCategorias();
 });
 </script>
 

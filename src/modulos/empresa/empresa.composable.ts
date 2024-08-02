@@ -4,12 +4,12 @@ import { useAuthStore } from '@/modulos/main/useAuthStore';
 export const useEmpresa = () => {
   const router = useRouter();
   const store = storeEmpresa();
-  const estado = reactive({});
+  const estadoEmpresa = reactive({});
   const authStore = useAuthStore();
 
   // exports
   return {
-    estado,
+    estadoEmpresa,
     store,
     authStore,
     router,

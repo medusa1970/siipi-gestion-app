@@ -1,7 +1,5 @@
 <template>
   <NuxtLayout name="cathering">
-    {{ authStore.autorizar(['ADQUISICION']) }}
-    {{ authStore.autorizar(['ALMACEN']) }}
     <q-tabs
       v-model="estado.tabActiva"
       inline-label

@@ -1,7 +1,7 @@
 import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
 export const useEmpleadoPersona = () => {
-  const { store, authStore, router } = useEmpresa();
+  const { store, authStore, estadoEmpresa, router } = useEmpresa();
   const estado = reactive({});
 
   return {

@@ -1,8 +1,18 @@
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import type { Producto } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosProductos = ['LOGISTICA'];
+
+/**
+ * Composable
+ */
 export const useProductos = () => {
-  const { store, productoIncompleto } = useAlmacen();
+  const { store, authStore, router, productoIncompleto } = useAlmacen();
+  if (!authStore.autorizar(permisosProductos)) goTo(router, 'noAutorizado');
+
   const estado = reactive({
     // lista de los productos a recuperar del store (promisa resuelta)
     productos: null as Producto[],
@@ -85,7 +95,10 @@ export const useProductos = () => {
   return {
     estado,
     store,
+    authStore,
+    router,
     rowsTablaProductos,
+    productoIncompleto,
     handleProductoCreado,
     handleOfertaSimpleCreada,
   };

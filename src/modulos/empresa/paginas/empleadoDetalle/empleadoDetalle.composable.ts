@@ -11,7 +11,7 @@ export const permisosEmpleadosDetalles = ['ADQUISICION', 'ALMACEN'];
 export const useEmpleadoDetalle = () => {
   const { store, authStore, router } = useEmpresa();
   if (!authStore.autorizar(permisosEmpleadosDetalles))
-    goTo(router, '/noAutorizado');
+    goTo(router, 'noAutorizado');
 
   const estado = reactive({
     tabActiva: 'permisos',

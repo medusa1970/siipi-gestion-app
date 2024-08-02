@@ -227,7 +227,7 @@
     <!-- pagina -->
     <q-page-container>
       <div class="text-center">
-        <q-btn rounded color="black" style="margin-top: -45px; z-index: 2000">
+        <q-btn rounded color="black" style="margin-top: 15px">
           {{ infoPagina?.titulo }}
         </q-btn>
       </div>

@@ -1,4 +1,14 @@
-import { useQuasar } from "quasar";
+import { useQuasar } from 'quasar';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosCategoria = ['LOGISTICA'];
+
+/**
+ * Composable
+ */
 
 const init_categoria = {
   _id: null as string,
@@ -6,6 +16,9 @@ const init_categoria = {
 };
 
 export const useCategoria = () => {
+  const { store, authStore, router } = useAlmacen();
+  if (!authStore.autorizar(permisosCategoria)) goTo(router, 'noAutorizado');
+
   const $q = useQuasar();
 
   const estado = reactive({
@@ -22,16 +35,16 @@ export const useCategoria = () => {
   // BUSCAR
   const buscarCategorias = async () => {
     const { categoriaArbol } = await GqlCategoriaArbol({
-      busqueda: { nombre: ["CATEGORIA RAIZ"] },
+      busqueda: { nombre: ['CATEGORIA RAIZ'] },
     });
     estado.categorias = [categoriaArbol];
 
     const data = [
       {
         label: categoriaArbol.nombre,
-        avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
+        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
         children: categoriaArbol.hijas.map((hija: any) => ({
-          icon: "room_service",
+          icon: 'room_service',
           label: hija.nombre,
           children: hija.hijas.map((hija2: any) => ({
             label: hija2.nombre,
@@ -56,11 +69,11 @@ export const useCategoria = () => {
         pariente: estado.datos_categoria._id,
       },
       { populate: true },
-      { loading: true }
+      { loading: true },
     );
     if (categoriaCreada) {
       await buscarCategorias();
-      NotifySucessCenter("Categoria creada correctamente");
+      NotifySucessCenter('Categoria creada correctamente');
       estado.datos_categoria = clone(init_categoria);
     }
     estado.modal.show_agregarCategoria = false;
@@ -78,11 +91,11 @@ export const useCategoria = () => {
       { _id: estado.datos_categoria._id },
       { nombre: estado.datos_categoria.nombre },
       { populate: true },
-      { loading: true }
+      { loading: true },
     );
     if (categoriaModificada) {
       await buscarCategorias();
-      NotifySucessCenter("Categoria modificada correctamente");
+      NotifySucessCenter('Categoria modificada correctamente');
 
       //limpiar campos
       estado.datos_categoria = clone(init_categoria);
@@ -96,8 +109,8 @@ export const useCategoria = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar esta categoria${
         row.hijas?.length > 0
-          ? ", tiene " + row.hijas.length + " subcategorias"
-          : ""
+          ? ', tiene ' + row.hijas.length + ' subcategorias'
+          : ''
       }?`,
       cancel: true,
       persistent: true,
@@ -105,7 +118,7 @@ export const useCategoria = () => {
       const categoriaBorrada = await api.borrarCategoria({ _id: row._id });
 
       if (categoriaBorrada) {
-        NotifySucessCenter("Categoria eliminada correctamente");
+        NotifySucessCenter('Categoria eliminada correctamente');
         await buscarCategorias();
       }
     });
@@ -113,6 +126,9 @@ export const useCategoria = () => {
 
   return {
     estado,
+    store,
+    authStore,
+    router,
     buscarCategorias,
     modalCrearCategoria,
     crearCategoriaArbol,

@@ -320,17 +320,8 @@
 </template>
 
 <script setup lang="ts">
-// import store & router
-import { useAuthStore } from '@/modulos/main/useAuthStore';
-const authStore = useAuthStore();
-const router = useRouter();
-
-// imports composables
 import { useProductos } from './productos.composable';
-const composable = useProductos();
-const { estado, store } = composable;
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-const { store: storeOfertas, productoIncompleto } = useAlmacen();
+const { estado, store, authStore, router, productoIncompleto } = useProductos();
 
 // otros imports
 import ProductoImage from '@/assets/img/noHayProducto.png';
@@ -383,7 +374,7 @@ onBeforeMount(() => {
     console.log('socket productos triggered');
   });
   $socket.on('cambiosOfertas', async (data: any) => {
-    await storeOfertas.refreshProductos();
+    await store.refreshProductos();
   });
 });
 onBeforeUnmount(() => {

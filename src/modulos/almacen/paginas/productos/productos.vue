@@ -211,31 +211,31 @@
                 }
               }
             "
-          icon="add_business"
-          class="p-1"
-          color="orange"
-          size="sm"
+            icon="add_business"
+            class="p-1"
+            color="orange"
+            size="sm"
+          >
+            <q-tooltip> Crear oferta </q-tooltip>
+          </q-btn>
+        </q-btn-group>
+      </template>
+      <template #body-cell-nombre="{ val, row }">
+        <div
+          style="
+            font-size: 13px;
+            display: block;
+            word-wrap: break-word;
+            white-space: normal;
+          "
         >
-          <q-tooltip> Crear oferta </q-tooltip>
-        </q-btn>
-      </q-btn-group>
-    </template>
-    <template #body-cell-nombre="{ val, row }">
-      <div
-        style="
-          font-size: 13px;
-          display: block;
-          word-wrap: break-word;
-          white-space: normal;
-        "
-      >
-        <b>{{ row.nombre }}</b>
-      </div>
-      <div class="flex" v-if="row.variedades?.length > 0">
-        <q-badge
-          v-for="variedad in row.variedades"
-          :key="variedad._id"
-          color="darkblue"
+          <b>{{ row.nombre }}</b>
+        </div>
+        <div class="flex" v-if="row.variedades?.length > 0">
+          <q-badge
+            v-for="variedad in row.variedades"
+            :key="variedad._id"
+            color="darkblue"
             class="mr-1 mb-1 lowercase"
           >
             {{ variedad.marca?.nombre }}
@@ -324,11 +324,6 @@
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
-
-// Checkeamos de los permisos y si no los tiene hacemos redireccion
-const permisosRequeridos = [];
-const noAutorizado = authStore.autorizar(permisosRequeridos);
-if (noAutorizado) goTo(router, noAutorizado);
 
 // imports composables
 import { useProductos } from './productos.composable';

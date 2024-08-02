@@ -3,10 +3,10 @@
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
-import type { Catalogo, Oferta } from "#gql";
-import localforage from "localforage";
-import { defineStore } from "pinia";
-import { apiOfertas } from "../ofertas/API/ofertas.api";
+import type { Catalogo, Oferta } from '#gql';
+import localforage from 'localforage';
+import { defineStore } from 'pinia';
+import { apiOfertas } from '../ofertas/API/ofertas.api';
 
 interface storeProps {
   ofertas: Oferta[] | null;
@@ -18,7 +18,7 @@ interface storeProps {
   catalogoSeleccionado: Catalogo | null;
 }
 
-export const storeOferta = defineStore("ofertas", {
+export const storeOferta = defineStore('ofertas', {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
@@ -36,7 +36,7 @@ export const storeOferta = defineStore("ofertas", {
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB = false): Promise<Oferta[]> {
-      this.ofertas = (await localforage.getItem("ofertas")) as Oferta[];
+      this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
       if (!this.ofertas || actualizarDB) {
         try {
           this.ofertas = await api.buscarOfertas(
@@ -94,10 +94,6 @@ export const storeOferta = defineStore("ofertas", {
   },
 
   persist: {
-<<<<<<< HEAD
-    paths: ["oferta", "catalogoOpciones", "catalogoSeleccionado"], // Solo persiste 'myPersistentState'
-=======
     paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'], // Solo persiste 'myPersistentState'
->>>>>>> main
   },
 });

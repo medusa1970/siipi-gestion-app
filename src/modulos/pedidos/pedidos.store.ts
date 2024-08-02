@@ -1,4 +1,4 @@
-import type { Producto } from '#gql';
+import type { Producto } from "#gql";
 
 interface PedidoState {
   listaPedido: Producto[];
@@ -8,13 +8,13 @@ interface PedidoState {
   areaPedidoID: string;
 }
 
-export const storePedido = defineStore('pedidos', {
+export const storePedido = defineStore("pedidos", {
   state: (): PedidoState => ({
     listaPedido: [],
     pedidosSolicitado: [],
     pedidosDirecto: [],
     isDespachar: false,
-    areaPedidoID: '',
+    areaPedidoID: "",
   }),
 
   getters: {},

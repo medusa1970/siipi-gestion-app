@@ -74,11 +74,11 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'cathering',
+  layout: "cathering",
 });
-import { useProveedores } from './proveedores.composable';
-import ProveedorImage from '@/assets/img/noHayProveedor.png';
-import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
+import { useProveedores } from "./proveedores.composable";
+import ProveedorImage from "@/assets/img/noHayProveedor.png";
+import formProveedor from "@/modulos/almacen/forms/formProveedor.vue";
 const {
   estado,
   store,
@@ -88,26 +88,26 @@ const {
 } = useProveedores();
 const columnsTabla = [
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    style: 'width:50px; margin:5px; padding: 5px',
-    align: 'center',
+    style: "width:50px; margin:5px; padding: 5px",
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
-    name: 'nombre',
-    label: 'Nombre',
-    style: 'width:50px; margin:5px; padding: 5px; width:100%',
-    align: 'left',
+    name: "nombre",
+    label: "Nombre",
+    style: "width:50px; margin:5px; padding: 5px; width:100%",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true,
   },
   {
-    name: 'actions',
-    label: '',
-    align: 'center',
+    name: "actions",
+    label: "",
+    align: "center",
     slot: true,
   },
 ];

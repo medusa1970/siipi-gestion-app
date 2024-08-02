@@ -2,20 +2,23 @@
   <div>
     <Navigation2
       :nav="[{ label: 'categorias', to: 'categorias' }]"
-      titulo="Gestion de categorias" />
+      titulo="Gestion de categorias"
+    />
 
     <!-- ARBOL -->
     <div class="flex justify-center mt-4">
       <q-list
         class="rounded-borders w-[350px]"
         v-for="categoria in estado.categorias"
-        :key="categoria._id">
+        :key="categoria._id"
+      >
         <q-expansion-item
           expand-separator
           icon="category"
           :label="categoria.nombre"
           default-opened
-          dense>
+          dense
+        >
           <template v-slot:header>
             <q-item-section>
               <h1>{{ categoria?.nombre }}</h1>
@@ -27,21 +30,24 @@
                   name="add"
                   size="17px"
                   class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                  @click.stop="modalCrearCategoria(categoria)" />
+                  @click.stop="modalCrearCategoria(categoria)"
+                />
               </div>
             </q-item-section>
           </template>
           <q-list
             v-for="(item, index) in categoria?.hijas"
             :key="index"
-            class="border-b-[1px] border-gray-300">
+            class="border-b-[1px] border-gray-300"
+          >
             <q-expansion-item
               :header-inset-level="0.5"
               switch-toggle-side
               dense-toggle
               :label="item.nombre"
               default-opened
-              dense>
+              dense
+            >
               <template v-slot:header>
                 <q-item-section> {{ item.nombre }} </q-item-section>
 
@@ -51,20 +57,23 @@
                       name="add"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                      @click.stop="modalCrearCategoria(item)" />
+                      @click.stop="modalCrearCategoria(item)"
+                    />
                     <q-icon
                       name="edit"
                       color="primary"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                      @click.stop="modalModificarCategoria(item)" />
+                      @click.stop="modalModificarCategoria(item)"
+                    />
                     <q-icon
                       v-if="item.hijas.length == 0"
                       name="delete"
                       color="red"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                      @click.stop="borrarCategoriaArbol(item)" />
+                      @click.stop="borrarCategoriaArbol(item)"
+                    />
                   </div>
                 </q-item-section>
               </template>
@@ -77,7 +86,8 @@
                   :content-inset-level="2"
                   expand-separator
                   active-class="text-blue"
-                  dense>
+                  dense
+                >
                   <template v-slot:header>
                     <q-item-section> {{ item2.nombre }} </q-item-section>
 
@@ -88,14 +98,16 @@
                           color="primary"
                           size="17px"
                           class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                          @click.stop="modalModificarCategoria(item2)" />
+                          @click.stop="modalModificarCategoria(item2)"
+                        />
                         <q-icon
                           v-if="item2.productos.length == 0"
                           name="delete"
                           color="red"
                           size="17px"
                           class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                          @click.stop="borrarCategoriaArbol(item2)" />
+                          @click.stop="borrarCategoriaArbol(item2)"
+                        />
                       </div>
                     </q-item-section>
                   </template>
@@ -120,7 +132,8 @@
           round
           dense
           v-close-popup
-          class="border-2 border-red-500" />
+          class="border-2 border-red-500"
+        />
       </div>
       <!-- <q-space /> -->
 
@@ -128,7 +141,8 @@
         <q-input
           v-model="estado.datos_categoria.nombre"
           label="Nombre categoria"
-          dense />
+          dense
+        />
       </div>
       <div class="flex row justify-center">
         <q-btn
@@ -139,7 +153,8 @@
           label="Guardar"
           color="secondary"
           type="submit"
-          @click="crearCategoriaArbol"></q-btn>
+          @click="crearCategoriaArbol"
+        ></q-btn>
       </div>
     </q-card>
   </q-dialog>
@@ -155,7 +170,8 @@
           round
           dense
           v-close-popup
-          class="border-2 border-red-500" />
+          class="border-2 border-red-500"
+        />
       </div>
       <!-- <q-space /> -->
 
@@ -163,7 +179,8 @@
         <q-input
           v-model="estado.datos_categoria.nombre"
           label="Nombre del catalogo"
-          dense />
+          dense
+        />
       </div>
       <div class="flex row justify-center">
         <q-btn
@@ -174,18 +191,19 @@
           label="Guardar"
           color="secondary"
           type="submit"
-          @click="modificarCategoriaArbol"></q-btn>
+          @click="modificarCategoriaArbol"
+        ></q-btn>
       </div>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup>
-import { useCategoria } from './categoria.composable';
+import { useCategoria } from "./categoria.composable";
 
 // layout
 definePageMeta({
-  layout: 'cathering'
+  layout: "cathering",
 });
 
 const {
@@ -195,7 +213,7 @@ const {
   crearCategoriaArbol,
   modalModificarCategoria,
   modificarCategoriaArbol,
-  borrarCategoriaArbol
+  borrarCategoriaArbol,
 } = useCategoria();
 
 onMounted(() => {

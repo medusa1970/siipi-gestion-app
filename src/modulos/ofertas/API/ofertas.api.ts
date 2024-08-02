@@ -1,4 +1,4 @@
-import type { BuscarCatalogoDto, BuscarOpciones, Catalogo, Oferta } from '#gql';
+import type { BuscarCatalogoDto, BuscarOpciones, Catalogo, Oferta } from "#gql";
 
 export const apiOfertas = {
   /**
@@ -7,7 +7,7 @@ export const apiOfertas = {
   buscarArbolCatalogos: async (
     b: BuscarCatalogoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
-    t: any = null,
+    t: any = null
   ): Promise<Catalogo> => {
     o.limit = 0;
     return <Catalogo>(
@@ -20,18 +20,18 @@ export const apiOfertas = {
    */
   buscarArbolCatalogosRaiz: async (
     opciones: BuscarOpciones & { loading?: boolean } = {},
-    token: any = null,
+    token: any = null
   ): Promise<Catalogo> => {
     opciones.limit = 0;
     return <Catalogo>await buscarUno(
       GqlCatalogoArbol,
       token,
       {
-        nombre: 'CATALOGO RAIZ',
+        nombre: "CATALOGO RAIZ",
       },
       opciones,
       null,
-      opciones.loading,
+      opciones.loading
     );
   },
 
@@ -40,15 +40,15 @@ export const apiOfertas = {
    */
   borrarOfertaConMotivo: async (
     ofertaID: string,
-    comentario: string = 'test comentario borrar',
-    token: any,
+    comentario: string = "test comentario borrar",
+    token: any
   ): Promise<Oferta | null> => {
     try {
       // borramos el producto
       const oferta = extraerUno(
         await GqlBorrarOfertas({
           busqueda: { _id: [ofertaID] },
-        }),
+        })
       );
 
       // en caso de que no se borró nada
@@ -63,14 +63,14 @@ export const apiOfertas = {
               // persona: va con el token
               comentario: comentario,
               oferta: oferta._id,
-              accion: 'borrado',
+              accion: "borrado",
             },
             opciones: {
               aceptarInexistentes: true,
             },
           },
-          token,
-        ),
+          token
+        )
       );
       // retornamos el oferta
       return oferta;

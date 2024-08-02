@@ -1,7 +1,7 @@
-import type { Catalogo, Oferta } from '#gql';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
-import { storeOferta } from '@/modulos/ofertas/ofertas.store';
-import localforage from 'localforage';
+import type { Catalogo, Oferta } from "#gql";
+import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
+import { storeOferta } from "@/modulos/ofertas/ofertas.store";
+import localforage from "localforage";
 
 const init_crearOfertaBasico = {
   nombre: null as string,
@@ -28,11 +28,11 @@ export const useOferta = () => {
   });
 
   const handleOfertaSimpleCreada = async (oferta) => {
-    NotifySucessCenter('Oferta creada éxitosamente');
+    NotifySucessCenter("Oferta creada éxitosamente");
     estado.modal.show_crearOfertaSimple = false;
   };
   const handleOfertaBasicaCreada = async (oferta) => {
-    NotifySucessCenter('Oferta creada éxitosamente');
+    NotifySucessCenter("Oferta creada éxitosamente");
     estado.modal.show_crearOfertaBasico = false;
   };
 

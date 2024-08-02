@@ -74,13 +74,13 @@ const { params } = useRoute();
 const router = useRouter();
 
 // Verificacion de permisos
-if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
+if (!authStore.autorizar(['ALMACEN', 'ADQUISICION', 'TODO'])) {
   ('No tiene el acceso para esta pagina');
 }
-const soloAlmacen = ref(authStore.checkPermisos(['ALMACEN']));
-const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
+const soloAlmacen = ref(authStore.autorizar(['ALMACEN']));
+const soloAdquisicion = ref(authStore.autorizar(['ADQUISICION']));
 const soloAlmacenAdquisicion = ref(
-  authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
+  authStore.autorizar(['ADQUISICION', 'ALMACEN']),
 );
 
 import MarcaTabPanel from './variedades/productoVariedades.vue';

@@ -1,8 +1,8 @@
 import type {
   BuscarCatalogoDto,
   CrearCatalogoDto,
-  ModificarCatalogoDto
-} from '#gql';
+  ModificarCatalogoDto,
+} from "#gql";
 
 export const catalogoService = {
   /**
@@ -12,7 +12,7 @@ export const catalogoService = {
   buscarCatalogoID: async (busqueda: BuscarCatalogoDto): Promise<any> => {
     const catalogoArbol = extraer(
       await GqlCatalogoArbol({
-        busqueda
+        busqueda,
       })
     );
     return catalogoArbol;
@@ -25,7 +25,7 @@ export const catalogoService = {
     const catalogoCreado = extraerUno(
       await GqlCrearCatalogos({
         datos,
-        opciones: { populate: true }
+        opciones: { populate: true },
       })
     );
 
@@ -42,7 +42,7 @@ export const catalogoService = {
     const catalogoModificado = extraerUno(
       await GqlModificarCatalogos({
         busqueda,
-        datos
+        datos,
       })
     );
     return catalogoModificado;
@@ -54,7 +54,7 @@ export const catalogoService = {
   borrarCatalogo: async (busqueda: BuscarCatalogoDto) => {
     const catalogoBorrado = extraerUno(
       await GqlBorrarCatalogos({
-        busqueda
+        busqueda,
       })
     );
     return catalogoBorrado;
@@ -66,9 +66,9 @@ export const catalogoService = {
   obtenerTodasCategorias: async () => {
     const arbol = extraer(
       await GqlCategoriaArbol({
-        busqueda: { nombre: ['CATEGORIA RAIZ'] }
+        busqueda: { nombre: ["CATEGORIA RAIZ"] },
       })
     );
     return arbol;
-  }
+  },
 };

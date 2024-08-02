@@ -1,66 +1,76 @@
 <template>
-  <Navigation2
-    :nav="[
-      { label: 'empleados', to: 'empleados' },
-      {
-        label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.nombre}`,
-        to: 'empleado',
-        params: { id: store.empleado?._id },
-      },
-    ]"
-  />
-  <div id="pageContainer">
+  <NuxtLayout name="cathering">
+    {{ authStore.autorizar(['ADQUISICION']) }}
+    {{ authStore.autorizar(['ALMACEN']) }}
     <q-tabs
-      v-model="estado.tab"
+      v-model="estado.tabActiva"
       inline-label
       outside-arrows
       mobile-arrows
       class="bg-grey-7 text-white shadow-2"
       no-caps
     >
-      <q-tab name="persona" icon="person" label="Persona" />
-      <q-tab name="cargos" icon="work" label="Cargos" />
-      <q-tab name="permisos" icon="group" label="Permisos" />
+      <q-tab
+        v-if="authStore.autorizar(['ADQUISICION'])"
+        name="persona"
+        icon="person"
+        label="Persona"
+      />
+      <q-tab
+        v-if="authStore.autorizar(['ALMACEN', 'ADQUISICION'])"
+        name="cargos"
+        icon="work"
+        label="Cargos"
+      />
+      <q-tab
+        v-if="authStore.autorizar(['ALMACEN'])"
+        name="permisos"
+        icon="group"
+        label="Permisos"
+      />
     </q-tabs>
     <q-tab-panels
-      v-model="estado.tab"
+      v-model="estado.tabActiva"
       animated
       style="height: calc(100vh - 115px)"
     >
       <q-tab-panel name="persona" animated>
-        <PersonaTabPanel />
-      </q-tab-panel>
-      <q-tab-panel name="permisos" animated>
-        <PermisosTabPanel />
+        <PersonaTabPanel :key="store.empleado?._id" />
       </q-tab-panel>
       <q-tab-panel name="cargos" animated>
-        <CargosTabPanel />
+        <CargosTabPanel :key="store.empleado?._id" />
+      </q-tab-panel>
+      <q-tab-panel name="permisos" animated>
+        <PermisosTabPanel :key="store.empleado?._id" />
       </q-tab-panel>
     </q-tab-panels>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'cathering' });
 import { useEmpleadoDetalle } from './empleadoDetalle.composable';
-const composable = useEmpleadoDetalle();
-const { estado, store } = composable;
+const { estado, store, authStore, router } = useEmpleadoDetalle();
 const { params } = useRoute();
-const router = useRouter();
 
+provide('infoPagina', {
+  titulo: 'Gestion de empleados',
+  camino: [
+    { label: 'empleados', to: 'empleados' },
+    {
+      label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.apellido}`,
+      to: 'empleado',
+      params: { id: store.empleado?._id },
+    },
+  ],
+});
+
+// otros imports
 import PersonaTabPanel from './persona/empleadoPersona.vue';
 import PermisosTabPanel from './permisos/empleadoPermisos.vue';
 import CargosTabPanel from './cargos/empleadoCargos.vue';
 
-onMounted(async () => {
-  await store.getEmpleados();
-  const empleado = store.empleados.find((prod) => {
-    return prod._id === params.id;
-  });
-  if (empleado) {
-    store.empleado = empleado;
-  } else {
-    console.log('ooooh'); // goTo(router, 'empleados');
-  }
+onBeforeMount(async () => {
+  const empleado = await store.useEmpleado(params.id);
+  if (!empleado) goTo(router, 'empleados');
 });
 </script>

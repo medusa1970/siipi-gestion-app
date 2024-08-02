@@ -1,5 +1,5 @@
-import type { Bloque } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Bloque } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 export const useBloques = () => {
   const { store } = useAlmacen();
@@ -10,7 +10,7 @@ export const useBloques = () => {
     bloque: null,
     // config de los filtros de la tabla
     filtros: {
-      buscar: '',
+      buscar: "",
     },
     // estado de los modales
     modal: {
@@ -30,12 +30,12 @@ export const useBloques = () => {
     let rows = store.entidad.bloques;
     if (!rows) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      const regex = new RegExp(`${estado.filtros.buscar}`, "i");
       rows = rows.filter((bloque) => {
         return (
           regex.test(bloque.nombre + sinAcentos(bloque.nombre)) ||
-          regex.test(bloque.descripcion ?? '') ||
-          regex.test(sinAcentos(bloque.descripcion ?? ''))
+          regex.test(bloque.descripcion ?? "") ||
+          regex.test(sinAcentos(bloque.descripcion ?? ""))
         );
       });
     }
@@ -44,14 +44,14 @@ export const useBloques = () => {
 
   // se creó un bloque
   const handleBloqueCreado = async (bloque) => {
-    NotifySucessCenter('Bloque creada correctamente');
+    NotifySucessCenter("Bloque creada correctamente");
     estado.modal.formCrearBloque = false;
     store.refreshEntidad();
   };
 
   // se modificcó un bloque
   const handleBloqueModificado = async (bloque) => {
-    NotifySucessCenter('Bloque modificada correctamente');
+    NotifySucessCenter("Bloque modificada correctamente");
     estado.modal.formModificarBloque = false;
     store.refreshEntidad();
   };

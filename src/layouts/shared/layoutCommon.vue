@@ -1,5 +1,6 @@
 <template>
   <q-layout view="lHr lpR lFr ">
+    <!-- header -->
     <q-header
       elevated
       :class="[
@@ -10,19 +11,14 @@
       ]"
       style=""
     >
-      <DeployStatus />
-      <q-toolbar class="h-[6vh]">
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title class="navBar">
-          <div>
-            <h1 class="font-bold uppercase">
-              {{ authStore.getNegocio?.nombre }}
-            </h1>
-            <!-- <p class="text-sm capitalize">
-              {{
-                `${authStore.getUsuarioNombreCompleto} (${authStore.getNegocio?.cargos[0]?.nombre})`
-              }}
-            </p> -->
+      <q-toolbar class="">
+        <q-toolbar-title
+          class="flex items-center justify-start"
+          style="margin: 0 !important"
+        >
+          <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+          <div class="text-base">
+            {{ authStore.getNegocio?.nombre }}
           </div>
         </q-toolbar-title>
         <usuarioMenu />
@@ -43,8 +39,22 @@
           >
         </q-btn>
       </q-toolbar>
+      <q-breadcrumbs class="flex bg-orange pl-4">
+        <q-breadcrumbs-el
+          class="text-white"
+          icon="home"
+          :to="getRoute(router, 'cathering')"
+        />
+        <q-breadcrumbs-el
+          v-for="nivel in infoPagina?.camino"
+          :label="nivel.label"
+          :icon="nivel.icon ?? undefined"
+          :to="getRoute(router, nivel.to, nivel.params)"
+        />
+      </q-breadcrumbs>
     </q-header>
 
+    <!-- drawer a la izquierda -->
     <q-drawer
       show-if-above
       v-model="leftDrawerOpen"
@@ -59,57 +69,74 @@
       ]"
     >
       <!-- drawer content -->
-      <q-list>
-        <!-- PERFIL -->
-        <q-item style="height: 150px; width: 300px">
-          <q-img
-            id="portada"
-            class="absolute-top"
-            :src="portadaImg"
-            style="width: 300px; height: 150px"
-            fit="cover"
-            position="top right"
+      <!-- PERFIL -->
+      <q-item style="height: 150px; width: 300px">
+        <q-img
+          id="portada"
+          class="absolute-top"
+          :src="portadaImg"
+          style="width: 300px; height: 150px"
+          fit="cover"
+          position="top right"
+        >
+          <div
+            id="perfil"
+            class="absolute-bottom text-center"
+            style="height: 40px; padding: 9px; z-index: 100"
           >
-            <div
-              id="perfil"
-              class="absolute-bottom text-center"
-              style="height: 40px; padding: 9px; z-index: 100"
-            >
-              {{
-                `${authStore.getUsuarioNombreCompleto} (${authStore.getCargo})`
-              }}
-            </div>
-          </q-img>
-          <div class="w-full h-full flex justify-center items-center">
-            <q-avatar size="100px">
-              <img
-                v-if="authStore.getUsuario?.cloudinaryUrl"
-                style="object-fit: cover"
-                :src="authStore.getUsuario?.cloudinaryUrl"
-              />
-              <img
-                v-else
-                style="object-fit: cover"
-                src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
-              />
-            </q-avatar>
+            {{
+              `${authStore.getUsuarioNombreCompleto} (${authStore.getCargo})`
+            }}
           </div>
-        </q-item>
-        <div id="vistas-objetos">
-          <q-list
-            v-for="item in menuList"
-            :key="item"
-            @click.prevent="goTo(router, item.to)"
-          >
+        </q-img>
+        <div class="w-full h-full flex justify-center items-center">
+          <q-avatar size="100px">
+            <img
+              v-if="authStore.getUsuario?.cloudinaryUrl"
+              style="object-fit: cover"
+              :src="authStore.getUsuario?.cloudinaryUrl"
+            />
+            <img
+              v-else
+              style="object-fit: cover"
+              src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
+            />
+          </q-avatar>
+        </div>
+      </q-item>
+
+      <q-list v-for="item in menuList">
+        <q-btn
+          v-if="authStore.autorizar(item.permisos)"
+          :icon="item.icon"
+          :label="item.label"
+          :to="getRoute(router, item.to)"
+          flat
+          no-caps
+        />
+      </q-list>
+
+      <!--
+        <q-list
+          v-for="item in menuList"
+          :key="item"
+          @click.prevent="goTo(router, item.to)"
+        >
+
             <q-expansion-item
               group="somegroup"
               :icon="item.icon"
               :label="item.label"
               style="border: 0px; color: white"
-              :to="item.to"
+              :to="getRoute(router, item.to)"
             >
               <q-list class="q-pl-lg" v-if="item.subMenu?.length > 0">
-                <q-item clickable v-for="i in item.subMenu" :key="i" :to="i.to">
+                <q-item
+                  clickable
+                  v-for="i in item.subMenu"
+                  :key="i"
+                  :to="getRoute(router, i.to)"
+                >
                   <q-item-section>{{ i.label }}</q-item-section>
                   <q-item-section avatar>
                     <q-icon color="secondary" name="keyboard_arrow_right" />
@@ -117,13 +144,13 @@
                 </q-item>
               </q-list>
             </q-expansion-item>
-            <!-- <q-separator /> -->
-          </q-list>
-          <!-- <DrawerMenuAdm :menu-list="menuList" /> -->
-        </div>
-      </q-list>
+        </q-list>
+          -->
+      <!-- <q-separator /> -->
+      <!-- <DrawerMenuAdm :menu-list="menuList" /> -->
     </q-drawer>
 
+    <!-- drawer a la derecha -->
     <q-drawer
       v-model="rightDrawerOpen"
       side="right"
@@ -197,8 +224,14 @@
       </q-list>
     </q-drawer>
 
+    <!-- pagina -->
     <q-page-container>
-      <div class="layoutContainer">
+      <div class="text-center">
+        <q-btn rounded color="black" style="margin-top: -45px; z-index: 2000">
+          {{ infoPagina?.titulo }}
+        </q-btn>
+      </div>
+      <div id="layoutContainer">
         <slot name="slot" />
       </div>
     </q-page-container>
@@ -206,6 +239,9 @@
 </template>
 
 <script setup>
+// breadcrumb
+const infoPagina = inject('infoPagina');
+
 // PROPS
 defineProps({
   menuList: Array,
@@ -213,6 +249,8 @@ defineProps({
   sede: Boolean,
   portadaImg: String,
   cathering: Boolean,
+  nav: Array,
+  tituloPagina: String,
 });
 
 // IMPORTS
@@ -248,7 +286,6 @@ const borrarProductoCarrito = (id) => {
   );
 };
 </script>
-
 <style lang="scss">
 .navBar {
   display: flex;

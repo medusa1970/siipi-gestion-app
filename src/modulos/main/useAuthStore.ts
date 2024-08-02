@@ -172,23 +172,17 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * checkPermisos
+     * autorizar
      */
-    checkPermisos(permisosRequeridos: string[]) {
-      if (!this.negocio) {
-        // qué hacemos ?
-        return false;
+    autorizar(permisosRequeridos: string[] = []) {
+      const userPermisos = this.negocio.permisos;
+      const requerido = [...permisosRequeridos, 'DESAROLLO'];
+      let autorizado = false;
+      for (const permiso of userPermisos) {
+        if (permiso === 'BLOQUEADO') return false;
+        if (requerido.includes(permiso)) autorizado = true;
       }
-      try {
-        const userPermisos = this.negocio.permisos;
-        permisosRequeridos.push('DESAROLLO');
-        return (
-          permisosRequeridos.length === 0 ||
-          userPermisos.find((permiso) => permisosRequeridos.includes(permiso))
-        );
-      } catch (e) {
-        throw e;
-      }
+      return permisosRequeridos.length === 0 || autorizado;
     },
 
     /**

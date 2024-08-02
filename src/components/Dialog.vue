@@ -55,14 +55,14 @@ const props = withDefaults(
     closeManual?: boolean;
   }>(),
   {
-    title: '',
+    title: "",
     cardBig: false,
-    labelBtn: '',
+    labelBtn: "",
     noBtn: false,
     closeManual: false,
     handleClose: () => {},
     handleSubmit: () => {},
-  },
+  }
 );
 </script>
 

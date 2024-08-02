@@ -1,9 +1,9 @@
 export const columnaOfertas = [
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    align: 'center',
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   // {
@@ -15,9 +15,9 @@ export const columnaOfertas = [
   //   sortable: true,
   // },
   {
-    name: 'nombre',
-    label: 'Nombre',
-    align: 'left',
+    name: "nombre",
+    label: "Nombre",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true,
@@ -39,17 +39,17 @@ export const columnaOfertas = [
   //   sortable: true,
   // },
   {
-    name: 'estado',
-    label: 'Modif.',
-    align: 'right',
+    name: "estado",
+    label: "Modif.",
+    align: "right",
     field: (row: any) => row._modificado,
     slot: true,
     sortable: true,
   },
   {
-    name: 'acciones',
-    label: 'Accion',
-    align: 'center',
+    name: "acciones",
+    label: "Accion",
+    align: "center",
     slot: true,
   },
 ];

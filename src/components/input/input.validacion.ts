@@ -1,7 +1,7 @@
 export const validacion = {
-  requerido(mensaje: string = 'Campo requerido'): Function {
+  requerido(mensaje: string = "Campo requerido"): Function {
     const requerido = (val: any): String | true => {
-      if (val == null || val === '') {
+      if (val == null || val === "") {
         return mensaje;
       } else {
         return true;
@@ -10,7 +10,7 @@ export const validacion = {
     return requerido;
   },
 
-  numero(mensaje: string = 'Debe ser un numero intero'): Function {
+  numero(mensaje: string = "Debe ser un numero intero"): Function {
     const numero = (val: any): String | true => {
       if (!val) return true;
       if (!/^(\d{1,3}(,?\d{3})*)?$/.test(val)) {
@@ -23,7 +23,7 @@ export const validacion = {
   },
 
   decimal(
-    mensaje: string = 'Debe ser un numero con 2 decimales max',
+    mensaje: string = "Debe ser un numero con 2 decimales max"
   ): Function {
     const decimal = (val: any): String | true => {
       if (val != null && !/^(\d{1,3}(,?\d{3})*(\.\d{1,2})?)?$/.test(val)) {

@@ -58,27 +58,27 @@
 
 <script setup lang="ts">
 // imports
-import type { Inventario, InventarioLote, Producto } from '#gql';
-import formInventarioLote from '@/modulos/almacen/forms/formInventarioLote.vue';
-import { apiAlmacen } from '~/modulos/almacen/API/almacen.api';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+import type { Inventario, InventarioLote, Producto } from "#gql";
+import formInventarioLote from "@/modulos/almacen/forms/formInventarioLote.vue";
+import { apiAlmacen } from "~/modulos/almacen/API/almacen.api";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 const $q = useQuasar();
-import type { Lote } from './formInventarioLote.vue';
-import type { Bloque } from '#gql';
-import type { Marca } from '#gql';
+import type { Lote } from "./formInventarioLote.vue";
+import type { Bloque } from "#gql";
+import type { Marca } from "#gql";
 
 // definicion de los emits
-const emits = defineEmits(['hacerInventario']);
+const emits = defineEmits(["hacerInventario"]);
 
 // definicion de los props
 const props = withDefaults(
   defineProps<{
     producto: Producto;
   }>(),
-  {},
+  {}
 );
 
 // definicion del estado
@@ -101,7 +101,7 @@ onMounted(async () => {
 const formSubmit = async () => {
   // debe haber por lo menos un lote
   if (estado.lotes.length === 0) {
-    console.log('debe haber por lo menos un lote');
+    console.log("debe haber por lo menos un lote");
     return false;
   }
 
@@ -116,13 +116,13 @@ const formSubmit = async () => {
         return lote;
       }),
       true,
-      'se hizo',
+      "se hizo"
     );
   } catch (err) {
     errFallBack(err);
     return;
   }
-  emits('hacerInventario', inventario);
+  emits("hacerInventario", inventario);
 };
 
 // Lote >> InventarioLote
@@ -141,14 +141,14 @@ const handleCrearLote = async (lote) => {
 const handleModificarLote = async (modificado) => {
   showModal.modificarLote = false;
   estado.lotes = estado.lotes.map((lote) =>
-    lote.id === modificado.id ? modificado : lote,
+    lote.id === modificado.id ? modificado : lote
   );
 };
 
 // lote borrar
 const borrarLote = async (loteBorrar) => {
   $q.dialog({
-    message: '¿Estas seguro de borrar este lote?',
+    message: "¿Estas seguro de borrar este lote?",
     cancel: true,
     persistent: true,
   }).onOk(async () => {

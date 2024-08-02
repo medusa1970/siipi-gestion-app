@@ -33,13 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import type { TipoEmpaque } from '#gql';
-import type { SelectOpcion } from '~/components/input/select.interface';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { TipoEmpaque } from "#gql";
+import type { SelectOpcion } from "~/components/input/select.interface";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -48,7 +48,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -61,8 +61,8 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: '',
-  errorAbreviacion: '',
+  errorNombre: "",
+  errorAbreviacion: "",
 });
 
 // Inicializaciones
@@ -82,9 +82,9 @@ const formSubmit = async () => {
         },
       });
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         medida.tipoEmpaques.find((v) => v._id === props.edicion?._id),
-        medida,
+        medida
       );
     }
 
@@ -96,16 +96,16 @@ const formSubmit = async () => {
           agregar: [estado.dataForm],
         },
       });
-      emits('crearObjeto', ultimo(medida.tipoEmpaques), medida);
+      emits("crearObjeto", ultimo(medida.tipoEmpaques), medida);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
+    if (isApiBadRequest(err, "duplicado")) {
       for (const campo of err.detalle.campos) {
         const [path] = campo;
-        if (ultimo(path.split('.')) === 'nombre') {
-          estado.errorNombre = 'Este nombre ya esta registrado.';
-        } else if (ultimo(path.split('.')) === 'abreviacion') {
-          estado.errorAbreviacion = 'Esta abreviacion ya esta registrada.';
+        if (ultimo(path.split(".")) === "nombre") {
+          estado.errorNombre = "Este nombre ya esta registrado.";
+        } else if (ultimo(path.split(".")) === "abreviacion") {
+          estado.errorAbreviacion = "Esta abreviacion ya esta registrada.";
         }
       }
       return;

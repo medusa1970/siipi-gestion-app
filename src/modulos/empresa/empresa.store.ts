@@ -1,32 +1,38 @@
-import type { Empleado } from '#gql';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+import type { Empleado } from "#gql";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 
 interface storeProps {
   empleados?: Empleado[];
   empleado: Empleado;
 }
 
-export const storeEmpresa = defineStore('empresa', {
+export const storeEmpresa = defineStore("empresa", {
   state: (): storeProps => ({
     empleados: null,
     empleado: null,
   }),
 
-  getters: {
-    getEmpleado: (state) => state.empleado,
-  },
+  getters: {},
 
   actions: {
+    /**
+     * define el empleado actual que se esta modificando en pagina de detalles
+     */
+    async useEmpleado(id): Promise<Empleado> {
+      const empleados = await this.getEmpleados();
+      this.empleado = empleados.find((e) => e._id === id);
+      return this.empleado;
+    },
+
     /**
      * Retorna la lista de las empleados de la base de datos
      */
     async getEmpleados(): Promise<Empleado[]> {
-      if (this.empleados == null) {
+      if (!this.empleados) {
         try {
           const entidad = await api.buscarEntidad_empleados(
-            useAuthStore().getNegocio._id,
+            useAuthStore().getNegocio._id
           );
-          console.log(1, entidad);
           this.empleados = entidad.empleados;
         } catch (err) {
           errFallBack(err);
@@ -38,10 +44,13 @@ export const storeEmpresa = defineStore('empresa', {
     async refreshEmpleados(): Promise<void> {
       this.empleados = null;
       await this.getEmpleados();
+      if (this.empleado) {
+        await this.useEmpleado(this.empleado._id);
+      }
     },
   },
 
   persist: {
-    paths: ['empleados'],
+    paths: ["empleados"],
   },
 });

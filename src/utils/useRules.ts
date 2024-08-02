@@ -1,5 +1,5 @@
 export const useRules = {
-  numero(mensaje: string = 'Debe ser un numero intero'): Function {
+  numero(mensaje: string = "Debe ser un numero intero"): Function {
     const numero = (val: any): String | true => {
       if (!val) return true;
       if (!/^(\d{1,3}(,?\d{3})*)?$/.test(val)) {
@@ -38,7 +38,7 @@ export const useRules = {
   // },
 
   decimal(
-    mensaje: string = 'Debe ser un numero con 2 decimales max',
+    mensaje: string = "Debe ser un numero con 2 decimales max"
   ): Function {
     const decimal = (val: any): String | true => {
       if (val != null && !/^(\d{1,3}(,?\d{3})*(\.\d{1,2})?)?$/.test(val)) {
@@ -50,9 +50,9 @@ export const useRules = {
     return decimal;
   },
 
-  requerido(mensaje: string = 'Campo requerido'): Function {
+  requerido(mensaje: string = "Campo requerido"): Function {
     const requerido = (val: any): String | true => {
-      if (val == null || val === '') {
+      if (val == null || val === "") {
         return mensaje;
       } else {
         return true;
@@ -61,7 +61,7 @@ export const useRules = {
     return requerido;
   },
 
-  correo(mensaje: string = 'Email malformado'): Function {
+  correo(mensaje: string = "Email malformado"): Function {
     const correo = (val: string): String | true => {
       if (!/@/.test(val)) {
         return mensaje;
@@ -72,7 +72,7 @@ export const useRules = {
     return correo;
   },
 
-  telefono(mensaje: string = 'Telefono malformado'): Function {
+  telefono(mensaje: string = "Telefono malformado"): Function {
     const telefono = (val: string): String | true => {
       if (val.length !== 8) {
         return mensaje;
@@ -88,9 +88,9 @@ export const useRules = {
       val.length > 0 &&
       !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*$/.test(val)
     ) {
-      return 'La contraseña debe tener por lo menos una minuscula, una maiuscula y un numero.';
+      return "La contraseña debe tener por lo menos una minuscula, una maiuscula y un numero.";
     } else if (val.length < 8) {
-      return 'La contraseña debe tener al menos 8 caracteres.';
+      return "La contraseña debe tener al menos 8 caracteres.";
     } else {
       return true;
     }

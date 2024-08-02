@@ -39,16 +39,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Entidad } from '#gql';
-import type { Bloque } from '#gql';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Entidad } from "#gql";
+import type { Bloque } from "#gql";
+import { UrlToBase64Image } from "~/components/input/input.service";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -57,7 +57,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -70,7 +70,7 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: '',
+  errorNombre: "",
   imagenPreview: null,
 });
 
@@ -112,12 +112,12 @@ const formSubmit = async () => {
             },
             modificar: estado.dataForm,
           },
-        },
+        }
       );
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         entidad.bloques.find((v) => v._id === props.edicion?._id),
-        entidad,
+        entidad
       );
     } else {
       const entidad = await api.modificarEntidad_bloques(
@@ -126,13 +126,13 @@ const formSubmit = async () => {
           bloques: {
             agregar: [estado.dataForm],
           },
-        },
+        }
       );
-      emits('crearObjeto', ultimo(entidad.bloques), entidad);
+      emits("crearObjeto", ultimo(entidad.bloques), entidad);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Este bloque ya esta registrada';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorNombre = "Este bloque ya esta registrada";
       return;
     }
     errFallBack(err);

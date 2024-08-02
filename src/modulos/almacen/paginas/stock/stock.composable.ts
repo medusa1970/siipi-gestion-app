@@ -1,6 +1,6 @@
-import type { Bloque, Categoria, Marca, Producto, Stock } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+import type { Bloque, Categoria, Marca, Producto, Stock } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 
 export const useStock = () => {
   const authStore = useAuthStore();
@@ -11,7 +11,7 @@ export const useStock = () => {
       alerta: null,
       categoriaSeleccionada: null,
       marcaSeleccionada: null,
-      buscarFiltro: '',
+      buscarFiltro: "",
     },
     modal: {
       formInventario: false,
@@ -44,10 +44,10 @@ export const useStock = () => {
         fechaUltimoInventario: stock.lotes?.[0]._creado,
         diasDesdeUltimoInventario: Math.floor(
           diferenciaFechas(
-            new Date('2024-07-09'), // stock.lotes?.[0]._creado,
+            new Date("2024-07-09"), // stock.lotes?.[0]._creado,
             new Date(),
-            'D',
-          ),
+            "D"
+          )
         ),
         diasHastaProximoInventario: null,
         inventarioAviso: null,
@@ -58,7 +58,7 @@ export const useStock = () => {
       for (const lote of stock.lotes) {
         const marcaId = lote.marca._id.toString();
         const variedad = stock.producto.variedades.find(
-          (variedad: any) => variedad.marca._id === marcaId,
+          (variedad: any) => variedad.marca._id === marcaId
         );
         if (!res.marcas[marcaId]) {
           Object.assign(res.marcas, {
@@ -103,7 +103,7 @@ export const useStock = () => {
         } else {
           res.diasHastaProximoInventario = Math.min(
             res.diasHastaProximoInventario,
-            marca.diasHastaProximoInventario,
+            marca.diasHastaProximoInventario
           );
         }
         if (res.alertaInventario == null) {
@@ -111,7 +111,7 @@ export const useStock = () => {
         } else {
           res.alertaInventario = Math.max(
             res.alertaInventario,
-            marca.alertaInventario,
+            marca.alertaInventario
           );
         }
       }
@@ -132,7 +132,7 @@ export const useStock = () => {
         // dias hasta que toque el inventario (sale negativo si ya pasó)
         res.marcas[marcaId].diasInventario =
           Math.floor(
-            diferenciaFechas(res.fechaUltimoInventario, new Date(), 'D'),
+            diferenciaFechas(res.fechaUltimoInventario, new Date(), "D")
           ) + max;
         // alerta de marca
         lote.alertaCantidad = 0;
@@ -141,7 +141,7 @@ export const useStock = () => {
         // alerta res
         res.alertaCantidad = Math.max(
           res.alertaCantidad,
-          res.marcas[marcaId].alertaCantidad,
+          res.marcas[marcaId].alertaCantidad
         );
       }
 
@@ -151,7 +151,7 @@ export const useStock = () => {
 
         // dias hasta el vencimiento (sale negativo si ya pasó)
         lote.diasHastaVencimiento = Math.floor(
-          diferenciaFechas(new Date(), lote.vencimiento, 'D'),
+          diferenciaFechas(new Date(), lote.vencimiento, "D")
         );
 
         lote.alertaVencimiento = 0;
@@ -173,12 +173,12 @@ export const useStock = () => {
         } else {
           lote.diasHastaVencimiento = Math.min(
             res.diasHastaProximoVencimiento,
-            lote.diasHastaVencimiento,
+            lote.diasHastaVencimiento
           );
         }
         res.alertaVencimiento = Math.max(
           res.alertaVencimiento,
-          lote.alertaVencimiento,
+          lote.alertaVencimiento
         );
       }
       return res;
@@ -196,7 +196,7 @@ export const useStock = () => {
           hijas.push({
             label: subcat.nombre,
             value: [subcat._id],
-            class: 'option',
+            class: "option",
           });
           idsHijas.push(subcat._id);
         }
@@ -218,7 +218,7 @@ export const useStock = () => {
         options.push({
           label: marca.nombre,
           value: marca._id,
-          class: 'option',
+          class: "option",
         });
       }
     }
@@ -229,19 +229,19 @@ export const useStock = () => {
   const rowsParaMostrar = computed(() => {
     let filtered = estado.stocks;
     // filtro por alertas
-    if (estado.filtros.alerta === 'cantidad') {
+    if (estado.filtros.alerta === "cantidad") {
       filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
     }
-    if (estado.filtros.alerta === 'vencimiento') {
+    if (estado.filtros.alerta === "vencimiento") {
       filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
     }
-    if (estado.filtros.alerta === 'inventario') {
+    if (estado.filtros.alerta === "inventario") {
       filtered = filtered.filter((stock) => stock.alertaInventario > 0);
     }
     // filtro por categoria
     if (
       estado.filtros.categoriaSeleccionada != null &&
-      estado.filtros.categoriaSeleccionada !== ''
+      estado.filtros.categoriaSeleccionada !== ""
     ) {
       filtered = filtered;
       // .filter((stock) =>
@@ -253,21 +253,21 @@ export const useStock = () => {
     // filtro por marca
     if (
       estado.filtros.marcaSeleccionada != null &&
-      estado.filtros.marcaSeleccionada !== ''
+      estado.filtros.marcaSeleccionada !== ""
     ) {
       filtered = filtered.filter((stock) =>
-        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
+        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada)
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
     if (estado.filtros.buscarFiltro != null) {
       filtered = filtered.filter((stock) => {
-        const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+        const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
         return regex.test(
           stock.producto.nombre +
             stock.producto.nombre
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, ''),
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
         );
       });
     }
@@ -283,7 +283,7 @@ export const useStock = () => {
 
   // se hizo un inventario
   const handleInventario = async (inventario) => {
-    NotifySucessCenter('Inventario hecho');
+    NotifySucessCenter("Inventario hecho");
     estado.modal.formInventario = false;
   };
 

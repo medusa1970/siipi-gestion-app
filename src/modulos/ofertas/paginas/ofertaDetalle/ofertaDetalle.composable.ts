@@ -1,4 +1,4 @@
-import { storeOferta } from '@/modulos/ofertas/ofertas.store.js';
+import { storeOferta } from "@/modulos/ofertas/ofertas.store.js";
 
 export const useOfertaDetalle = () => {
   /** DECLARACIONES */
@@ -6,7 +6,7 @@ export const useOfertaDetalle = () => {
 
   /** REACTIVOS */
   const estado = reactive({
-    tab: 'datosBasicos',
+    tab: "datosBasicos",
   });
 
   /** FUNCIONES */

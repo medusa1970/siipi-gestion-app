@@ -1,8 +1,8 @@
-import type { CrearOfertaDto } from '#gql';
+import type { CrearOfertaDto } from "#gql";
 
-interface CrearOferta extends Omit<CrearOfertaDto, 'precioSinFactura'> {
+interface CrearOferta extends Omit<CrearOfertaDto, "precioSinFactura"> {
   categoria?: string | null;
-  precioSinFactura?: CrearOfertaDto['precioSinFactura'];
+  precioSinFactura?: CrearOfertaDto["precioSinFactura"];
 }
 
 export type { CrearOferta };

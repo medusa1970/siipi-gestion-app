@@ -29,8 +29,8 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
+const emits = defineEmits(["go"]);
+import { apiAuth } from "~/modulos/main/API/auth.api";
 
 const correo = reactiveInput();
 
@@ -41,13 +41,13 @@ const formSubmit = async (datos) => {
   try {
     const res = await apiAuth.pedirRDC(correo.value);
   } catch (err) {
-    if (isApiNotFound(err, 'correo')) {
-      correo.error = 'Email desconocido';
+    if (isApiNotFound(err, "correo")) {
+      correo.error = "Email desconocido";
     } else {
       errFallBack(err);
     }
     return;
   }
-  emits('go', 'rdc2');
+  emits("go", "rdc2");
 };
 </script>

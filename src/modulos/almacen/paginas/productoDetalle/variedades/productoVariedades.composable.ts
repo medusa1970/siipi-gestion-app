@@ -1,5 +1,5 @@
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-import { useQuasar } from 'quasar';
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import { useQuasar } from "quasar";
 
 const initFormCrear = {
   marca: null,
@@ -24,18 +24,18 @@ export const useProductoVariedades = () => {
     },
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: '',
+      buscarFiltro: "",
     },
   });
 
   const handleVariedadCreada = (variedad, producto) => {
-    NotifySucessCenter('Marca registrada éxitosamente');
+    NotifySucessCenter("Marca registrada éxitosamente");
     estado.modal.formVariedadCrear = false;
     store.producto = producto;
   };
 
   const handleVariedadModificada = (variedad, producto) => {
-    NotifySucessCenter('Marca modificada éxitosamente');
+    NotifySucessCenter("Marca modificada éxitosamente");
     estado.modal.formVariedadModificar = false;
     store.producto = producto;
   };
@@ -43,7 +43,7 @@ export const useProductoVariedades = () => {
   const borrarProductoMarca = (variedad: any) => {
     $q.dialog({
       title: `Eliminar ${variedad.marca.nombre}`,
-      message: 'No se puede deshacer.',
+      message: "No se puede deshacer.",
       cancel: true,
       persistent: true,
     }).onOk(async () => {
@@ -55,12 +55,12 @@ export const useProductoVariedades = () => {
               borrar: { _id: variedad._id },
             },
           },
-          { loading: true },
+          { loading: true }
         );
         if (productoVariedad) {
-          NotifySucessCenter('Marca borrado correctamente');
+          NotifySucessCenter("Marca borrado correctamente");
           store.producto.variedades = store.producto.variedades.filter(
-            (e) => e._id !== variedad._id,
+            (e) => e._id !== variedad._id
           );
         }
       } catch (error) {

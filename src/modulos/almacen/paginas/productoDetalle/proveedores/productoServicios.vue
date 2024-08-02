@@ -117,8 +117,8 @@
 </template>
 
 <script setup lang="ts">
-import { useProductoServicios } from './productoServicios.composable';
-import formServicio from '@/modulos/almacen/forms/formServicio.vue';
+import { useProductoServicios } from "./productoServicios.composable";
+import formServicio from "@/modulos/almacen/forms/formServicio.vue";
 const { $socket } = useNuxtApp();
 const {
   estado,
@@ -135,17 +135,15 @@ const rowsTabla = computed(() => {
   let filtered = estado.servicios;
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
     filtered = filtered.filter((servicio) => {
       return regex.test(
         servicio.proveedor?.nombre +
           servicio.proveedor?.nombre
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '') +
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") +
           servicio.marca.nombre +
-          servicio.marca.nombre
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, ''),
+          servicio.marca.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       );
     });
   }

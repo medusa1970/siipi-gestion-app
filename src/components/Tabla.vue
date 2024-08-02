@@ -55,8 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const filter = ref('');
+import { ref } from "vue";
+const filter = ref("");
 const props = withDefaults(
   defineProps<{
     rows: Array<any>;
@@ -70,19 +70,19 @@ const props = withDefaults(
   }>(),
   {
     defaultImage: null,
-    rowKey: '_id',
-    watchFilter: '',
+    rowKey: "_id",
+    watchFilter: "",
     conBusqueda: false,
-    titulo: '',
+    titulo: "",
     disableExpand: false,
-  },
+  }
 );
 watch(
   () => props.watchFilter,
   () => {
     filter.value = props.watchFilter;
   },
-  { immediate: false },
+  { immediate: false }
 );
 </script>
 

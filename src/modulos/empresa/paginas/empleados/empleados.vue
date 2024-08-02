@@ -1,17 +1,8 @@
 <template>
-  <Navigation2
-    :nav="[
-      {
-        label: 'empleados',
-        to: 'empleados',
-      },
-    ]"
-    titulo="Gestion de empleados"
-  />
-  <div id="pageContainer">
+  <NuxtLayout name="cathering">
     <Tabla
       disableExpand
-      :rows="composable.rowsTabla.value"
+      :rows="rowsTabla"
       :columns="[
   {
     name: 'imagen',
@@ -36,12 +27,13 @@
     align: 'left',
     field: (row: any) => row.cargos[0].nombre,
     sortable: true,
-  },  {
+  },  
+  {
     name: 'permisos',
     label: 'Permisos',
     style: 'margin:5px; padding: 5px;',
     align: 'left',
-    field: (row: any) => row.permisos.map(p => p.permiso).join(', '),
+    field: (row: any) => row.permisos.length,
     sortable: true,
   },
   {
@@ -95,22 +87,18 @@
         </q-btn-group>
       </template>
     </Tabla>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-// layout
-definePageMeta({ layout: 'cathering' });
-// import composable, store & estado
 import { useEmpleados } from './empleados.composable';
-const composable = useEmpleados();
-const { estado, store } = composable;
-// Otros imports
-const router = useRouter();
+const { estado, store, authStore, router, rowsTabla } = useEmpleados();
 import EmpleadoImage from '@/assets/img/noHayEmpleado.png';
-import formEmpleado from '@/modulos/empresa/forms/formEmpleado.vue';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-const authStore = useAuthStore();
+
+provide('infoPagina', {
+  titulo: 'Gestion de empleados',
+  camino: [{ label: 'Empleados', to: 'empleados' }],
+});
 
 onMounted(async () => {
   await store.getEmpleados();

@@ -78,13 +78,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Oferta } from '#gql';
-import type { Precio } from '#gql';
-import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
+import type { Oferta } from "#gql";
+import type { Precio } from "#gql";
+import { useOfertas } from "@/modulos/ofertas/ofertas.composable";
 const { store } = useOfertas();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -93,7 +93,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -115,10 +115,10 @@ const estado = reactive({
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
-  estado.dataForm.precioConFactura ? 'orange' : 'orange-4',
+  estado.dataForm.precioConFactura ? "orange" : "orange-4"
 );
 const colorCalculateCon = computed(() =>
-  estado.dataForm.precioSinFactura ? 'orange' : 'orange-4',
+  estado.dataForm.precioSinFactura ? "orange" : "orange-4"
 );
 
 // Inicializaciones
@@ -128,12 +128,12 @@ onMounted(async () => {});
 const formSubmit = async () => {
   try {
     // si es una oferta
-    if (props.edicion && props.edicion.hasOwnProperty('_esOferta')) {
+    if (props.edicion && props.edicion.hasOwnProperty("_esOferta")) {
       const oferta = await api.modificarOferta(store.oferta._id, {
         precioConFactura: estado.dataForm.precioConFactura,
         precioSinFactura: estado.dataForm.precioSinFactura,
       });
-      emits('modificarObjeto', null, oferta);
+      emits("modificarObjeto", null, oferta);
     }
 
     // si edicion de precio por mayor
@@ -147,9 +147,9 @@ const formSubmit = async () => {
         },
       });
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         oferta.preciosPorMayor.find((v) => v._id === props.edicion?._id),
-        oferta,
+        oferta
       );
     }
 
@@ -160,7 +160,7 @@ const formSubmit = async () => {
           agregar: estado.dataForm,
         },
       });
-      emits('crearObjeto', ultimo(oferta.preciosPorMayor), oferta);
+      emits("crearObjeto", ultimo(oferta.preciosPorMayor), oferta);
     }
   } catch (err) {
     errFallBack(err);
@@ -173,10 +173,10 @@ const formSubmit = async () => {
 // rule dos
 const rule2 = (val: number): String | true => {
   if (
-    !(props.edicion && props.edicion.hasOwnProperty('_esOferta')) &&
+    !(props.edicion && props.edicion.hasOwnProperty("_esOferta")) &&
     Number(val) <= 1
   ) {
-    return 'Los precios por mayor son a partir de 2';
+    return "Los precios por mayor son a partir de 2";
   } else {
     return true;
   }

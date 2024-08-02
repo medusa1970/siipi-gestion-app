@@ -54,9 +54,9 @@
 </template>
 
 <script setup>
-import Logo from '@/assets/img/logo.png';
-import formularioLogin from '@/modulos/main/componientes/formularioLogin.vue';
-import second from 'first';
+import Logo from "@/assets/img/logo.png";
+import formularioLogin from "@/modulos/main/componientes/formularioLogin.vue";
+import second from "first";
 
 definePageMeta({
   layout: false,
@@ -65,18 +65,18 @@ definePageMeta({
 const router = useRouter();
 
 const persona = reactive({
-  nombre: '',
-  apellido: '',
+  nombre: "",
+  apellido: "",
   telefono: 0,
-  correo: '',
-  contrasena: '',
+  correo: "",
+  contrasena: "",
 });
 
 async function register() {
   const nuevaPersona = await authService.registrar(persona);
   if (nuevaPersona) {
     NotifySucess(`${nuevaPersona.nombre} se ha registrado correctamente`);
-    router.push('/');
+    router.push("/");
   }
 }
 </script>

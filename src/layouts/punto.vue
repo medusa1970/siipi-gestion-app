@@ -35,40 +35,40 @@
 </template>
 
 <script setup>
-import PortadaCathering from '@/assets/img/cookies.png';
-import layoutCommon from '@/layouts/shared/layoutCommon.vue';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { storePedido } from '@/modulos/pedidos/pedidos.store';
-import { useQuasar } from 'quasar';
+import PortadaCathering from "@/assets/img/cookies.png";
+import layoutCommon from "@/layouts/shared/layoutCommon.vue";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import { storePedido } from "@/modulos/pedidos/pedidos.store";
+import { useQuasar } from "quasar";
 
 const $q = useQuasar();
 const pedidoStore = storePedido();
 const router = useRouter();
 const authStore = useAuthStore();
-if (authStore.getNegocio?.tipo !== 'PUNTO') {
-  goTo(router, 'inicio');
+if (authStore.getNegocio?.tipo !== "PUNTO") {
+  goTo(router, "inicio");
 }
 
 const menuListPunto = [
   {
-    icon: 'warehouse',
-    label: 'Almacen',
-    to: 'stock',
+    icon: "warehouse",
+    label: "Almacen",
+    to: "stock",
   },
   {
-    icon: 'add_shopping_cart',
-    label: 'Realizar pedido',
-    to: 'realizar-pedido',
+    icon: "add_shopping_cart",
+    label: "Realizar pedido",
+    to: "realizar-pedido",
   },
   {
-    icon: 'list_alt',
-    label: 'Mis pedidos',
-    to: 'lista-pedidos',
+    icon: "list_alt",
+    label: "Mis pedidos",
+    to: "lista-pedidos",
   },
   {
-    icon: 'people',
-    label: 'Empleados',
-    to: 'empleados',
+    icon: "people",
+    label: "Empleados",
+    to: "empleados",
   },
   // {
   //   icon: 'description',
@@ -131,7 +131,7 @@ const realizarPedido = async () => {
     cantidad: parseInt(p.cantidad),
   }));
   $q.dialog({
-    message: '¿Estas seguro de aceptar este pedido?',
+    message: "¿Estas seguro de aceptar este pedido?",
     cancel: true,
     persistent: true,
   }).onOk(async () => {
@@ -139,22 +139,22 @@ const realizarPedido = async () => {
       const pedido = await apiPedido.pedidoIniciar(
         {
           comprador: authStore.negocio._id,
-          vendedor: '65a5a9af08c1a906d83522d0',
+          vendedor: "65a5a9af08c1a906d83522d0",
           items,
         },
         { loading: true },
-        authStore.token,
+        authStore.token
       );
       if (pedido) {
         const pedidoEstado = await apiPedido.pedidoConfirmarItems(
           {
             _id: pedido._id,
           },
-          authStore.token,
+          authStore.token
         );
-        NotifySucessCenter('Pedido realizado con éxito');
+        NotifySucessCenter("Pedido realizado con éxito");
         pedidoStore.listaPedido = [];
-      } else NotifyError('Error al realizar el pedido');
+      } else NotifyError("Error al realizar el pedido");
     } catch (err) {
       console.log(err);
       return;

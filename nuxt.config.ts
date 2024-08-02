@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     enabled: false,
   },
   ssr: false,
+  generate: {
+    fallback: '404.html',
+  },
   typescript: {
     typeCheck: false,
     strict: false,

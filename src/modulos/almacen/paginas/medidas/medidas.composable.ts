@@ -1,5 +1,5 @@
-import type { Medida } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Medida } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 export const useMedidas = () => {
   const { store } = useAlmacen();
@@ -10,7 +10,7 @@ export const useMedidas = () => {
     medida: null,
     // config de los filtros de la tabla
     filtros: {
-      buscar: '',
+      buscar: "",
     },
     // estado de los modales
     modal: {
@@ -29,7 +29,7 @@ export const useMedidas = () => {
     let rows = store.medidas;
     if (!rows) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      const regex = new RegExp(`${estado.filtros.buscar}`, "i");
       rows = rows.filter((medida) => {
         return regex.test(medida.nombre + sinAcentos(medida.nombre));
       });
@@ -39,13 +39,13 @@ export const useMedidas = () => {
 
   // se creó una medida
   const handleMedidaCreada = async (medida) => {
-    NotifySucessCenter('Medida creada correctamente');
+    NotifySucessCenter("Medida creada correctamente");
     estado.modal.formCrearMedida = false;
   };
 
   // se modificcó una medida
   const handleMedidaModificada = async (medida) => {
-    NotifySucessCenter('Medida modificada correctamente');
+    NotifySucessCenter("Medida modificada correctamente");
     estado.modal.formModificarMedida = false;
   };
 

@@ -1,4 +1,4 @@
-import type { SelectOpcion } from '@/components/input/select.interface';
+import type { SelectOpcion } from "@/components/input/select.interface";
 export interface CategoriaSelectOpcion extends SelectOpcion {
-  class: 'titulo' | 'option';
+  class: "titulo" | "option";
 }

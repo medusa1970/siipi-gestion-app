@@ -36,15 +36,15 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+const emits = defineEmits(["go"]);
+import { apiAuth } from "~/modulos/main/API/auth.api";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
 
 const password = reactiveInput();
 const password2 = reactiveInput();
 const password2Rule = (p) => {
-  return p !== password.value ? 'Las contraseñas no coinciden' : true;
+  return p !== password.value ? "Las contraseñas no coinciden" : true;
 };
 
 /**
@@ -54,12 +54,12 @@ const formSubmit = async (datos) => {
   try {
     const res = await apiAuth.actuarRDC(
       authStore.cookie.rdcToken,
-      password.value,
+      password.value
     );
   } catch (err) {
     errFallBack(err);
     return;
   }
-  emits('go', 'rdc4');
+  emits("go", "rdc4");
 };
 </script>

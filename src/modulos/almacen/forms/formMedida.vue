@@ -41,13 +41,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Medida } from '#gql';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Medida } from "#gql";
+import { UrlToBase64Image } from "~/components/input/input.service";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -56,7 +56,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -71,8 +71,8 @@ const estado = reactive({
   // valor de los inputs
   dataForm: clone(initForm),
   //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
+  errorNombre: "",
+  errorAbreviacion: "",
   // preview de la imagen en el input
   imagenPreview: null,
 });
@@ -99,23 +99,23 @@ const formSubmit = async () => {
       const medida = await api.modificarMedida(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits('modificarObjeto', medida);
+      emits("modificarObjeto", medida);
     }
     // Modo creacion
     else {
       const medida = await api.crearMedida(estado.dataForm, { loading: true });
-      emits('crearObjeto', medida);
+      emits("crearObjeto", medida);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
+    if (isApiBadRequest(err, "duplicado")) {
       for (const campo of err.detalle.campos) {
         const [path] = campo;
-        if (ultimo(path.split('.')) === 'nombre') {
-          estado.errorNombre = 'Este nombre ya esta registrado.';
-        } else if (ultimo(path.split('.')) === 'abreviacion') {
-          estado.errorAbreviacion = 'Esta abreviacion ya esta registrada.';
+        if (ultimo(path.split(".")) === "nombre") {
+          estado.errorNombre = "Este nombre ya esta registrado.";
+        } else if (ultimo(path.split(".")) === "abreviacion") {
+          estado.errorAbreviacion = "Esta abreviacion ya esta registrada.";
         }
       }
       return;

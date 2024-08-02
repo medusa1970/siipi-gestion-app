@@ -72,9 +72,9 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { apiAuth } from '~/modulos/main/API/auth.api';
+const emits = defineEmits(["go"]);
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import { apiAuth } from "~/modulos/main/API/auth.api";
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -86,7 +86,7 @@ const telefono = reactiveInput();
 const password = reactiveInput();
 const password2 = reactiveInput();
 const password2Rule = (p) =>
-  p !== password.value ? 'Las contraseñas no coinciden' : true;
+  p !== password.value ? "Las contraseñas no coinciden" : true;
 
 /**
  * Submit del formulario
@@ -103,12 +103,12 @@ const submit = async () => {
     });
     authStore.cookie.registrado = persona;
   } catch (err) {
-    if (isApiNotFound(err, 'correo')) {
-      correo.error = 'Este email ya está registrado';
-    } else if (isApiBadRequest(err, 'correo')) {
-      telefono.error = 'Este telefono ya está registrado';
-    } else if (isApiBadRequest(err, 'correo')) {
-      usuario.error = 'Este usuario ya está registrado';
+    if (isApiNotFound(err, "correo")) {
+      correo.error = "Este email ya está registrado";
+    } else if (isApiBadRequest(err, "correo")) {
+      telefono.error = "Este telefono ya está registrado";
+    } else if (isApiBadRequest(err, "correo")) {
+      usuario.error = "Este usuario ya está registrado";
     } else {
       errFallBack(err);
       return;
@@ -116,6 +116,6 @@ const submit = async () => {
   }
 
   // cambiar a la seccion siguiente
-  emits('go', 'registro2');
+  emits("go", "registro2");
 };
 </script>

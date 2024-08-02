@@ -39,13 +39,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Marca } from '#gql';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Marca } from "#gql";
+import { UrlToBase64Image } from "~/components/input/input.service";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -54,7 +54,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -69,7 +69,7 @@ const estado = reactive({
   // valor de los inputs
   dataForm: clone(initForm),
   //mensajes de error del formulario
-  errorNombre: '',
+  errorNombre: "",
   // preview de la imagen en el input
   imagenPreview: null,
 });
@@ -96,16 +96,16 @@ const formSubmit = async () => {
       const marca = await api.modificarMarca(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits('modificarObjeto', marca);
+      emits("modificarObjeto", marca);
     } else {
       const marca = await api.crearMarca(estado.dataForm, { loading: true });
-      emits('crearObjeto', marca);
+      emits("crearObjeto", marca);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe una marca con este nombre';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorNombre = "Ya existe una marca con este nombre";
       return;
     }
     errFallBack(err);

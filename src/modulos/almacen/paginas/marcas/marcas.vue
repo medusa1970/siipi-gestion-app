@@ -71,35 +71,35 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'cathering',
+  layout: "cathering",
 });
-import { useMarcas } from './marcas.composable';
-import MarcaImage from '@/assets/img/noHayMarca.png';
-import formMarca from '@/modulos/almacen/forms/formMarca.vue';
+import { useMarcas } from "./marcas.composable";
+import MarcaImage from "@/assets/img/noHayMarca.png";
+import formMarca from "@/modulos/almacen/forms/formMarca.vue";
 const { estado, store, rowsTabla, handleMarcaCreada, handleMarcaModificada } =
   useMarcas();
 const columnsTabla = [
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    style: 'width:50px; margin:5px; padding: 5px',
-    align: 'center',
+    style: "width:50px; margin:5px; padding: 5px",
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
-    name: 'nombre',
-    label: 'Nombre',
-    style: 'width:50px; margin:5px; padding: 5px; width:100%',
-    align: 'left',
+    name: "nombre",
+    label: "Nombre",
+    style: "width:50px; margin:5px; padding: 5px; width:100%",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true,
   },
   {
-    name: 'actions',
-    label: '',
-    align: 'center',
+    name: "actions",
+    label: "",
+    align: "center",
     slot: true,
   },
 ];

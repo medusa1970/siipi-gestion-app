@@ -98,12 +98,12 @@
 
 <script setup lang="ts">
 // layout
-definePageMeta({ layout: 'cathering' });
+definePageMeta({ layout: "cathering" });
 // import composable, store & estado
-import { useBloques } from './bloques.composable';
+import { useBloques } from "./bloques.composable";
 const composable = useBloques();
 const { estado, store } = composable;
 // Otros imports
-import BloqueImage from '@/assets/img/noHayBloque.png';
-import formBloque from '@/modulos/almacen/forms/formBloque.vue';
+import BloqueImage from "@/assets/img/noHayBloque.png";
+import formBloque from "@/modulos/almacen/forms/formBloque.vue";
 </script>

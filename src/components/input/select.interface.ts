@@ -4,5 +4,5 @@ export interface SelectOpcion {
   disable?: boolean;
 }
 export type selectOpcionCallback = (
-  listaOpciones: SelectOpcion[],
+  listaOpciones: SelectOpcion[]
 ) => SelectOpcion[];

@@ -21,7 +21,7 @@
       <q-btn :color="getColor(negocio)" class="w-full mt-2" no-caps>
         {{ negocio.nombre }}
         {{
-          negocio.cargos.length > 0 ? '(' + negocio.cargos[0].nombre + ')' : ''
+          negocio.cargos.length > 0 ? "(" + negocio.cargos[0].nombre + ")" : ""
         }}
       </q-btn>
     </div>
@@ -39,8 +39,8 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+const emits = defineEmits(["go"]);
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -52,14 +52,14 @@ const elegirNegocio = async (index) => {
     NotifyError(`Error no tratado: ${e}`);
   }
   switch (authStore.getNegocio.tipo) {
-    case 'PUNTO':
-      goTo(router, 'punto');
+    case "PUNTO":
+      goTo(router, "punto");
       break;
-    case 'CATHERING':
-      goTo(router, 'cathering');
+    case "CATHERING":
+      goTo(router, "cathering");
       break;
-    case 'CLIENTELA':
-      goTo(router, 'cliente');
+    case "CLIENTELA":
+      goTo(router, "cliente");
       break;
   }
 };
@@ -67,18 +67,18 @@ const elegirNegocio = async (index) => {
 // logout
 const logout = () => {
   authStore.logout();
-  emits('go', 'login'); // o 'byebye'
+  emits("go", "login"); // o 'byebye'
 };
 
 // colores para los botones
 const getColor = (negocio) => {
   switch (negocio.tipo) {
-    case 'CATHERING':
-      return 'green';
-    case 'PUNTO':
-      return 'orange';
-    case 'CLIENTELA':
-      return 'black';
+    case "CATHERING":
+      return "green";
+    case "PUNTO":
+      return "orange";
+    case "CLIENTELA":
+      return "black";
   }
 };
 </script>

@@ -22,19 +22,8 @@
 import { useProductoAcciones } from './productoAcciones.composable';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-const { $socket } = useNuxtApp();
 const { estado, authStore, store, borrarProducto } = useProductoAcciones();
 const router = useRouter();
-
-// Verificacion de permisos
-if (!authStore.checkPermisos(['ALMACEN', 'ADQUISICION', 'TODO'])) {
-  console.log('No tiene el acceso para esta pagina');
-}
-const soloAlmacen = ref(authStore.checkPermisos(['ALMACEN']));
-const soloAdquisicion = ref(authStore.checkPermisos(['ADQUISICION']));
-const soloAlmacenAdquisicion = ref(
-  authStore.checkPermisos(['ADQUISICION', 'ALMACEN']),
-);
 
 // si no hay producto, pagina equivocada y volvemos a lalista
 if (!store.producto) {

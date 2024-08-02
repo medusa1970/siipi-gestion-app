@@ -50,13 +50,13 @@
   </q-table>
 </template>
 <script setup>
-import { ref, defineModel } from 'vue';
+import { ref, defineModel } from "vue";
 //@ts-ignore
 definePageMeta({
-  layout: 'cathering',
+  layout: "cathering",
 });
 
-const filter = ref('');
+const filter = ref("");
 defineProps({
   rows: {
     type: Array,

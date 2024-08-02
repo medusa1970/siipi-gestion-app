@@ -1,9 +1,9 @@
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 export const useProductoDetalle = () => {
   const { store } = useAlmacen();
   const estado = reactive({
-    tab: 'datosBasicos',
+    tab: "datosBasicos",
   });
 
   return {

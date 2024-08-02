@@ -1,14 +1,23 @@
 import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
-export const useTesoreria = () => {
-  const { store } = useEmpresa();
-  const estado = reactive({});
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosTesoreria = ['LOGISTICA'];
 
-  // Inicializaciones
-  onMounted(async () => {});
+/**
+ * Composable para empresa/tesoreria
+ */
+export const useTesoreria = () => {
+  const { store, authStore, router } = useEmpresa();
+  if (!authStore.autorizar(permisosTesoreria)) goTo(router, '/noAutorizado');
+
+  const estado = reactive({});
 
   return {
     estado,
     store,
+    authStore,
+    router,
   };
 };

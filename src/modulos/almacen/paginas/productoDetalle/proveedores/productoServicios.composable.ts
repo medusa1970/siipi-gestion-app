@@ -1,5 +1,5 @@
-import type { Entidad, Servicio } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Entidad, Servicio } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 export const useProductoServicios = () => {
   const { store, estado: estadoAlmacen } = useAlmacen();
@@ -17,7 +17,7 @@ export const useProductoServicios = () => {
     },
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: '',
+      buscarFiltro: "",
     },
   });
 
@@ -27,7 +27,7 @@ export const useProductoServicios = () => {
     try {
       proveedores = await api.buscarEntidades_servicios(
         {
-          tipo: ['PROVEEDOR'],
+          tipo: ["PROVEEDOR"],
           servicios: {
             producto: store.producto._id,
           },
@@ -37,7 +37,7 @@ export const useProductoServicios = () => {
           servicios: {
             producto: store.producto._id,
           },
-        },
+        }
       );
     } catch (err) {
       errFallBack(err);
@@ -62,7 +62,7 @@ export const useProductoServicios = () => {
   };
 
   const handleServicioCreado = (servicio, proveedor) => {
-    NotifySucessCenter('Proveedor creado éxitosamente');
+    NotifySucessCenter("Proveedor creado éxitosamente");
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
     estado.servicios.push(servicio);
@@ -70,11 +70,11 @@ export const useProductoServicios = () => {
   };
 
   const handleServicioModificado = (servicio, proveedor) => {
-    NotifySucessCenter('Proveedor modificado éxitosamente');
+    NotifySucessCenter("Proveedor modificado éxitosamente");
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
     estado.servicios = estado.servicios.map((s) =>
-      s._id === servicio._id ? servicio : s,
+      s._id === servicio._id ? servicio : s
     );
     estado.modal.formServicioModificar = false;
   };

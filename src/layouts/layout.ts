@@ -1,5 +1,5 @@
 export const layoutIndex = {
-  CATHERING: 'cathering',
-  PUNTO: 'punto',
-  CLIENTELA: 'cliente',
+  CATHERING: "cathering",
+  PUNTO: "punto",
+  CLIENTELA: "cliente",
 };

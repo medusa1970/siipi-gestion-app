@@ -7,7 +7,7 @@ import type {
   Problema,
   Producto,
   Stock,
-} from '#gql';
+} from "#gql";
 
 export const apiAlmacen = {
   /**
@@ -16,7 +16,7 @@ export const apiAlmacen = {
   buscarArbolCategorias: async (
     b: BuscarCategoriaDto,
     o: BuscarOpciones & { loading?: boolean } = {},
-    t: any = null,
+    t: any = null
   ): Promise<Categoria> => {
     o.limit = 0;
     return <Categoria>(
@@ -29,18 +29,18 @@ export const apiAlmacen = {
    */
   buscarArbolCategoriasRaiz: async (
     opciones: BuscarOpciones & { loading?: boolean } = {},
-    token: any = null,
+    token: any = null
   ): Promise<Categoria> => {
     opciones.limit = 0;
     return <Categoria>await buscarUno(
       GqlCategoriaArbol,
       token,
       {
-        nombre: 'CATEGORIA RAIZ',
+        nombre: "CATEGORIA RAIZ",
       },
       opciones,
       null,
-      opciones.loading,
+      opciones.loading
     );
   },
 
@@ -57,7 +57,7 @@ export const apiAlmacen = {
     productoID: any,
     lotes: any,
     guardar: boolean,
-    mensaje: string = 'se hizo',
+    mensaje: string = "se hizo"
   ): Promise<Inventario> => {
     try {
       const inventario = extraerUno(
@@ -69,7 +69,7 @@ export const apiAlmacen = {
             lotes: lotes,
             reporte: mensaje,
           },
-        }),
+        })
       );
       return inventario;
     } catch (err) {
@@ -86,7 +86,7 @@ export const apiAlmacen = {
         await GqlProductosMenu({
           busqueda: { _id: [entidadID] },
           busquedaMenu: {},
-        }),
+        })
       );
       return producto;
     } catch (err) {
@@ -102,7 +102,7 @@ export const apiAlmacen = {
       const productos = extraer(
         await GqlFilaInventario({
           busqueda: { _id: [entidadID] },
-        }),
+        })
       );
       return productos;
     } catch (err) {
@@ -115,7 +115,7 @@ export const apiAlmacen = {
    */
   buscarProblema: async (
     entidadID: string,
-    problemaID: string,
+    problemaID: string
   ): Promise<Problema> => {
     try {
       const entidad = extraerUno(
@@ -123,7 +123,7 @@ export const apiAlmacen = {
           busqueda: { _id: [entidadID] },
           filtro: { problemas: { _id: [problemaID] } },
           opciones: { limit: 1, errorSiVacio: true },
-        }),
+        })
       );
       return entidad.problemas[0];
     } catch (err) {
@@ -135,7 +135,7 @@ export const apiAlmacen = {
    * Recupera todos los problemas no resueltos
    */
   buscarProblemasNoResueltos: async (
-    entidadID: string,
+    entidadID: string
   ): Promise<Problema[]> => {
     try {
       const entidad = extraerUno(
@@ -143,7 +143,7 @@ export const apiAlmacen = {
           busqueda: { _id: [entidadID] },
           filtro: { problemas: { resuelto: false } },
           opciones: { limit: 1, errorSiVacio: true },
-        }),
+        })
       );
       return entidad.problemas;
     } catch (err) {
@@ -157,7 +157,7 @@ export const apiAlmacen = {
   resolverProblema: async (
     entidadID: string,
     problemaID: string,
-    datos: object,
+    datos: object
   ): Promise<Problema> => {
     try {
       const entidad = extraerUno(
@@ -172,10 +172,10 @@ export const apiAlmacen = {
             },
           },
           opciones: { limit: 1, errorSiVacio: true },
-        }),
+        })
       );
       return entidad.problemas.find(
-        (problema) => problema._id.toString() === problemaID,
+        (problema) => problema._id.toString() === problemaID
       );
     } catch (err) {
       throw formatApiError(err);

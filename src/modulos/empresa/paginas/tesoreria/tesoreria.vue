@@ -1,23 +1,15 @@
 <template>
-  <Navigation2
-    :nav="[
-      {
-        label: 'tesorerias',
-        to: 'tesorerias',
-      },
-    ]"
-    titulo="Gestion de tesoreria"
-  />
-
-  <h1>En progreso</h1>
+  <NuxtLayout name="cathering">
+    <h1>En progreso</h1>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-// layout
-definePageMeta({ layout: 'cathering' });
-// import composable, store & estado
 import { useTesoreria } from './tesoreria.composable';
-const composable = useTesoreria();
-const { estado, store } = composable;
-// Otros imports
+const { estado, store, authStore, router } = useTesoreria();
+
+provide('infoPagina', {
+  titulo: 'Gestion de tesoreria',
+  camino: [{ label: 'Tesoreria', to: 'tesoreria' }],
+});
 </script>

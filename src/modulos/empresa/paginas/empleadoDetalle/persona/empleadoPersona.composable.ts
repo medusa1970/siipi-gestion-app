@@ -1,14 +1,13 @@
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { storeEmpresa } from '~/modulos/empresa/empresa.store';
+import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
 export const useEmpleadoPersona = () => {
-  const authStore = useAuthStore();
-  const store = storeEmpresa();
+  const { store, authStore, router } = useEmpresa();
   const estado = reactive({});
 
   return {
+    estado,
     store,
     authStore,
-    estado,
+    router,
   };
 };

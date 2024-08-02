@@ -10,11 +10,6 @@
       />
     </q-breadcrumbs>
   </div>
-  <div class="flex justify-center mt-2">
-    <h1 class="!m-0 pr-3 font-extrabold" v-if="titulo" id="tituloPagina">
-      {{ titulo }}
-    </h1>
-  </div>
 </template>
 
 <script setup lang="ts">

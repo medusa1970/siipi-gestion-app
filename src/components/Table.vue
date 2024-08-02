@@ -87,8 +87,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const filter = ref('');
+import { ref } from "vue";
+const filter = ref("");
 
 defineProps({
   rows: {

@@ -1,11 +1,11 @@
-import type { Catalogo } from '#gql';
-import { catalogoService } from './catalogo.service';
-import { useQuasar } from 'quasar';
-import { storeOferta } from '@/modulos/ofertas/ofertas.store';
+import type { Catalogo } from "#gql";
+import { catalogoService } from "./catalogo.service";
+import { useQuasar } from "quasar";
+import { storeOferta } from "@/modulos/ofertas/ofertas.store";
 
 const init_catalogoCategoria = {
   _id: null as string,
-  nombre: null as string
+  nombre: null as string,
 };
 
 export const useCatalogos = () => {
@@ -20,10 +20,10 @@ export const useCatalogos = () => {
     modal: {
       show_agregarCatalogo: false,
       show_agregarCategoriaCatalogo: false,
-      show_modificarCategoriaCatalogo: false
+      show_modificarCategoriaCatalogo: false,
     },
 
-    datos_catalogoCategoria: clone(init_catalogoCategoria)
+    datos_catalogoCategoria: clone(init_catalogoCategoria),
   });
 
   /**
@@ -31,7 +31,7 @@ export const useCatalogos = () => {
    */
   const traerCatalagoso = async () => {
     const { catalogoArbol: catalogos } = await GqlCatalogoArbol({
-      busqueda: { nombre: ['CATALOGO RAIZ'] }
+      busqueda: { nombre: ["CATALOGO RAIZ"] },
     });
     //@ts-ignore
     if (catalogos) ofertaStore.catalogos = estado.catalogos = catalogos?.hijas;
@@ -46,7 +46,7 @@ export const useCatalogos = () => {
 
   const obtenerCatalogoId = async (catalogoId: string) => {
     const catalogoArbol = await catalogoService.buscarCatalogoID({
-      _id: [catalogoId]
+      _id: [catalogoId],
     });
     if (catalogoArbol) estado.catalogoSeleccionado = [catalogoArbol];
     return catalogoArbol;
@@ -61,11 +61,11 @@ export const useCatalogos = () => {
   const crearCatalogoArbol = async (catalogoID: string) => {
     const catalogoCreado = await catalogoService.crearCatalogo({
       nombre: estado.datos_catalogoCategoria.nombre,
-      pariente: estado.datos_catalogoCategoria._id
+      pariente: estado.datos_catalogoCategoria._id,
     });
     if (catalogoCreado) {
       obtenerCatalogoId(catalogoID);
-      NotifySucessCenter('Categoria creada correctamente');
+      NotifySucessCenter("Categoria creada correctamente");
       estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     }
     estado.modal.show_agregarCategoriaCatalogo = false;
@@ -82,7 +82,7 @@ export const useCatalogos = () => {
       { nombre: estado.datos_catalogoCategoria.nombre }
     );
     if (catalogoModificado) {
-      NotifySucessCenter('Catalogo modificado correctamente');
+      NotifySucessCenter("Catalogo modificado correctamente");
       obtenerCatalogoId(catalogoID);
     }
     estado.modal.show_modificarCategoriaCatalogo = false;
@@ -92,17 +92,17 @@ export const useCatalogos = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar este catalogo${
         row.hijas?.length > 0
-          ? ', tiene ' + row.hijas.length + ' subcategorias'
-          : ''
+          ? ", tiene " + row.hijas.length + " subcategorias"
+          : ""
       }?`,
       cancel: true,
-      persistent: true
+      persistent: true,
     }).onOk(async () => {
       const catalogoBorrada = await catalogoService.borrarCatalogo({
-        _id: [row._id]
+        _id: [row._id],
       });
       if (catalogoBorrada) {
-        NotifySucessCenter('Catalogo eliminada correctamente');
+        NotifySucessCenter("Catalogo eliminada correctamente");
         obtenerCatalogoId(catalogoID);
       }
     });
@@ -114,15 +114,15 @@ export const useCatalogos = () => {
     const data = [
       {
         label: categoriaArbol.nombre,
-        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+        avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
         children: categoriaArbol.hijas.map((hija: any) => ({
-          icon: 'room_service',
+          icon: "room_service",
           label: hija.nombre,
           children: hija.hijas.map((hija2: any) => ({
-            label: hija2.nombre
-          }))
-        }))
-      }
+            label: hija2.nombre,
+          })),
+        })),
+      },
     ];
     // estado.props = data;
   };
@@ -137,6 +137,6 @@ export const useCatalogos = () => {
     modalModificarCatalogoCategoria,
     modificarCatalogoArbol,
     borrarCatalogoArbol,
-    obtenerTodasCategorias
+    obtenerTodasCategorias,
   };
 };

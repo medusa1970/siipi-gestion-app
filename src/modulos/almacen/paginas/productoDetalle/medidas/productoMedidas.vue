@@ -162,9 +162,9 @@
 </template>
 
 <script setup lang="ts">
-import formMedida from '@/modulos/almacen/forms/formMedida.vue';
-import formEmpaque from '@/modulos/almacen/forms/formEmpaque.vue';
-import { useProductoMedidas } from './productoMedidas.composable';
+import formMedida from "@/modulos/almacen/forms/formMedida.vue";
+import formEmpaque from "@/modulos/almacen/forms/formEmpaque.vue";
+import { useProductoMedidas } from "./productoMedidas.composable";
 const { $socket } = useNuxtApp();
 const {
   estado,
@@ -196,14 +196,14 @@ const rowsTabla = computed(() => {
   let filtered = store.producto.empaques;
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
     filtered = filtered.filter((empaque) => {
       return regex.test(
         empaque.abreviacion +
           empaque.nombre +
-          empaque.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '') +
+          empaque.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "") +
           empaque.marca.nombre +
-          empaque.marca.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+          empaque.marca.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       );
     });
   }

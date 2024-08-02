@@ -77,14 +77,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Oferta } from '#gql';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
-import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
-import { UrlToBase64Image } from '~/components/input/input.service';
+import type { Oferta } from "#gql";
+import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
+import { useOfertas } from "@/modulos/ofertas/ofertas.composable";
+import { UrlToBase64Image } from "~/components/input/input.service";
 const { store, ofertaAbreviacion } = useOfertas();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -93,7 +93,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -120,7 +120,7 @@ const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
   let options = [];
   for (const cat of store.catalogoArbol.hijas) {
-    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+    if (cat.nombre !== "CATALOGO PROVEEDORES")
       options.push({
         label: cat.nombre,
         value: cat._id,
@@ -142,16 +142,16 @@ const selectSubCatalogo = computed(() => {
       hijas.push({
         label: subcat.nombre,
         value: subcat._id,
-        class: 'option',
+        class: "option",
       });
       idsHijas.push(subcat._id);
     }
-    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+    if (cat.nombre !== "CATALOGO PROVEEDORES")
       options.push({
         label: cat.nombre,
         value: cat._id,
         disable: true,
-        class: 'title',
+        class: "title",
       });
     options = [...options, ...hijas];
   }
@@ -198,12 +198,12 @@ const formSubmit = async () => {
       const oferta = await api.modificarOferta(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits('modificarObjeto', oferta);
+      emits("modificarObjeto", oferta);
     } else {
       const oferta = await api.crearOferta(estado.dataForm, { loading: true });
-      emits('crearObjeto', oferta);
+      emits("crearObjeto", oferta);
     }
   } catch (err) {
     errFallBack(err);

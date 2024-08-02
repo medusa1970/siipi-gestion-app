@@ -185,20 +185,20 @@
 </template>
 
 <script setup lang="ts">
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 const { store, ofertaAbreviacion } = useOfertas();
 const { store: storeAlmacen, productoIncompleto } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
   defineProps<{
     config?: { productoId?: string };
   }>(),
-  {},
+  {}
 );
 
 // datos por defecto del formulario
@@ -221,8 +221,8 @@ const estado = reactive({
   dataForm: clone(initForm),
   catalogoAncestro: null as string, // catalogo seleccionado (solo el subcat va en el form)
   //mensajes de error del formulario
-  errorNombre: '',
-  errorAbreviacion: '',
+  errorNombre: "",
+  errorAbreviacion: "",
   // producto seleccionado
   oferta: null,
 
@@ -239,10 +239,10 @@ const estado = reactive({
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
-  estado.dataForm.precioConFactura ? 'orange' : 'orange-4',
+  estado.dataForm.precioConFactura ? "orange" : "orange-4"
 );
 const colorCalculateCon = computed(() =>
-  estado.dataForm.precioSinFactura ? 'orange' : 'orange-4',
+  estado.dataForm.precioSinFactura ? "orange" : "orange-4"
 );
 
 // producto seleccionado
@@ -270,7 +270,7 @@ const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
   let options = [];
   for (const cat of store.catalogoArbol.hijas) {
-    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+    if (cat.nombre !== "CATALOGO PROVEEDORES")
       options.push({
         label: cat.nombre,
         value: cat._id,
@@ -292,16 +292,16 @@ const selectSubCatalogo = computed(() => {
       hijas.push({
         label: subcat.nombre,
         value: subcat._id,
-        class: 'option',
+        class: "option",
       });
       idsHijas.push(subcat._id);
     }
-    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+    if (cat.nombre !== "CATALOGO PROVEEDORES")
       options.push({
         label: cat.nombre,
         value: cat._id,
         disable: true,
-        class: 'title',
+        class: "title",
       });
     options = [...options, ...hijas];
   }
@@ -312,7 +312,7 @@ watch(
   () => estado.catalogoAncestro,
   () => {
     estado.dataForm.catalogo = null;
-  },
+  }
 );
 
 const selectVariedad = computed(() => {
@@ -345,31 +345,31 @@ watch(producto, (v) => {
 watch(
   [producto, () => estado.dataForm.marca, () => estado.dataForm.cantidad],
   (v) => {
-    let nombre = producto.value?.nombre ?? '';
+    let nombre = producto.value?.nombre ?? "";
     const marca = selectVariedad.value?.find(
-      (opcion) => opcion.value === estado.dataForm.marca,
+      (opcion) => opcion.value === estado.dataForm.marca
     )?.label;
-    if (marca) nombre += ' ' + marca;
-    if (estado.nombreEmpaque) nombre += ' ' + estado.nombreEmpaque;
+    if (marca) nombre += " " + marca;
+    if (estado.nombreEmpaque) nombre += " " + estado.nombreEmpaque;
     if (estado.dataForm.cantidad && producto.value) {
       nombre +=
-        ' ' +
+        " " +
         estado.dataForm.cantidad +
-        ' ' +
+        " " +
         producto.value.medida.abreviacion;
     }
     estado.dataForm.nombre = nombre;
     estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
   },
-  { immediate: true },
+  { immediate: true }
 );
 watch(
   () => estado.dataForm.marca,
   (v) => {
     if (!v) {
-      estado.nombreEmpaque = '';
+      estado.nombreEmpaque = "";
     }
-  },
+  }
 );
 
 // Prellenar el empaque con seleccionar un tipo de empaque
@@ -398,7 +398,7 @@ const formSubmit = async () => {
       descripcion: estado.dataForm.descripcion,
       ingredientes: [
         {
-          tipo: 'SIMPLE',
+          tipo: "SIMPLE",
           producto: estado.dataForm.producto,
           marca: estado.dataForm.marca,
           cantidad: estado.dataForm.cantidad,
@@ -410,7 +410,7 @@ const formSubmit = async () => {
     };
 
     const oferta = await api.crearOferta(estado.oferta, { loading: true });
-    emits('crearObjeto', oferta);
+    emits("crearObjeto", oferta);
   } catch (err) {
     errFallBack(err);
     return;

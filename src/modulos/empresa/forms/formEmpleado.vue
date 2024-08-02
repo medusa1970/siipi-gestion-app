@@ -8,13 +8,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Empleado } from '#gql';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { useEmpresa } from '~/modulos/empresa/empresa.composable';
+import type { Empleado } from "#gql";
+import { useEmpresa } from "~/modulos/empresa/empresa.composable";
 const { store } = useEmpresa();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -23,7 +22,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -35,8 +34,7 @@ const estado = reactive({
 });
 
 // Inicializaciones
-onMounted(async () => {
-});
+onMounted(async () => {});
 
 // submision del formulario
 const formSubmit = async () => {
@@ -45,18 +43,18 @@ const formSubmit = async () => {
       const empleado = await api.modificarEmpleado(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits('modificarObjeto', empleado);
+      emits("modificarObjeto", empleado);
     } else {
       const empleado = await api.crearEmpleado(estado.dataForm, {
         loading: true,
       });
-      emits('crearObjeto', empleado);
+      emits("crearObjeto", empleado);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe una empleado con este nombre';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorNombre = "Ya existe una empleado con este nombre";
       return;
     }
     errFallBack(err);

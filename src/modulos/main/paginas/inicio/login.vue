@@ -53,8 +53,8 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+const emits = defineEmits(["go"]);
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
 
 const usuario = reactiveInput();
@@ -65,10 +65,10 @@ const formSubmit = async (datos) => {
   try {
     await authStore.login(usuario.value, password.value);
   } catch (err) {
-    if (isApiNotFound(err, 'usuario')) {
-      usuario.error = 'Usuario inexistente';
-    } else if (isApiBadRequest(err, 'password')) {
-      password.error = 'Contraseña incorrecta';
+    if (isApiNotFound(err, "usuario")) {
+      usuario.error = "Usuario inexistente";
+    } else if (isApiBadRequest(err, "password")) {
+      password.error = "Contraseña incorrecta";
     } else {
       errFallBack(err);
       return;

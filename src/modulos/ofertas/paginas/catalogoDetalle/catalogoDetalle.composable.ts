@@ -1,6 +1,6 @@
-import type { Catalogo } from '#gql';
-import { useQuasar } from 'quasar';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
+import type { Catalogo } from "#gql";
+import { useQuasar } from "quasar";
+import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
 
 const init_catalogoCategoria = {
   _id: null as string,
@@ -48,7 +48,7 @@ export const useCatalogoDetalle = () => {
     });
     if (catalogoCreado) {
       obtenerCatalogoId(catalogoID);
-      NotifySucessCenter('Categoria creada correctamente');
+      NotifySucessCenter("Categoria creada correctamente");
       estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     }
     estado.modal.show_agregarCategoriaCatalogo = false;
@@ -62,10 +62,10 @@ export const useCatalogoDetalle = () => {
   const modificarCatalogoArbol = async (catalogoID: string) => {
     const catalogoModificado = await api.modificarCatalogo(
       { _id: [estado.datos_catalogoCategoria._id] },
-      { nombre: estado.datos_catalogoCategoria.nombre },
+      { nombre: estado.datos_catalogoCategoria.nombre }
     );
     if (catalogoModificado) {
-      NotifySucessCenter('Catalogo modificado correctamente');
+      NotifySucessCenter("Catalogo modificado correctamente");
       obtenerCatalogoId(catalogoID);
     }
     estado.modal.show_modificarCategoriaCatalogo = false;
@@ -75,8 +75,8 @@ export const useCatalogoDetalle = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar este catalogo${
         row.hijas?.length > 0
-          ? ', tiene ' + row.hijas.length + ' subcategorias'
-          : ''
+          ? ", tiene " + row.hijas.length + " subcategorias"
+          : ""
       }?`,
       cancel: true,
       persistent: true,
@@ -85,7 +85,7 @@ export const useCatalogoDetalle = () => {
         _id: [row._id],
       });
       if (catalogoBorrada) {
-        NotifySucessCenter('Catalogo eliminada correctamente');
+        NotifySucessCenter("Catalogo eliminada correctamente");
         obtenerCatalogoId(catalogoID);
       }
     });
@@ -97,9 +97,9 @@ export const useCatalogoDetalle = () => {
     const data = [
       {
         label: categoriaArbol.nombre,
-        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+        avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
         children: categoriaArbol.hijas.map((hija: any) => ({
-          icon: 'room_service',
+          icon: "room_service",
           label: hija.nombre,
           children: hija.hijas.map((hija2: any) => ({
             label: hija2.nombre,

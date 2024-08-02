@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
-      {{ label + (requerido ? ' *' : '') }}
+      {{ label + (requerido ? " *" : "") }}
       <q-icon
         name="help"
         color="blue"
@@ -11,7 +11,9 @@
     </h3>
     <q-select
       ref="inputRef"
-      :label="labelAdentro ? label + (requerido ? ' *' : '') : undefined"
+      :label="
+        labelAdentro ? (label ?? '') + (requerido ? ' *' : '') : undefined
+      "
       v-model="localModel"
       :hint="hint"
       :requerido="requerido"
@@ -105,10 +107,10 @@
 </template>
 
 <script setup lang="ts">
-import { inputConfig } from './input.service';
-import type { SelectOpcion } from './select.interface';
-import { validacion } from './input.validacion';
-import { ref } from 'vue';
+import { inputConfig } from "./input.service";
+import type { SelectOpcion } from "./select.interface";
+import { validacion } from "./input.validacion";
+import { ref } from "vue";
 
 /**
  * El tooltip tiene el texto de ayuda ;
@@ -125,21 +127,21 @@ const hideTooltip = (seconds = 3) =>
 
 const emits = defineEmits<{
   (
-    event: 'update', // cambió el valor del input
-    valor: string | null, // el valor
+    event: "update", // cambió el valor del input
+    valor: string | null // el valor
   ): void;
 
   (
-    event: 'error', // el input está en estado de error de validación
+    event: "error", // el input está en estado de error de validación
     errorFlag: boolean, // true si hay un error activa
     errorMensaje: string | null, // el mensaje de error
-    valor: any, // el valor que ha provocado el error
+    valor: any // el valor que ha provocado el error
   ): void;
 
   (
-    event: 'crearObjeto', // se ha creado un objeto via el boton [+]
+    event: "crearObjeto", // se ha creado un objeto via el boton [+]
     objeto: any, // el objeto creado
-    pariente?: any, // si el objeto es un subdoc de un documento, el mismo documento
+    pariente?: any // si el objeto es un subdoc de un documento, el mismo documento
   ): void;
 }>();
 
@@ -222,7 +224,7 @@ const props = withDefaults(
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
     forceWatch: null,
-  },
+  }
 );
 
 /**
@@ -245,7 +247,7 @@ let reglasValidacion = props.rules ?? [];
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === 'string' ? props.requerido : undefined,
+      typeof props.requerido === "string" ? props.requerido : undefined
     ),
     ...reglasValidacion,
   ];
@@ -280,7 +282,7 @@ onBeforeMount(async () => {
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje != null;
-  emits('error', errorFlag.value, errorMensaje.value, localModel.value);
+  emits("error", errorFlag.value, errorMensaje.value, localModel.value);
 }
 
 /**
@@ -308,7 +310,7 @@ function activarValidacion() {
 const handleChange = (valor: string | null) => {
   if (inputRef.value) inputRef.value.resetValidation();
   activarValidacion();
-  emits('update', valor);
+  emits("update", valor);
 };
 
 /**
@@ -320,10 +322,10 @@ function filterFn(valor: string, update: Function) {
     const needle = valor.toLowerCase();
     const opciones = opcionesSrc.value;
     listaOpciones.value =
-      valor === ''
+      valor === ""
         ? opciones
         : opciones?.filter(
-            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1
           );
   });
 }
@@ -337,7 +339,7 @@ const handleCrear = (objeto) => {
   localModel.value = objeto._id;
   handleChange(objeto._id);
   showDialog.value = false;
-  emits('crearObjeto', objeto);
+  emits("crearObjeto", objeto);
 };
 
 /**
@@ -348,7 +350,7 @@ const handleCrear = (objeto) => {
 const handleClear = () => {
   // activarValidacion();
   localModel.value = null;
-  emits('update', null);
+  emits("update", null);
 };
 
 /**
@@ -371,7 +373,7 @@ watch(
     // localModel.value = null;
     // handleClear();
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 /**
@@ -381,7 +383,7 @@ watch(
 
 watch(
   () => props.error,
-  () => setError(props.error),
+  () => setError(props.error)
 );
 
 /**
@@ -392,7 +394,7 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false },
+  { immediate: false }
 );
 
 /**
@@ -407,9 +409,9 @@ watch(
   () => [props.watch, props.forceWatch],
   () => {
     localModel.value = props.watch;
-    emits('update', localModel.value);
+    emits("update", localModel.value);
   },
-  { immediate: false },
+  { immediate: false }
 );
 // watch(
 //   () => props.watch,

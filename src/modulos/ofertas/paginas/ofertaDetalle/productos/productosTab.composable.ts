@@ -1,6 +1,6 @@
-import type { Producto } from '#gql';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
-import { storeOferta } from '@/modulos/ofertas/ofertas.store.js';
+import type { Producto } from "#gql";
+import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
+import { storeOferta } from "@/modulos/ofertas/ofertas.store.js";
 
 export const useProductoTab = () => {
   const store = storeOferta();
@@ -26,17 +26,17 @@ export const useProductoTab = () => {
         ingredientes: {
           reemplazar: [
             {
-              tipo: 'SIMPLE',
+              tipo: "SIMPLE",
               producto: estado.dataForm.producto._id,
               marca: estado.dataForm.marca._id,
               cantidad: estado.dataForm.cantidad,
             },
           ],
         },
-      },
+      }
     );
     if (ofertaModificada) {
-      NotifySucessCenter('Producto modificado  correctamente');
+      NotifySucessCenter("Producto modificado  correctamente");
       store.oferta = ofertaModificada;
     }
   };

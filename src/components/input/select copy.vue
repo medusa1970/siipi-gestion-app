@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
-      {{ label + (requerido ? ' *' : '') }}
+      {{ label + (requerido ? " *" : "") }}
       <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
         <q-tooltip
           v-model="tooltip"
@@ -87,9 +87,9 @@
 </template>
 
 <script setup lang="ts">
-import { inputConfig } from './input.service';
-import type { SelectOpcion } from './select.interface';
-import { ref } from 'vue';
+import { inputConfig } from "./input.service";
+import type { SelectOpcion } from "./select.interface";
+import { ref } from "vue";
 
 /**
  * Tooltip
@@ -104,13 +104,13 @@ const hideTooltip = (seconds = 3) =>
 
 const emits = defineEmits<{
   // cambió el valor del input
-  (event: 'update', valor: string | null): void;
+  (event: "update", valor: string | null): void;
   // el input está en estado de error de validación
-  (event: 'error', errorFlag: boolean, errorMensaje: string | null): void;
+  (event: "error", errorFlag: boolean, errorMensaje: string | null): void;
   // cambió el valor del input
-  (event: 'crearObjeto', objeto: any, pariente?: any): void;
+  (event: "crearObjeto", objeto: any, pariente?: any): void;
   // cleared
-  (event: 'clear'): void;
+  (event: "clear"): void;
 }>();
 
 /**
@@ -152,7 +152,7 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-  },
+  }
 );
 
 /**
@@ -166,7 +166,7 @@ const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
 const contenidoDialog = ref<object>(props.dialog); // componiente para agregar un nuevo objeto
 const showDialog = ref<boolean>(false); // mostrar o esconder el dialogo de agregar objeto
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+const requerido = props.rules.map((rule) => rule.name).includes("requerido");
 
 onBeforeMount(async () => {
   opcionesSrc.value = props.opciones;
@@ -182,7 +182,7 @@ function setError(mensaje: string | null) {
   //@ts-ignore
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje !== null;
-  emits('error', errorFlag.value, errorMensaje.value);
+  emits("error", errorFlag.value, errorMensaje.value);
 }
 
 // activar la validacíon del valor actual del input
@@ -200,7 +200,7 @@ function activarValidacion() {
 // metodo llamado cuando el valor del input cambia
 const handleChange = (valor: string | null) => {
   activarValidacion(); // activar la validacion con el valor actual del input
-  emits('update', valor); // emitir el cambio al componiente padre
+  emits("update", valor); // emitir el cambio al componiente padre
 };
 
 // al entrar un valor en el input, filtra las opciones (no-case)
@@ -209,10 +209,10 @@ function filterFn(valor: string, update: Function) {
     const needle = valor.toLowerCase();
     const opciones = opcionesSrc.value;
     listaOpciones.value =
-      valor === ''
+      valor === ""
         ? opciones
         : opciones?.filter(
-            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1
           );
   });
 }
@@ -223,13 +223,13 @@ const handleCrear = (objeto, pariente?) => {
   localModel.value = objeto._id;
   handleChange(objeto._id);
   showDialog.value = false;
-  emits('crearObjeto', objeto);
+  emits("crearObjeto", objeto);
 };
 
 // Se ha creado una nueva opcion via el boton [+]
 const handleClear = () => {
   activarValidacion();
-  emits('clear');
+  emits("clear");
 };
 
 /**
@@ -245,20 +245,20 @@ watch(
     // localModel.value = null;
     // handleClear();
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 // activar el error si llega un mensaje de error desde el componiente padre
 watch(
   () => props.error,
-  () => setError(props.error),
+  () => setError(props.error)
 );
 
 // activar la validacion desde el componiente padre
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false },
+  { immediate: false }
 );
 
 // modificar el valor desde el componiente padre
@@ -267,15 +267,15 @@ watch(
   () => {
     localModel.value = props.watch;
     activarValidacion();
-    emits('update', localModel.value);
+    emits("update", localModel.value);
   },
-  { immediate: false },
+  { immediate: false }
 );
 watch(
   () => props.watch,
   () => {
-    emits('update', localModel.value);
+    emits("update", localModel.value);
   },
-  { once: true, immediate: true },
+  { once: true, immediate: true }
 );
 </script>

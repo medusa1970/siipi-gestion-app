@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Producto } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Producto } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // tipado
@@ -57,7 +57,7 @@ export type Lote = {
 };
 
 // definicion de los emits
-const emits = defineEmits(['crearLote']);
+const emits = defineEmits(["crearLote"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -67,7 +67,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // definicion del estado
@@ -106,7 +106,7 @@ onMounted(async () => {
 // submision del formulario
 const formSubmit = async () => {
   try {
-    emits('crearLote', dataForm);
+    emits("crearLote", dataForm);
   } catch (err) {
     errFallBack(err);
     return;

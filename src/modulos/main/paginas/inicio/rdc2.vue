@@ -28,9 +28,9 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+const emits = defineEmits(["go"]);
+import { apiAuth } from "~/modulos/main/API/auth.api";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -50,9 +50,9 @@ const formSubmit = async (datos) => {
 
   if (codigoOk) {
     authStore.cookie.rdcToken = codigo.value;
-    emits('go', 'rdc3');
+    emits("go", "rdc3");
   } else {
-    codigo.error = 'token inválido';
+    codigo.error = "token inválido";
   }
 };
 </script>

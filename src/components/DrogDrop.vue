@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
 
 defineProps({
   lista: {
@@ -70,13 +70,13 @@ defineProps({
   itemKey: String,
 });
 
-const emit = defineEmits(['delete', 'edit']);
+const emit = defineEmits(["delete", "edit"]);
 
 const eliminar = (element) => {
-  emit('delete', element);
+  emit("delete", element);
 };
 
 const editar = (element) => {
-  emit('edit', element);
+  emit("edit", element);
 };
 </script>

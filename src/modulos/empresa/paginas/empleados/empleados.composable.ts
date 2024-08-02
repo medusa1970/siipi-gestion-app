@@ -1,8 +1,18 @@
 import type { Empleado } from '#gql';
 import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosEmpleados = ['ADQUISICION', 'ALMACEN'];
+
+/**
+ * Composable para empresa/empleados
+ */
 export const useEmpleados = () => {
-  const { store } = useEmpresa();
+  const { store, authStore, router } = useEmpresa();
+  if (!authStore.autorizar(permisosEmpleados)) goTo(router, '/noAutorizado');
+
   const estado = reactive({
     // lista de las empleados a recuperar del store (promisa resuelta)
     empleados: null as Empleado[],
@@ -55,6 +65,8 @@ export const useEmpleados = () => {
   return {
     estado,
     store,
+    authStore,
+    router,
     rowsTabla,
     handleEmpleadoCreada,
     handleEmpleadoModificada,

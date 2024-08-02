@@ -11,3 +11,17 @@ varios
 - borrar medidas si no usada
 
 todos los busquedores con stringify
+actualizar catalogos al crear nuevo, el select no se actualiza
+bug puntos
+vencimiento permiso vencido ?
+gqltoken universel
+bug backend image
+cerrar sesion al usuario cuando se le cambia de permisos
+
+por unidad sin decimales + lo que dijo Vania
+recargar marcas+empaques al crear oferta (indexdb ?)
+bug oferta "sin marca"
+bug oferta imagen no aparece
+no hay descripcion en expand
+oferta / producto marca object object
+no se puede borrar ofertas

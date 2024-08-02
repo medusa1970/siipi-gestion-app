@@ -175,14 +175,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Servicio } from '#gql';
-import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
-import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Servicio } from "#gql";
+import formVariedad from "@/modulos/almacen/forms/formVariedad.vue";
+import formProveedor from "@/modulos/almacen/forms/formProveedor.vue";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -192,7 +192,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -260,9 +260,9 @@ const formSubmit = async () => {
         },
       });
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         proveedor.servicios.find((s) => s._id === props.edicion._id),
-        proveedor,
+        proveedor
       );
     }
     // Modo creacion
@@ -272,7 +272,7 @@ const formSubmit = async () => {
           agregar: data,
         },
       });
-      emits('crearObjeto', ultimo(proveedor.servicios), proveedor);
+      emits("crearObjeto", ultimo(proveedor.servicios), proveedor);
     }
   } catch (err) {
     errFallBack(err);
@@ -287,7 +287,7 @@ const addPpmSubmit = () => {
   estado.showFormPorMayor = false;
   if (ppmIndexEdit.value) {
     estado.dataForm.preciosPorMayor[ppmIndexEdit.value] = clone(
-      estado.dataFormPorMayor,
+      estado.dataFormPorMayor
     );
     ppmIndexEdit.value = null;
   } else {

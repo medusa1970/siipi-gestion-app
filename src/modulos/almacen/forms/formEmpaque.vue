@@ -61,15 +61,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Empaque } from '#gql';
-import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-import formTipoEmpaque from '@/modulos/almacen/forms/formTipoEmpaque.vue';
+import type { Empaque } from "#gql";
+import formVariedad from "@/modulos/almacen/forms/formVariedad.vue";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import formTipoEmpaque from "@/modulos/almacen/forms/formTipoEmpaque.vue";
 
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -78,7 +78,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -92,9 +92,9 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: '',
-  errorAbreviacion: '',
-  resetEmpaque: '',
+  errorNombre: "",
+  errorAbreviacion: "",
+  resetEmpaque: "",
 });
 
 // opciones
@@ -129,9 +129,9 @@ const formSubmit = async () => {
         },
       });
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         producto.empaques.find((v) => v._id === props.edicion?._id),
-        producto,
+        producto
       );
     } else {
       const producto = await api.modificarProducto_basico(store.producto._id, {
@@ -139,16 +139,16 @@ const formSubmit = async () => {
           agregar: [estado.dataForm],
         },
       });
-      emits('crearObjeto', ultimo(producto.empaques), producto);
+      emits("crearObjeto", ultimo(producto.empaques), producto);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
+    if (isApiBadRequest(err, "duplicado")) {
       for (const campo of err.detalle.campos) {
         const [path] = campo;
-        if (ultimo(path.split('.')) === 'nombre') {
-          estado.errorNombre = 'Este nombre ya esta registrado.';
-        } else if (ultimo(path.split('.')) === 'abreviacion') {
-          estado.errorAbreviacion = 'Esta abreviacion ya esta registrada.';
+        if (ultimo(path.split(".")) === "nombre") {
+          estado.errorNombre = "Este nombre ya esta registrado.";
+        } else if (ultimo(path.split(".")) === "abreviacion") {
+          estado.errorAbreviacion = "Esta abreviacion ya esta registrada.";
         }
       }
       return;
@@ -164,12 +164,12 @@ const formSubmit = async () => {
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async (empaqueId) => {
   const empaque = store.producto.medida.tipoEmpaques.find(
-    (tipoE) => tipoE._id === empaqueId,
+    (tipoE) => tipoE._id === empaqueId
   );
   if (!empaque) {
     return false;
   }
-  estado.resetEmpaque = 'Eligido ' + (empaque.nombre ?? '');
+  estado.resetEmpaque = "Eligido " + (empaque.nombre ?? "");
   estado.dataForm.nombre = empaque.nombre;
   estado.dataForm.abreviacion = empaque.abreviacion;
   estado.dataForm.cantidad = empaque.cantidad;

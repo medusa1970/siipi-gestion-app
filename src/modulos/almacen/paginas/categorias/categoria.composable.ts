@@ -1,8 +1,8 @@
-import { useQuasar } from 'quasar';
+import { useQuasar } from "quasar";
 
 const init_categoria = {
   _id: null as string,
-  nombre: null as string
+  nombre: null as string,
 };
 
 export const useCategoria = () => {
@@ -13,31 +13,31 @@ export const useCategoria = () => {
 
     modal: {
       show_agregarCategoria: false,
-      show_modificarCategoria: false
+      show_modificarCategoria: false,
     },
 
-    datos_categoria: clone(init_categoria)
+    datos_categoria: clone(init_categoria),
   });
 
   // BUSCAR
   const buscarCategorias = async () => {
     const { categoriaArbol } = await GqlCategoriaArbol({
-      busqueda: { nombre: ['CATEGORIA RAIZ'] }
+      busqueda: { nombre: ["CATEGORIA RAIZ"] },
     });
     estado.categorias = [categoriaArbol];
 
     const data = [
       {
         label: categoriaArbol.nombre,
-        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+        avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
         children: categoriaArbol.hijas.map((hija: any) => ({
-          icon: 'room_service',
+          icon: "room_service",
           label: hija.nombre,
           children: hija.hijas.map((hija2: any) => ({
-            label: hija2.nombre
-          }))
-        }))
-      }
+            label: hija2.nombre,
+          })),
+        })),
+      },
     ]; //@ts-ignore
     // console.log(data);
   };
@@ -53,14 +53,14 @@ export const useCategoria = () => {
     const categoriaCreada = await api.crearCategoria(
       {
         nombre: estado.datos_categoria.nombre,
-        pariente: estado.datos_categoria._id
+        pariente: estado.datos_categoria._id,
       },
       { populate: true },
       { loading: true }
     );
     if (categoriaCreada) {
       await buscarCategorias();
-      NotifySucessCenter('Categoria creada correctamente');
+      NotifySucessCenter("Categoria creada correctamente");
       estado.datos_categoria = clone(init_categoria);
     }
     estado.modal.show_agregarCategoria = false;
@@ -82,7 +82,7 @@ export const useCategoria = () => {
     );
     if (categoriaModificada) {
       await buscarCategorias();
-      NotifySucessCenter('Categoria modificada correctamente');
+      NotifySucessCenter("Categoria modificada correctamente");
 
       //limpiar campos
       estado.datos_categoria = clone(init_categoria);
@@ -96,16 +96,16 @@ export const useCategoria = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar esta categoria${
         row.hijas?.length > 0
-          ? ', tiene ' + row.hijas.length + ' subcategorias'
-          : ''
+          ? ", tiene " + row.hijas.length + " subcategorias"
+          : ""
       }?`,
       cancel: true,
-      persistent: true
+      persistent: true,
     }).onOk(async () => {
       const categoriaBorrada = await api.borrarCategoria({ _id: row._id });
 
       if (categoriaBorrada) {
-        NotifySucessCenter('Categoria eliminada correctamente');
+        NotifySucessCenter("Categoria eliminada correctamente");
         await buscarCategorias();
       }
     });
@@ -118,6 +118,6 @@ export const useCategoria = () => {
     crearCategoriaArbol,
     modalModificarCategoria,
     modificarCategoriaArbol,
-    borrarCategoriaArbol
+    borrarCategoriaArbol,
   };
 };

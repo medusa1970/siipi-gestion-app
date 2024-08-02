@@ -1,4 +1,4 @@
-import { storeOferta } from './ofertas.store';
+import { storeOferta } from "./ofertas.store";
 
 export const useOfertas = () => {
   const store = storeOferta();
@@ -7,7 +7,7 @@ export const useOfertas = () => {
   });
 
   const ofertaAbreviacion = (nombre: string): string => {
-    return nombre.substring(0, 15) + '...';
+    return nombre.substring(0, 15) + "...";
   };
 
   // exports

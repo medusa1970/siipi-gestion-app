@@ -57,25 +57,25 @@
 
 <script setup>
 definePageMeta({
-  layout: 'inicio',
+  layout: "inicio",
   // middleware: ['auth'],
 });
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import login from './login.vue';
-import negocios from './negocios.vue';
-import rdc1 from './rdc1.vue';
-import rdc2 from './rdc2.vue';
-import rdc3 from './rdc3.vue';
-import registro1 from './registro1.vue';
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import login from "./login.vue";
+import negocios from "./negocios.vue";
+import rdc1 from "./rdc1.vue";
+import rdc2 from "./rdc2.vue";
+import rdc3 from "./rdc3.vue";
+import registro1 from "./registro1.vue";
 const authStore = useAuthStore();
 
 /**
  * refs
  */
 
-const page = ref('login');
+const page = ref("login");
 if (authStore.getRecienDesconectado()) {
-  page.value = 'login'; // o 'byebye'
+  page.value = "login"; // o 'byebye'
 }
 
 /**

@@ -25,7 +25,10 @@ query buscarEntidades_empleados(
         nombre
       }
       permisos {
+        _id
         _creado
+        _borrado
+
         permiso
         vencimiento
       }
@@ -59,7 +62,9 @@ mutation crearEntidades_empleados(
         nombre
       }
       permisos {
+        _id
         _creado
+        _borrado
         permiso
         vencimiento
       }
@@ -94,6 +99,7 @@ mutation modificarEntidades_empleados(
         nombre
       }
       permisos {
+        _id
         _creado
         permiso
         vencimiento
@@ -128,6 +134,7 @@ mutation borrarEntidades_empleados(
         nombre
       }
       permisos {
+        _id
         _creado
         permiso
         vencimiento

@@ -1,7 +1,7 @@
-import { storeOferta } from '@/modulos/ofertas/ofertas.store';
-import { useQuasar } from 'quasar';
-import { apiOfertas } from '@/modulos/ofertas/API/ofertas.api';
-import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { storeOferta } from "@/modulos/ofertas/ofertas.store";
+import { useQuasar } from "quasar";
+import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
+import { useAuthStore } from "@/modulos/main/useAuthStore";
 
 export const useAccionesTab = () => {
   /** DECLARACIONES */
@@ -11,14 +11,14 @@ export const useAccionesTab = () => {
 
   /** REACTIVOS */
   const estado = reactive({
-    motivoEliminacion: '' as string,
+    motivoEliminacion: "" as string,
   });
 
   /** FUNCIONES */
   const borrarOferta = () => {
     $q.dialog({
       title: `Eliminar ${store.oferta.nombre}`,
-      message: 'No se puede deshacer.',
+      message: "No se puede deshacer.",
       cancel: true,
       persistent: true,
     }).onOk(async () => {
@@ -26,11 +26,11 @@ export const useAccionesTab = () => {
         .borrarOfertaConMotivo(
           store.oferta._id,
           estado.motivoEliminacion,
-          useGqlToken(authStore.token),
+          useGqlToken(authStore.token)
         )
         .then((res) => {
-          estado.motivoEliminacion = '';
-          NotifySucess('Oferta eliminado correctamente');
+          estado.motivoEliminacion = "";
+          NotifySucess("Oferta eliminado correctamente");
           // await act;
         });
     });

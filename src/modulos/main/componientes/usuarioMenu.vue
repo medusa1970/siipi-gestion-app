@@ -1,5 +1,5 @@
 <template>
-  <q-btn color="green">
+  <q-btn color="green px-5" dense rounded>
     {{ authStore.getUsuario?.nombre || 'USUARIO' }}
     <q-menu
       transition-show="rotate"

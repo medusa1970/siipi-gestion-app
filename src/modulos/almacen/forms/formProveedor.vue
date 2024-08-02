@@ -39,13 +39,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Entidad } from '#gql';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Entidad } from "#gql";
+import { UrlToBase64Image } from "~/components/input/input.service";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -54,12 +54,12 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
 const initForm = {
-  tipo: 'PROVEEDOR',
+  tipo: "PROVEEDOR",
   nombre: props.edicion?.nombre,
   descripcion: props.edicion?.descripcion,
   imagen: null,
@@ -68,7 +68,7 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: '',
+  errorNombre: "",
   imagenPreview: null,
 });
 
@@ -95,20 +95,20 @@ const formSubmit = async () => {
       const proveedor = await api.modificarEntidad_basico(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits('modificarObjeto', proveedor);
+      emits("modificarObjeto", proveedor);
     }
     // Modo creacion
     else {
       const proveedor = await api.crearEntidad_basico(estado.dataForm, {
         loading: true,
       });
-      emits('crearObjeto', proveedor);
+      emits("crearObjeto", proveedor);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe un proveedor con este nombre';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorNombre = "Ya existe un proveedor con este nombre";
       return;
     }
     errFallBack(err);

@@ -5,10 +5,11 @@
       { label: 'catalogos', to: 'catalogos' },
       {
         label: 'detalle',
-        to: 'catalogos-id'
-      }
+        to: 'catalogos-id',
+      },
     ]"
-    titulo="Edicion de catalogo" />
+    titulo="Edicion de catalogo"
+  />
   <!-- TREE
   <h1 class="text-lg font-bold text-center">
     {{
@@ -22,13 +23,15 @@
     <q-list
       class="rounded-borders w-[350px]"
       v-for="categoria in estado.catalogoSeleccionado"
-      :key="categoria._id">
+      :key="categoria._id"
+    >
       <q-expansion-item
         expand-separator
         icon="category"
         :label="categoria.nombre"
         default-opened
-        dense>
+        dense
+      >
         <template v-slot:header>
           <q-item-section>
             <h1>{{ categoria?.nombre }}</h1>
@@ -40,21 +43,24 @@
                 name="add"
                 size="17px"
                 class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                @click.stop="modalCrearCatalogoCategoria(categoria)" />
+                @click.stop="modalCrearCatalogoCategoria(categoria)"
+              />
             </div>
           </q-item-section>
         </template>
         <q-list
           v-for="(item, index) in categoria.hijas"
           :key="index"
-          class="border-b-[1px] border-gray-300">
+          class="border-b-[1px] border-gray-300"
+        >
           <q-expansion-item
             :header-inset-level="0.5"
             switch-toggle-side
             dense-toggle
             :label="item.nombre"
             default-opened
-            dense>
+            dense
+          >
             <template v-slot:header>
               <q-item-section> {{ item.nombre }} </q-item-section>
 
@@ -64,20 +70,23 @@
                     name="add"
                     size="17px"
                     class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                    @click.stop="modalCrearCatalogoCategoria(item)" />
+                    @click.stop="modalCrearCatalogoCategoria(item)"
+                  />
                   <q-icon
                     name="edit"
                     color="primary"
                     size="17px"
                     class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                    @click.stop="modalModificarCatalogoCategoria(item)" />
+                    @click.stop="modalModificarCatalogoCategoria(item)"
+                  />
                   <q-icon
                     v-if="item.hijas.length == 0"
                     name="delete"
                     color="red"
                     size="17px"
                     class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                    @click.stop="borrarCatalogoArbol(item, route.params.id)" />
+                    @click.stop="borrarCatalogoArbol(item, route.params.id)"
+                  />
                 </div>
               </q-item-section>
             </template>
@@ -90,7 +99,8 @@
                 :content-inset-level="2"
                 expand-separator
                 active-class="text-blue"
-                dense>
+                dense
+              >
                 <template v-slot:header>
                   <q-item-section> {{ item2.nombre }} </q-item-section>
 
@@ -101,7 +111,8 @@
                         color="primary"
                         size="17px"
                         class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                        @click.stop="modalModificarCatalogoCategoria(item2)" />
+                        @click.stop="modalModificarCatalogoCategoria(item2)"
+                      />
                       <q-icon
                         v-if="item2.ofertas.length == 0"
                         name="delete"
@@ -110,7 +121,8 @@
                         class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
                         @click.stop="
                           borrarCatalogoArbol(item2, route.params.id)
-                        " />
+                        "
+                      />
                     </div>
                   </q-item-section>
                 </template>
@@ -133,7 +145,8 @@
           round
           dense
           v-close-popup
-          class="border-2 border-red-500" />
+          class="border-2 border-red-500"
+        />
       </div>
       <!-- <q-space /> -->
 
@@ -141,7 +154,8 @@
         <q-input
           v-model="estado.datos_catalogoCategoria.nombre"
           label="Nombre del catalogo"
-          dense />
+          dense
+        />
       </div>
       <div class="flex row justify-center">
         <q-btn
@@ -152,7 +166,8 @@
           label="Guardar"
           color="secondary"
           type="submit"
-          @click="crearCatalogoArbol(route.params.id)"></q-btn>
+          @click="crearCatalogoArbol(route.params.id)"
+        ></q-btn>
       </div>
     </q-card>
   </q-dialog>
@@ -168,7 +183,8 @@
           round
           dense
           v-close-popup
-          class="border-2 border-red-500" />
+          class="border-2 border-red-500"
+        />
       </div>
       <!-- <q-space /> -->
 
@@ -176,7 +192,8 @@
         <q-input
           v-model="estado.datos_catalogoCategoria.nombre"
           label="Nombre del catalogo"
-          dense />
+          dense
+        />
       </div>
       <div class="flex row justify-center">
         <q-btn
@@ -187,7 +204,8 @@
           label="Guardar"
           color="secondary"
           type="submit"
-          @click="modificarCatalogoArbol(route.params.id)"></q-btn>
+          @click="modificarCatalogoArbol(route.params.id)"
+        ></q-btn>
       </div>
     </q-card>
   </q-dialog>
@@ -199,7 +217,7 @@ import { useCatalogos } from './catalogos.composable';
 import { useRoute } from 'vue-router';
 
 definePageMeta({
-  layout: 'cathering'
+  layout: 'cathering',
 });
 
 const {
@@ -209,7 +227,7 @@ const {
   crearCatalogoArbol,
   modalModificarCatalogoCategoria,
   modificarCatalogoArbol,
-  borrarCatalogoArbol
+  borrarCatalogoArbol,
 } = useCatalogos();
 
 const route = useRoute();

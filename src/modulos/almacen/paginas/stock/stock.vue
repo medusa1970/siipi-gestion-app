@@ -180,14 +180,14 @@
       <div>
         {{
           !row.producto.puedeVencer
-            ? 'No vence'
+            ? "No vence"
             : row.vencimientoAvisoSuave === 0
-            ? 'Sin alerta'
+            ? "Sin alerta"
             : row.diasHastaProximoVencimiento < 0
             ? `Vencido desde ${-row.diasHastaProximoVencimiento} días`
             : row.diasHastaProximoVencimiento > 0
             ? `Vence en ${row.diasHastaProximoVencimiento} días`
-            : 'Vence hoy'
+            : "Vence hoy"
         }}
       </div>
     </template>
@@ -211,7 +211,7 @@
             ? `Toca en ${row.diasHastaProximoInventario} días`
             : row.diasHastaProximoInventario === 1
             ? `Toca mañana`
-            : 'Toca hoy'
+            : "Toca hoy"
         }}
       </div>
       <div v-else>Sin limite de tiempo</div>
@@ -262,7 +262,7 @@
         <span v-else-if="row.diasDesdeUltimoInventario === 0">hoy</span>
         <span v-else
           >hace {{ row.diasDesdeUltimoInventario }} día{{
-            row.diasInventario > 1 ? 's' : ''
+            row.diasInventario > 1 ? "s" : ""
           }}</span
         >
       </p>
@@ -318,15 +318,15 @@
 
 <script setup lang="ts">
 // layout
-definePageMeta({ layout: 'cathering' });
+definePageMeta({ layout: "cathering" });
 // import composable, store & estado
-import { useStock } from './stock.composable';
+import { useStock } from "./stock.composable";
 const composable = useStock();
 const { estado, store } = composable;
 // Otros imports
-import formInventario from '@/modulos/almacen/forms/formInventario.vue';
-import ProductoImage from '@/assets/img/noHayProducto.png';
-import { useRouter } from 'vue-router';
+import formInventario from "@/modulos/almacen/forms/formInventario.vue";
+import ProductoImage from "@/assets/img/noHayProducto.png";
+import { useRouter } from "vue-router";
 const router = useRouter();
 // producto seleccionado al hacer click en una accion
 const producto = ref(null);

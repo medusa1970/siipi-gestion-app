@@ -1,15 +1,15 @@
 export const menuListCathering = [
   {
-    icon: 'bi-box',
-    label: 'Logistica',
+    icon: "bi-box",
+    label: "Logistica",
     subMenu: [
       {
-        label: 'Productos',
-        to: '/cathering/productos',
+        label: "Productos",
+        to: "/cathering/productos",
       },
       {
-        label: 'Categorias de productos ',
-        to: '/cathering/categorias',
+        label: "Categorias de productos ",
+        to: "/cathering/categorias",
       },
       // {
       //   label: 'Proveedores',
@@ -40,16 +40,16 @@ export const menuListCathering = [
   //   ],
   // },
   {
-    icon: 'sell',
-    label: 'Venta',
+    icon: "sell",
+    label: "Venta",
     subMenu: [
       {
-        label: 'Ofertas',
-        to: '/cathering/ofertas',
+        label: "Ofertas",
+        to: "/cathering/ofertas",
       },
       {
-        label: 'Catalogos de oferta',
-        to: '/cathering/catalogos',
+        label: "Catalogos de oferta",
+        to: "/cathering/catalogos",
       },
     ],
   },
@@ -79,16 +79,16 @@ export const menuListCathering = [
   // },
 
   {
-    icon: 'people',
-    label: 'Administracion',
+    icon: "people",
+    label: "Administracion",
     subMenu: [
       // {
       //   label: 'Datos de la empresa',
       //   to: '/cathering',
       // },
       {
-        label: 'Empleados',
-        to: '/cathering/empleados',
+        label: "Empleados",
+        to: "/cathering/empleados",
       },
     ],
   },
@@ -106,18 +106,18 @@ export const menuListCathering = [
 
 export const menuListPunto = [
   {
-    icon: 'warehouse',
-    label: 'Almacen',
+    icon: "warehouse",
+    label: "Almacen",
     subMenu: [
       {
-        label: 'Stock ',
-        to: '/cathering/stock',
+        label: "Stock ",
+        to: "/cathering/stock",
       },
       {
-        label: 'Adquisicion',
+        label: "Adquisicion",
       },
       {
-        label: 'Inventario',
+        label: "Inventario",
       },
       // {
       //   label: 'Despacho',
@@ -126,16 +126,16 @@ export const menuListPunto = [
     ],
   },
   {
-    icon: 'description',
-    label: 'Pedidos',
+    icon: "description",
+    label: "Pedidos",
     subMenu: [
       {
-        label: 'Realizar pedido',
-        to: '/pedidos/realizar-pedido',
+        label: "Realizar pedido",
+        to: "/pedidos/realizar-pedido",
       },
       {
-        label: 'ver pedidos',
-        to: '/pedidos/listaPedidos',
+        label: "ver pedidos",
+        to: "/pedidos/listaPedidos",
       },
     ],
   },
@@ -165,16 +165,16 @@ export const menuListPunto = [
   // },
 
   {
-    icon: 'people',
-    label: 'Administracion',
+    icon: "people",
+    label: "Administracion",
     subMenu: [
       // {
       //   label: 'Datos de la empresa',
       //   to: '/cathering',
       // },
       {
-        label: 'Empleados',
-        to: '/cathering/empleados',
+        label: "Empleados",
+        to: "/cathering/empleados",
       },
     ],
   },

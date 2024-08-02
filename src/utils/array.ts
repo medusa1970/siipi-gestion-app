@@ -8,7 +8,7 @@ export const primero = (array: Array<any>) => {
 
 export function quitarDuplicados(
   coleccion: Array<any>,
-  compare: Function = null,
+  compare: Function = null
 ) {
   if (compare !== null) {
     return coleccion.filter((objeto, index) => {

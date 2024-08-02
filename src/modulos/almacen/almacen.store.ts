@@ -1,7 +1,7 @@
-import type { Categoria, Entidad, Marca, Medida, Producto } from '#gql';
-import localforage from 'localforage';
-import { apiAlmacen } from '@/modulos/almacen/API/almacen.api';
-import { useAuthStore } from '../main/useAuthStore';
+import type { Categoria, Entidad, Marca, Medida, Producto } from "#gql";
+import localforage from "localforage";
+import { apiAlmacen } from "@/modulos/almacen/API/almacen.api";
+import { useAuthStore } from "../main/useAuthStore";
 
 interface storeProps {
   productos: Producto[] | null;
@@ -18,7 +18,7 @@ interface storeProps {
   entidad: Entidad | null; // entidad corriente
 }
 
-export const storeAlmacen = defineStore('almacen', {
+export const storeAlmacen = defineStore("almacen", {
   state: (): storeProps => ({
     productos: null,
     marcas: null,
@@ -40,16 +40,16 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
-      this.productos = (await localforage.getItem('productos')) as Producto[];
+      this.productos = (await localforage.getItem("productos")) as Producto[];
       if (!this.productos || actualizarDB) {
         try {
           this.productos = await api.buscarProductos_basico(
             {},
-            { sort: '-_modificado -_creado' },
+            { sort: "-_modificado -_creado" }
           );
           await localforage.setItem(
-            'productos',
-            JSON.parse(JSON.stringify(this.productos)),
+            "productos",
+            JSON.parse(JSON.stringify(this.productos))
           );
         } catch (err) {
           errFallBack(err);
@@ -103,7 +103,7 @@ export const storeAlmacen = defineStore('almacen', {
     async getMarcas(): Promise<Marca[]> {
       if (this.marcas == null) {
         try {
-          this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
+          this.marcas = await api.buscarMarcas({}, { sort: "nombre" });
           return this.marcas;
         } catch (err) {
           errFallBack(err);
@@ -124,8 +124,8 @@ export const storeAlmacen = defineStore('almacen', {
       if (this.proveedores == null) {
         try {
           this.proveedores = await api.buscarEntidades_basico(
-            { tipo: ['PROVEEDOR'] },
-            { sort: 'nombre' },
+            { tipo: ["PROVEEDOR"] },
+            { sort: "nombre" }
           );
           return this.proveedores;
         } catch (err) {
@@ -167,7 +167,7 @@ export const storeAlmacen = defineStore('almacen', {
       if (this.entidad == null) {
         try {
           this.entidad = await api.buscarEntidad_bloques(
-            useAuthStore().negocio._id,
+            useAuthStore().negocio._id
           );
           return this.entidad;
         } catch (err) {
@@ -184,6 +184,6 @@ export const storeAlmacen = defineStore('almacen', {
   },
 
   persist: {
-    paths: ['producto', 'marcas', 'medidas', 'proveedores'],
+    paths: ["producto", "marcas", "medidas", "proveedores"],
   },
 });

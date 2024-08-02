@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 v-if="!labelAdentro">
-      {{ label + (requerido ? ' *' : '') }}
+      {{ label + (requerido ? " *" : "") }}
 
       <q-icon name="help" color="blue" size="20px" @click="tooltip = !tooltip">
         <q-tooltip
@@ -73,8 +73,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { inputConfig } from './input.service';
+import { ref } from "vue";
+import { inputConfig } from "./input.service";
 
 /**
  * Tooltip
@@ -90,16 +90,16 @@ const hideTooltip = (seconds = 3) =>
 const emits = defineEmits<{
   (
     // cambió el valor del input
-    event: 'update',
+    event: "update",
     data: string | null,
     mimetype: string | null,
-    isPreview: boolean,
+    isPreview: boolean
   ): void;
   (
     // el input está en estado de error de validación
-    event: 'error',
+    event: "error",
     errorFlag: boolean,
-    errorMensaje: string | null,
+    errorMensaje: string | null
   ): void;
 }>();
 
@@ -132,13 +132,13 @@ const props = withDefaults(
   {
     clearable: true,
     rules: [] as Function[],
-    maxSizeKb: '500',
+    maxSizeKb: "500",
     filled: inputConfig.filled,
     dense: inputConfig.dense,
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-  },
+  }
 );
 
 /**
@@ -149,7 +149,7 @@ const archivo = ref<File | null>(null); // contenido del input
 const imagen = ref<string | null>(null); // imagen que se muestra a la pantalla
 const errorFlag = ref<boolean>(false); // si se tiene que mostrar o no el error
 const errorMensaje = ref<string>(props.error); // el mensaje de error
-const requerido = props.rules.map((rule) => rule.name).includes('requerido');
+const requerido = props.rules.map((rule) => rule.name).includes("requerido");
 
 // bug
 onBeforeMount(async () => {});
@@ -163,7 +163,7 @@ function setError(mensaje: string | null) {
   //@ts-ignore
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje !== null;
-  emits('error', errorFlag.value, errorMensaje.value);
+  emits("error", errorFlag.value, errorMensaje.value);
 }
 
 // activar la validacíon del valor actual del input
@@ -184,12 +184,12 @@ const handleChange = async (file: File | null) => {
   if (file instanceof File) {
     archivo.value = file;
     const lector = new FileReader();
-    lector.addEventListener('load', () => {
+    lector.addEventListener("load", () => {
       imagen.value = lector.result as string;
-      emits('update', imagen.value, file.type, false);
+      emits("update", imagen.value, file.type, false);
     });
-    lector.addEventListener('error', () => {
-      setError('Hubo un problema al cargar la imagen');
+    lector.addEventListener("error", () => {
+      setError("Hubo un problema al cargar la imagen");
     });
     lector.readAsDataURL(file);
   }
@@ -206,15 +206,15 @@ const handleChange = async (file: File | null) => {
 // hubo un error de tamaño o de extensión de la imagen
 const handleReject = ([event]: [any]) => {
   errorFlag.value = true;
-  if (event.failedPropValidation == 'max-total-size') {
+  if (event.failedPropValidation == "max-total-size") {
     errorMensaje.value =
-      'La imagen debe pesar menos de ' + Number(props.maxSizeKb) + 'KB';
-  } else if (event.failedPropValidation == 'accept') {
-    errorMensaje.value = 'Este archivo no es una imagen';
+      "La imagen debe pesar menos de " + Number(props.maxSizeKb) + "KB";
+  } else if (event.failedPropValidation == "accept") {
+    errorMensaje.value = "Este archivo no es una imagen";
   } else {
-    errorMensaje.value = 'Algo fue mal, intente de nuevo';
+    errorMensaje.value = "Algo fue mal, intente de nuevo";
   }
-  emits('error', errorFlag.value, errorMensaje.value);
+  emits("error", errorFlag.value, errorMensaje.value);
 };
 
 /**
@@ -225,7 +225,7 @@ const handleReject = ([event]: [any]) => {
 const handleClear = () => {
   archivo.value = null;
   imagen.value = null;
-  emits('update', null, null, false);
+  emits("update", null, null, false);
 };
 
 // reiniciar el valor inicial del input
@@ -233,17 +233,17 @@ const handleRefresh = () => {
   // valor por defecto
   if (props.dataInicial) {
     imagen.value = props.dataInicial;
-    archivo.value = new File([props.dataInicial], 'foo.bar', {
-      type: 'image/png',
+    archivo.value = new File([props.dataInicial], "foo.bar", {
+      type: "image/png",
     });
-    emits('update', props.dataInicial, 'image/png', false);
+    emits("update", props.dataInicial, "image/png", false);
   }
 
   // valor por defecto
   else if (props.dataPreview) {
     imagen.value = props.dataPreview;
     archivo.value = null;
-    emits('update', null, null, true);
+    emits("update", null, null, true);
   }
 
   // nada
@@ -257,14 +257,14 @@ const handleRefresh = () => {
 // activar el error si llega un mensaje de error desde el componiente padre
 watch(
   () => props.error,
-  () => setError(props.error),
+  () => setError(props.error)
 );
 
 // activar la validacion desde el componiente padre
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false },
+  { immediate: false }
 );
 
 // modificar el valor desde el componiente padre
@@ -274,7 +274,7 @@ watch(
     archivo.value = props.watch;
     activarValidacion();
   },
-  { immediate: false },
+  { immediate: false }
 );
 
 /**

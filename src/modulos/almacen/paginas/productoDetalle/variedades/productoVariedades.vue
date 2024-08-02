@@ -114,9 +114,9 @@
 </template>
 
 <script setup lang="ts">
-import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
-import { useProductoVariedades } from './productoVariedades.composable';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import formVariedad from "@/modulos/almacen/forms/formVariedad.vue";
+import { useProductoVariedades } from "./productoVariedades.composable";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { $socket } = useNuxtApp();
 const {
   estado,
@@ -133,13 +133,11 @@ const rowsTabla = computed(() => {
   let filtered = store.producto?.variedades;
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
     filtered = filtered.filter((variedad) => {
       return regex.test(
         variedad.marca.nombre +
-          variedad.marca.nombre
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, ''),
+          variedad.marca.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       );
     });
   }

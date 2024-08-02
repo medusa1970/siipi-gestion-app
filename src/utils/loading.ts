@@ -1,4 +1,4 @@
-import { Loading } from 'quasar';
+import { Loading } from "quasar";
 
 export const loading = function (code: () => any): any {
   let res;

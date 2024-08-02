@@ -35,11 +35,11 @@ defineProps({
   title2: String,
   icon: {
     type: String,
-    default: 'folder',
+    default: "folder",
   },
   colorIcon: {
     type: String,
-    default: 'primary',
+    default: "primary",
   },
   href: String,
 });

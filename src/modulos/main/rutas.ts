@@ -1,5 +1,20 @@
 export default [
   {
+    name: '404',
+    path: '/404',
+    file: '@/modulos/main/paginas/error/404.vue',
+  },
+  {
+    name: 'noAutorizado',
+    path: '/noAutorizado',
+    file: '@/modulos/main/paginas/error/noAutorizado.vue',
+  },
+  {
+    name: 'usuarioBloqueado',
+    path: '/bloqueado',
+    file: '@/modulos/main/paginas/error/bloqueado.vue',
+  },
+  {
     name: 'inicio',
     path: '/',
     file: '@/modulos/main/paginas/inicio/inicio.vue',

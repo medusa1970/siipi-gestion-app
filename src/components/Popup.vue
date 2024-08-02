@@ -28,6 +28,6 @@ const props = withDefaults(
   defineProps<{
     titulo: string;
   }>(),
-  {},
+  {}
 );
 </script>

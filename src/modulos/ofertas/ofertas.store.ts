@@ -3,10 +3,10 @@
  * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
  */
 
-import type { Catalogo, Oferta } from '#gql';
-import localforage from 'localforage';
-import { defineStore } from 'pinia';
-import { apiOfertas } from '../ofertas/API/ofertas.api';
+import type { Catalogo, Oferta } from "#gql";
+import localforage from "localforage";
+import { defineStore } from "pinia";
+import { apiOfertas } from "../ofertas/API/ofertas.api";
 
 interface storeProps {
   ofertas: Oferta[] | null;
@@ -18,14 +18,14 @@ interface storeProps {
   catalogoSeleccionado: Catalogo | null;
 }
 
-export const storeOferta = defineStore('ofertas', {
+export const storeOferta = defineStore("ofertas", {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
 
     oferta: null,
     catalogos: null,
-    catalogoSeleccionado: null
+    catalogoSeleccionado: null,
   }),
 
   getters: {},
@@ -36,15 +36,15 @@ export const storeOferta = defineStore('ofertas', {
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB = false): Promise<Oferta[]> {
-      this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
+      this.ofertas = (await localforage.getItem("ofertas")) as Oferta[];
       if (!this.ofertas || actualizarDB) {
         try {
           this.ofertas = await api.buscarOfertas(
             {},
-            { sort: '-_modificado -_creado' }
+            { sort: "-_modificado -_creado" }
           );
           await localforage.setItem(
-            'ofertas',
+            "ofertas",
             JSON.parse(JSON.stringify(this.ofertas))
           );
         } catch (err) {
@@ -78,7 +78,7 @@ export const storeOferta = defineStore('ofertas', {
     },
     getCatalogo(id: string): Catalogo {
       if (this.catalogoArbol === null) return null;
-      const f = catalogo => {
+      const f = (catalogo) => {
         if (catalogo._id === id) {
           return catalogo;
         } else if (catalogo.hijas) {
@@ -91,10 +91,10 @@ export const storeOferta = defineStore('ofertas', {
         }
       };
       return f(this.catalogoArbol);
-    }
+    },
   },
 
   persist: {
-    paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'] // Solo persiste 'myPersistentState'
-  }
+    paths: ["oferta", "catalogoOpciones", "catalogoSeleccionado"], // Solo persiste 'myPersistentState'
+  },
 });

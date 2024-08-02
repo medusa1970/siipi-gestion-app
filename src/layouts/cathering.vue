@@ -48,6 +48,17 @@ const menu = [
     label: 'Catalogos',
     to: 'catalogos',
   },
+      {
+        icon: 'shopping_cart',
+        label: 'ListaPedidos',
+        to: 'listaPedidos'
+      },
+      {
+        icon: 'shopping_cart',
+        label: 'pedidosGlobal',
+        to: 'pedidosGlobal'
+      },
+
   {
     icon: 'storefront',
     label: 'Marcas',

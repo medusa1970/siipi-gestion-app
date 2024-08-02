@@ -34,4 +34,18 @@ export const validacion = {
     };
     return decimal;
   },
+
+  maxLength(n: number, mensaje: string = 'max ' + n + ' caracteres'): Function {
+    const maxLength = (val: any): String | true => {
+      return val.length <= n ? true : mensaje;
+    };
+    return maxLength;
+  },
+
+  minLength(n: number, mensaje: string = 'min ' + n + ' caracteres'): Function {
+    const minLength = (val: any): String | true => {
+      return val.length >= n ? true : mensaje;
+    };
+    return minLength;
+  },
 };

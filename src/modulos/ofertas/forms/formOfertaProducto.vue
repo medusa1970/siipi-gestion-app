@@ -16,7 +16,7 @@
       :opciones="selectProducto"
       :porDefecto="estado.dataForm.producto"
       @update="(v) => (estado.dataForm.producto = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Marca -->
@@ -26,7 +26,7 @@
       :opciones="selectVariedad"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :watch="estado.dataForm.marca"
     />
 
@@ -74,6 +74,7 @@
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
       :error="estado.errorAbreviacion"
+      maxLength="30"
     />
 
     <!-- descripcion -->
@@ -89,10 +90,10 @@
       label="Catalogo"
       info="Info #43"
       :opciones="selectCatalogo"
-      :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
+      :porDefecto="estado.catalogoAncestro"
       @update="(v) => (estado.catalogoAncestro = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
     <input-select
       label="Sub catalogo"
@@ -101,7 +102,7 @@
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.dataForm.catalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Imagen -->
@@ -235,6 +236,9 @@ const estado = reactive({
   watchCon: null as number,
   forceWatchCon: false,
   forceWatchSin: false,
+
+  // todos los catalogos
+  catalogos: null,
 });
 
 // color de los botones calduladoras
@@ -336,7 +340,8 @@ const selectEmpaque = computed(() => {
 // Inicializaciones
 onMounted(async () => {
   await storeAlmacen.getProductos();
-  await store.getCatalogos();
+  estado.catalogos = await store.getCatalogos();
+  estado.catalogoAncestro = '75a4475e446a5885b05739c4';
 });
 
 watch(producto, (v) => {

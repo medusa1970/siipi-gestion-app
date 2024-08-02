@@ -7,7 +7,7 @@
       info="Info #28"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :disable="edicion != null"
       :dialog="formVariedad"
       @crearObjeto="handleVariedadCreada"
@@ -46,7 +46,12 @@
     <input-text
       label="Cantidad en unidades básicas"
       info="Info #32"
-      :tipo="store.producto.medida.nombre === 'unidad' ? 'number' : 'decimal'"
+      :tipo="
+        // por unidad
+        store.producto.medida._id === '665f746dd6b07c8d26ef9b6d'
+          ? 'number'
+          : 'decimal'
+      "
       @update="(v) => (estado.dataForm.cantidad = v)"
       :porDefecto="estado.dataForm.cantidad"
       :watch="estado.dataForm.cantidad"

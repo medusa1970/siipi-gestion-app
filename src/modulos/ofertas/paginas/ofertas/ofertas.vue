@@ -62,6 +62,7 @@
             row.abreviacion &&
             row.catalogo &&
             row.imagen &&
+            row.marca &&
             row.precioSinFactura &&
             row.precioConFactura &&
             row.ingredientes.length > 0
@@ -87,10 +88,8 @@
         </h1>
         <div class="flex" v-if="row.ingredientes?.length > 0">
           <div v-for="ingrediente in row.ingredientes" :key="ingrediente._id">
-            <q-badge color="green" class="mr-1 mb-1 lowercase">
-              {{ ingrediente.producto.nombre }}
-            </q-badge>
-            <q-badge color="orange" class="mr-1 mb-1 lowercase">
+            <q-badge color="darkblue" class="mr-1 mb-1 lowercase">
+              {{ ingrediente.producto.nombre }} /
               {{ ingrediente.marca ? ingrediente.marca?.nombre : 'Sin marca' }}
             </q-badge>
           </div>
@@ -167,6 +166,10 @@
             <span class="flex gap-2 items-center"
               ><h1 class="font-bold text-xs">CATALOGO:</h1>
               <p>{{ row.catalogo.nombre }}</p></span
+            >
+            <span class="flex gap-2 items-center"
+              ><h1 class="font-bold text-xs">DESCRIPCION:</h1>
+              <p>{{ row.descripcion }}</p></span
             >
           </div>
           <!-- PRODUCTOS -->

@@ -25,7 +25,7 @@ export const storeOferta = defineStore('ofertas', {
 
     oferta: null,
     catalogos: null,
-    catalogoSeleccionado: null
+    catalogoSeleccionado: null,
   }),
 
   getters: {},
@@ -41,11 +41,11 @@ export const storeOferta = defineStore('ofertas', {
         try {
           this.ofertas = await api.buscarOfertas(
             {},
-            { sort: '-_modificado -_creado' }
+            { sort: '-_modificado -_creado' },
           );
           await localforage.setItem(
             'ofertas',
-            JSON.parse(JSON.stringify(this.ofertas))
+            JSON.parse(JSON.stringify(this.ofertas)),
           );
         } catch (err) {
           errFallBack(err);
@@ -78,7 +78,7 @@ export const storeOferta = defineStore('ofertas', {
     },
     getCatalogo(id: string): Catalogo {
       if (this.catalogoArbol === null) return null;
-      const f = catalogo => {
+      const f = (catalogo) => {
         if (catalogo._id === id) {
           return catalogo;
         } else if (catalogo.hijas) {
@@ -86,15 +86,14 @@ export const storeOferta = defineStore('ofertas', {
             const res = f(hija);
             if (res) return res;
           }
-        } else {
-          return null;
         }
+        return null;
       };
       return f(this.catalogoArbol);
-    }
+    },
   },
 
   persist: {
-    paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'] // Solo persiste 'myPersistentState'
-  }
+    paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'], // Solo persiste 'myPersistentState'
+  },
 });

@@ -233,7 +233,7 @@
         <q-badge
           v-for="variedad in row.variedades"
           :key="variedad._id"
-          color="green"
+          color="darkblue"
           class="mr-1 mb-1 lowercase"
         >
           {{ variedad.marca?.nombre }}

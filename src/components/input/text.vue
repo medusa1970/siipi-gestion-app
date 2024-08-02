@@ -50,7 +50,9 @@
       >
         {{ info }}
       </q-tooltip>
-
+      <template #counter v-if="props.maxLength || props.MinLength">
+        {{ localModel?.length ?? 0 }}
+      </template>
       <template #prepend v-if="icono">
         <q-icon :name="icono" @click.stop.prevent />
       </template>
@@ -150,6 +152,10 @@ const props = withDefaults(
     // reglas de validacion de la forma (val: any): String | true
     rules?: any;
 
+    // min or max length
+    minLength?: number;
+    maxLength?: number;
+
     // una referencia que cuando cambia su valor, activa la validacion del input
     activarValidacion?: boolean;
 
@@ -238,6 +244,18 @@ if (props.tipo === 'decimal') {
 }
 if (props.tipo === 'number') {
   reglasValidacion = [validacion.numero(), ...reglasValidacion];
+}
+if (props.minLength) {
+  reglasValidacion = [
+    validacion.minLength(props.minLength),
+    ...reglasValidacion,
+  ];
+}
+if (props.maxLength) {
+  reglasValidacion = [
+    validacion.maxLength(props.maxLength),
+    ...reglasValidacion,
+  ];
 }
 if (props.requerido) {
   reglasValidacion = [

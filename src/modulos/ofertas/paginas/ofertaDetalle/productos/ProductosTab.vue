@@ -4,8 +4,8 @@
     <input-select
       label="Producto"
       @update="(v) => (estado.dataForm.producto = v as string)"
-      :porDefecto="estado.dataForm.producto?.nombre"
-      :rules="[useRules.requerido()]"
+      :porDefecto="estado.dataForm.producto"
+      requerido
       :opciones="estado.productosOpciones"
       info="Info #53"
     />
@@ -16,7 +16,7 @@
       @update="(v) => (estado.dataForm.marca = v as string)"
       :porDefecto="estado.dataForm.marca"
       :watch="estado.dataForm.marca"
-      :rules="[useRules.requerido()]"
+      requerido
       :opciones="selectVariedad"
       info="Info #54"
     />
@@ -42,8 +42,8 @@ const { estado, store, submitForm } = useProductoTab();
 
 if (store.oferta) {
   estado.dataForm = {
-    producto: store.oferta?.ingredientes[0]?.producto,
-    marca: store.oferta?.ingredientes[0]?.marca,
+    producto: store.oferta?.ingredientes[0]?.producto?._id,
+    marca: store.oferta?.ingredientes[0]?.marca?._id,
     cantidad: store.oferta?.ingredientes[0]?.cantidad,
   };
   // const { producto, marca, cantidad } = store.oferta.ingredientes[0];
@@ -64,11 +64,14 @@ const selectVariedad = computed(() => {
     label: variedad.marca.nombre,
   }));
 });
-watch(producto, () => {
-  if (!producto) {
-    estado.dataForm.marca = null;
-  }
-});
+watch(
+  () => estado.dataForm.producto,
+  () => {
+    if (!estado.dataForm.producto) {
+      estado.dataForm.marca = null;
+    }
+  },
+);
 
 onMounted(async () => {
   const productos = await almacen.store.getProductos();

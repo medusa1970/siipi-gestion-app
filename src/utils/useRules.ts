@@ -10,32 +10,6 @@ export const useRules = {
     };
     return numero;
   },
-  // numero(mensaje: string = 'Debe ser un numero intero'): Function {
-  //   const numero = (val: any): String | true => {
-  //     if (!val) return true;
-  //     const n = Number(val);
-  //     if (Number.isNaN(n) || n !== Math.round(n)) {
-  //       return mensaje;
-  //     } else {
-  //       return true;
-  //     }
-  //   };
-  //   return numero;
-  // },
-  // decimal2(
-  //   mensaje: string = 'Debe ser un numero con 2 decimales max.',
-  // ): Function {
-  //   const decimal2 = (val: any): String | true => {
-  //     if (!val) return true;
-  //     const n = Number(val);
-  //     if (Number.isNaN(n) || n * 100 !== Math.round(n * 100)) {
-  //       return mensaje;
-  //     } else {
-  //       return true;
-  //     }
-  //   };
-  //   return decimal2;
-  // },
 
   decimal(
     mensaje: string = 'Debe ser un numero con 2 decimales max',

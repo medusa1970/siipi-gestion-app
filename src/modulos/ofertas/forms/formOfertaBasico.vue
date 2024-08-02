@@ -16,6 +16,7 @@
       :porDefecto="estado.dataForm.abreviacion"
       @update="(v) => (estado.dataForm.abreviacion = v)"
       requerido
+      maxLength="30"
     />
 
     <!-- descripcion -->
@@ -44,12 +45,13 @@
       "
       requerido
     />
+
     <input-select
       label="Sub catalogo"
       info="Info #44"
       :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
-      :watch="estado.dataForm.catalogo"
+      :watch="estado.watchCatalogo"
       @update="(v) => (estado.dataForm.catalogo = v)"
       requerido
     />
@@ -98,10 +100,10 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  nombre: props.edicion?.nombre ?? null,
-  catalogo: props.edicion?.catalogo?._id ?? null,
-  abreviacion: props.edicion?.abreviacion ?? null,
-  descripcion: props.edicion?.descripcion ?? null,
+  nombre: props.edicion?.nombre,
+  catalogo: props.edicion?.catalogo._id,
+  abreviacion: props.edicion?.abreviacion,
+  descripcion: props.edicion?.descripcion,
   imagen: null,
 };
 
@@ -113,6 +115,7 @@ const estado = reactive({
   catalogoOpciones: [],
   subCatalogoOpciones: [],
   imagenPreview: null,
+  watchCatalogo: props.edicion?.catalogo._id,
 });
 
 // opciones

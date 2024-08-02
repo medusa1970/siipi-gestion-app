@@ -18,10 +18,15 @@ gqltoken universel
 bug backend image
 cerrar sesion al usuario cuando se le cambia de permisos
 
+
+OK
 por unidad sin decimales + lo que dijo Vania
-recargar marcas+empaques al crear oferta (indexdb ?)
-bug oferta "sin marca"
-bug oferta imagen no aparece
-no hay descripcion en expand
+bug punto catalogo
 oferta / producto marca object object
+counter de caracteres para abreviacion
+bug oferta "sin marca"
+no hay descripcion en expand
+---
+recargar marcas+empaques al crear oferta (indexdb ?)
+bug oferta imagen no aparece
 no se puede borrar ofertas

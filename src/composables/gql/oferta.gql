@@ -13,6 +13,7 @@ query buscarOfertas(
     _modificado
     nombre
     abreviacion
+    descripcion
     catalogo {
       _id
       nombre
@@ -22,6 +23,13 @@ query buscarOfertas(
       producto {
         _id
         nombre
+        variedades {
+          _id
+          marca {
+            _id
+            nombre
+          }
+        }
       }
       marca {
         _id
@@ -59,6 +67,14 @@ mutation crearOfertas(
       tipo
       producto {
         _id
+        nombre
+        variedades {
+          _id
+          marca {
+            _id
+            nombre
+          }
+        }
       }
       cantidad
     }
@@ -96,6 +112,14 @@ mutation modificarOfertas(
       tipo
       producto {
         _id
+        nombre
+        variedades {
+          _id
+          marca {
+            _id
+            nombre
+          }
+        }
       }
       cantidad
     }
@@ -132,6 +156,14 @@ mutation borrarOfertas(
       tipo
       producto {
         _id
+        nombre
+        variedades {
+          _id
+          marca {
+            _id
+            nombre
+          }
+        }
       }
       cantidad
     }

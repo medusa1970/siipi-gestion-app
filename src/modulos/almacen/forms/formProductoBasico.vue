@@ -28,7 +28,7 @@
       info="Info #2"
       :porDefecto="estado.dataForm.categoria"
       @update="(v) => (estado.dataForm.categoria = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :dialog="formCategoria"
     />
 

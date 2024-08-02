@@ -7,7 +7,7 @@
       info="Info #18"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :dialog="formVariedad"
       :disable="edicion != null"
       @CrearObjeto="handleVariedadCreada"
@@ -21,7 +21,7 @@
       :opciones="selectProveedor"
       :porDefecto="estado.dataForm.proveedor"
       @update="(v) => (estado.dataForm.proveedor = v)"
-      :rules="[useRules.requerido()]"
+      requerido
       :dialog="formProveedor"
       :disable="edicion != null"
     />

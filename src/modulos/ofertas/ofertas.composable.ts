@@ -7,7 +7,7 @@ export const useOfertas = () => {
   });
 
   const ofertaAbreviacion = (nombre: string): string => {
-    return nombre.substring(0, 15) + "...";
+    return nombre.substring(0, 27) + '...';
   };
 
   // exports

@@ -17,7 +17,7 @@
       info="Info #27"
       :porDefecto="estado.dataForm.pariente"
       @update="(v) => (estado.dataForm.pariente = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
 
     <!-- Submit -->

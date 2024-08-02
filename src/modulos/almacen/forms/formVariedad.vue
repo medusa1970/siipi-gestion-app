@@ -7,6 +7,7 @@
       info="Info #33"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
+      requerido
       :error="estado.errorMarca"
       :disable="edicion != null"
       :dialog="formMarca"

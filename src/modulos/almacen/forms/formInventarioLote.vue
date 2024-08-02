@@ -4,7 +4,12 @@
     <input-text
       label="Cantidad en unidades básicas"
       info="Info #"
-      :tipo="props.producto.medida.nombre === 'unidad' ? 'number' : 'decimal'"
+      :tipo="
+        // por unidad
+        props.producto.medida._id === '665f746dd6b07c8d26ef9b6d'
+          ? 'number'
+          : 'decimal'
+      "
       @update="(v) => (dataForm.cantidad = v as number)"
       :porDefecto="dataForm.cantidad"
       requerido
@@ -24,7 +29,7 @@
       info="Info #"
       :porDefecto="dataForm.bloque"
       @update="(v) => (dataForm.bloque = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
     <!-- Marca -->
     <input-select
@@ -33,7 +38,7 @@
       info="Info #"
       :porDefecto="dataForm.marca"
       @update="(v) => (dataForm.marca = v)"
-      :rules="[useRules.requerido()]"
+      requerido
     />
     <!-- guardar -->
     <div class="text-center">

@@ -18,7 +18,7 @@
     :opciones="estado.medidaOpciones"
     @update="changeMedida"
     :porDefecto="store.producto.medida?._id"
-    :rules="[useRules.requerido()]"
+    requerido
     :dialog="formMedida"
   />
   <div

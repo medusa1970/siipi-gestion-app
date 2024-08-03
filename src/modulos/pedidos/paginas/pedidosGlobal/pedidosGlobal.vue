@@ -1,9 +1,10 @@
 <template>
-  <div>pedidos globales</div>
+  <NuxtLayout name="cathering"> <div>pedidos globales</div></NuxtLayout>
 </template>
 
 <script setup>
-definePageMeta({
-  layout: 'cathering'
+provide("infoPagina", {
+  titulo: "Pedidos global",
+  camino: [{ label: "pedidos", to: "pedidosGlobal" }],
 });
 </script>

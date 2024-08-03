@@ -196,8 +196,8 @@
 </template>
 
 <script setup>
-import { useCatalogos } from './catalogos.composable';
-import { useRoute } from 'vue-router';
+import { useCatalogos } from "./catalogos.composable";
+import { useRoute } from "vue-router";
 const {
   estado,
   store,
@@ -212,19 +212,19 @@ const {
 
 const { params } = useRoute();
 const titulo = ref(null);
-titulo.value = 'Catalogo ' + (await store.getCatalogoArbol(params.id)).nombre;
+titulo.value = "Catalogo " + (await store.getCatalogoArbol(params.id)).nombre;
 
 onBeforeMount(async () => {
   estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
 });
 
-provide('infoPagina', {
+provide("infoPagina", {
   titulo: titulo,
   camino: [
-    { label: 'Catalogos', to: 'catalogos' },
+    { label: "Catalogos", to: "catalogos" },
     {
-      label: 'detalle',
-      to: 'catalogos-id',
+      label: "detalle",
+      to: "catalogos-id",
     },
   ],
 });

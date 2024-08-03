@@ -1,5 +1,5 @@
-import { storeEmpresa } from './empresa.store';
-import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { storeEmpresa } from "./empresa.store";
+import { useAuthStore } from "@/modulos/main/useAuthStore";
 
 export const useEmpresa = () => {
   const router = useRouter();

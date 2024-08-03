@@ -1,15 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  srcDir: 'src',
+  srcDir: "src",
   devtools: {
     enabled: false,
   },
   ssr: false,
   generate: {
-    fallback: '404.html',
+    fallback: "404.html",
   },
   typescript: {
     typeCheck: false,
@@ -25,17 +25,17 @@ export default defineNuxtConfig({
     },
     resolve: {
       alias: {
-        '@modulos': '/home/leo/Workspace/siipi-gestion-app/src/modulos',
+        "@modulos": "/home/leo/Workspace/siipi-gestion-app/src/modulos",
       },
     },
   },
   modules: [
-    '@nuxtjs/tailwindcss',
-    'nuxt-quasar-ui',
-    '@nuxt/image',
-    'nuxt-graphql-client',
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
+    "@nuxtjs/tailwindcss",
+    "nuxt-quasar-ui",
+    "@nuxt/image",
+    "nuxt-graphql-client",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   tailwindcss: {
     exposeConfig: true,
@@ -43,15 +43,15 @@ export default defineNuxtConfig({
     // and more...
   },
   quasar: {
-    plugins: ['Notify', 'Dialog', 'Loading', 'LocalStorage', 'SessionStorage'],
-    extras: { fontIcons: ['bootstrap-icons'] },
-    lang: 'es',
+    plugins: ["Notify", "Dialog", "Loading", "LocalStorage", "SessionStorage"],
+    extras: { fontIcons: ["bootstrap-icons"] },
+    lang: "es",
   },
   runtimeConfig: {
     public: {
       DeployStatus: process.env.DEPLOY,
       GQL_HOST: process.env.GRAPH_URI,
-      'graphql-client': {
+      "graphql-client": {
         codegen: {
           silent: false,
           skipTypename: false,
@@ -60,12 +60,12 @@ export default defineNuxtConfig({
           onlyOperationTypes: false,
           avoidOptionals: false,
           disableOnBuild: false,
-          maybeValue: 'T | null',
+          maybeValue: "T | null",
         },
         default: {
           clients: {
             host: process.env.GRAPH_URI,
-            schema: 'schema/schema.gql',
+            schema: "schema/schema.gql",
           },
         },
       },
@@ -78,11 +78,11 @@ export default defineNuxtConfig({
   //   storage: 'localStorage',
   // },
   piniaPersistedstate: {
-    storage: 'localStorage',
+    storage: "localStorage",
   },
   router: {
     options: {
-      scrollBehaviorType: 'smooth',
+      scrollBehaviorType: "smooth",
     },
   },
   devServer: {
@@ -90,14 +90,14 @@ export default defineNuxtConfig({
     port: Number(process.env.PORT),
   },
   hooks: {
-    'pages:extend': async (pages: any) => {
-      const modulosPath = './src/modulos/';
+    "pages:extend": async (pages: any) => {
+      const modulosPath = "./src/modulos/";
       const files = await fs.promises.readdir(modulosPath);
       for (const file of files) {
         const filePath = path.join(modulosPath, file);
         const stats = await fs.promises.stat(filePath);
         if (stats.isDirectory()) {
-          const fullPath = path.join(__dirname, '/', filePath, '/rutas.ts');
+          const fullPath = path.join(__dirname, "/", filePath, "/rutas.ts");
           if (fs.existsSync(fullPath)) {
             //@ts-ignore
             const routes = await import(fullPath);
@@ -108,7 +108,7 @@ export default defineNuxtConfig({
         }
       }
       console.log(
-        '\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Se han creado las rutas dinamicas',
+        "\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Se han creado las rutas dinamicas"
       );
     },
   },

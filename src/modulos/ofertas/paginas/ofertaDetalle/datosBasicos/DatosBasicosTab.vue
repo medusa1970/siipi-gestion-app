@@ -9,8 +9,8 @@
 </template>
 
 <script setup>
-import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
-import { useDatosBasicosTab } from './datosBasicosTab.composable';
+import formOfertaBasico from "@/modulos/ofertas/forms/formOfertaBasico.vue";
+import { useDatosBasicosTab } from "./datosBasicosTab.composable";
 const composable = useDatosBasicosTab();
 const { store } = composable;
 </script>

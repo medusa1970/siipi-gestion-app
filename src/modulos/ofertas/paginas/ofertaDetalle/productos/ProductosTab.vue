@@ -35,9 +35,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAlmacen } from '@/modulos/almacen/almacen.composable';
+import { useAlmacen } from "@/modulos/almacen/almacen.composable";
 const almacen = useAlmacen();
-import { useProductoTab } from './productosTab.composable';
+import { useProductoTab } from "./productosTab.composable";
 const { estado, store, submitForm } = useProductoTab();
 
 if (store.oferta) {
@@ -70,7 +70,7 @@ watch(
     if (!estado.dataForm.producto) {
       estado.dataForm.marca = null;
     }
-  },
+  }
 );
 
 onMounted(async () => {

@@ -1,9 +1,5 @@
 <template>
-  <NuxtLayout
-    name="cathering"
-    :nav="[{ label: 'productos', to: 'productos' }]"
-    titulo="Gestion de productos"
-  >
+  <NuxtLayout name="cathering">
     <Tabla
       :rows="rowsTablaProductos"
       :columns="columnsTablaProducto"
@@ -320,16 +316,21 @@
 </template>
 
 <script setup lang="ts">
-import { useProductos } from './productos.composable';
+import { useProductos } from "./productos.composable";
 const { estado, store, authStore, router, productoIncompleto } = useProductos();
 
 // otros imports
-import ProductoImage from '@/assets/img/noHayProducto.png';
-import formProductoBasico from '@/modulos/almacen/forms/formProductoBasico.vue';
-import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
-import type { CategoriaSelectOpcion } from '../../almacen.interface';
+import ProductoImage from "@/assets/img/noHayProducto.png";
+import formProductoBasico from "@/modulos/almacen/forms/formProductoBasico.vue";
+import formOfertaProducto from "@/modulos/ofertas/forms/formOfertaProducto.vue";
+import type { CategoriaSelectOpcion } from "../../almacen.interface";
 const { rowsTablaProductos, handleProductoCreado, handleOfertaSimpleCreada } =
   useProductos();
+
+provide("infoPagina", {
+  titulo: "Gestion de productos",
+  camino: [{ label: "productos", to: "productos" }],
+});
 
 // opciones
 const selectCategoriaFiltro = computed(() => {
@@ -342,7 +343,7 @@ const selectCategoriaFiltro = computed(() => {
         hijas.push(<CategoriaSelectOpcion>{
           label: subcat.nombre,
           value: [subcat._id],
-          class: 'option',
+          class: "option",
         });
         idsHijas.push(subcat._id);
       }
@@ -370,73 +371,49 @@ onMounted(async () => {
 // sockets
 const { $socket } = useNuxtApp();
 onBeforeMount(() => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    console.log('socket productos triggered');
+  $socket.on("cambiosProductos", async (data: any) => {
+    console.log("socket productos triggered");
   });
-  $socket.on('cambiosOfertas', async (data: any) => {
+  $socket.on("cambiosOfertas", async (data: any) => {
     await store.refreshProductos();
   });
 });
 onBeforeUnmount(() => {
   // $socket.off('cambiosProductos');
-  $socket.off('cambiosOfertas');
+  $socket.off("cambiosOfertas");
 });
 
 // configuracion de la tabla
 const columnsTablaProducto = ref([
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    align: 'center',
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
 
   {
-    name: 'nombre',
+    name: "nombre",
     required: true,
     slot: true,
-    label: 'Nombre',
-    align: 'left',
+    label: "Nombre",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
   },
-  // {
-  //   name: 'medida',
-  //   required: true,
-  //   label: 'Unidad',
-  //   align: 'left',
-  //   field: (row: any) => row.medida?.abreviacion,
-  //   sortable: true,
-  // },
-  // {
-  //   name: 'categoria',
-  //   required: true,
-  //   label: 'categoria',
-  //   align: 'left',
-  //   field: (row: any) => row.categoria.nombre,
-  //   sortable: true,
-  // },
-  // {
-  //   name: 'modificado',
-  //   label: 'Modif.',
-  //   align: 'left',
-  //   field: (row: any) => row._modificado,
-  //   format: (val, row) => `${fechaMes(row._modificado ?? row._creado) }`,
-  //   sortable: true,
-  // },
   {
-    name: 'estado',
-    label: 'Modif.',
-    align: 'right',
+    name: "estado",
+    label: "Modif.",
+    align: "right",
     field: (row: any) => row._modificado,
     slot: true,
     sortable: true,
   },
   {
-    name: 'acciones',
-    label: 'Accion',
-    align: 'center',
+    name: "acciones",
+    label: "Accion",
+    align: "center",
     slot: true,
   },
 ]);

@@ -1,6 +1,6 @@
 <template>
   <q-btn color="green px-5" dense rounded>
-    {{ authStore.getUsuario?.nombre || 'USUARIO' }}
+    {{ authStore.getUsuario?.nombre || "USUARIO" }}
     <q-menu
       transition-show="rotate"
       transition-hide="rotate"
@@ -134,9 +134,9 @@
 
 <script setup lang="ts">
 // import { ModificarPersonaDto } from '#gql';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { UrlToBase64Image } from '~/components/input/input.service';
-import { apiAuth } from '~/modulos/main/API/auth.api';
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import { UrlToBase64Image } from "~/components/input/input.service";
+import { apiAuth } from "~/modulos/main/API/auth.api";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -163,7 +163,7 @@ const previewImagenPerfil = ref(null);
 //@ts-ignore
 await UrlToBase64Image(
   authStore.getUsuario?.cloudinaryUrl,
-  (base64Data) => (previewImagenPerfil.value = null),
+  (base64Data) => (previewImagenPerfil.value = null)
 );
 const editarPerfilSubmit = async () => {
   // preparacion de los datos
@@ -185,9 +185,9 @@ const editarPerfilSubmit = async () => {
       if (persona.value !== null) {
         authStore.editarPerfil(persona.value);
         showPerfil.value = false;
-        NotifySucessCenter('Usuario editado correctamente');
+        NotifySucessCenter("Usuario editado correctamente");
       } else {
-        NotifyError('Hubo un error, intente de nuevo');
+        NotifyError("Hubo un error, intente de nuevo");
       }
     });
   } catch (e) {
@@ -197,25 +197,25 @@ const editarPerfilSubmit = async () => {
 
 // ELEGIR NEGOCIO
 
-const password = ref('');
+const password = ref("");
 const elegirNegocio = (index: number, nombre: string) => {
   $q.dialog({
     title: `<strong>Entrar a ${nombre}</strong>`,
-    message: '¿Está seguro de cambiar de negocio?',
+    message: "¿Está seguro de cambiar de negocio?",
     cancel: true,
     persistent: true,
     html: true,
     prompt: {
       //@ts-ignore
       model: password,
-      type: 'password',
+      type: "password",
       clearable: true,
       required: true,
       // native attributes:
       min: 0,
       max: 10,
       step: 2,
-      label: 'Ingrese tu contrasena',
+      label: "Ingrese tu contrasena",
       outlined: true,
       dense: true,
     },
@@ -226,26 +226,26 @@ const elegirNegocio = (index: number, nombre: string) => {
     try {
       loginResponse = await apiAuth.login(
         authStore.getUsuario?.usuario as string,
-        password.value,
+        password.value
       );
       if (!loginResponse) {
       } else {
         await authStore.elegirNegocio(index);
 
-        password.value = '';
+        password.value = "";
         NotifySucess(`Negocio elegido: ${nombre}`);
         showPerfil.value = false;
         switch (authStore.getNegocio?.tipo) {
-          case 'PUNTO':
-            goTo(router, 'punto');
+          case "PUNTO":
+            goTo(router, "punto");
             break;
-          case 'CATHERING':
-            goTo(router, 'cathering');
+          case "CATHERING":
+            goTo(router, "cathering");
             break;
         }
       }
     } catch (e: any) {
-      if (e === 'B104') {
+      if (e === "B104") {
         NotifyError(`Contraseña incorrecta`); // notificacion en caso de error desconocido
       } else {
         NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
@@ -262,7 +262,7 @@ const logout = () => {
   const username = authStore.getUsuario?.nombre;
   authStore.logout();
   NotifySucess(`Hasta pronto ${username}!`);
-  goTo(router, 'inicio');
+  goTo(router, "inicio");
 };
 </script>
 

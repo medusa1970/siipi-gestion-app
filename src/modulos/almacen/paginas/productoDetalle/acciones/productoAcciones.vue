@@ -19,15 +19,15 @@
 </template>
 
 <script setup lang="ts">
-import { useProductoAcciones } from './productoAcciones.composable';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { useProductoAcciones } from "./productoAcciones.composable";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 const { estado, authStore, store, borrarProducto } = useProductoAcciones();
 const router = useRouter();
 
 // si no hay producto, pagina equivocada y volvemos a lalista
 if (!store.producto) {
-  goTo(router, 'productos');
+  goTo(router, "productos");
 }
 </script>
 

@@ -1,6 +1,6 @@
-import type { Catalogo, Oferta } from '#gql';
-import localforage from 'localforage';
-import { apiOfertas } from '../ofertas/API/ofertas.api';
+import type { Catalogo, Oferta } from "#gql";
+import localforage from "localforage";
+import { apiOfertas } from "../ofertas/API/ofertas.api";
 
 interface storeProps {
   // colecciones
@@ -10,7 +10,7 @@ interface storeProps {
   oferta: Oferta | null;
 }
 
-export const storeOferta = defineStore('ofertas', {
+export const storeOferta = defineStore("ofertas", {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
@@ -25,16 +25,16 @@ export const storeOferta = defineStore('ofertas', {
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB = false): Promise<Oferta[]> {
-      this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
+      this.ofertas = (await localforage.getItem("ofertas")) as Oferta[];
       if (!this.ofertas || actualizarDB) {
         try {
           this.ofertas = await api.buscarOfertas(
             {},
-            { sort: '-_modificado -_creado' },
+            { sort: "-_modificado -_creado" }
           );
           await localforage.setItem(
-            'ofertas',
-            JSON.parse(JSON.stringify(this.ofertas)),
+            "ofertas",
+            JSON.parse(JSON.stringify(this.ofertas))
           );
         } catch (err) {
           errFallBack(err);
@@ -84,6 +84,6 @@ export const storeOferta = defineStore('ofertas', {
   },
 
   persist: {
-    paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'], // Solo persiste 'myPersistentState'
+    paths: ["oferta", "catalogoOpciones", "catalogoSeleccionado"], // Solo persiste 'myPersistentState'
   },
 });

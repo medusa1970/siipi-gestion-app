@@ -8,24 +8,9 @@
       class="bg-grey-7 text-white shadow-2"
       no-caps
     >
-      <q-tab
-        v-if="authStore.autorizar(['ADQUISICION'])"
-        name="persona"
-        icon="person"
-        label="Persona"
-      />
-      <q-tab
-        v-if="authStore.autorizar(['ALMACEN', 'ADQUISICION'])"
-        name="cargos"
-        icon="work"
-        label="Cargos"
-      />
-      <q-tab
-        v-if="authStore.autorizar(['ALMACEN'])"
-        name="permisos"
-        icon="group"
-        label="Permisos"
-      />
+      <q-tab name="persona" icon="person" label="Persona" />
+      <q-tab name="cargos" icon="work" label="Cargos" />
+      <q-tab name="permisos" icon="group" label="Permisos" />
     </q-tabs>
     <q-tab-panels
       v-model="estado.tabActiva"
@@ -46,29 +31,29 @@
 </template>
 
 <script setup lang="ts">
-import { useEmpleadoDetalle } from './empleadoDetalle.composable';
+import { useEmpleadoDetalle } from "./empleadoDetalle.composable";
 const { estado, store, authStore, router } = useEmpleadoDetalle();
 const { params } = useRoute();
 
-provide('infoPagina', {
-  titulo: 'Gestion de empleados',
+provide("infoPagina", {
+  titulo: "Gestion de empleados",
   camino: [
-    { label: 'empleados', to: 'empleados' },
+    { label: "empleados", to: "empleados" },
     {
       label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.apellido}`,
-      to: 'empleado',
+      to: "empleado",
       params: { id: store.empleado?._id },
     },
   ],
 });
 
 // otros imports
-import PersonaTabPanel from './persona/empleadoPersona.vue';
-import PermisosTabPanel from './permisos/empleadoPermisos.vue';
-import CargosTabPanel from './cargos/empleadoCargos.vue';
+import PersonaTabPanel from "./persona/empleadoPersona.vue";
+import PermisosTabPanel from "./permisos/empleadoPermisos.vue";
+import CargosTabPanel from "./cargos/empleadoCargos.vue";
 
 onBeforeMount(async () => {
   const empleado = await store.useEmpleado(params.id);
-  if (!empleado) goTo(router, 'empleados');
+  if (!empleado) goTo(router, "empleados");
 });
 </script>

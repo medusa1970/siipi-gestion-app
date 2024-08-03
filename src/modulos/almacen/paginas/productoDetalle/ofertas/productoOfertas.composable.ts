@@ -1,4 +1,4 @@
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 export const useProductoOfertas = () => {
   const { store, authStore, estadoAlmacen, router } = useAlmacen();

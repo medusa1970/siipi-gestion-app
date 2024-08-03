@@ -58,8 +58,8 @@
 </template>
 
 <script setup>
-import { usePrecioTab } from './preciosTab.composable';
-import formPrecio from '@/modulos/ofertas/forms/formPrecio.vue';
+import { usePrecioTab } from "./preciosTab.composable";
+import formPrecio from "@/modulos/ofertas/forms/formPrecio.vue";
 const {
   estado,
   store,
@@ -86,26 +86,26 @@ const rowsTabla = computed(() => {
 // Columnas
 const columnsTabla = [
   {
-    name: 'cantidad',
-    label: 'A partir de...',
+    name: "cantidad",
+    label: "A partir de...",
     field: (row) => row.cantidadMin,
   },
   {
-    name: 'precioSinFactura',
-    label: 'Precio sin factura',
+    name: "precioSinFactura",
+    label: "Precio sin factura",
     field: (row) => row.precioSinFactura,
-    format: (value) => (value != null ? `${value} bs` : 'a ingresar'),
+    format: (value) => (value != null ? `${value} bs` : "a ingresar"),
   },
   {
-    name: 'precioConFactura',
-    label: 'Precio con factura',
+    name: "precioConFactura",
+    label: "Precio con factura",
     field: (row) => row.precioConFactura,
-    format: (value) => (value != null ? `${value} bs` : 'a ingresar'),
+    format: (value) => (value != null ? `${value} bs` : "a ingresar"),
   },
   {
-    name: 'actions',
-    label: '',
-    align: 'center',
+    name: "actions",
+    label: "",
+    align: "center",
     slot: true,
   },
 ];

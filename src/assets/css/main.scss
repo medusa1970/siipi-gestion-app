@@ -1,5 +1,5 @@
 // TEXT FONT
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,300&display=swap");
 
 // VARIABLES
 $dark: #010f1a;
@@ -7,18 +7,13 @@ $white: #fdfffc;
 $verde: #1fa245;
 $red: #e71d36;
 $naranja: #f6921e;
-$mi-fuente: 'Nunito Sans', sans-serif;
-
-// INPUTS
-.inputTitle {
-  margin-bottom: 2px;
-}
+$mi-fuente: "Nunito Sans", sans-serif;
 
 // STYLE
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Nunito Sans', sans-serif !important;
+  font-family: "Nunito Sans", sans-serif !important;
 }
 h1,
 h2,
@@ -29,19 +24,8 @@ h6 {
   @apply text-sm;
 }
 
-#tituloPagina {
-  font-size: 16px;
-  font-weight: bolder;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  text-align: left;
-  margin: 15px;
-}
-#contenido {
-  padding: 0 15px;
-}
 #layoutContainer {
-  padding: 0 15px;
+  padding: 16px;
 }
 .importante {
   background-color: rgb(247, 197, 157);
@@ -54,9 +38,11 @@ h6 {
   float: left;
   margin: 5px 10px 0 0;
 }
-
 .tituloForm {
   margin: 0 0 10px 0;
+}
+.inputTitle {
+  margin-bottom: 2px;
 }
 
 // INVESTIGAR, la primera precarga no lee los estilos globales compartidos en las pages con clases.
@@ -114,8 +100,8 @@ h6 {
 }
 
 .backImage::before {
-  content: '';
-  background-image: url('~/assets/img/planta5.jpg');
+  content: "";
+  background-image: url("~/assets/img/planta5.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

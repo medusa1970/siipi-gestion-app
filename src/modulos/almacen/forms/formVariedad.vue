@@ -76,13 +76,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Variedad } from '#gql';
-import formMarca from '@/modulos/almacen/forms/formMarca.vue';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Variedad } from "#gql";
+import formMarca from "@/modulos/almacen/forms/formMarca.vue";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -91,7 +91,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -107,7 +107,7 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorMarca: '',
+  errorMarca: "",
 });
 
 // opciones
@@ -137,9 +137,9 @@ const formSubmit = async () => {
         },
       });
       emits(
-        'modificarObjeto',
+        "modificarObjeto",
         producto.variedades.find((v) => v._id === props.edicion?._id),
-        producto,
+        producto
       );
     } else {
       const producto = await api.modificarProducto_basico(store.producto._id, {
@@ -147,11 +147,11 @@ const formSubmit = async () => {
           agregar: [estado.dataForm],
         },
       });
-      emits('crearObjeto', ultimo(producto.variedades), producto);
+      emits("crearObjeto", ultimo(producto.variedades), producto);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorMarca = 'Esta marca ya esta registrada';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorMarca = "Esta marca ya esta registrada";
       return;
     }
     errFallBack(err);

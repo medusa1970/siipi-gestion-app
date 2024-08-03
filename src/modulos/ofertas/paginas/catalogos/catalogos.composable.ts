@@ -1,11 +1,11 @@
-import type { Catalogo } from '#gql';
-import { useQuasar } from 'quasar';
-import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+import type { Catalogo } from "#gql";
+import { useQuasar } from "quasar";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosCatalogos = ['LOGISTICA'];
+export const permisosCatalogos = ["ACCEDER"];
 
 /**
  * Composable
@@ -42,12 +42,12 @@ export const useCatalogos = () => {
         nombre: estado.datos_catalogoCategoria.nombre,
         pariente: estado.datos_catalogoCategoria._id,
       });
-      if (!catalogoCreado) throw 'No se pudo crear el catalogo';
+      if (!catalogoCreado) throw "No se pudo crear el catalogo";
     } catch (err) {
       errFallBack(err);
     }
     estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
-    NotifySucessCenter('Categoria creada correctamente');
+    NotifySucessCenter("Categoria creada correctamente");
     estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     estado.modal.show_agregarCategoriaCatalogo = false;
   };
@@ -63,13 +63,13 @@ export const useCatalogos = () => {
     try {
       catalogoModificado = await api.modificarCatalogo(
         { _id: [estado.datos_catalogoCategoria._id] },
-        { nombre: estado.datos_catalogoCategoria.nombre },
+        { nombre: estado.datos_catalogoCategoria.nombre }
       );
-      if (!catalogoModificado) throw 'No se pudo modificar el catalogo';
+      if (!catalogoModificado) throw "No se pudo modificar el catalogo";
     } catch (err) {
       errFallBack(err);
     }
-    NotifySucessCenter('Catalogo modificado correctamente');
+    NotifySucessCenter("Catalogo modificado correctamente");
     estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
     estado.modal.show_modificarCategoriaCatalogo = false;
   };
@@ -79,8 +79,8 @@ export const useCatalogos = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar este catalogo${
         row.hijas?.length > 0
-          ? ', tiene ' + row.hijas.length + ' subcategorias'
-          : ''
+          ? ", tiene " + row.hijas.length + " subcategorias"
+          : ""
       }?`,
       cancel: true,
       persistent: true,
@@ -92,9 +92,9 @@ export const useCatalogos = () => {
       } catch (err) {
         errFallBack(err);
       }
-      NotifySucessCenter('Catalogo eliminada correctamente');
+      NotifySucessCenter("Catalogo eliminada correctamente");
       estado.catalogoSeleccionado = await store.refreshCatalogoArbol(
-        catalogoID,
+        catalogoID
       );
     });
   };

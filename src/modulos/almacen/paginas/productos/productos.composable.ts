@@ -1,17 +1,17 @@
-import type { Producto } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Producto } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosProductos = ['LOGISTICA'];
+export const permisosProductos = ["ACCEDER"];
 
 /**
  * Composable
  */
 export const useProductos = () => {
   const { store, authStore, router, productoIncompleto } = useAlmacen();
-  if (!authStore.autorizar(permisosProductos)) goTo(router, 'noAutorizado');
+  if (!authStore.autorizar(permisosProductos)) goTo(router, "noAutorizado");
 
   const estado = reactive({
     // lista de los productos a recuperar del store (promisa resuelta)
@@ -19,11 +19,11 @@ export const useProductos = () => {
     // config de los filtros de la tabla
     filtros: {
       categoriaOpciones: [],
-      categoriaSeleccionada: '',
+      categoriaSeleccionada: "",
       marcaOpciones: [],
-      marcaSeleccionada: '',
-      buscarFiltro: '',
-      completud: 'todos',
+      marcaSeleccionada: "",
+      buscarFiltro: "",
+      completud: "todos",
     },
     // dialogs
     modal: {
@@ -44,39 +44,39 @@ export const useProductos = () => {
     let filtered = store.productos;
     if (!filtered) return [];
     // filtro por completo
-    if (estado.filtros.completud === 'soloCompletos') {
+    if (estado.filtros.completud === "soloCompletos") {
       filtered = filtered.filter((producto) => !productoIncompleto(producto));
     }
-    if (estado.filtros.completud == 'soloIncompletos') {
+    if (estado.filtros.completud == "soloIncompletos") {
       filtered = filtered.filter((producto) => productoIncompleto(producto));
     }
     // filtro por categoria
     if (
       estado.filtros.categoriaSeleccionada != null &&
-      estado.filtros.categoriaSeleccionada !== ''
+      estado.filtros.categoriaSeleccionada !== ""
     ) {
       filtered = filtered.filter((producto) =>
-        estado.filtros.categoriaSeleccionada.includes(producto.categoria._id),
+        estado.filtros.categoriaSeleccionada.includes(producto.categoria._id)
       );
     }
     // filtro por marca
     if (
       estado.filtros.marcaSeleccionada != null &&
-      estado.filtros.marcaSeleccionada !== ''
+      estado.filtros.marcaSeleccionada !== ""
     ) {
       filtered = filtered.filter((producto) =>
         producto.variedades
           .map((variedad) => variedad.marca._id)
-          .includes(estado.filtros.marcaSeleccionada),
+          .includes(estado.filtros.marcaSeleccionada)
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
     if (estado.filtros.buscarFiltro != null) {
-      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
       filtered = filtered.filter((producto) => {
         return regex.test(
           producto.nombre +
-            producto.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+            producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         );
       });
     }
@@ -84,11 +84,11 @@ export const useProductos = () => {
   });
 
   const handleProductoCreado = (producto) => {
-    NotifySucessCenter('Producto creado éxitosamente');
+    NotifySucessCenter("Producto creado éxitosamente");
     estado.modal.formProductoBasico = false;
   };
   const handleOfertaSimpleCreada = (oferta) => {
-    NotifySucessCenter('Oferta creada éxitosamente');
+    NotifySucessCenter("Oferta creada éxitosamente");
     estado.modal.crearOferta = false;
   };
 

@@ -47,19 +47,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 definePageMeta({
   layout: false,
 });
-import Logo from '@/assets/img/logo.png';
-import { useAuth } from '~/modulos/main/API/useAuth';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
+import Logo from "@/assets/img/logo.png";
+import { useAuth } from "~/modulos/main/API/useAuth";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
 
 const router = useRouter();
-const correo = ref('');
-const otp = ref('');
-const contrasena = ref('');
+const correo = ref("");
+const otp = ref("");
+const contrasena = ref("");
 const isOtp = ref(false);
 
 const sendOTP = async () => {
@@ -67,7 +67,7 @@ const sendOTP = async () => {
     showLoading();
     const res = await useAuth.pedirRDC(correo.value);
     if (res) isOtp.value = true;
-    NotifySucess('Se ha enviado un codigo a tu correo');
+    NotifySucess("Se ha enviado un codigo a tu correo");
     hideLoading();
   } catch (error) {
     ApiError(error);
@@ -78,11 +78,11 @@ const actualizarContraseña = async () => {
     showLoading();
     const res = await useAuth.actuarRDC(otp.value, contrasena.value);
     if (res) {
-      NotifySucess('Se ha actualizado tu contraseña');
+      NotifySucess("Se ha actualizado tu contraseña");
       isOtp.value = false;
     }
     hideLoading();
-    router.push('/');
+    router.push("/");
   } catch (error) {
     ApiError(error);
   }

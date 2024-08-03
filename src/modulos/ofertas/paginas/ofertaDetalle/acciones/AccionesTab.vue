@@ -28,6 +28,6 @@
 </template>
 
 <script setup>
-import { useAccionesTab } from './accionesTab.composable';
+import { useAccionesTab } from "./accionesTab.composable";
 const { estado, borrarOferta } = useAccionesTab();
 </script>

@@ -1,6 +1,5 @@
 <template>
   <NuxtLayout name="cathering">
-    <Navigation2 :nav="[{ label: 'bienvenido', to: 'cathering' }]" />
     <div
       class="flex justify-center items-center backImage"
       style="height: 500px"
@@ -10,8 +9,8 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
-provide('infoPagina', {
-  titulo: 'Bienvenido',
-  camino: [{ label: 'bienvenido', to: 'cathering' }],
+provide("infoPagina", {
+  titulo: "Bienvenido",
+  camino: [{ label: "bienvenido", to: "cathering" }],
 });
 </script>

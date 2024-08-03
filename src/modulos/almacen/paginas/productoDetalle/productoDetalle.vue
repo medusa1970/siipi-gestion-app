@@ -43,24 +43,24 @@
 </template>
 
 <script setup lang="ts">
-import { useProductoDetalle } from './productoDetalle.composable';
+import { useProductoDetalle } from "./productoDetalle.composable";
 const { estado, store, authStore, router } = useProductoDetalle();
 const { params } = useRoute();
 
-import MarcaTabPanel from './variedades/productoVariedades.vue';
-import MedidaTabPanel from './medidas/productoMedidas.vue';
-import ProveedorTabPanel from './proveedores/productoServicios.vue';
-import AccionesTabPanel from './acciones/productoAcciones.vue';
-import BasicoTabPanel from './basico/productoBasico.vue';
-import OfertasTabPanel from './ofertas/productoOfertas.vue';
+import MarcaTabPanel from "./variedades/productoVariedades.vue";
+import MedidaTabPanel from "./medidas/productoMedidas.vue";
+import ProveedorTabPanel from "./proveedores/productoServicios.vue";
+import AccionesTabPanel from "./acciones/productoAcciones.vue";
+import BasicoTabPanel from "./basico/productoBasico.vue";
+import OfertasTabPanel from "./ofertas/productoOfertas.vue";
 
-provide('infoPagina', {
-  titulo: store.producto?.nombre + '(edición)',
+provide("infoPagina", {
+  titulo: store.producto?.nombre + "(edición)",
   camino: [
-    { label: 'productos', to: 'productos' },
+    { label: "productos", to: "productos" },
     {
       label: store.producto?.nombre,
-      to: 'producto',
+      to: "producto",
       params: { id: store.producto?._id },
     },
   ],
@@ -74,7 +74,7 @@ onMounted(async () => {
   if (producto) {
     store.producto = producto;
   } else {
-    goTo(router, 'productos');
+    goTo(router, "productos");
   }
 });
 </script>

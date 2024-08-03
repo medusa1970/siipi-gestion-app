@@ -74,7 +74,7 @@
         <h1 v-if="row.nombre" class="tooltip font-semibold">
           {{
             row.nombre.length > 30
-              ? row.nombre.slice(0, 30) + '...'
+              ? row.nombre.slice(0, 30) + "..."
               : row.nombre
           }}
           <span
@@ -86,7 +86,7 @@
           <div v-for="ingrediente in row.ingredientes" :key="ingrediente._id">
             <q-badge color="darkblue" class="mr-1 mb-1 lowercase">
               {{ ingrediente.producto.nombre }} /
-              {{ ingrediente.marca ? ingrediente.marca?.nombre : 'Sin marca' }}
+              {{ ingrediente.marca ? ingrediente.marca?.nombre : "Sin marca" }}
             </q-badge>
           </div>
         </div>
@@ -217,7 +217,7 @@
 </template>
 
 <script setup lang="ts">
-import { useOferta } from './ofertas.composable';
+import { useOferta } from "./ofertas.composable";
 const {
   estado,
   store,
@@ -227,13 +227,13 @@ const {
   handleOfertaSimpleCreada,
 } = useOferta();
 
-import { columnaOfertas } from './columns';
-import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
-import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
+import { columnaOfertas } from "./columns";
+import formOfertaBasico from "@/modulos/ofertas/forms/formOfertaBasico.vue";
+import formOfertaProducto from "@/modulos/ofertas/forms/formOfertaProducto.vue";
 
-provide('infoPagina', {
-  titulo: 'Gestion de ofertas',
-  camino: [{ label: 'Ofertas', to: 'ofertas' }],
+provide("infoPagina", {
+  titulo: "Gestion de ofertas",
+  camino: [{ label: "Ofertas", to: "ofertas" }],
 });
 
 // opciones
@@ -247,7 +247,7 @@ const selectCatalogoFiltro = computed(() => {
         hijas.push({
           label: subcat.nombre,
           value: [subcat._id],
-          class: 'option',
+          class: "option",
         });
         idsHijas.push(subcat._id);
       }
@@ -266,18 +266,18 @@ const rowsParaMostrar = computed(() => {
   if (!filtered) return [];
   if (
     estado.filtros.catalogoSeleccionado != null &&
-    estado.filtros.catalogoSeleccionado !== ''
+    estado.filtros.catalogoSeleccionado !== ""
   ) {
     filtered = filtered.filter((oferta) =>
-      estado.filtros.catalogoSeleccionado.includes(oferta.catalogo._id),
+      estado.filtros.catalogoSeleccionado.includes(oferta.catalogo._id)
     );
   }
   if (estado.filtros.buscarFiltro != null) {
     filtered = filtered.filter((oferta) => {
-      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
       return regex.test(
         oferta.nombre +
-          oferta.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+          oferta.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       );
     });
   }
@@ -292,12 +292,12 @@ onMounted(async () => {
 // sockets
 const { $socket } = useNuxtApp();
 onBeforeMount(() => {
-  $socket.on('cambiosOfertas', async (data: any) => {
+  $socket.on("cambiosOfertas", async (data: any) => {
     await store.refreshOfertas();
   });
 });
 onBeforeUnmount(() => {
-  $socket.off('cambiosOfertas');
+  $socket.off("cambiosOfertas");
 });
 </script>
 
@@ -306,7 +306,7 @@ onBeforeUnmount(() => {
 .weekday {
   display: none !important;
 }
-input[type='checkbox'] + label {
+input[type="checkbox"] + label {
   display: inline-block;
   border-radius: 50%;
   background: #dddddd;
@@ -317,7 +317,7 @@ input[type='checkbox'] + label {
   font-weight: bold;
   cursor: pointer;
 }
-input[type='checkbox']:checked + label {
+input[type="checkbox"]:checked + label {
   background: #007bff;
   color: #ffffff;
 }

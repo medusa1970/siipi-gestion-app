@@ -53,20 +53,20 @@
 </template>
 
 <script setup>
-import { useOfertaDetalle } from './ofertaDetalle.composable';
+import { useOfertaDetalle } from "./ofertaDetalle.composable";
 const { estado, store, authStore, router } = useOfertaDetalle();
 const { params } = useRoute();
 
-import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasicos/DatosBasicosTab.vue';
-import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';
-import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue';
-import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
+import DatosBasicosTab from "@/modulos/ofertas/paginas/ofertaDetalle/datosBasicos/DatosBasicosTab.vue";
+import ProductosTab from "@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue";
+import PreciosTab from "@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue";
+import AccionesTab from "@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue";
 
-provide('infoPagina', {
-  titulo: store.oferta?.nombre + ' (edicion)',
+provide("infoPagina", {
+  titulo: store.oferta?.nombre + " (edicion)",
   camino: [
-    { label: 'ofertas', to: 'ofertas' },
-    { label: store.oferta?.nombre, to: 'ofertasDetalles' },
+    { label: "ofertas", to: "ofertas" },
+    { label: store.oferta?.nombre, to: "ofertasDetalles" },
   ],
 });
 
@@ -78,7 +78,7 @@ onMounted(async () => {
   if (oferta) {
     store.oferta = oferta;
   } else {
-    goTo(router, 'ofertas');
+    goTo(router, "ofertas");
   }
 });
 </script>

@@ -1,15 +1,11 @@
-varios
-- que se cierre un producto al abrir otro
-- ofertas de un producto (pestaña)
-- precios por mayor en el expand oferta proveedores
-
-- averiguar que se modifica/borra bien la oferta automatica
-- recarga de inventario
-
-- pasar categorias / catalogos lista a tabla
-- ofertas completas
-- borrar medidas si no usada
-
+que se cierra un producto al abrir otro
+ofertas de un producto (pestaña)
+precios por mayor en el expand oferta proveedores
+averiguar que se modifica/borra bien la oferta automatica
+recarga de inventario
+pasar categorias / catalogos lista a tabla
+ofertas completas
+borrar medidas si no usada
 todos los busquedores con stringify
 actualizar catalogos al crear nuevo, el select no se actualiza
 bug puntos
@@ -17,26 +13,30 @@ vencimiento permiso vencido ?
 gqltoken universel
 bug backend image
 cerrar sesion al usuario cuando se le cambia de permisos
-
-
-OK
+empleado breadcrumb undefined undefined
+recargar marcas+empaques al crear oferta (indexdb ?)
+bug oferta imagen no aparece
+no se puede borrar ofertas
+validacion telefono se porta raro al entrar un telefono ok
+avisar cuando es completa una oferta
+---
+OK:
 por unidad sin decimales + lo que dijo Vania
 bug punto catalogo
 oferta / producto marca object object
 counter de caracteres para abreviacion
 bug oferta "sin marca"
 no hay descripcion en expand
----
-recargar marcas+empaques al crear oferta (indexdb ?)
-bug oferta imagen no aparece
-no se puede borrar ofertas
 
-ETAPA 1
 ----------------------------------------
-EMPLEADOS Y PERMISOS
-OFERTAS conversion empaques, comparacion precio proveedor
+ETAPA 1
+PERMISOS
 MEDIDAS
+OFERTAS conversion empaques, comparacion precio proveedor
 STOCK alertas, busqueda, etc
 INVENTARIO segundo intento
 PROBLEMAS
 TESORERIA
+----------------------------------------
+ETAPA 2
+asignar administradores de puntos

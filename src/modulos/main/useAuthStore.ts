@@ -1,6 +1,6 @@
-import { apiAuth } from '~/modulos/main/API/auth.api';
-import type { ConexionResponse, Empleado, Entidad, Persona } from '#gql';
-import localforage from 'localforage';
+import { apiAuth } from "~/modulos/main/API/auth.api";
+import type { ConexionResponse, Empleado, Entidad, Persona } from "#gql";
+import localforage from "localforage";
 
 /**
  * AuthStore: Almacén de estado para la autenticación
@@ -36,7 +36,7 @@ interface AuthStoreProps {
   };
 }
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   /**
    * state
    */
@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
       usuario: null,
       negocio: null,
       recienDesconectado: false,
-      cookie: { rdcToken: '', registrado: null },
+      cookie: { rdcToken: "", registrado: null },
     };
   },
 
@@ -96,7 +96,7 @@ export const useAuthStore = defineStore('auth', {
       // negocios del usuario filtrando los empleados de las entidad
       const negocios = entidades.map((entidad) => {
         const empleado = entidad.empleados.find(
-          (empleado) => empleado.persona.usuario === loginResponse.usuario,
+          (empleado) => empleado.persona.usuario === loginResponse.usuario
         ) as Empleado;
         return {
           _id: entidad._id,
@@ -113,9 +113,9 @@ export const useAuthStore = defineStore('auth', {
 
       // agregamos el negocio 'cliente'
       negocios.push({
-        _id: '665ff01b7aa0f5756c88656e',
-        nombre: 'Cliente',
-        tipo: 'CLIENTELA',
+        _id: "665ff01b7aa0f5756c88656e",
+        nombre: "Cliente",
+        tipo: "CLIENTELA",
         cargos: [],
         permisos: [],
       });
@@ -144,7 +144,7 @@ export const useAuthStore = defineStore('auth', {
      */
     async elegirNegocio(index: number) {
       if (!this.getUsuario || !this.usuario?.negocios?.[index]) {
-        throw 'ERR_USUARIO_REQ';
+        throw "ERR_USUARIO_REQ";
       }
       try {
         const negocio = this.usuario.negocios[index];
@@ -175,11 +175,13 @@ export const useAuthStore = defineStore('auth', {
      * autorizar
      */
     autorizar(permisosRequeridos: string[] = []) {
+      if (!this.negocio) return false;
+
       const userPermisos = this.negocio.permisos;
-      const requerido = [...permisosRequeridos, 'DESAROLLO'];
+      const requerido = [...permisosRequeridos, "DESAROLLO"];
       let autorizado = false;
       for (const permiso of userPermisos) {
-        if (permiso === 'BLOQUEADO') return false;
+        if (permiso === "BLOQUEADO") return false;
         if (requerido.includes(permiso)) autorizado = true;
       }
       return permisosRequeridos.length === 0 || autorizado;
@@ -191,7 +193,7 @@ export const useAuthStore = defineStore('auth', {
     editarPerfil(persona: Persona, cloudinaryUrl = null) {
       this.$patch((state) => {
         if (!state.usuario) {
-          throw 'ERR_USUARIO_REQ';
+          throw "ERR_USUARIO_REQ";
         }
         Object.assign(state.usuario, {
           nombre: persona.nombre,

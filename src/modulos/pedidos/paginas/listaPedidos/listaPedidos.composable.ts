@@ -1,7 +1,7 @@
-import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
-import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { useAuthStore } from "@/modulos/main/useAuthStore";
 
 /**
  * LOGICA
@@ -19,7 +19,7 @@ export const useListaPedidos = () => {
       isShowPassword: false,
       isBuscarPorCategoria: false,
       isShowPedidos: false,
-      isShowEntidad: false
+      isShowEntidad: false,
     },
     isEditCantidad: false,
     pedidosEntidad: [],
@@ -29,40 +29,40 @@ export const useListaPedidos = () => {
     pedidosSinAceptar: [],
     pedidosRecibidos: [],
     pedidosFiltrados: [],
-    pedidoItemsEstado: '',
+    pedidoItemsEstado: "",
     itemPedido: {
-      id: '',
+      id: "",
       cantidad: 0,
-      comentario: ''
+      comentario: "",
     },
     ListaOfertasPedido: [] as any[],
     itemsEstadoAjustado: [] as any[],
-    passwordChofer: '',
-    pedidoID: '',
+    passwordChofer: "",
+    pedidoID: "",
     catalogoSeleccionado: [],
     catalogoSeleccionado2: [],
     searchResults: [],
-    filter: '',
+    filter: "",
     PedidosIDS: [],
     stocks: [],
     pedidoPuntos: [
       {
-        nombre: '',
-        cantidad: '',
-        ruta: '',
-        orden: ''
-      }
+        nombre: "",
+        cantidad: "",
+        ruta: "",
+        orden: "",
+      },
     ],
-    comentario: '',
+    comentario: "",
     entidadesSinPedidos: [],
     panaderia: [],
     reposteria: [],
     siinple: [],
     envasados: [],
     embotellados: [],
-    panaderiaTable: []
+    panaderiaTable: [],
   });
-  const filter = ref('');
+  const filter = ref("");
 
   // const obtenerCatalogosProductos = async () => {
   //   const catalogoArbol = await pedidoService.leerCatalogoConOfertas(
@@ -85,14 +85,14 @@ export const useListaPedidos = () => {
     const pedidos = listaPedidos.reduce(
       (accumulator: any, pedido: any) => {
         const allAccepted = pedido.items.every((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'aceptado')
+          item.estado.some((estado: any) => estado.estado === "aceptado")
         );
 
         const hasReceived = pedido.items.some((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'recibido')
+          item.estado.some((estado: any) => estado.estado === "recibido")
         );
         const allConfirmed = pedido.items.some((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'confirmado')
+          item.estado.some((estado: any) => estado.estado === "confirmado")
         );
 
         if (allAccepted && !hasReceived) {
@@ -126,8 +126,8 @@ export const useListaPedidos = () => {
           comprador: {
             ...pedido.comprador,
             ruta: pedido.comprador.ruta[indice],
-            orden: pedido.comprador.orden[indice]
-          }
+            orden: pedido.comprador.orden[indice],
+          },
         };
       })
       .sort((a: any, b: any) => {
@@ -148,8 +148,8 @@ export const useListaPedidos = () => {
           comprador: {
             ...pedido.comprador,
             ruta: pedido.comprador.ruta[indice],
-            orden: pedido.comprador.orden[indice]
-          }
+            orden: pedido.comprador.orden[indice],
+          },
         };
       })
       .sort((a: any, b: any) => {
@@ -168,8 +168,8 @@ export const useListaPedidos = () => {
           comprador: {
             ...pedido.comprador,
             ruta: pedido.comprador.ruta[indice],
-            orden: pedido.comprador.orden[indice]
-          }
+            orden: pedido.comprador.orden[indice],
+          },
         };
       })
       .sort((a: any, b: any) => {
@@ -188,8 +188,8 @@ export const useListaPedidos = () => {
           comprador: {
             ...pedido.comprador,
             ruta: pedido.comprador.ruta[indice],
-            orden: pedido.comprador.orden[indice]
-          }
+            orden: pedido.comprador.orden[indice],
+          },
         };
       })
       .sort((a: any, b: any) => {
@@ -208,8 +208,8 @@ export const useListaPedidos = () => {
           comprador: {
             ...pedido.comprador,
             ruta: pedido.comprador.ruta[indice],
-            orden: pedido.comprador.orden[indice]
-          }
+            orden: pedido.comprador.orden[indice],
+          },
         };
       })
       .sort((a: any, b: any) => {
@@ -881,6 +881,6 @@ export const useListaPedidos = () => {
 
     buscarPedidos2,
 
-    filter
+    filter,
   };
 };

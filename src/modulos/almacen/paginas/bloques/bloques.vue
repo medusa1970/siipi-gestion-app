@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { useBloques } from './bloques.composable';
+import { useBloques } from "./bloques.composable";
 const {
   estado,
   store,
@@ -101,11 +101,11 @@ const {
   handleBloqueCreado,
 } = useBloques();
 
-provide('infoPagina', {
-  titulo: 'Gestion de bloques',
-  camino: [{ label: 'bloques', to: 'bloques' }],
+provide("infoPagina", {
+  titulo: "Gestion de bloques",
+  camino: [{ label: "bloques", to: "bloques" }],
 });
 
-import BloqueImage from '@/assets/img/noHayBloque.png';
-import formBloque from '@/modulos/almacen/forms/formBloque.vue';
+import BloqueImage from "@/assets/img/noHayBloque.png";
+import formBloque from "@/modulos/almacen/forms/formBloque.vue";
 </script>

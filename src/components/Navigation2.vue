@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const props = withDefaults(
@@ -28,7 +28,7 @@ const props = withDefaults(
       params?: any;
     }[];
   }>(),
-  { color: 'orange' },
+  { color: "orange" }
 );
 
 const authStore = useAuthStore();

@@ -38,12 +38,12 @@
 </template>
 
 <script setup>
-import { useCatalogos } from './catalogos.composable';
+import { useCatalogos } from "./catalogos.composable";
 const { estado, store, authStore, router } = useCatalogos();
 
-provide('infoPagina', {
-  titulo: 'Gestion de catalogos',
-  camino: [{ label: 'Catalogos', to: 'catalogos' }],
+provide("infoPagina", {
+  titulo: "Gestion de catalogos",
+  camino: [{ label: "Catalogos", to: "catalogos" }],
 });
 
 onBeforeMount(async () => {

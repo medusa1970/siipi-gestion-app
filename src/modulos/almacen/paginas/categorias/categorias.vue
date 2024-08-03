@@ -194,7 +194,7 @@
 </template>
 
 <script setup>
-import { useCategorias } from './categorias.composable';
+import { useCategorias } from "./categorias.composable";
 const {
   estado,
   store,
@@ -208,9 +208,9 @@ const {
   borrarCategoriaArbol,
 } = useCategorias();
 
-provide('infoPagina', {
-  titulo: 'Gestion de categorias',
-  camino: [{ label: 'categorias', to: 'categorias' }],
+provide("infoPagina", {
+  titulo: "Gestion de categorias",
+  camino: [{ label: "categorias", to: "categorias" }],
 });
 
 onMounted(async () => {

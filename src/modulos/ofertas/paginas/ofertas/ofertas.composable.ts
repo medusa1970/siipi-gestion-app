@@ -1,10 +1,10 @@
-import type { Oferta } from '#gql';
-import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+import type { Oferta } from "#gql";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosOfertas = ['LOGISTICA'];
+export const permisosOfertas = ["ACCEDER"];
 
 /**
  * Composable
@@ -35,11 +35,11 @@ export const useOferta = () => {
   });
 
   const handleOfertaSimpleCreada = async (oferta) => {
-    NotifySucessCenter('Oferta creada éxitosamente');
+    NotifySucessCenter("Oferta creada éxitosamente");
     estado.modal.show_crearOfertaSimple = false;
   };
   const handleOfertaBasicaCreada = async (oferta) => {
-    NotifySucessCenter('Oferta creada éxitosamente');
+    NotifySucessCenter("Oferta creada éxitosamente");
     estado.modal.show_crearOfertaBasico = false;
   };
 

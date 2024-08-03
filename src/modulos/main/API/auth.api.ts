@@ -4,7 +4,7 @@ import type {
   Entidad,
   ModificarPersonaDto,
   Persona,
-} from '#gql';
+} from "#gql";
 
 export const apiAuth = {
   /**
@@ -14,7 +14,7 @@ export const apiAuth = {
   login: async (
     usuario: string,
     contrasena: string,
-    entidad?: string,
+    entidad?: string
   ): Promise<ConexionResponse> => {
     try {
       return extraer(
@@ -24,7 +24,7 @@ export const apiAuth = {
             contrasena,
             entidad,
           },
-        }),
+        })
       );
     } catch (err) {
       throw formatApiError(err);
@@ -39,8 +39,8 @@ export const apiAuth = {
         await GqlAuthCambiarEntidad(
           { datos: { entidad } },
           //@ts-ignore
-          useGqlToken(token),
-        ),
+          useGqlToken(token)
+        )
       );
     } catch (err) {
       throw formatApiError(err);
@@ -55,7 +55,7 @@ export const apiAuth = {
     try {
       return extraer(
         //@ts-ignore
-        await GqlAuthEntidadesUsuarioConectado(useGqlToken(token)),
+        await GqlAuthEntidadesUsuarioConectado(useGqlToken(token))
       );
     } catch (err) {
       throw formatApiError(err);
@@ -71,7 +71,7 @@ export const apiAuth = {
       const nuevaPersona = extraerUno(
         await GqlAuthCrearPersonas({
           datos: [datos],
-        }),
+        })
       );
       return nuevaPersona;
     } catch (err) {
@@ -97,7 +97,7 @@ export const apiAuth = {
    */
   actuarRDC: async (
     token: string,
-    contrasena: string | null = null,
+    contrasena: string | null = null
   ): Promise<boolean> => {
     try {
       // @ts-ignore contrasena puede ser null pero ts no lo detecta bien

@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { useAuthStore } from "@/modulos/main/useAuthStore";
 
 export const usePuntos = () => {
   const authStore = useAuthStore();
@@ -8,7 +8,7 @@ export const usePuntos = () => {
     pedidosSinAceptar: [],
     pedidosRecibidos: [],
     pedidosFiltrados: [],
-    pedidoItemsEstado: ''
+    pedidoItemsEstado: "",
   });
 
   const buscarPedidos = async () => {
@@ -21,14 +21,14 @@ export const usePuntos = () => {
     const pedidos = listaPedidos.reduce(
       (accumulator: any, pedido: any) => {
         const allAccepted = pedido.items.every((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'aceptado')
+          item.estado.some((estado: any) => estado.estado === "aceptado")
         );
 
         const hasReceived = pedido.items.some((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'recibido')
+          item.estado.some((estado: any) => estado.estado === "recibido")
         );
         const allConfirmed = pedido.items.some((item: any) =>
-          item.estado.some((estado: any) => estado.estado === 'confirmado')
+          item.estado.some((estado: any) => estado.estado === "confirmado")
         );
 
         if (allAccepted && !hasReceived) {
@@ -160,6 +160,6 @@ export const usePuntos = () => {
 
   return {
     estado,
-    buscarPedidos
+    buscarPedidos,
   };
 };

@@ -4,7 +4,7 @@
 
 <script setup>
 definePageMeta({
-  layout: 'cathering'
+  layout: "cathering",
 });
 </script>
 

@@ -28,12 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Categoria } from '#gql';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Categoria } from "#gql";
+import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
+const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
 
 // definicion de los props
 const props = withDefaults(
@@ -42,7 +42,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  },
+  }
 );
 
 // datos por defecto del formulario
@@ -54,7 +54,7 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: '',
+  errorNombre: "",
 });
 
 // opciones
@@ -82,16 +82,16 @@ const formSubmit = async () => {
     if (props.edicion) {
       const categoria = await api.modificarCategoria(
         props.edicion._id,
-        estado.dataForm,
+        estado.dataForm
       );
-      emits('modificarObjeto', categoria);
+      emits("modificarObjeto", categoria);
     } else {
       const categoria = await api.crearCategoria(estado.dataForm);
-      emits('crearObjeto', categoria);
+      emits("crearObjeto", categoria);
     }
   } catch (err) {
-    if (isApiBadRequest(err, 'duplicado')) {
-      estado.errorNombre = 'Ya existe una categoria con este nombre';
+    if (isApiBadRequest(err, "duplicado")) {
+      estado.errorNombre = "Ya existe una categoria con este nombre";
       return;
     }
     errFallBack(err);

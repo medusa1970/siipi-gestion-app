@@ -9,8 +9,8 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
-provide('infoPagina', {
-  titulo: 'Bienvenido',
-  camino: [{ label: 'bienvenido', to: 'cliente' }],
+provide("infoPagina", {
+  titulo: "Bienvenido",
+  camino: [{ label: "bienvenido", to: "cliente" }],
 });
 </script>

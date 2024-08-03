@@ -58,7 +58,7 @@
             icon="add"
             color="green"
             style="height: 16px; width: 16px; margin: 5px 10px"
-            @click="() => (estado.modal.formCrearEmpleado = true)"
+            @click="() => (estado.showModal.crearEmpleado = true)"
           />
         </div>
       </template>
@@ -88,16 +88,24 @@
       </template>
     </Tabla>
   </NuxtLayout>
+
+  <Popup v-model="estado.showModal.crearEmpleado" titulo="Nuevo producto">
+    <template #body>
+      <formEmpleado @crearObjeto="handleEmpleadoCreado" />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import { useEmpleados } from './empleados.composable';
-const { estado, store, authStore, router, rowsTabla } = useEmpleados();
-import EmpleadoImage from '@/assets/img/noHayEmpleado.png';
+import { useEmpleados } from "./empleados.composable";
+const { estado, store, authStore, router, rowsTabla, handleEmpleadoCreado } =
+  useEmpleados();
+import EmpleadoImage from "@/assets/img/noHayEmpleado.png";
+import formEmpleado from "@/modulos/empresa/forms/formEmpleado.vue";
 
-provide('infoPagina', {
-  titulo: 'Gestion de empleados',
-  camino: [{ label: 'Empleados', to: 'empleados' }],
+provide("infoPagina", {
+  titulo: "Gestion de empleados",
+  camino: [{ label: "Empleados", to: "empleados" }],
 });
 
 onMounted(async () => {

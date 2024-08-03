@@ -106,14 +106,16 @@
       </q-item>
 
       <q-list v-for="item in menuList">
-        <q-btn
-          v-if="authStore.autorizar(item.permisos)"
-          :icon="item.icon"
-          :label="item.label"
-          :to="getRoute(router, item.to)"
-          flat
-          no-caps
-        />
+        <div v-if="!item.soloDev || $config.public.DeployStatus !== 'PROD'">
+          <q-btn
+            v-if="authStore.autorizar(item.permisos)"
+            :icon="item.icon"
+            :label="item.label"
+            :to="getRoute(router, item.to)"
+            flat
+            no-caps
+          />
+        </div>
       </q-list>
 
       <!--
@@ -240,7 +242,7 @@
 
 <script setup>
 // breadcrumb
-const infoPagina = inject('infoPagina');
+const infoPagina = inject("infoPagina");
 
 // PROPS
 defineProps({
@@ -254,19 +256,19 @@ defineProps({
 });
 
 // IMPORTS
-import { ref, watch, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-import { useQuasar } from 'quasar';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
-import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { ref, watch, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+import { useAuthStore } from "~/modulos/main/useAuthStore";
+import usuarioMenu from "~/modulos/main/componientes/usuarioMenu.vue";
+import { storePedido } from "@/modulos/pedidos/pedidos.store";
 
 const router = useRouter();
 const authStore = useAuthStore();
 const pedidoStore = storePedido();
 
 if (!authStore.getUsuario) {
-  goTo(router, 'inicio');
+  goTo(router, "inicio");
 }
 
 const $q = useQuasar();

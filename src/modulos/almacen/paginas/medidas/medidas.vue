@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMedidas } from './medidas.composable';
+import { useMedidas } from "./medidas.composable";
 const {
   estado,
   store,
@@ -85,43 +85,43 @@ const {
   handleMedidaModificada,
 } = useMedidas();
 
-import MedidaImage from '@/assets/img/noHayMedida.png';
-import formMedida from '@/modulos/almacen/forms/formMedida.vue';
+import MedidaImage from "@/assets/img/noHayMedida.png";
+import formMedida from "@/modulos/almacen/forms/formMedida.vue";
 
-provide('infoPagina', {
-  titulo: 'Gestion de medidas',
-  camino: [{ label: 'medidas', to: 'medidas' }],
+provide("infoPagina", {
+  titulo: "Gestion de medidas",
+  camino: [{ label: "medidas", to: "medidas" }],
 });
 
 const columnsTabla = [
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    style: 'width:50px; margin:5px; padding: 5px',
-    align: 'center',
+    style: "width:50px; margin:5px; padding: 5px",
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
-    name: 'nombre',
-    label: 'Nombre',
-    style: 'width:50px; margin:5px; padding: 5px; width:100%',
-    align: 'left',
+    name: "nombre",
+    label: "Nombre",
+    style: "width:50px; margin:5px; padding: 5px; width:100%",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
   },
   {
-    name: 'abreviacio',
-    label: 'Abreviacion',
-    style: 'width:50px; margin:5px; padding: 5px; width:100%',
-    align: 'left',
+    name: "abreviacio",
+    label: "Abreviacion",
+    style: "width:50px; margin:5px; padding: 5px; width:100%",
+    align: "left",
     field: (row: any) => row.abreviacion,
     sortable: true,
   },
   {
-    name: 'actions',
-    label: '',
-    align: 'center',
+    name: "actions",
+    label: "",
+    align: "center",
     slot: true,
   },
 ];

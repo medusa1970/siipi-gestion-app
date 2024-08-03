@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { useProveedores } from './proveedores.composable';
+import { useProveedores } from "./proveedores.composable";
 const {
   estado,
   store,
@@ -76,36 +76,36 @@ const {
   handleProveedorModificado,
 } = useProveedores();
 
-import ProveedorImage from '@/assets/img/noHayProveedor.png';
-import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
+import ProveedorImage from "@/assets/img/noHayProveedor.png";
+import formProveedor from "@/modulos/almacen/forms/formProveedor.vue";
 
-provide('infoPagina', {
-  titulo: 'Gestion de proveedores',
-  camino: [{ label: 'proveedores', to: 'proveedores' }],
+provide("infoPagina", {
+  titulo: "Gestion de proveedores",
+  camino: [{ label: "proveedores", to: "proveedores" }],
 });
 
 const columnsTabla = [
   {
-    name: 'imagen',
-    label: 'Imagen',
+    name: "imagen",
+    label: "Imagen",
     imagen: true,
-    style: 'width:50px; margin:5px; padding: 5px',
-    align: 'center',
+    style: "width:50px; margin:5px; padding: 5px",
+    align: "center",
     field: (row: any) => row.imagen?.cloudinaryUrl,
   },
   {
-    name: 'nombre',
-    label: 'Nombre',
-    style: 'width:50px; margin:5px; padding: 5px; width:100%',
-    align: 'left',
+    name: "nombre",
+    label: "Nombre",
+    style: "width:50px; margin:5px; padding: 5px; width:100%",
+    align: "left",
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true,
   },
   {
-    name: 'actions',
-    label: '',
-    align: 'center',
+    name: "actions",
+    label: "",
+    align: "center",
     slot: true,
   },
 ];

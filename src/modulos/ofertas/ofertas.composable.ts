@@ -1,8 +1,12 @@
-import { storeOferta } from "./ofertas.store";
+import { storeOferta } from './ofertas.store';
+import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useOfertas = () => {
   const store = storeOferta();
-  const estado = reactive({
+  const router = useRouter();
+  const authStore = useAuthStore();
+
+  const estadoOfertas = reactive({
     catalogoSeleccionado: null as string,
   });
 
@@ -12,8 +16,10 @@ export const useOfertas = () => {
 
   // exports
   return {
-    estado,
+    estadoOfertas,
     store,
+    authStore,
+    router,
     ofertaAbreviacion,
   };
 };

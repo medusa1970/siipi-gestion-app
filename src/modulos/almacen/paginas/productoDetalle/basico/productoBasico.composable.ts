@@ -1,5 +1,5 @@
-import type { CrearProductoDto } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { CrearProductoDto } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 const initForm = {
   nombre: null,
@@ -12,7 +12,7 @@ const initForm = {
 } as CrearProductoDto;
 
 export const useProductoBasico = () => {
-  const { store, estado: estadoAlmacen } = useAlmacen();
+  const { store, authStore, estadoAlmacen, router } = useAlmacen();
   const estado = reactive({
     dataForm: clone(initForm),
     errorNombre: null,
@@ -20,13 +20,15 @@ export const useProductoBasico = () => {
   });
 
   const handleProductoModificado = (producto) => {
-    NotifySucessCenter("Producto modificado correctamente");
+    NotifySucessCenter('Producto modificado correctamente');
     store.producto = producto;
   };
 
   return {
-    store,
     estado,
+    store,
+    authStore,
+    router,
     handleProductoModificado,
   };
 };

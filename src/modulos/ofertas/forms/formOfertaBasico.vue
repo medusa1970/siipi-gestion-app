@@ -135,7 +135,7 @@ const selectCatalogo = computed(() => {
 
 // opciones
 const selectSubCatalogo = computed(() => {
-  const catalogo = store.getCatalogo(estado.catalogoAncestro);
+  const catalogo = store.getgetOne(estado.catalogoAncestro);
   if (!catalogo) return [];
   let options = [];
   for (const cat of catalogo.hijas) {
@@ -165,7 +165,7 @@ const selectSubCatalogo = computed(() => {
 onMounted(async () => {
   // recuperamos el catalogo padre del catalogo en edicion si necesario
   if (props.edicion?.catalogo?._id) {
-    await store.getCatalogos();
+    await store.getCatalogoArbol();
     const f = (id, catalogo) => {
       return (
         catalogo._id === id ||

@@ -10,7 +10,7 @@
 import PortadaCathering from '@/assets/img/cookies.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { permisosBloques } from '~/modulos/almacen/paginas/bloques/bloques.composable';
-import { permisosCategoria } from '~/modulos/almacen/paginas/categorias/categoria.composable';
+import { permisosCategoria } from '~/modulos/almacen/paginas/categorias/categorias.composable';
 import { permisosMarcas } from '~/modulos/almacen/paginas/marcas/marcas.composable';
 import { permisosMedidas } from '~/modulos/almacen/paginas/medidas/medidas.composable';
 import { permisosProductos } from '~/modulos/almacen/paginas/productos/productos.composable';
@@ -102,3 +102,4 @@ const menu = [
   },
 ];
 </script>
+~/modulos/almacen/paginas/categorias/categorias.composable

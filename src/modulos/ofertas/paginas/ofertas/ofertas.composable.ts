@@ -1,7 +1,14 @@
-import type { Catalogo, Oferta } from "#gql";
-import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
-import { storeOferta } from "@/modulos/ofertas/ofertas.store";
-import localforage from "localforage";
+import type { Oferta } from '#gql';
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosOfertas = ['LOGISTICA'];
+
+/**
+ * Composable
+ */
 
 const init_crearOfertaBasico = {
   nombre: null as string,
@@ -11,7 +18,7 @@ const init_crearOfertaBasico = {
 };
 
 export const useOferta = () => {
-  const store = storeOferta();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
   const estado = reactive({
     ofertas: [] as Oferta[],
 
@@ -28,17 +35,19 @@ export const useOferta = () => {
   });
 
   const handleOfertaSimpleCreada = async (oferta) => {
-    NotifySucessCenter("Oferta creada éxitosamente");
+    NotifySucessCenter('Oferta creada éxitosamente');
     estado.modal.show_crearOfertaSimple = false;
   };
   const handleOfertaBasicaCreada = async (oferta) => {
-    NotifySucessCenter("Oferta creada éxitosamente");
+    NotifySucessCenter('Oferta creada éxitosamente');
     estado.modal.show_crearOfertaBasico = false;
   };
 
   return {
     estado,
     store,
+    authStore,
+    router,
     handleOfertaSimpleCreada,
     handleOfertaBasicaCreada,
   };

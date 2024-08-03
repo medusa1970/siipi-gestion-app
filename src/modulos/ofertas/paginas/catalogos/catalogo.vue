@@ -1,22 +1,17 @@
 <template>
   <NuxtLayout name="cathering">
-    <!-- ARBOL -->
     <div class="flex justify-center mt-4">
-      <q-list
-        class="rounded-borders w-[350px]"
-        v-for="categoria in estado.categorias"
-        :key="categoria._id"
-      >
+      <q-list class="rounded-borders w-[350px]">
         <q-expansion-item
           expand-separator
           icon="category"
-          :label="categoria.nombre"
+          :label="estado.catalogoSeleccionado.nombre"
           default-opened
           dense
         >
           <template v-slot:header>
             <q-item-section>
-              <h1>{{ categoria?.nombre }}</h1>
+              <h1>{{ estado.catalogoSeleccionado?.nombre }}</h1>
             </q-item-section>
 
             <q-item-section side>
@@ -25,13 +20,15 @@
                   name="add"
                   size="17px"
                   class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                  @click.stop="modalCrearCategoria(categoria)"
+                  @click.stop="
+                    modalCrearCatalogoCategoria(estado.catalogoSeleccionado)
+                  "
                 />
               </div>
             </q-item-section>
           </template>
           <q-list
-            v-for="(item, index) in categoria?.hijas"
+            v-for="(item, index) in estado.catalogoSeleccionado.hijas"
             :key="index"
             class="border-b-[1px] border-gray-300"
           >
@@ -44,7 +41,9 @@
               dense
             >
               <template v-slot:header>
-                <q-item-section> {{ item.nombre }} </q-item-section>
+                <q-item-section>
+                  {{ item.nombre }}
+                </q-item-section>
 
                 <q-item-section side>
                   <div class="row items-center">
@@ -52,14 +51,14 @@
                       name="add"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75 bg-green-600 text-white rounded-full"
-                      @click.stop="modalCrearCategoria(item)"
+                      @click.stop="modalCrearCatalogoCategoria(item)"
                     />
                     <q-icon
                       name="edit"
                       color="primary"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                      @click.stop="modalModificarCategoria(item)"
+                      @click.stop="modalModificarCatalogoCategoria(item)"
                     />
                     <q-icon
                       v-if="item.hijas.length == 0"
@@ -67,7 +66,7 @@
                       color="red"
                       size="17px"
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                      @click.stop="borrarCategoriaArbol(item)"
+                      @click.stop="borrarCatalogoArbol(item, params.id)"
                     />
                   </div>
                 </q-item-section>
@@ -84,7 +83,11 @@
                   dense
                 >
                   <template v-slot:header>
-                    <q-item-section> {{ item2.nombre }} </q-item-section>
+                    <q-item-section>
+                      {{ item2.nombre }} ({{
+                        item2.ofertas.length
+                      }})</q-item-section
+                    >
 
                     <q-item-section side>
                       <div class="row items-center">
@@ -93,15 +96,15 @@
                           color="primary"
                           size="17px"
                           class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                          @click.stop="modalModificarCategoria(item2)"
+                          @click.stop="modalModificarCatalogoCategoria(item2)"
                         />
                         <q-icon
-                          v-if="item2.productos.length == 0"
+                          v-if="item2.ofertas.length == 0"
                           name="delete"
                           color="red"
                           size="17px"
                           class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
-                          @click.stop="borrarCategoriaArbol(item2)"
+                          @click.stop="borrarCatalogoArbol(item2, params.id)"
                         />
                       </div>
                     </q-item-section>
@@ -115,12 +118,11 @@
     </div>
   </NuxtLayout>
 
-  <!-- DIALOGOS -->
-  <!-- MODAL CATEGORIA -->
-  <q-dialog persistent v-model="estado.modal.show_agregarCategoria">
+  <!-- MODAL CATALOGO -->
+  <q-dialog persistent v-model="estado.modal.show_agregarCategoriaCatalogo">
     <q-card class="p-3 w-[380px]">
       <div class="flex justify-between">
-        <h1 class="text-lg font-bold">Agregar Categoria</h1>
+        <h1 class="text-lg font-bold">Agregar Catalogo</h1>
         <q-btn
           icon="close"
           flat
@@ -134,45 +136,7 @@
 
       <div class="my-1">
         <q-input
-          v-model="estado.datos_categoria.nombre"
-          label="Nombre categoria"
-          dense
-        />
-      </div>
-      <div class="flex row justify-center">
-        <q-btn
-          class="mt-2 mb-1"
-          no-caps
-          style="font-size: 15px"
-          padding="4px 10px"
-          label="Guardar"
-          color="secondary"
-          type="submit"
-          @click="crearCategoriaArbol"
-        ></q-btn>
-      </div>
-    </q-card>
-  </q-dialog>
-
-  <!-- MODAL editar CATEGORIA -->
-  <q-dialog persistent v-model="estado.modal.show_modificarCategoria">
-    <q-card class="p-3 w-[380px]">
-      <div class="flex justify-between">
-        <h1 class="text-lg font-bold">Editar Categoria</h1>
-        <q-btn
-          icon="close"
-          flat
-          round
-          dense
-          v-close-popup
-          class="border-2 border-red-500"
-        />
-      </div>
-      <!-- <q-space /> -->
-
-      <div class="my-1">
-        <q-input
-          v-model="estado.datos_categoria.nombre"
+          v-model="estado.datos_catalogoCategoria.nombre"
           label="Nombre del catalogo"
           dense
         />
@@ -186,7 +150,45 @@
           label="Guardar"
           color="secondary"
           type="submit"
-          @click="modificarCategoriaArbol"
+          @click="crearCatalogoArbol(params.id)"
+        ></q-btn>
+      </div>
+    </q-card>
+  </q-dialog>
+
+  <!-- MODAL editar CATALOGO -->
+  <q-dialog persistent v-model="estado.modal.show_modificarCategoriaCatalogo">
+    <q-card class="p-3 w-[380px]">
+      <div class="flex justify-between">
+        <h1 class="text-lg font-bold">Editar Catalogoo</h1>
+        <q-btn
+          icon="close"
+          flat
+          round
+          dense
+          v-close-popup
+          class="border-2 border-red-500"
+        />
+      </div>
+      <!-- <q-space /> -->
+
+      <div class="my-1">
+        <q-input
+          v-model="estado.datos_catalogoCategoria.nombre"
+          label="Nombre del catalogo"
+          dense
+        />
+      </div>
+      <div class="flex row justify-center">
+        <q-btn
+          class="mt-2 mb-1"
+          no-caps
+          style="font-size: 15px"
+          padding="4px 10px"
+          label="Guardar"
+          color="secondary"
+          type="submit"
+          @click="modificarCatalogoArbol(params.id)"
         ></q-btn>
       </div>
     </q-card>
@@ -194,29 +196,36 @@
 </template>
 
 <script setup>
-import { useCategorias } from './categorias.composable';
+import { useCatalogos } from './catalogos.composable';
+import { useRoute } from 'vue-router';
 const {
   estado,
   store,
   authStore,
   router,
-  buscarCategorias,
-  modalCrearCategoria,
-  crearCategoriaArbol,
-  modalModificarCategoria,
-  modificarCategoriaArbol,
-  borrarCategoriaArbol,
-} = useCategorias();
+  modalCrearCatalogoCategoria,
+  crearCatalogoArbol,
+  modalModificarCatalogoCategoria,
+  modificarCatalogoArbol,
+  borrarCatalogoArbol,
+} = useCatalogos();
+
+const { params } = useRoute();
+const titulo = ref(null);
+titulo.value = 'Catalogo ' + (await store.getCatalogoArbol(params.id)).nombre;
+
+onBeforeMount(async () => {
+  estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
+});
 
 provide('infoPagina', {
-  titulo: 'Gestion de categorias',
-  camino: [{ label: 'categorias', to: 'categorias' }],
-});
-
-onMounted(async () => {
-  await buscarCategorias();
+  titulo: titulo,
+  camino: [
+    { label: 'Catalogos', to: 'catalogos' },
+    {
+      label: 'detalle',
+      to: 'catalogos-id',
+    },
+  ],
 });
 </script>
-
-<style lang="scss" scoped></style>
-./categorias.composable

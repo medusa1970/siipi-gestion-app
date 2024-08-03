@@ -1,15 +1,19 @@
-import { storeOferta } from "@/modulos/ofertas/ofertas.store.js";
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosOfertaDetalle = ['LOGISTICA'];
+
+/**
+ * Composable
+ */
 export const useOfertaDetalle = () => {
-  /** DECLARACIONES */
-  const store = storeOferta();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
 
-  /** REACTIVOS */
   const estado = reactive({
-    tab: "datosBasicos",
+    tab: 'datosBasicos',
   });
 
-  /** FUNCIONES */
-
-  return { estado, store };
+  return { estado, store, authStore, router };
 };

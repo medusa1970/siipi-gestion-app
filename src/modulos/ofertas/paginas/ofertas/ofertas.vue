@@ -1,9 +1,5 @@
 <template>
-  <Navigation2
-    :nav="[{ label: 'ofertas', to: 'ofertas' }]"
-    titulo="Gestion de ofertas"
-  />
-  <div>
+  <NuxtLayout name="cathering">
     <Tabla :rows="rowsParaMostrar" :columns="columnaOfertas">
       <!-- AGREGAR -->
 
@@ -205,31 +201,39 @@
         </div>
       </template>
     </Tabla>
-  </div>
+  </NuxtLayout>
 
   <Popup v-model="estado.modal.show_crearOfertaBasico" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaBasico @crearObjeto="composable.handleOfertaBasicaCreada" />
+      <formOfertaBasico @crearObjeto="handleOfertaBasicaCreada" />
     </template>
   </Popup>
 
   <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaProducto @crearObjeto="composable.handleOfertaSimpleCreada" />
+      <formOfertaProducto @crearObjeto="handleOfertaSimpleCreada" />
     </template>
   </Popup>
 </template>
 
 <script setup lang="ts">
+import { useOferta } from './ofertas.composable';
+const {
+  estado,
+  store,
+  authStore,
+  router,
+  handleOfertaBasicaCreada,
+  handleOfertaSimpleCreada,
+} = useOferta();
+
 import { columnaOfertas } from './columns';
 import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
-import { useOferta } from './ofertas.composable';
-const composable = useOferta();
-const { estado, store } = composable;
-const router = useRouter();
-definePageMeta({
-  layout: 'cathering',
+
+provide('infoPagina', {
+  titulo: 'Gestion de ofertas',
+  camino: [{ label: 'Ofertas', to: 'ofertas' }],
 });
 
 // opciones
@@ -282,7 +286,7 @@ const rowsParaMostrar = computed(() => {
 
 onMounted(async () => {
   estado.ofertas = await store.getOfertas();
-  await store.getCatalogos();
+  await store.getCatalogoArbol();
 });
 
 // sockets

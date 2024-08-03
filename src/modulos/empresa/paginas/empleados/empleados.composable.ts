@@ -10,7 +10,7 @@ export const permisosEmpleados = ['ADQUISICION', 'ALMACEN'];
  * Composable para empresa/empleados
  */
 export const useEmpleados = () => {
-  const { store, authStore, router } = useEmpresa();
+  const { store, authStore, estadoEmpresa, router } = useEmpresa();
   if (!authStore.autorizar(permisosEmpleados)) goTo(router, 'noAutorizado');
 
   const estado = reactive({

@@ -1,31 +1,20 @@
-/**
- * ofertaStore: Almacén de estado para la autenticación
- * Contiene información sobre el usuario autenticado, el token y el negocio seleccionado.
- */
-
 import type { Catalogo, Oferta } from '#gql';
 import localforage from 'localforage';
-import { defineStore } from 'pinia';
 import { apiOfertas } from '../ofertas/API/ofertas.api';
 
 interface storeProps {
+  // colecciones
   ofertas: Oferta[] | null;
   catalogoArbol: Catalogo | null;
-
+  // seleccionados
   oferta: Oferta | null;
-
-  catalogos: Catalogo[] | null;
-  catalogoSeleccionado: Catalogo | null;
 }
 
 export const storeOferta = defineStore('ofertas', {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
-
     oferta: null,
-    catalogos: null,
-    catalogoSeleccionado: null,
   }),
 
   getters: {},
@@ -61,7 +50,7 @@ export const storeOferta = defineStore('ofertas', {
     /**
      * Retorna el arbol de catalogo
      */
-    async getCatalogos(id: string = null): Promise<Catalogo> {
+    async getCatalogoArbol(id: string = null): Promise<Catalogo> {
       if (this.catalogoArbol === null) {
         try {
           this.catalogoArbol = await apiOfertas.buscarArbolCatalogosRaiz();
@@ -70,13 +59,13 @@ export const storeOferta = defineStore('ofertas', {
           return null;
         }
       }
-      return id == null ? this.catalogoArbol : this.getCatalogo(id);
+      return id == null ? this.catalogoArbol : this.getOne(id);
     },
-    refreshCatalogos(): void {
+    async refreshCatalogoArbol(id: string = null): Promise<Catalogo> {
       this.catalogoArbol = null;
-      this.getCatalogos();
+      return await this.getCatalogoArbol(id);
     },
-    getCatalogo(id: string): Catalogo {
+    getOne(id: string): Catalogo {
       if (this.catalogoArbol === null) return null;
       const f = (catalogo) => {
         if (catalogo._id === id) {
@@ -86,8 +75,9 @@ export const storeOferta = defineStore('ofertas', {
             const res = f(hija);
             if (res) return res;
           }
+        } else {
+          return null;
         }
-        return null;
       };
       return f(this.catalogoArbol);
     },

@@ -1,10 +1,10 @@
-import type { Medida, TipoEmpaque } from "#gql";
-import type { SelectOpcion } from "~/components/input/select.interface";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
-import { useQuasar } from "quasar";
+import type { Medida } from '#gql';
+import type { SelectOpcion } from '~/components/input/select.interface';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useQuasar } from 'quasar';
 
 export const useProductoMedidas = () => {
-  const { store, estado: estadoAlmacen } = useAlmacen();
+  const { store, authStore, estadoAlmacen, router } = useAlmacen();
   const $q = useQuasar();
 
   const estado = reactive({
@@ -23,7 +23,7 @@ export const useProductoMedidas = () => {
     medidaOpciones: [] as SelectOpcion[],
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: "",
+      buscarFiltro: '',
     },
   });
 
@@ -38,18 +38,18 @@ export const useProductoMedidas = () => {
       errFallBack(err);
       return;
     }
-    NotifySucess("Medida guardada correctamente");
+    NotifySucess('Medida guardada correctamente');
     store.producto.medida = producto.medida;
   };
 
   const handleEmpaqueCreado = (empaque, producto) => {
-    NotifySucessCenter("Empaque creado éxitosamente");
+    NotifySucessCenter('Empaque creado éxitosamente');
     estado.modal.formEmpaqueCrear = false;
     store.producto = producto;
   };
 
   const handleEmpaqueModificado = (empaque, producto) => {
-    NotifySucessCenter("Empaque modificade éxitosamente");
+    NotifySucessCenter('Empaque modificade éxitosamente');
     estado.modal.formEmpaqueModificar = false;
     store.producto = producto;
   };
@@ -57,7 +57,7 @@ export const useProductoMedidas = () => {
   const borrarProductoEmpaque = (empaque: any) => {
     $q.dialog({
       title: `Eliminar ${empaque.nombre}`,
-      message: "No se puede deshacer.",
+      message: 'No se puede deshacer.',
       cancel: true,
       persistent: true,
     }).onOk(async () => {
@@ -69,13 +69,13 @@ export const useProductoMedidas = () => {
               borrar: { _id: empaque._id },
             },
           },
-          { loading: true }
+          { loading: true },
         );
         if (productoEmpaque) {
-          NotifySucessCenter("Empaque borrado correctamente");
+          NotifySucessCenter('Empaque borrado correctamente');
 
           store.producto.empaques = store.producto.empaques.filter(
-            (e) => e._id !== empaque._id
+            (e) => e._id !== empaque._id,
           );
         }
       } catch (error) {
@@ -85,8 +85,10 @@ export const useProductoMedidas = () => {
   };
 
   return {
-    store,
     estado,
+    store,
+    authStore,
+    router,
     formSubmit,
     handleEmpaqueModificado,
     handleEmpaqueCreado,

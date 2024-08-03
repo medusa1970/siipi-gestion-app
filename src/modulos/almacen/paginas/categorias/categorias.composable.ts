@@ -15,7 +15,7 @@ const init_categoria = {
   nombre: null as string,
 };
 
-export const useCategoria = () => {
+export const useCategorias = () => {
   const { store, authStore, router } = useAlmacen();
   if (!authStore.autorizar(permisosCategoria)) goTo(router, 'noAutorizado');
 

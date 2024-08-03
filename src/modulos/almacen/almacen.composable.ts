@@ -5,7 +5,7 @@ import { useAuthStore } from '@/modulos/main/useAuthStore';
 export const useAlmacen = () => {
   const router = useRouter();
   const store = storeAlmacen();
-  const estado = reactive({});
+  const estadoAlmacen = reactive({});
   const authStore = useAuthStore();
 
   /**
@@ -22,7 +22,7 @@ export const useAlmacen = () => {
 
   // exports
   return {
-    estado,
+    estadoAlmacen,
     store,
     authStore,
     router,

@@ -16,8 +16,9 @@ const init_catalogoCategoria = {
 };
 
 export const useCatalogos = () => {
-  const { store, authStore, estadoOfertas, router } = useOfertas();
   const $q = useQuasar();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
+  if (!authStore.autorizar(permisosCatalogos)) goTo(router, "noAutorizado");
 
   const estado = reactive({
     catalogoSeleccionado: null as Catalogo,
@@ -63,7 +64,7 @@ export const useCatalogos = () => {
     try {
       catalogoModificado = await api.modificarCatalogo(
         { _id: [estado.datos_catalogoCategoria._id] },
-        { nombre: estado.datos_catalogoCategoria.nombre }
+        { nombre: estado.datos_catalogoCategoria.nombre },
       );
       if (!catalogoModificado) throw "No se pudo modificar el catalogo";
     } catch (err) {
@@ -94,7 +95,7 @@ export const useCatalogos = () => {
       }
       NotifySucessCenter("Catalogo eliminada correctamente");
       estado.catalogoSeleccionado = await store.refreshCatalogoArbol(
-        catalogoID
+        catalogoID,
       );
     });
   };

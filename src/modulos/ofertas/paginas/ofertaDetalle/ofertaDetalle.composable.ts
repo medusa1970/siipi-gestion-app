@@ -10,6 +10,7 @@ export const permisosOfertaDetalle = ["ACCEDER"];
  */
 export const useOfertaDetalle = () => {
   const { store, authStore, estadoOfertas, router } = useOfertas();
+  if (!authStore.autorizar(permisosOfertaDetalle)) goTo(router, "noAutorizado");
 
   const estado = reactive({
     tab: "datosBasicos",

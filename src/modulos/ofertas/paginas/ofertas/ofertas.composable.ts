@@ -19,6 +19,8 @@ const init_crearOfertaBasico = {
 
 export const useOferta = () => {
   const { store, authStore, estadoOfertas, router } = useOfertas();
+  if (!authStore.autorizar(permisosOfertas)) goTo(router, "noAutorizado");
+
   const estado = reactive({
     ofertas: [] as Oferta[],
 

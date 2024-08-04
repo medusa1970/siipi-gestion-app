@@ -19,6 +19,8 @@ import { permisosStock } from "~/modulos/almacen/paginas/stock/stock.composable"
 import { permisosEmpleados } from "~/modulos/empresa/paginas/empleados/empleados.composable";
 import { permisosTesoreria } from "~/modulos/empresa/paginas/tesoreria/tesoreria.composable";
 import { useAuthStore } from "~/modulos/main/useAuthStore";
+import { permisosCatalogos } from "~/modulos/ofertas/paginas/catalogos/catalogos.composable";
+import { permisosOfertas } from "~/modulos/ofertas/paginas/ofertas/ofertas.composable";
 const authStore = useAuthStore();
 const router = useRouter();
 if (authStore.getNegocio?.tipo !== "CATHERING") {
@@ -85,11 +87,13 @@ const menu = [
         icon: "menu_book",
         label: "Ofertas",
         to: "ofertas",
+        permisos: permisosOfertas,
       },
       {
         icon: "category",
         label: "Catalogos",
         to: "catalogos",
+        permisos: permisosCatalogos,
       },
     ],
   },
@@ -98,6 +102,7 @@ const menu = [
     label: "Pedidos",
     key: "pedidos",
     permisos: permisosProductos,
+    soloDev: true,
     subMenu: [
       {
         icon: "shopping_cart",
@@ -109,6 +114,7 @@ const menu = [
         icon: "shopping_cart",
         label: "Pedidos global",
         to: "pedidosGlobal",
+        soloDev: true,
       },
     ],
   },

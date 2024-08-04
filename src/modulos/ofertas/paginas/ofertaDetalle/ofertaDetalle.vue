@@ -49,15 +49,7 @@ import AccionesTab from "@/modulos/ofertas/paginas/ofertaDetalle/acciones/Accion
 provide("infoPagina", {
   titulo: store.oferta?.nombre + " (edicion)",
   camino: [
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-    { label: "ofertas", to: "ofertas" },
-=======
     { label: "Ofertas", to: "ofertas" },
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-    { label: "Ofertas", to: "ofertas" },
->>>>>>> Stashed changes
     { label: store.oferta?.nombre, to: "ofertasDetalles" },
   ],
 });

@@ -243,24 +243,10 @@ const estado = reactive({
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  estado.dataForm.precioConFactura ? "orange" : "orange-4"
-);
-const colorCalculateCon = computed(() =>
-  estado.dataForm.precioSinFactura ? "orange" : "orange-4"
-=======
   estado.dataForm.precioConFactura ? "orange" : "orange-4",
 );
 const colorCalculateCon = computed(() =>
   estado.dataForm.precioSinFactura ? "orange" : "orange-4",
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-  estado.dataForm.precioConFactura ? "orange" : "orange-4",
-);
-const colorCalculateCon = computed(() =>
-  estado.dataForm.precioSinFactura ? "orange" : "orange-4",
->>>>>>> Stashed changes
 );
 
 // producto seleccionado

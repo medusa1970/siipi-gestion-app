@@ -20,20 +20,8 @@
 
 <script setup lang="ts">
 import { useProductoAcciones } from "./productoAcciones.composable";
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-import { useRouter } from "vue-router";
-import { ref } from "vue";
-const { estado, authStore, store, borrarProducto } = useProductoAcciones();
-const router = useRouter();
-=======
 const { estado, authStore, store, router, borrarProducto } =
   useProductoAcciones();
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-const { estado, authStore, store, router, borrarProducto } =
-  useProductoAcciones();
->>>>>>> Stashed changes
 
 // si no hay producto, pagina equivocada y volvemos a lalista
 if (!store.producto) {

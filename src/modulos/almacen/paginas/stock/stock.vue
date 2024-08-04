@@ -321,15 +321,7 @@ const {
 
 provide("infoPagina", {
   titulo: "Gestion de stock",
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  camino: [{ label: "stock", to: "stock" }],
-=======
   camino: [{ label: "Stock", to: "stock" }],
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-  camino: [{ label: "Stock", to: "stock" }],
->>>>>>> Stashed changes
 });
 
 import formInventario from "@/modulos/almacen/forms/formInventario.vue";

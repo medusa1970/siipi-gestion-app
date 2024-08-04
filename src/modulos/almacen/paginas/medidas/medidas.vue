@@ -59,40 +59,15 @@
 
 <script setup lang="ts">
 import { useMedidas } from "./medidas.composable";
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-const {
-  estado,
-  store,
-  authStore,
-  router,
-  rowsTabla,
-  handleMedidaCreada,
-  handleMedidaModificada,
-} = useMedidas();
-=======
 const { estado, store, authStore, router, rowsTabla, handleMedidaCreada } =
   useMedidas();
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-const { estado, store, authStore, router, rowsTabla, handleMedidaCreada } =
-  useMedidas();
->>>>>>> Stashed changes
 
 import MedidaImage from "@/assets/img/noHayMedida.png";
 import formMedida from "@/modulos/almacen/forms/formMedida.vue";
 
 provide("infoPagina", {
   titulo: "Gestion de medidas",
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  camino: [{ label: "medidas", to: "medidas" }],
-=======
   camino: [{ label: "Medidas", to: "medidas" }],
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-  camino: [{ label: "Medidas", to: "medidas" }],
->>>>>>> Stashed changes
 });
 
 const columnsTabla = [

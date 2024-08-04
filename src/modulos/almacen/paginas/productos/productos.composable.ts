@@ -76,15 +76,7 @@ export const useProductos = () => {
       filtered = filtered.filter((producto) => {
         return regex.test(
           producto.nombre +
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-            producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-=======
             producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-            producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
->>>>>>> Stashed changes
         );
       });
     }

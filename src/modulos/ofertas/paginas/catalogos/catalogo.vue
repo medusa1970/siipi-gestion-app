@@ -211,43 +211,17 @@ const {
 } = useCatalogos();
 
 const { params } = useRoute();
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-const titulo = ref(null);
-titulo.value = "Catalogo " + (await store.getCatalogoArbol(params.id)).nombre;
-
-=======
 const cat = ref(await store.getCatalogoArbol(params.id));
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-const cat = ref(await store.getCatalogoArbol(params.id));
->>>>>>> Stashed changes
 onBeforeMount(async () => {
   estado.catalogoSeleccionado = cat.value;
 });
 
 provide("infoPagina", {
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-  titulo: titulo,
-  camino: [
-    { label: "Catalogos", to: "catalogos" },
-    {
-      label: "detalle",
-=======
   titulo: "Catalogo " + cat.value.nombre,
   camino: [
     { label: "Catalogos", to: "catalogos" },
     {
       label: cat.value.nombre,
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
-=======
-  titulo: "Catalogo " + cat.value.nombre,
-  camino: [
-    { label: "Catalogos", to: "catalogos" },
-    {
-      label: cat.value.nombre,
->>>>>>> Stashed changes
       to: "catalogos-id",
     },
   ],

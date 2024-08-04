@@ -1,9 +1,9 @@
 import type { Precio } from "#gql";
-import { storeOferta } from "@/modulos/ofertas/ofertas.store";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 
 export const usePrecioTab = () => {
   const $q = useQuasar();
-  const store = storeOferta();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
 
   const estado = reactive({
     precios: [] as any[],
@@ -31,7 +31,7 @@ export const usePrecioTab = () => {
               borrar: { _id: precio._id },
             },
           },
-          { loading: true }
+          { loading: true },
         );
       } catch (err) {
         errFallBack(err);

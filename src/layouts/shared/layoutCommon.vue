@@ -124,6 +124,7 @@
       >
         <div v-for="subItem in item.subMenu ?? []">
           <q-btn
+            :to="getRoute(router, subItem.to)"
             v-if="authStore.autorizar(subItem.permisos)"
             :class="'w-full' + (subItem.to === routeName ? ' bg-orange' : '')"
             background="orange"
@@ -141,7 +142,7 @@
         </div>
       </q-expansion-item>
     </q-drawer>
-    {{ params }}
+
     <!-- drawer a la derecha -->
     <q-drawer
       v-model="rightDrawerOpen"

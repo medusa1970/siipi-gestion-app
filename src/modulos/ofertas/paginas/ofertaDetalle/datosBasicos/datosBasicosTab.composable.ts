@@ -1,7 +1,7 @@
-import { storeOferta } from "@/modulos/ofertas/ofertas.store";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 
 export const useDatosBasicosTab = () => {
-  const store = storeOferta();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
   const estado = reactive({});
 
   const handleOfertaModificada = (oferta) => {

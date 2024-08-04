@@ -1,9 +1,8 @@
 import type { Producto } from "#gql";
-import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
-import { storeOferta } from "@/modulos/ofertas/ofertas.store.js";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 
 export const useProductoTab = () => {
-  const store = storeOferta();
+  const { store, authStore, estadoOfertas, router } = useOfertas();
 
   // datos por defecto del formulario
   const initForm = {
@@ -33,7 +32,7 @@ export const useProductoTab = () => {
             },
           ],
         },
-      }
+      },
     );
     if (ofertaModificada) {
       NotifySucessCenter("Producto modificado  correctamente");

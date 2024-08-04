@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Info #18"
+      info="Seleccione la marca de la cual agregara proveedor, si no existe la marca, puede crear con el boton (+)"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       requerido
@@ -17,7 +17,7 @@
     <!-- Categoria -->
     <input-select
       label="Proveedor"
-      info="Info #19"
+      info="Seleccione proveedor, si el proveedor no existe, puede crearla con el boton (+)"
       :opciones="selectProveedor"
       :porDefecto="estado.dataForm.proveedor"
       @update="(v) => (estado.dataForm.proveedor = v)"
@@ -29,7 +29,8 @@
     <!-- Identificativo -->
     <input-text
       label="Identificativo"
-      info="Info #20"
+      info="Ingrese los nombres que el proveedor usa para este producto en sus facturas o recibos. Ejemplo: Si el platillo desechable se llama 'BEX 485', coloque 'BEX 485'. 
+Esto facilitara la comunicación con los proveedores."
       :porDefecto="estado.dataForm.identificativo"
       @update="(v) => (estado.dataForm.identificativo = v)"
     />
@@ -37,14 +38,14 @@
     <!-- Precios -->
     <input-text
       label="Precio con factura"
-      info="Info #21"
+      info="Agregar el precio de compra CON FACTURA si tuviera."
       tipo="number"
       :porDefecto="estado.dataForm.precioConFactura"
       @update="(v) => (estado.dataForm.precioConFactura = v)"
     />
     <input-text
       label="precio sin factura"
-      info="Info #22"
+      info="Agregar el precio de compra SIN FACTURA."
       tipo="number"
       :porDefecto="estado.dataForm.precioSinFactura"
       @update="(v) => (estado.dataForm.precioSinFactura = v)"
@@ -153,14 +154,14 @@
         <input-text
           label="Precio con factura"
           tipo="number"
-          info="Info #24"
+          info="Agregar el precio de compra UNITARIO con factura, si tuviera."
           :porDefecto="estado.dataFormPorMayor.precioConFactura"
           @update="(v) => (estado.dataFormPorMayor.precioConFactura = v)"
         />
         <input-text
           label="Precio sin factura"
           tipo="number"
-          info="Info #25"
+          info="Agregar el precio de compra UNITARIO sin factura."
           :porDefecto="estado.dataFormPorMayor.precioSinFactura"
           @update="(v) => (estado.dataFormPorMayor.precioSinFactura = v)"
         />
@@ -192,7 +193,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -262,7 +263,7 @@ const formSubmit = async () => {
       emits(
         "modificarObjeto",
         proveedor.servicios.find((s) => s._id === props.edicion._id),
-        proveedor
+        proveedor,
       );
     }
     // Modo creacion
@@ -287,7 +288,7 @@ const addPpmSubmit = () => {
   estado.showFormPorMayor = false;
   if (ppmIndexEdit.value) {
     estado.dataForm.preciosPorMayor[ppmIndexEdit.value] = clone(
-      estado.dataFormPorMayor
+      estado.dataFormPorMayor,
     );
     ppmIndexEdit.value = null;
   } else {

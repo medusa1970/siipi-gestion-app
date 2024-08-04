@@ -3,7 +3,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info #26"
+      info="Nombre de la categoria que se esta creando."
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       requerido
@@ -14,7 +14,7 @@
     <input-select
       label="Categoria pariente"
       :opciones="selectCategoriaNivel1"
-      info="Info #27"
+      info="Dentro de que CATEGORIA PADRE deseas crear esta nueva categoria"
       :porDefecto="estado.dataForm.pariente"
       @update="(v) => (estado.dataForm.pariente = v)"
       requerido
@@ -42,7 +42,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -82,7 +82,7 @@ const formSubmit = async () => {
     if (props.edicion) {
       const categoria = await api.modificarCategoria(
         props.edicion._id,
-        estado.dataForm
+        estado.dataForm,
       );
       emits("modificarObjeto", categoria);
     } else {

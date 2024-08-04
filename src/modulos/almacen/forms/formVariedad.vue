@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Info #33"
+      info="Seleccione la marca del producto, si la marca no existe, puede crearla con el boton (+)"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       requerido
@@ -20,7 +20,7 @@
         class="flex-grow"
         style="margin-right: 16px"
         label="Avisar a la cantidad X"
-        info="Info #34"
+        info="Ingrese la cantidad mínima que debe existir del producto en su unidad básica. Ejemplo: Si desea que el sistema avise cuando quede 1 caja de vasos desechables (1000 unidades), coloque 1000."
         tipo="number"
         :porDefecto="estado.dataForm.cantidadAvisoFuerte"
         @update="(v) => (estado.dataForm.cantidadAvisoFuerte = v)"
@@ -30,7 +30,7 @@
         style="margin-left: 16px"
         tipo="number"
         label="Avisar a la cantidad Y"
-        info="Info #35"
+        info="Ingrese la cantidad mínima crítica del producto. Ejemplo: Si en el primer campo coloco 1000, aquí puede colocar 500. El sistema alertará si el stock es igual o menor a esta cantidad."
         :porDefecto="estado.dataForm.cantidadAvisoSuave"
         @update="(v) => (estado.dataForm.cantidadAvisoSuave = v)"
       />
@@ -44,7 +44,7 @@
         style="margin-right: 16px"
         tipo="number"
         label="Inventariar cada X días"
-        info="Info #36"
+        info="Despues de hacer un inventario, despues de cuantos dias se deberia volver a realizar otro inventario."
         :porDefecto="estado.dataForm.inventarioPeriodo"
         @update="(v) => (estado.dataForm.inventarioPeriodo = v)"
       />
@@ -53,7 +53,7 @@
         style="margin-left: 16px"
         tipo="number"
         label="Avisar Y días antes"
-        info="Info #37"
+        info="Ingrese la cantidad de dias que desea que el sistema le bote una alerta antes de la fecha de inventario. Ejemplo: Si en el primer campo coloco 10, aqui se puede colocar 2. El sistema avisara despues de 8 dias que la fecha del inventario se acerca."
         :porDefecto="estado.dataForm.inventarioAviso"
         @update="(v) => (estado.dataForm.inventarioAviso = v)"
       />
@@ -65,7 +65,7 @@
       tipo="number"
       :porDefecto="estado.dataForm.cantidadMaxPedido"
       @update="(v) => (estado.dataForm.cantidadMaxPedido = v)"
-      info="Info #38"
+      info="Ingrese la cantidad máxima permitida del producto. Ejemplo: Si normalmente se piden 10 cajas de vasos, pero pueden pedir hasta 20, coloque su equivalente a unidades, es decir 20,000."
     />
 
     <!-- Submit -->
@@ -91,7 +91,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -139,7 +139,7 @@ const formSubmit = async () => {
       emits(
         "modificarObjeto",
         producto.variedades.find((v) => v._id === props.edicion?._id),
-        producto
+        producto,
       );
     } else {
       const producto = await api.modificarProducto_basico(store.producto._id, {

@@ -118,7 +118,7 @@ import { ref } from "vue";
  */
 
 const tooltip = ref(false);
-const hideTooltip = (seconds = 3) =>
+const hideTooltip = (seconds = 5) =>
   setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
@@ -128,20 +128,20 @@ const hideTooltip = (seconds = 3) =>
 const emits = defineEmits<{
   (
     event: "update", // cambió el valor del input
-    valor: string | null // el valor
+    valor: string | null, // el valor
   ): void;
 
   (
     event: "error", // el input está en estado de error de validación
     errorFlag: boolean, // true si hay un error activa
     errorMensaje: string | null, // el mensaje de error
-    valor: any // el valor que ha provocado el error
+    valor: any, // el valor que ha provocado el error
   ): void;
 
   (
     event: "crearObjeto", // se ha creado un objeto via el boton [+]
     objeto: any, // el objeto creado
-    pariente?: any // si el objeto es un subdoc de un documento, el mismo documento
+    pariente?: any, // si el objeto es un subdoc de un documento, el mismo documento
   ): void;
 }>();
 
@@ -224,7 +224,7 @@ const props = withDefaults(
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
     forceWatch: null,
-  }
+  },
 );
 
 /**
@@ -247,7 +247,7 @@ let reglasValidacion = props.rules ?? [];
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === "string" ? props.requerido : undefined
+      typeof props.requerido === "string" ? props.requerido : undefined,
     ),
     ...reglasValidacion,
   ];
@@ -325,7 +325,7 @@ function filterFn(valor: string, update: Function) {
       valor === ""
         ? opciones
         : opciones?.filter(
-            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
           );
   });
 }
@@ -373,7 +373,7 @@ watch(
     // localModel.value = null;
     // handleClear();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
@@ -383,7 +383,7 @@ watch(
 
 watch(
   () => props.error,
-  () => setError(props.error)
+  () => setError(props.error),
 );
 
 /**
@@ -394,7 +394,7 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false }
+  { immediate: false },
 );
 
 /**
@@ -411,7 +411,7 @@ watch(
     localModel.value = props.watch;
     emits("update", localModel.value);
   },
-  { immediate: false }
+  { immediate: false },
 );
 // watch(
 //   () => props.watch,

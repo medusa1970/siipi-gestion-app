@@ -87,7 +87,7 @@ import { ref } from "vue";
  */
 
 const tooltip = ref(false);
-const hideTooltip = (seconds = 3) =>
+const hideTooltip = (seconds = 5) =>
   setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
@@ -97,13 +97,13 @@ const hideTooltip = (seconds = 3) =>
 const emits = defineEmits<{
   (
     event: "update", // si cambió el valor del input
-    valor: string | number | null // el valor
+    valor: string | number | null, // el valor
   ): void;
   (
     event: "error", // si estado de error de validación cambió
     errorFlag: boolean, // true si hay un error activa
     errorMessage: string | null, // el mensaje de error
-    valor: any // el valor que ha provocado el error
+    valor: any, // el valor que ha provocado el error
   ): void;
 }>();
 
@@ -191,7 +191,7 @@ const props = withDefaults(
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
     forceWatch: null,
-  }
+  },
 );
 
 /**
@@ -262,7 +262,7 @@ if (props.maxLength) {
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === "string" ? props.requerido : undefined
+      typeof props.requerido === "string" ? props.requerido : undefined,
     ),
     ...reglasValidacion,
   ];
@@ -276,7 +276,7 @@ const tipo = computed(() =>
       : "text"
     : props.tipo === "textarea"
     ? "textarea"
-    : "text"
+    : "text",
 );
 
 /**
@@ -350,7 +350,7 @@ function activarValidacion() {
 
 watch(
   () => props.error,
-  () => setError(props.error)
+  () => setError(props.error),
 );
 
 /**
@@ -361,7 +361,7 @@ watch(
 watch(
   () => props.activarValidacion,
   () => activarValidacion(),
-  { immediate: false }
+  { immediate: false },
 );
 
 /**
@@ -378,7 +378,7 @@ watch(
     localModel.value = numeroConComas(props.watch);
     handleChange(localModel.value);
   },
-  { immediate: false }
+  { immediate: false },
 );
 // watch(
 //   () => props.watch,

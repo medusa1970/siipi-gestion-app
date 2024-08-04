@@ -95,7 +95,7 @@ import { ref } from "vue";
  * Tooltip
  */
 const tooltip = ref(false);
-const hideTooltip = (seconds = 3) =>
+const hideTooltip = (seconds = 5) =>
   setTimeout(() => (tooltip.value = false), seconds * 1000);
 
 /**
@@ -152,7 +152,7 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-  }
+  },
 );
 
 /**
@@ -212,7 +212,7 @@ function filterFn(valor: string, update: Function) {
       valor === ""
         ? opciones
         : opciones?.filter(
-            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
           );
   });
 }
@@ -245,20 +245,20 @@ watch(
     // localModel.value = null;
     // handleClear();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // activar el error si llega un mensaje de error desde el componiente padre
 watch(
   () => props.error,
-  () => setError(props.error)
+  () => setError(props.error),
 );
 
 // activar la validacion desde el componiente padre
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false }
+  { immediate: false },
 );
 
 // modificar el valor desde el componiente padre
@@ -269,13 +269,13 @@ watch(
     activarValidacion();
     emits("update", localModel.value);
   },
-  { immediate: false }
+  { immediate: false },
 );
 watch(
   () => props.watch,
   () => {
     emits("update", localModel.value);
   },
-  { once: true, immediate: true }
+  { once: true, immediate: true },
 );
 </script>

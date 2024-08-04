@@ -14,7 +14,7 @@
     <!-- nombre -->
     <input-text
       label="Nombre"
-      info="Info #1"
+      info="Nombre del PRODUCTO. Por favor antes de crear un producto, primero verifique que aun no exista ayudándose con el buscador."
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       requerido
@@ -25,7 +25,7 @@
     <input-select
       label="Categoria"
       :opciones="selectCategoria"
-      info="Info #2"
+      info="La categoría existe con el objetivo de ubicar facilmente un producto. Para crear una nueva categoria, puede dar click en el boton (+) o vaya al menu Logistica > Categorías."
       :porDefecto="estado.dataForm.categoria"
       @update="(v) => (estado.dataForm.categoria = v)"
       requerido
@@ -35,7 +35,7 @@
     <!-- Imagen -->
     <input-image
       label="Imagen"
-      info="Info #3"
+      info="Subir imagen del producto SOLO en fondo oscuro o claro, formato cuadrado"
       :dataPreview="estado.imagenPreview"
       :key="estado.imagenPreview"
       @update="
@@ -51,7 +51,7 @@
     <input-text
       label="Tiempo de vida"
       tipo="number"
-      info="Info #4"
+      info='Ingrese el tiempo de vida del producto en DIAS, ejemplo: Los embolsados de semillas tienen 6 meses de vida, por lo tanto ingresar "180".'
       :porDefecto="estado.dataForm.tiempoVida"
       @update="(v) => (estado.dataForm.tiempoVida = v)"
     />
@@ -69,7 +69,7 @@
         style="margin-right: 16px"
         label="Avisar debajo de X"
         tipo="number"
-        info="Info #5"
+        info="Ingrese la cantidad de dias que desea que el sistema le bote una 1ra alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5, el sistema botara una alerta 5 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoSuave"
         @update="(v) => (estado.dataForm.vencimientoAvisoSuave = v)"
       />
@@ -78,7 +78,7 @@
         style="margin-left: 16px"
         label="Aviso fuerte debajo de Y"
         tipo="number"
-        info="Info #6"
+        info="Ingrese la cantidad de dias que desea que el sistema le bote una 2da alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5 en el primer campo, entonces esta 2da alerta puede ser 2, asi el sistema botara nuevamente otra alerta 2 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoFuerte"
         @update="(v) => (estado.dataForm.vencimientoAvisoFuerte = v)"
       />
@@ -87,7 +87,7 @@
     <input-text
       tipo="textarea"
       label="Comentario"
-      info="Info #7"
+      info="Agregue cualquier información adicional importante de este producto."
       :porDefecto="estado.dataForm.comentario"
       @update="(v) => (estado.dataForm.comentario = v)"
     />
@@ -116,7 +116,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -184,7 +184,7 @@ const formSubmit = async () => {
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,
-        { loading: true }
+        { loading: true },
       );
       emits("modificarObjeto", producto);
     } else {

@@ -4,7 +4,7 @@
     <input-select
       label="Marca"
       :opciones="selectMarca"
-      info="Info #28"
+      info="Seleccione la marca del producto, si la marca no existe, puede crearla con el boton (+)"
       :porDefecto="estado.dataForm.marca"
       @update="(v) => (estado.dataForm.marca = v)"
       requerido
@@ -15,7 +15,7 @@
 
     <input-select
       label="Empaques preseleccionados"
-      info="Info #29"
+      info="Info #Espacio de ayuda para AUTOCOMPLETADO, seleccione los empaques existentes, y se AUTOCOMPLETARA los siguientes campos. Caso contrario puede crear nuevo empaque"
       :opciones="selectTipoEmpaques"
       @update="(v) => prellenarEmpaque(v)"
       :watch="estado.resetEmpaque"
@@ -27,7 +27,7 @@
 
     <input-text
       label="Empaque"
-      info="Info #30"
+      info="El empaque es la forma en que se transporta o manipula el producto. Ejemplo: las bolsas llegan en paquetes, jabas o bultos."
       @update="(v) => (estado.dataForm.nombre = v)"
       :porDefecto="estado.dataForm.nombre"
       :watch="estado.dataForm.nombre"
@@ -39,13 +39,13 @@
       @update="(v) => (estado.dataForm.abreviacion = v)"
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
-      info="Info #31"
+      info="Abreviacion del empaque"
       requerido
     />
 
     <input-text
       label="Cantidad en unidades básicas"
-      info="Info #32"
+      info="Cantidad de producto que contiene el empaque en unidades basicas: Ejemplo la caja lleva 1000 unid, entonces colocar 1000"
       :tipo="
         // por unidad
         store.producto.medida._id === '665f746dd6b07c8d26ef9b6d'
@@ -83,7 +83,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -136,7 +136,7 @@ const formSubmit = async () => {
       emits(
         "modificarObjeto",
         producto.empaques.find((v) => v._id === props.edicion?._id),
-        producto
+        producto,
       );
     } else {
       const producto = await api.modificarProducto_basico(store.producto._id, {
@@ -169,7 +169,7 @@ const formSubmit = async () => {
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async (empaqueId) => {
   const empaque = store.producto.medida.tipoEmpaques.find(
-    (tipoE) => tipoE._id === empaqueId
+    (tipoE) => tipoE._id === empaqueId,
   );
   if (!empaque) {
     return false;

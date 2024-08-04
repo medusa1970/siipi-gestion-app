@@ -9,12 +9,9 @@
           tipo="textarea"
           label="Motivo"
           @update="(v) => (estado.motivoEliminacion = v)"
-          info="Info #39"
+          info="El jefe de logistica recibira una notificacion cuando elimines una oferta"
           requerido
         />
-      </div>
-      <div>
-        <BotonDetalle mensaje="Se avisará el jefe de logistica." />
       </div>
     </div>
     <q-btn

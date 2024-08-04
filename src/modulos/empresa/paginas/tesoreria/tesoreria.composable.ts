@@ -3,7 +3,7 @@ import { useEmpresa } from "~/modulos/empresa/empresa.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosTesoreria = ["ACCEDER"];
+export const permisosTesoreria = ["ADMINISTRACION"];
 
 /**
  * Composable

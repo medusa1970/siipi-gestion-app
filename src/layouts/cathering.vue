@@ -31,13 +31,21 @@ const menu = [
     icon: "warehouse",
     label: "Almacen",
     key: "almacen",
-    permisos: permisosProductos,
+    permisos: [
+      ...permisosProductos,
+      ...permisosCategoria,
+      ...permisosStock,
+      ...permisosBloques,
+      ...permisosMarcas,
+      ...permisosMedidas,
+      ...permisosProveedores,
+    ],
     subMenu: [
       {
         icon: "bi-box",
         label: "Productos",
         to: "productos",
-        permisos: permisosCategoria,
+        permisos: permisosProductos,
       },
       {
         icon: "category",
@@ -81,7 +89,7 @@ const menu = [
     icon: "menu_book",
     label: "Ofertas",
     key: "ofertas",
-    permisos: permisosProductos,
+    permisos: [...permisosOfertas, ...permisosCatalogos],
     subMenu: [
       {
         icon: "menu_book",
@@ -101,7 +109,6 @@ const menu = [
     icon: "shopping_cart",
     label: "Pedidos",
     key: "pedidos",
-    permisos: permisosProductos,
     soloDev: true,
     subMenu: [
       {
@@ -122,7 +129,7 @@ const menu = [
     icon: "storefront",
     label: "Empresa",
     key: "empresa",
-    permisos: permisosProductos,
+    permisos: [...permisosEmpleados, ...permisosEmpleados],
     subMenu: [
       {
         icon: "group",

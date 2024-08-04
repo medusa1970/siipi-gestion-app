@@ -35,6 +35,7 @@ GLOBAL
 -- todos los busquedores con stringify
 -- gqltoken universel
 -- verifier ojo de tabla en todos los lugares
+-- permisos submenus refactor
 AVERIGUAR
 -- bug backend image
 PUNTOS

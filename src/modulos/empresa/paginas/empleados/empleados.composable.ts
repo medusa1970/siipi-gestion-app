@@ -4,7 +4,7 @@ import { useEmpresa } from "~/modulos/empresa/empresa.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosEmpleados = ["ACCEDER"];
+export const permisosEmpleados = ["ADMINISTRACION"];
 
 /**
  * Composable para empresa/empleados
@@ -41,7 +41,7 @@ export const useEmpleados = () => {
       const regex = new RegExp(`${estado.filtros.buscar}`, "i");
       rows = rows.filter((empleado) => {
         return regex.test(
-          JSON.stringify(empleado) + sinAcentos(JSON.stringify(empleado))
+          JSON.stringify(empleado) + sinAcentos(JSON.stringify(empleado)),
         );
       });
     }

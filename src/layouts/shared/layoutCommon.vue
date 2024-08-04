@@ -109,7 +109,10 @@
       <q-list>
         <q-list-item v-for="item in menuList">
           <q-expansion-item
-            v-if="!item.soloDev || $config.public.DeployStatus !== 'PROD'"
+            v-if="
+              (!item.soloDev || $config.public.DeployStatus !== 'PROD') &&
+              authStore.autorizar(item.permisos)
+            "
             v-model="menuState[item.key]"
             :icon="item.icon"
             :class="'w-full' + (item.to === routeName ? ' bg-orange' : '')"

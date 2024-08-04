@@ -12,5 +12,5 @@ export const TipoPermiso = [
   "ALMACEN",
   "ADQUISICION",
   "LOGISTICA",
-  "HACER_INVENTARIO",
+  "ADMINISTRACION",
 ] as const;

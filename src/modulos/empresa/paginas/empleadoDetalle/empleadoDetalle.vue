@@ -38,11 +38,15 @@ const { params } = useRoute();
 provide("infoPagina", {
   titulo: "Gestion de empleados",
   camino: [
+<<<<<<< Updated upstream
 <<<<<<< HEAD
     { label: "empleados", to: "empleados" },
 =======
     { label: "Empleados", to: "empleados" },
 >>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
+=======
+    { label: "Empleados", to: "empleados" },
+>>>>>>> Stashed changes
     {
       label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.apellido}`,
       to: "empleado",

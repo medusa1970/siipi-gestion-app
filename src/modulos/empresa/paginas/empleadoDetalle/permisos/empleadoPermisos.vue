@@ -1,29 +1,25 @@
 <template>
-  <q-form @submit="composable.formSubmit">
-    <div v-for="(permiso, index) in composable.estado.dataForm">
+  <q-form @submit="formSubmit">
+    <div v-for="(permiso, index) in estado.dataForm">
       <div class="flex justify-between">
-        <q-toggle
-          v-model="composable.estado.dataForm[index].estado"
-          color="green"
-        >
+        <q-toggle v-model="estado.dataForm[index].estado" color="green">
           {{ permiso.permiso }}
           <span
             v-if="
-              composable.estado.dataForm[index].vencimiento &&
-              new Date(composable.estado.dataForm[index].vencimiento) <
-                new Date()
+              estado.dataForm[index].vencimiento &&
+              new Date(estado.dataForm[index].vencimiento) < new Date()
             "
             class="text-red-500"
             >- VENCIDO</span
           >
         </q-toggle>
         <input-text
-          v-if="composable.estado.dataForm[index].estado"
+          v-if="estado.dataForm[index].estado"
           label="Vencimiento"
           labelAdentro
           noSlot
-          :porDefecto="composable.estado.dataForm[index].vencimiento"
-          @update="(v) => (composable.estado.dataForm[index].vencimiento = v)"
+          :porDefecto="estado.dataForm[index].vencimiento"
+          @update="(v) => (estado.dataForm[index].vencimiento = v)"
         />
       </div>
     </div>
@@ -37,5 +33,5 @@
 
 <script setup lang="ts">
 import { useEmpleadoPermisos } from "./empleadoPermisos.composable";
-const composable = useEmpleadoPermisos();
+const { estado, authStore, store, router, formSubmit } = useEmpleadoPermisos();
 </script>

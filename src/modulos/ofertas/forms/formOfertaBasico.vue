@@ -95,7 +95,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -135,7 +135,7 @@ const selectCatalogo = computed(() => {
 
 // opciones
 const selectSubCatalogo = computed(() => {
-  const catalogo = store.getgetOne(estado.catalogoAncestro);
+  const catalogo = store.getOne(estado.catalogoAncestro);
   if (!catalogo) return [];
   let options = [];
   for (const cat of catalogo.hijas) {
@@ -201,7 +201,7 @@ const formSubmit = async () => {
       const oferta = await api.modificarOferta(
         props.edicion._id,
         estado.dataForm,
-        { loading: true }
+        { loading: true },
       );
       emits("modificarObjeto", oferta);
     } else {

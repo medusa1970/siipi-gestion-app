@@ -210,11 +210,7 @@ const {
 
 provide("infoPagina", {
   titulo: "Gestion de categorias",
-<<<<<<< HEAD
-  camino: [{ label: "categorias", to: "categorias" }],
-=======
   camino: [{ label: "Categorias", to: "categorias" }],
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 });
 
 onMounted(async () => {

@@ -78,11 +78,7 @@ import formMarca from "@/modulos/almacen/forms/formMarca.vue";
 
 provide("infoPagina", {
   titulo: "Gestion de marcas",
-<<<<<<< HEAD
-  camino: [{ label: "marcas", to: "marcas" }],
-=======
   camino: [{ label: "Marcas", to: "marcas" }],
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 });
 
 const columnsTabla = [

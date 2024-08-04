@@ -199,7 +199,7 @@ const props = withDefaults(
   defineProps<{
     config?: { productoId?: string };
   }>(),
-  {}
+  {},
 );
 
 // datos por defecto del formulario
@@ -243,6 +243,7 @@ const estado = reactive({
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
+<<<<<<< Updated upstream
 <<<<<<< HEAD
   estado.dataForm.precioConFactura ? "orange" : "orange-4"
 );
@@ -254,6 +255,12 @@ const colorCalculateCon = computed(() =>
 const colorCalculateCon = computed(() =>
   estado.dataForm.precioSinFactura ? "orange" : "orange-4",
 >>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
+=======
+  estado.dataForm.precioConFactura ? "orange" : "orange-4",
+);
+const colorCalculateCon = computed(() =>
+  estado.dataForm.precioSinFactura ? "orange" : "orange-4",
+>>>>>>> Stashed changes
 );
 
 // producto seleccionado
@@ -323,7 +330,7 @@ watch(
   () => estado.catalogoAncestro,
   () => {
     estado.dataForm.catalogo = null;
-  }
+  },
 );
 
 const selectVariedad = computed(() => {
@@ -359,7 +366,7 @@ watch(
   (v) => {
     let nombre = producto.value?.nombre ?? "";
     const marca = selectVariedad.value?.find(
-      (opcion) => opcion.value === estado.dataForm.marca
+      (opcion) => opcion.value === estado.dataForm.marca,
     )?.label;
     if (marca) nombre += " " + marca;
     if (estado.nombreEmpaque) nombre += " " + estado.nombreEmpaque;
@@ -373,7 +380,7 @@ watch(
     estado.dataForm.nombre = nombre;
     estado.dataForm.abreviacion = ofertaAbreviacion(nombre);
   },
-  { immediate: true }
+  { immediate: true },
 );
 watch(
   () => estado.dataForm.marca,
@@ -381,7 +388,7 @@ watch(
     if (!v) {
       estado.nombreEmpaque = "";
     }
-  }
+  },
 );
 
 // Prellenar el empaque con seleccionar un tipo de empaque

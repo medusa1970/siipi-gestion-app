@@ -53,6 +53,7 @@ export const useMedidas = () => {
     estado.modal.formCrearMedida = false;
   };
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
   // se modificcó una medida
   const handleMedidaModificada = async (medida) => {
@@ -62,6 +63,8 @@ export const useMedidas = () => {
 
 =======
 >>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
+=======
+>>>>>>> Stashed changes
   return {
     estado,
     store,

@@ -20,6 +20,11 @@ export default [
     file: "@/modulos/almacen/paginas/medidas/medidas.vue",
   },
   {
+    name: "medida",
+    path: "/cathering/medidas/:id",
+    file: "@/modulos/almacen/paginas/medidaDetalle/medidaDetalle.vue",
+  },
+  {
     name: "proveedores",
     path: "/cathering/proveedores",
     file: "@/modulos/almacen/paginas/proveedores/proveedores.vue",

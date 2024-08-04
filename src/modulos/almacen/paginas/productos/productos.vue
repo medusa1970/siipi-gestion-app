@@ -329,11 +329,15 @@ const { rowsTablaProductos, handleProductoCreado, handleOfertaSimpleCreada } =
 
 provide("infoPagina", {
   titulo: "Gestion de productos",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
   camino: [{ label: "productos", to: "productos" }],
 =======
   camino: [{ label: "Productos", to: "productos" }],
 >>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
+=======
+  camino: [{ label: "Productos", to: "productos" }],
+>>>>>>> Stashed changes
 });
 
 // opciones

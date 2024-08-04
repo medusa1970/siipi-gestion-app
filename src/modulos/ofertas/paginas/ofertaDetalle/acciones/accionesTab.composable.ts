@@ -1,20 +1,13 @@
-import { storeOferta } from "@/modulos/ofertas/ofertas.store";
+import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 import { useQuasar } from "quasar";
-import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
-import { useAuthStore } from "@/modulos/main/useAuthStore";
 
 export const useAccionesTab = () => {
-  /** DECLARACIONES */
-  const store = storeOferta();
   const $q = useQuasar();
-  const authStore = useAuthStore();
-
-  /** REACTIVOS */
+  const { store, authStore, estadoOfertas, router } = useOfertas();
   const estado = reactive({
     motivoEliminacion: "" as string,
   });
 
-  /** FUNCIONES */
   const borrarOferta = () => {
     $q.dialog({
       title: `Eliminar ${store.oferta.nombre}`,
@@ -22,17 +15,40 @@ export const useAccionesTab = () => {
       cancel: true,
       persistent: true,
     }).onOk(async () => {
-      apiOfertas
-        .borrarOfertaConMotivo(
-          store.oferta._id,
-          estado.motivoEliminacion,
-          useGqlToken(authStore.token)
-        )
-        .then((res) => {
-          estado.motivoEliminacion = "";
-          NotifySucess("Oferta eliminado correctamente");
-          // await act;
-        });
+      // borramos el producto
+      try {
+        await api.borrarOferta(store.oferta._id);
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+      await store.refreshOfertas();
+
+      // creamos la accion
+      try {
+        await api.crearAccion(
+          {
+            comentario: estado.motivoEliminacion,
+            producto: store.oferta._id,
+            accion: "borrado",
+            // la persona va con el token
+          },
+          {
+            aceptarInexistentes: true,
+          },
+          useGqlToken(authStore.token),
+        );
+      } catch (err) {
+        errFallBack(err);
+        return;
+      }
+
+      // esta todo ok
+      NotifySucessCenter("Producto eliminado correctamente");
+      estado.motivoEliminacion = "";
+      store.ofertas = store.ofertas.filter((p) => p._id !== store.oferta._id);
+      store.ofertas = null;
+      goTo(router, "ofertas");
     });
   };
 

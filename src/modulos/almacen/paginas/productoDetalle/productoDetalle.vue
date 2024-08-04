@@ -9,11 +9,11 @@
       align="justify"
       no-caps
     >
-      <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
-      <q-tab name="marcas" icon="group" label="Marcas" />
-      <q-tab name="medidas" icon="folder_copy" label="Medidas & Empaques" />
-      <q-tab name="proveedores" icon="query_stats" label="Proveedores" />
-      <q-tab name="ofertas" icon="work" label="Ofertas" />
+      <q-tab name="datosBasicos" icon="bi-box" label="Datos basicos" />
+      <q-tab name="marcas" icon="storefront" label="Marcas" />
+      <q-tab name="medidas" icon="balance" label="Medidas & Empaques" />
+      <q-tab name="proveedores" icon="hail" label="Proveedores" />
+      <q-tab name="ofertas" icon="menu_book" label="Ofertas" />
       <q-tab name="acciones" icon="delete" label="Borrar" />
     </q-tabs>
     <q-tab-panels

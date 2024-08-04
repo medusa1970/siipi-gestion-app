@@ -56,7 +56,7 @@ export const useProductos = () => {
       estado.filtros.categoriaSeleccionada !== ""
     ) {
       filtered = filtered.filter((producto) =>
-        estado.filtros.categoriaSeleccionada.includes(producto.categoria._id)
+        estado.filtros.categoriaSeleccionada.includes(producto.categoria._id),
       );
     }
     // filtro por marca
@@ -67,7 +67,7 @@ export const useProductos = () => {
       filtered = filtered.filter((producto) =>
         producto.variedades
           .map((variedad) => variedad.marca._id)
-          .includes(estado.filtros.marcaSeleccionada)
+          .includes(estado.filtros.marcaSeleccionada),
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
@@ -76,11 +76,15 @@ export const useProductos = () => {
       filtered = filtered.filter((producto) => {
         return regex.test(
           producto.nombre +
+<<<<<<< Updated upstream
 <<<<<<< HEAD
             producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 =======
             producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
 >>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
+=======
+            producto.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+>>>>>>> Stashed changes
         );
       });
     }

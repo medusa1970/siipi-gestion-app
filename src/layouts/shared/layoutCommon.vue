@@ -105,53 +105,6 @@
         </div>
       </q-item>
 
-<<<<<<< HEAD
-      <q-list v-for="item in menuList">
-        <div v-if="!item.soloDev || $config.public.DeployStatus !== 'PROD'">
-          <q-btn
-            v-if="authStore.autorizar(item.permisos)"
-            :icon="item.icon"
-            :label="item.label"
-            :to="getRoute(router, item.to)"
-            flat
-            no-caps
-          />
-        </div>
-      </q-list>
-
-      <!--
-        <q-list
-          v-for="item in menuList"
-          :key="item"
-          @click.prevent="goTo(router, item.to)"
-        >
-
-            <q-expansion-item
-              group="somegroup"
-              :icon="item.icon"
-              :label="item.label"
-              style="border: 0px; color: white"
-              :to="getRoute(router, item.to)"
-            >
-              <q-list class="q-pl-lg" v-if="item.subMenu?.length > 0">
-                <q-item
-                  clickable
-                  v-for="i in item.subMenu"
-                  :key="i"
-                  :to="getRoute(router, i.to)"
-                >
-                  <q-item-section>{{ i.label }}</q-item-section>
-                  <q-item-section avatar>
-                    <q-icon color="secondary" name="keyboard_arrow_right" />
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-expansion-item>
-        </q-list>
-          -->
-      <!-- <q-separator /> -->
-      <!-- <DrawerMenuAdm :menu-list="menuList" /> -->
-=======
       <!-- menu section -->
       <q-expansion-item
         v-for="item in menuList"
@@ -187,7 +140,6 @@
           </q-btn>
         </div>
       </q-expansion-item>
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     </q-drawer>
     {{ params }}
     <!-- drawer a la derecha -->

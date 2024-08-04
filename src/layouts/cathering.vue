@@ -26,15 +26,9 @@ if (authStore.getNegocio?.tipo !== "CATHERING") {
 }
 const menu = [
   {
-<<<<<<< HEAD
-    icon: "bi-box",
-    label: "Productos",
-    to: "productos",
-=======
     icon: "warehouse",
     label: "Almacen",
     key: "almacen",
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     permisos: permisosProductos,
     subMenu: [
       {
@@ -82,76 +76,6 @@ const menu = [
     ],
   },
   {
-<<<<<<< HEAD
-    icon: "category",
-    label: "Categorias",
-    to: "categorias",
-    permisos: permisosCategoria,
-  },
-  {
-    icon: "warehouse",
-    label: "Stock",
-    to: "stock",
-    permisos: permisosStock,
-  },
-  {
-    icon: "shelves",
-    label: "Bloques",
-    to: "bloques",
-    permisos: permisosBloques,
-  },
-  {
-    icon: "menu_book",
-    label: "Ofertas",
-    to: "ofertas",
-  },
-  {
-    icon: "sell",
-    label: "Catalogos",
-    to: "catalogos",
-  },
-  {
-    icon: "shopping_cart",
-    label: "ListaPedidos",
-    to: "listaPedidos",
-    soloDev: true,
-  },
-  {
-    icon: "shopping_cart",
-    label: "pedidosGlobal",
-    to: "pedidosGlobal",
-  },
-
-  {
-    icon: "storefront",
-    label: "Marcas",
-    to: "marcas",
-    permisos: permisosMarcas,
-  },
-  {
-    icon: "balance",
-    label: "Medidas",
-    to: "medidas",
-    permisos: permisosMedidas,
-  },
-  {
-    icon: "hail",
-    label: "Proveedores",
-    to: "proveedores",
-    permisos: permisosProveedores,
-  },
-  {
-    icon: "group",
-    label: "Empleados",
-    to: "empleados",
-    permisos: permisosEmpleados,
-  },
-  {
-    icon: "money",
-    label: "Tesoreria",
-    to: "tesoreria",
-    permisos: permisosTesoreria,
-=======
     icon: "menu_book",
     label: "Ofertas",
     key: "ofertas",
@@ -207,7 +131,6 @@ const menu = [
         permisos: permisosTesoreria,
       },
     ],
->>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
   },
 ];
 </script>

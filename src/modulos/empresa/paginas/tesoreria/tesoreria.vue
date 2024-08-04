@@ -1,7 +1,10 @@
 <template>
   <NuxtLayout name="cathering">
     <h1>En progreso</h1>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     <div v-if="authStore.autorizar(['ADQUISICION'])">
       Esta frase solo esta visible por los de adquisicion
     </div>

@@ -38,7 +38,11 @@ const { params } = useRoute();
 provide("infoPagina", {
   titulo: "Gestion de empleados",
   camino: [
+<<<<<<< HEAD
     { label: "empleados", to: "empleados" },
+=======
+    { label: "Empleados", to: "empleados" },
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     {
       label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.apellido}`,
       to: "empleado",

@@ -26,12 +26,63 @@ if (authStore.getNegocio?.tipo !== "CATHERING") {
 }
 const menu = [
   {
+<<<<<<< HEAD
     icon: "bi-box",
     label: "Productos",
     to: "productos",
+=======
+    icon: "warehouse",
+    label: "Almacen",
+    key: "almacen",
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     permisos: permisosProductos,
+    subMenu: [
+      {
+        icon: "bi-box",
+        label: "Productos",
+        to: "productos",
+        permisos: permisosCategoria,
+      },
+      {
+        icon: "category",
+        label: "Categorias",
+        to: "categorias",
+        permisos: permisosCategoria,
+      },
+      {
+        icon: "warehouse",
+        label: "Stock",
+        to: "stock",
+        permisos: permisosStock,
+      },
+      {
+        icon: "shelves",
+        label: "Bloques",
+        to: "bloques",
+        permisos: permisosBloques,
+      },
+      {
+        icon: "storefront",
+        label: "Marcas",
+        to: "marcas",
+        permisos: permisosMarcas,
+      },
+      {
+        icon: "balance",
+        label: "Medidas",
+        to: "medidas",
+        permisos: permisosMedidas,
+      },
+      {
+        icon: "hail",
+        label: "Proveedores",
+        to: "proveedores",
+        permisos: permisosProveedores,
+      },
+    ],
   },
   {
+<<<<<<< HEAD
     icon: "category",
     label: "Categorias",
     to: "categorias",
@@ -100,7 +151,63 @@ const menu = [
     label: "Tesoreria",
     to: "tesoreria",
     permisos: permisosTesoreria,
+=======
+    icon: "menu_book",
+    label: "Ofertas",
+    key: "ofertas",
+    permisos: permisosProductos,
+    subMenu: [
+      {
+        icon: "menu_book",
+        label: "Ofertas",
+        to: "ofertas",
+      },
+      {
+        icon: "category",
+        label: "Catalogos",
+        to: "catalogos",
+      },
+    ],
+  },
+  {
+    icon: "shopping_cart",
+    label: "Pedidos",
+    key: "pedidos",
+    permisos: permisosProductos,
+    subMenu: [
+      {
+        icon: "shopping_cart",
+        label: "ListaPedidos",
+        to: "listaPedidos",
+        soloDev: true,
+      },
+      {
+        icon: "shopping_cart",
+        label: "Pedidos global",
+        to: "pedidosGlobal",
+      },
+    ],
+  },
+  {
+    icon: "storefront",
+    label: "Empresa",
+    key: "empresa",
+    permisos: permisosProductos,
+    subMenu: [
+      {
+        icon: "group",
+        label: "Empleados",
+        to: "empleados",
+        permisos: permisosEmpleados,
+      },
+      {
+        icon: "money",
+        label: "Tesoreria",
+        to: "tesoreria",
+        permisos: permisosTesoreria,
+      },
+    ],
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
   },
 ];
 </script>
-~/modulos/almacen/paginas/categorias/categorias.composable

@@ -81,7 +81,11 @@ import formProveedor from "@/modulos/almacen/forms/formProveedor.vue";
 
 provide("infoPagina", {
   titulo: "Gestion de proveedores",
+<<<<<<< HEAD
   camino: [{ label: "proveedores", to: "proveedores" }],
+=======
+  camino: [{ label: "Proveedores", to: "proveedores" }],
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 });
 
 const columnsTabla = [

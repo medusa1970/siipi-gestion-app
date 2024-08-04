@@ -53,12 +53,15 @@ export const useMedidas = () => {
     estado.modal.formCrearMedida = false;
   };
 
+<<<<<<< HEAD
   // se modificcó una medida
   const handleMedidaModificada = async (medida) => {
     NotifySucessCenter("Medida modificada correctamente");
     estado.modal.formModificarMedida = false;
   };
 
+=======
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
   return {
     estado,
     store,
@@ -66,6 +69,5 @@ export const useMedidas = () => {
     router,
     rowsTabla,
     handleMedidaCreada,
-    handleMedidaModificada,
   };
 };

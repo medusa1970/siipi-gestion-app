@@ -211,19 +211,31 @@ const {
 } = useCatalogos();
 
 const { params } = useRoute();
+<<<<<<< HEAD
 const titulo = ref(null);
 titulo.value = "Catalogo " + (await store.getCatalogoArbol(params.id)).nombre;
 
+=======
+const cat = ref(await store.getCatalogoArbol(params.id));
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 onBeforeMount(async () => {
-  estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
+  estado.catalogoSeleccionado = cat.value;
 });
 
 provide("infoPagina", {
+<<<<<<< HEAD
   titulo: titulo,
   camino: [
     { label: "Catalogos", to: "catalogos" },
     {
       label: "detalle",
+=======
+  titulo: "Catalogo " + cat.value.nombre,
+  camino: [
+    { label: "Catalogos", to: "catalogos" },
+    {
+      label: cat.value.nombre,
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
       to: "catalogos-id",
     },
   ],

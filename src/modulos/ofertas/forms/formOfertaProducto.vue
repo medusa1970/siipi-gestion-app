@@ -74,7 +74,7 @@
       :porDefecto="estado.dataForm.abreviacion"
       :watch="estado.dataForm.abreviacion"
       :error="estado.errorAbreviacion"
-      maxLength="30"
+      :maxLength="30"
     />
 
     <!-- descripcion -->
@@ -243,10 +243,17 @@ const estado = reactive({
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
+<<<<<<< HEAD
   estado.dataForm.precioConFactura ? "orange" : "orange-4"
 );
 const colorCalculateCon = computed(() =>
   estado.dataForm.precioSinFactura ? "orange" : "orange-4"
+=======
+  estado.dataForm.precioConFactura ? "orange" : "orange-4",
+);
+const colorCalculateCon = computed(() =>
+  estado.dataForm.precioSinFactura ? "orange" : "orange-4",
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 );
 
 // producto seleccionado
@@ -286,7 +293,7 @@ const selectCatalogo = computed(() => {
 
 // opciones
 const selectSubCatalogo = computed(() => {
-  const catalogo = store.getgetOne(estado.catalogoAncestro);
+  const catalogo = store.getOne(estado.catalogoAncestro);
   if (!catalogo) return [];
   let options = [];
   for (const cat of catalogo.hijas) {

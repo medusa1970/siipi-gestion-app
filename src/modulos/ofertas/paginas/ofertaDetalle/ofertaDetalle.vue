@@ -9,9 +9,9 @@
       align="justify"
       no-caps
     >
-      <q-tab name="datosBasicos" icon="storefront" label="Datos basicos" />
-      <q-tab name="productos" icon="group" label="Productos" />
-      <q-tab name="precios" icon="attach_money" label="Precios" />
+      <q-tab name="datosBasicos" icon="menu_book" label="Datos basicos" />
+      <q-tab name="productos" icon="bi-box" label="Productos" />
+      <q-tab name="precios" icon="money" label="Precios" />
       <q-tab name="acciones" icon="delete" label="Borrar" />
     </q-tabs>
 
@@ -20,31 +20,15 @@
       animated
       style="height: calc(100vh - 115px)"
     >
-      <!-- 
-    DATOS BASICOS 
-  -->
-
       <q-tab-panel name="datosBasicos" animated>
         <DatosBasicosTab />
       </q-tab-panel>
-
-      <!-- 
-        PRODUCTOS OFERTA 
-  -->
       <q-tab-panel name="productos" animated>
         <ProductosTab />
       </q-tab-panel>
-
-      <!-- 
-    PRECIOS OFERTA 
-  -->
       <q-tab-panel name="precios" animated>
         <PreciosTab />
       </q-tab-panel>
-
-      <!-- 
-    ACCIONES BORRAR 
-  -->
       <q-tab-panel name="acciones" animated>
         <AccionesTab />
       </q-tab-panel>
@@ -65,7 +49,11 @@ import AccionesTab from "@/modulos/ofertas/paginas/ofertaDetalle/acciones/Accion
 provide("infoPagina", {
   titulo: store.oferta?.nombre + " (edicion)",
   camino: [
+<<<<<<< HEAD
     { label: "ofertas", to: "ofertas" },
+=======
+    { label: "Ofertas", to: "ofertas" },
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     { label: store.oferta?.nombre, to: "ofertasDetalles" },
   ],
 });

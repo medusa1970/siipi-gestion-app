@@ -103,7 +103,11 @@ const {
 
 provide("infoPagina", {
   titulo: "Gestion de bloques",
+<<<<<<< HEAD
   camino: [{ label: "bloques", to: "bloques" }],
+=======
+  camino: [{ label: "Bloques", to: "bloques" }],
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 });
 
 import BloqueImage from "@/assets/img/noHayBloque.png";

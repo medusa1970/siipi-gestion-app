@@ -105,6 +105,7 @@
         </div>
       </q-item>
 
+<<<<<<< HEAD
       <q-list v-for="item in menuList">
         <div v-if="!item.soloDev || $config.public.DeployStatus !== 'PROD'">
           <q-btn
@@ -150,8 +151,45 @@
           -->
       <!-- <q-separator /> -->
       <!-- <DrawerMenuAdm :menu-list="menuList" /> -->
+=======
+      <!-- menu section -->
+      <q-expansion-item
+        v-for="item in menuList"
+        v-model="menuState[item.key]"
+        :icon="item.icon"
+        :class="'w-full' + (item.to === routeName ? ' bg-orange' : '')"
+        :label="item.label"
+        @click="
+          if (item.to) {
+            router.push(getRoute(router, item.to));
+          } else {
+            // for (const i of menuList) {
+            //   menuState[i.key] = item?.key === i?.key;
+            // }
+          }
+        "
+      >
+        <div v-for="subItem in item.subMenu ?? []">
+          <q-btn
+            v-if="authStore.autorizar(subItem.permisos)"
+            :class="'w-full' + (subItem.to === routeName ? ' bg-orange' : '')"
+            background="orange"
+            align="left"
+            flat
+            no-caps
+            ><template #default>
+              <q-icon
+                :name="subItem.icon"
+                style="font-size: 20px; padding-left: 22px; margin-right: 10px"
+              />
+              {{ subItem.label }}
+            </template>
+          </q-btn>
+        </div>
+      </q-expansion-item>
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
     </q-drawer>
-
+    {{ params }}
     <!-- drawer a la derecha -->
     <q-drawer
       v-model="rightDrawerOpen"
@@ -245,7 +283,7 @@
 const infoPagina = inject("infoPagina");
 
 // PROPS
-defineProps({
+const props = defineProps({
   menuList: Array,
   punto: Boolean,
   sede: Boolean,
@@ -254,6 +292,20 @@ defineProps({
   nav: Array,
   tituloPagina: String,
 });
+
+const { name: routeName } = useRoute();
+const menuState = reactive(
+  Object.fromEntries(
+    props.menuList.map((item) => [
+      item.key,
+      false ||
+        (item.to && item.to === routeName) ||
+        (item.subMenu &&
+          item.subMenu.find((subItem) => subItem.to === routeName)) !=
+          undefined,
+    ]),
+  ),
+);
 
 // IMPORTS
 import { ref, watch, reactive } from "vue";
@@ -301,6 +353,9 @@ const borrarProductoCarrito = (id) => {
 .colorBackground {
   // #231f20 011327
   background-color: #011327;
+}
+.q-breadcrumbs a {
+  color: white;
 }
 
 // .q-drawer.q-drawer--right {

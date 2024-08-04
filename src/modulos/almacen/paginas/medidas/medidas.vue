@@ -25,12 +25,7 @@
       <template #body-cell-actions="{ row }">
         <q-btn-group push @click="(e) => e.stopPropagation()">
           <q-btn
-            @click="
-              () => {
-                estado.medida = row;
-                estado.modal.formModificarMedida = true;
-              }
-            "
+            @click="goTo(router, 'medida', { id: row._id })"
             icon="edit"
             class="p-1"
             color="black"
@@ -60,21 +55,11 @@
       <formMedida @crearObjeto="handleMedidaCreada" />
     </template>
   </popup>
-  <popup
-    v-model="estado.modal.formModificarMedida"
-    titulo="Modificar una medida"
-  >
-    <template #body>
-      <formMedida
-        :edicion="estado.medida"
-        @modificarObjeto="handleMedidaModificada"
-      />
-    </template>
-  </popup>
 </template>
 
 <script setup lang="ts">
 import { useMedidas } from "./medidas.composable";
+<<<<<<< HEAD
 const {
   estado,
   store,
@@ -84,13 +69,21 @@ const {
   handleMedidaCreada,
   handleMedidaModificada,
 } = useMedidas();
+=======
+const { estado, store, authStore, router, rowsTabla, handleMedidaCreada } =
+  useMedidas();
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 
 import MedidaImage from "@/assets/img/noHayMedida.png";
 import formMedida from "@/modulos/almacen/forms/formMedida.vue";
 
 provide("infoPagina", {
   titulo: "Gestion de medidas",
+<<<<<<< HEAD
   camino: [{ label: "medidas", to: "medidas" }],
+=======
+  camino: [{ label: "Medidas", to: "medidas" }],
+>>>>>>> 4eb450e... finalizacion empleados + bugs + prettier double quote + menu
 });
 
 const columnsTabla = [

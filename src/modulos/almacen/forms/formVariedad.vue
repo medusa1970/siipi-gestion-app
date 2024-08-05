@@ -19,20 +19,20 @@
       <input-text
         class="flex-grow"
         style="margin-right: 16px"
-        label="Avisar a la cantidad X"
-        info="Ingrese la cantidad mínima que debe existir del producto en su unidad básica. Ejemplo: Si desea que el sistema avise cuando quede 1 caja de vasos desechables (1000 unidades), coloque 1000."
-        tipo="number"
-        :porDefecto="estado.dataForm.cantidadAvisoFuerte"
-        @update="(v) => (estado.dataForm.cantidadAvisoFuerte = v)"
-      />
-      <input-text
-        class="flex-grow"
-        style="margin-left: 16px"
         tipo="number"
         label="Avisar a la cantidad Y"
         info="Ingrese la cantidad mínima crítica del producto. Ejemplo: Si en el primer campo coloco 1000, aquí puede colocar 500. El sistema alertará si el stock es igual o menor a esta cantidad."
         :porDefecto="estado.dataForm.cantidadAvisoSuave"
         @update="(v) => (estado.dataForm.cantidadAvisoSuave = v)"
+      />
+      <input-text
+        class="flex-grow"
+        style="margin-left: 16px"
+        label="Avisar a la cantidad X"
+        info="Ingrese la cantidad mínima que debe existir del producto en su unidad básica. Ejemplo: Si desea que el sistema avise cuando quede 1 caja de vasos desechables (1000 unidades), coloque 1000."
+        tipo="number"
+        :porDefecto="estado.dataForm.cantidadAvisoFuerte"
+        @update="(v) => (estado.dataForm.cantidadAvisoFuerte = v)"
       />
     </div>
 

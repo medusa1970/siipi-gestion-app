@@ -47,6 +47,6 @@ provide("infoPagina", {
 });
 
 onBeforeMount(async () => {
-  await store.getCatalogoArbol();
+  store.catalogoArbol = await store.getCatalogoArbol();
 });
 </script>

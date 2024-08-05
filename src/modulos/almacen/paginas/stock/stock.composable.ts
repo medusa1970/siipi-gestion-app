@@ -54,8 +54,8 @@ export const useStock = () => {
           diferenciaFechas(
             new Date("2024-07-09"), // stock.lotes?.[0]._creado,
             new Date(),
-            "D"
-          )
+            "D",
+          ),
         ),
         diasHastaProximoInventario: null,
         inventarioAviso: null,
@@ -66,7 +66,7 @@ export const useStock = () => {
       for (const lote of stock.lotes) {
         const marcaId = lote.marca._id.toString();
         const variedad = stock.producto.variedades.find(
-          (variedad: any) => variedad.marca._id === marcaId
+          (variedad: any) => variedad.marca._id === marcaId,
         );
         if (!res.marcas[marcaId]) {
           Object.assign(res.marcas, {
@@ -111,7 +111,7 @@ export const useStock = () => {
         } else {
           res.diasHastaProximoInventario = Math.min(
             res.diasHastaProximoInventario,
-            marca.diasHastaProximoInventario
+            marca.diasHastaProximoInventario,
           );
         }
         if (res.alertaInventario == null) {
@@ -119,20 +119,26 @@ export const useStock = () => {
         } else {
           res.alertaInventario = Math.max(
             res.alertaInventario,
-            marca.alertaInventario
+            marca.alertaInventario,
           );
         }
       }
 
-      // cantidad total y alerta de cantidad por marca y res
+      // cantidad total y alerta de cantidad por marca y global
       for (const lote of stock.lotes) {
         const marcaId = lote.marca._id.toString();
         // ajustamos las cantidad
         res.cantidadTotal += lote.cantidad;
         res.marcas[marcaId].cantidadTotal += lote.cantidad;
         // max y min segun la configuracion de marca
-        const max = Math.max(...res.marcas[marcaId].cantidadLimite);
-        const min = Math.min(...res.marcas[marcaId].cantidadLimite);
+        const max = Math.max(
+          res.marcas[marcaId].cantidadAvisoFuerte,
+          res.marcas[marcaId].cantidadAvisoSuave,
+        );
+        const min = Math.min(
+          res.marcas[marcaId].cantidadAvisoFuerte,
+          res.marcas[marcaId].cantidadAvisoSuave,
+        );
         // si no hay limite configurado salimos
         if (Math.max(min, max) <= 0) {
           continue;
@@ -140,16 +146,18 @@ export const useStock = () => {
         // dias hasta que toque el inventario (sale negativo si ya pasó)
         res.marcas[marcaId].diasInventario =
           Math.floor(
-            diferenciaFechas(res.fechaUltimoInventario, new Date(), "D")
+            diferenciaFechas(res.fechaUltimoInventario, new Date(), "D"),
           ) + max;
         // alerta de marca
         lote.alertaCantidad = 0;
-        if (max > 0 && lote.alertaCantidad <= max) lote.cantidadTotal = 1;
-        if (min > 0 && lote.alertaCantidad <= min) lote.cantidadTotal = 2;
+        if (max > 0 && res.marcas[marcaId].cantidadTotal <= max)
+          res.marcas[marcaId].alertaCantidad = 1;
+        if (min > 0 && res.marcas[marcaId].cantidadTotal <= min)
+          res.marcas[marcaId].alertaCantidad = 2;
         // alerta res
         res.alertaCantidad = Math.max(
           res.alertaCantidad,
-          res.marcas[marcaId].alertaCantidad
+          res.marcas[marcaId].alertaCantidad,
         );
       }
 
@@ -159,7 +167,7 @@ export const useStock = () => {
 
         // dias hasta el vencimiento (sale negativo si ya pasó)
         lote.diasHastaVencimiento = Math.floor(
-          diferenciaFechas(new Date(), lote.vencimiento, "D")
+          diferenciaFechas(new Date(), lote.vencimiento, "D"),
         );
 
         lote.alertaVencimiento = 0;
@@ -181,12 +189,12 @@ export const useStock = () => {
         } else {
           lote.diasHastaVencimiento = Math.min(
             res.diasHastaProximoVencimiento,
-            lote.diasHastaVencimiento
+            lote.diasHastaVencimiento,
           );
         }
         res.alertaVencimiento = Math.max(
           res.alertaVencimiento,
-          lote.alertaVencimiento
+          lote.alertaVencimiento,
         );
       }
       return res;
@@ -251,12 +259,11 @@ export const useStock = () => {
       estado.filtros.categoriaSeleccionada != null &&
       estado.filtros.categoriaSeleccionada !== ""
     ) {
-      filtered = filtered;
-      // .filter((stock) =>
-      //   store
-      //     .getCategoria(estado.filtros.categoriaSeleccionada)
-      //     .includes(stock.producto.categoria._id),
-      // );
+      filtered = filtered.filter((stock) =>
+        store
+          .getCategoria(estado.filtros.categoriaSeleccionada)
+          .includes(stock.producto.categoria._id),
+      );
     }
     // filtro por marca
     if (
@@ -264,7 +271,7 @@ export const useStock = () => {
       estado.filtros.marcaSeleccionada !== ""
     ) {
       filtered = filtered.filter((stock) =>
-        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada)
+        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
@@ -275,7 +282,7 @@ export const useStock = () => {
           stock.producto.nombre +
             stock.producto.nombre
               .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[\u0300-\u036f]/g, ""),
         );
       });
     }

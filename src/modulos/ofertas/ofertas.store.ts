@@ -30,11 +30,11 @@ export const storeOferta = defineStore("ofertas", {
         try {
           this.ofertas = await api.buscarOfertas(
             {},
-            { sort: "-_modificado -_creado" }
+            { sort: "-_modificado -_creado" },
           );
           await localforage.setItem(
             "ofertas",
-            JSON.parse(JSON.stringify(this.ofertas))
+            JSON.parse(JSON.stringify(this.ofertas)),
           );
         } catch (err) {
           errFallBack(err);
@@ -51,7 +51,7 @@ export const storeOferta = defineStore("ofertas", {
      * Retorna el arbol de catalogo
      */
     async getCatalogoArbol(id: string = null): Promise<Catalogo> {
-      if (this.catalogoArbol === null) {
+      if (this.catalogoArbol == null) {
         try {
           this.catalogoArbol = await apiOfertas.buscarArbolCatalogosRaiz();
         } catch (err) {

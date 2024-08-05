@@ -220,49 +220,67 @@ export const useListaPedidos = () => {
       });
   };
 
-  // const obtenerOfertas = (area: any) => {
-  //   // console.log(area);
-  //   estado.panaderiaTable = [];
-  //   area.forEach((venta: any) => {
-  //     venta.items.forEach((item: any) => {
-  //       const existeOferta = estado.panaderiaTable.some(
-  //         (oferta: any) => oferta._id === item.oferta._id
-  //       );
+  const buscarPedidoID = async (pedidoID: string) => {
+    const pedido = await GqlBuscarPedidos(
+      { busqueda: { _id: [pedidoID] } }, //@ts-expect-error
+      useGqlToken(authStore.token)
+    );
 
-  //       if (!existeOferta) {
-  //         //@ts-ignore
-  //         estado.panaderiaTable.push(item.oferta);
-  //       }
-  //     });
-  //   });
-  //   // console.log(estado.panaderiaTable);
-  // };
-  // function obtenerCantidad(items: any, ofertaId: any) {
-  //   const item = items.find((item: any) => item.oferta._id === ofertaId);
-  //   return item ? item.cantidad : 0;
-  // }
+    estado.pedidoDetalle = pedido; //@ts-expect-error
+    estado.precioGeneral = pedido.items.reduce((total, item) => {
+      //@ts-ignore
+      return total + item.oferta.precio * item.cantidad;
+    }, 0);
 
-  // const buscarPedidoID = async (pedidoID: string) => {
-  //   const [pedido] = await pedidoService.pedidoBuscar(
-  //     { _id: [pedidoID] },
-  //     useGqlToken(useAuth.token)
-  //   );
-  //   estado.pedidoDetalle = pedido;
-  //   estado.precioGeneral = pedido.items.reduce((total, item) => {
-  //     //@ts-ignore
-  //     return total + item.oferta.precio * item.cantidad;
-  //   }, 0);
+    //@ts-ignore
+    estado.pedidoItemsEstado = //@ts-ignore
+      pedido.items[0].estado?.[pedido.items[0].estado?.length - 1]; //@ts-ignore
+    //@ts-ignore
+    const itemsConEstadoAjustado = pedido.items.filter((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado'
+      );
+      return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
+    });
 
-  //   //@ts-ignore
-  //   estado.pedidoItemsEstado = //@ts-ignore
-  //     pedido.items[0].estado?.[pedido.items[0].estado?.length - 1]; //@ts-ignore
-  //   //@ts-ignore
-  //   const itemsConEstadoAjustado = pedido.items.filter((item: any) => {
-  //     const estadosAjustados = item.estado.filter(
-  //       (estado: any) => estado.estado === 'ajustado'
-  //     );
-  //     return estadosAjustados.length > 0; // Solo retener items con al menos un estado "ajustado"
-  //   });
+    // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
+    estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
+      const estadosAjustados = item.estado.filter(
+        (estado: any) => estado.estado === 'ajustado'
+      );
+      const ultimoEstadoAjustado =
+        estadosAjustados[estadosAjustados.length - 1];
+      return {
+        nombre: item.oferta.nombre,
+        estadoAjustado: ultimoEstadoAjustado.estado,
+        comentario: ultimoEstadoAjustado.comentario,
+        valor: ultimoEstadoAjustado.valor
+      };
+    });
+  };
+
+  const obtenerOfertas = (area: any) => {
+    // console.log(area);
+    estado.panaderiaTable = [];
+    area.forEach((venta: any) => {
+      venta.items.forEach((item: any) => {
+        const existeOferta = estado.panaderiaTable.some(
+          (oferta: any) => oferta._id === item.oferta._id
+        );
+
+        if (!existeOferta) {
+          //@ts-ignore
+          estado.panaderiaTable.push(item.oferta);
+        }
+      });
+    });
+    // console.log(estado.panaderiaTable);
+  };
+
+  function obtenerCantidad(items: any, ofertaId: any) {
+    const item = items.find((item: any) => item.oferta._id === ofertaId);
+    return item ? item.cantidad : 0;
+  }
 
   //   // Obtener la información de nombre, estado ajustado, comentario y valor (último estado ajustado)
   //   estado.itemsEstadoAjustado = itemsConEstadoAjustado.map((item: any) => {
@@ -880,6 +898,7 @@ export const useListaPedidos = () => {
     estado,
 
     buscarPedidos2,
+    obtenerOfertas,
 
     filter,
   };

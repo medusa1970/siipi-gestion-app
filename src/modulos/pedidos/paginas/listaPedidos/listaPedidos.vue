@@ -107,7 +107,35 @@
 
     <!-- VER PEDIDO GLOBAL -->
     <q-tab-panel name="global">
-      <Global />
+      <!-- TABS -->
+      <q-tabs v-model="tabPuntos" inline-label no-caps dense>
+        <q-tab class="[&>div>div]:font-bold" name="areaGlobal" label="Global" />
+        <q-tab
+          class="[&>div>div]:font-bold"
+          name="panaderia"
+          label="Panaderia"
+          @click="obtenerOfertas(estado.panaderia)" />
+        <q-tab
+          class="[&>div>div]:font-bold"
+          name="reposteria"
+          label="Reposteria"
+          @click="obtenerOfertas(estado.reposteria)" />
+        <q-tab
+          class="[&>div>div]:font-bold"
+          name="envasados"
+          label="Envasados"
+          @click="obtenerOfertas(estado.envasados)" />
+        <q-tab
+          class="[&>div>div]:font-bold"
+          name="embotellados"
+          label="Embotellados"
+          @click="obtenerOfertas(estado.embotellados)" />
+        <q-tab
+          class="[&>div>div]:font-bold"
+          name="siinple"
+          label="Siinple"
+          @click="obtenerOfertas(estado.siinple)" />
+      </q-tabs>
     </q-tab-panel>
 
     <!-- VER HISTORIAL DE PEDIDOS -->
@@ -129,7 +157,8 @@ definePageMeta({
   layout: 'cathering'
 });
 
-const { estado, buscarPedidos2 } = useListaPedidos();
+const { estado, buscarPedidos2, obtenerOfertas } = useListaPedidos();
 
 const tab = ref('puntos');
+const tabPuntos = ref('areaGlobal');
 </script>

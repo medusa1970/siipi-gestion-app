@@ -10,23 +10,20 @@
             grid-gap: 16px;
             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
             width: 100%;
-          "
-        >
+          ">
           <input-text
             label="Buscar"
             labelAdentro
-            @update="(v) => (estado.filtros.buscarFiltro = v)"
-            noSlot
-          />
+            @update="v => (estado.filtros.buscarFiltro = v)"
+            noSlot />
 
           <input-select
             label="Catalogo"
             labelAdentro
             :opciones="selectCatalogoFiltro"
-            @update="(v) => (estado.filtros.catalogoSeleccionado = v)"
+            @update="v => (estado.filtros.catalogoSeleccionado = v)"
             :porDefecto="estado.filtros.catalogoSeleccionado"
-            noSlot
-          />
+            noSlot />
 
           <q-btn
             icon="add"
@@ -34,16 +31,14 @@
             color="green"
             no-caps
             padding="4px 10px"
-            @click="() => (estado.modal.show_crearOfertaBasico = true)"
-          />
+            @click="() => (estado.modal.show_crearOfertaBasico = true)" />
           <q-btn
             icon="add"
             color="green"
             label="Oferta avanzada"
             no-caps
             style="padding: 7px 15px"
-            @click="() => (estado.modal.show_crearOfertaSimple = true)"
-          />
+            @click="() => (estado.modal.show_crearOfertaSimple = true)" />
         </div>
       </template>
 
@@ -63,8 +58,7 @@
             row.precioConFactura &&
             row.ingredientes.length > 0
           "
-          color="green"
-        >
+          color="green">
           completo
         </q-badge>
         <q-badge v-else color="orange"> incompleto </q-badge>
@@ -74,7 +68,7 @@
         <h1 v-if="row.nombre" class="tooltip font-semibold">
           {{
             row.nombre.length > 30
-              ? row.nombre.slice(0, 30) + "..."
+              ? row.nombre.slice(0, 30) + '...'
               : row.nombre
           }}
           <span
@@ -86,7 +80,7 @@
           <div v-for="ingrediente in row.ingredientes" :key="ingrediente._id">
             <q-badge color="darkblue" class="mr-1 mb-1 lowercase">
               {{ ingrediente.producto.nombre }} /
-              {{ ingrediente.marca ? ingrediente.marca?.nombre : "Sin marca" }}
+              {{ ingrediente.marca ? ingrediente.marca?.nombre : 'Sin marca' }}
             </q-badge>
           </div>
         </div>
@@ -116,12 +110,11 @@
             class="p-1"
             size="sm"
             @click="
-              (e) => {
+              e => {
                 e.stopPropagation();
                 goTo(router, 'oferta', { id: row._id });
               }
-            "
-          >
+            ">
             <q-tooltip> Editar producto </q-tooltip></q-btn
           >
         </q-btn-group>
@@ -133,8 +126,7 @@
             display: grid;
             grid-gap: 16px;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          "
-        >
+          ">
           <!-- IMAGEN -->
           <div>
             <q-img
@@ -142,8 +134,7 @@
               :src="row.imagen?.cloudinaryUrl"
               spinner-color="primary"
               spinner-size="82px"
-              class="w-full h-auto object-cover"
-            />
+              class="w-full h-auto object-cover" />
             <h1 v-else>No hay imagen...</h1>
           </div>
           <!-- DATOS BASICOS -->
@@ -217,23 +208,23 @@
 </template>
 
 <script setup lang="ts">
-import { useOferta } from "./ofertas.composable";
+import { useOferta } from './ofertas.composable';
 const {
   estado,
   store,
   authStore,
   router,
   handleOfertaBasicaCreada,
-  handleOfertaSimpleCreada,
+  handleOfertaSimpleCreada
 } = useOferta();
 
-import { columnaOfertas } from "./columns";
-import formOfertaBasico from "@/modulos/ofertas/forms/formOfertaBasico.vue";
-import formOfertaProducto from "@/modulos/ofertas/forms/formOfertaProducto.vue";
+import { columnaOfertas } from './columns';
+import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
+import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 
-provide("infoPagina", {
-  titulo: "Gestion de ofertas",
-  camino: [{ label: "Ofertas", to: "ofertas" }],
+provide('infoPagina', {
+  titulo: 'Gestion de ofertas',
+  camino: [{ label: 'Ofertas', to: 'ofertas' }]
 });
 
 // opciones
@@ -247,13 +238,13 @@ const selectCatalogoFiltro = computed(() => {
         hijas.push({
           label: subcat.nombre,
           value: [subcat._id],
-          class: "option",
+          class: 'option'
         });
         idsHijas.push(subcat._id);
       }
       options.push({
         label: cat.nombre,
-        value: [...idsHijas, cat._id],
+        value: [...idsHijas, cat._id]
       });
       options = [...options, ...hijas];
     }
@@ -262,22 +253,23 @@ const selectCatalogoFiltro = computed(() => {
 });
 
 const rowsParaMostrar = computed(() => {
+  console.log('first');
   let filtered = store.ofertas;
   if (!filtered) return [];
   if (
     estado.filtros.catalogoSeleccionado != null &&
-    estado.filtros.catalogoSeleccionado !== ""
+    estado.filtros.catalogoSeleccionado !== ''
   ) {
-    filtered = filtered.filter((oferta) =>
+    filtered = filtered.filter(oferta =>
       estado.filtros.catalogoSeleccionado.includes(oferta.catalogo._id)
     );
   }
   if (estado.filtros.buscarFiltro != null) {
-    filtered = filtered.filter((oferta) => {
-      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
+    filtered = filtered.filter(oferta => {
+      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
       return regex.test(
         oferta.nombre +
-          oferta.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          oferta.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       );
     });
   }
@@ -292,12 +284,12 @@ onMounted(async () => {
 // sockets
 const { $socket } = useNuxtApp();
 onBeforeMount(() => {
-  $socket.on("cambiosOfertas", async (data: any) => {
+  $socket.on('cambiosOfertas', async (data: any) => {
     await store.refreshOfertas();
   });
 });
 onBeforeUnmount(() => {
-  $socket.off("cambiosOfertas");
+  $socket.off('cambiosOfertas');
 });
 </script>
 
@@ -306,7 +298,7 @@ onBeforeUnmount(() => {
 .weekday {
   display: none !important;
 }
-input[type="checkbox"] + label {
+input[type='checkbox'] + label {
   display: inline-block;
   border-radius: 50%;
   background: #dddddd;
@@ -317,7 +309,7 @@ input[type="checkbox"] + label {
   font-weight: bold;
   cursor: pointer;
 }
-input[type="checkbox"]:checked + label {
+input[type='checkbox']:checked + label {
   background: #007bff;
   color: #ffffff;
 }

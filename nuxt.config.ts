@@ -51,7 +51,7 @@ export default defineNuxtConfig({
     public: {
       DeployStatus: process.env.DEPLOY,
       GQL_HOST: process.env.GRAPH_URI,
-      "graphql-client": {
+      graphqlClient: {
         codegen: {
           silent: false,
           skipTypename: false,
@@ -108,7 +108,7 @@ export default defineNuxtConfig({
         }
       }
       console.log(
-        "\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Se han creado las rutas dinamicas"
+        "\x1b[32m✔ \x1b[33m[Siipiges]\x1b[0m Se han creado las rutas dinamicas",
       );
     },
   },

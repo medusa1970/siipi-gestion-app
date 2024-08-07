@@ -1,42 +1,34 @@
-PERMISOS
-++ definir los permisos y las restricciones
--- cerrar sesion al usuario cuando se le cambia de permisos
--- validacion telefono se porta raro al entrar un telefono ok
-MEDIDAS
-++ poder agregar y borrar tipos de empaque
-OFERTAS
-++ conversion empaques en los formularios tipo inventario
--- comparacion precio proveedor
-STOCK
-++ alertas, busqueda, etc
-INVENTARIO
-L ++ segundo intento
-L ++ recarga de inventario
-PROBLEMAS
--- pagina de gestion de problemas
-TESORERIA
-++ tesoreria basica
-PRODUCTOS
--- averiguar que se modifica/borra bien la oferta automatica de proveedor
--- ofertas de un producto (pestaña)
--- producto/id ($cie) no volver a productos si id not found pero error
-OFERTAS
-L ++ avisar lo que falta para ofertas completas
-L ++ recargar marcas+empaques al crear oferta (indexdb ?)
-L ++ no se puede borrar ofertas
--- precios por mayor en el expand oferta proveedores
-?? bug oferta imagen no aparece
-PROVEEDORES
-++ gestion de proveedor detalle con sus ofertas
-CAT
--- pasar categorias / catalogos lista a tabla
-GLOBAL
--- que se cierra un producto al abrir otro
--- todos los busquedores con stringify
--- gqltoken universel
--- verifier ojo de tabla en todos los lugares
--- permisos submenus refactor
-AVERIGUAR
--- bug backend image
-PUNTOS
--- asignar administradores de puntos
+
+
+
+
+
+
+++ PERMISOS: definir los permisos y las restricciones
+-- PERMISOS: cerrar sesion al usuario cuando se le cambia de permisos
+-- PERMISOS: validacion telefono se porta raro al entrar un telefono ok
+++ MEDIDAS: poder agregar y borrar tipos de empaque
+++ OFERTAS: conversion empaques en los formularios tipo inventario
+-- OFERTAS: comparacion precio proveedor
+++ STOCK: averiguar alertas
+-- STOCK: arreglar busqueda
+++ INVENTARIO: segundo intento
+++ INVENTARIO: recarga de inventario
+-- PROBLEMAS: pagina de gestion de problemas
+++ TESORERIA: tesoreria basica
+-- PRODUCTOS: averiguar que se modifica/borra bien la oferta automatica de proveedor
+-- PRODUCTOS: ofertas de un producto (pestaña)
+-- PRODUCTOS: producto/id ($cie) no volver a productos si id not found pero error
+++ OFERTAS: avisar lo que falta para ofertas completas
+++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
+-- OFERTAS: precios por mayor en el expand oferta proveedores
+?? OFERTAS: bug oferta imagen no aparece
+++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
+-- CAT: pasar categorias / catalogos lista a tabla
+-- GLOBAL: que se cierra un producto al abrir otro
+-- GLOBAL: todos los busquedores con stringify
+-- GLOBAL: gqltoken universel
+-- GLOBAL: verifier ojo de tabla en todos los lugares
+-- GLOBAL: permisos submenus refactor
+-- AVERIGUAR: bug backend image
+-- PUNTOS: asignar administradores de puntos

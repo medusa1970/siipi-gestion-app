@@ -8,7 +8,6 @@
     :defaultImage="defaultImage"
     :filter="filter"
     class="border-none"
-    virtual-scroll
     :rows-per-page-options="[30]"
     style="max-height: 82.5vh; overflow-y: auto"
   >
@@ -17,7 +16,9 @@
     </template>
     <template #body="props">
       <q-tr
-        :class="1 == props.rowIndex % 2 ? 'odd' : 'even'"
+        :class="`${
+          1 == props.rowIndex % 2 ? 'expand odd' : 'expand even'
+        } q-virtual-scroll--with-prev`"
         :props="props"
         @click="props.expand = !props.expand"
       >
@@ -43,7 +44,7 @@
       </q-tr>
       <q-tr
         :class="1 == props.rowIndex % 2 ? 'expand odd' : 'expand even'"
-        v-show="!disableExpand && props.expand"
+        v-if="!disableExpand && props.expand"
         :props="props"
       >
         <q-td colspan="100%">
@@ -75,14 +76,14 @@ const props = withDefaults(
     conBusqueda: false,
     titulo: "",
     disableExpand: false,
-  }
+  },
 );
 watch(
   () => props.watchFilter,
   () => {
     filter.value = props.watchFilter;
   },
-  { immediate: false }
+  { immediate: false },
 );
 </script>
 

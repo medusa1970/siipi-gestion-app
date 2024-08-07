@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHr lpR lFr ">
+  <q-layout view="lHr lpR lFr">
     <!-- header -->
     <q-header
       elevated
@@ -107,7 +107,7 @@
 
       <!-- menu section -->
       <q-list>
-        <q-list-item v-for="item in menuList">
+        <q-item v-for="item in menuList">
           <q-expansion-item
             v-if="
               (!item.soloDev || $config.public.DeployStatus !== 'PROD') &&
@@ -156,7 +156,7 @@
               </q-btn>
             </div>
           </q-expansion-item>
-        </q-list-item>
+        </q-item>
       </q-list>
     </q-drawer>
 

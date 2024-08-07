@@ -96,7 +96,7 @@ export const useAuthStore = defineStore("auth", {
       // negocios del usuario filtrando los empleados de las entidad
       const negocios = entidades.map((entidad) => {
         const empleado = entidad.empleados.find(
-          (empleado) => empleado.persona.usuario === loginResponse.usuario
+          (empleado) => empleado.persona.usuario === loginResponse.usuario,
         ) as Empleado;
         return {
           _id: entidad._id,
@@ -174,7 +174,11 @@ export const useAuthStore = defineStore("auth", {
     /**
      * autorizar
      */
-    autorizar(permisosRequeridos: string[] = []) {
+    autorizar(permisosRequeridos: string[] = null) {
+      // pagina abierta sin restriccion si null
+      if (permisosRequeridos === null) return true;
+
+      // sino se requiere una entidad
       if (!this.negocio) return false;
 
       const userPermisos = this.negocio.permisos;
@@ -184,7 +188,7 @@ export const useAuthStore = defineStore("auth", {
         if (permiso === "BLOQUEADO") return false;
         if (requerido.includes(permiso)) autorizado = true;
       }
-      return permisosRequeridos.length === 0 || autorizado;
+      return autorizado;
     },
 
     /**

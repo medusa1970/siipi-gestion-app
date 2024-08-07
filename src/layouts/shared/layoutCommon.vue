@@ -107,56 +107,65 @@
 
       <!-- menu section -->
       <q-list>
-        <q-item v-for="item in menuList">
-          <q-expansion-item
+        <div v-for="item in menuList">
+          <q-item
             v-if="
+              // soloDev = no mostrar en produccion
               (!item.soloDev || $config.public.DeployStatus !== 'PROD') &&
-              authStore.autorizar(item.permisos)
-            "
-            v-model="menuState[item.key]"
-            :icon="item.icon"
-            :class="'w-full' + (item.to === routeName ? ' bg-orange' : '')"
-            :label="item.label"
-            @click="
-              if (item.to) {
-                router.push(getRoute(router, item.to));
-              } else {
-                // for (const i of menuList) {
-                //   menuState[i.key] = item?.key === i?.key;
-                // }
-              }
+              // y tambien...
+              ((item.permisos && authStore.autorizar(item.permisos)) || // o bien autorizacion explicita,
+                (item.subMenu && // o bien tiene un submenu...
+                  item.subMenu.reduce((autorizado, subMenu) => {
+                    return autorizado || authStore.autorizar(subMenu.permisos);
+                  }, false))) // y el submenu tiene por lo menos un item autorizado
             "
           >
-            <div v-for="subItem in item.subMenu ?? []">
-              <q-btn
-                :to="getRoute(router, subItem.to)"
-                v-if="
-                  (!subItem.soloDev ||
-                    $config.public.DeployStatus !== 'PROD') &&
-                  authStore.autorizar(subItem.permisos)
-                "
-                :class="
-                  'w-full' + (subItem.to === routeName ? ' bg-orange' : '')
-                "
-                background="orange"
-                align="left"
-                flat
-                no-caps
-                ><template #default>
-                  <q-icon
-                    :name="subItem.icon"
-                    style="
-                      font-size: 20px;
-                      padding-left: 22px;
-                      margin-right: 10px;
-                    "
-                  />
-                  {{ subItem.label }}
-                </template>
-              </q-btn>
-            </div>
-          </q-expansion-item>
-        </q-item>
+            <q-expansion-item
+              v-model="menuState[item.key]"
+              :icon="item.icon"
+              :class="'w-full' + (item.to === routeName ? ' bg-orange' : '')"
+              :label="item.label"
+              @click="
+                if (item.to) {
+                  router.push(getRoute(router, item.to));
+                } else {
+                  // for (const i of menuList) {
+                  //   menuState[i.key] = item?.key === i?.key;
+                  // }
+                }
+              "
+            >
+              <div v-for="subItem in item.subMenu ?? []">
+                <q-btn
+                  :to="getRoute(router, subItem.to)"
+                  v-if="
+                    (!subItem.soloDev ||
+                      $config.public.DeployStatus !== 'PROD') &&
+                    authStore.autorizar(subItem.permisos)
+                  "
+                  :class="
+                    'w-full' + (subItem.to === routeName ? ' bg-orange' : '')
+                  "
+                  background="orange"
+                  align="left"
+                  flat
+                  no-caps
+                  ><template #default>
+                    <q-icon
+                      :name="subItem.icon"
+                      style="
+                        font-size: 20px;
+                        padding-left: 22px;
+                        margin-right: 10px;
+                      "
+                    />
+                    {{ subItem.label }}
+                  </template>
+                </q-btn>
+              </div>
+            </q-expansion-item>
+          </q-item>
+        </div>
       </q-list>
     </q-drawer>
 

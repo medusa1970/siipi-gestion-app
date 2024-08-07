@@ -31,15 +31,6 @@ const menu = [
     icon: "warehouse",
     label: "Almacen",
     key: "almacen",
-    permisos: [
-      ...permisosProductos,
-      ...permisosCategoria,
-      ...permisosStock,
-      ...permisosBloques,
-      ...permisosMarcas,
-      ...permisosMedidas,
-      ...permisosProveedores,
-    ],
     subMenu: [
       {
         icon: "bi-box",
@@ -89,7 +80,6 @@ const menu = [
     icon: "menu_book",
     label: "Ofertas",
     key: "ofertas",
-    permisos: [...permisosOfertas, ...permisosCatalogos],
     subMenu: [
       {
         icon: "menu_book",
@@ -129,7 +119,6 @@ const menu = [
     icon: "storefront",
     label: "Empresa",
     key: "empresa",
-    permisos: [...permisosEmpleados, ...permisosEmpleados],
     subMenu: [
       {
         icon: "group",

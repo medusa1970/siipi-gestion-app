@@ -4,7 +4,7 @@ import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosCategoria = ["ACCEDER"];
+export const permisosCategoria = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
 
 /**
  * Composable
@@ -69,7 +69,7 @@ export const useCategorias = () => {
         pariente: estado.datos_categoria._id,
       },
       { populate: true },
-      { loading: true }
+      { loading: true },
     );
     if (categoriaCreada) {
       await buscarCategorias();
@@ -91,7 +91,7 @@ export const useCategorias = () => {
       { _id: estado.datos_categoria._id },
       { nombre: estado.datos_categoria.nombre },
       { populate: true },
-      { loading: true }
+      { loading: true },
     );
     if (categoriaModificada) {
       await buscarCategorias();

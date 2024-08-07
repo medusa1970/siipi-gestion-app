@@ -3,7 +3,7 @@ import { useEmpresa } from "~/modulos/empresa/empresa.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosEmpleadosDetalles = ["ACCEDER"];
+export const permisosEmpleadosDetalles = ["ADMINISTRACION"];
 
 /**
  * Composable para empresa/empleados

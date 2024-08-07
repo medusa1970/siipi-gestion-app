@@ -341,7 +341,6 @@ const selectCategoriaFiltro = computed(() => {
  * Rows para la tabla
  */
 const rowsTablaProductos = computed(() => {
-  console.log('first');
   let filtered = store.productos;
   if (!filtered) return [];
   // filtro por completo
@@ -374,7 +373,6 @@ const rowsTablaProductos = computed(() => {
   // filtro por buscar que no discrimine maiusculas de minusculas y acentos
 
   if (estado.filtros.buscarFiltro != null) {
-    console.log('first');
     const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
     filtered = filtered.filter(producto => {
       return regex.test(
@@ -382,10 +380,8 @@ const rowsTablaProductos = computed(() => {
           producto.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       );
     });
-    console.log(filtered);
   }
 
-  console.log(filtered);
   return filtered;
 });
 

@@ -5,9 +5,6 @@ export const TipoPermiso = [
   // acceso illimitado
   "DESAROLLO",
 
-  // Acceder a una entidad
-  "ACCEDER",
-
   // roles en Cathering
   "ALMACEN",
   "ADQUISICION",

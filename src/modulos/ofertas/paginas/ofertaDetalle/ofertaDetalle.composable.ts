@@ -3,7 +3,7 @@ import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosOfertaDetalle = ["ACCEDER"];
+export const permisosOfertaDetalle = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
 
 /**
  * Composable

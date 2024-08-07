@@ -3,7 +3,7 @@ import { useAlmacen } from "~/modulos/almacen/almacen.composable";
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosProductoDetalle = ["ACCEDER"];
+export const permisosProductoDetalle = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
 
 /**
  * Composable

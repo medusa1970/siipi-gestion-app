@@ -1,13 +1,15 @@
 import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
 export const usePuntos = () => {
   const authStore = useAuthStore();
+  const pedidoStore = storePedido();
 
   const estado = reactive({
-    pedidosAceptados: [],
-    pedidosSinAceptar: [],
-    pedidosRecibidos: [],
-    pedidosFiltrados: [],
+    // pedidosAceptados: [],
+    // pedidosSinAceptar: [],
+    // pedidosRecibidos: [],
+    // pedidosFiltrados: [],
     pedidoItemsEstado: ''
   });
 
@@ -45,9 +47,11 @@ export const usePuntos = () => {
       { aceptados: [], noAceptados: [], recibidos: [] }
     );
 
-    estado.pedidosSinAceptar = pedidos.noAceptados;
-    estado.pedidosAceptados = pedidos.aceptados;
-    estado.pedidosRecibidos = pedidos.recibidos;
+    pedidoStore.pedidosSinAceptar = pedidos.noAceptados;
+    pedidoStore.pedidosAceptados = pedidos.aceptados;
+    pedidoStore.pedidosRecibidos = pedidos.recibidos;
+
+    console.log(pedidoStore);
 
     // hideLoading();
 
@@ -160,6 +164,7 @@ export const usePuntos = () => {
 
   return {
     estado,
-    buscarPedidos
+    buscarPedidos,
+    pedidoStore
   };
 };

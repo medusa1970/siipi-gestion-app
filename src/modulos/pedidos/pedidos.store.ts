@@ -6,6 +6,11 @@ interface PedidoState {
   pedidosDirecto: any[];
   isDespachar: boolean;
   areaPedidoID: string;
+
+  // NUEVOS
+  pedidosAceptados: [];
+  pedidosSinAceptar: [];
+  pedidosRecibidos: [];
 }
 
 export const storePedido = defineStore('pedidos', {
@@ -15,13 +20,16 @@ export const storePedido = defineStore('pedidos', {
     pedidosDirecto: [],
     isDespachar: false,
     areaPedidoID: '',
+    pedidosAceptados: [],
+    pedidosSinAceptar: [],
+    pedidosRecibidos: []
   }),
 
   getters: {},
 
   actions: {},
 
-  persist: true,
+  persist: true
 
   // persist: {
   //   paths: [],

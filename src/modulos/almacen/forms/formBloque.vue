@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Entidad } from "#gql";
 import type { Bloque } from "#gql";
 import { UrlToBase64Image } from "~/components/input/input.service";
 import { useAlmacen } from "~/modulos/almacen/almacen.composable";
@@ -57,7 +56,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // datos por defecto del formulario
@@ -112,12 +111,12 @@ const formSubmit = async () => {
             },
             modificar: estado.dataForm,
           },
-        }
+        },
       );
       emits(
         "modificarObjeto",
         entidad.bloques.find((v) => v._id === props.edicion?._id),
-        entidad
+        entidad,
       );
     } else {
       const entidad = await api.modificarEntidad_bloques(
@@ -126,7 +125,7 @@ const formSubmit = async () => {
           bloques: {
             agregar: [estado.dataForm],
           },
-        }
+        },
       );
       emits("crearObjeto", ultimo(entidad.bloques), entidad);
     }

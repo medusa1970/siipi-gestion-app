@@ -45,6 +45,8 @@
       "
       requerido
     />
+    {{ estado.dataForm.catalogo ?? "lk" }}
+    {{ estado.watchCatalogo ?? "no" }}
 
     <input-select
       label="Sub catalogo"
@@ -80,7 +82,6 @@
 
 <script setup lang="ts">
 import type { Oferta } from "#gql";
-import { apiOfertas } from "@/modulos/ofertas/API/ofertas.api";
 import { useOfertas } from "@/modulos/ofertas/ofertas.composable";
 import { UrlToBase64Image } from "~/components/input/input.service";
 const { store, ofertaAbreviacion } = useOfertas();

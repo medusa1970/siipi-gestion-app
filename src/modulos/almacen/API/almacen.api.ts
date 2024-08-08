@@ -16,7 +16,7 @@ export const apiAlmacen = {
   buscarArbolCategorias: async (
     b: BuscarCategoriaDto,
     o: BuscarOpciones & { loading?: boolean } = {},
-    t: any = null
+    t: any = null,
   ): Promise<Categoria> => {
     o.limit = 0;
     return <Categoria>(
@@ -29,7 +29,7 @@ export const apiAlmacen = {
    */
   buscarArbolCategoriasRaiz: async (
     opciones: BuscarOpciones & { loading?: boolean } = {},
-    token: any = null
+    token: any = null,
   ): Promise<Categoria> => {
     opciones.limit = 0;
     return <Categoria>await buscarUno(
@@ -40,7 +40,7 @@ export const apiAlmacen = {
       },
       opciones,
       null,
-      opciones.loading
+      opciones.loading,
     );
   },
 
@@ -57,7 +57,7 @@ export const apiAlmacen = {
     productoID: any,
     lotes: any,
     guardar: boolean,
-    mensaje: string = "se hizo"
+    mensaje: string = "se hizo",
   ): Promise<Inventario> => {
     try {
       const inventario = extraerUno(
@@ -69,7 +69,7 @@ export const apiAlmacen = {
             lotes: lotes,
             reporte: mensaje,
           },
-        })
+        }),
       );
       return inventario;
     } catch (err) {
@@ -86,7 +86,7 @@ export const apiAlmacen = {
         await GqlProductosMenu({
           busqueda: { _id: [entidadID] },
           busquedaMenu: {},
-        })
+        }),
       );
       return producto;
     } catch (err) {
@@ -102,81 +102,9 @@ export const apiAlmacen = {
       const productos = extraer(
         await GqlFilaInventario({
           busqueda: { _id: [entidadID] },
-        })
+        }),
       );
       return productos;
-    } catch (err) {
-      throw formatApiError(err);
-    }
-  },
-
-  /**
-   * Recupera un problema
-   */
-  buscarProblema: async (
-    entidadID: string,
-    problemaID: string
-  ): Promise<Problema> => {
-    try {
-      const entidad = extraerUno(
-        await GqlBuscarEntidades_problemas({
-          busqueda: { _id: [entidadID] },
-          filtro: { problemas: { _id: [problemaID] } },
-          opciones: { limit: 1, errorSiVacio: true },
-        })
-      );
-      return entidad.problemas[0];
-    } catch (err) {
-      throw formatApiError(err);
-    }
-  },
-
-  /**
-   * Recupera todos los problemas no resueltos
-   */
-  buscarProblemasNoResueltos: async (
-    entidadID: string
-  ): Promise<Problema[]> => {
-    try {
-      const entidad = extraerUno(
-        await GqlBuscarEntidades_problemas({
-          busqueda: { _id: [entidadID] },
-          filtro: { problemas: { resuelto: false } },
-          opciones: { limit: 1, errorSiVacio: true },
-        })
-      );
-      return entidad.problemas;
-    } catch (err) {
-      throw formatApiError(err);
-    }
-  },
-
-  /**
-   * Resuelve un problema
-   */
-  resolverProblema: async (
-    entidadID: string,
-    problemaID: string,
-    datos: object
-  ): Promise<Problema> => {
-    try {
-      const entidad = extraerUno(
-        await GqlModificarEntidades_problemas({
-          busqueda: {
-            _id: [entidadID],
-          },
-          datos: {
-            problemas: {
-              buscar: { _id: [problemaID] },
-              modificar: datos,
-            },
-          },
-          opciones: { limit: 1, errorSiVacio: true },
-        })
-      );
-      return entidad.problemas.find(
-        (problema) => problema._id.toString() === problemaID
-      );
     } catch (err) {
       throw formatApiError(err);
     }

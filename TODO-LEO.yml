@@ -1,21 +1,17 @@
-
-
-
-
-
+++ OFERTAS: conversion empaques en los formularios tipo inventario
+-- PROBLEMAS: pagina de gestion de problemas
+++ TESORERIA: tesoreria basica
+-- OFERTAS: comparacion precio proveedor
+++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
 
 ++ PERMISOS: definir los permisos y las restricciones
 -- PERMISOS: cerrar sesion al usuario cuando se le cambia de permisos
 -- PERMISOS: validacion telefono se porta raro al entrar un telefono ok
 ++ MEDIDAS: poder agregar y borrar tipos de empaque
-++ OFERTAS: conversion empaques en los formularios tipo inventario
--- OFERTAS: comparacion precio proveedor
 ++ STOCK: averiguar alertas
 -- STOCK: arreglar busqueda
 ++ INVENTARIO: segundo intento
 ++ INVENTARIO: recarga de inventario
--- PROBLEMAS: pagina de gestion de problemas
-++ TESORERIA: tesoreria basica
 -- PRODUCTOS: averiguar que se modifica/borra bien la oferta automatica de proveedor
 -- PRODUCTOS: ofertas de un producto (pestaña)
 -- PRODUCTOS: producto/id ($cie) no volver a productos si id not found pero error
@@ -23,12 +19,11 @@
 ++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
 -- OFERTAS: precios por mayor en el expand oferta proveedores
 ?? OFERTAS: bug oferta imagen no aparece
-++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
 -- CAT: pasar categorias / catalogos lista a tabla
 -- GLOBAL: que se cierra un producto al abrir otro
 -- GLOBAL: todos los busquedores con stringify
 -- GLOBAL: gqltoken universel
 -- GLOBAL: verifier ojo de tabla en todos los lugares
--- GLOBAL: permisos submenus refactor
 -- AVERIGUAR: bug backend image
 -- PUNTOS: asignar administradores de puntos
+-- GLOBAL: Forms, failsafe si edicion._id is null, todo se iria a modificar

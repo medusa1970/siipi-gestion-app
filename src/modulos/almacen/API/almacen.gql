@@ -80,56 +80,6 @@ query filaInventario(
   }
 }
 
-mutation modificarEntidades_problemas(
-  $busqueda: BuscarEntidadDto!
-  $datos: ModificarEntidadDto!
-  $opciones: ModificarOpciones = {}
-) {
-  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
-    problemas {
-      _id
-      _creado
-      inventario
-      producto {
-        _id
-        nombre
-      }
-      diferencias {
-        vencimiento
-        diferencia
-      }
-      fechaResolucion
-      reporte
-      resuelto
-    }
-  }
-}
-
-query buscarEntidades_problemas(
-  $busqueda: BuscarEntidadDto!
-  $filtro: BuscarEntidadDto = {}
-  $opciones: BuscarOpciones = {}
-) {
-  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
-    problemas {
-      _id
-      _creado
-      inventario
-      producto {
-        _id
-        nombre
-      }
-      diferencias {
-        vencimiento
-        diferencia
-      }
-      fechaResolucion
-      reporte
-      resuelto
-    }
-  }
-}
-
 query stockBuscarEntidad(
   $busqueda: BuscarEntidadDto = {}
   $opciones: BuscarOpciones = {}

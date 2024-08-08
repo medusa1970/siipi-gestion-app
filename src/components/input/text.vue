@@ -52,7 +52,7 @@
       >
         {{ info }}
       </q-tooltip>
-      <template #counter v-if="props.maxLength || props.MinLength">
+      <template #counter v-if="props.maxLength || props.minLength">
         {{ localModel?.length ?? 0 }}
       </template>
       <template #prepend v-if="icono">
@@ -380,12 +380,11 @@ watch(
   },
   { immediate: false },
 );
-// watch(
-//   () => props.watch,
-//   () => {
-//     console.log('once:', props.label, localModel.value, '/', props.watch);
-//     emits('update', localModel.value);
-//   },
-//   { once: true, immediate: true },
-// );
+watch(
+  () => props.watch,
+  () => {
+    emits("update", localModel.value);
+  },
+  { once: true, immediate: true },
+);
 </script>

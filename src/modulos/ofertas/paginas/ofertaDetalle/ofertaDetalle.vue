@@ -50,7 +50,7 @@ provide("infoPagina", {
   titulo: store.oferta?.nombre + " (edicion)",
   camino: [
     { label: "Ofertas", to: "ofertas" },
-    { label: store.oferta?.nombre, to: "ofertasDetalles" },
+    { label: store.oferta?.nombre, to: "ofertaDetalles" },
   ],
 });
 

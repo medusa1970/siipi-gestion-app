@@ -1,4 +1,11 @@
-import type { Categoria, Entidad, Marca, Medida, Producto } from "#gql";
+import type {
+  Categoria,
+  Entidad,
+  Marca,
+  Medida,
+  Producto,
+  Problema,
+} from "#gql";
 import localforage from "localforage";
 import { apiAlmacen } from "@/modulos/almacen/API/almacen.api";
 import { useAuthStore } from "../main/useAuthStore";
@@ -9,6 +16,7 @@ interface storeProps {
   medidas: Medida[] | null;
   proveedores: Entidad[] | null;
   categoriaArbol: Categoria | null;
+  problemas: Problema[] | null;
 
   // Objeto corriente en la pagina de detalle
   producto: Producto | null;
@@ -30,6 +38,7 @@ export const storeAlmacen = defineStore("almacen", {
     marca: null,
     medida: null,
     proveedor: null,
+    problemas: null,
   }),
 
   getters: {},
@@ -45,11 +54,11 @@ export const storeAlmacen = defineStore("almacen", {
         try {
           this.productos = await api.buscarProductos_basico(
             {},
-            { sort: "-_modificado -_creado" }
+            { sort: "-_modificado -_creado" },
           );
           await localforage.setItem(
             "productos",
-            JSON.parse(JSON.stringify(this.productos))
+            JSON.parse(JSON.stringify(this.productos)),
           );
         } catch (err) {
           errFallBack(err);
@@ -125,7 +134,7 @@ export const storeAlmacen = defineStore("almacen", {
         try {
           this.proveedores = await api.buscarEntidades_basico(
             { tipo: ["PROVEEDOR"] },
-            { sort: "nombre" }
+            { sort: "nombre" },
           );
           return this.proveedores;
         } catch (err) {
@@ -167,7 +176,7 @@ export const storeAlmacen = defineStore("almacen", {
       if (this.entidad == null) {
         try {
           this.entidad = await api.buscarEntidad_bloques(
-            useAuthStore().negocio._id
+            useAuthStore().negocio._id,
           );
           return this.entidad;
         } catch (err) {
@@ -181,9 +190,37 @@ export const storeAlmacen = defineStore("almacen", {
       this.entidad = null;
       await this.getEntidad();
     },
+
+    /**
+     * Retorna la lista de las problemas de la base de datos
+     */
+    async getProblemas(): Promise<Problema[]> {
+      if (!this.problemas) {
+        try {
+          const entidad = await api.buscarEntidad_problemas(
+            useAuthStore().getNegocio._id,
+          );
+          this.problemas = entidad.problemas;
+          // this.problemas = entidad.problemas.sort((p1, p2) =>
+          //   p1._modificado > p2._modificado ? -1 : 1,
+          // );
+        } catch (err) {
+          errFallBack(err);
+          return;
+        }
+      }
+      return this.problemas;
+    },
+    async refreshProblemas(): Promise<void> {
+      this.problemas = null;
+      await this.getProblemas();
+      // if (this.problema) {
+      //   await this.useProblema(this.problema._id);
+      // }
+    },
   },
 
   persist: {
-    paths: ["producto", "marcas", "medidas", "proveedores"],
+    paths: ["producto", "marcas", "medidas", "proveedores", "problemas"],
   },
 });

@@ -105,3 +105,40 @@ query leerEstadoPedido(
 ) {
   leerEstadoPedido(busqueda: $busqueda, opciones: $opciones)
 }
+
+query entidadLeerMenu(
+  $busqueda: BuscarEntidadDto!
+  $busquedaMenu: BuscarMenuDto!
+  $opciones: BuscarOpciones = {}
+) {
+  entidadLeerMenu(
+    busqueda: $busqueda
+    busquedaMenu: $busquedaMenu
+    opciones: $opciones
+  ) {
+    _id
+    nombre
+    hijas {
+      _id
+      nombre
+      ofertas {
+        nombre
+      }
+      hijas {
+        _id
+        nombre
+        ofertas {
+          _id
+          nombre
+        }
+      }
+    }
+    ofertas {
+      _id
+      nombre
+      ingredientes {
+        _id
+      }
+    }
+  }
+}

@@ -46,6 +46,7 @@ import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria
 import { permisosCatalogos } from '~/modulos/ofertas/paginas/catalogos/catalogos.composable';
 import { permisosOfertas } from '~/modulos/ofertas/paginas/ofertas/ofertas.composable';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
+import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 
 const $q = useQuasar();
 const pedidoStore = storePedido();
@@ -55,81 +56,6 @@ if (authStore.getNegocio?.tipo !== 'PUNTO') {
   goTo(router, 'inicio');
 }
 
-const menuListPunto = [
-  {
-    icon: 'warehouse',
-    label: 'Almacen',
-    to: 'stock'
-  },
-  {
-    icon: 'add_shopping_cart',
-    label: 'Realizar pedido',
-    to: 'realizar-pedido'
-  },
-  {
-    icon: 'list_alt',
-    label: 'Mis pedidos',
-    to: 'lista-pedidos'
-  },
-  {
-    icon: 'people',
-    label: 'Empleados',
-    to: 'empleados'
-  }
-  // {
-  //   icon: 'description',
-  //   label: 'Pedidos',
-  //   subMenu: [
-  //     {
-  //       label: 'ver pedidos',
-  //       to: '/cathering/pedidos/listaPedidos',
-  //     },
-  //   ],
-  // },
-  // {
-  //   icon: 'sell',
-  //   label: 'Areas',
-  //   subMenu: [
-  //     {
-  //       label: 'Panaderia',
-  //       to: '/cathering',
-  //     },
-  //     {
-  //       label: 'Reposteria',
-  //       to: '/cathering',
-  //     },
-  //   ],
-  // },
-  // {
-  //   icon: 'inventory_2',
-  //   label: 'Gestion',
-  //   subMenu: [
-  //     {
-  //       label: 'Problemas de inventario',
-  //       to: '/cathering/inventario/listaProblemas',
-  //     },
-  //   ],
-  // },
-  // {
-  //   icon: 'fact_check',
-  //   label: 'Menu',
-  //   to: '/punto/menu',
-  //   subMenu: [],
-  // },
-
-  // {
-  //   icon: 'point_of_sale',
-  //   label: 'Caja',
-  //   to: '/punto/caja',
-  //   subMenu: [],
-  // },
-  // {
-  //   icon: 'settings',
-  //   label: 'Configuración',
-  //   // to: '/punto/configuracion',
-  //   subMenu: [],
-  // },
-];
 const menu = [
   {
     icon: 'warehouse',
@@ -165,7 +91,7 @@ const menu = [
       {
         icon: 'add_shopping_cart',
         label: 'Realizar pedido',
-        to: 'realizar-pedido'
+        to: 'realizarPedido'
       },
       {
         icon: 'list_alt',
@@ -221,6 +147,7 @@ const realizarPedido = async () => {
         { loading: true },
         authStore.token
       );
+      console.log(pedido);
       if (pedido) {
         const pedidoEstado = await apiPedido.pedidoConfirmarItems(
           {
@@ -228,6 +155,7 @@ const realizarPedido = async () => {
           },
           authStore.token
         );
+        console.log(pedidoEstado);
         NotifySucessCenter('Pedido realizado con éxito');
         pedidoStore.listaPedido = [];
       } else NotifyError('Error al realizar el pedido');

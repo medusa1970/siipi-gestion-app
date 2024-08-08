@@ -199,7 +199,7 @@ const props = withDefaults(
  * con el buen numero de decimales y las comas entre los millares
  */
 
-const numeroConComas = (valor) => {
+const valorParaMostrar = (valor) => {
   let res = null;
   if (valor != null) {
     switch (props.tipo) {
@@ -220,6 +220,15 @@ const numeroConComas = (valor) => {
   }
   return res;
 };
+const valorParaEmitir = (valor) => {
+  if (valor === null) {
+    return null;
+  }
+  if (props.tipo === "number" || props.tipo === "decimal") {
+    return Number(valor.replace(",", ""));
+  }
+  return String(valor);
+};
 
 /**
  * Definicion de las refs
@@ -229,7 +238,7 @@ const numeroConComas = (valor) => {
 const inputRef = ref(null);
 
 // la ref que contiene el valor del input
-const localModel = ref<string>(numeroConComas(props.porDefecto));
+const localModel = ref<string>(valorParaMostrar(props.porDefecto));
 
 // un boolean que controla si setiene que mostrar o no el mensaje error, y
 // el dicho mensaje
@@ -288,11 +297,7 @@ const tipo = computed(() =>
 const handleChange = (valor: string | null) => {
   if (inputRef.value) inputRef.value.resetValidation();
   if (activarValidacion()) {
-    if (props.tipo === "number" || props.tipo === "decimal") {
-      emits("update", valor == null ? null : Number(valor.replace(",", "")));
-    } else {
-      emits("update", valor);
-    }
+    emits("update", valorParaEmitir(valor));
   }
 };
 
@@ -375,7 +380,7 @@ watch(
 watch(
   () => [props.watch, props.forceWatch],
   () => {
-    localModel.value = numeroConComas(props.watch);
+    localModel.value = valorParaMostrar(props.watch);
     handleChange(localModel.value);
   },
   { immediate: false },
@@ -383,7 +388,7 @@ watch(
 watch(
   () => props.watch,
   () => {
-    emits("update", localModel.value);
+    emits("update", valorParaEmitir(localModel.value));
   },
   { once: true, immediate: true },
 );

@@ -1,12 +1,13 @@
 <template>
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
-      {{ label + (requerido ? ' *' : '') }}
+      {{ label + (requerido ? " *" : "") }}
       <q-icon
         name="help"
         color="blue"
         size="20px"
-        @click="tooltip = !tooltip" />
+        @click="tooltip = !tooltip"
+      />
     </h3>
     <q-select
       ref="inputRef"
@@ -24,7 +25,7 @@
       @blur="handleBlur"
       @filter="filterFn"
       @input-value="
-        v => {
+        (v) => {
           // console.log(`${props.label}=${v === '' ? '<empty string>' : v}`);
         }
       "
@@ -52,7 +53,8 @@
         (localModel && localModel !== ''
           ? inputConfig.bgColorLleno
           : inputConfig.bgColorVacio)
-      ">
+      "
+    >
       <q-tooltip
         v-model="tooltip"
         class="no-pointer-events text-white text-sm bg-blue-9"
@@ -61,7 +63,8 @@
         :offset="[0, -15]"
         max-width="300px"
         no-parent-event
-        @show="hideTooltip()">
+        @show="hideTooltip()"
+      >
         {{ info }}
       </q-tooltip>
 
@@ -80,11 +83,13 @@
           icon="add"
           color="green"
           style="height: 16px; width: 16px"
-          @click="() => (showDialog = true)"></q-btn>
+          @click="() => (showDialog = true)"
+        ></q-btn>
         <q-icon
           v-if="labelAdentro && info && info.length > 0"
           name="help"
-          @click="tooltip = !tooltip" />
+          @click="tooltip = !tooltip"
+        />
       </template>
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps" :class="scope.opt.class">
@@ -102,10 +107,10 @@
 </template>
 
 <script setup lang="ts">
-import { inputConfig } from './input.service';
-import type { SelectOpcion } from './select.interface';
-import { validacion } from './input.validacion';
-import { ref } from 'vue';
+import { inputConfig } from "./input.service";
+import type { SelectOpcion } from "./select.interface";
+import { validacion } from "./input.validacion";
+import { ref } from "vue";
 
 /**
  * El tooltip tiene el texto de ayuda ;
@@ -122,21 +127,21 @@ const hideTooltip = (seconds = 5) =>
 
 const emits = defineEmits<{
   (
-    event: 'update', // cambió el valor del input
-    valor: string | null // el valor
+    event: "update", // cambió el valor del input
+    valor: string | null, // el valor
   ): void;
 
   (
-    event: 'error', // el input está en estado de error de validación
+    event: "error", // el input está en estado de error de validación
     errorFlag: boolean, // true si hay un error activa
     errorMensaje: string | null, // el mensaje de error
-    valor: any // el valor que ha provocado el error
+    valor: any, // el valor que ha provocado el error
   ): void;
 
   (
-    event: 'crearObjeto', // se ha creado un objeto via el boton [+]
+    event: "crearObjeto", // se ha creado un objeto via el boton [+]
     objeto: any, // el objeto creado
-    pariente?: any // si el objeto es un subdoc de un documento, el mismo documento
+    pariente?: any, // si el objeto es un subdoc de un documento, el mismo documento
   ): void;
 }>();
 
@@ -218,8 +223,8 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-    forceWatch: null
-  }
+    forceWatch: null,
+  },
 );
 
 /**
@@ -242,9 +247,9 @@ let reglasValidacion = props.rules ?? [];
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === 'string' ? props.requerido : undefined
+      typeof props.requerido === "string" ? props.requerido : undefined,
     ),
-    ...reglasValidacion
+    ...reglasValidacion,
   ];
 }
 
@@ -277,7 +282,7 @@ onBeforeMount(async () => {
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje != null;
-  emits('error', errorFlag.value, errorMensaje.value, localModel.value);
+  emits("error", errorFlag.value, errorMensaje.value, localModel.value);
 }
 
 /**
@@ -305,7 +310,7 @@ function activarValidacion() {
 const handleChange = (valor: string | null) => {
   if (inputRef.value) inputRef.value.resetValidation();
   activarValidacion();
-  emits('update', valor);
+  emits("update", valor);
 };
 
 /**
@@ -317,10 +322,10 @@ function filterFn(valor: string, update: Function) {
     const needle = valor.toLowerCase();
     const opciones = opcionesSrc.value;
     listaOpciones.value =
-      valor === ''
+      valor === ""
         ? opciones
         : opciones?.filter(
-            v => !v.disable && v.label.toLowerCase().indexOf(needle) > -1
+            (v) => !v.disable && v.label.toLowerCase().indexOf(needle) > -1,
           );
   });
 }
@@ -329,12 +334,12 @@ function filterFn(valor: string, update: Function) {
  * metodo llamado cuando se ha creado una nueva opcion via el boton [+]
  */
 
-const handleCrear = objeto => {
+const handleCrear = (objeto) => {
   listaOpciones.value = opcionesSrc.value;
   localModel.value = objeto._id;
   handleChange(objeto._id);
   showDialog.value = false;
-  emits('crearObjeto', objeto);
+  emits("crearObjeto", objeto);
 };
 
 /**
@@ -345,7 +350,7 @@ const handleCrear = objeto => {
 const handleClear = () => {
   // activarValidacion();
   localModel.value = null;
-  emits('update', null);
+  emits("update", null);
 };
 
 /**
@@ -368,7 +373,7 @@ watch(
     // localModel.value = null;
     // handleClear();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /**
@@ -378,7 +383,7 @@ watch(
 
 watch(
   () => props.error,
-  () => setError(props.error)
+  () => setError(props.error),
 );
 
 /**
@@ -389,7 +394,7 @@ watch(
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
-  { immediate: false }
+  { immediate: false },
 );
 
 /**
@@ -404,19 +409,10 @@ watch(
   () => [props.watch, props.forceWatch],
   () => {
     localModel.value = props.watch;
-    emits('update', localModel.value);
+    emits("update", localModel.value);
   },
-  { immediate: false }
+  { immediate: false },
 );
-watch(
-  () => props.watch,
-  () => {
-    emits('update', localModel.value);
-  },
-  { once: true, immediate: true }
-);
-<<<<<<< HEAD
-=======
 watch(
   () => props.watch,
   () => {
@@ -424,5 +420,4 @@ watch(
   },
   { once: true, immediate: true },
 );
->>>>>>> main
 </script>

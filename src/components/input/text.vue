@@ -383,14 +383,4 @@ watch(
   },
   { once: true, immediate: true }
 );
-<<<<<<< HEAD
-=======
-watch(
-  () => props.watch,
-  () => {
-    emits("update", localModel.value);
-  },
-  { once: true, immediate: true },
-);
->>>>>>> main
 </script>

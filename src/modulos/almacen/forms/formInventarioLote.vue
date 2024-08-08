@@ -20,7 +20,7 @@
       label="Fecha de vencimiento"
       info="Info #"
       @update="(v) => (dataForm.vencimiento = new Date(v))"
-      :porDefecto="dataForm.vencimiento.toString()"
+      :porDefecto="dataForm.vencimiento?.toString()"
     />
     <!-- Bloque -->
     <input-select
@@ -72,7 +72,7 @@ const props = withDefaults(
   }>(),
   {
     edicion: null,
-  }
+  },
 );
 
 // definicion del estado

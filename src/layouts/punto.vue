@@ -1,12 +1,8 @@
 <template>
-  <DeployStatus />
-  <layout-common
-    :menuList="menuListPunto"
-    :portada-img="PortadaCathering"
-    punto
-  >
+  <!-- <DeployStatus /> -->
+  <layout-common :menuList="menu" :portada-img="PortadaCathering" cathering>
     <template #actionPedido>
-      <q-btn-group push @click="(e) => e.stopPropagation()">
+      <q-btn-group push @click="e => e.stopPropagation()">
         <q-btn
           @click="pedidoStore.listaPedido = []"
           label="Vaciar"
@@ -14,8 +10,7 @@
           color="orange-7"
           padding="2px 20px"
           size="md"
-          style="border-radius: 0"
-        />
+          style="border-radius: 0" />
 
         <q-btn
           @click="realizarPedido"
@@ -24,8 +19,7 @@
           color="green-7"
           padding="2px 18px"
           size="md"
-          style="border-radius: 0"
-        />
+          style="border-radius: 0" />
       </q-btn-group>
     </template>
     <template #slot>
@@ -35,41 +29,53 @@
 </template>
 
 <script setup>
-import PortadaCathering from "@/assets/img/cookies.png";
-import layoutCommon from "@/layouts/shared/layoutCommon.vue";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import { storePedido } from "@/modulos/pedidos/pedidos.store";
-import { useQuasar } from "quasar";
+import PortadaCathering from '@/assets/img/cookies.png';
+import layoutCommon from '@/layouts/shared/layoutCommon.vue';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { useQuasar } from 'quasar';
+import { permisosBloques } from '~/modulos/almacen/paginas/bloques/bloques.composable';
+import { permisosCategoria } from '~/modulos/almacen/paginas/categorias/categorias.composable';
+import { permisosMarcas } from '~/modulos/almacen/paginas/marcas/marcas.composable';
+import { permisosMedidas } from '~/modulos/almacen/paginas/medidas/medidas.composable';
+import { permisosProductos } from '~/modulos/almacen/paginas/productos/productos.composable';
+import { permisosProveedores } from '~/modulos/almacen/paginas/proveedores/proveedores.composable';
+import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable';
+import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados.composable';
+import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria.composable';
+import { permisosCatalogos } from '~/modulos/ofertas/paginas/catalogos/catalogos.composable';
+import { permisosOfertas } from '~/modulos/ofertas/paginas/ofertas/ofertas.composable';
+import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 
 const $q = useQuasar();
 const pedidoStore = storePedido();
 const router = useRouter();
 const authStore = useAuthStore();
-if (authStore.getNegocio?.tipo !== "PUNTO") {
-  goTo(router, "inicio");
+if (authStore.getNegocio?.tipo !== 'PUNTO') {
+  goTo(router, 'inicio');
 }
 
 const menuListPunto = [
   {
-    icon: "warehouse",
-    label: "Almacen",
-    to: "stock",
+    icon: 'warehouse',
+    label: 'Almacen',
+    to: 'stock'
   },
   {
-    icon: "add_shopping_cart",
-    label: "Realizar pedido",
-    to: "realizar-pedido",
+    icon: 'add_shopping_cart',
+    label: 'Realizar pedido',
+    to: 'realizar-pedido'
   },
   {
-    icon: "list_alt",
-    label: "Mis pedidos",
-    to: "lista-pedidos",
+    icon: 'list_alt',
+    label: 'Mis pedidos',
+    to: 'lista-pedidos'
   },
   {
-    icon: "people",
-    label: "Empleados",
-    to: "empleados",
-  },
+    icon: 'people',
+    label: 'Empleados',
+    to: 'empleados'
+  }
   // {
   //   icon: 'description',
   //   label: 'Pedidos',
@@ -124,23 +130,93 @@ const menuListPunto = [
   //   subMenu: [],
   // },
 ];
+const menu = [
+  {
+    icon: 'warehouse',
+    label: 'Almacen',
+    key: 'almacen',
+    subMenu: [
+      {
+        icon: 'warehouse',
+        label: 'Stock',
+        to: 'stock',
+        permisos: permisosStock
+      },
+      {
+        icon: 'hail',
+        label: 'Proveedores',
+        to: 'proveedores',
+        permisos: permisosProveedores
+      },
+      {
+        icon: 'warning',
+        label: 'Problemas de inventario',
+        to: 'problemas',
+        permisos: permisosProblemas
+      }
+    ]
+  },
+  {
+    icon: 'shopping_cart',
+    label: 'Pedidos',
+    key: 'pedidos',
+    soloDev: true,
+    subMenu: [
+      {
+        icon: 'add_shopping_cart',
+        label: 'Realizar pedido',
+        to: 'realizar-pedido'
+      },
+      {
+        icon: 'list_alt',
+        label: 'Mis pedidos',
+        to: 'lista-pedidos'
+      }
+      // {
+      //   icon: 'shopping_cart',
+      //   label: 'ListaPedidos',
+      //   to: 'listaPedidos',
+      //   soloDev: true
+      // }
+    ]
+  },
+  {
+    icon: 'storefront',
+    label: 'Empresa',
+    key: 'empresa',
+    subMenu: [
+      {
+        icon: 'group',
+        label: 'Empleados',
+        to: 'empleados',
+        permisos: permisosEmpleados
+      },
+      {
+        icon: 'money',
+        label: 'Tesoreria',
+        to: 'tesoreria',
+        permisos: permisosTesoreria
+      }
+    ]
+  }
+];
 
 const realizarPedido = async () => {
-  const items = pedidoStore.listaPedido.map((p) => ({
+  const items = pedidoStore.listaPedido.map(p => ({
     ofertaId: p.id,
-    cantidad: parseInt(p.cantidad),
+    cantidad: parseInt(p.cantidad)
   }));
   $q.dialog({
-    message: "¿Estas seguro de aceptar este pedido?",
+    message: '¿Estas seguro de aceptar este pedido?',
     cancel: true,
-    persistent: true,
+    persistent: true
   }).onOk(async () => {
     try {
       const pedido = await apiPedido.pedidoIniciar(
         {
           comprador: authStore.negocio._id,
-          vendedor: "65a5a9af08c1a906d83522d0",
-          items,
+          vendedor: '65a5a9af08c1a906d83522d0',
+          items
         },
         { loading: true },
         authStore.token
@@ -148,13 +224,13 @@ const realizarPedido = async () => {
       if (pedido) {
         const pedidoEstado = await apiPedido.pedidoConfirmarItems(
           {
-            _id: pedido._id,
+            _id: pedido._id
           },
           authStore.token
         );
-        NotifySucessCenter("Pedido realizado con éxito");
+        NotifySucessCenter('Pedido realizado con éxito');
         pedidoStore.listaPedido = [];
-      } else NotifyError("Error al realizar el pedido");
+      } else NotifyError('Error al realizar el pedido');
     } catch (err) {
       console.log(err);
       return;

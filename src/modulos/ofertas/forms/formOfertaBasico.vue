@@ -45,8 +45,6 @@
       "
       requerido
     />
-    {{ estado.dataForm.catalogo ?? "lk" }}
-    {{ estado.watchCatalogo ?? "no" }}
 
     <input-select
       label="Sub catalogo"

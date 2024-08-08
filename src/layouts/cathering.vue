@@ -114,12 +114,6 @@ const menu = [
         to: "listaPedidos",
         soloDev: true,
       },
-      {
-        icon: "shopping_cart",
-        label: "Pedidos global",
-        to: "pedidosGlobal",
-        soloDev: true,
-      },
     ],
   },
   {

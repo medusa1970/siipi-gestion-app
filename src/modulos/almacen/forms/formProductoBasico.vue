@@ -1,4 +1,8 @@
 <template>
+  hey
+  <pre>
+    {{ estado.dataForm ?? [0] }}
+  </pre>
   <q-form @submit="formSubmit">
     <!--h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1-->
     <div v-if="edicion === null" class="importante">

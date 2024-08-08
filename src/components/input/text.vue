@@ -1,12 +1,13 @@
 <template>
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
-      {{ label + (requerido ? ' *' : '') }}
+      {{ label + (requerido ? " *" : "") }}
       <q-icon
         name="help"
         color="blue"
         size="20px"
-        @click="tooltip = !tooltip" />
+        @click="tooltip = !tooltip"
+      />
     </h3>
     <q-input
       ref="inputRef"
@@ -37,7 +38,8 @@
         localModel && localModel !== ''
           ? inputConfig.bgColorLleno
           : inputConfig.bgColorVacio
-      ">
+      "
+    >
       <q-tooltip
         v-model="tooltip"
         class="no-pointer-events text-white text-sm bg-blue-9"
@@ -46,7 +48,8 @@
         :offset="[0, -15]"
         max-width="300px"
         no-parent-event
-        @show="hideTooltip()">
+        @show="hideTooltip()"
+      >
         {{ info }}
       </q-tooltip>
       <template #counter v-if="props.maxLength || props.minLength">
@@ -59,22 +62,24 @@
         <q-icon
           :name="esconderLetras ? 'visibility_off' : 'visibility'"
           class="cursor-pointer"
-          @click="esconderLetras = !esconderLetras"></q-icon>
+          @click="esconderLetras = !esconderLetras"
+        ></q-icon>
       </template>
       <template #after>
         <q-icon
           v-if="labelAdentro && info && info.length > 0"
           name="help"
-          @click="tooltip = !tooltip" />
+          @click="tooltip = !tooltip"
+        />
       </template>
     </q-input>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inputConfig } from './input.service';
-import { validacion } from './input.validacion';
-import { ref } from 'vue';
+import { inputConfig } from "./input.service";
+import { validacion } from "./input.validacion";
+import { ref } from "vue";
 
 /**
  * El tooltip tiene el texto de ayuda ;
@@ -91,14 +96,14 @@ const hideTooltip = (seconds = 5) =>
 
 const emits = defineEmits<{
   (
-    event: 'update', // si cambió el valor del input
-    valor: string | number | null // el valor
+    event: "update", // si cambió el valor del input
+    valor: string | number | null, // el valor
   ): void;
   (
-    event: 'error', // si estado de error de validación cambió
+    event: "error", // si estado de error de validación cambió
     errorFlag: boolean, // true si hay un error activa
     errorMessage: string | null, // el mensaje de error
-    valor: any // el valor que ha provocado el error
+    valor: any, // el valor que ha provocado el error
   ): void;
 }>();
 
@@ -126,11 +131,11 @@ const props = withDefaults(
 
     // el tipo del input
     tipo?:
-      | 'text' // texto simple (por defecto)
-      | 'textarea' // textarea
-      | 'password' // contraseña con letras escondidas
-      | 'number' // numero intero
-      | 'decimal'; // numero con dos decimales
+      | "text" // texto simple (por defecto)
+      | "textarea" // textarea
+      | "password" // contraseña con letras escondidas
+      | "number" // numero intero
+      | "decimal"; // numero con dos decimales
 
     // un texto de ayuda a mostrar debajo del input
     hint?: string;
@@ -174,7 +179,7 @@ const props = withDefaults(
     noSlot?: boolean; // ya no se mostraron mensajes de error pero queda mas compacto
   }>(),
   {
-    tipo: 'text',
+    tipo: "text",
     requerido: false,
     autogrow: false,
     noSlot: false,
@@ -185,8 +190,8 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-    forceWatch: null
-  }
+    forceWatch: null,
+  },
 );
 
 /**
@@ -194,19 +199,19 @@ const props = withDefaults(
  * con el buen numero de decimales y las comas entre los millares
  */
 
-const numeroConComas = valor => {
+const valorParaMostrar = (valor) => {
   let res = null;
   if (valor != null) {
     switch (props.tipo) {
-      case 'number':
-        res = parseFloat(String(valor)).toLocaleString('en-US', {
-          minimumFractionDigits: 0
+      case "number":
+        res = parseFloat(String(valor)).toLocaleString("en-US", {
+          minimumFractionDigits: 0,
         });
         break;
-      case 'decimal':
-        res = parseFloat(String(valor)).toLocaleString('en-US', {
+      case "decimal":
+        res = parseFloat(String(valor)).toLocaleString("en-US", {
           minimumFractionDigits: 2,
-          maximumFractionDigits: 2
+          maximumFractionDigits: 2,
         });
         break;
       default:
@@ -214,6 +219,15 @@ const numeroConComas = valor => {
     }
   }
   return res;
+};
+const valorParaEmitir = (valor) => {
+  if (valor === null) {
+    return null;
+  }
+  if (props.tipo === "number" || props.tipo === "decimal") {
+    return Number(valor.replace(",", ""));
+  }
+  return String(valor);
 };
 
 /**
@@ -224,7 +238,7 @@ const numeroConComas = valor => {
 const inputRef = ref(null);
 
 // la ref que contiene el valor del input
-const localModel = ref<string>(numeroConComas(props.porDefecto));
+const localModel = ref<string>(valorParaMostrar(props.porDefecto));
 
 // un boolean que controla si setiene que mostrar o no el mensaje error, y
 // el dicho mensaje
@@ -236,42 +250,42 @@ const esconderLetras = ref<boolean>(true);
 
 // agregamos las reglas de vlaidacion especificas segun el tipo del input
 let reglasValidacion = props.rules ?? [];
-if (props.tipo === 'decimal') {
+if (props.tipo === "decimal") {
   reglasValidacion = [validacion.decimal(), ...reglasValidacion];
 }
-if (props.tipo === 'number') {
+if (props.tipo === "number") {
   reglasValidacion = [validacion.numero(), ...reglasValidacion];
 }
 if (props.minLength) {
   reglasValidacion = [
     validacion.minLength(props.minLength),
-    ...reglasValidacion
+    ...reglasValidacion,
   ];
 }
 if (props.maxLength) {
   reglasValidacion = [
     validacion.maxLength(props.maxLength),
-    ...reglasValidacion
+    ...reglasValidacion,
   ];
 }
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === 'string' ? props.requerido : undefined
+      typeof props.requerido === "string" ? props.requerido : undefined,
     ),
-    ...reglasValidacion
+    ...reglasValidacion,
   ];
 }
 
 // calculo del tipo extacto a pasar a q-input
 const tipo = computed(() =>
-  props.tipo === 'password'
+  props.tipo === "password"
     ? esconderLetras.value
-      ? 'password'
-      : 'text'
-    : props.tipo === 'textarea'
-    ? 'textarea'
-    : 'text'
+      ? "password"
+      : "text"
+    : props.tipo === "textarea"
+    ? "textarea"
+    : "text",
 );
 
 /**
@@ -283,11 +297,7 @@ const tipo = computed(() =>
 const handleChange = (valor: string | null) => {
   if (inputRef.value) inputRef.value.resetValidation();
   if (activarValidacion()) {
-    if (props.tipo === 'number' || props.tipo === 'decimal') {
-      emits('update', valor == null ? null : Number(valor.replace(',', '')));
-    } else {
-      emits('update', valor);
-    }
+    emits("update", valorParaEmitir(valor));
   }
 };
 
@@ -298,14 +308,14 @@ const handleChange = (valor: string | null) => {
 
 const handleClear = () => {
   localModel.value = null;
-  emits('update', null);
+  emits("update", null);
 };
 
 /**
  * Este metodo se ejecuta cada vez que el input pierde el focus
  */
 
-const handleBlur = e => {
+const handleBlur = (e) => {
   setError(null);
 };
 
@@ -317,7 +327,7 @@ const handleBlur = e => {
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje !== null;
-  emits('error', errorFlag.value, errorMensaje.value, localModel.value);
+  emits("error", errorFlag.value, errorMensaje.value, localModel.value);
 }
 
 /**
@@ -345,7 +355,7 @@ function activarValidacion() {
 
 watch(
   () => props.error,
-  () => setError(props.error)
+  () => setError(props.error),
 );
 
 /**
@@ -356,7 +366,7 @@ watch(
 watch(
   () => props.activarValidacion,
   () => activarValidacion(),
-  { immediate: false }
+  { immediate: false },
 );
 
 /**
@@ -370,17 +380,16 @@ watch(
 watch(
   () => [props.watch, props.forceWatch],
   () => {
-    localModel.value = numeroConComas(props.watch);
+    localModel.value = valorParaMostrar(props.watch);
     handleChange(localModel.value);
   },
-  { immediate: false }
+  { immediate: false },
 );
 watch(
   () => props.watch,
   () => {
-    console.log('once:', props.label, localModel.value, '/', props.watch);
-    emits('update', localModel.value);
+    emits("update", valorParaEmitir(localModel.value));
   },
-  { once: true, immediate: true }
+  { once: true, immediate: true },
 );
 </script>

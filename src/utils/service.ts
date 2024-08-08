@@ -5,7 +5,7 @@ const buscar = async (
   busqueda: any,
   opciones: any,
   filtro: any,
-  loading = false
+  loading = false,
 ) => {
   delete opciones.loading;
   if (!multiple) {
@@ -37,7 +37,7 @@ export const buscarUno = async (
   b = {},
   o = {},
   f = null,
-  l = false
+  l = false,
 ) => {
   return buscar(c, t, false, b, o, f, l);
 };
@@ -48,7 +48,7 @@ export const buscarVarios = async (
   b = {},
   o = {},
   f = null,
-  l = false
+  l = false,
 ) => {
   return buscar(c, t, true, b, o, f, l);
 };
@@ -59,7 +59,7 @@ const crear = async (
   multiple: boolean,
   datos: any,
   opciones: any,
-  loading = false
+  loading = false,
 ) => {
   delete opciones.loading;
   if (opciones.populate === undefined) opciones.populate = true;
@@ -94,7 +94,7 @@ const modificar = async (
   busqueda: any,
   datos: any,
   opciones: any,
-  loading = false
+  loading = false,
 ) => {
   delete opciones.loading;
   if (!multiple) {
@@ -133,7 +133,7 @@ const borrar = async (
   multiple: boolean,
   busqueda: any,
   opciones: any,
-  loading = false
+  loading = false,
 ) => {
   delete opciones.loading;
   if (!multiple) {

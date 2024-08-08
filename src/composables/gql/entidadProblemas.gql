@@ -1,0 +1,133 @@
+query buscarEntidades_problemas(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarEntidadDto = {}
+) {
+  buscarEntidades(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    _modificado
+    problemas {
+      _id
+      _creado
+      _modificado
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        _id
+        marca {
+          _id
+          nombre
+        }
+        vencimiento
+        diferencia
+      }
+      resuelto
+      fechaResolucion
+      reporte
+      reporteResolucion
+    }
+  }
+}
+
+mutation crearEntidades_problemas(
+  $datos: [CrearEntidadDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearEntidades(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    problemas {
+      _id
+      _creado
+      _modificado
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        _id
+        marca {
+          _id
+          nombre
+        }
+        vencimiento
+        diferencia
+      }
+      resuelto
+      fechaResolucion
+      reporte
+      reporteResolucion
+    }
+  }
+}
+
+mutation modificarEntidades_problemas(
+  $busqueda: BuscarEntidadDto!
+  $datos: ModificarEntidadDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarEntidades(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    problemas {
+      _id
+      _creado
+      _modificado
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        _id
+        marca {
+          _id
+          nombre
+        }
+        vencimiento
+        diferencia
+      }
+      resuelto
+      fechaResolucion
+      reporte
+      reporteResolucion
+    }
+  }
+}
+
+mutation borrarEntidades_problemas(
+  $busqueda: BuscarEntidadDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarEntidades(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    problemas {
+      _id
+      _creado
+      _modificado
+      producto {
+        _id
+        nombre
+      }
+      diferencias {
+        _id
+        marca {
+          _id
+          nombre
+        }
+        vencimiento
+        diferencia
+      }
+      resuelto
+      fechaResolucion
+      reporte
+      reporteResolucion
+    }
+  }
+}

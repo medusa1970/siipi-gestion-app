@@ -21,6 +21,7 @@ import { permisosTesoreria } from "~/modulos/empresa/paginas/tesoreria/tesoreria
 import { useAuthStore } from "~/modulos/main/useAuthStore";
 import { permisosCatalogos } from "~/modulos/ofertas/paginas/catalogos/catalogos.composable";
 import { permisosOfertas } from "~/modulos/ofertas/paginas/ofertas/ofertas.composable";
+import { permisosProblemas } from "~/modulos/almacen/paginas/problemas/problemas.composable";
 const authStore = useAuthStore();
 const router = useRouter();
 if (authStore.getNegocio?.tipo !== "CATHERING") {
@@ -73,6 +74,12 @@ const menu = [
         label: "Proveedores",
         to: "proveedores",
         permisos: permisosProveedores,
+      },
+      {
+        icon: "warning",
+        label: "Problemas de inventario",
+        to: "problemas",
+        permisos: permisosProblemas,
       },
     ],
   },

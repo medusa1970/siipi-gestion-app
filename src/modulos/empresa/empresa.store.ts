@@ -31,7 +31,7 @@ export const storeEmpresa = defineStore("empresa", {
       if (!this.empleados) {
         try {
           const entidad = await api.buscarEntidad_empleados(
-            useAuthStore().getNegocio._id
+            useAuthStore().getNegocio._id,
           );
           this.empleados = entidad.empleados;
         } catch (err) {

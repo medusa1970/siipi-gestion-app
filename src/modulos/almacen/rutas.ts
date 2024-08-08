@@ -44,4 +44,9 @@ export default [
     path: "/cathering/bloques",
     file: "@/modulos/almacen/paginas/bloques/bloques.vue",
   },
+  {
+    name: "problemas",
+    path: "/cathering/problemas",
+    file: "@/modulos/almacen/paginas/problemas/problemas.vue",
+  },
 ];

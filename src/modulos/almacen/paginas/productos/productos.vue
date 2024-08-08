@@ -3,8 +3,7 @@
     <Tabla
       :rows="rowsTablaProductos"
       :columns="columnsTablaProducto"
-      :defaultImage="ProductoImage"
-    >
+      :defaultImage="ProductoImage">
       <template #dropdown>
         <div
           style="
@@ -12,41 +11,36 @@
             grid-gap: 16px;
             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
             width: 100%;
-          "
-        >
+          ">
           <input-text
             label="Buscar"
             labelAdentro
             @update="(v) => (estado.filtros.buscarFiltro = v as string)"
-            noSlot
-          />
+            noSlot />
 
           <input-select
             label="Categoria"
             labelAdentro
             :opciones="selectCategoriaFiltro"
-            @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
-            noSlot
-          />
+            @update="v => (estado.filtros.categoriaSeleccionada = v)"
+            noSlot />
 
           <input-select
             label="Marca"
             labelAdentro
-            @update="(v) => (estado.filtros.marcaSeleccionada = v)"
+            @update="v => (estado.filtros.marcaSeleccionada = v)"
             :opciones="estado.filtros.marcaOpciones"
-            noSlot
-          />
+            noSlot />
 
           <input-select
             label="Estado"
             labelAdentro
-            @update="(v) => (estado.filtros.completud = v)"
+            @update="v => (estado.filtros.completud = v)"
             :opciones="[
               { value: 'soloCompletos', label: 'solo completos' },
-              { value: 'soloIncompletos', label: 'solo incompletos' },
+              { value: 'soloIncompletos', label: 'solo incompletos' }
             ]"
-            noSlot
-          />
+            noSlot />
 
           <q-btn
             style="width: 42px"
@@ -54,8 +48,7 @@
             color="green"
             no-caps
             padding="4px 10px"
-            @click="() => (estado.modal.formProductoBasico = true)"
-          >
+            @click="() => (estado.modal.formProductoBasico = true)">
             <q-tooltip> Agregar producto </q-tooltip>
           </q-btn>
         </div>
@@ -74,8 +67,7 @@
             display: grid;
             grid-gap: 16px;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          "
-        >
+          ">
           <!-- IMAGEN -->
           <div>
             <q-img
@@ -83,8 +75,7 @@
               :src="row.imagen?.cloudinaryUrl"
               spinner-color="primary"
               spinner-size="82px"
-              class="w-full h-auto object-cover"
-            />
+              class="w-full h-auto object-cover" />
             <h1 v-else>No hay imagen...</h1>
           </div>
           <!-- DATOS BASICOS -->
@@ -111,8 +102,7 @@
             <div
               v-for="variedad in row.variedades"
               :key="variedad._id"
-              class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-            >
+              class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1">
               <span class="flex gap-2 items-center"
                 ><h1 class="font-bold text-xs">MARCA:</h1>
                 <p>{{ variedad.marca.nombre }}</p></span
@@ -145,8 +135,7 @@
             <div
               v-for="empaque in row.empaques"
               :key="empaque.nombre"
-              class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1"
-            >
+              class="border border-gray-400 p-1 mt-1 rounded-[4px] mb-1">
               <span class="flex gap-2 items-center"
                 ><h1 class="font-bold text-xs">NOMBRE:</h1>
                 <p>{{ empaque.nombre }}</p></span
@@ -176,13 +165,12 @@
             icon="visibility"
             class="p-1"
             size="sm"
-            @click="() => {}"
-          >
+            @click="() => {}">
             <q-tooltip> Ver informacion producto </q-tooltip>
           </q-btn>
           <q-btn
             @click="
-              (e) => {
+              e => {
                 e.stopPropagation();
                 goTo(router, 'producto', { id: row._id });
               }
@@ -190,13 +178,12 @@
             icon="edit"
             class="p-1"
             color="black"
-            size="sm"
-          >
+            size="sm">
             <q-tooltip> Modificar </q-tooltip>
           </q-btn>
           <q-btn
             @click="
-              (e) => {
+              e => {
                 e.stopPropagation();
                 estado.productoSeleccionado = row._id;
                 estado.productoIncompleto = productoIncompleto(row);
@@ -210,8 +197,7 @@
             icon="add_business"
             class="p-1"
             color="orange"
-            size="sm"
-          >
+            size="sm">
             <q-tooltip> Crear oferta </q-tooltip>
           </q-btn>
         </q-btn-group>
@@ -223,8 +209,7 @@
             display: block;
             word-wrap: break-word;
             white-space: normal;
-          "
-        >
+          ">
           <b>{{ row.nombre }}</b>
         </div>
         <div class="flex" v-if="row.variedades?.length > 0">
@@ -232,8 +217,7 @@
             v-for="variedad in row.variedades"
             :key="variedad._id"
             color="darkblue"
-            class="mr-1 mb-1 lowercase"
-          >
+            class="mr-1 mb-1 lowercase">
             {{ variedad.marca?.nombre }}
           </q-badge>
         </div>
@@ -269,8 +253,7 @@
     <template #body>
       <formOfertaProducto
         :config="{ productoId: estado.productoSeleccionado }"
-        @crearObjeto="handleOfertaSimpleCreada"
-      />
+        @crearObjeto="handleOfertaSimpleCreada" />
     </template>
   </Popup>
 
@@ -287,8 +270,7 @@
           </q-item>
           <q-item
             v-if="estado.productoIncompleto?.includes('variedad')"
-            v-ripple
-          >
+            v-ripple>
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> M </q-avatar>
             </q-item-section>
@@ -302,8 +284,7 @@
           </q-item>
           <q-item
             v-if="estado.productoIncompleto?.includes('categoria')"
-            v-ripple
-          >
+            v-ripple>
             <q-item-section avatar>
               <q-avatar color="green" text-color="white"> C </q-avatar>
             </q-item-section>
@@ -316,20 +297,19 @@
 </template>
 
 <script setup lang="ts">
-import { useProductos } from "./productos.composable";
+import { useProductos } from './productos.composable';
 const { estado, store, authStore, router, productoIncompleto } = useProductos();
 
 // otros imports
-import ProductoImage from "@/assets/img/noHayProducto.png";
-import formProductoBasico from "@/modulos/almacen/forms/formProductoBasico.vue";
-import formOfertaProducto from "@/modulos/ofertas/forms/formOfertaProducto.vue";
-import type { CategoriaSelectOpcion } from "../../almacen.interface";
-const { rowsTablaProductos, handleProductoCreado, handleOfertaSimpleCreada } =
-  useProductos();
+import ProductoImage from '@/assets/img/noHayProducto.png';
+import formProductoBasico from '@/modulos/almacen/forms/formProductoBasico.vue';
+import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
+import type { CategoriaSelectOpcion } from '../../almacen.interface';
+const { handleProductoCreado, handleOfertaSimpleCreada } = useProductos();
 
-provide("infoPagina", {
-  titulo: "Gestion de productos",
-  camino: [{ label: "Productos", to: "productos" }],
+provide('infoPagina', {
+  titulo: 'Gestion de productos',
+  camino: [{ label: 'Productos', to: 'productos' }]
 });
 
 // opciones
@@ -343,13 +323,13 @@ const selectCategoriaFiltro = computed(() => {
         hijas.push(<CategoriaSelectOpcion>{
           label: subcat.nombre,
           value: [subcat._id],
-          class: "option",
+          class: 'option'
         });
         idsHijas.push(subcat._id);
       }
       options.push(<CategoriaSelectOpcion>{
         label: cat.nombre,
-        value: idsHijas,
+        value: idsHijas
       });
       options = [...options, ...hijas];
     }
@@ -357,13 +337,61 @@ const selectCategoriaFiltro = computed(() => {
   return options;
 });
 
+/**
+ * Rows para la tabla
+ */
+const rowsTablaProductos = computed(() => {
+  let filtered = store.productos;
+  if (!filtered) return [];
+  // filtro por completo
+  if (estado.filtros.completud === 'soloCompletos') {
+    filtered = filtered.filter(producto => !productoIncompleto(producto));
+  }
+  if (estado.filtros.completud == 'soloIncompletos') {
+    filtered = filtered.filter(producto => productoIncompleto(producto));
+  }
+  // filtro por categoria
+  if (
+    estado.filtros.categoriaSeleccionada != null &&
+    estado.filtros.categoriaSeleccionada !== ''
+  ) {
+    filtered = filtered.filter(producto =>
+      estado.filtros.categoriaSeleccionada.includes(producto.categoria._id)
+    );
+  }
+  // filtro por marca
+  if (
+    estado.filtros.marcaSeleccionada != null &&
+    estado.filtros.marcaSeleccionada !== ''
+  ) {
+    filtered = filtered.filter(producto =>
+      producto.variedades
+        .map(variedad => variedad.marca._id)
+        .includes(estado.filtros.marcaSeleccionada)
+    );
+  }
+  // filtro por buscar que no discrimine maiusculas de minusculas y acentos
+
+  if (estado.filtros.buscarFiltro != null) {
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    filtered = filtered.filter(producto => {
+      return regex.test(
+        producto.nombre +
+          producto.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      );
+    });
+  }
+
+  return filtered;
+});
+
 // mount
 onMounted(async () => {
   await store.getCategorias();
   await store.getProductos();
-  estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map((marca) => ({
+  estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map(marca => ({
     value: marca._id,
-    label: marca.nombre,
+    label: marca.nombre
   }));
   store.producto = null;
 });
@@ -371,51 +399,51 @@ onMounted(async () => {
 // sockets
 const { $socket } = useNuxtApp();
 onBeforeMount(() => {
-  $socket.on("cambiosProductos", async (data: any) => {
-    console.log("socket productos triggered");
+  $socket.on('cambiosProductos', async (data: any) => {
+    console.log('socket productos triggered');
   });
-  $socket.on("cambiosOfertas", async (data: any) => {
+  $socket.on('cambiosOfertas', async (data: any) => {
     await store.refreshProductos();
   });
 });
 onBeforeUnmount(() => {
   // $socket.off('cambiosProductos');
-  $socket.off("cambiosOfertas");
+  $socket.off('cambiosOfertas');
 });
 
 // configuracion de la tabla
 const columnsTablaProducto = ref([
   {
-    name: "imagen",
-    label: "Imagen",
+    name: 'imagen',
+    label: 'Imagen',
     imagen: true,
-    align: "center",
-    field: (row: any) => row.imagen?.cloudinaryUrl,
+    align: 'center',
+    field: (row: any) => row.imagen?.cloudinaryUrl
   },
 
   {
-    name: "nombre",
+    name: 'nombre',
     required: true,
     slot: true,
-    label: "Nombre",
-    align: "left",
+    label: 'Nombre',
+    align: 'left',
     field: (row: any) => row.nombre,
-    sortable: true,
+    sortable: true
   },
   {
-    name: "estado",
-    label: "Modif.",
-    align: "right",
+    name: 'estado',
+    label: 'Modif.',
+    align: 'right',
     field: (row: any) => row._modificado,
     slot: true,
-    sortable: true,
+    sortable: true
   },
   {
-    name: "acciones",
-    label: "Accion",
-    align: "center",
-    slot: true,
-  },
+    name: 'acciones',
+    label: 'Accion',
+    align: 'center',
+    slot: true
+  }
 ]);
 </script>
 

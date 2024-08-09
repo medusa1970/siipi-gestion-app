@@ -15,8 +15,9 @@ export const useMisPedidos = () => {
     //   // @ts-expect-error (creado dinamicamente)
     //   useGqlToken(useAuth.token)
     // );
-    const listaPedidos = await apiPedido.pedido_buscar(
+    const listaPedidos = await api.buscarPedidos(
       { comprador: [authStore.negocio._id] },
+      {},
       {},
       useGqlToken(authStore.token)
     );
@@ -26,7 +27,7 @@ export const useMisPedidos = () => {
       listaPedidos.map(pedido =>
         apiPedido
           .pedido_leerEstadoItems(
-            { _id: pedido._id },
+            { _id: [pedido._id] },
             { loading: true },
             authStore.token
           )

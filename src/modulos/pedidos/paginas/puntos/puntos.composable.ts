@@ -15,9 +15,10 @@ export const usePuntos = () => {
   });
 
   const buscarPedidos = async () => {
-    const listaPedidos = await apiPedido.pedido_buscar(
+    const listaPedidos = await api.buscarPedidos(
       { vendedor: [authStore.negocio._id] },
       { loading: true },
+      {},
       authStore.token
     );
 

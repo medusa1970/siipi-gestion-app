@@ -1,0 +1,213 @@
+query buscarPedidos(
+  $busqueda: BuscarPedidoDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarPedidoDto = {}
+) {
+  buscarPedidos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+  }
+}
+
+mutation crearPedidos(
+  $datos: [CrearPedidoDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearPedidos(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+  }
+}
+
+mutation modificarPedidos(
+  $busqueda: BuscarPedidoDto!
+  $datos: ModificarPedidoDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarPedidos(busqueda: $busqueda, datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+  }
+}
+
+mutation borrarPedidos(
+  $busqueda: BuscarPedidoDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarPedidos(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    comprador {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    vendedor {
+      nombre
+      _id
+      ruta
+      orden
+    }
+    estado {
+      estado
+      _creado
+      persona {
+        nombre
+        apellido
+        telefono
+      }
+    }
+    items {
+      _id
+      oferta {
+        nombre
+        _id
+        ingredientes {
+          tipo
+          producto {
+            nombre
+          }
+          cantidad
+        }
+      }
+      cantidad
+      estado {
+        _creado
+        estado
+        valor
+        comentario
+      }
+    }
+  }
+  }
+}

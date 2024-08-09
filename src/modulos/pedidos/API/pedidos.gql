@@ -1,13 +1,3 @@
-# CREAR PEDIDO
-mutation crearPedido(
-  $datos: [CrearPedidoDto!]!
-  $opciones: CrearOpciones = {}
-) {
-  crearPedidos(datos: $datos, opciones: $opciones) {
-    _id
-  }
-}
-
 # INICIAR PEDIDO DESDE
 mutation iniciarPedido($datos: CrearPedidoDto!, $opciones: CrearOpciones = {}) {
   iniciarPedido(datos: $datos, opciones: $opciones) {
@@ -41,60 +31,6 @@ mutation cambiarEstadoItems(
     opciones: $opciones
   ) {
     _id
-  }
-}
-
-# Busca todos los pedidos\
-query buscarPedidos(
-  $busqueda: BuscarPedidoDto = {}
-  $opciones: BuscarOpciones = {}
-  $filtro: BuscarPedidoDto = {}
-) {
-  buscarPedidos(busqueda: $busqueda, opciones: $opciones, filtro: $filtro) {
-    _id
-    _creado
-    comprador {
-      nombre
-      _id
-      ruta
-      orden
-    }
-    vendedor {
-      nombre
-      _id
-      ruta
-      orden
-    }
-    estado {
-      estado
-      _creado
-      persona {
-        nombre
-        apellido
-        telefono
-      }
-    }
-    items {
-      _id
-      oferta {
-        nombre
-        _id
-        ingredientes {
-          tipo
-          producto {
-            nombre
-          }
-          cantidad
-        }
-      }
-      cantidad
-      estado {
-        _creado
-        estado
-        valor
-        comentario
-      }
-    }
   }
 }
 

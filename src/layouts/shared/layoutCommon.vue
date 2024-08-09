@@ -7,15 +7,13 @@
         'text-white ',
         punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
-        sede && 'colorBackground',
+        sede && 'colorBackground'
       ]"
-      style=""
-    >
+      style="">
       <q-toolbar class="">
         <q-toolbar-title
           class="flex items-center justify-start"
-          style="margin: 0 !important"
-        >
+          style="margin: 0 !important">
           <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
           <div class="text-base">
             {{ authStore.getNegocio?.nombre }}
@@ -27,8 +25,7 @@
           round
           color="white"
           icon="shopping_cart"
-          @click="toggleRightDrawer"
-        >
+          @click="toggleRightDrawer">
           <q-badge
             v-if="pedidoStore.listaPedido.length > 0"
             class="rounded-full"
@@ -43,14 +40,12 @@
         <q-breadcrumbs-el
           class="text-white"
           icon="home"
-          :to="getRoute(router, 'cathering')"
-        />
+          :to="getRoute(router, 'cathering')" />
         <q-breadcrumbs-el
           v-for="nivel in infoPagina?.camino"
           :label="nivel.label"
           :icon="nivel.icon ?? undefined"
-          :to="getRoute(router, nivel.to, nivel.params)"
-        />
+          :to="getRoute(router, nivel.to, nivel.params)" />
       </q-breadcrumbs>
     </q-header>
 
@@ -65,9 +60,8 @@
         'text-white ',
         punto && 'bg-[#ff9215]',
         cathering && 'bg-green-700',
-        sede && 'colorBackground',
-      ]"
-    >
+        sede && 'colorBackground'
+      ]">
       <!-- drawer content -->
       <!-- PERFIL -->
       <q-item style="height: 150px; width: 300px">
@@ -77,13 +71,11 @@
           :src="portadaImg"
           style="width: 300px; height: 150px"
           fit="cover"
-          position="top right"
-        >
+          position="top right">
           <div
             id="perfil"
             class="absolute-bottom text-center"
-            style="height: 40px; padding: 9px; z-index: 100"
-          >
+            style="height: 40px; padding: 9px; z-index: 100">
             {{
               `${authStore.getUsuarioNombreCompleto} (${authStore.getCargo})`
             }}
@@ -94,13 +86,11 @@
             <img
               v-if="authStore.getUsuario?.cloudinaryUrl"
               style="object-fit: cover"
-              :src="authStore.getUsuario?.cloudinaryUrl"
-            />
+              :src="authStore.getUsuario?.cloudinaryUrl" />
             <img
               v-else
               style="object-fit: cover"
-              src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg"
-            />
+              src="https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg" />
           </q-avatar>
         </div>
       </q-item>
@@ -118,8 +108,7 @@
                   item.subMenu.reduce((autorizado, subMenu) => {
                     return autorizado || authStore.autorizar(subMenu.permisos);
                   }, false))) // y el submenu tiene por lo menos un item autorizado
-            "
-          >
+            ">
             <q-expansion-item
               v-model="menuState[item.key]"
               :icon="item.icon"
@@ -133,8 +122,7 @@
                   //   menuState[i.key] = item?.key === i?.key;
                   // }
                 }
-              "
-            >
+              ">
               <div v-for="subItem in item.subMenu ?? []">
                 <q-btn
                   :to="getRoute(router, subItem.to)"
@@ -157,8 +145,7 @@
                         font-size: 20px;
                         padding-left: 22px;
                         margin-right: 10px;
-                      "
-                    />
+                      " />
                     {{ subItem.label }}
                   </template>
                 </q-btn>
@@ -174,8 +161,7 @@
       v-model="rightDrawerOpen"
       side="right"
       class="colorBackground"
-      style=""
-    >
+      style="">
       <!-- drawer content -->
       <q-list>
         <!-- SIDEBAR -->
@@ -187,8 +173,7 @@
               switch-toggle-side
               expand-separator
               default-opened
-              class="[&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white"
-            >
+              class="[&>div>div>div>i]:bg-orange-400 [&>div>div>div>i]:rounded-full [&>div>div>div>i]:text-white">
               <template v-slot:header>
                 <div class="flex items-center">
                   <!-- uppercase font-bold line-clamp-1 -->
@@ -204,8 +189,7 @@
                 <div
                   class="grid grid-cols-[70px_1fr_30px] gap-2 mb-2"
                   v-for="producto in pedidoStore.listaPedido"
-                  :key="producto.id"
-                >
+                  :key="producto.id">
                   <div>
                     <input
                       type="number"
@@ -214,8 +198,7 @@
                       min="0"
                       @input="
                         producto.cantidad = Math.max(0, producto.cantidad)
-                      "
-                    />
+                      " />
                   </div>
                   <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
                   <h1>{{ producto.nombre }}</h1>
@@ -226,14 +209,12 @@
                     dense
                     rounded
                     size="sm"
-                    @click="borrarProductoCarrito(producto.id)"
-                  />
+                    @click="borrarProductoCarrito(producto.id)" />
                 </div>
 
                 <div
                   v-if="pedidoStore.listaPedido.length > 0"
-                  class="flex gap-2 justify-center"
-                >
+                  class="flex gap-2 justify-center">
                   <slot name="actionPedido" />
                 </div>
               </div>
@@ -259,7 +240,7 @@
 
 <script setup>
 // breadcrumb
-const infoPagina = inject("infoPagina");
+const infoPagina = inject('infoPagina');
 
 // PROPS
 const props = defineProps({
@@ -269,37 +250,36 @@ const props = defineProps({
   portadaImg: String,
   cathering: Boolean,
   nav: Array,
-  tituloPagina: String,
+  tituloPagina: String
 });
 
 const { name: routeName } = useRoute();
 const menuState = reactive(
   Object.fromEntries(
-    props.menuList.map((item) => [
+    props.menuList.map(item => [
       item.key,
       false ||
         (item.to && item.to === routeName) ||
         (item.subMenu &&
-          item.subMenu.find((subItem) => subItem.to === routeName)) !=
-          undefined,
-    ]),
-  ),
+          item.subMenu.find(subItem => subItem.to === routeName)) != undefined
+    ])
+  )
 );
 
 // IMPORTS
-import { ref, watch, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import usuarioMenu from "~/modulos/main/componientes/usuarioMenu.vue";
-import { storePedido } from "@/modulos/pedidos/pedidos.store";
+import { ref, watch, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const pedidoStore = storePedido();
 
 if (!authStore.getUsuario) {
-  goTo(router, "inicio");
+  goTo(router, 'inicio');
 }
 
 const $q = useQuasar();
@@ -313,9 +293,9 @@ function toggleRightDrawer() {
   rightDrawerOpen.value = !rightDrawerOpen.value;
 }
 
-const borrarProductoCarrito = (id) => {
+const borrarProductoCarrito = id => {
   pedidoStore.listaPedido = pedidoStore.listaPedido.filter(
-    (producto) => producto.id !== id,
+    producto => producto.id !== id
   );
 };
 </script>

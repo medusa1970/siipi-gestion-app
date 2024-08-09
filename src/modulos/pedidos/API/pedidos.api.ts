@@ -2,7 +2,7 @@ import type {
   BuscarOpciones,
   BuscarPedidoDto,
   CrearOpciones,
-  CrearPedidoDto,
+  CrearPedidoDto, //@ts-expect-error
   Pedido
 } from '#gql';
 
@@ -11,11 +11,24 @@ export const apiPedido = {
    * Pedidos
    */
   pedidoIniciar: async (
-    d: CrearPedidoDto,
-    o: CrearOpciones & { loading?: boolean } = {},
-    t: any = null
-  ): Promise<Pedido> =>
-    await crearUno(GqlCrearPedido, useGqlToken(t), d, o, o.loading),
+    datos: CrearPedidoDto,
+    opciones: CrearOpciones = {},
+    token: any = null
+  ): Promise<Pedido> => {
+    let resultado;
+    try {
+      await loadingAsync(async () => {
+        resultado = await GqlIniciarPedido(
+          { datos, opciones },
+          //@ts-expect-error
+          useGqlToken(token)
+        );
+      });
+    } catch (err) {
+      throw formatApiError(err);
+    }
+    return extraerUno(resultado);
+  },
 
   pedidoConfirmarItems: async (busqueda: BuscarPedidoDto, token: any) => {
     let resultado;
@@ -45,7 +58,7 @@ export const apiPedido = {
       await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, f, o.loading)
     ),
 
-  pedido_leerEstado: async (
+  pedido_buscarUno: async (
     b: BuscarPedidoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
 
@@ -77,5 +90,30 @@ export const apiPedido = {
     } catch (err) {
       throw formatApiError(err);
     }
-  }
+  },
+
+  // pedido buscar
+  // colocar siempre el filtro
+  pedido_buscar: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Pedido[]> =>
+    <Pedido[]>(
+      await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, {}, o.loading)
+    ),
+  pedido_leerEstadoItems: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ) => await buscarUno(GqlLeerEstadoPedido, useGqlToken(t), b, o, o.loading)
+
+  //   GqlLeerEstadoPedido(
+  //     {
+  //       busqueda: { _id: [pedidoID] },
+  //       opciones: { limit: 1, errorSiVacio: true },
+  //     },
+  //     token,
+  //   ),
+  // );
 };

@@ -111,29 +111,28 @@
 </template>
 
 <script setup>
+import { usePuntos } from '../puntos/puntos.composable';
 import { useMisPedidos } from './misPedidos.composable';
 
-// definePageMeta({
-//   layout: 'punto'
-// });
-const { estado, buscarPedidos } = useMisPedidos();
+const { estado, buscarPedidos, filtroHistorial } = useMisPedidos();
+
 const tab = ref('cathering');
+
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
+console.log(date.value);
 const dateOption = date => {
-  // console.log(date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return new Date(date) <= today;
 };
 
-// watch(date, value => {
-//   // console.log(value);
-//   // console.log(date.value);
-//   filtroHistorial(value);
-// });
+watch(date, value => {
+  console.log(value);
+  filtroHistorial(value);
+});
 
 onMounted(async () => {
   await buscarPedidos();
-  // filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
+  filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 });
 </script>

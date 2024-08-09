@@ -3,31 +3,56 @@ import type {
   BuscarPedidoDto,
   CrearOpciones,
   CrearPedidoDto,
-  Pedido
-} from '#gql';
+  Pedido,
+} from "#gql";
 
 export const apiPedido = {
   /**
    * Pedidos
    */
   pedidoIniciar: async (
-    d: CrearPedidoDto,
-    o: CrearOpciones & { loading?: boolean } = {},
-    t: any = null
-  ): Promise<Pedido> =>
-    await crearUno(GqlCrearPedido, useGqlToken(t), d, o, o.loading),
+    datos: CrearPedidoDto,
+    opciones: CrearOpciones & { loading?: boolean } = {},
+    token: any = null,
+  ): Promise<Pedido> => {
+    delete opciones.loading;
+    let resultado;
+    try {
+      if (opciones.loading) {
+        await loadingAsync(async () => {
+          resultado = await GqlIniciarPedido(
+            { datos, opciones },
+            //@ts-expect-error
+            useGqlToken(token),
+          );
+        });
+      } else {
+        resultado = await GqlIniciarPedido(
+          { datos, opciones },
+          //@ts-expect-error
+          useGqlToken(token),
+        );
+      }
+      if (!resultado) {
+        throw "error resultado null";
+      }
+    } catch (err) {
+      throw formatApiError(err);
+    }
+    return extraerUno(resultado);
+  },
 
   pedidoConfirmarItems: async (busqueda: BuscarPedidoDto, token: any) => {
     let resultado;
     try {
       await loadingAsync(async () => {
         resultado = await GqlCambiarEstadoItems(
-          { busqueda, itemIds: [], estado: { estado: 'confirmado' } }, //@ts-expect-error
-          useGqlToken(token)
+          { busqueda, itemIds: [], estado: { estado: "confirmado" } }, //@ts-expect-error
+          useGqlToken(token),
         );
       });
       if (!resultado) {
-        throw 'error resultado null';
+        throw "error resultado null";
       }
     } catch (err) {
       throw formatApiError(err);
@@ -39,7 +64,7 @@ export const apiPedido = {
     b: BuscarPedidoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
     f: BuscarPedidoDto = {},
-    t: any = null
+    t: any = null,
   ): Promise<Pedido[]> =>
     <Pedido[]>(
       await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, f, o.loading)
@@ -49,7 +74,7 @@ export const apiPedido = {
     b: BuscarPedidoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
 
-    t: any = null
+    t: any = null,
   ): Promise<Pedido[]> =>
     <Pedido[]>await buscarUno(GqlBuscarPedidos, t, b, o, o.loading),
 
@@ -68,14 +93,14 @@ export const apiPedido = {
           {
             busqueda: { _id: [entidadID] },
             busquedaMenu: {},
-            opciones: { limit: 1, errorSiVacio: true }
+            opciones: { limit: 1, errorSiVacio: true },
           }, //@ts-ignore
-          useGqlToken(token)
-        )
+          useGqlToken(token),
+        ),
       );
       return menu;
     } catch (err) {
       throw formatApiError(err);
     }
-  }
+  },
 };

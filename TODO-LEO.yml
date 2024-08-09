@@ -1,13 +1,12 @@
 ++ TESORERIA: tesoreria basica
--- OFERTAS: comparacion precio proveedor
+++ OFERTAS: comparacion precio proveedor
+
 ++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
-
-++ STOCK: averiguar alertas
--- STOCK: arreglar busqueda
 ++ OFERTAS: avisar lo que falta para ofertas completas
+afficher une popup sur le badge + producto
 ++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
-
 ++ MEDIDAS: poder agregar y borrar tipos de empaque
+
 -- PERMISOS: cerrar sesion al usuario cuando se le cambia de permisos
 -- PERMISOS: validacion telefono se porta raro al entrar un telefono ok
 -- PRODUCTOS: averiguar que se modifica/borra bien la oferta automatica de proveedor

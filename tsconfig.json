@@ -10,7 +10,7 @@
     // },
     "noImplicitAny": false,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "allowJs": true, // Permite archivos JS
     "skipLibCheck": true, // Omite la verificación de tipos en archivos de declaración
     "strict": false // Desactiva la verificación estricta de tipos

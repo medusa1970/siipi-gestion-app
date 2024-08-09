@@ -1,4 +1,30 @@
 export const validacion = {
+  fecha(mensaje: string = "No es una fecha válida"): Function {
+    const fecha = (val: string): String | true => {
+      const [day, month, year] = val.split("/");
+      console.log(`${month}/${day}/${year}`);
+      if (val !== null && isNaN(Date.parse(`${month}/${day}/${year}`))) {
+        return mensaje;
+      } else {
+        return true;
+      }
+    };
+    return fecha;
+  },
+
+  before(mensaje: Date): Function {
+    const before = (val: any): Boolean => {
+      return true;
+    };
+    return before;
+  },
+  after(mensaje: Date): Function {
+    const after = (val: any): Boolean => {
+      return true;
+    };
+    return after;
+  },
+
   requerido(mensaje: string = "Campo requerido"): Function {
     const requerido = (val: any): String | true => {
       if (val == null || val === "") {
@@ -23,7 +49,7 @@ export const validacion = {
   },
 
   decimal(
-    mensaje: string = "Debe ser un numero con 2 decimales max"
+    mensaje: string = "Debe ser un numero con 2 decimales max",
   ): Function {
     const decimal = (val: any): String | true => {
       if (val != null && !/^(\d{1,3}(,?\d{3})*(\.\d{1,2})?)?$/.test(val)) {

@@ -6,12 +6,11 @@
         name="help"
         color="blue"
         size="20px"
-        @click="tooltip = !tooltip"
-      />
+        @click="tooltip = !tooltip" />
     </h3>
     <q-input
       ref="inputRef"
-      :type="tipo"
+      type="text"
       :label="
         labelAdentro ? (label ?? '') + (requerido ? ' *' : '') : undefined
       "
@@ -21,8 +20,6 @@
       :rules="reglasValidacion"
       :clearable="clearable"
       :disable="disable"
-      @update:model-value="handleChange"
-      @clear="handleClear"
       @blur="handleBlur"
       lazy-rules="ondemand"
       debounce="300"
@@ -32,14 +29,12 @@
       :dense="dense"
       :outlined="outlined"
       :filled="filled"
-      :autogrow="tipo === 'password' ? false : autogrow"
       :color="inputConfig.color"
       :bg-color="
         localModel && localModel !== ''
           ? inputConfig.bgColorLleno
           : inputConfig.bgColorVacio
-      "
-    >
+      ">
       <q-tooltip
         v-model="tooltip"
         class="no-pointer-events text-white text-sm bg-blue-9"
@@ -48,38 +43,45 @@
         :offset="[0, -15]"
         max-width="300px"
         no-parent-event
-        @show="hideTooltip()"
-      >
+        @show="hideTooltip()">
         {{ info }}
       </q-tooltip>
-      <template #counter v-if="props.maxLength || props.minLength">
-        {{ localModel?.length ?? 0 }}
-      </template>
       <template #prepend v-if="icono">
         <q-icon :name="icono" @click.stop.prevent />
-      </template>
-      <template #append v-if="tipo === 'password'">
-        <q-icon
-          :name="esconderLetras ? 'visibility_off' : 'visibility'"
-          class="cursor-pointer"
-          @click="esconderLetras = !esconderLetras"
-        ></q-icon>
       </template>
       <template #after>
         <q-icon
           v-if="labelAdentro && info && info.length > 0"
           name="help"
-          @click="tooltip = !tooltip"
-        />
+          @click="tooltip = !tooltip" />
+      </template>
+      <template v-slot:append>
+        <q-icon
+          name="event"
+          class="cursor-pointer"
+          @click="showModal.datePicker = true" />
       </template>
     </q-input>
   </div>
 
-  <Popup v-model="localModel" titulo="Elija una fecha"> </Popup>
+  <Popup v-model="showModal.datePicker" titulo="Elija una fecha">
+    <template #body>
+      <q-date
+        v-model="localModel"
+        :locale="locale"
+        mask="DD/MM/YYYY"
+        minimal
+        @update:model-value="
+          {
+            showModal.datePicker = false;
+          }
+        " />
+    </template>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import { inputConfig } from "./input.service";
+import { inputConfig, locale } from "./input.service";
 import { validacion } from "./input.validacion";
 import { ref } from "vue";
 
@@ -99,7 +101,7 @@ const hideTooltip = (seconds = 5) =>
 const emits = defineEmits<{
   (
     event: "update", // si cambió el valor del input
-    valor: string | number | null, // el valor
+    valor: Date, // el valor
   ): void;
   (
     event: "error", // si estado de error de validación cambió
@@ -131,14 +133,6 @@ const props = withDefaults(
     // si el input esta desabilitado
     disable?: boolean;
 
-    // el tipo del input
-    tipo?:
-      | "text" // texto simple (por defecto)
-      | "textarea" // textarea
-      | "password" // contraseña con letras escondidas
-      | "number" // numero intero
-      | "decimal"; // numero con dos decimales
-
     // un texto de ayuda a mostrar debajo del input
     hint?: string;
 
@@ -146,19 +140,19 @@ const props = withDefaults(
     info?: string;
 
     // el valor por defecto al cargar el input
-    porDefecto?: string | number;
+    porDefecto?: Date;
 
     // Una referencia que cuando cambia su valor, se actualiza el input con el mismo
     // forceWatch permite activar el watch mismo si el valor de watch no ha cambiado
-    watch?: string | number;
+    watch?: Date;
     forceWatch?: boolean;
 
     // reglas de validacion de la forma (val: any): String | true
     rules?: any;
 
-    // min or max length
-    minLength?: number;
-    maxLength?: number;
+    // range
+    before?: Date;
+    after?: Date;
 
     // una referencia que cuando cambia su valor, activa la validacion del input
     activarValidacion?: boolean;
@@ -170,9 +164,6 @@ const props = withDefaults(
     // mostrar la crucecita para borrar el valor del input
     clearable?: boolean;
 
-    // si el tamaño del input en altura es dinamico
-    autogrow?: boolean;
-
     // visual
     icono?: string; // icono en prepend
     dense?: boolean;
@@ -181,12 +172,13 @@ const props = withDefaults(
     noSlot?: boolean; // ya no se mostraron mensajes de error pero queda mas compacto
   }>(),
   {
-    tipo: "text",
     requerido: false,
-    autogrow: false,
     noSlot: false,
     clearable: true,
     rules: [] as Function[],
+    hint: "Fecha con el formato DD/MM/AAAA",
+    before: null,
+    after: null,
     filled: inputConfig.filled,
     dense: inputConfig.dense,
     outlined: inputConfig.outlined,
@@ -196,40 +188,13 @@ const props = withDefaults(
   },
 );
 
-/**
- * si el tipo es number o decimal, convierte el valor en locale en-US
- * con el buen numero de decimales y las comas entre los millares
- */
-
-const valorParaMostrar = (valor) => {
-  let res = null;
-  if (valor != null) {
-    switch (props.tipo) {
-      case "number":
-        res = parseFloat(String(valor)).toLocaleString("en-US", {
-          minimumFractionDigits: 0,
-        });
-        break;
-      case "decimal":
-        res = parseFloat(String(valor)).toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
-        break;
-      default:
-        res = String(valor);
-    }
-  }
-  return res;
+const valorParaMostrar = (valor = null) => {
+  return valor != null ? new Date(valor).toLocaleString().split(" ")[0] : null;
 };
-const valorParaEmitir = (valor) => {
-  if (valor === null) {
-    return null;
-  }
-  if (props.tipo === "number" || props.tipo === "decimal") {
-    return Number(valor.replace(",", ""));
-  }
-  return String(valor);
+const valorParaEmitir = (date) => {
+  if (date === null) return null;
+  const [day, month, year] = date.split("/");
+  return new Date(`${month}/${day}/${year}`);
 };
 
 /**
@@ -247,28 +212,22 @@ const localModel = ref<string>(valorParaMostrar(props.porDefecto));
 const errorFlag = ref<boolean>(false);
 const errorMensaje = ref<string>(props.error);
 
-// si el input es de tipo password, controla si las letras son visibles o no
-const esconderLetras = ref<boolean>(true);
+// modales
+const showModal = reactive({
+  datePicker: false,
+});
 
-// agregamos las reglas de vlaidacion especificas segun el tipo del input
+/**
+ * Reglas de validacion
+ */
+
 let reglasValidacion = props.rules ?? [];
-if (props.tipo === "decimal") {
-  reglasValidacion = [validacion.decimal(), ...reglasValidacion];
+reglasValidacion = [validacion.fecha(), ...reglasValidacion];
+if (props.before) {
+  reglasValidacion = [validacion.before(props.before), ...reglasValidacion];
 }
-if (props.tipo === "number") {
-  reglasValidacion = [validacion.numero(), ...reglasValidacion];
-}
-if (props.minLength) {
-  reglasValidacion = [
-    validacion.minLength(props.minLength),
-    ...reglasValidacion,
-  ];
-}
-if (props.maxLength) {
-  reglasValidacion = [
-    validacion.maxLength(props.maxLength),
-    ...reglasValidacion,
-  ];
+if (props.after) {
+  reglasValidacion = [validacion.after(props.after), ...reglasValidacion];
 }
 if (props.requerido) {
   reglasValidacion = [
@@ -279,39 +238,57 @@ if (props.requerido) {
   ];
 }
 
-// calculo del tipo extacto a pasar a q-input
-const tipo = computed(() =>
-  props.tipo === "password"
-    ? esconderLetras.value
-      ? "password"
-      : "text"
-    : props.tipo === "textarea"
-    ? "textarea"
-    : "text",
+/**
+ * Cambio de valor
+ */
+
+watch(
+  () => localModel.value,
+  () => {
+    // reset de la validacion
+    if (inputRef.value) inputRef.value.resetValidation();
+    activarValidacion();
+
+    // clear: ponemos el localModel a null
+    if (localModel.value === null) {
+      emits("update", null);
+    }
+
+    // change: si no hay error de validacion, emitemos el nuevo valor
+    else {
+      if (activarValidacion()) {
+        emits("update", valorParaEmitir(localModel.value));
+      }
+    }
+  },
 );
 
 /**
- * Este metodo se ejecuta cada vez que cambia el valor del input
- * Si el cambio no produce error de validacion, se emite el nuevo valor
- * Nota : el valor del input es un string pero el valor emitido en el evento puede ser number
+ * Cambio de valor desde el componiente padre via props.watch
  */
 
-const handleChange = (valor: string | null) => {
-  if (inputRef.value) inputRef.value.resetValidation();
-  if (activarValidacion()) {
-    emits("update", valorParaEmitir(valor));
-  }
-};
+watch(
+  () => props.watch,
+  () => {
+    emits("update", valorParaEmitir(localModel.value));
+  },
+  { once: true, immediate: true },
+);
 
 /**
- * Este metodo se ejecuta cada vez que se presiona el boton de borrar (x)
- * en caso de que clearable esta a true
+ * Inicializacion del componente al cargar props.watch la primera vez
+ * La prop 'forceWatch' sirve para forzar este cambio en caso de que
+ * el valor de la prop tiene que ser la misma dos veces seguida (porque
+ * la funcion watch solo detecta los cambios reales).
  */
 
-const handleClear = () => {
-  localModel.value = null;
-  emits("update", null);
-};
+watch(
+  () => [props.watch, props.forceWatch],
+  () => {
+    localModel.value = valorParaMostrar(props.watch);
+  },
+  { immediate: false },
+);
 
 /**
  * Este metodo se ejecuta cada vez que el input pierde el focus
@@ -369,29 +346,5 @@ watch(
   () => props.activarValidacion,
   () => activarValidacion(),
   { immediate: false },
-);
-
-/**
- * El input puede también recibir un valor directamente del componiente padre pasandolo
- * por la prop 'watch'. La primera vez, lo hace sin validacion.
- *  La prop 'forceWatch' sirve para forzar este cambio en caso de que
- * el valor de la prop tiene que ser la misma dos veces seguida (la funcion watch solo
- * detecta los cambios reales).
- */
-
-watch(
-  () => [props.watch, props.forceWatch],
-  () => {
-    localModel.value = valorParaMostrar(props.watch);
-    handleChange(localModel.value);
-  },
-  { immediate: false },
-);
-watch(
-  () => props.watch,
-  () => {
-    emits("update", valorParaEmitir(localModel.value));
-  },
-  { once: true, immediate: true },
 );
 </script>

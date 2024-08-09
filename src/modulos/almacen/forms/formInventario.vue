@@ -15,18 +15,24 @@
           icon="edit"
           class="p-1"
           color="black"
-          size="sm"
-        />
+          size="sm" />
         <q-btn
           icon="delete"
           class="p-1"
           color="red"
           size="sm"
-          @click="borrarLote(lote)"
-        />
+          @click="borrarLote(lote)" />
         <ul>
           <li>cantidad: {{ lote.cantidad }}</li>
           <li>marca: {{ getMarca(lote).nombre }}</li>
+          <li v-if="producto.puedeVencer">
+            vencimiento:
+            {{
+              lote.vencimiento != null
+                ? new Date(lote.vencimiento).toLocaleString().split(" ")[0]
+                : null
+            }}
+          </li>
           <li>bloque: {{ getBloque(lote).nombre }}</li>
         </ul>
       </q-card>
@@ -35,14 +41,12 @@
       <q-btn
         label="Agregar Lote"
         color="orange"
-        @click="showModal.crearLote = true"
-      />
+        @click="showModal.crearLote = true" />
       <q-btn
         v-if="estado.lotes.length > 0"
         label="Guardar"
         color="green"
-        type="submit"
-      />
+        type="submit" />
     </div>
   </q-form>
 
@@ -55,8 +59,7 @@
           v-if="estado.puedeGuardar"
           label="Mandar"
           color="orange"
-          @click="submitConfirmar"
-        />
+          @click="submitConfirmar" />
       </div>
     </template>
   </Popup>
@@ -70,8 +73,7 @@
       <formInventarioLote
         :edicion="estado.loteEdicion"
         :producto
-        @crearLote="handleModificarLote"
-      />
+        @crearLote="handleModificarLote" />
     </template>
   </Popup>
 </template>

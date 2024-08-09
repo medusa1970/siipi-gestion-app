@@ -1,4 +1,5 @@
 <template>
+  {{ dataForm.vencimiento }}
   <q-form @submit="formSubmit">
     <!-- cantidad -->
     <input-text
@@ -12,16 +13,20 @@
       "
       @update="(v) => (dataForm.cantidad = v as number)"
       :porDefecto="dataForm.cantidad"
-      requerido
-    />
+      requerido />
+
     <!-- vencimiento -->
-    <input-text
+    <input-date
       v-if="props.producto.puedeVencer"
       label="Fecha de vencimiento"
       info="Info #"
-      @update="(v) => (dataForm.vencimiento = new Date(v))"
-      :porDefecto="dataForm.vencimiento?.toString()"
-    />
+      @update="
+        (v) => {
+          dataForm.vencimiento = v;
+        }
+      "
+      :porDefecto="props.edicion?.vencimiento" />
+
     <!-- Bloque -->
     <input-select
       label="Bloque"
@@ -29,8 +34,8 @@
       info="Info #"
       :porDefecto="dataForm.bloque"
       @update="(v) => (dataForm.bloque = v)"
-      requerido
-    />
+      requerido />
+
     <!-- Marca -->
     <input-select
       label="Marca"
@@ -38,8 +43,8 @@
       info="Info #"
       :porDefecto="dataForm.marca"
       @update="(v) => (dataForm.marca = v)"
-      requerido
-    />
+      requerido />
+
     <!-- guardar -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />

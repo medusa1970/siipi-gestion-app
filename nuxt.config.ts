@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   },
   ssr: false,
   generate: {
+    // @ts-ignore
     fallback: "404.html",
   },
   typescript: {
@@ -51,7 +52,7 @@ export default defineNuxtConfig({
     public: {
       DeployStatus: process.env.DEPLOY,
       GQL_HOST: process.env.GRAPH_URI,
-      graphqlClient: {
+      "graphql-client": {
         codegen: {
           silent: false,
           skipTypename: false,

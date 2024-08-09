@@ -1,6 +1,9 @@
 export const validacion = {
   fecha(mensaje: string = "No es una fecha válida"): Function {
     const fecha = (val: string): String | true => {
+      if (val === null) {
+        return true;
+      }
       const [day, month, year] = val.split("/");
       console.log(`${month}/${day}/${year}`);
       if (val !== null && isNaN(Date.parse(`${month}/${day}/${year}`))) {

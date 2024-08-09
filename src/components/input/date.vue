@@ -20,6 +20,7 @@
       :rules="reglasValidacion"
       :clearable="clearable"
       :disable="disable"
+      @clear="handleClear"
       @blur="handleBlur"
       lazy-rules="ondemand"
       debounce="300"
@@ -293,7 +294,9 @@ watch(
 /**
  * Este metodo se ejecuta cada vez que el input pierde el focus
  */
-
+const handleClear = () => {
+  localModel.value = null;
+};
 const handleBlur = (e) => {
   setError(null);
 };

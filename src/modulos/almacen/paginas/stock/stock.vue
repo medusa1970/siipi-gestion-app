@@ -47,11 +47,11 @@
         },
         {
           name: 'alertaInventario',
-          slot: true,
           required: true,
+          slot: true,
           label: 'Inventario',
           align: 'center',
-          field: (row) => row.alertaInventario,
+          field: (row) => row.diasHastaProximoInventario,
           sortable: true,
         },
         {
@@ -61,8 +61,7 @@
           slot: true,
         },
       ]"
-      :defaultImage="ProductoImage"
-    >
+      :defaultImage="ProductoImage">
       <template #dropdown>
         <div id="radiosAlertas">
           <q-radio
@@ -70,29 +69,25 @@
             v-model="estado.filtros.alerta"
             color="orange"
             no-caps
-            val=""
-          />
+            val="" />
           <q-radio
             label="Stock bajo"
             v-model="estado.filtros.alerta"
             color="orange"
             no-caps
-            val="cantidad"
-          />
+            val="cantidad" />
           <q-radio
             color="orange"
             no-caps
             label="Por vencer"
             v-model="estado.filtros.alerta"
-            val="vencimiento"
-          />
+            val="vencimiento" />
           <q-radio
             color="orange"
             no-caps
             label="Inventariar"
             v-model="estado.filtros.alerta"
-            val="inventario"
-          />
+            val="inventario" />
         </div>
 
         <div
@@ -101,28 +96,24 @@
             grid-gap: 16px;
             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
             width: 100%;
-          "
-        >
+          ">
           <input-text
             label="Buscar"
             labelAdentro
             @update="(v) => (estado.filtros.buscarFiltro = v as string)"
-            noSlot
-          />
+            noSlot />
           <input-select
             label="Categoria"
             labelAdentro
             @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
             :opciones="selectCategoriaFiltro"
-            noSlot
-          />
+            noSlot />
           <input-select
             label="Marca"
             labelAdentro
             @update="(v) => (estado.filtros.marcaSeleccionada = v)"
             :opciones="selectMarcaFiltro"
-            noSlot
-          />
+            noSlot />
         </div>
       </template>
       <template #body-cell-producto="{ val, row }">
@@ -188,22 +179,26 @@
         <!-- <div v-if="row.stock.lotes.find((l) => !l.bloque)">
         <q-icon name="report" color="blue" size="sm" />
       </div> -->
-        <div v-if="row.alertaInventario === 1">
-          <q-icon name="report" color="orange" size="sm" />
+        <div v-if="row.stock.lotes.filter((lote) => !lote.bloque).length > 0">
+          <q-icon name="report" color="blue" size="sm" />
+          <div>Toca hacer</div>
         </div>
-        <div v-else-if="row.alertaInventario === 2">
-          <q-icon name="report" color="red" size="sm" />
-        </div>
-        <div v-if="row.diasHastaProximoInventario != null">
-          {{
-            row.diasHastaProximoInventario < 0
-              ? `Atrasado ${-row.diasHastaProximoInventario} días`
-              : row.diasHastaProximoInventario >= 2
-              ? `Toca en ${row.diasHastaProximoInventario} días`
-              : row.diasHastaProximoInventario === 1
-              ? `Toca mañana`
-              : "Toca hoy"
-          }}
+        <div v-else-if="row.alertaInventario > 0">
+          <q-icon
+            name="report"
+            :color="[null, 'orange', 'red', 'blue'][row.alertaInventario]"
+            size="sm" />
+          <div v-if="row.diasHastaProximoInventario != null">
+            {{
+              row.diasHastaProximoInventario < 0
+                ? `Atrasado ${-row.diasHastaProximoInventario} días`
+                : row.diasHastaProximoInventario >= 2
+                ? `Toca en ${row.diasHastaProximoInventario} días`
+                : row.diasHastaProximoInventario === 1
+                ? `Toca mañana`
+                : "Toca hoy"
+            }}
+          </div>
         </div>
         <div v-else>Sin limite de tiempo</div>
       </template>
@@ -215,15 +210,13 @@
             (e) => {
               e.stopPropagation();
             }
-          "
-        >
+          ">
           <q-btn
             class="p-1"
             color="orange"
             size="sm"
             icon="shopping_cart"
-            @click=""
-          />
+            @click="" />
           <q-btn
             class="p-1"
             color="green"
@@ -234,15 +227,13 @@
                 producto = row.stock.producto;
                 estado.modal.formInventario = true;
               }
-            "
-          />
+            " />
           <q-btn
             class="p-1"
             color="black"
             size="sm"
             icon="edit"
-            @click="goTo(router, 'producto', { id: row.producto._id })"
-          />
+            @click="goTo(router, 'producto', { id: row.producto._id })" />
         </q-btn-group>
       </template>
 
@@ -276,14 +267,12 @@
           <q-card
             class="mr-3 mb-3"
             v-for="lote in row.stock.lotes"
-            :key="lote._id"
-          >
+            :key="lote._id">
             <q-card-section>
               <p>{{ lote.marca.nombre }}</p>
               <p
                 v-if="row.producto.puedeVencer"
-                :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''"
-              >
+                :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
                 Vencimiento: {{ fechaMes(lote.vencimiento) }}
               </p>
               <p>Cantidad: {{ lote.cantidad }}</p>

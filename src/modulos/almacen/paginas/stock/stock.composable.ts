@@ -52,7 +52,7 @@ export const useStock = () => {
         fechaUltimoInventario: stock.lotes?.[0]._creado,
         diasDesdeUltimoInventario: Math.floor(
           diferenciaFechas(
-            new Date("2024-07-09"), // stock.lotes?.[0]._creado,
+            new Date("2024-08-01"), // stock.lotes?.[0]._creado,
             new Date(),
             "D",
           ),
@@ -61,6 +61,12 @@ export const useStock = () => {
         inventarioAviso: null,
         alertaInventario: 0,
       };
+
+      //
+      if (stock.lotes.filter((lote) => !lote.bloque).length > 0) {
+        res.diasHastaProximoInventario = 0;
+        res.alertaInventario = 3;
+      }
 
       // Inicializacion de las marcas
       for (const lote of stock.lotes) {
@@ -106,9 +112,9 @@ export const useStock = () => {
         }
 
         // alerta res
-        if (res.diasHastaProximoInventario == null) {
+        if (res.diasHastaProximoInventario === null) {
           res.diasHastaProximoInventario = marca.diasHastaProximoInventario;
-        } else {
+        } else if (res.alertaInventario !== 3) {
           res.diasHastaProximoInventario = Math.min(
             res.diasHastaProximoInventario,
             marca.diasHastaProximoInventario,
@@ -252,7 +258,7 @@ export const useStock = () => {
       filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
     }
     if (estado.filtros.alerta === "inventario") {
-      filtered = filtered.filter((stock) => stock.alertaInventario > 0);
+      filtered = filtered.filter((stock) => stock.alertaInventario != 0);
     }
     // filtro por categoria
     if (
@@ -260,9 +266,9 @@ export const useStock = () => {
       estado.filtros.categoriaSeleccionada !== ""
     ) {
       filtered = filtered.filter((stock) =>
-        store
-          .getCategoria(estado.filtros.categoriaSeleccionada)
-          .includes(stock.producto.categoria._id),
+        estado.filtros.categoriaSeleccionada.includes(
+          stock.producto.categoria._id,
+        ),
       );
     }
     // filtro por marca
@@ -290,7 +296,7 @@ export const useStock = () => {
   });
 
   // Inicializaciones
-  onMounted(async () => {
+  onBeforeMount(async () => {
     await store.getEntidad();
     await store.getCategorias();
     await obtenerTodoStock();
@@ -300,6 +306,7 @@ export const useStock = () => {
   const handleInventario = async (inventario) => {
     NotifySucessCenter("Inventario hecho");
     estado.modal.formInventario = false;
+    obtenerTodoStock();
   };
 
   const getBloque = (id): Bloque => {

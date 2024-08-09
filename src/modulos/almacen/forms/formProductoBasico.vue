@@ -1,8 +1,5 @@
 <template>
   hey
-  <pre>
-    {{ estado.dataForm ?? [0] }}
-  </pre>
   <q-form @submit="formSubmit">
     <!--h1 class="text-center bg-gray-300 font-bold py-[2px]">DATOS BASICOS</h1-->
     <div v-if="edicion === null" class="importante">
@@ -22,8 +19,7 @@
       :porDefecto="estado.dataForm.nombre"
       @update="(v) => (estado.dataForm.nombre = v)"
       requerido
-      :error="estado.errorNombre"
-    />
+      :error="estado.errorNombre" />
 
     <!-- Categoria -->
     <input-select
@@ -33,8 +29,7 @@
       :porDefecto="estado.dataForm.categoria"
       @update="(v) => (estado.dataForm.categoria = v)"
       requerido
-      :dialog="formCategoria"
-    />
+      :dialog="formCategoria" />
 
     <!-- Imagen -->
     <input-image
@@ -48,8 +43,7 @@
             ? { data: base64Data, mimetype: mimetype }
             : null)
       "
-      icono="photo_camera"
-    />
+      icono="photo_camera" />
 
     <!-- Tiempo de vida -->
     <input-text
@@ -57,8 +51,7 @@
       tipo="number"
       info='Ingrese el tiempo de vida del producto en DIAS, ejemplo: Los embolsados de semillas tienen 6 meses de vida, por lo tanto ingresar "180".'
       :porDefecto="estado.dataForm.tiempoVida"
-      @update="(v) => (estado.dataForm.tiempoVida = v)"
-    />
+      @update="(v) => (estado.dataForm.tiempoVida = v)" />
 
     <h3>Fecha de vencimiento</h3>
     <div class="">
@@ -75,8 +68,7 @@
         tipo="number"
         info="Ingrese la cantidad de dias que desea que el sistema le bote una 1ra alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5, el sistema botara una alerta 5 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoSuave"
-        @update="(v) => (estado.dataForm.vencimientoAvisoSuave = v)"
-      />
+        @update="(v) => (estado.dataForm.vencimientoAvisoSuave = v)" />
       <input-text
         class="flex-grow"
         style="margin-left: 16px"
@@ -84,8 +76,7 @@
         tipo="number"
         info="Ingrese la cantidad de dias que desea que el sistema le bote una 2da alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5 en el primer campo, entonces esta 2da alerta puede ser 2, asi el sistema botara nuevamente otra alerta 2 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoFuerte"
-        @update="(v) => (estado.dataForm.vencimientoAvisoFuerte = v)"
-      />
+        @update="(v) => (estado.dataForm.vencimientoAvisoFuerte = v)" />
     </div>
 
     <input-text
@@ -93,8 +84,7 @@
       label="Comentario"
       info="Agregue cualquier información adicional importante de este producto."
       :porDefecto="estado.dataForm.comentario"
-      @update="(v) => (estado.dataForm.comentario = v)"
-    />
+      @update="(v) => (estado.dataForm.comentario = v)" />
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />

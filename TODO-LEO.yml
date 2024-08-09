@@ -4,7 +4,6 @@
 
 ++ STOCK: averiguar alertas
 -- STOCK: arreglar busqueda
-++ INVENTARIO: recarga de inventario
 ++ OFERTAS: avisar lo que falta para ofertas completas
 ++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
 

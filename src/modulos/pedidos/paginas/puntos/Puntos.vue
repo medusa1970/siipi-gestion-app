@@ -34,7 +34,7 @@
       :title="punto.comprador.nombre"
       class="w-full max-sm:w-full"
       :href="`listaPedidos/${punto._id}`"
-      :title2="formateadorFecha(punto.estado[0]._creado)">
+      :title2="formateadorFecha(punto.estado[0]?._creado)">
       <template v-slot:actions>
         <div class="flex">
           <q-btn
@@ -58,7 +58,7 @@
       v-for="punto in pedidoStore.pedidosAceptados"
       :key="punto._id"
       :href="`listaPedidos/${punto._id}`"
-      :title="punto.comprador.nombre"
+      :title="punto.comprador?.nombre"
       class="w-[400px] max-sm:w-full"
       :title2="formateadorFecha(punto.estado[0]._creado)">
       <template v-slot:actions>

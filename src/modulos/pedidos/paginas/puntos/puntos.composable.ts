@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { apiPedido } from '../../API/pedidos.api';
 
 export const usePuntos = () => {
   const authStore = useAuthStore();
@@ -14,11 +15,11 @@ export const usePuntos = () => {
   });
 
   const buscarPedidos = async () => {
-    const { buscarPedidos: listaPedidos } = await GqlBuscarPedidos(
-      { busqueda: { vendedor: [authStore.negocio._id] } }, // @ts-expect-error
-      useGqlToken(authStore.token)
+    const listaPedidos = await apiPedido.pedido_buscar(
+      { vendedor: [authStore.negocio._id] },
+      { loading: true },
+      authStore.token
     );
-    console.log(listaPedidos);
 
     const pedidos = listaPedidos.reduce(
       (accumulator: any, pedido: any) => {
@@ -50,8 +51,6 @@ export const usePuntos = () => {
     pedidoStore.pedidosSinAceptar = pedidos.noAceptados;
     pedidoStore.pedidosAceptados = pedidos.aceptados;
     pedidoStore.pedidosRecibidos = pedidos.recibidos;
-
-    console.log(pedidoStore);
 
     // hideLoading();
 

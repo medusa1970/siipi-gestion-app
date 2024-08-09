@@ -2,9 +2,9 @@ import type {
   BuscarOpciones,
   BuscarPedidoDto,
   CrearOpciones,
-  CrearPedidoDto,
-  Pedido,
-} from "#gql";
+  CrearPedidoDto, //@ts-expect-error
+  Pedido
+} from '#gql';
 
 export const apiPedido = {
   /**
@@ -12,6 +12,7 @@ export const apiPedido = {
    */
   pedidoIniciar: async (
     datos: CrearPedidoDto,
+<<<<<<< HEAD
     opciones: CrearOpciones & { loading?: boolean } = {},
     token: any = null,
   ): Promise<Pedido> => {
@@ -36,6 +37,20 @@ export const apiPedido = {
       if (!resultado) {
         throw "error resultado null";
       }
+=======
+    opciones: CrearOpciones = {},
+    token: any = null
+  ): Promise<Pedido> => {
+    let resultado;
+    try {
+      await loadingAsync(async () => {
+        resultado = await GqlIniciarPedido(
+          { datos, opciones },
+          //@ts-expect-error
+          useGqlToken(token)
+        );
+      });
+>>>>>>> dev-will2
     } catch (err) {
       throw formatApiError(err);
     }
@@ -70,7 +85,7 @@ export const apiPedido = {
       await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, f, o.loading)
     ),
 
-  pedido_leerEstado: async (
+  pedido_buscarUno: async (
     b: BuscarPedidoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
 
@@ -103,4 +118,32 @@ export const apiPedido = {
       throw formatApiError(err);
     }
   },
+<<<<<<< HEAD
+=======
+
+  // pedido buscar
+  // colocar siempre el filtro
+  pedido_buscar: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Pedido[]> =>
+    <Pedido[]>(
+      await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, {}, o.loading)
+    ),
+  pedido_leerEstadoItems: async (
+    b: BuscarPedidoDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ) => await buscarUno(GqlLeerEstadoPedido, useGqlToken(t), b, o, o.loading)
+
+  //   GqlLeerEstadoPedido(
+  //     {
+  //       busqueda: { _id: [pedidoID] },
+  //       opciones: { limit: 1, errorSiVacio: true },
+  //     },
+  //     token,
+  //   ),
+  // );
+>>>>>>> dev-will2
 };

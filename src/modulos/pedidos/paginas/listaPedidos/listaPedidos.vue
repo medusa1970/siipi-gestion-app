@@ -1,7 +1,7 @@
 <template>
-  <Navigation2
+  <!-- <Navigation2
     :nav="[{ label: 'Pedidos', to: 'listaPedidos' }]"
-    titulo="Gestion de pedidos" />
+    titulo="Gestion de pedidos" /> -->
   <!-- TABS MENU -->
   <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
     <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
@@ -25,21 +25,21 @@
 
     <!-- VER PEDIDO GLOBAL -->
     <q-tab-panel name="global">
-      <Global />
+      <!-- <Global /> -->
     </q-tab-panel>
 
     <!-- VER HISTORIAL DE PEDIDOS -->
     <q-tab-panel
       name="historial"
       class="flex flex-col justify-center items-center">
-      <Historial />
+      <!-- <Historial /> -->
     </q-tab-panel>
   </q-tab-panels>
 </template>
 
 <script setup>
 import Puntos from '../puntos/Puntos.vue';
-import Global from '../global/Global.vue';
+// import Global from '../global/Global.vue';
 import Historial from '../historial/Historial.vue';
 import { useListaPedidos } from './listaPedidos.composable';
 
@@ -47,7 +47,7 @@ definePageMeta({
   layout: 'cathering'
 });
 
-const { estado, buscarPedidos2, obtenerOfertas } = useListaPedidos();
+// const { estado, buscarPedidos2, obtenerOfertas } = useListaPedidos();
 
 const tab = ref('puntos');
 // const tabPuntos = ref('areaGlobal');

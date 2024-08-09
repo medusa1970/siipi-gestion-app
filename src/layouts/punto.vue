@@ -95,10 +95,10 @@ const menu = [
         to: "realizarPedido",
       },
       {
-        icon: "list_alt",
-        label: "Mis pedidos",
-        to: "lista-pedidos",
-      },
+        icon: 'list_alt',
+        label: 'Mis pedidos',
+        to: 'misPedidos'
+      }
       // {
       //   icon: 'shopping_cart',
       //   label: 'ListaPedidos',
@@ -108,9 +108,9 @@ const menu = [
     ],
   },
   {
-    icon: "storefront",
-    label: "Empresa",
-    key: "empresa",
+    icon: 'storefront',
+    label: 'Sucursal',
+    key: 'sucursal',
     subMenu: [
       {
         icon: "group",
@@ -145,10 +145,10 @@ const realizarPedido = async () => {
           vendedor: "65a5a9af08c1a906d83522d0",
           items,
         },
-        { loading: true },
-        authStore.token,
+        {},
+        authStore.token
       );
-      console.log(pedido);
+      // console.log(pedido);
       if (pedido) {
         const pedidoEstado = await apiPedido.pedidoConfirmarItems(
           {
@@ -156,8 +156,8 @@ const realizarPedido = async () => {
           },
           authStore.token,
         );
-        console.log(pedidoEstado);
-        NotifySucessCenter("Pedido realizado con éxito");
+        // console.log(pedidoEstado);
+        NotifySucessCenter('Pedido realizado con éxito');
         pedidoStore.listaPedido = [];
       } else NotifyError("Error al realizar el pedido");
     } catch (err) {

@@ -86,6 +86,13 @@ query buscarPedidos(
           }
           cantidad
         }
+        precioConFactura
+        precioSinFactura
+        preciosPorMayor {
+          cantidadMin
+          precioConFactura
+          precioSinFactura
+        }
       }
       cantidad
       estado {

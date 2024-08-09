@@ -259,7 +259,7 @@
   </q-tab-panels>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { usePedidoGlobal } from './global.composable';
 definePageMeta({
   layout: 'cathering'

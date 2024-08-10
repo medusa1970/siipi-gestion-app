@@ -20,10 +20,6 @@ export const useHistorial = () => {
         return pedidoDate.getTime() === dateObj.getTime();
       }
     );
-    console.log(estado.pedidosFiltrados);
-
-    // console.log(pedidosFiltrados);
-    // console.log(pedidosFiltrados.length);
   };
 
   return {

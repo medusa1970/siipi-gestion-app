@@ -2,6 +2,7 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { apiPedido } from '../../API/pedidos.api';
 
 /**
  * LOGICA
@@ -221,10 +222,12 @@ export const useListaPedidos = () => {
   };
 
   const buscarPedidoID = async (pedidoID: string) => {
-    const pedido = await GqlBuscarPedidos(
-      { busqueda: { _id: [pedidoID] } }, //@ts-expect-error
+    console.log('first');
+    const pedido = await apiPedido.pedido_buscarUno(
+      { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)
     );
+    console.log(pedido);
 
     estado.pedidoDetalle = pedido; //@ts-expect-error
     estado.precioGeneral = pedido.items.reduce((total, item) => {
@@ -900,6 +903,7 @@ export const useListaPedidos = () => {
     buscarPedidos2,
     obtenerOfertas,
 
-    filter
+    filter,
+    buscarPedidoID
   };
 };

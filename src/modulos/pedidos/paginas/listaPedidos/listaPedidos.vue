@@ -32,7 +32,7 @@
     <q-tab-panel
       name="historial"
       class="flex flex-col justify-center items-center">
-      <!-- <Historial /> -->
+      <Historial />
     </q-tab-panel>
   </q-tab-panels>
 </template>

@@ -117,14 +117,6 @@ const menu = [
         icon: 'add_shopping_cart',
         label: 'Realizar pedido',
         to: 'realizarPedido'
-      },
-      {
-        label: 'lista',
-        to: 'lista'
-      },
-      {
-        label: 'test',
-        to: 'test'
       }
     ]
   },

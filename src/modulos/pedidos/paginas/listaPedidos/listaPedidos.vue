@@ -25,7 +25,7 @@
 
     <!-- VER PEDIDO GLOBAL -->
     <q-tab-panel name="global">
-      <!-- <Global /> -->
+      <Global />
     </q-tab-panel>
 
     <!-- VER HISTORIAL DE PEDIDOS -->
@@ -39,7 +39,7 @@
 
 <script setup>
 import Puntos from '../puntos/Puntos.vue';
-// import Global from '../global/Global.vue';
+import Global from '../global/Global.vue';
 import Historial from '../historial/Historial.vue';
 import { useListaPedidos } from './listaPedidos.composable';
 

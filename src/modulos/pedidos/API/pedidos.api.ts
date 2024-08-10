@@ -66,14 +66,6 @@ export const apiPedido = {
   ): Promise<Pedido[]> =>
     <Pedido[]>await buscarUno(GqlBuscarPedidos, t, b, o, o.loading),
 
-  // pedido_leerMenu: async (
-  //   b: BuscarPedidoDto,
-
-  //   o: BuscarOpciones & { loading?: boolean } = {},
-
-  //   t: any = null
-  // ) => await buscarUno(GqlEntidadLeerMenu, useGqlToken(t), b, o, o.loading),
-
   pedido_leerMenu: async (entidadID: string, token: any) => {
     try {
       const menu = extraerUno(
@@ -102,18 +94,36 @@ export const apiPedido = {
     <Pedido[]>(
       await buscarVarios(GqlBuscarPedidos, useGqlToken(t), b, o, {}, o.loading)
     ),
+
   pedido_leerEstadoItems: async (
     b: BuscarPedidoDto,
     o: BuscarOpciones & { loading?: boolean } = {},
     t: any = null
-  ) => await buscarUno(GqlLeerEstadoPedido, useGqlToken(t), b, o, o.loading)
+  ) => await buscarUno(GqlLeerEstadoPedido, useGqlToken(t), b, o, o.loading),
 
-  //   GqlLeerEstadoPedido(
-  //     {
-  //       busqueda: { _id: [pedidoID] },
-  //       opciones: { limit: 1, errorSiVacio: true },
-  //     },
-  //     token,
-  //   ),
-  // );
+  pedido_aceptarOfertas: async (
+    pedidosIDS: string[],
+    tipo: string,
+    token: any
+  ) => {
+    try {
+      console.log(pedidosIDS, tipo);
+      const menu = extraer(
+        await GqlCambiarEstadoItemsPorOfertas_aceptar(
+          {
+            busqueda: { _id: pedidosIDS },
+            estado: {
+              estado: 'aceptado'
+            },
+            tipo,
+            opciones: { limit: 1, errorSiVacio: true }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      return menu;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  }
 };

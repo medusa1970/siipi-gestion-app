@@ -2,31 +2,14 @@
   <!-- TABS -->
   <q-tabs v-model="estado.tabPuntos" inline-label no-caps dense>
     <q-tab class="[&>div>div]:font-bold" name="areaGlobal" label="Global" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="panaderia"
-      label="Panaderia"
-      @click="obtenerOfertas(estado.panaderia)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="reposteria"
-      label="Reposteria"
-      @click="obtenerOfertas(estado.reposteria)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="envasados"
-      label="Envasados"
-      @click="obtenerOfertas(estado.envasados)" />
+    <q-tab class="[&>div>div]:font-bold" name="panaderia" label="Panaderia" />
+    <q-tab class="[&>div>div]:font-bold" name="reposteria" label="Reposteria" />
+    <q-tab class="[&>div>div]:font-bold" name="envasados" label="Envasados" />
     <q-tab
       class="[&>div>div]:font-bold"
       name="embotellados"
-      label="Embotellados"
-      @click="obtenerOfertas(estado.embotellados)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="siinple"
-      label="Siinple"
-      @click="obtenerOfertas(estado.siinple)" />
+      label="Embotellados" />
+    <q-tab class="[&>div>div]:font-bold" name="siinple" label="Siinple" />
   </q-tabs>
 
   <!-- PANELES -->
@@ -102,7 +85,6 @@
                     round
                     size="10px"
                     padding="2px"
-                    @click="ajustarOferta(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ajustar</q-tooltip
                     ></q-btn
@@ -122,7 +104,6 @@
                     :disable="
                       props.row.estado.some(e => e.estado === 'preparado')
                     "
-                    @click="ofertaPreparado(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Preparado</q-tooltip
                     ></q-btn
@@ -135,7 +116,6 @@
                     round
                     size="12px"
                     padding="2px"
-                    @click="verPedidoPuntos(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ver Producto</q-tooltip
                     ></q-btn
@@ -210,7 +190,6 @@
                     round
                     size="10px"
                     padding="2px"
-                    @click="ajustarOferta(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ajustar</q-tooltip
                     ></q-btn
@@ -231,7 +210,6 @@
                     :disable="
                       props.row.estado.some(e => e.estado === 'preparado')
                     "
-                    @click="ofertaPreparado(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Preparado</q-tooltip
                     ></q-btn
@@ -244,7 +222,6 @@
                     round
                     size="12px"
                     padding="2px"
-                    @click="verPedidoPuntos(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ver Producto</q-tooltip
                     ></q-btn
@@ -259,13 +236,17 @@
   </q-tab-panels>
 </template>
 
-<script setup lang="ts">
-import { usePedidoGlobal } from './global.composable';
-definePageMeta({
-  layout: 'cathering'
-});
+<script setup>
+import { useGlobal } from '@/modulos/pedidos/paginas/global/global.composable';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
-const { estado, pedidoStore } = usePedidoGlobal();
+const pedidoStore = storePedido();
+const {
+  estado,
+  aceptarTodosLosPedidosSolicitables,
+  aceptarTodosLosPedidosDirectos
+} = useGlobal();
+console.log(estado.tabPuntos);
 
 const pedidoGlobal = [
   {
@@ -273,7 +254,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Nombre(s)',
     align: 'left',
-    field: (row: any) => row.oferta.nombre,
+    field: row => row.oferta.nombre,
     sortable: true
   },
   {
@@ -281,7 +262,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Pedido',
     align: 'center',
-    field: (row: any) => row.cantidad,
+    field: row => row.cantidad,
     sortable: true
   },
   {
@@ -289,7 +270,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Cantidad Pedido',
     align: 'center',
-    field: (row: any) =>
+    field: row =>
       row.cantidad * row.oferta.cantidad + `(${row.presentacionBasica})`,
     sortable: true
   },
@@ -298,7 +279,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Cantidad Stock',
     align: 'center',
-    field: (row: any) => row.stockEntidad + `(${row.presentacionBasica})`,
+    field: row => row.stockEntidad + `(${row.presentacionBasica})`,
     sortable: true
   },
   {
@@ -306,7 +287,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Diferencia',
     align: 'right',
-    field: (row: any) => row.stockEntidad - row.cantidad,
+    field: row => row.stockEntidad - row.cantidad,
     sortable: true
   },
   {
@@ -315,5 +296,5 @@ const pedidoGlobal = [
     align: 'right'
   }
 ];
-console.log(pedidoGlobal);
+// console.log(pedidoGlobal);
 </script>

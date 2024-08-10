@@ -49,7 +49,6 @@ query buscarPedidos(
       }
     }
   }
-  }
 }
 
 mutation crearPedidos(
@@ -101,7 +100,6 @@ mutation crearPedidos(
         comentario
       }
     }
-  }
   }
 }
 
@@ -156,7 +154,6 @@ mutation modificarPedidos(
       }
     }
   }
-  }
 }
 
 mutation borrarPedidos(
@@ -208,6 +205,5 @@ mutation borrarPedidos(
         comentario
       }
     }
-  }
   }
 }

@@ -1,27 +1,28 @@
 import { apiPedido } from '~/modulos/pedidos/API/pedidos.api';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
-export const usePedido = () => {
+export const useMiPedido = () => {
+  const router = useRouter();
   const estado = reactive({
     pedidoDetalle: {},
     pedidoItemsEstado: '',
     itemsEstadoAjustado: [],
-    precioGeneral: []
+    precioGeneral: [],
+
+    modal: {
+      isShowPassword: false
+    },
+    pedidoID: '',
+    passwordChofer: ''
   });
   const authStore = useAuthStore();
 
   const buscarPedidoID = async (pedidoID: string) => {
-    console.log('first');
-    const pedido = await apiPedido.pedido_buscar(
+    const pedido = await apiPedido.pedido_buscarUno(
       { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)
     );
-    console.log(pedido);
-    // const [pedido] = await pedidoService.pedidoBuscar(
-    //   { _id: [pedidoID] },
-    //   // @ts-expect-error (creado dinamicamente)
-    //   useGqlToken(useAuth.token)
-    // );
+
     estado.pedidoDetalle = pedido; //@ts-ignore
     estado.precioGeneral = pedido.items.reduce((total, item) => {
       //@ts-ignore
@@ -53,13 +54,43 @@ export const usePedido = () => {
         valor: ultimoEstadoAjustado.valor
       };
     });
+  };
 
-    // Mostrar la información
+  const abrirModalRecibirPedido = (pedidoID: string) => {
+    estado.modal.isShowPassword = true;
+    estado.pedidoID = pedidoID;
+  };
+
+  const recibirPedido = async () => {
+    // INPUT PASSWORD CHOFER
+    const password = 'choferSiipi123';
+    console.log(estado.pedidoID);
+    console.log(authStore.token);
+
+    if (estado.passwordChofer == password) {
+      const pedidoRecibido = await apiPedido.pedido_recibirOfertas(
+        estado.pedidoID,
+        authStore.token
+      );
+      console.log(pedidoRecibido);
+      if (pedidoRecibido) {
+        NotifySucessCenter('Pedido recibido');
+        estado.modal.isShowPassword = false;
+        estado.passwordChofer = '';
+        router.push('/punto/misPedidos');
+      } else NotifyError('Error al recibir pedido');
+    } else {
+      NotifyError('Contraseña incorrecta');
+      estado.modal.isShowPassword = false;
+      estado.passwordChofer = '';
+    }
   };
 
   return {
     estado,
     buscarPedidoID,
-    authStore
+    authStore,
+    abrirModalRecibirPedido,
+    recibirPedido
   };
 };

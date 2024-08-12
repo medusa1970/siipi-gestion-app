@@ -143,7 +143,7 @@ export const apiPedido = {
             estado: {
               estado: 'preparado'
             },
-            opciones: {}
+            opciones: { populate: true }
           }, //@ts-ignore
           useGqlToken(token)
         )
@@ -173,6 +173,27 @@ export const apiPedido = {
               estado: 'ajustado',
               valor: [diferenciaTotal],
               comentario
+            }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  pedido_recibirOfertas: async (pedidoID: string, token?: any) => {
+    try {
+      const pedidos = extraer(
+        await GqlCambiarEstadoItems(
+          {
+            busqueda: { _id: [pedidoID] },
+            opciones: { limit: 1, errorSiVacio: true },
+            estado: {
+              estado: 'recibido'
             }
           }, //@ts-ignore
           useGqlToken(token)

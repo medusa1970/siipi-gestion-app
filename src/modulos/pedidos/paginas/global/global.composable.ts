@@ -93,7 +93,7 @@ export const useGlobal = () => {
       return acumulador;
     }, []);
 
-    console.log(result);
+    // console.log(result);
     pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
       const stock = estado.stocks.find(
         //@ts-ignore
@@ -106,7 +106,7 @@ export const useGlobal = () => {
         presentacionBasica: stock ? stock.producto.presentacionBasica : ''
       };
     });
-    console.log(pedidoStore.pedidosSolicitado);
+    // console.log(pedidoStore.pedidosSolicitado);
 
     // pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
     //   const stock = estado.stocks.find(
@@ -320,10 +320,12 @@ export const useGlobal = () => {
       [fila.oferta._id],
       authStore.token
     );
+    console.log(ofertasPreparadas);
 
     if (ofertasPreparadas) NotifySucessCenter('Oferta preparada exitosamente');
     // console.log(ofertasPreparadas);
     let item = ofertasPreparadas[0].items[0];
+    console.log(item);
 
     pedidoStore.pedidosSolicitado.forEach(pedido => {
       if (pedido.oferta._id == item.oferta._id) {
@@ -365,7 +367,7 @@ export const useGlobal = () => {
         estado.comentario,
         diferencia
       );
-      // console.log(ofertasAjustadas);
+      console.log(ofertasAjustadas);
       // console.log(pedidoStore.pedidosDirecto);
       // console.log(pedidoStore.pedidosSolicitado);
 

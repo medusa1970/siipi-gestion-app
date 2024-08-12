@@ -85,6 +85,7 @@
                     round
                     size="10px"
                     padding="2px"
+                    @click="ajustarOferta(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ajustar</q-tooltip
                     ></q-btn
@@ -95,6 +96,7 @@
                       props.row.estado.some(e => e.estado === 'preparado') &&
                         '!text-gray-300 !font-bold'
                     ]"
+                    color="green-5"
                     icon="bi-check2-circle"
                     dense
                     flat
@@ -104,6 +106,7 @@
                     :disable="
                       props.row.estado.some(e => e.estado === 'preparado')
                     "
+                    @click="ofertaPreparado(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Preparado</q-tooltip
                     ></q-btn
@@ -116,6 +119,7 @@
                     round
                     size="12px"
                     padding="2px"
+                    @click="verPedidoPuntos(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ver Producto</q-tooltip
                     ></q-btn

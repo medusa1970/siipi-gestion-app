@@ -415,6 +415,14 @@ type Transaccion {
   _modificado: DateTime
   _borrado: DateTime
   _orden: Float
+  comprador: Entidad
+  vendedor: Entidad
+  monto: Float
+  glosa: String
+  modalidad: String
+  estado: String
+  numero: Float
+  referencia: String
 }
 
 type TransaccionMonto {
@@ -532,6 +540,8 @@ type Query {
   buscarMarcas(busqueda: BuscarMarcaDto!, opciones: BuscarOpciones, filtro: BuscarMarcaDto): [Marca!]!
   contarTags(busqueda: BuscarTagDto!, opciones: ContarOpciones): Float!
   buscarTags(busqueda: BuscarTagDto!, opciones: BuscarOpciones, filtro: BuscarTagDto): [Tag!]!
+  contarTransacciones(busqueda: BuscarTransaccionDto!, opciones: ContarOpciones): Float!
+  buscarTransacciones(busqueda: BuscarTransaccionDto!, opciones: BuscarOpciones, filtro: BuscarTransaccionDto): [Transaccion!]!
 }
 
 input BuscarEjemploDto {
@@ -962,6 +972,21 @@ input BuscarTagDto {
   ofertas: [ID!]
 }
 
+input BuscarTransaccionDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  comprador: [ID!]
+  vendedor: [ID!]
+  monto: [Float!]
+  glosa: [String!]
+  modalidad: [String!]
+  estado: [String!]
+  numero: [Float!]
+  referencia: [String!]
+}
+
 type Mutation {
   PopulateEjemplos(opciones: PopulateOpciones): [Ejemplo!]!
   crearEjemplos(datos: [CrearEjemploDto!]!, opciones: CrearOpciones): [Ejemplo!]!
@@ -1048,6 +1073,12 @@ type Mutation {
   borrarTags(busqueda: BuscarTagDto!, opciones: BorrarOpciones): [Tag!]!
   eliminarTags(busqueda: BuscarTagDto!, opciones: EliminarOpciones): Float!
   moverTags(busqueda: BuscarTagDto!, despuesDe: BuscarTagDto!, opciones: EliminarOpciones): Float!
+  PopulateTransacciones(opciones: PopulateOpciones): [Transaccion!]!
+  crearTransacciones(datos: [CrearTransaccionDto!]!, opciones: CrearOpciones): [Transaccion!]!
+  modificarTransacciones(busqueda: BuscarTransaccionDto!, datos: ModificarTransaccionDto!, opciones: ModificarOpciones): [Transaccion!]!
+  borrarTransacciones(busqueda: BuscarTransaccionDto!, opciones: BorrarOpciones): [Transaccion!]!
+  eliminarTransacciones(busqueda: BuscarTransaccionDto!, opciones: EliminarOpciones): Float!
+  moverTransacciones(busqueda: BuscarTransaccionDto!, despuesDe: BuscarTransaccionDto!, opciones: EliminarOpciones): Float!
 }
 
 input PopulateOpciones {
@@ -1260,7 +1291,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-08-08T00:13:27.758Z"
+  saldoActualizacion: DateTime = "2024-08-12T01:03:09.560Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1550,7 +1581,7 @@ input ModificarProblemaDto {
   resuelto: Boolean
   fechaResolucion: DateTime
   reporte: String
-  reporteResolucion: [String!]
+  reporteResolucion: String
 }
 
 input EditarMenuDto {
@@ -1880,4 +1911,27 @@ input ModificarTagDto {
   paraEvitarErrorDeTypescript: String
   nombre: String
   ofertas: EditarRefsDto
+}
+
+input CrearTransaccionDto {
+  _id: ID
+  comprador: ID
+  vendedor: ID
+  monto: Float
+  glosa: String
+  modalidad: String
+  estado: String
+  numero: Float
+  referencia: String
+}
+
+input ModificarTransaccionDto {
+  comprador: ID
+  vendedor: ID
+  monto: Float
+  glosa: String
+  modalidad: String
+  estado: String
+  numero: Float
+  referencia: String
 }

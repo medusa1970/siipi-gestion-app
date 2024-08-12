@@ -8,7 +8,7 @@
           label: 'Imagen',
           imagen: true,
           align: 'left',
-          field: (row) => row.producto.imagen?.cloudinaryUrl,
+          field: row => row.producto.imagen?.cloudinaryUrl
         },
         {
           name: 'producto',
@@ -16,8 +16,8 @@
           slot: true,
           label: 'Producto',
           align: 'left',
-          field: (row) => row.producto.nombre,
-          sortable: true,
+          field: row => row.producto.nombre,
+          sortable: true
         },
         // {
         //   name: 'cantidad',
@@ -33,8 +33,8 @@
           required: true,
           label: 'Cantidad',
           align: 'center',
-          field: (row) => row.cantidadTotal,
-          sortable: true,
+          field: row => row.cantidadTotal,
+          sortable: true
         },
         {
           name: 'alertaVencimiento',
@@ -42,8 +42,8 @@
           required: true,
           label: 'Vencimiento',
           align: 'center',
-          field: (row) => row.dias,
-          sortable: true,
+          field: row => row.dias,
+          sortable: true
         },
         {
           name: 'alertaInventario',
@@ -51,15 +51,15 @@
           slot: true,
           label: 'Inventario',
           align: 'center',
-          field: (row) => row.diasHastaProximoInventario,
-          sortable: true,
+          field: row => row.diasHastaProximoInventario,
+          sortable: true
         },
         {
           name: 'actions',
           label: 'Acciones',
           align: 'right',
-          slot: true,
-        },
+          slot: true
+        }
       ]"
       :defaultImage="ProductoImage">
       <template #dropdown>
@@ -105,13 +105,13 @@
           <input-select
             label="Categoria"
             labelAdentro
-            @update="(v) => (estado.filtros.categoriaSeleccionada = v)"
+            @update="v => (estado.filtros.categoriaSeleccionada = v)"
             :opciones="selectCategoriaFiltro"
             noSlot />
           <input-select
             label="Marca"
             labelAdentro
-            @update="(v) => (estado.filtros.marcaSeleccionada = v)"
+            @update="v => (estado.filtros.marcaSeleccionada = v)"
             :opciones="selectMarcaFiltro"
             noSlot />
         </div>
@@ -162,14 +162,14 @@
         <div>
           {{
             !row.producto.puedeVencer
-              ? "No vence"
+              ? 'No vence'
               : row.vencimientoAvisoSuave === 0
-              ? "Sin alerta"
+              ? 'Sin alerta'
               : row.diasHastaProximoVencimiento < 0
               ? `Vencido desde ${-row.diasHastaProximoVencimiento} días`
               : row.diasHastaProximoVencimiento > 0
               ? `Vence en ${row.diasHastaProximoVencimiento} días`
-              : "Vence hoy"
+              : 'Vence hoy'
           }}
         </div>
       </template>
@@ -179,7 +179,7 @@
         <!-- <div v-if="row.stock.lotes.find((l) => !l.bloque)">
         <q-icon name="report" color="blue" size="sm" />
       </div> -->
-        <div v-if="row.stock.lotes.filter((lote) => !lote.bloque).length > 0">
+        <div v-if="row.stock.lotes.filter(lote => !lote.bloque).length > 0">
           <q-icon name="report" color="blue" size="sm" />
           <div>Toca hacer</div>
         </div>
@@ -196,7 +196,7 @@
                 ? `Toca en ${row.diasHastaProximoInventario} días`
                 : row.diasHastaProximoInventario === 1
                 ? `Toca mañana`
-                : "Toca hoy"
+                : 'Toca hoy'
             }}
           </div>
         </div>
@@ -207,7 +207,7 @@
         <q-btn-group
           push
           @click="
-            (e) => {
+            e => {
               e.stopPropagation();
             }
           ">
@@ -244,7 +244,7 @@
           <span v-else-if="row.diasDesdeUltimoInventario === 0">hoy</span>
           <span v-else
             >hace {{ row.diasDesdeUltimoInventario }} día{{
-              row.diasInventario > 1 ? "s" : ""
+              row.diasInventario > 1 ? 's' : ''
             }}</span
           >
         </p>
@@ -295,7 +295,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStock } from "./stock.composable";
+import { useStock } from './stock.composable';
 const {
   estado,
   store,
@@ -305,16 +305,18 @@ const {
   selectCategoriaFiltro,
   selectMarcaFiltro,
   getBloque,
-  rowsParaMostrar,
+  rowsParaMostrar
 } = useStock();
 
-provide("infoPagina", {
-  titulo: "Gestion de stock",
-  camino: [{ label: "Stock", to: "stock" }],
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'Gestion de stock',
+    camino: [{ label: 'Stock', to: 'stock' }]
+  }
 });
 
-import formInventario from "@/modulos/almacen/forms/formInventario.vue";
-import ProductoImage from "@/assets/img/noHayProducto.png";
+import formInventario from '@/modulos/almacen/forms/formInventario.vue';
+import ProductoImage from '@/assets/img/noHayProducto.png';
 
 // producto seleccionado al hacer click en una accion
 const producto = ref(null);

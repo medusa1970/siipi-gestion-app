@@ -9,7 +9,9 @@
 </template>
 <script setup lang="ts">
 provide('infoPagina', {
-  titulo: 'Bienvenido',
-  camino: [{ label: 'bienvenido', to: 'punto' }]
+  infoPagina: {
+    titulo: 'Bienvenido',
+    camino: [{ label: 'bienvenido', to: 'punto' }]
+  }
 });
 </script>

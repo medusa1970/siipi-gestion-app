@@ -23,8 +23,5 @@ export const goTo = function (
   routeName: string,
   params: any = null
 ) {
-  console.log('first');
-  console.log(routeName);
-  console.log(getRoute(router, routeName, params));
   router.push(getRoute(router, routeName, params));
 };

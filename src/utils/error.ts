@@ -1,13 +1,13 @@
-export const errFallBack = (err) => {
-  NotifyError("Se produjó un error inesperado.");
+export const errFallBack = err => {
+  NotifyError('Se produjó un error inesperado.');
   console.log(
-    "El error inesperado:",
+    'El error inesperado:',
     err.mensaje ?? err.gqErrors?.[0].message ?? err
   );
   console.log(err);
 };
 
-export const formatApiError = (err) => {
+export const formatApiError = err => {
   return Object.assign(err.gqlErrors?.[0], { isApiError: true });
 };
 
@@ -19,16 +19,16 @@ export const isApiError = (err, tipo = null, clave = null) => {
   );
 };
 export const isApiInternalError = (err, clave = null) =>
-  isApiError(err, "INTERNAL_ERROR", clave);
+  isApiError(err, 'INTERNAL_ERROR', clave);
 export const isApiNotFound = (err, clave = null) =>
-  isApiError(err, "NOT_FOUND", clave);
+  isApiError(err, 'NOT_FOUND', clave);
 export const isApiBadRequest = (err, clave = null) =>
-  isApiError(err, "BAD_REQUEST", clave);
+  isApiError(err, 'BAD_REQUEST', clave);
 export const isApiBadData = (err, clave = null) =>
-  isApiError(err, "BAD_DATA", clave);
+  isApiError(err, 'BAD_DATA', clave);
 export const isApiNoAutorixado = (err, clave = null) =>
-  isApiError(err, "NO_AUTORIZADO", clave);
+  isApiError(err, 'NO_AUTORIZADO', clave);
 export const isApiServIndisponible = (err, clave = null) =>
-  isApiError(err, "SERVICIO_INDISPONIBLE", clave);
+  isApiError(err, 'SERVICIO_INDISPONIBLE', clave);
 export const isApiExpirado = (err, clave = null) =>
-  isApiError(err, "EXPIRADO", clave);
+  isApiError(err, 'EXPIRADO', clave);

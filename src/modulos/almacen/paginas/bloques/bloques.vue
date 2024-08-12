@@ -28,23 +28,20 @@
     slot: true,
   },
 ]"
-      :defaultImage="BloqueImage"
-    >
+      :defaultImage="BloqueImage">
       <template #dropdown>
         <div class="w-full flex" style="align-items: center">
           <input-text
             label="Buscar"
             labelAdentro
             @update="(v) => (estado.filtros.buscar = v as string)"
-            noSlot
-          />
+            noSlot />
           <q-btn
             size="12px"
             icon="add"
             color="green"
             style="height: 16px; width: 16px; margin: 5px 10px"
-            @click="() => (estado.modal.formCrearBloque = true)"
-          />
+            @click="() => (estado.modal.formCrearBloque = true)" />
         </div>
       </template>
       <template #body-cell-nombre="{ val, row }">
@@ -53,7 +50,7 @@
         <i>{{ row.descripcion }}</i>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group push @click="(e) => e.stopPropagation()">
+        <q-btn-group push @click="e => e.stopPropagation()">
           <q-btn
             @click="
               () => {
@@ -64,8 +61,7 @@
             icon="edit"
             class="p-1"
             color="black"
-            size="sm"
-          />
+            size="sm" />
         </q-btn-group>
       </template>
     </Tabla>
@@ -77,20 +73,18 @@
     </popup>
     <popup
       v-model="estado.modal.formModificarBloque"
-      titulo="Modificar una bloque"
-    >
+      titulo="Modificar una bloque">
       <template #body>
         <formBloque
           :edicion="estado.bloque"
-          @modificarObjeto="handleBloqueModificado"
-        />
+          @modificarObjeto="handleBloqueModificado" />
       </template>
     </popup>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { useBloques } from "./bloques.composable";
+import { useBloques } from './bloques.composable';
 const {
   estado,
   store,
@@ -98,14 +92,16 @@ const {
   router,
   rowsTabla,
   handleBloqueModificado,
-  handleBloqueCreado,
+  handleBloqueCreado
 } = useBloques();
 
-provide("infoPagina", {
-  titulo: "Gestion de bloques",
-  camino: [{ label: "Bloques", to: "bloques" }],
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'Gestion de bloques',
+    camino: [{ label: 'Bloques', to: 'bloques' }]
+  }
 });
 
-import BloqueImage from "@/assets/img/noHayBloque.png";
-import formBloque from "@/modulos/almacen/forms/formBloque.vue";
+import BloqueImage from '@/assets/img/noHayBloque.png';
+import formBloque from '@/modulos/almacen/forms/formBloque.vue';
 </script>

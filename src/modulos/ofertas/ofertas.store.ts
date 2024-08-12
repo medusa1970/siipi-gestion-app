@@ -1,6 +1,6 @@
-import type { Catalogo, Oferta } from "#gql";
-import localforage from "localforage";
-import { apiOfertas } from "../ofertas/API/ofertas.api";
+import type { Catalogo, Oferta } from '#gql';
+import localforage from 'localforage';
+import { apiOfertas } from '../ofertas/API/ofertas.api';
 
 interface storeProps {
   // colecciones
@@ -10,31 +10,46 @@ interface storeProps {
   oferta: Oferta | null;
 }
 
-export const storeOferta = defineStore("ofertas", {
+export const storeOferta = defineStore('ofertas', {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
-    oferta: null,
+    oferta: null
   }),
 
-  getters: {},
+  getters: {
+    ofertaId: state => useRoute()?.params.id
+  },
 
   actions: {
+    /**
+     * define la oferta actual que se esta modificando en pagina de detalles
+     */
+    async useEntidad(): Promise<void> {
+      if (!this.oferta || this.ofertaId !== this.oferta._id) {
+        try {
+          this.oferta = await api.buscarOferta(this.ofertaId as string);
+        } catch (err) {
+          errFallBack(err);
+        }
+      }
+    },
+
     /**
      * Retorna la lista de los productos desde el indexedDb o desde la base
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB = false): Promise<Oferta[]> {
-      this.ofertas = (await localforage.getItem("ofertas")) as Oferta[];
+      this.ofertas = (await localforage.getItem('ofertas')) as Oferta[];
       if (!this.ofertas || actualizarDB) {
         try {
           this.ofertas = await api.buscarOfertas(
             {},
-            { sort: "-_modificado -_creado" },
+            { sort: '-_modificado -_creado' }
           );
           await localforage.setItem(
-            "ofertas",
-            JSON.parse(JSON.stringify(this.ofertas)),
+            'ofertas',
+            JSON.parse(JSON.stringify(this.ofertas))
           );
         } catch (err) {
           errFallBack(err);
@@ -67,7 +82,7 @@ export const storeOferta = defineStore("ofertas", {
     },
     getOne(id: string): Catalogo {
       if (this.catalogoArbol === null) return null;
-      const f = (catalogo) => {
+      const f = catalogo => {
         if (catalogo._id === id) {
           return catalogo;
         } else if (catalogo.hijas) {
@@ -80,10 +95,10 @@ export const storeOferta = defineStore("ofertas", {
         }
       };
       return f(this.catalogoArbol);
-    },
+    }
   },
 
   persist: {
-    paths: ["oferta", "catalogoOpciones", "catalogoSeleccionado"], // Solo persiste 'myPersistentState'
-  },
+    paths: ['oferta', 'catalogoOpciones', 'catalogoSeleccionado'] // Solo persiste 'myPersistentState'
+  }
 });

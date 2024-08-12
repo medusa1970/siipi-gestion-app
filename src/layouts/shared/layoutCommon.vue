@@ -240,7 +240,11 @@
 
 <script setup>
 // breadcrumb
-const infoPagina = inject('infoPagina');
+
+const { infoPagina, update } = inject('infoPagina');
+onMounted(() => {
+  if (update) update();
+});
 
 // PROPS
 const props = defineProps({

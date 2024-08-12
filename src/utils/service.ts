@@ -5,11 +5,11 @@ const buscar = async (
   busqueda: any,
   opciones: any,
   filtro: any,
-  loading = false,
+  loading = false
 ) => {
   delete opciones.loading;
   if (!multiple) {
-    busqueda = typeof busqueda === "string" ? { _id: [busqueda] } : busqueda;
+    busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;
     if (opciones.errorSiVacio === undefined) opciones.errorSiVacio = true;
   }
@@ -23,7 +23,7 @@ const buscar = async (
       resultado = await consulta({ busqueda, opciones, filtro }, token);
     }
     if (!resultado) {
-      throw "error resultado null";
+      throw 'error resultado null';
     }
   } catch (err) {
     throw formatApiError(err);
@@ -37,7 +37,7 @@ export const buscarUno = async (
   b = {},
   o = {},
   f = null,
-  l = false,
+  l = false
 ) => {
   return buscar(c, t, false, b, o, f, l);
 };
@@ -48,7 +48,7 @@ export const buscarVarios = async (
   b = {},
   o = {},
   f = null,
-  l = false,
+  l = false
 ) => {
   return buscar(c, t, true, b, o, f, l);
 };
@@ -59,7 +59,7 @@ const crear = async (
   multiple: boolean,
   datos: any,
   opciones: any,
-  loading = false,
+  loading = false
 ) => {
   delete opciones.loading;
   if (opciones.populate === undefined) opciones.populate = true;
@@ -73,7 +73,7 @@ const crear = async (
       resultado = await consulta({ datos: [datos], opciones }, token);
     }
     if (!resultado) {
-      throw "error resultado null";
+      throw 'error resultado null';
     }
   } catch (err) {
     throw formatApiError(err);
@@ -94,11 +94,11 @@ const modificar = async (
   busqueda: any,
   datos: any,
   opciones: any,
-  loading = false,
+  loading = false
 ) => {
   delete opciones.loading;
   if (!multiple) {
-    busqueda = typeof busqueda === "string" ? { _id: [busqueda] } : busqueda;
+    busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;
     if (opciones.errorSiVacio === undefined) opciones.errorSiVacio = true;
   }
@@ -113,7 +113,7 @@ const modificar = async (
       resultado = await consulta({ busqueda, datos, opciones }, token);
     }
     if (!resultado) {
-      throw "error resultado null";
+      throw 'error resultado null';
     }
   } catch (err) {
     throw formatApiError(err);
@@ -133,11 +133,11 @@ const borrar = async (
   multiple: boolean,
   busqueda: any,
   opciones: any,
-  loading = false,
+  loading = false
 ) => {
   delete opciones.loading;
   if (!multiple) {
-    busqueda = typeof busqueda === "string" ? { _id: [busqueda] } : busqueda;
+    busqueda = typeof busqueda === 'string' ? { _id: [busqueda] } : busqueda;
     if (opciones.limit === undefined) opciones.limit = 1;
     if (opciones.errorSiVacio === undefined) opciones.errorSiVacio = true;
   }
@@ -151,7 +151,7 @@ const borrar = async (
       resultado = await consulta({ busqueda, opciones }, token);
     }
     if (!resultado) {
-      throw "error resultado null";
+      throw 'error resultado null';
     }
   } catch (err) {
     throw formatApiError(err);

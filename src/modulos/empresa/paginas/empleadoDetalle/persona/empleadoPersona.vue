@@ -3,6 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { useEmpleadoPersona } from "./empleadoPersona.composable";
+import { useEmpleadoPersona } from './empleadoPersona';
 const { estado, authStore, store, router } = useEmpleadoPersona();
 </script>

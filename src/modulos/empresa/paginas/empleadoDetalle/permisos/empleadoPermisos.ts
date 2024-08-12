@@ -1,26 +1,26 @@
-import { useEmpresa } from "~/modulos/empresa/empresa.composable";
-import { TipoPermiso } from "~/schema/permisos";
+import { useEmpresa } from '~/modulos/empresa/empresa.composable';
+import { TipoPermiso } from '~/schema/permisos';
 
 export const useEmpleadoPermisos = () => {
   const { store, authStore, estadoEmpresa, router } = useEmpresa();
 
   // inicializacion del formulario con cada permiso posible
   const initForm = () => {
-    return TipoPermiso.map((permiso) => {
+    return TipoPermiso.map(permiso => {
       const permisoEmpleado = store.empleado.permisos.find(
-        (p) => p.permiso === permiso
+        p => p.permiso === permiso
       );
       return {
         estado: Boolean(permisoEmpleado),
         permiso: permiso,
-        vencimiento: permisoEmpleado?.vencimiento ?? null,
+        vencimiento: permisoEmpleado?.vencimiento ?? null
       };
     });
   };
 
   // estado reactivo
   const estado = reactive({
-    dataForm: [] as ReturnType<typeof initForm>,
+    dataForm: [] as ReturnType<typeof initForm>
   });
 
   // Inicializaciones
@@ -33,13 +33,13 @@ export const useEmpleadoPermisos = () => {
   const formSubmit = async () => {
     const datosPermisos = {
       borrar: { permiso: [] }, // permisos a quitar o modificar
-      agregar: [], // permisos a agregar o modificar
+      agregar: [] // permisos a agregar o modificar
     };
     // recorremos los permisos del formulario
     for (const nuevoPermiso of estado.dataForm) {
       // buscamos el permiso correspondiente donde el empleado
       const permisoActual = store.empleado.permisos.find(
-        (p) => p.permiso === nuevoPermiso.permiso
+        p => p.permiso === nuevoPermiso.permiso
       );
       console.log(permisoActual?.permiso, nuevoPermiso.estado);
       // modificacion o delecion
@@ -50,7 +50,7 @@ export const useEmpleadoPermisos = () => {
       if (nuevoPermiso.estado) {
         datosPermisos.agregar.push({
           permiso: nuevoPermiso.permiso,
-          vencimiento: nuevoPermiso.vencimiento,
+          vencimiento: nuevoPermiso.vencimiento
         });
       }
     }
@@ -61,18 +61,18 @@ export const useEmpleadoPermisos = () => {
         {
           empleados: {
             buscar: {
-              _id: [store.empleado._id],
+              _id: [store.empleado._id]
             },
             modificar: {
               permisos: {
                 borrar: datosPermisos.borrar,
-                agregar: datosPermisos.agregar,
-              },
-            },
-          },
+                agregar: datosPermisos.agregar
+              }
+            }
+          }
         },
         {
-          loading: true,
+          loading: true
           // aceptarInexistentes: true,
         }
       );
@@ -82,7 +82,7 @@ export const useEmpleadoPermisos = () => {
     }
     // reinicializamos el formulario
     await store.refreshEmpleados();
-    NotifySucessCenter("Permisos cambiados correctamente");
+    NotifySucessCenter('Permisos cambiados correctamente');
   };
 
   return {
@@ -90,6 +90,6 @@ export const useEmpleadoPermisos = () => {
     store,
     authStore,
     router,
-    formSubmit,
+    formSubmit
   };
 };

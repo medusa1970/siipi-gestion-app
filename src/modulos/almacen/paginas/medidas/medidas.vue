@@ -3,34 +3,30 @@
     <Tabla
       :rows="rowsTabla"
       :columns="columnsTabla"
-      :defaultImage="MedidaImage"
-    >
+      :defaultImage="MedidaImage">
       <template #dropdown>
         <div class="w-full flex" style="align-items: center">
           <input-text
             label="Buscar"
             labelAdentro
             @update="(v) => (estado.filtros.buscar = v as string)"
-            noSlot
-          />
+            noSlot />
           <q-btn
             size="12px"
             icon="add"
             color="green"
             style="height: 16px; width: 16px; margin: 5px 10px"
-            @click="() => (estado.modal.formCrearMedida = true)"
-          />
+            @click="() => (estado.modal.formCrearMedida = true)" />
         </div>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group push @click="(e) => e.stopPropagation()">
+        <q-btn-group push @click="e => e.stopPropagation()">
           <q-btn
             @click="goTo(router, 'medida', { id: row._id })"
             icon="edit"
             class="p-1"
             color="black"
-            size="sm"
-          />
+            size="sm" />
         </q-btn-group>
       </template>
       <template #body-expand="{ row }">
@@ -38,8 +34,7 @@
           <q-card
             class="mr-3 mb-3"
             v-for="tipoEmpaque in row.tipoEmpaques"
-            :key="tipoEmpaque._id"
-          >
+            :key="tipoEmpaque._id">
             <q-card-section>
               <p>Nombre: {{ tipoEmpaque.nombre }}</p>
               <p>Abreviacion: {{ tipoEmpaque.abreviacion }}</p>
@@ -58,48 +53,50 @@
 </template>
 
 <script setup lang="ts">
-import { useMedidas } from "./medidas.composable";
+import { useMedidas } from './medidas.composable';
 const { estado, store, authStore, router, rowsTabla, handleMedidaCreada } =
   useMedidas();
 
-import MedidaImage from "@/assets/img/noHayMedida.png";
-import formMedida from "@/modulos/almacen/forms/formMedida.vue";
+import MedidaImage from '@/assets/img/noHayMedida.png';
+import formMedida from '@/modulos/almacen/forms/formMedida.vue';
 
-provide("infoPagina", {
-  titulo: "Gestion de medidas",
-  camino: [{ label: "Medidas", to: "medidas" }],
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'Gestion de medidas',
+    camino: [{ label: 'Medidas', to: 'medidas' }]
+  }
 });
 
 const columnsTabla = [
   {
-    name: "imagen",
-    label: "Imagen",
+    name: 'imagen',
+    label: 'Imagen',
     imagen: true,
-    style: "width:50px; margin:5px; padding: 5px",
-    align: "center",
-    field: (row: any) => row.imagen?.cloudinaryUrl,
+    style: 'width:50px; margin:5px; padding: 5px',
+    align: 'center',
+    field: (row: any) => row.imagen?.cloudinaryUrl
   },
   {
-    name: "nombre",
-    label: "Nombre",
-    style: "width:50px; margin:5px; padding: 5px; width:100%",
-    align: "left",
+    name: 'nombre',
+    label: 'Nombre',
+    style: 'width:50px; margin:5px; padding: 5px; width:100%',
+    align: 'left',
     field: (row: any) => row.nombre,
-    sortable: true,
+    sortable: true
   },
   {
-    name: "abreviacio",
-    label: "Abreviacion",
-    style: "width:50px; margin:5px; padding: 5px; width:100%",
-    align: "left",
+    name: 'abreviacio',
+    label: 'Abreviacion',
+    style: 'width:50px; margin:5px; padding: 5px; width:100%',
+    align: 'left',
     field: (row: any) => row.abreviacion,
-    sortable: true,
+    sortable: true
   },
   {
-    name: "actions",
-    label: "",
-    align: "center",
-    slot: true,
-  },
+    name: 'actions',
+    label: '',
+    align: 'center',
+    slot: true
+  }
 ];
 </script>

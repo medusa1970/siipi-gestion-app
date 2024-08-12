@@ -11,6 +11,7 @@ import type {
   BuscarOpciones,
   BuscarPersonaDto,
   BuscarProductoDto,
+  BuscarTransaccionDto,
   Catalogo,
   Categoria,
   CrearAccionDto,
@@ -23,6 +24,7 @@ import type {
   CrearOpciones,
   CrearPersonaDto,
   CrearProductoDto,
+  CrearTransaccionDto,
   Entidad,
   Marca,
   Medida,
@@ -36,6 +38,7 @@ import type {
   ModificarOpciones,
   ModificarPersonaDto,
   ModificarProductoDto,
+  ModificarTransaccionDto,
   Oferta,
   Persona,
   Producto,
@@ -43,7 +46,8 @@ import type {
   BuscarPedidoDto,
   CrearPedidoDto,
   ModificarPedidoDto,
-  Pedido
+  Pedido,
+  Transaccion
 } from '#gql';
 
 const bu = buscarUno;
@@ -882,5 +886,61 @@ export const api = {
     o: BorrarOpciones & { loading?: boolean } = {},
     t: any = null
   ): Promise<Pedido[]> =>
-    <Pedido[]>await dv(GqlBorrarPedidos, t, b, o, o.loading)
+    <Pedido[]>await dv(GqlBorrarPedidos, t, b, o, o.loading),
+
+  /*
+   * Transacciones
+   */
+  buscarTransaccion: async (
+    b: string | BuscarTransaccionDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarTransaccionDto = {},
+    t: any = null
+  ): Promise<Transaccion> =>
+    <Transaccion>await bu(GqlBuscarTransacciones, t, b, o, f, o.loading),
+  buscarTransacciones: async (
+    b: BuscarTransaccionDto,
+    o: BuscarOpciones & { loading?: boolean } = {},
+    f: BuscarTransaccionDto = {},
+    t: any = null
+  ): Promise<Transaccion[]> =>
+    <Transaccion[]>await bv(GqlBuscarTransacciones, t, b, o, f, o.loading),
+  crearTransaccion: async (
+    d: CrearTransaccionDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion> =>
+    <Transaccion>await cu(GqlCrearTransacciones, t, d, o, o.loading),
+  crearTransacciones: async (
+    d: CrearTransaccionDto,
+    o: CrearOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion[]> =>
+    <Transaccion[]>await cv(GqlCrearTransacciones, t, d, o, o.loading),
+  modificarTransaccion: async (
+    b: string | BuscarTransaccionDto,
+    d: ModificarTransaccionDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion> =>
+    <Transaccion>await mu(GqlModificarTransacciones, t, b, d, o, o.loading),
+  modificarTransacciones: async (
+    b: BuscarTransaccionDto,
+    d: ModificarTransaccionDto,
+    o: ModificarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion[]> =>
+    <Transaccion[]>await mv(GqlModificarTransacciones, t, b, d, o, o.loading),
+  borrarTransaccion: async (
+    b: string | BuscarTransaccionDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion> =>
+    <Transaccion>await du(GqlBorrarTransacciones, t, b, o, o.loading),
+  borrarTransacciones: async (
+    b: BuscarTransaccionDto,
+    o: BorrarOpciones & { loading?: boolean } = {},
+    t: any = null
+  ): Promise<Transaccion[]> =>
+    <Transaccion[]>await dv(GqlBorrarTransacciones, t, b, o, o.loading)
 };

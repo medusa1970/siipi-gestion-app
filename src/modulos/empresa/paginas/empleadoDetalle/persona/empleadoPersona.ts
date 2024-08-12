@@ -1,4 +1,4 @@
-import { useEmpresa } from "~/modulos/empresa/empresa.composable";
+import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
 export const useEmpleadoPersona = () => {
   const { store, authStore, estadoEmpresa, router } = useEmpresa();
@@ -8,6 +8,6 @@ export const useEmpleadoPersona = () => {
     estado,
     store,
     authStore,
-    router,
+    router
   };
 };

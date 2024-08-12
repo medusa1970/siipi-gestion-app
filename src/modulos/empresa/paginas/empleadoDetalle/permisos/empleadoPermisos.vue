@@ -19,8 +19,7 @@
           labelAdentro
           noSlot
           :porDefecto="estado.dataForm[index].vencimiento"
-          @update="(v) => (estado.dataForm[index].vencimiento = v)"
-        />
+          @update="v => (estado.dataForm[index].vencimiento = v)" />
       </div>
     </div>
 
@@ -32,6 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { useEmpleadoPermisos } from "./empleadoPermisos.composable";
+import { useEmpleadoPermisos } from './empleadoPermisos';
 const { estado, authStore, store, router, formSubmit } = useEmpleadoPermisos();
 </script>

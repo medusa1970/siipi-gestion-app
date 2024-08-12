@@ -1,17 +1,17 @@
-import type { Empleado } from "#gql";
-import { useEmpresa } from "~/modulos/empresa/empresa.composable";
+import type { Empleado } from '#gql';
+import { useEmpresa } from '~/modulos/empresa/empresa.composable';
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosEmpleados = ["ADMINISTRACION"];
+export const permisosEmpleados = ['ADMINISTRACION'];
 
 /**
  * Composable para empresa/empleados
  */
 export const useEmpleados = () => {
   const { store, authStore, estadoEmpresa, router } = useEmpresa();
-  if (!authStore.autorizar(permisosEmpleados)) goTo(router, "noAutorizado");
+  if (!authStore.autorizar(permisosEmpleados)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     // lista de las empleados a recuperar del store (promisa resuelta)
@@ -20,12 +20,12 @@ export const useEmpleados = () => {
     empleado: null,
     // config de los filtros de la tabla
     filtros: {
-      buscar: "",
+      buscar: ''
     },
     // estado de los modales
     showModal: {
-      crearEmpleado: false,
-    },
+      crearEmpleado: false
+    }
   });
 
   // Inicializaciones
@@ -38,10 +38,10 @@ export const useEmpleados = () => {
     let rows = store.empleados;
     if (!rows) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, "i");
-      rows = rows.filter((empleado) => {
+      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      rows = rows.filter(empleado => {
         return regex.test(
-          JSON.stringify(empleado) + sinAcentos(JSON.stringify(empleado)),
+          JSON.stringify(empleado) + sinAcentos(JSON.stringify(empleado))
         );
       });
     }
@@ -50,8 +50,8 @@ export const useEmpleados = () => {
   });
 
   // se creó una empleado
-  const handleEmpleadoCreado = async (empleado) => {
-    NotifySucessCenter("Empleado creado correctamente");
+  const handleEmpleadoCreado = async empleado => {
+    NotifySucessCenter('Empleado creado correctamente');
     estado.showModal.crearEmpleado = false;
   };
 
@@ -61,6 +61,6 @@ export const useEmpleados = () => {
     authStore,
     router,
     rowsTabla,
-    handleEmpleadoCreado,
+    handleEmpleadoCreado
   };
 };

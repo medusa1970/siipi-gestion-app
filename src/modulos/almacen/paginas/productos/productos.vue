@@ -159,28 +159,13 @@
       </template>
 
       <template #body-cell-acciones="{ row }">
-        <q-btn-group push>
-          <q-btn
-            color="green"
-            icon="visibility"
-            class="p-1"
-            size="sm"
-            @click="() => {}">
-            <q-tooltip> Ver informacion producto </q-tooltip>
-          </q-btn>
-          <q-btn
+        <q-btn-group>
+          <btnAccion
+            icono="edit black"
             @click="
-              e => {
-                e.stopPropagation();
-                goTo(router, 'producto', { id: row._id });
-              }
-            "
-            icon="edit"
-            class="p-1"
-            color="black"
-            size="sm">
-            <q-tooltip> Modificar </q-tooltip>
-          </q-btn>
+              store.producto = row;
+              goTo(router, 'producto', { id: row._id });
+            " />
           <q-btn
             @click="
               e => {
@@ -308,8 +293,10 @@ import type { CategoriaSelectOpcion } from '../../almacen.interface';
 const { handleProductoCreado, handleOfertaSimpleCreada } = useProductos();
 
 provide('infoPagina', {
-  titulo: 'Gestion de productos',
-  camino: [{ label: 'Productos', to: 'productos' }]
+  infoPagina: {
+    titulo: 'Gestion de productos',
+    camino: [{ label: 'Productos', to: 'productos' }]
+  }
 });
 
 // opciones

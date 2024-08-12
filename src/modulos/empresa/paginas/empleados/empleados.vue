@@ -43,23 +43,20 @@
     slot: true,
   },
 ]"
-      :defaultImage="EmpleadoImage"
-    >
+      :defaultImage="EmpleadoImage">
       <template #dropdown>
         <div class="w-full flex" style="align-items: center">
           <input-text
             label="Buscar"
             labelAdentro
             @update="(v) => (estado.filtros.buscar = v as string)"
-            noSlot
-          />
+            noSlot />
           <q-btn
             size="12px"
             icon="add"
             color="green"
             style="height: 16px; width: 16px; margin: 5px 10px"
-            @click="() => (estado.showModal.crearEmpleado = true)"
-          />
+            @click="() => (estado.showModal.crearEmpleado = true)" />
         </div>
       </template>
       <template #body-cell-nombre="{ val, row }">
@@ -68,22 +65,12 @@
         <i>{{ row.descripcion }}</i>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group push @click="(e) => e.stopPropagation()">
-          <q-btn
-            @click="
-              (e) => {
-                e.stopPropagation();
-                console.log(getRoute(router, 'empleado', { id: row._id }));
-                goTo(router, 'empleado', { id: row._id });
-              }
-            "
-            icon="edit"
-            class="p-1"
-            color="black"
-            size="sm"
-          >
+        <q-btn-group push @click="e => e.stopPropagation()">
+          <btnAccion
+            icono="edit black"
+            @click="goTo(router, 'empleado', { id: row._id })">
             <q-tooltip> Modificar </q-tooltip>
-          </q-btn>
+          </btnAccion>
         </q-btn-group>
       </template>
     </Tabla>
@@ -97,15 +84,17 @@
 </template>
 
 <script setup lang="ts">
-import { useEmpleados } from "./empleados.composable";
+import { useEmpleados } from './empleados';
 const { estado, store, authStore, router, rowsTabla, handleEmpleadoCreado } =
   useEmpleados();
-import EmpleadoImage from "@/assets/img/noHayEmpleado.png";
-import formEmpleado from "@/modulos/empresa/forms/formEmpleado.vue";
+import EmpleadoImage from '@/assets/img/noHayEmpleado.png';
+import formEmpleado from '@/modulos/empresa/forms/formEmpleado.vue';
 
-provide("infoPagina", {
-  titulo: "Gestion de empleados",
-  camino: [{ label: "Empleados", to: "empleados" }],
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'Gestion de empleados',
+    camino: [{ label: 'Empleados', to: 'empleados' }]
+  }
 });
 
 onMounted(async () => {

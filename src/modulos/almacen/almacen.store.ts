@@ -4,11 +4,11 @@ import type {
   Marca,
   Medida,
   Producto,
-  Problema,
-} from "#gql";
-import localforage from "localforage";
-import { apiAlmacen } from "@/modulos/almacen/API/almacen.api";
-import { useAuthStore } from "../main/useAuthStore";
+  Problema
+} from '#gql';
+import localforage from 'localforage';
+import { apiAlmacen } from '@/modulos/almacen/API/almacen.api';
+import { useAuthStore } from '../main/useAuthStore';
 
 interface storeProps {
   productos: Producto[] | null;
@@ -26,7 +26,7 @@ interface storeProps {
   entidad: Entidad | null; // entidad corriente
 }
 
-export const storeAlmacen = defineStore("almacen", {
+export const storeAlmacen = defineStore('almacen', {
   state: (): storeProps => ({
     productos: null,
     marcas: null,
@@ -38,27 +38,44 @@ export const storeAlmacen = defineStore("almacen", {
     marca: null,
     medida: null,
     proveedor: null,
-    problemas: null,
+    problemas: null
   }),
 
-  getters: {},
+  getters: {
+    productoId: state => useRoute()?.params.id
+  },
 
   actions: {
+    /**
+     * define el producto actual que se esta modificando en pagina de detalles
+     */
+    async useProducto(): Promise<void> {
+      if (!this.producto || this.producto._id !== this.productoId) {
+        try {
+          this.producto = await api.buscarProducto_basico(
+            this.productoId as string
+          );
+        } catch (err) {
+          errFallBack(err);
+        }
+      }
+    },
+
     /**
      * Retorna la lista de los productos desde el indexedDb o desde la base
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
-      this.productos = (await localforage.getItem("productos")) as Producto[];
+      this.productos = (await localforage.getItem('productos')) as Producto[];
       if (!this.productos || actualizarDB) {
         try {
           this.productos = await api.buscarProductos_basico(
             {},
-            { sort: "-_modificado -_creado" },
+            { sort: '-_modificado -_creado' }
           );
           await localforage.setItem(
-            "productos",
-            JSON.parse(JSON.stringify(this.productos)),
+            'productos',
+            JSON.parse(JSON.stringify(this.productos))
           );
         } catch (err) {
           errFallBack(err);
@@ -91,7 +108,7 @@ export const storeAlmacen = defineStore("almacen", {
     },
     getCategoria(id: string): Categoria {
       if (this.categoriaArbol === null) return null;
-      const f = (categoria) => {
+      const f = categoria => {
         if (categoria._id === id) {
           return categoria;
         } else if (categoria.hijas) {
@@ -112,7 +129,7 @@ export const storeAlmacen = defineStore("almacen", {
     async getMarcas(): Promise<Marca[]> {
       if (this.marcas == null) {
         try {
-          this.marcas = await api.buscarMarcas({}, { sort: "nombre" });
+          this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
           return this.marcas;
         } catch (err) {
           errFallBack(err);
@@ -133,8 +150,8 @@ export const storeAlmacen = defineStore("almacen", {
       if (this.proveedores == null) {
         try {
           this.proveedores = await api.buscarEntidades_basico(
-            { tipo: ["PROVEEDOR"] },
-            { sort: "nombre" },
+            { tipo: ['PROVEEDOR'] },
+            { sort: 'nombre' }
           );
           return this.proveedores;
         } catch (err) {
@@ -176,7 +193,7 @@ export const storeAlmacen = defineStore("almacen", {
       if (this.entidad == null) {
         try {
           this.entidad = await api.buscarEntidad_bloques(
-            useAuthStore().negocio._id,
+            useAuthStore().negocio._id
           );
           return this.entidad;
         } catch (err) {
@@ -198,7 +215,7 @@ export const storeAlmacen = defineStore("almacen", {
       if (!this.problemas) {
         try {
           const entidad = await api.buscarEntidad_problemas(
-            useAuthStore().getNegocio._id,
+            useAuthStore().getNegocio._id
           );
           this.problemas = entidad.problemas;
           // this.problemas = entidad.problemas.sort((p1, p2) =>
@@ -217,10 +234,10 @@ export const storeAlmacen = defineStore("almacen", {
       // if (this.problema) {
       //   await this.useProblema(this.problema._id);
       // }
-    },
+    }
   },
 
   persist: {
-    paths: ["producto", "marcas", "medidas", "proveedores", "problemas"],
-  },
+    paths: ['producto', 'marcas', 'medidas', 'proveedores', 'problemas']
+  }
 });

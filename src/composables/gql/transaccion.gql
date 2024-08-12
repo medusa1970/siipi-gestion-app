@@ -1,0 +1,93 @@
+query buscarTransacciones(
+  $busqueda: BuscarTransaccionDto = {}
+  $opciones: BuscarOpciones = {}
+  $filtro: BuscarTransaccionDto = {}
+) {
+  buscarTransacciones(
+    busqueda: $busqueda
+    opciones: $opciones
+    filtro: $filtro
+  ) {
+    _id
+    _creado
+    _modificado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+  }
+}
+
+mutation crearTransacciones(
+  $datos: [CrearTransaccionDto!]!
+  $opciones: CrearOpciones = {}
+) {
+  crearTransacciones(datos: $datos, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+  }
+}
+
+mutation modificarTransacciones(
+  $busqueda: BuscarTransaccionDto!
+  $datos: ModificarTransaccionDto!
+  $opciones: ModificarOpciones = {}
+) {
+  modificarTransacciones(
+    busqueda: $busqueda
+    datos: $datos
+    opciones: $opciones
+  ) {
+    _id
+    _creado
+    _modificado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+  }
+}
+
+mutation borrarTransacciones(
+  $busqueda: BuscarTransaccionDto!
+  $opciones: BorrarOpciones = {}
+) {
+  borrarTransacciones(busqueda: $busqueda, opciones: $opciones) {
+    _id
+    _creado
+    _modificado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+  }
+}

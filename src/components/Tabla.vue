@@ -1,16 +1,14 @@
 <template>
   <q-table
-    id="foo"
     flat
     :rows="rows"
     :rowKey="rowKey"
     :columns="columns"
+    :footer="footer"
     :defaultImage="defaultImage"
     :filter="filter"
-    class="border-none"
-    :rows-per-page-options="[30]"
-    style="max-height: 82.5vh; overflow-y: auto"
-  >
+    :dense
+    :rows-per-page-options="[30]">
     <template #top>
       <slot name="dropdown" />
     </template>
@@ -20,22 +18,19 @@
           1 == props.rowIndex % 2 ? 'expand odd' : 'expand even'
         } q-virtual-scroll--with-prev`"
         :props="props"
-        @click="props.expand = !props.expand"
-      >
+        @click="props.expand = !props.expand">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
           <div v-if="col.slot">
             <slot
               :name="`body-cell-${col.name}`"
               :val="col.value"
-              :row="props.row"
-            />
+              :row="props.row" />
           </div>
           <div v-else-if="col.imagen">
             <q-img
               :src="col.value ?? defaultImage"
               spinner-color="black"
-              class="cell-image"
-            />
+              class="cell-image" />
           </div>
           <div v-else>
             {{ col.value }}
@@ -45,45 +40,53 @@
       <q-tr
         :class="1 == props.rowIndex % 2 ? 'expand odd' : 'expand even'"
         v-if="!disableExpand && props.expand"
-        :props="props"
-      >
+        :props="props">
         <q-td colspan="100%">
           <slot name="body-expand" :row="props.row" />
         </q-td>
+      </q-tr>
+    </template>
+    <template v-slot:bottom-row v-if="footer">
+      <q-tr
+        ><q-td v-for="cell in footer">{{ cell }} </q-td>
       </q-tr>
     </template>
   </q-table>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-const filter = ref("");
+import { ref } from 'vue';
+const filter = ref('');
 const props = withDefaults(
   defineProps<{
     rows: Array<any>;
     columns: Array<any>;
+    footer: Array<any>;
     defaultImage?: any;
     rowKey?: string;
     conBusqueda?: boolean;
     watchFilter?: string;
     titulo?: string;
     disableExpand?: boolean;
+    dense?: boolean;
   }>(),
   {
     defaultImage: null,
-    rowKey: "_id",
-    watchFilter: "",
+    rowKey: '_id',
+    watchFilter: '',
     conBusqueda: false,
-    titulo: "",
+    titulo: '',
     disableExpand: false,
-  },
+    dense: false,
+    footer: null
+  }
 );
 watch(
   () => props.watchFilter,
   () => {
     filter.value = props.watchFilter;
   },
-  { immediate: false },
+  { immediate: false }
 );
 </script>
 
@@ -117,43 +120,36 @@ watch(
   opacity: 1;
 }
 
-.q-table th {
-  background-color: #777;
-  color: white;
-}
-.q-table tr.odd {
-  background-color: #e7e9eb;
-}
-.q-table tr.even {
-  background-color: #fff;
-  border: 2px solid blue;
-}
-
-/* .q-table tr.expand.odd {
-  background-color: #e7e9eb;
-}
-.q-table tr.expand.even {
-  background-color: #fff;
-} */
-.q-table tr.expand .q-card {
-  background-color: #f8f8f8;
-}
-
-/* QUASAR TABLE */
-.q-table thead,
-.q-table tr,
-.q-table th,
-.q-table td {
-  border: none;
-  /* @apply border-gray-400; */
-}
 .q-table {
-  @apply border-t-[1px]
-  /* border: 1px solid #f6921e; */
-  /* @apply border-[1px] border-gray-200; */;
-}
-.q-table tr th {
-  font-weight: bold;
-  text-transform: uppercase;
+  max-height: 82.5vh;
+  overflow-y: auto;
+  border: none;
+
+  thead,
+  tr,
+  th,
+  td {
+    border: none;
+  }
+  thead {
+    color: red;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #888888;
+    color: white;
+  }
+  tr {
+    height: 10px !important;
+  }
+  tr.odd {
+    background-color: #e7e9eb;
+  }
+  tr.even {
+    background-color: #fff;
+    border: 2px solid blue;
+  }
+  tr.expand .q-card {
+    background-color: #f8f8f8;
+  }
 }
 </style>

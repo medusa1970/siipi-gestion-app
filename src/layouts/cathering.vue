@@ -16,8 +16,8 @@ import { permisosMedidas } from '~/modulos/almacen/paginas/medidas/medidas.compo
 import { permisosProductos } from '~/modulos/almacen/paginas/productos/productos.composable';
 import { permisosProveedores } from '~/modulos/almacen/paginas/proveedores/proveedores.composable';
 import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable';
-import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados.composable';
-import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria.composable';
+import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
+import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import { permisosCatalogos } from '~/modulos/ofertas/paginas/catalogos/catalogos.composable';
 import { permisosOfertas } from '~/modulos/ofertas/paginas/ofertas/ofertas.composable';

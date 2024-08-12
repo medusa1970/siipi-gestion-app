@@ -99,24 +99,13 @@
       </template> -->
 
       <template #body-cell-acciones="{ val, row }">
-        <q-btn-group push>
-          <q-btn color="green" icon="visibility" class="p-1" size="sm">
-            <q-tooltip> Ver informacion oferta </q-tooltip>
-          </q-btn>
-
-          <q-btn
-            color="black"
-            icon="edit"
-            class="p-1"
-            size="sm"
+        <q-btn-group push @click="e => e.stopPropagation()">
+          <btnAccion
+            icono="edit black"
             @click="
-              e => {
-                e.stopPropagation();
-                goTo(router, 'oferta', { id: row._id });
-              }
-            ">
-            <q-tooltip> Editar producto </q-tooltip></q-btn
-          >
+              store.oferta = row;
+              goTo(router, 'oferta', { id: row._id });
+            " />
         </q-btn-group>
       </template>
 
@@ -223,8 +212,10 @@ import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 
 provide('infoPagina', {
-  titulo: 'Gestion de ofertas',
-  camino: [{ label: 'Ofertas', to: 'ofertas' }]
+  infoPagina: {
+    titulo: 'Gestion de ofertas',
+    camino: [{ label: 'Ofertas', to: 'ofertas' }]
+  }
 });
 
 // opciones

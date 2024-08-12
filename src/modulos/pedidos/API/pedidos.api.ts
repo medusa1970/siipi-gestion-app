@@ -108,7 +108,7 @@ export const apiPedido = {
   ) => {
     try {
       console.log(pedidosIDS, tipo);
-      const menu = extraer(
+      const pedidos = extraer(
         await GqlCambiarEstadoItemsPorOfertas_aceptar(
           {
             busqueda: { _id: pedidosIDS },
@@ -116,12 +116,13 @@ export const apiPedido = {
               estado: 'aceptado'
             },
             tipo,
-            opciones: { limit: 1, errorSiVacio: true }
+            opciones: {}
           }, //@ts-ignore
           useGqlToken(token)
         )
       );
-      return menu;
+      console.log(pedidos);
+      return pedidos;
     } catch (err) {
       throw formatApiError(err);
     }

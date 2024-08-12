@@ -190,6 +190,7 @@
                     round
                     size="10px"
                     padding="2px"
+                    @click="ajustarOferta(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ajustar</q-tooltip
                     ></q-btn
@@ -210,6 +211,7 @@
                     :disable="
                       props.row.estado.some(e => e.estado === 'preparado')
                     "
+                    @click="ofertaPreparado(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Preparado</q-tooltip
                     ></q-btn
@@ -222,6 +224,7 @@
                     round
                     size="12px"
                     padding="2px"
+                    @click="verPedidoPuntos(props.row)"
                     ><q-tooltip class="bg-gray-400-500"
                       >Ver Producto</q-tooltip
                     ></q-btn
@@ -234,6 +237,41 @@
       </div>
     </q-tab-panel>
   </q-tab-panels>
+
+  <!-- MODAL -->
+  <q-dialog v-model="estado.modal.isShowPedidos" persistent>
+    <q-card class="w-[370px]" style="padding: 0.5rem !important">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-lg font-semibold">Pedidos puntos</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <!-- <h1 class="bg-gray-300 text-center my-2">puntos</h1> -->
+        <table class="w-full !my-2">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Ruta</th>
+              <th>Orden</th>
+            </tr>
+          </thead>
+          <tbody class="[&>tr]:border-b-[1px]">
+            <tr
+              v-for="punto in estado.pedidoPuntos"
+              :key="punto"
+              class="text-center">
+              <td>{{ punto.nombre }}</td>
+              <td>{{ punto.cantidad }}</td>
+              <td>{{ punto.ruta }}</td>
+              <td>{{ punto.orden }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -244,9 +282,12 @@ const pedidoStore = storePedido();
 const {
   estado,
   aceptarTodosLosPedidosSolicitables,
-  aceptarTodosLosPedidosDirectos
+  aceptarTodosLosPedidosDirectos,
+  verPedidoPuntos,
+  ofertaPreparado,
+  ajustarOferta
 } = useGlobal();
-console.log(estado.tabPuntos);
+// console.log(estado.tabPuntos);
 
 const pedidoGlobal = [
   {
@@ -296,5 +337,4 @@ const pedidoGlobal = [
     align: 'right'
   }
 ];
-// console.log(pedidoGlobal);
 </script>

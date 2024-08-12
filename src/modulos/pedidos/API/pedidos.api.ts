@@ -126,5 +126,62 @@ export const apiPedido = {
     } catch (err) {
       throw formatApiError(err);
     }
+  },
+
+  pedido_prepararOfertas: async (
+    pedidosIDS: string[],
+    ofertaIds: string[],
+    token: any
+  ) => {
+    try {
+      console.log(pedidosIDS, ofertaIds);
+      const pedidos = extraer(
+        await GqlCambiarEstadoItemsPorOfertas_preparar(
+          {
+            busqueda: { _id: pedidosIDS },
+            ofertaIds,
+            estado: {
+              estado: 'preparado'
+            },
+            opciones: {}
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  pedido_ajustarOfertas: async (
+    pedidoIds: string[],
+    ofertaId: string,
+    comentario: string,
+    diferenciaTotal: number,
+    token?: any
+  ) => {
+    try {
+      // console.log(pedidosIDS, ofertaIds);
+      const pedidos = extraer(
+        await GqlAjustarItemsPorOferta(
+          {
+            busqueda: { _id: pedidoIds },
+            ofertaId,
+            estado: {
+              estado: 'ajustado',
+              valor: [diferenciaTotal],
+              comentario
+            }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
   }
 };

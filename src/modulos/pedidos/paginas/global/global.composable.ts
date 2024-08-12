@@ -130,92 +130,92 @@ export const useGlobal = () => {
       (pedido: any) => pedido._id
     );
     console.log(pedidosIDS);
-    // const ofertasAceptadas = await apiPedido.pedido_aceptarOfertas(
-    //   pedidosIDS,
-    //   'directo',
-    //   authStore.token
-    // );
-    // console.log(ofertasAceptadas);
-    const res = [
-      {
-        _id: '66b7d1ac7a34aac0dae428f3',
+    const ofertasAceptadas = await apiPedido.pedido_aceptarOfertas(
+      pedidosIDS,
+      'directo',
+      authStore.token
+    );
+    console.log(ofertasAceptadas);
+    // const res = [
+    //   {
+    //     _id: '66b7d1ac7a34aac0dae428f3',
 
-        estado: [{ estado: 'iniciado' }],
+    //     estado: [{ estado: 'iniciado' }],
 
-        comprador: {
-          _id: '65a1a96453602a2180052e51',
+    //     comprador: {
+    //       _id: '65a1a96453602a2180052e51',
 
-          nombre: 'Irala',
+    //       nombre: 'Irala',
 
-          ruta: [1, 1, 1, 1, 2],
+    //       ruta: [1, 1, 1, 1, 2],
 
-          orden: [10, 10, 10, 10, 10]
-        },
+    //       orden: [10, 10, 10, 10, 10]
+    //     },
 
-        items: [
-          {
-            _id: '66b7d1ac7a34aac0dae428f6',
+    //     items: [
+    //       {
+    //         _id: '66b7d1ac7a34aac0dae428f6',
 
-            cantidad: 12,
+    //         cantidad: 12,
 
-            oferta: {
-              _id: '6201c1c8df85a46e2f0b94b8',
+    //         oferta: {
+    //           _id: '6201c1c8df85a46e2f0b94b8',
 
-              nombre: 'Cuñape (unidad)',
+    //           nombre: 'Cuñape (unidad)',
 
-              ingredientes: [
-                {
-                  tipo: 'SIMPLE',
+    //           ingredientes: [
+    //             {
+    //               tipo: 'SIMPLE',
 
-                  producto: {
-                    _id: '661ec1bddf85a46e2f0b90d0',
-                    nombre: 'Cuñape'
-                  },
+    //               producto: {
+    //                 _id: '661ec1bddf85a46e2f0b90d0',
+    //                 nombre: 'Cuñape'
+    //               },
 
-                  cantidad: 1
-                }
-              ]
-            },
+    //               cantidad: 1
+    //             }
+    //           ]
+    //         },
 
-            estado: [
-              { estado: 'aceptado', _creado: '2024-08-10T20:46:36.491Z' }
-            ]
-          },
+    //         estado: [
+    //           { estado: 'aceptado', _creado: '2024-08-10T20:46:36.491Z' }
+    //         ]
+    //       },
 
-          {
-            _id: '66b7d1ac7a34aac0dae428f9',
+    //       {
+    //         _id: '66b7d1ac7a34aac0dae428f9',
 
-            cantidad: 10,
+    //         cantidad: 10,
 
-            oferta: {
-              _id: '6201c1c8df85a46e2f0b94c9',
+    //         oferta: {
+    //           _id: '6201c1c8df85a46e2f0b94c9',
 
-              nombre: 'Empanada de queso (unidad)',
+    //           nombre: 'Empanada de queso (unidad)',
 
-              ingredientes: [
-                {
-                  tipo: 'SIMPLE',
+    //           ingredientes: [
+    //             {
+    //               tipo: 'SIMPLE',
 
-                  producto: {
-                    _id: '661ec1bddf85a46e2f0b90e1',
+    //               producto: {
+    //                 _id: '661ec1bddf85a46e2f0b90e1',
 
-                    nombre: 'Empanada de queso'
-                  },
+    //                 nombre: 'Empanada de queso'
+    //               },
 
-                  cantidad: 1
-                }
-              ]
-            },
+    //               cantidad: 1
+    //             }
+    //           ]
+    //         },
 
-            estado: [
-              { estado: 'confirmado', _creado: '2024-08-10T20:46:36.491Z' }
-            ]
-          }
-        ]
-      }
-    ];
+    //         estado: [
+    //           { estado: 'confirmado', _creado: '2024-08-10T20:46:36.491Z' }
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // ];
 
-    const result = res.reduce((acumulador: any, pedido: any) => {
+    const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
       pedido.items.forEach((item: any) => {
         // console.log(item);
         if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {

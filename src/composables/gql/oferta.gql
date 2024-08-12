@@ -48,6 +48,8 @@ query buscarOfertas(
       precioConFactura
       precioSinFactura
     }
+    solicitable
+    tags
   }
 }
 
@@ -92,6 +94,8 @@ mutation crearOfertas(
     catalogo {
       _id
     }
+    solicitable
+    tags
   }
 }
 
@@ -137,6 +141,8 @@ mutation modificarOfertas(
     catalogo {
       _id
     }
+    solicitable
+    tags
   }
 }
 
@@ -181,5 +187,7 @@ mutation borrarOfertas(
     catalogo {
       _id
     }
+    solicitable
+    tags
   }
 }

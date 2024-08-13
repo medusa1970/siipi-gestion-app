@@ -11,55 +11,48 @@
       <input-text
         label="Nombre"
         labelAdentro
-        @update="(v) => (nombre.value = v)"
-        requerido
-      />
+        @update="v => (nombre.value = v)"
+        requerido />
       <input-text
         label="Apellido"
         labelAdentro
-        @update="(v) => (apellido.value = v)"
-        requerido
-      />
+        @update="v => (apellido.value = v)"
+        requerido />
       <input-text
         label="Usuario"
         labelAdentro
-        @update="(v) => (usuario.value = v)"
+        @update="v => (usuario.value = v)"
         :error="usuario.error"
-        requerido
-      />
+        requerido />
       <input-text
         label="Correo"
         labelAdentro
-        @update="(v) => (correo.value = v)"
+        @update="v => (correo.value = v)"
         :error="correo.error"
         requerido
-        :rules="[useRules.correo()]"
-      />
+        :rules="[useRules.correo()]" />
       <input-text
         label="Telefono"
         labelAdentro
-        @update="(v) => (telefono.value = v)"
-        :error="telefono.value"
+        @update="v => (telefono.value = v)"
+        :error="telefono.error"
         requerido
-        :rules="[useRules.telefono()]"
-      />
+        :rules="[useRules.telefono()]" />
       <input-text
         type="password"
         label="Contraseña"
         labelAdentro
-        @update="(v) => (password.value = v)"
+        @update="v => (password.value = v)"
         requerido
         :rules="[useRules.password]"
-        icono="key"
-      />
+        icono="key" />
       <input-text
         type="password"
         label="Repetir"
         labelAdentro
-        @update="(v) => (password2.value = v)"
+        @update="v => (password2.value = v)"
         :rules="[password2Rule]"
-        icono="key"
-      />
+        icono="key" />
       <div class="mt-1 w-full text-center">
         <q-btn no-caps label="Confirmar" type="submit" color="primary" />
       </div>
@@ -72,11 +65,10 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["go"]);
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import { apiAuth } from "~/modulos/main/API/auth.api";
+const emits = defineEmits(['go']);
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { apiAuth } from '~/modulos/main/API/auth.api';
 const authStore = useAuthStore();
-const router = useRouter();
 
 const nombre = reactiveInput();
 const apellido = reactiveInput();
@@ -85,8 +77,8 @@ const correo = reactiveInput();
 const telefono = reactiveInput();
 const password = reactiveInput();
 const password2 = reactiveInput();
-const password2Rule = (p) =>
-  p !== password.value ? "Las contraseñas no coinciden" : true;
+const password2Rule = p =>
+  p !== password.value ? 'Las contraseñas no coinciden' : true;
 
 /**
  * Submit del formulario
@@ -99,23 +91,26 @@ const submit = async () => {
       usuario: usuario.value,
       correo: correo.value,
       telefono: telefono.value,
-      contrasena: password.value,
+      contrasena: password.value
     });
     authStore.cookie.registrado = persona;
   } catch (err) {
-    if (isApiNotFound(err, "correo")) {
-      correo.error = "Este email ya está registrado";
-    } else if (isApiBadRequest(err, "correo")) {
-      telefono.error = "Este telefono ya está registrado";
-    } else if (isApiBadRequest(err, "correo")) {
-      usuario.error = "Este usuario ya está registrado";
+    if (isApiBadRequest(err, 'duplicado', 'usuario')) {
+      usuario.error = 'Este usuario ya está registrado';
+      return;
+    } else if (isApiBadRequest(err, 'duplicado', 'correo')) {
+      correo.error = 'Este email ya está registrado';
+      return;
+    } else if (isApiBadRequest(err, 'duplicado', 'telefono')) {
+      telefono.error = 'Este telefono ya está registrado';
+      return;
     } else {
-      errFallBack(err);
+      errFailback(err);
       return;
     }
   }
 
   // cambiar a la seccion siguiente
-  emits("go", "registro2");
+  emits('go', 'registro2');
 };
 </script>

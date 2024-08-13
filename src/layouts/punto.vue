@@ -1,6 +1,9 @@
 <template>
-  <!-- <DeployStatus /> -->
-  <layout-common :menuList="menu" :portada-img="PortadaCathering" cathering>
+  <layout-common :menuList="menu" :portada-img="PortadaCathering" punto>
+    <template #slot>
+      <slot />
+    </template>
+
     <template #actionPedido>
       <q-btn-group push @click="e => e.stopPropagation()">
         <q-btn
@@ -22,9 +25,6 @@
           style="border-radius: 0" />
       </q-btn-group>
     </template>
-    <template #slot>
-      <slot />
-    </template>
   </layout-common>
 </template>
 
@@ -34,17 +34,10 @@ import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
-import { permisosBloques } from '~/modulos/almacen/paginas/bloques/bloques.composable';
-import { permisosCategoria } from '~/modulos/almacen/paginas/categorias/categorias.composable';
-import { permisosMarcas } from '~/modulos/almacen/paginas/marcas/marcas.composable';
-import { permisosMedidas } from '~/modulos/almacen/paginas/medidas/medidas.composable';
-import { permisosProductos } from '~/modulos/almacen/paginas/productos/productos.composable';
 import { permisosProveedores } from '~/modulos/almacen/paginas/proveedores/proveedores.composable';
 import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable';
 import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados.composable';
 import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria.composable';
-import { permisosCatalogos } from '~/modulos/ofertas/paginas/catalogos/catalogos.composable';
-import { permisosOfertas } from '~/modulos/ofertas/paginas/ofertas/ofertas.composable';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 

@@ -5,19 +5,17 @@
       label="Nombre"
       info="Info #40"
       :porDefecto="estado.dataForm.nombre"
-      @update="(v) => (estado.dataForm.nombre = v)"
-      requerido
-    />
+      @update="v => (estado.dataForm.nombre = v)"
+      requerido />
 
     <!-- abreviacion -->
     <input-text
       label="Abreviacion"
       info="Info #41"
       :porDefecto="estado.dataForm.abreviacion"
-      @update="(v) => (estado.dataForm.abreviacion = v)"
+      @update="v => (estado.dataForm.abreviacion = v)"
       requerido
-      :maxLength="30"
-    />
+      :maxLength="30" />
 
     <!-- descripcion -->
     <input-text
@@ -25,8 +23,7 @@
       info="Info #42"
       autogrow
       :porDefecto="estado.dataForm.descripcion"
-      @update="(v) => (estado.dataForm.descripcion = v)"
-    />
+      @update="v => (estado.dataForm.descripcion = v)" />
 
     <!-- Catalogo -->
     <input-select
@@ -36,15 +33,14 @@
       :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
       :watch="estado.catalogoAncestro"
       @update="
-        (v) => {
+        v => {
           estado.catalogoAncestro = v;
           if (estado.catalogoAncestroHack) {
             estado.dataForm.catalogo = null;
           }
         }
       "
-      requerido
-    />
+      requerido />
 
     <input-select
       label="Sub catalogo"
@@ -52,9 +48,8 @@
       :opciones="selectSubCatalogo"
       :porDefecto="estado.dataForm.catalogo"
       :watch="estado.watchCatalogo"
-      @update="(v) => (estado.dataForm.catalogo = v)"
-      requerido
-    />
+      @update="v => (estado.dataForm.catalogo = v)"
+      requerido />
 
     <!-- Imagen -->
     <input-image
@@ -68,8 +63,7 @@
           (estado.dataForm.imagen = base64Data
             ? { data: base64Data, mimetype: mimetype }
             : null)
-      "
-    />
+      " />
 
     <!-- Submit -->
     <div class="text-center">
@@ -79,13 +73,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Oferta } from "#gql";
-import { useOfertas } from "@/modulos/ofertas/ofertas.composable";
-import { UrlToBase64Image } from "~/components/input/input.service";
+import type { Oferta } from '#gql';
+import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
+import { UrlToBase64Image } from '~/components/input/input.service';
 const { store, ofertaAbreviacion } = useOfertas();
 
 // definicion de los emits
-const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -93,8 +87,8 @@ const props = withDefaults(
     edicion?: Oferta; // edicion si producto no es null, sino creacion
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
@@ -103,7 +97,7 @@ const initForm = {
   catalogo: props.edicion?.catalogo._id,
   abreviacion: props.edicion?.abreviacion,
   descripcion: props.edicion?.descripcion,
-  imagen: null,
+  imagen: null
 };
 
 // definicion del estado
@@ -114,7 +108,7 @@ const estado = reactive({
   catalogoOpciones: [],
   subCatalogoOpciones: [],
   imagenPreview: null,
-  watchCatalogo: props.edicion?.catalogo._id,
+  watchCatalogo: props.edicion?.catalogo._id
 });
 
 // opciones
@@ -122,10 +116,10 @@ const selectCatalogo = computed(() => {
   if (!store.catalogoArbol) return [];
   let options = [];
   for (const cat of store.catalogoArbol.hijas) {
-    if (cat.nombre !== "CATALOGO PROVEEDORES")
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
       options.push({
         label: cat.nombre,
-        value: cat._id,
+        value: cat._id
       });
     options = [...options];
   }
@@ -144,16 +138,16 @@ const selectSubCatalogo = computed(() => {
       hijas.push({
         label: subcat.nombre,
         value: subcat._id,
-        class: "option",
+        class: 'option'
       });
       idsHijas.push(subcat._id);
     }
-    if (cat.nombre !== "CATALOGO PROVEEDORES")
+    if (cat.nombre !== 'CATALOGO PROVEEDORES')
       options.push({
         label: cat.nombre,
         value: cat._id,
         disable: true,
-        class: "title",
+        class: 'title'
       });
     options = [...options, ...hijas];
   }
@@ -181,7 +175,7 @@ onMounted(async () => {
   }
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
-    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
+    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, base64Data => {
       estado.imagenPreview = base64Data;
     });
   } else {
@@ -200,15 +194,15 @@ const formSubmit = async () => {
       const oferta = await api.modificarOferta(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits("modificarObjeto", oferta);
+      emits('modificarObjeto', oferta);
     } else {
       const oferta = await api.crearOferta(estado.dataForm, { loading: true });
-      emits("crearObjeto", oferta);
+      emits('crearObjeto', oferta);
     }
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   await store.refreshOfertas();

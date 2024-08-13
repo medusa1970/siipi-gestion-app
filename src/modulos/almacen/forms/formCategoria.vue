@@ -5,10 +5,9 @@
       label="Nombre"
       info="Nombre de la categoria que se esta creando."
       :porDefecto="estado.dataForm.nombre"
-      @update="(v) => (estado.dataForm.nombre = v)"
+      @update="v => (estado.dataForm.nombre = v)"
       requerido
-      :error="estado.errorNombre"
-    />
+      :error="estado.errorNombre" />
 
     <!-- Categoria -->
     <input-select
@@ -16,9 +15,8 @@
       :opciones="selectCategoriaNivel1"
       info="Dentro de que CATEGORIA PADRE deseas crear esta nueva categoria"
       :porDefecto="estado.dataForm.pariente"
-      @update="(v) => (estado.dataForm.pariente = v)"
-      requerido
-    />
+      @update="v => (estado.dataForm.pariente = v)"
+      requerido />
 
     <!-- Submit -->
     <div class="text-center">
@@ -28,12 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Categoria } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Categoria } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -41,20 +39,20 @@ const props = withDefaults(
     edicion?: Categoria;
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
 const initForm = {
   nombre: props.edicion?.nombre,
-  pariente: props.edicion?.pariente?._id,
+  pariente: props.edicion?.pariente?._id
 };
 
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: "",
+  errorNombre: ''
 });
 
 // opciones
@@ -64,7 +62,7 @@ const selectCategoriaNivel1 = computed(() => {
     for (const cat of store.categoriaArbol.hijas) {
       options.push({
         label: cat.nombre,
-        value: cat._id,
+        value: cat._id
       });
     }
   }
@@ -82,19 +80,19 @@ const formSubmit = async () => {
     if (props.edicion) {
       const categoria = await api.modificarCategoria(
         props.edicion._id,
-        estado.dataForm,
+        estado.dataForm
       );
-      emits("modificarObjeto", categoria);
+      emits('modificarObjeto', categoria);
     } else {
       const categoria = await api.crearCategoria(estado.dataForm);
-      emits("crearObjeto", categoria);
+      emits('crearObjeto', categoria);
     }
   } catch (err) {
-    if (isApiBadRequest(err, "duplicado")) {
-      estado.errorNombre = "Ya existe una categoria con este nombre";
+    if (isApiBadRequest(err, 'duplicado')) {
+      estado.errorNombre = 'Ya existe una categoria con este nombre';
       return;
     }
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   // reinicializacion del formulario

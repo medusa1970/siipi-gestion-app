@@ -1,33 +1,33 @@
-import type { Catalogo } from "#gql";
-import { useQuasar } from "quasar";
-import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
+import type { Catalogo } from '#gql';
+import { useQuasar } from 'quasar';
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosCatalogos = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
+export const permisosCatalogos = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
 
 /**
  * Composable
  */
 const init_catalogoCategoria = {
   _id: null as string,
-  nombre: null as string,
+  nombre: null as string
 };
 
 export const useCatalogos = () => {
   const $q = useQuasar();
   const { store, authStore, estadoOfertas, router } = useOfertas();
-  if (!authStore.autorizar(permisosCatalogos)) goTo(router, "noAutorizado");
+  if (!authStore.autorizar(permisosCatalogos)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     catalogoSeleccionado: null as Catalogo,
     modal: {
       show_agregarCatalogo: false,
       show_agregarCategoriaCatalogo: false,
-      show_modificarCategoriaCatalogo: false,
+      show_modificarCategoriaCatalogo: false
     },
-    datos_catalogoCategoria: clone(init_catalogoCategoria),
+    datos_catalogoCategoria: clone(init_catalogoCategoria)
   });
 
   const modalCrearCatalogoCategoria = (datos: any) => {
@@ -41,14 +41,14 @@ export const useCatalogos = () => {
     try {
       catalogoCreado = await api.crearCatalogo({
         nombre: estado.datos_catalogoCategoria.nombre,
-        pariente: estado.datos_catalogoCategoria._id,
+        pariente: estado.datos_catalogoCategoria._id
       });
-      if (!catalogoCreado) throw "No se pudo crear el catalogo";
+      if (!catalogoCreado) throw 'No se pudo crear el catalogo';
     } catch (err) {
-      errFallBack(err);
+      errFailback(err);
     }
     estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
-    NotifySucessCenter("Categoria creada correctamente");
+    NotifySucessCenter('Categoria creada correctamente');
     estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     estado.modal.show_agregarCategoriaCatalogo = false;
   };
@@ -64,13 +64,13 @@ export const useCatalogos = () => {
     try {
       catalogoModificado = await api.modificarCatalogo(
         { _id: [estado.datos_catalogoCategoria._id] },
-        { nombre: estado.datos_catalogoCategoria.nombre },
+        { nombre: estado.datos_catalogoCategoria.nombre }
       );
-      if (!catalogoModificado) throw "No se pudo modificar el catalogo";
+      if (!catalogoModificado) throw 'No se pudo modificar el catalogo';
     } catch (err) {
-      errFallBack(err);
+      errFailback(err);
     }
-    NotifySucessCenter("Catalogo modificado correctamente");
+    NotifySucessCenter('Catalogo modificado correctamente');
     estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
     estado.modal.show_modificarCategoriaCatalogo = false;
   };
@@ -80,22 +80,22 @@ export const useCatalogos = () => {
       title: `Eliminar ${row.nombre}`,
       message: `¿Está seguro de eliminar este catalogo${
         row.hijas?.length > 0
-          ? ", tiene " + row.hijas.length + " subcategorias"
-          : ""
+          ? ', tiene ' + row.hijas.length + ' subcategorias'
+          : ''
       }?`,
       cancel: true,
-      persistent: true,
+      persistent: true
     }).onOk(async () => {
       try {
         await api.borrarCatalogo({
-          _id: [row._id],
+          _id: [row._id]
         });
       } catch (err) {
-        errFallBack(err);
+        errFailback(err);
       }
-      NotifySucessCenter("Catalogo eliminada correctamente");
+      NotifySucessCenter('Catalogo eliminada correctamente');
       estado.catalogoSeleccionado = await store.refreshCatalogoArbol(
-        catalogoID,
+        catalogoID
       );
     });
   };
@@ -109,6 +109,6 @@ export const useCatalogos = () => {
     modalCrearCatalogoCategoria,
     modalModificarCatalogoCategoria,
     modificarCatalogoArbol,
-    borrarCatalogoArbol,
+    borrarCatalogoArbol
   };
 };

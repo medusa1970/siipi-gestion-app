@@ -152,7 +152,7 @@ const formSubmit = async () => {
     emits('pagoRecibido', transaccion);
     console.log(1);
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   // reinicializamos el formulario

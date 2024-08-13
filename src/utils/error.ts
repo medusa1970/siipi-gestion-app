@@ -1,4 +1,4 @@
-export const errFallBack = err => {
+export const errFailback = err => {
   NotifyError('Se produjó un error inesperado.');
   console.log(
     'El error inesperado:',

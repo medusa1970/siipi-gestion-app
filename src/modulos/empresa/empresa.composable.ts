@@ -13,7 +13,7 @@ export const useEmpresa = () => {
       try {
         store.entidad = await api.buscarEntidad_basico(id);
       } catch (err) {
-        errFallBack(err);
+        errFailback(err);
       }
     }
     return store.entidad;

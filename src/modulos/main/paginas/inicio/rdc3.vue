@@ -12,18 +12,16 @@
         tipo="password"
         label="Contraseña"
         labelAdentro
-        @update="(v) => (password.value = v)"
+        @update="v => (password.value = v)"
         requerido
         :rules="[useRules.password]"
-        icono="key"
-      />
+        icono="key" />
       <input-text
         tipo="password"
         label="Repetir"
-        @update="(v) => (password2.value = v)"
+        @update="v => (password2.value = v)"
         :rules="[password2Rule]"
-        icono="key"
-      />
+        icono="key" />
       <div class="mt-1 w-full text-center">
         <q-btn label="Confirmar" type="submit" color="primary" no-caps />
       </div>
@@ -36,30 +34,30 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["go"]);
-import { apiAuth } from "~/modulos/main/API/auth.api";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
+const emits = defineEmits(['go']);
+import { apiAuth } from '~/modulos/main/API/auth.api';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 
 const password = reactiveInput();
 const password2 = reactiveInput();
-const password2Rule = (p) => {
-  return p !== password.value ? "Las contraseñas no coinciden" : true;
+const password2Rule = p => {
+  return p !== password.value ? 'Las contraseñas no coinciden' : true;
 };
 
 /**
  * Submit del formulario
  */
-const formSubmit = async (datos) => {
+const formSubmit = async datos => {
   try {
     const res = await apiAuth.actuarRDC(
       authStore.cookie.rdcToken,
       password.value
     );
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
-  emits("go", "rdc4");
+  emits('go', 'rdc4');
 };
 </script>

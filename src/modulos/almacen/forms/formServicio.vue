@@ -6,13 +6,12 @@
       :opciones="selectMarca"
       info="Seleccione la marca de la cual agregara proveedor, si no existe la marca, puede crear con el boton (+)"
       :porDefecto="estado.dataForm.marca"
-      @update="(v) => (estado.dataForm.marca = v)"
+      @update="v => (estado.dataForm.marca = v)"
       requerido
       :dialog="formVariedad"
       :disable="edicion != null"
       @CrearObjeto="handleVariedadCreada"
-      :watch="estado.dataForm.marca"
-    />
+      :watch="estado.dataForm.marca" />
 
     <!-- Categoria -->
     <input-select
@@ -20,11 +19,10 @@
       info="Seleccione proveedor, si el proveedor no existe, puede crearla con el boton (+)"
       :opciones="selectProveedor"
       :porDefecto="estado.dataForm.proveedor"
-      @update="(v) => (estado.dataForm.proveedor = v)"
+      @update="v => (estado.dataForm.proveedor = v)"
       requerido
       :dialog="formProveedor"
-      :disable="edicion != null"
-    />
+      :disable="edicion != null" />
 
     <!-- Identificativo -->
     <input-text
@@ -32,24 +30,21 @@
       info="Ingrese los nombres que el proveedor usa para este producto en sus facturas o recibos. Ejemplo: Si el platillo desechable se llama 'BEX 485', coloque 'BEX 485'. 
 Esto facilitara la comunicación con los proveedores."
       :porDefecto="estado.dataForm.identificativo"
-      @update="(v) => (estado.dataForm.identificativo = v)"
-    />
+      @update="v => (estado.dataForm.identificativo = v)" />
 
     <!-- Precios -->
     <input-text
       label="Precio con factura"
       info="Agregar el precio de compra CON FACTURA si tuviera."
-      tipo="number"
+      tipo="decimal"
       :porDefecto="estado.dataForm.precioConFactura"
-      @update="(v) => (estado.dataForm.precioConFactura = v)"
-    />
+      @update="v => (estado.dataForm.precioConFactura = v)" />
     <input-text
       label="precio sin factura"
       info="Agregar el precio de compra SIN FACTURA."
-      tipo="number"
+      tipo="decimal"
       :porDefecto="estado.dataForm.precioSinFactura"
-      @update="(v) => (estado.dataForm.precioSinFactura = v)"
-    />
+      @update="v => (estado.dataForm.precioSinFactura = v)" />
 
     <!-- Por mayor -->
     <div class="flex justify-between items-center mt-2 mb-1">
@@ -60,8 +55,7 @@ Esto facilitara la comunicación con los proveedores."
         dense
         no-caps
         padding="1px 6px"
-        @click="estado.showFormPorMayor = true"
-      />
+        @click="estado.showFormPorMayor = true" />
     </div>
     <table class="min-w-full bg-white rounded-sm overflow-hidden">
       <thead class="bg-teal-700 text-white">
@@ -80,8 +74,7 @@ Esto facilitara la comunicación con los proveedores."
         <tr
           v-for="(precio, index) in estado.dataForm.preciosPorMayor"
           :key="index"
-          class="[&>td]:border [&>td]:border-gray-400"
-        >
+          class="[&>td]:border [&>td]:border-gray-400">
           <td class="whitespace-nowrap text-center">
             {{ precio.cantidadMin }}
           </td>
@@ -109,8 +102,7 @@ Esto facilitara la comunicación con los proveedores."
                     estado.dataForm.preciosPorMayor[index].precioConFactura;
                   estado.showFormPorMayor = true;
                 }
-              "
-            />
+              " />
             <q-btn
               color="red"
               icon="delete"
@@ -122,13 +114,12 @@ Esto facilitara la comunicación con los proveedores."
                   $q.dialog({
                     message: '¿Estas seguro de borrar este precio?',
                     cancel: true,
-                    persistent: true,
+                    persistent: true
                   }).onOk(() => {
                     estado.dataForm.preciosPorMayor.splice(index, 1);
                   });
                 }
-              "
-            />
+              " />
           </td>
         </tr>
       </tbody>
@@ -148,23 +139,20 @@ Esto facilitara la comunicación con los proveedores."
           label="Cantidad min."
           info="Info #23"
           :porDefecto="estado.dataFormPorMayor.cantidadMin"
-          @update="(v) => (estado.dataFormPorMayor.cantidadMin = v)"
-          requerido
-        />
+          @update="v => (estado.dataFormPorMayor.cantidadMin = v)"
+          requerido />
         <input-text
           label="Precio con factura"
-          tipo="number"
+          tipo="decimal"
           info="Agregar el precio de compra UNITARIO con factura, si tuviera."
           :porDefecto="estado.dataFormPorMayor.precioConFactura"
-          @update="(v) => (estado.dataFormPorMayor.precioConFactura = v)"
-        />
+          @update="v => (estado.dataFormPorMayor.precioConFactura = v)" />
         <input-text
           label="Precio sin factura"
-          tipo="number"
+          tipo="decimal"
           info="Agregar el precio de compra UNITARIO sin factura."
           :porDefecto="estado.dataFormPorMayor.precioSinFactura"
-          @update="(v) => (estado.dataFormPorMayor.precioSinFactura = v)"
-        />
+          @update="v => (estado.dataFormPorMayor.precioSinFactura = v)" />
 
         <!-- Submit -->
         <div class="text-center">
@@ -176,14 +164,14 @@ Esto facilitara la comunicación con los proveedores."
 </template>
 
 <script setup lang="ts">
-import type { Servicio } from "#gql";
-import formVariedad from "@/modulos/almacen/forms/formVariedad.vue";
-import formProveedor from "@/modulos/almacen/forms/formProveedor.vue";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Servicio } from '#gql';
+import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
+import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -192,8 +180,8 @@ const props = withDefaults(
     edicion?: Servicio;
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
@@ -204,34 +192,34 @@ const initForm = {
   identificativo: props.edicion?.identificativo,
   precioConFactura: props.edicion?.precioConFactura,
   precioSinFactura: props.edicion?.precioSinFactura,
-  preciosPorMayor: props.edicion?.preciosPorMayor ?? [],
+  preciosPorMayor: props.edicion?.preciosPorMayor ?? []
 };
 const initFormPorMayor = {
   cantidadMin: 0,
   precioConFactura: 0,
-  precioSinFactura: 0,
+  precioSinFactura: 0
 };
 
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
   dataFormPorMayor: clone(initFormPorMayor),
-  showFormPorMayor: false,
+  showFormPorMayor: false
 });
 
 // opciones
 const selectMarca = computed(() => {
   if (!store.producto.variedades) return [];
-  return store.producto.variedades.map((variedad) => ({
+  return store.producto.variedades.map(variedad => ({
     value: variedad.marca._id,
-    label: variedad.marca.nombre,
+    label: variedad.marca.nombre
   }));
 });
 const selectProveedor = computed(() => {
   if (!store.proveedores) return [];
-  return store.proveedores.map((proveedor) => ({
+  return store.proveedores.map(proveedor => ({
     value: proveedor._id,
-    label: proveedor.nombre,
+    label: proveedor.nombre
   }));
 });
 
@@ -255,28 +243,28 @@ const formSubmit = async () => {
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
         servicios: {
           buscar: {
-            _id: [props.edicion._id],
+            _id: [props.edicion._id]
           },
-          modificar: data,
-        },
+          modificar: data
+        }
       });
       emits(
-        "modificarObjeto",
-        proveedor.servicios.find((s) => s._id === props.edicion._id),
-        proveedor,
+        'modificarObjeto',
+        proveedor.servicios.find(s => s._id === props.edicion._id),
+        proveedor
       );
     }
     // Modo creacion
     else {
       const proveedor = await api.modificarEntidad_servicios(proveedorId, {
         servicios: {
-          agregar: data,
-        },
+          agregar: data
+        }
       });
-      emits("crearObjeto", ultimo(proveedor.servicios), proveedor);
+      emits('crearObjeto', ultimo(proveedor.servicios), proveedor);
     }
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   await store.refreshProveedores();
@@ -288,7 +276,7 @@ const addPpmSubmit = () => {
   estado.showFormPorMayor = false;
   if (ppmIndexEdit.value) {
     estado.dataForm.preciosPorMayor[ppmIndexEdit.value] = clone(
-      estado.dataFormPorMayor,
+      estado.dataFormPorMayor
     );
     ppmIndexEdit.value = null;
   } else {
@@ -297,7 +285,7 @@ const addPpmSubmit = () => {
   estado.dataFormPorMayor = clone(initFormPorMayor);
 };
 
-const handleVariedadCreada = (variedad) => {
+const handleVariedadCreada = variedad => {
   store.producto.variedades.push(variedad);
   estado.dataForm.marca = variedad.marca._id;
 };

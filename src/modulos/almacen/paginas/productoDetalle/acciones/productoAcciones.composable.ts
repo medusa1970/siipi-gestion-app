@@ -1,7 +1,7 @@
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
-import { useQuasar } from "quasar";
-import type { Producto } from "#gql";
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useQuasar } from 'quasar';
+import type { Producto } from '#gql';
 
 export const useProductoAcciones = () => {
   const { store, authStore, estadoAlmacen, router } = useAlmacen();
@@ -9,21 +9,21 @@ export const useProductoAcciones = () => {
 
   const estado = reactive({
     producto: {} as Producto,
-    motivoEliminacion: "",
+    motivoEliminacion: ''
   });
 
   const borrarProducto = () => {
     $q.dialog({
       title: `Eliminar ${store.producto.nombre}`,
-      message: "No se puede deshacer.",
+      message: 'No se puede deshacer.',
       cancel: true,
-      persistent: true,
+      persistent: true
     }).onOk(async () => {
       // borramos el producto
       try {
         await api.borrarProducto_basico(store.producto._id);
       } catch (err) {
-        errFallBack(err);
+        errFailback(err);
         return;
       }
       await store.refreshProductos();
@@ -34,27 +34,27 @@ export const useProductoAcciones = () => {
           {
             comentario: estado.motivoEliminacion,
             producto: store.producto._id,
-            accion: "borrado",
+            accion: 'borrado'
             // la persona va con el token
           },
           {
-            aceptarInexistentes: true,
+            aceptarInexistentes: true
           },
           useGqlToken(authStore.token)
         );
       } catch (err) {
-        errFallBack(err);
+        errFailback(err);
         return;
       }
 
       // esta todo ok
-      NotifySucessCenter("Producto eliminado correctamente");
-      estado.motivoEliminacion = "";
+      NotifySucessCenter('Producto eliminado correctamente');
+      estado.motivoEliminacion = '';
       store.productos = store.productos.filter(
-        (p) => p._id !== store.producto._id
+        p => p._id !== store.producto._id
       );
       store.producto = null;
-      goTo(router, "productos");
+      goTo(router, 'productos');
     });
   };
 
@@ -63,6 +63,6 @@ export const useProductoAcciones = () => {
     store,
     authStore,
     router,
-    borrarProducto,
+    borrarProducto
   };
 };

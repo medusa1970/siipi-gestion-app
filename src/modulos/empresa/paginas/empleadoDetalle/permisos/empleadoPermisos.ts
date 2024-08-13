@@ -77,7 +77,7 @@ export const useEmpleadoPermisos = () => {
         }
       );
     } catch (err) {
-      errFallBack(err);
+      errFailback(err);
       return;
     }
     // reinicializamos el formulario

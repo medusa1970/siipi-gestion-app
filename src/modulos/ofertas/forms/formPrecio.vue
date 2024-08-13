@@ -8,9 +8,8 @@
       label="Cantidad min."
       info="Info #50"
       :porDefecto="estado.dataForm.cantidadMin"
-      @update="(v) => (estado.dataForm.cantidadMin = v)"
-      :rules="[rule2]"
-    />
+      @update="v => (estado.dataForm.cantidadMin = v)"
+      :rules="[rule2]" />
 
     <!-- Precios -->
     <div class="flex">
@@ -21,10 +20,9 @@
         label="Precio sin factura"
         info="Info #51"
         :porDefecto="estado.dataForm.precioSinFactura"
-        @update="(v) => (estado.dataForm.precioSinFactura = v)"
+        @update="v => (estado.dataForm.precioSinFactura = v)"
         :watch="estado.watchSin"
-        :forceWatch="estado.forceWatchSin"
-      />
+        :forceWatch="estado.forceWatchSin" />
       <q-btn
         icon="calculate"
         size="lg"
@@ -35,8 +33,7 @@
         @click="
           estado.forceWatchSin = !estado.forceWatchSin;
           estado.watchSin = estado.dataForm.precioConFactura * (100 / 113);
-        "
-      /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
+        " /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
         >calcular sin factura -13%</q-tooltip
       >
     </div>
@@ -47,11 +44,10 @@
         tipo="decimal"
         :porDefecto="estado.dataForm.precioConFactura"
         info="Info #52"
-        @update="(v) => (estado.dataForm.precioConFactura = v)"
+        @update="v => (estado.dataForm.precioConFactura = v)"
         :watch="estado.watchCon"
         :forceWatch="estado.forceWatchCon"
-        requerido="Debe entrar un precio con factura"
-      />
+        requerido="Debe entrar un precio con factura" />
       <q-btn
         icon="calculate"
         size="lg"
@@ -64,8 +60,7 @@
             estado.forceWatchCon = !estado.forceWatchCon;
             estado.watchCon = estado.dataForm.precioSinFactura * (113 / 100);
           }
-        "
-      /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
+        " /><q-tooltip anchor="bottom right" self="top right" :offset="[0, -35]"
         >calcular con factura +13%</q-tooltip
       >
     </div>
@@ -78,13 +73,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Oferta } from "#gql";
-import type { Precio } from "#gql";
-import { useOfertas } from "@/modulos/ofertas/ofertas.composable";
+import type { Oferta } from '#gql';
+import type { Precio } from '#gql';
+import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
 const { store } = useOfertas();
 
 // definicion de los emits
-const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -92,7 +87,7 @@ const props = withDefaults(
     edicion?: Precio | Oferta;
   }>(),
   {
-    edicion: null,
+    edicion: null
   }
 );
 
@@ -101,7 +96,7 @@ const initForm = {
   // @ts-ignore
   cantidadMin: props.edicion?.cantidadMin ?? null,
   precioConFactura: props.edicion?.precioConFactura ?? null,
-  precioSinFactura: props.edicion?.precioSinFactura ?? null,
+  precioSinFactura: props.edicion?.precioSinFactura ?? null
 };
 
 // definicion del estado
@@ -110,15 +105,15 @@ const estado = reactive({
   watchSin: null as number,
   watchCon: null as number,
   forceWatchCon: false,
-  forceWatchSin: false,
+  forceWatchSin: false
 });
 
 // color de los botones calduladoras
 const colorCalculateSin = computed(() =>
-  estado.dataForm.precioConFactura ? "orange" : "orange-4"
+  estado.dataForm.precioConFactura ? 'orange' : 'orange-4'
 );
 const colorCalculateCon = computed(() =>
-  estado.dataForm.precioSinFactura ? "orange" : "orange-4"
+  estado.dataForm.precioSinFactura ? 'orange' : 'orange-4'
 );
 
 // Inicializaciones
@@ -128,12 +123,12 @@ onMounted(async () => {});
 const formSubmit = async () => {
   try {
     // si es una oferta
-    if (props.edicion && props.edicion.hasOwnProperty("_esOferta")) {
+    if (props.edicion && props.edicion.hasOwnProperty('_esOferta')) {
       const oferta = await api.modificarOferta(store.oferta._id, {
         precioConFactura: estado.dataForm.precioConFactura,
-        precioSinFactura: estado.dataForm.precioSinFactura,
+        precioSinFactura: estado.dataForm.precioSinFactura
       });
-      emits("modificarObjeto", null, oferta);
+      emits('modificarObjeto', null, oferta);
     }
 
     // si edicion de precio por mayor
@@ -141,14 +136,14 @@ const formSubmit = async () => {
       const oferta = await api.modificarOferta(store.oferta._id, {
         preciosPorMayor: {
           buscar: {
-            _id: [props.edicion._id],
+            _id: [props.edicion._id]
           },
-          modificar: estado.dataForm,
-        },
+          modificar: estado.dataForm
+        }
       });
       emits(
-        "modificarObjeto",
-        oferta.preciosPorMayor.find((v) => v._id === props.edicion?._id),
+        'modificarObjeto',
+        oferta.preciosPorMayor.find(v => v._id === props.edicion?._id),
         oferta
       );
     }
@@ -157,13 +152,13 @@ const formSubmit = async () => {
     else {
       const oferta = await api.modificarOferta(store.oferta._id, {
         preciosPorMayor: {
-          agregar: estado.dataForm,
-        },
+          agregar: estado.dataForm
+        }
       });
-      emits("crearObjeto", ultimo(oferta.preciosPorMayor), oferta);
+      emits('crearObjeto', ultimo(oferta.preciosPorMayor), oferta);
     }
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   await store.refreshOfertas();
@@ -173,10 +168,10 @@ const formSubmit = async () => {
 // rule dos
 const rule2 = (val: number): String | true => {
   if (
-    !(props.edicion && props.edicion.hasOwnProperty("_esOferta")) &&
+    !(props.edicion && props.edicion.hasOwnProperty('_esOferta')) &&
     Number(val) <= 1
   ) {
-    return "Los precios por mayor son a partir de 2";
+    return 'Los precios por mayor son a partir de 2';
   } else {
     return true;
   }

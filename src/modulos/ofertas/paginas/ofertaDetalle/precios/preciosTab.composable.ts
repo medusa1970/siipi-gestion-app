@@ -1,5 +1,5 @@
-import type { Precio } from "#gql";
-import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
+import type { Precio } from '#gql';
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const usePrecioTab = () => {
   const $q = useQuasar();
@@ -11,16 +11,16 @@ export const usePrecioTab = () => {
     configEdit: null as Precio,
     modal: {
       formCrearPrecio: false,
-      formModificarPrecio: false,
-    },
+      formModificarPrecio: false
+    }
   });
 
-  const borrarOfertaPrecio = async (precio) => {
+  const borrarOfertaPrecio = async precio => {
     $q.dialog({
       title: `Eliminar este precio ?`,
-      message: "No se puede deshacer.",
+      message: 'No se puede deshacer.',
       cancel: true,
-      persistent: true,
+      persistent: true
     }).onOk(async () => {
       let oferta;
       try {
@@ -28,29 +28,29 @@ export const usePrecioTab = () => {
           store.oferta._id,
           {
             preciosPorMayor: {
-              borrar: { _id: precio._id },
-            },
+              borrar: { _id: precio._id }
+            }
           },
-          { loading: true },
+          { loading: true }
         );
       } catch (err) {
-        errFallBack(err);
+        errFailback(err);
         return;
       }
-      NotifySucessCenter("Precio borrado correctamente");
+      NotifySucessCenter('Precio borrado correctamente');
       store.oferta.preciosPorMayor = oferta.preciosPorMayor;
       await store.refreshOfertas();
     });
   };
 
   const handlePrecioCreado = async (precio, oferta) => {
-    NotifySucessCenter("Precio creado correctamente");
+    NotifySucessCenter('Precio creado correctamente');
     estado.modal.formCrearPrecio = false;
     store.oferta = oferta;
     await store.refreshOfertas();
   };
   const handlePrecioModificado = async (precio, oferta) => {
-    NotifySucessCenter("Precio modificado correctamente");
+    NotifySucessCenter('Precio modificado correctamente');
     estado.modal.formModificarPrecio = false;
     store.oferta = oferta;
     await store.refreshOfertas();
@@ -61,6 +61,6 @@ export const usePrecioTab = () => {
     borrarOfertaPrecio,
     handlePrecioCreado,
     handlePrecioModificado,
-    store,
+    store
   };
 };

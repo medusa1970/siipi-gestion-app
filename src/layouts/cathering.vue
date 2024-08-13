@@ -37,7 +37,8 @@ const menu = [
         icon: 'bi-box',
         label: 'Productos',
         to: 'productos',
-        permisos: permisosProductos
+        permisos: permisosProductos,
+        activar: ['producto']
       },
       {
         icon: 'category',
@@ -67,7 +68,8 @@ const menu = [
         icon: 'balance',
         label: 'Medidas',
         to: 'medidas',
-        permisos: permisosMedidas
+        permisos: permisosMedidas,
+        activar: ['medida']
       },
       {
         icon: 'hail',
@@ -92,7 +94,8 @@ const menu = [
         icon: 'menu_book',
         label: 'Ofertas',
         to: 'ofertas',
-        permisos: permisosOfertas
+        permisos: permisosOfertas,
+        activar: ['oferta']
       },
       {
         icon: 'category',
@@ -112,11 +115,6 @@ const menu = [
         icon: 'shopping_cart',
         label: 'listaPedidos',
         to: 'listaPedidos'
-      },
-      {
-        icon: 'add_shopping_cart',
-        label: 'Realizar pedido',
-        to: 'realizarPedido'
       }
     ]
   },
@@ -129,13 +127,15 @@ const menu = [
         icon: 'group',
         label: 'Empleados',
         to: 'empleados',
-        permisos: permisosEmpleados
+        permisos: permisosEmpleados,
+        activar: ['empleado']
       },
       {
         icon: 'money',
         label: 'Tesoreria',
         to: 'tesoreria',
-        permisos: permisosTesoreria
+        permisos: permisosTesoreria,
+        activar: ['tesoreriaDetalle']
       }
     ]
   }

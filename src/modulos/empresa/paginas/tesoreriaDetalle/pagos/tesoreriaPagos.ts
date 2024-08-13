@@ -31,7 +31,7 @@ export const useTesoreriaPagos = () => {
         comprador: [store.entidad._id]
       });
     } catch (err) {
-      errFallBack(err);
+      errFailback(err);
     }
   };
 

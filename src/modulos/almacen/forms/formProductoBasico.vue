@@ -17,7 +17,7 @@
       label="Nombre"
       info="Nombre del PRODUCTO. Por favor antes de crear un producto, primero verifique que aun no exista ayudándose con el buscador."
       :porDefecto="estado.dataForm.nombre"
-      @update="(v) => (estado.dataForm.nombre = v)"
+      @update="v => (estado.dataForm.nombre = v)"
       requerido
       :error="estado.errorNombre" />
 
@@ -27,7 +27,7 @@
       :opciones="selectCategoria"
       info="La categoría existe con el objetivo de ubicar facilmente un producto. Para crear una nueva categoria, puede dar click en el boton (+) o vaya al menu Logistica > Categorías."
       :porDefecto="estado.dataForm.categoria"
-      @update="(v) => (estado.dataForm.categoria = v)"
+      @update="v => (estado.dataForm.categoria = v)"
       requerido
       :dialog="formCategoria" />
 
@@ -51,7 +51,7 @@
       tipo="number"
       info='Ingrese el tiempo de vida del producto en DIAS, ejemplo: Los embolsados de semillas tienen 6 meses de vida, por lo tanto ingresar "180".'
       :porDefecto="estado.dataForm.tiempoVida"
-      @update="(v) => (estado.dataForm.tiempoVida = v)" />
+      @update="v => (estado.dataForm.tiempoVida = v)" />
 
     <h3>Fecha de vencimiento</h3>
     <div class="">
@@ -68,7 +68,7 @@
         tipo="number"
         info="Ingrese la cantidad de dias que desea que el sistema le bote una 1ra alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5, el sistema botara una alerta 5 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoSuave"
-        @update="(v) => (estado.dataForm.vencimientoAvisoSuave = v)" />
+        @update="v => (estado.dataForm.vencimientoAvisoSuave = v)" />
       <input-text
         class="flex-grow"
         style="margin-left: 16px"
@@ -76,7 +76,7 @@
         tipo="number"
         info="Ingrese la cantidad de dias que desea que el sistema le bote una 2da alerta antes del vencimiento del producto. Ejemplo: Si ingreso 5 en el primer campo, entonces esta 2da alerta puede ser 2, asi el sistema botara nuevamente otra alerta 2 dias antes al vencimiento de este producto"
         :porDefecto="estado.dataForm.vencimientoAvisoFuerte"
-        @update="(v) => (estado.dataForm.vencimientoAvisoFuerte = v)" />
+        @update="v => (estado.dataForm.vencimientoAvisoFuerte = v)" />
     </div>
 
     <input-text
@@ -84,7 +84,7 @@
       label="Comentario"
       info="Agregue cualquier información adicional importante de este producto."
       :porDefecto="estado.dataForm.comentario"
-      @update="(v) => (estado.dataForm.comentario = v)" />
+      @update="v => (estado.dataForm.comentario = v)" />
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />
@@ -93,15 +93,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Producto } from "#gql";
-import type { CategoriaSelectOpcion } from "../almacen.interface";
-import formCategoria from "./formCategoria.vue";
-import { UrlToBase64Image } from "~/components/input/input.service";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Producto } from '#gql';
+import type { CategoriaSelectOpcion } from '../almacen.interface';
+import formCategoria from './formCategoria.vue';
+import { UrlToBase64Image } from '~/components/input/input.service';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(["crearObjeto", "modificarObjeto"]);
+const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -109,8 +109,8 @@ const props = withDefaults(
     edicion?: Producto; // edicion si producto no es null, sino creacion
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
@@ -122,14 +122,14 @@ const initForm = {
   vencimientoAvisoSuave: props.edicion?.vencimientoAvisoSuave,
   vencimientoAvisoFuerte: props.edicion?.vencimientoAvisoFuerte,
   tiempoVida: props.edicion?.tiempoVida ?? null,
-  imagen: null,
+  imagen: null
 };
 
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
-  errorNombre: "",
-  imagenPreview: null,
+  errorNombre: '',
+  imagenPreview: null
 });
 
 // opciones
@@ -141,13 +141,13 @@ const selectCategoria = computed(() => {
         label: cat.nombre,
         value: cat._id,
         disable: true,
-        class: "titulo",
+        class: 'titulo'
       });
       for (const subcat of cat.hijas) {
         options.push(<CategoriaSelectOpcion>{
           label: subcat.nombre,
           value: subcat._id,
-          class: "option",
+          class: 'option'
         });
       }
     }
@@ -160,7 +160,7 @@ onMounted(async () => {
   await store.getCategorias();
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
-    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, (base64Data) => {
+    await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, base64Data => {
       estado.imagenPreview = base64Data;
     });
   } else {
@@ -178,21 +178,21 @@ const formSubmit = async () => {
       const producto = await api.modificarProducto_basico(
         props.edicion._id,
         estado.dataForm,
-        { loading: true },
+        { loading: true }
       );
-      emits("modificarObjeto", producto);
+      emits('modificarObjeto', producto);
     } else {
       const producto = await api.crearProducto_basico(estado.dataForm, {
-        loading: true,
+        loading: true
       });
-      emits("crearObjeto", producto);
+      emits('crearObjeto', producto);
     }
   } catch (err) {
-    if (isApiBadRequest(err, "duplicado")) {
-      estado.errorNombre = "Ya existe un producto con este nombre";
+    if (isApiBadRequest(err, 'duplicado')) {
+      estado.errorNombre = 'Ya existe un producto con este nombre';
       return;
     }
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   await store.refreshProductos();

@@ -67,7 +67,7 @@ onMounted(async () => {
   try {
     personas.value = await api.buscarPersonas({});
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
 });
@@ -89,7 +89,7 @@ const formSubmit = async () => {
       estado.errorNombre = 'Esta persona ya esta empleada';
       return;
     }
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   // reinicializamos el formulario

@@ -50,7 +50,7 @@ export const storeEmpresa = defineStore('empresa', {
             this.entidadId as string
           );
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
         }
       }
     },
@@ -75,7 +75,7 @@ export const storeEmpresa = defineStore('empresa', {
           );
           this.empleados = entidad.empleados;
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -120,7 +120,7 @@ export const storeEmpresa = defineStore('empresa', {
             }
           }
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return null;
         }
       }

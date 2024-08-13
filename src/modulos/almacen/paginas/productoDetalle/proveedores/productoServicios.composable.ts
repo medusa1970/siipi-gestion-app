@@ -1,5 +1,5 @@
-import type { Entidad, Servicio } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Entidad, Servicio } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 export const useProductoServicios = () => {
   const { store, authStore, estadoAlmacen, router } = useAlmacen();
@@ -13,12 +13,12 @@ export const useProductoServicios = () => {
     // los dialogs
     modal: {
       formServicioModificar: false,
-      formServicioCrear: false,
+      formServicioCrear: false
     },
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: "",
-    },
+      buscarFiltro: ''
+    }
   });
 
   // recupera toos los servicios del producto en store
@@ -27,20 +27,20 @@ export const useProductoServicios = () => {
     try {
       proveedores = await api.buscarEntidades_servicios(
         {
-          tipo: ["PROVEEDOR"],
+          tipo: ['PROVEEDOR'],
           servicios: {
-            producto: store.producto._id,
-          },
+            producto: store.producto._id
+          }
         },
         {},
         {
           servicios: {
-            producto: store.producto._id,
-          },
+            producto: store.producto._id
+          }
         }
       );
     } catch (err) {
-      errFallBack(err);
+      errFailback(err);
       return;
     }
 
@@ -48,7 +48,7 @@ export const useProductoServicios = () => {
     let servicios = [];
     for (const proveedor of proveedores) {
       // asignamos a cada servicio su proveedor
-      const serviciosConProveedores = proveedor.servicios.map((servicio) => {
+      const serviciosConProveedores = proveedor.servicios.map(servicio => {
         Object.assign(servicio, { proveedor: proveedor });
         // para evitar recursividad que bota un error
         delete servicio.proveedor.servicios;
@@ -62,7 +62,7 @@ export const useProductoServicios = () => {
   };
 
   const handleServicioCreado = (servicio, proveedor) => {
-    NotifySucessCenter("Proveedor creado éxitosamente");
+    NotifySucessCenter('Proveedor creado éxitosamente');
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
     estado.servicios.push(servicio);
@@ -70,10 +70,10 @@ export const useProductoServicios = () => {
   };
 
   const handleServicioModificado = (servicio, proveedor) => {
-    NotifySucessCenter("Proveedor modificado éxitosamente");
+    NotifySucessCenter('Proveedor modificado éxitosamente');
     Object.assign(servicio, { proveedor });
     delete servicio.proveedor.servicios;
-    estado.servicios = estado.servicios.map((s) =>
+    estado.servicios = estado.servicios.map(s =>
       s._id === servicio._id ? servicio : s
     );
     estado.modal.formServicioModificar = false;
@@ -86,6 +86,6 @@ export const useProductoServicios = () => {
     router,
     getServiciosProducto,
     handleServicioCreado,
-    handleServicioModificado,
+    handleServicioModificado
   };
 };

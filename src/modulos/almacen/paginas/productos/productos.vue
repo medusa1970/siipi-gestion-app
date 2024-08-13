@@ -1,5 +1,16 @@
 <template>
   <NuxtLayout name="cathering">
+    <div>
+      <q-btn
+        width="auto"
+        icon="add"
+        label="Nuevo producto"
+        color="green"
+        no-caps
+        margin="auto"
+        @click="() => (estado.modal.formProductoBasico = true)" />
+    </div>
+
     <Tabla
       :rows="rowsTablaProductos"
       :columns="columnsTablaProducto"
@@ -9,7 +20,8 @@
           style="
             display: grid;
             grid-gap: 16px;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            margin: 0;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             width: 100%;
           ">
           <input-text
@@ -41,16 +53,6 @@
               { value: 'soloIncompletos', label: 'solo incompletos' }
             ]"
             noSlot />
-
-          <q-btn
-            style="width: 42px"
-            icon="add"
-            color="green"
-            no-caps
-            padding="4px 10px"
-            @click="() => (estado.modal.formProductoBasico = true)">
-            <q-tooltip> Agregar producto </q-tooltip>
-          </q-btn>
         </div>
       </template>
       <template #body-cell-estado="{ row }">

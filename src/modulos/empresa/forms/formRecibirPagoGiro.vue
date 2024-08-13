@@ -57,7 +57,7 @@ const formSubmit = async () => {
     const transaccion = await api.crearTransaccion(estado.dataForm);
     emits('pagoRecibido', transaccion);
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
 };

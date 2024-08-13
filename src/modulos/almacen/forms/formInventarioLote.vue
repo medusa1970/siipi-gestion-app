@@ -21,7 +21,7 @@
       label="Fecha de vencimiento"
       info="Info #"
       @update="
-        (v) => {
+        v => {
           dataForm.vencimiento = v;
         }
       "
@@ -33,7 +33,7 @@
       :opciones="selectBloque"
       info="Info #"
       :porDefecto="dataForm.bloque"
-      @update="(v) => (dataForm.bloque = v)"
+      @update="v => (dataForm.bloque = v)"
       requerido />
 
     <!-- Marca -->
@@ -42,7 +42,7 @@
       :opciones="selectMarca"
       info="Info #"
       :porDefecto="dataForm.marca"
-      @update="(v) => (dataForm.marca = v)"
+      @update="v => (dataForm.marca = v)"
       requerido />
 
     <!-- guardar -->
@@ -53,8 +53,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Producto } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Producto } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 
 // tipado
@@ -67,7 +67,7 @@ export type Lote = {
 };
 
 // definicion de los emits
-const emits = defineEmits(["crearLote"]);
+const emits = defineEmits(['crearLote']);
 
 // definicion de los props
 const props = withDefaults(
@@ -76,8 +76,8 @@ const props = withDefaults(
     edicion?: Lote;
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // definicion del estado
@@ -86,24 +86,24 @@ const dataForm = reactive<Lote>({
   vencimiento: props.edicion?.vencimiento,
   bloque: props.edicion?.bloque,
   marca: props.edicion?.marca,
-  id: props.edicion?.id ?? new Date().toString(),
+  id: props.edicion?.id ?? new Date().toString()
 });
 
 // opciones para los select
 const selectMarca = computed(() => {
-  return props.producto.variedades.map((variedad) => {
+  return props.producto.variedades.map(variedad => {
     return {
       label: variedad.marca.nombre,
-      value: variedad.marca._id,
+      value: variedad.marca._id
     };
   });
 });
 const selectBloque = computed(() => {
   if (!store.entidad) return [];
-  return store.entidad.bloques.map((bloque) => {
+  return store.entidad.bloques.map(bloque => {
     return {
       label: bloque.nombre,
-      value: bloque._id,
+      value: bloque._id
     };
   });
 });
@@ -116,9 +116,9 @@ onMounted(async () => {
 // submision del formulario
 const formSubmit = async () => {
   try {
-    emits("crearLote", dataForm);
+    emits('crearLote', dataForm);
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
 };

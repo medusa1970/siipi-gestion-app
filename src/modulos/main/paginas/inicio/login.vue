@@ -11,22 +11,20 @@
       <input-text
         label="Usuario"
         labelAdentro
-        @update="(v) => (usuario.value = v)"
+        @update="v => (usuario.value = v)"
         :error="usuario.error"
         requerido="El usuario es obligatorio"
         default="lionel"
-        icono="person"
-      />
+        icono="person" />
       <input-text
         tipo="password"
         label="Contraseña"
         labelAdentro
-        @update="(v) => (password.value = v)"
+        @update="v => (password.value = v)"
         :error="password.error"
         requerido
         default="Siipi123"
-        icono="key"
-      />
+        icono="key" />
       <div class="w-full text-center">
         <q-btn label="Iniciar sesión" type="submit" color="primary" no-caps />
       </div>
@@ -38,39 +36,37 @@
         @click="emits('go', 'rdc1')"
         dense
         no-caps
-        flat
-      />
+        flat />
       |
       <q-btn
         label="Registrarse"
         @click="emits('go', 'registro1')"
         no-caps
         dense
-        flat
-      />
+        flat />
     </div>
   </div>
 </template>
 
 <script setup>
-const emits = defineEmits(["go"]);
-import { useAuthStore } from "~/modulos/main/useAuthStore";
+const emits = defineEmits(['go']);
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 
 const usuario = reactiveInput();
 const password = reactiveInput();
 
 // funcion llamada al hacer submit
-const formSubmit = async (datos) => {
+const formSubmit = async datos => {
   try {
     await authStore.login(usuario.value, password.value);
   } catch (err) {
-    if (isApiNotFound(err, "usuario")) {
-      usuario.error = "Usuario inexistente";
-    } else if (isApiBadRequest(err, "password")) {
-      password.error = "Contraseña incorrecta";
+    if (isApiNotFound(err, 'usuario')) {
+      usuario.error = 'Usuario inexistente';
+    } else if (isApiBadRequest(err, 'password')) {
+      password.error = 'Contraseña incorrecta';
     } else {
-      errFallBack(err);
+      errFailback(err);
       return;
     }
   }

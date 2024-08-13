@@ -30,7 +30,7 @@ export const storeOferta = defineStore('ofertas', {
         try {
           this.oferta = await api.buscarOferta(this.ofertaId as string);
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
         }
       }
     },
@@ -52,7 +52,7 @@ export const storeOferta = defineStore('ofertas', {
             JSON.parse(JSON.stringify(this.ofertas))
           );
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -70,7 +70,7 @@ export const storeOferta = defineStore('ofertas', {
         try {
           this.catalogoArbol = await apiOfertas.buscarArbolCatalogosRaiz();
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return null;
         }
       }

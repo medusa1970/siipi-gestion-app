@@ -29,7 +29,7 @@
             vencimiento:
             {{
               lote.vencimiento != null
-                ? new Date(lote.vencimiento).toLocaleString().split(" ")[0]
+                ? new Date(lote.vencimiento).toLocaleString().split(' ')[0]
                 : null
             }}
           </li>
@@ -86,25 +86,25 @@ import type {
   Producto,
   Bloque,
   Marca,
-  Lote,
-} from "#gql";
-import formInventarioLote from "@/modulos/almacen/forms/formInventarioLote.vue";
-import { apiAlmacen } from "~/modulos/almacen/API/almacen.api";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
+  Lote
+} from '#gql';
+import formInventarioLote from '@/modulos/almacen/forms/formInventarioLote.vue';
+import { apiAlmacen } from '~/modulos/almacen/API/almacen.api';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 const $q = useQuasar();
 
 // definicion de los emits
-const emits = defineEmits(["hacerInventario"]);
+const emits = defineEmits(['hacerInventario']);
 
 // definicion de los props
 const props = withDefaults(
   defineProps<{
     producto: Producto;
   }>(),
-  {},
+  {}
 );
 
 // definicion del estado
@@ -112,12 +112,12 @@ const estado = reactive({
   dataForm: {},
   lotes: [] as Lote[],
   loteEdicion: null,
-  puedeGuardar: false,
+  puedeGuardar: false
 });
 const showModal = reactive({
   crearLote: false,
   modificarLote: false,
-  verificar: false,
+  verificar: false
 });
 
 // Inicializaciones
@@ -132,7 +132,7 @@ const formSubmit = async () => {
 const mandar = async (guardar = false) => {
   // debe haber por lo menos un lote
   if (estado.lotes.length === 0) {
-    console.log("debe haber por lo menos un lote");
+    console.log('debe haber por lo menos un lote');
     return false;
   }
 
@@ -142,41 +142,41 @@ const mandar = async (guardar = false) => {
     inventario = await apiAlmacen.realizarInventario(
       authStore.negocio._id,
       props.producto._id,
-      estado.lotes.map((lote) => {
+      estado.lotes.map(lote => {
         delete lote.id;
         return lote;
       }),
       guardar,
-      "se hizo",
+      'se hizo'
     );
     if (!guardar && inventario.diferencias.length > 0) {
       showModal.verificar = true;
       return;
     }
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
-  emits("hacerInventario", inventario);
+  emits('hacerInventario', inventario);
 };
 
 // Lote >> InventarioLote
 const getMarca = (lote: Lote): Marca =>
-  props.producto.variedades.find((v) => v.marca._id === lote.marca).marca;
+  props.producto.variedades.find(v => v.marca._id === lote.marca).marca;
 const getBloque = (lote: Lote): Bloque =>
-  store.entidad.bloques.find((b) => b._id === lote.bloque);
+  store.entidad.bloques.find(b => b._id === lote.bloque);
 
 // lote creado
-const handleCrearLote = async (lote) => {
+const handleCrearLote = async lote => {
   showModal.crearLote = false;
   estado.lotes.push(lote);
 };
 
 // lote modificado
-const handleModificarLote = async (modificado) => {
+const handleModificarLote = async modificado => {
   showModal.modificarLote = false;
-  estado.lotes = estado.lotes.map((lote) =>
-    lote.id === modificado.id ? modificado : lote,
+  estado.lotes = estado.lotes.map(lote =>
+    lote.id === modificado.id ? modificado : lote
   );
 };
 
@@ -193,13 +193,13 @@ const sumbitReintentar = () => {
 };
 
 // lote borrar
-const borrarLote = async (loteBorrar) => {
+const borrarLote = async loteBorrar => {
   $q.dialog({
-    message: "¿Estas seguro de borrar este lote?",
+    message: '¿Estas seguro de borrar este lote?',
     cancel: true,
-    persistent: true,
+    persistent: true
   }).onOk(async () => {
-    estado.lotes = estado.lotes.filter((lote) => loteBorrar.id !== lote.id);
+    estado.lotes = estado.lotes.filter(lote => loteBorrar.id !== lote.id);
   });
 };
 </script>

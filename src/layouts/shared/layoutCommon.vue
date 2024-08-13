@@ -112,8 +112,12 @@
             <q-expansion-item
               v-model="menuState[item.key]"
               :icon="item.icon"
-              :class="'w-full' + (item.to === routeName ? ' bg-orange' : '')"
               :label="item.label"
+              :class="
+                item.to && activo(item, routeName)
+                  ? 'w-full bg-orange'
+                  : 'w-full'
+              "
               @click="
                 if (item.to) {
                   router.push(getRoute(router, item.to));
@@ -132,7 +136,7 @@
                     authStore.autorizar(subItem.permisos)
                   "
                   :class="
-                    'w-full' + (subItem.to === routeName ? ' bg-orange' : '')
+                    activo(subItem, routeName) ? 'w-full bg-orange' : 'w-full'
                   "
                   background="orange"
                   align="left"
@@ -258,15 +262,17 @@ const props = defineProps({
 });
 
 const { name: routeName } = useRoute();
+const activo = (item, route) => {
+  let activar = [];
+  for (const el of [item, ...(item.subMenu ?? [])]) {
+    if (el.to) activar = [...activar, el.to];
+    if (el.activar) activar = [...activar, ...el.activar];
+  }
+  return activar.includes(route);
+};
 const menuState = reactive(
   Object.fromEntries(
-    props.menuList.map(item => [
-      item.key,
-      false ||
-        (item.to && item.to === routeName) ||
-        (item.subMenu &&
-          item.subMenu.find(subItem => subItem.to === routeName)) != undefined
-    ])
+    props.menuList.map(item => [item.key, activo(item, routeName)])
   )
 );
 

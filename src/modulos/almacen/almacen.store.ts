@@ -56,7 +56,7 @@ export const storeAlmacen = defineStore('almacen', {
             this.productoId as string
           );
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
         }
       }
     },
@@ -78,7 +78,7 @@ export const storeAlmacen = defineStore('almacen', {
             JSON.parse(JSON.stringify(this.productos))
           );
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -96,7 +96,7 @@ export const storeAlmacen = defineStore('almacen', {
         try {
           this.categoriaArbol = await apiAlmacen.buscarArbolCategoriasRaiz();
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return null;
         }
       }
@@ -132,7 +132,7 @@ export const storeAlmacen = defineStore('almacen', {
           this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
           return this.marcas;
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -155,7 +155,7 @@ export const storeAlmacen = defineStore('almacen', {
           );
           return this.proveedores;
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -175,7 +175,7 @@ export const storeAlmacen = defineStore('almacen', {
           this.medidas = await api.buscarMedidas({});
           return this.medidas;
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -197,7 +197,7 @@ export const storeAlmacen = defineStore('almacen', {
           );
           return this.entidad;
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }
@@ -222,7 +222,7 @@ export const storeAlmacen = defineStore('almacen', {
           //   p1._modificado > p2._modificado ? -1 : 1,
           // );
         } catch (err) {
-          errFallBack(err);
+          errFailback(err);
           return;
         }
       }

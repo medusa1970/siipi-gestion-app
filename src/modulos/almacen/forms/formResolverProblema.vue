@@ -5,8 +5,7 @@
       <q-card
         class="mr-3 mb-3"
         v-for="dif in edicion.diferencias"
-        :key="dif._id"
-      >
+        :key="dif._id">
         <q-card-section>
           <p>{{ dif.marca.nombre }}</p>
           <p>{{ fechaMes(dif.vencimiento) }}</p>
@@ -26,8 +25,7 @@
       info="Info #"
       noSlot
       :porDefecto="estado.dataForm.reporteResolucion"
-      @update="(v) => (estado.dataForm.reporteResolucion = v)"
-    />
+      @update="v => (estado.dataForm.reporteResolucion = v)" />
     <q-toggle v-model="estado.dataForm.resuelto" color="green">
       Marcar como resuelto
     </q-toggle>
@@ -42,12 +40,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Problema } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Problema } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store, authStore } = useAlmacen();
 
 // definicion de los emits
-const emits = defineEmits(["modificarObjeto"]);
+const emits = defineEmits(['modificarObjeto']);
 
 // definicion de los props
 const props = withDefaults(
@@ -55,19 +53,19 @@ const props = withDefaults(
     edicion?: Problema;
   }>(),
   {
-    edicion: null,
-  },
+    edicion: null
+  }
 );
 
 // datos por defecto del formulario
 const initForm = {
   resuelto: props.edicion?.resuelto ?? false,
-  reporteResolucion: props.edicion?.reporteResolucion,
+  reporteResolucion: props.edicion?.reporteResolucion
 };
 
 // definicion del estado
 const estado = reactive({
-  dataForm: clone(initForm),
+  dataForm: clone(initForm)
 });
 
 // submision del formulario
@@ -79,22 +77,22 @@ const formSubmit = async () => {
       {
         problemas: {
           buscar: {
-            _id: props.edicion?._id,
+            _id: props.edicion?._id
           },
           modificar: {
             resuelto: estado.dataForm.resuelto,
-            reporteResolucion: estado.dataForm.reporteResolucion,
-          },
-        },
-      },
+            reporteResolucion: estado.dataForm.reporteResolucion
+          }
+        }
+      }
     );
     emits(
-      "modificarObjeto",
-      entidad.problemas.find((v) => v._id === props.edicion?._id),
-      entidad,
+      'modificarObjeto',
+      entidad.problemas.find(v => v._id === props.edicion?._id),
+      entidad
     );
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
   // reinicializamos el formulario

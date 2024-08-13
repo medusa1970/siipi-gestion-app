@@ -11,12 +11,11 @@
       <input-text
         label="Correo electronico"
         labelAdentro
-        @update="(v) => (correo.value = v)"
+        @update="v => (correo.value = v)"
         :error="correo.error"
         requerido
         :rules="[useRules.correo()]"
-        icono="email"
-      />
+        icono="email" />
       <div class="w-full text-center">
         <q-btn label="Enviar codigo" type="submit" color="primary" no-caps />
       </div>
@@ -29,25 +28,25 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["go"]);
-import { apiAuth } from "~/modulos/main/API/auth.api";
+const emits = defineEmits(['go']);
+import { apiAuth } from '~/modulos/main/API/auth.api';
 
 const correo = reactiveInput();
 
 /**
  * Submit del formulario
  */
-const formSubmit = async (datos) => {
+const formSubmit = async datos => {
   try {
     const res = await apiAuth.pedirRDC(correo.value);
   } catch (err) {
-    if (isApiNotFound(err, "correo")) {
-      correo.error = "Email desconocido";
+    if (isApiNotFound(err, 'correo')) {
+      correo.error = 'Email desconocido';
     } else {
-      errFallBack(err);
+      errFailback(err);
     }
     return;
   }
-  emits("go", "rdc2");
+  emits('go', 'rdc2');
 };
 </script>

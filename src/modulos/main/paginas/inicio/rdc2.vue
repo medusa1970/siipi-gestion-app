@@ -11,11 +11,10 @@
       <input-text
         label="Código recibido por mail"
         labelAdentro
-        @update="(v) => (codigo.value = v)"
+        @update="v => (codigo.value = v)"
         :error="codigo.error"
         requerido
-        icono="key"
-      />
+        icono="key" />
       <div class="mt-1 w-full text-center">
         <q-btn no-caps label="siguiente" color="primary" type="submit"></q-btn>
       </div>
@@ -28,9 +27,9 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["go"]);
-import { apiAuth } from "~/modulos/main/API/auth.api";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
+const emits = defineEmits(['go']);
+import { apiAuth } from '~/modulos/main/API/auth.api';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -39,20 +38,20 @@ const codigo = reactiveInput();
 /**
  * Submit del formulario
  */
-const formSubmit = async (datos) => {
+const formSubmit = async datos => {
   let codigoOk = null;
   try {
     codigoOk = await apiAuth.actuarRDC(codigo.value);
   } catch (err) {
-    errFallBack(err);
+    errFailback(err);
     return;
   }
 
   if (codigoOk) {
     authStore.cookie.rdcToken = codigo.value;
-    emits("go", "rdc3");
+    emits('go', 'rdc3');
   } else {
-    codigo.error = "token inválido";
+    codigo.error = 'token inválido';
   }
 };
 </script>

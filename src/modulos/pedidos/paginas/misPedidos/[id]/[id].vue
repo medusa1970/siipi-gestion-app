@@ -55,8 +55,7 @@
         v-if="estado.pedidoDetalle.items"
         :rows="estado.pedidoDetalle.items"
         :columns="detallePedidoPunto"
-        dense
-        :handle-pedido="() => recibirPedido(params.id)">
+        dense>
         <template #dropdown>
           <span class="flex gap-2 justify-center items-center">
             <h1 class="font-bold bg-orange-500 p-2 text-white">

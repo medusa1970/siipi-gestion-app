@@ -187,6 +187,7 @@ export const apiPedido = {
 
   pedido_recibirOfertas: async (pedidoID: string, token?: any) => {
     try {
+      console.log(pedidoID, token);
       const pedidos = extraer(
         await GqlCambiarEstadoItems(
           {

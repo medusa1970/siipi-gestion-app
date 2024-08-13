@@ -41,7 +41,7 @@ export const useGlobal = () => {
 
     const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
       pedido.items.forEach((item: any) => {
-        // console.log(item);
+        console.log(item);
         if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
           const itemExistente = acumulador.find(
             (itemAcumulador: any) =>
@@ -93,7 +93,7 @@ export const useGlobal = () => {
       return acumulador;
     }, []);
 
-    // console.log(result);
+    console.log(result);
     pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
       const stock = estado.stocks.find(
         //@ts-ignore
@@ -106,7 +106,7 @@ export const useGlobal = () => {
         presentacionBasica: stock ? stock.producto.presentacionBasica : ''
       };
     });
-    // console.log(pedidoStore.pedidosSolicitado);
+    console.log(pedidoStore.pedidosSolicitado);
 
     // pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
     //   const stock = estado.stocks.find(
@@ -320,21 +320,21 @@ export const useGlobal = () => {
       [fila.oferta._id],
       authStore.token
     );
-    console.log(ofertasPreparadas);
 
     if (ofertasPreparadas) NotifySucessCenter('Oferta preparada exitosamente');
-    // console.log(ofertasPreparadas);
-    let item = ofertasPreparadas[0].items[0];
-    console.log(item);
+
+    let ofertaP = ofertasPreparadas
+      .flatMap(oferta => oferta.items)
+      .find(item => item.oferta._id === fila.oferta._id);
 
     pedidoStore.pedidosSolicitado.forEach(pedido => {
-      if (pedido.oferta._id == item.oferta._id) {
-        pedido.estado = item.estado;
+      if (pedido.oferta._id == ofertaP.oferta._id) {
+        pedido.estado = ofertaP.estado;
       }
     });
     pedidoStore.pedidosDirecto.forEach(pedido => {
-      if (pedido.oferta._id == item.oferta._id) {
-        pedido.estado = item.estado;
+      if (pedido.oferta._id == ofertaP.oferta._id) {
+        pedido.estado = ofertaP.estado;
       }
     });
   };

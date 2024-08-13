@@ -64,10 +64,9 @@ export const useMiPedido = () => {
   const recibirPedido = async () => {
     // INPUT PASSWORD CHOFER
     const password = 'choferSiipi123';
-    console.log(estado.pedidoID);
-    console.log(authStore.token);
 
     if (estado.passwordChofer == password) {
+      console.log(estado.pedidoID);
       const pedidoRecibido = await apiPedido.pedido_recibirOfertas(
         estado.pedidoID,
         authStore.token

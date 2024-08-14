@@ -125,6 +125,10 @@ mutation modificarOfertas(
           }
         }
       }
+      marca {
+        _id
+        nombre
+      }
       cantidad
     }
     imagen {

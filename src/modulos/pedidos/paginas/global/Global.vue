@@ -39,6 +39,7 @@
             @click="aceptarTodosLosPedidosSolicitables" />
         </section>
         <TableSimple
+          v-if="pedidoStore.pedidosSolicitado"
           :rows="pedidoStore.pedidosSolicitado"
           :columns="pedidoGlobal"
           dense
@@ -148,6 +149,7 @@
             @click="aceptarTodosLosPedidosDirectos" />
         </section>
         <TableSimple
+          v-if="pedidoStore.pedidosDirecto"
           :rows="pedidoStore.pedidosDirecto"
           :columns="pedidoGlobal"
           dense

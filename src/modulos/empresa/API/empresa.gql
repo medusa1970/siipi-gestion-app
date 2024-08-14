@@ -1,0 +1,98 @@
+query buscarMovimientoEntidad(
+  $entidadId: ID!
+  $desde: DateTime
+  $hasta: DateTime
+  $opciones: BuscarOpciones = {}
+) {
+  buscarMovimientoEntidad(
+    entidadId: $entidadId
+    desde: $desde
+    hasta: $hasta
+    opciones: $opciones
+  ) {
+    _id
+  }
+}
+
+query actualizarSaldoEntidad(
+  $busqueda: BuscarEntidadDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  actualizarSaldoEntidad(busqueda: $busqueda, opciones: $opciones)
+}
+
+query pedidosPorPagarEntidad($entidadId: ID!, $opciones: BuscarOpciones = {}) {
+  pedidosPorPagarEntidad(entidadId: $entidadId, opciones: $opciones) {
+    _id
+    precio
+    pagado
+  }
+}
+
+mutation crearTransaccionConLimite(
+  $crearTransaccion: CrearTransaccionDto!
+  $opciones: BuscarOpciones = {}
+) {
+  crearTransaccionConLimite(
+    crearTransaccion: $crearTransaccion
+    opciones: $opciones
+  ) {
+    _id
+    _creado
+    _modificado
+    _borrado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+    numero
+    referencia
+    comentario
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
+  }
+}
+
+mutation validarTransaccion(
+  $buscarTransaccion: BuscarTransaccionDto = {}
+  $opciones: BuscarOpciones = {}
+) {
+  validarTransaccion(
+    buscarTransaccion: $buscarTransaccion
+    opciones: $opciones
+  ) {
+    _id
+    _creado
+    _modificado
+    _borrado
+    comprador {
+      _id
+    }
+    vendedor {
+      _id
+    }
+    monto
+    glosa
+    modalidad
+    estado
+    numero
+    referencia
+    comentario
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
+  }
+}

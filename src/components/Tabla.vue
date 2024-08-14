@@ -8,7 +8,7 @@
     :defaultImage="defaultImage"
     :filter="filter"
     :dense
-    :rows-per-page-options="[30]">
+    :rows-per-page-options="[paginacion]">
     <template #top>
       <slot name="dropdown" />
     </template>
@@ -22,7 +22,7 @@
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
           <div v-if="col.slot">
             <slot
-              :name="`body-cell-${col.name}`"
+              :name="`cell-${col.name}`"
               :val="col.value"
               :row="props.row" />
           </div>
@@ -47,8 +47,10 @@
       </q-tr>
     </template>
     <template v-slot:bottom-row v-if="footer">
-      <q-tr
-        ><q-td v-for="cell in footer">{{ cell }} </q-td>
+      <q-tr style="height: 10px" class="bg-lime-300">
+        <q-td v-for="row in footer" :style="'text-align: ' + row.align">
+          {{ row.value }}
+        </q-td>
       </q-tr>
     </template>
   </q-table>
@@ -61,7 +63,7 @@ const props = withDefaults(
   defineProps<{
     rows: Array<any>;
     columns: Array<any>;
-    footer: Array<any>;
+    footer?: Array<any>;
     defaultImage?: any;
     rowKey?: string;
     conBusqueda?: boolean;
@@ -69,6 +71,7 @@ const props = withDefaults(
     titulo?: string;
     disableExpand?: boolean;
     dense?: boolean;
+    paginacion?: number;
   }>(),
   {
     defaultImage: null,
@@ -77,8 +80,9 @@ const props = withDefaults(
     conBusqueda: false,
     titulo: '',
     disableExpand: false,
-    dense: false,
-    footer: null
+    dense: true,
+    footer: null,
+    paginacion: 0
   }
 );
 watch(
@@ -132,14 +136,12 @@ watch(
     border: none;
   }
   thead {
+    height: 30px !important;
     color: red;
     font-weight: bold;
     text-transform: uppercase;
     background: #888888;
     color: white;
-  }
-  tr {
-    height: 10px !important;
   }
   tr.odd {
     background-color: #e7e9eb;
@@ -151,5 +153,13 @@ watch(
   tr.expand .q-card {
     background-color: #f8f8f8;
   }
+  tfoot {
+    background-color: red;
+  }
+}
+.q-tr {
+}
+.q-td {
+  height: 30px !important;
 }
 </style>

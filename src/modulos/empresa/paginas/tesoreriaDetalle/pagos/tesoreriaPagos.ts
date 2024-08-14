@@ -10,38 +10,74 @@ export const permisosTesoreria = ['ADMINISTRACION'];
  * Composable
  */
 export const useTesoreriaPagos = () => {
-  const { store, authStore, estadoEmpresa, router, useEntidad2 } = useEmpresa();
+  const { store, authStore, apiEmpresa, router, useEntidad2 } = useEmpresa();
   if (!authStore.autorizar(permisosTesoreria)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     transacciones: [],
     filtros: {
-      buscar: ''
+      buscar: '',
+      modalidad: null,
+      estado: null
     },
     showModal: {
       // recibirPagoQR: false,
+      recibirPagoCupon: false,
       recibirPagoGiro: false,
       recibirPagoEfectivo: false
-    }
+    },
+    porPagar: null
   });
 
-  const refreshTransacciones = async (id = null) => {
+  const refreshTransacciones = async () => {
     try {
-      estado.transacciones = await api.buscarTransacciones({
-        comprador: [store.entidad._id]
-      });
+      estado.transacciones = await api.buscarTransacciones(
+        {
+          comprador: [store.entidad._id]
+        },
+        { sort: '-_creado' }
+      );
     } catch (err) {
       errFailback(err);
     }
   };
 
+  watch(
+    () => store.entidad,
+    async val => {
+      let pedidos;
+      try {
+        pedidos = await apiEmpresa.pedidosPorPagarEntidad(val._id);
+      } catch (err) {
+        errFailback(err);
+      }
+      estado.porPagar = pedidos.reduce(
+        (total, pedido) => total + pedido.precio - pedido.pagado,
+        0
+      );
+    },
+    { immediate: true }
+  );
+
   onMounted(async () => {
-    refreshTransacciones(store.infoPedidos);
+    refreshTransacciones();
   });
 
   // Rows para la tabla
   const rowsTabla = computed(() => {
-    return estado.transacciones;
+    let filtered = estado.transacciones;
+    if (!filtered) return [];
+    if (estado.filtros.modalidad) {
+      filtered = filtered.filter(
+        transaccion => transaccion.modalidad === estado.filtros.modalidad
+      );
+    }
+    if (estado.filtros.estado) {
+      filtered = filtered.filter(
+        transaccion => transaccion.estado === estado.filtros.estado
+      );
+    }
+    return filtered;
   });
 
   const handlePagoEfectivo = () => {
@@ -50,6 +86,10 @@ export const useTesoreriaPagos = () => {
   };
   const handlePagoGiro = () => {
     estado.showModal.recibirPagoGiro = false;
+    refreshTransacciones();
+  };
+  const handlePagoCupon = () => {
+    estado.showModal.recibirPagoCupon = false;
     refreshTransacciones();
   };
   // const handlePagoQR = () => {
@@ -63,7 +103,8 @@ export const useTesoreriaPagos = () => {
     router,
     rowsTabla,
     handlePagoEfectivo,
-    handlePagoGiro
+    handlePagoGiro,
+    handlePagoCupon
     // handlePagoQR
   };
 };

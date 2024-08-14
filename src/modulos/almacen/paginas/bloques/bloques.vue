@@ -44,12 +44,12 @@
             @click="() => (estado.modal.formCrearBloque = true)" />
         </div>
       </template>
-      <template #body-cell-nombre="{ val, row }">
+      <template #cell-nombre="{ val, row }">
         {{ val }}
         <br />
         <i>{{ row.descripcion }}</i>
       </template>
-      <template #body-cell-actions="{ row }">
+      <template #cell-actions="{ row }">
         <q-btn-group push @click="e => e.stopPropagation()">
           <q-btn
             @click="

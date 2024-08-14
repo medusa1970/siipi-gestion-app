@@ -75,7 +75,7 @@
           </span>
         </template>
 
-        <template #body-cell-actions="{ props }">
+        <template #cell-actions="{ props }">
           <q-td :props="props">
             <q-btn
               v-if="
@@ -100,7 +100,7 @@
         :columns="detallePedidoAlmacen"
         dense>
         
-        <template #body-cell-actions="{ props }">
+        <template #cell-actions="{ props }">
           <q-td :props="props">
             <q-btn
               v-if="

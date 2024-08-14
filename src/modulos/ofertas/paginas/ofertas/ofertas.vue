@@ -42,7 +42,7 @@
         </div>
       </template>
 
-      <template #body-cell-estado="{ row }">
+      <template #cell-estado="{ row }">
         {{ fechaMes(row._modificado ?? row._creado) }}
         <br />
         <q-badge
@@ -64,7 +64,7 @@
         <q-badge v-else color="orange"> incompleto </q-badge>
       </template>
 
-      <template #body-cell-nombre="{ val, row }">
+      <template #cell-nombre="{ val, row }">
         <h1 v-if="row.nombre" class="tooltip font-semibold">
           {{
             row.nombre.length > 30
@@ -94,11 +94,11 @@
         </p>
       </template>
 
-      <!-- <template #body-cell-catalogo="{ val, row }">
+      <!-- <template #cell-catalogo="{ val, row }">
         <h1>{{ val.nombre }}</h1>
       </template> -->
 
-      <template #body-cell-acciones="{ val, row }">
+      <template #cell-acciones="{ val, row }">
         <q-btn-group push @click="e => e.stopPropagation()">
           <btnAccion
             icono="edit black"

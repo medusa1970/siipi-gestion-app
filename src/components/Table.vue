@@ -7,8 +7,7 @@
     :filter="filter"
     :rows-per-page-options="[10, 20]"
     :dense="dense"
-    class="border-none"
-  >
+    class="border-none">
     <!-- HEADER -->
     <template v-slot:top-right="props">
       <q-input
@@ -25,15 +24,13 @@
           padding: 0 10px;
           width: 220px;
         "
-        placeholder="Buscar"
-      >
+        placeholder="Buscar">
         <template v-slot:append>
           <q-icon
             name="close"
             @click.stop.prevent="filter = ''"
             class="cursor-pointer"
-            size="22px"
-          />
+            size="22px" />
         </template>
         <template v-slot:prepend>
           <q-icon name="search" size="22px" />
@@ -51,8 +48,7 @@
           width: 150px;
         "
         placeholder="Buscar"
-        clearable
-      >
+        clearable>
         <template v-slot:prepend>
           <q-icon name="search" size="22px" />
         </template>
@@ -63,8 +59,7 @@
         round
         dense
         :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-        @click="props.toggleFullscreen"
-      />
+        @click="props.toggleFullscreen" />
     </template>
 
     <!-- DROPDDOWN -->
@@ -72,12 +67,12 @@
       <slot name="dropdown"></slot>
     </template>
     <!-- ACCIONES -->
-    <template v-slot:body-cell-actions="props">
-      <slot name="body-cell-actions" :props="props"></slot>
+    <template v-slot:cell-actions="props">
+      <slot name="cell-actions" :props="props"></slot>
     </template>
     <!-- IMAGES -->
-    <template v-slot:body-cell-foto="{ value }">
-      <slot name="body-cell-image" :value="value"></slot>
+    <template v-slot:cell-foto="{ value }">
+      <slot name="cell-image" :value="value"></slot>
     </template>
     <!-- BADGE -->
     <template v-if="badge" v-slot:body="props">
@@ -87,20 +82,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-const filter = ref("");
+import { ref } from 'vue';
+const filter = ref('');
 
 defineProps({
   rows: {
     type: Array,
-    required: true,
+    required: true
   },
   columns: {
     type: Array,
-    required: true,
+    required: true
   },
   dense: Boolean,
-  badge: Boolean,
+  badge: Boolean
 });
 </script>
 <style>

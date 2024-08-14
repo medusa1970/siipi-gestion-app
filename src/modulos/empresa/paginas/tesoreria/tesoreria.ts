@@ -31,7 +31,15 @@ export const useTesoreria = () => {
 
   // Rows para la tabla
   const rowsTabla = computed(() => {
-    return store.infoPedidos ?? [];
+    let filtered = store.infoPedidos;
+    if (!filtered) return [];
+    if (estado.filtros.buscar != null) {
+      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      filtered = filtered.filter(infoPedido => {
+        return regex.test(sinImportarAcentos(infoPedido.entidad.nombre));
+      });
+    }
+    return filtered;
   });
 
   return {

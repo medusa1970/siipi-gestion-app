@@ -13,7 +13,7 @@ export const getRoute = function (
   if (route) {
     path = params ? replaceParamsInRoute(route.path, params) : route.path;
   } else {
-    console.warn(`Ruta desconocida (${routeName}), redireccionando al inicio`);
+    console.warn(`Ruta desconocida (${routeName})`);
   }
   return '/' + path.replace(/^(\/)+|(\/)+$/g, '');
 };

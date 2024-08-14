@@ -1,7 +1,7 @@
 <template>
   <tabla disableExpand :columns="columnsTabla" :rows="rowsTabla">
-    <template #body-cell-actions="{ row }">
-      <q-btn-group push @click="(e) => e.stopPropagation()">
+    <template #cell-actions="{ row }">
+      <q-btn-group push @click="e => e.stopPropagation()">
         <q-btn
           @click="
             () => {
@@ -12,8 +12,7 @@
           icon="edit"
           class="p-1"
           color="black"
-          size="sm"
-        />
+          size="sm" />
         <q-tooltip> Eliminar marca </q-tooltip>
         <q-btn
           v-if="row.cantidadMin > 1"
@@ -21,8 +20,7 @@
           class="p-1"
           color="red"
           size="sm"
-          @click="borrarOfertaPrecio(row)"
-        />
+          @click="borrarOfertaPrecio(row)" />
         <q-tooltip> Eliminar precio </q-tooltip>
       </q-btn-group>
     </template>
@@ -34,8 +32,7 @@
       label="Agregar precio por mayor"
       color="green"
       no-caps
-      padding="4px 10px"
-    />
+      padding="4px 10px" />
   </div>
 
   <popup v-model="estado.modal.formCrearPrecio" titulo="Agregar un precio">
@@ -46,26 +43,24 @@
 
   <popup
     v-model="estado.modal.formModificarPrecio"
-    titulo="Modificar un precio"
-  >
+    titulo="Modificar un precio">
     <template #body>
       <formPrecio
         :edicion="estado.configEdit"
-        @modificarObjeto="handlePrecioModificado"
-      />
+        @modificarObjeto="handlePrecioModificado" />
     </template>
   </popup>
 </template>
 
 <script setup>
-import { usePrecioTab } from "./preciosTab.composable";
-import formPrecio from "@/modulos/ofertas/forms/formPrecio.vue";
+import { usePrecioTab } from './preciosTab.composable';
+import formPrecio from '@/modulos/ofertas/forms/formPrecio.vue';
 const {
   estado,
   store,
   borrarOfertaPrecio,
   handlePrecioCreado,
-  handlePrecioModificado,
+  handlePrecioModificado
 } = usePrecioTab();
 
 // Rows para la tabla
@@ -75,9 +70,9 @@ const rowsTabla = computed(() => {
       _esOferta: true,
       cantidadMin: 1,
       precioConFactura: store.oferta.precioConFactura,
-      precioSinFactura: store.oferta.precioSinFactura,
+      precioSinFactura: store.oferta.precioSinFactura
     },
-    ...(store.oferta.preciosPorMayor ?? []),
+    ...(store.oferta.preciosPorMayor ?? [])
   ];
   // TODO ORDENAR LOS PRECIOS
   return rows.sort((a, b) => a.cantidadMin - b.cantidadMin);
@@ -86,27 +81,27 @@ const rowsTabla = computed(() => {
 // Columnas
 const columnsTabla = [
   {
-    name: "cantidad",
-    label: "A partir de...",
-    field: (row) => row.cantidadMin,
+    name: 'cantidad',
+    label: 'A partir de...',
+    field: row => row.cantidadMin
   },
   {
-    name: "precioSinFactura",
-    label: "Precio sin factura",
-    field: (row) => row.precioSinFactura,
-    format: (value) => (value != null ? `${value} bs` : "a ingresar"),
+    name: 'precioSinFactura',
+    label: 'Precio sin factura',
+    field: row => row.precioSinFactura,
+    format: value => (value != null ? `${value} bs` : 'a ingresar')
   },
   {
-    name: "precioConFactura",
-    label: "Precio con factura",
-    field: (row) => row.precioConFactura,
-    format: (value) => (value != null ? `${value} bs` : "a ingresar"),
+    name: 'precioConFactura',
+    label: 'Precio con factura',
+    field: row => row.precioConFactura,
+    format: value => (value != null ? `${value} bs` : 'a ingresar')
   },
   {
-    name: "actions",
-    label: "",
-    align: "center",
-    slot: true,
-  },
+    name: 'actions',
+    label: '',
+    align: 'center',
+    slot: true
+  }
 ];
 </script>

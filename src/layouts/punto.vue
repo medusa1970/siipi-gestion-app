@@ -36,8 +36,8 @@ import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
 import { permisosProveedores } from '~/modulos/almacen/paginas/proveedores/proveedores.composable';
 import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable';
-import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados.composable';
-import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria.composable';
+import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
+import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 

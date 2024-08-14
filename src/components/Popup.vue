@@ -26,10 +26,10 @@
 const props = withDefaults(
   defineProps<{
     titulo: string;
-    width: number;
+    width?: number;
   }>(),
   {
-    width: null,
-  },
+    width: 0
+  }
 );
 </script>

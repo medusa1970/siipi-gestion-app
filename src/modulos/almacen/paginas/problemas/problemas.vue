@@ -49,7 +49,7 @@
           </q-card>
         </div>
       </template>
-      <template #body-cell-acciones="{ row }">
+      <template #cell-acciones="{ row }">
         <q-btn-group push @click="e => e.stopPropagation()">
           <q-btn
             @click="

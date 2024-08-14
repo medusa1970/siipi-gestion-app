@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 class="inputTitle" v-if="!labelAdentro">
-      {{ label + (requerido ? " *" : "") }}
+      {{ label + (requerido ? ' *' : '') }}
       <q-icon
         name="help"
         color="blue"
@@ -82,9 +82,9 @@
 </template>
 
 <script setup lang="ts">
-import { inputConfig, locale } from "./input.service";
-import { validacion } from "./input.validacion";
-import { ref } from "vue";
+import { inputConfig } from './input.service';
+import { validacion } from './input.validacion';
+import { ref } from 'vue';
 
 /**
  * El tooltip tiene el texto de ayuda ;
@@ -101,14 +101,14 @@ const hideTooltip = (seconds = 5) =>
 
 const emits = defineEmits<{
   (
-    event: "update", // si cambió el valor del input
-    valor: Date, // el valor
+    event: 'update', // si cambió el valor del input
+    valor: Date // el valor
   ): void;
   (
-    event: "error", // si estado de error de validación cambió
+    event: 'error', // si estado de error de validación cambió
     errorFlag: boolean, // true si hay un error activa
     errorMessage: string | null, // el mensaje de error
-    valor: any, // el valor que ha provocado el error
+    valor: any // el valor que ha provocado el error
   ): void;
 }>();
 
@@ -177,7 +177,7 @@ const props = withDefaults(
     noSlot: false,
     clearable: true,
     rules: [] as Function[],
-    hint: "Fecha con el formato DD/MM/AAAA",
+    hint: 'Fecha con el formato DD/MM/AAAA',
     before: null,
     after: null,
     filled: inputConfig.filled,
@@ -185,16 +185,16 @@ const props = withDefaults(
     outlined: inputConfig.outlined,
     clase: inputConfig.clase,
     labelAdentro: inputConfig.labelAdentro,
-    forceWatch: null,
-  },
+    forceWatch: null
+  }
 );
 
 const valorParaMostrar = (valor = null) => {
-  return valor != null ? new Date(valor).toLocaleString().split(" ")[0] : null;
+  return valor != null ? new Date(valor).toLocaleString().split(' ')[0] : null;
 };
-const valorParaEmitir = (date) => {
+const valorParaEmitir = date => {
   if (date === null) return null;
-  const [day, month, year] = date.split("/");
+  const [day, month, year] = date.split('/');
   return new Date(`${month}/${day}/${year}`);
 };
 
@@ -215,7 +215,7 @@ const errorMensaje = ref<string>(props.error);
 
 // modales
 const showModal = reactive({
-  datePicker: false,
+  datePicker: false
 });
 
 /**
@@ -233,9 +233,9 @@ if (props.after) {
 if (props.requerido) {
   reglasValidacion = [
     validacion.requerido(
-      typeof props.requerido === "string" ? props.requerido : undefined,
+      typeof props.requerido === 'string' ? props.requerido : undefined
     ),
-    ...reglasValidacion,
+    ...reglasValidacion
   ];
 }
 
@@ -252,16 +252,16 @@ watch(
 
     // clear: ponemos el localModel a null
     if (localModel.value === null) {
-      emits("update", null);
+      emits('update', null);
     }
 
     // change: si no hay error de validacion, emitemos el nuevo valor
     else {
       if (activarValidacion()) {
-        emits("update", valorParaEmitir(localModel.value));
+        emits('update', valorParaEmitir(localModel.value));
       }
     }
-  },
+  }
 );
 
 /**
@@ -271,9 +271,9 @@ watch(
 watch(
   () => props.watch,
   () => {
-    emits("update", valorParaEmitir(localModel.value));
+    emits('update', valorParaEmitir(localModel.value));
   },
-  { once: true, immediate: true },
+  { once: true, immediate: true }
 );
 
 /**
@@ -288,7 +288,7 @@ watch(
   () => {
     localModel.value = valorParaMostrar(props.watch);
   },
-  { immediate: false },
+  { immediate: false }
 );
 
 /**
@@ -297,7 +297,7 @@ watch(
 const handleClear = () => {
   localModel.value = null;
 };
-const handleBlur = (e) => {
+const handleBlur = e => {
   setError(null);
 };
 
@@ -309,7 +309,7 @@ const handleBlur = (e) => {
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje !== null;
-  emits("error", errorFlag.value, errorMensaje.value, localModel.value);
+  emits('error', errorFlag.value, errorMensaje.value, localModel.value);
 }
 
 /**
@@ -337,7 +337,7 @@ function activarValidacion() {
 
 watch(
   () => props.error,
-  () => setError(props.error),
+  () => setError(props.error)
 );
 
 /**
@@ -348,6 +348,6 @@ watch(
 watch(
   () => props.activarValidacion,
   () => activarValidacion(),
-  { immediate: false },
+  { immediate: false }
 );
 </script>

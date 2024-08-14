@@ -55,7 +55,7 @@
             noSlot />
         </div>
       </template>
-      <template #body-cell-estado="{ row }">
+      <template #cell-estado="{ row }">
         {{ fechaMes(row._modificado ?? row._creado) }}
         <br />
         <q-badge v-if="!productoIncompleto(row)" color="green">
@@ -160,7 +160,7 @@
         </div>
       </template>
 
-      <template #body-cell-acciones="{ row }">
+      <template #cell-acciones="{ row }">
         <q-btn-group>
           <btnAccion
             icono="edit black"
@@ -189,7 +189,7 @@
           </q-btn>
         </q-btn-group>
       </template>
-      <template #body-cell-nombre="{ val, row }">
+      <template #cell-nombre="{ val, row }">
         <div
           style="
             font-size: 13px;

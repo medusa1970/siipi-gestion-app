@@ -47,7 +47,11 @@ provide('infoPagina', {
       titulo: store.entidad?.nombre,
       camino: [
         { label: 'Tesoreria', to: 'tesoreria' },
-        { label: store.entidad?.nombre }
+        {
+          label: store.entidad?.nombre,
+          to: 'tesoreriaDetalle',
+          params: { id: store.entidad?._id }
+        }
       ]
     };
   }

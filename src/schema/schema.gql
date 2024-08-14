@@ -237,6 +237,8 @@ type Oferta {
   precioConFactura: Float
   preciosPorMayor: [Precio!]!
   catalogo: Catalogo!
+  solicitable: Boolean
+  tags: [String!]
 }
 
 type Catalogo {
@@ -364,7 +366,7 @@ type Entidad {
   bloques: [Bloque!]
   problemas: [Problema!]
   saldo: Float
-  saldoActualizacion: DateTime
+  fechaActualizacionSaldo: DateTime
   menus: [Menu!]
   ruta: [Float!]
   orden: [Float!]
@@ -409,6 +411,16 @@ type Item {
   estado: [ItemEstado!]!
 }
 
+type PedidoMonto {
+  _id: ID!
+  _creado: DateTime
+  _modificado: DateTime
+  _borrado: DateTime
+  _orden: Float
+  total: Float!
+  pedido: Pedido
+}
+
 type Transaccion {
   _id: ID!
   _creado: DateTime
@@ -423,6 +435,8 @@ type Transaccion {
   estado: String
   numero: Float
   referencia: String
+  pedidos: [PedidoMonto!]
+  comentario: String
 }
 
 type TransaccionMonto {
@@ -445,8 +459,10 @@ type Pedido {
   vendedor: Entidad
   estado: [Estado!]
   items: [Item!]!
-  transacciones: [TransaccionMonto!]!
-  pagoCompleto: Boolean
+  transacciones: [TransaccionMonto!]
+  conFactura: Boolean!
+  precio: Float
+  pagado: Float
 }
 
 type ConexionResponse {
@@ -542,6 +558,9 @@ type Query {
   buscarTags(busqueda: BuscarTagDto!, opciones: BuscarOpciones, filtro: BuscarTagDto): [Tag!]!
   contarTransacciones(busqueda: BuscarTransaccionDto!, opciones: ContarOpciones): Float!
   buscarTransacciones(busqueda: BuscarTransaccionDto!, opciones: BuscarOpciones, filtro: BuscarTransaccionDto): [Transaccion!]!
+  buscarMovimientoEntidad(entidadId: ID!, desde: DateTime, hasta: DateTime, opciones: BuscarOpciones): [Pedido!]!
+  actualizarSaldoEntidad(busqueda: BuscarEntidadDto!, opciones: BuscarOpciones): Float!
+  pedidosPorPagarEntidad(entidadId: ID!, opciones: BuscarOpciones): [Pedido!]!
 }
 
 input BuscarEjemploDto {
@@ -683,7 +702,7 @@ input BuscarEntidadDto {
   problemas: BuscarProblemaDto
   menus: BuscarMenuDto
   saldo: [Float!]
-  saldoActualizacion: [BuscarFechaDto!]
+  fechaActualizacionSaldo: [BuscarFechaDto!]
   servicios: BuscarServicioDto
 }
 
@@ -854,6 +873,8 @@ input BuscarOfertaDto {
   precioSinFactura: Float
   preciosPorMayor: BuscarPrecioDto
   catalogo: [ID!]
+  solicitable: Boolean
+  tags: [String!]
 }
 
 input BuscarPreparadoDto {
@@ -886,7 +907,9 @@ input BuscarPedidoDto {
   estado: BuscarEstadoDto
   items: BuscarItemDto
   transacciones: BuscarTransaccionMontoDto
-  pagoCompleto: Boolean
+  conFactura: Boolean
+  precio: [Float!]
+  pagado: [Float!]
 }
 
 input BuscarEstadoDto {
@@ -985,6 +1008,17 @@ input BuscarTransaccionDto {
   estado: [String!]
   numero: [Float!]
   referencia: [String!]
+  pedidos: BuscarPedidoMontoDto
+  comentario: [String!]
+}
+
+input BuscarPedidoMontoDto {
+  _id: [ID!]
+  _creado: [BuscarFechaDto!]
+  _modificado: [BuscarFechaDto!]
+  _borrado: [BuscarFechaDto!]
+  total: [Float!]
+  pedido: [ID!]
 }
 
 type Mutation {
@@ -1079,6 +1113,8 @@ type Mutation {
   borrarTransacciones(busqueda: BuscarTransaccionDto!, opciones: BorrarOpciones): [Transaccion!]!
   eliminarTransacciones(busqueda: BuscarTransaccionDto!, opciones: EliminarOpciones): Float!
   moverTransacciones(busqueda: BuscarTransaccionDto!, despuesDe: BuscarTransaccionDto!, opciones: EliminarOpciones): Float!
+  crearTransaccionConLimite(crearTransaccion: CrearTransaccionDto!, opciones: BuscarOpciones): Transaccion!
+  validarTransaccion(buscarTransaccion: BuscarTransaccionDto!, opciones: BuscarOpciones): Transaccion!
 }
 
 input PopulateOpciones {
@@ -1291,7 +1327,7 @@ input CrearEntidadDto {
   problemas: [CrearProblemaDto!]
   menus: [CrearMenuDto!]
   saldo: Float = 0
-  saldoActualizacion: DateTime = "2024-08-12T01:03:09.560Z"
+  fechaActualizacionSaldo: DateTime = "2024-08-14T06:14:21.692Z"
   servicios: [CrearServicioDto!]
 }
 
@@ -1412,7 +1448,7 @@ input ModificarEntidadDto {
   problemas: EditarProblemaDto
   menus: EditarMenuDto
   saldo: Float
-  saldoActualizacion: DateTime
+  fechaActualizacionSaldo: DateTime
   servicios: EditarServicioDto
 }
 
@@ -1672,6 +1708,8 @@ input CrearOfertaDto {
   precioSinFactura: Float
   preciosPorMayor: [CrearPrecioDto!]
   catalogo: ID!
+  solicitable: Boolean
+  tags: [String!]
 }
 
 input CrearPreparadoDto {
@@ -1700,6 +1738,8 @@ input ModificarOfertaDto {
   precioSinFactura: Float
   preciosPorMayor: EditarPrecioDto
   catalogo: ID
+  solicitable: Boolean
+  tags: EditarStringsDto
 }
 
 input EditarPreparadoDto {
@@ -1734,6 +1774,12 @@ input ModificarIngredienteDto {
   cantidad: Float
 }
 
+input EditarStringsDto {
+  reemplazar: [String!]
+  borrar: [String!]
+  agregar: [String!]
+}
+
 input CrearPedidoDto {
   _id: ID
   comprador: ID!
@@ -1741,7 +1787,9 @@ input CrearPedidoDto {
   estado: [CrearEstadoDto!]
   items: [CrearItemDto!]
   transacciones: [CrearTransaccionMontoDto!]
-  pagoCompleto: Boolean
+  conFactura: Boolean!
+  precio: Float
+  pagado: Float
 }
 
 input CrearEstadoDto {
@@ -1782,7 +1830,9 @@ input ModificarPedidoDto {
   estado: EditarEstadoDto
   items: EditarItemDto
   transacciones: EditarTransaccionMontoDto
-  pagoCompleto: Boolean
+  conFactura: Boolean
+  precio: Float
+  pagado: Float
 }
 
 input EditarEstadoDto {
@@ -1923,6 +1973,14 @@ input CrearTransaccionDto {
   estado: String
   numero: Float
   referencia: String
+  pedidos: [CrearPedidoMontoDto!]
+  comentario: String
+}
+
+input CrearPedidoMontoDto {
+  _id: ID
+  total: Float!
+  pedido: [ID!]
 }
 
 input ModificarTransaccionDto {
@@ -1934,4 +1992,6 @@ input ModificarTransaccionDto {
   estado: String
   numero: Float
   referencia: String
+  pedidos: BuscarPedidoMontoDto
+  comentario: String
 }

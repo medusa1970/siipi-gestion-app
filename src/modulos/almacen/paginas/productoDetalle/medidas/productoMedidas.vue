@@ -19,12 +19,10 @@
     @update="changeMedida"
     :porDefecto="store.producto.medida?._id"
     requerido
-    :dialog="formMedida"
-  />
+    :dialog="formMedida" />
   <div
     class="!flex justify-center"
-    v-if="!store.producto.empaques || store.producto.empaques.length === 0"
-  >
+    v-if="!store.producto.empaques || store.producto.empaques.length === 0">
     <q-btn
       class="display-block mx-auto mt-1"
       color="primary"
@@ -32,8 +30,7 @@
       dense
       no-caps
       padding="3px 20px"
-      @click="formSubmit"
-    />
+      @click="formSubmit" />
   </div>
 
   <!-- 
@@ -89,8 +86,7 @@
     align: 'right',
     slot: true,
   },
-]"
-  >
+]">
     <template #dropdown>
       <div class="flex">
         <input-text
@@ -98,19 +94,17 @@
           labelAdentro
           class="col-span-1"
           label="Buscar"
-          noSlot
-        />
+          noSlot />
         <q-btn
           @click="() => (estado.modal.formEmpaqueCrear = true)"
           icon="add"
           color="green"
           no-caps
-          padding="4px 10px"
-        />
+          padding="4px 10px" />
       </div>
     </template>
-    <template #body-cell-actions="{ row }">
-      <q-btn-group push @click="(e) => e.stopPropagation()">
+    <template #cell-actions="{ row }">
+      <q-btn-group push @click="e => e.stopPropagation()">
         <q-btn
           @click="
             () => {
@@ -121,15 +115,13 @@
           class="p-1"
           color="black"
           size="sm"
-          icon="edit"
-        />
+          icon="edit" />
         <q-btn
           icon="delete"
           class="p-1"
           color="red"
           size="sm"
-          @click="borrarProductoEmpaque(row)"
-        >
+          @click="borrarProductoEmpaque(row)">
           <q-tooltip> Eliminar empaque </q-tooltip>
         </q-btn>
       </q-btn-group>
@@ -141,20 +133,17 @@
 
   <Popup
     v-model="estado.modal.formEmpaqueModificar"
-    titulo="Modificar el empaque"
-  >
+    titulo="Modificar el empaque">
     <template #body>
       <formEmpaque
         :edicion="estado.empaque"
-        @modificarObjeto="handleEmpaqueModificado"
-      />
+        @modificarObjeto="handleEmpaqueModificado" />
     </template>
   </Popup>
 
   <Popup
     v-model="estado.modal.formEmpaqueCrear"
-    titulo="Registrar nuevo empaque"
-  >
+    titulo="Registrar nuevo empaque">
     <template #body>
       <formEmpaque @crearObjeto="handleEmpaqueCreado" />
     </template>
@@ -162,9 +151,9 @@
 </template>
 
 <script setup lang="ts">
-import formMedida from "@/modulos/almacen/forms/formMedida.vue";
-import formEmpaque from "@/modulos/almacen/forms/formEmpaque.vue";
-import { useProductoMedidas } from "./productoMedidas.composable";
+import formMedida from '@/modulos/almacen/forms/formMedida.vue';
+import formEmpaque from '@/modulos/almacen/forms/formEmpaque.vue';
+import { useProductoMedidas } from './productoMedidas.composable';
 const { $socket } = useNuxtApp();
 const {
   estado,
@@ -172,20 +161,20 @@ const {
   formSubmit,
   handleEmpaqueModificado,
   handleEmpaqueCreado,
-  borrarProductoEmpaque,
+  borrarProductoEmpaque
 } = useProductoMedidas();
 
 //inicializaciones
 onMounted(async () => {
   // llenamos las opciones de medidas
   estado.medidas = await api.buscarMedidas({});
-  estado.medidaOpciones = estado.medidas.map((medida) => ({
+  estado.medidaOpciones = estado.medidas.map(medida => ({
     value: medida._id,
-    label: `${medida.nombre} (${medida.abreviacion})`,
+    label: `${medida.nombre} (${medida.abreviacion})`
   }));
 });
 
-const changeMedida = (v) => {
+const changeMedida = v => {
   estado.medidaId = v;
 };
 
@@ -196,14 +185,14 @@ const rowsTabla = computed(() => {
   let filtered = store.producto.empaques;
   if (!filtered) return [];
   if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
-    filtered = filtered.filter((empaque) => {
+    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    filtered = filtered.filter(empaque => {
       return regex.test(
         empaque.abreviacion +
           empaque.nombre +
-          empaque.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "") +
+          empaque.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '') +
           empaque.marca.nombre +
-          empaque.marca.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          empaque.marca.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       );
     });
   }

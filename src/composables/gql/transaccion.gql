@@ -21,6 +21,13 @@ query buscarTransacciones(
     glosa
     modalidad
     estado
+    comentario
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
   }
 }
 
@@ -41,7 +48,14 @@ mutation crearTransacciones(
     monto
     glosa
     modalidad
+    comentario
     estado
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
   }
 }
 
@@ -67,7 +81,14 @@ mutation modificarTransacciones(
     monto
     glosa
     modalidad
+    comentario
     estado
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
   }
 }
 
@@ -88,6 +109,13 @@ mutation borrarTransacciones(
     monto
     glosa
     modalidad
+    comentario
     estado
+    pedidos {
+      pedido {
+        _id
+      }
+      total
+    }
   }
 }

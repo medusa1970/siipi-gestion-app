@@ -14,7 +14,7 @@
             noSlot />
         </div>
       </template>
-      <template #body-cell-actions="{ row }">
+      <template #cell-actions="{ row }">
         <q-btn-group push @click="e => e.stopPropagation()">
           <btnAccion
             icono="visibility black"

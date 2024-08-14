@@ -12,13 +12,7 @@
       requerido />
 
     <input-text
-      label="Glosa"
-      info="Info #"
-      @update="v => (estado.dataForm.glosa = v as string)"
-      requerido />
-
-    <input-text
-      label="Referencia del giro"
+      label="Referencia del cupon"
       info="Info #"
       @update="v => (estado.dataForm.referencia = v as string)"
       requerido />
@@ -58,8 +52,7 @@ const estado = reactive({
     vendedor: authStore.getNegocio._id,
     comprador: store.entidad._id,
     monto: null as number,
-    modalidad: 'GIRO',
-    glosa: null as string,
+    modalidad: 'CUPON',
     referencia: null as string,
     comentario: null as string
   },

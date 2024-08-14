@@ -116,7 +116,7 @@
             noSlot />
         </div>
       </template>
-      <template #body-cell-producto="{ val, row }">
+      <template #cell-producto="{ val, row }">
         {{ row.producto.nombre }}
         <br />
         <q-badge
@@ -134,14 +134,14 @@
         </q-badge>
       </template>
 
-      <template #body-cell-cantidad="{ val, row }">
+      <template #cell-cantidad="{ val, row }">
         Total :
         <br />
         {{ row.cantidadTotal }} {{ row.producto.medida.abreviacion }}
       </template>
 
       <!-- Alerta cantidad -->
-      <template #body-cell-alertaCantidad="{ val, row }">
+      <template #cell-alertaCantidad="{ val, row }">
         <div v-if="row.alertaCantidad === 2">
           <q-icon name="report" color="red" size="sm" />
         </div>
@@ -152,7 +152,7 @@
       </template>
 
       <!-- Alerta Vencimiento -->
-      <template #body-cell-alertaVencimiento="{ row }">
+      <template #cell-alertaVencimiento="{ row }">
         <div v-if="row.alertaVencimiento === 1">
           <q-icon name="report" color="orange" size="sm" />
         </div>
@@ -175,7 +175,7 @@
       </template>
 
       <!-- alerta Inventario -->
-      <template #body-cell-alertaInventario="{ val, row }">
+      <template #cell-alertaInventario="{ val, row }">
         <!-- <div v-if="row.stock.lotes.find((l) => !l.bloque)">
         <q-icon name="report" color="blue" size="sm" />
       </div> -->
@@ -203,7 +203,7 @@
         <div v-else>Sin limite de tiempo</div>
       </template>
 
-      <template #body-cell-actions="{ row }">
+      <template #cell-actions="{ row }">
         <q-btn-group
           push
           @click="

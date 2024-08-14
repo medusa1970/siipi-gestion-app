@@ -1,14 +1,13 @@
 <template>
   <q-form @submit="formSubmit">
-    <p>
-      Punto:
-      {{ store.entidad?.nombre }}
-    </p>
+    <p>Total a pagar: {{ porPagar }} bs</p>
+    <br />
 
     <input-text
       label="Monto"
       tipo="decimal"
       info="Info #"
+      :error="estado.errorAdelantado"
       @update="v => (estado.dataForm.monto = v as number)"
       requerido />
 
@@ -93,6 +92,14 @@
       </div>
     </div>
 
+    <!-- descripcion -->
+    <input-text
+      label="Comentario"
+      info="Info #"
+      autogrow
+      :porDefecto="estado.dataForm.comentario"
+      @update="v => (estado.dataForm.comentario = v as string)" />
+
     <div v-if="estado.dataForm.monto > 0">
       <div v-if="estado.cambio < 0">Falta cancelar {{ -estado.cambio }}bs</div>
       <div v-else-if="estado.cambio > 0">Cambio: {{ estado.cambio }}bs</div>
@@ -101,18 +108,22 @@
 
     <!-- Submit -->
     <div class="text-center">
-      <q-btn
-        :disable="estado.dataForm.monto <= 0 || estado.cambio < 0"
-        label="Guardar"
-        color="green"
-        type="submit" />
+      <q-btn label="Guardar" color="green" type="submit" />
     </div>
   </q-form>
 </template>
 
 <script setup lang="ts">
 import { useEmpresa } from '~/modulos/empresa/empresa.composable';
-const { store, authStore } = useEmpresa();
+const { store, authStore, apiEmpresa } = useEmpresa();
+const $q = useQuasar();
+
+const props = withDefaults(
+  defineProps<{
+    porPagar: number;
+  }>(),
+  {}
+);
 
 // definicion de los emits
 const emits = defineEmits(['pagoRecibido']);
@@ -124,7 +135,8 @@ const estado = reactive({
     comprador: store.entidad._id,
     monto: null as number,
     modalidad: 'EFECTIVO',
-    glosa: null as string
+    glosa: null as string,
+    comentario: null as string
   },
   total: 0,
   fraccionamento: {
@@ -140,24 +152,36 @@ const estado = reactive({
     c20: null,
     c10: null
   },
-  cambio: 0
+  cambio: 0,
+  errorAdelantado: null as string
 });
 
 onMounted(async () => {});
-
 // submision del formulario
 const formSubmit = async () => {
-  try {
-    const transaccion = await api.crearTransaccion(estado.dataForm);
-    emits('pagoRecibido', transaccion);
-    console.log(1);
-  } catch (err) {
-    errFailback(err);
-    return;
-  }
-  // reinicializamos el formulario
-  // await store.refreshEmpleados();
-  // estado.dataForm = clone(initForm);
+  $q.dialog({
+    title: `Confirmar recepcion`,
+    message: 'Monto ' + estado.dataForm.monto + 'bs, punto Irala',
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      const transaccion = await apiEmpresa.crearTransaccionConLimite(
+        estado.dataForm
+      );
+      const validado = await apiEmpresa.validarTransaccion({
+        _id: transaccion._id
+      });
+      emits('pagoRecibido', transaccion);
+    } catch (err) {
+      if (isApiBadRequest(err, 'adelantado')) {
+        estado.errorAdelantado = 'No se aceptan pagos adelantados';
+        return;
+      }
+      errFailback(err);
+      return;
+    }
+  });
 };
 
 watch([() => estado.dataForm.monto, estado.fraccionamento], () => {

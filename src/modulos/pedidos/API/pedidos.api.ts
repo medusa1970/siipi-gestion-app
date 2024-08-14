@@ -16,6 +16,8 @@ export const apiPedido = {
     token: any = null
   ): Promise<Pedido> => {
     let resultado;
+    Object.assign(datos, { conFactura: false });
+    console.log(datos);
     try {
       await loadingAsync(async () => {
         resultado = await GqlIniciarPedido(

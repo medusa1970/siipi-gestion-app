@@ -48,6 +48,15 @@ query buscarPedidos(
         comentario
       }
     }
+    precio
+    pagado
+    transacciones {
+      transaccion {
+        _id
+        _creado
+      }
+      total
+    }
   }
 }
 
@@ -99,6 +108,15 @@ mutation crearPedidos(
         valor
         comentario
       }
+    }
+    precio
+    pagado
+    transacciones {
+      transaccion {
+        _id
+        _creado
+      }
+      total
     }
   }
 }
@@ -153,6 +171,15 @@ mutation modificarPedidos(
         comentario
       }
     }
+    precio
+    pagado
+    transacciones {
+      transaccion {
+        _id
+        _creado
+      }
+      total
+    }
   }
 }
 
@@ -204,6 +231,15 @@ mutation borrarPedidos(
         valor
         comentario
       }
+    }
+    precio
+    pagado
+    transacciones {
+      transaccion {
+        _id
+        _creado
+      }
+      total
     }
   }
 }

@@ -7,8 +7,7 @@
     :filter="filter"
     :rows-per-page-options="[13, 26]"
     :dense="dense"
-    class="border-none"
-  >
+    class="border-none">
     <!-- HEADER -->
     <!-- <template v-slot:top-right="props">
 
@@ -22,12 +21,12 @@
     </template> -->
 
     <!-- ACCIONES -->
-    <template v-slot:body-cell-actions="props">
-      <slot name="body-cell-actions" :props="props"></slot>
+    <template v-slot:cell-actions="props">
+      <slot name="cell-actions" :props="props"></slot>
     </template>
     <!-- IMAGES -->
-    <template v-slot:body-cell-foto="{ value }">
-      <slot name="body-cell-image" :value="value"></slot>
+    <template v-slot:cell-foto="{ value }">
+      <slot name="cell-image" :value="value"></slot>
     </template>
     <!-- BADGE -->
     <template v-if="badge" v-slot:body="props">
@@ -37,20 +36,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-const filter = ref("");
+import { ref } from 'vue';
+const filter = ref('');
 
 defineProps({
   rows: {
     type: Array,
-    required: true,
+    required: true
   },
   columns: {
     type: Array,
-    required: true,
+    required: true
   },
   dense: Boolean,
-  badge: Boolean,
+  badge: Boolean
 });
 </script>
 <style scoped>

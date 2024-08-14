@@ -7,30 +7,21 @@ export const useTesoreriaDebido = () => {
       buscar: ''
     },
     pedidosSemanaActual: [],
-    pedidosSemanasAnteriores: null
+    pedidosSemanasAnteriores: null,
+    semana: {
+      inicio: new Date().setDate(new Date().getDate() - new Date().getDay()),
+      fin: new Date().setDate(new Date().getDate() - new Date().getDay() + 7)
+    }
   });
 
   const rows1 = computed(() => {
     if (!store.infoPedidos || !store.entidad) return [];
     const filtrado = store.infoPedidos.filter(
+      // solo los de esta entidad que ya se han recibido
       p => p.entidad._id === store.entidad._id
+      // TODO && [['recibido'].includes(p.estado)] o algo asi
     );
     return filtrado.length > 0 ? filtrado[0].semanaActual : [];
-  });
-
-  const footer1 = computed(() => {
-    if (!store.infoPedidos || !store.entidad) return [];
-    const filtrado = store.infoPedidos.filter(
-      p => p.entidad._id === store.entidad._id
-    );
-    return filtrado.length > 0
-      ? [
-          null,
-          null,
-          'TOTAL',
-          filtrado[0].semanaActual.reduce((total, pedido) => total + 1000, 0)
-        ]
-      : [];
   });
 
   const rows2 = computed(() => {
@@ -41,23 +32,9 @@ export const useTesoreriaDebido = () => {
     return filtrado.length > 0 ? filtrado[0].semanasAnteriores : [];
   });
 
-  const footer2 = computed(() => {
-    if (!store.infoPedidos || !store.entidad) return [];
-    const filtrado = store.infoPedidos.filter(
-      p => p.entidad._id === store.entidad._id
-    );
-    return filtrado.length > 0
-      ? [
-          null,
-          null,
-          'TOTAL',
-          filtrado[0].semanasAnteriores.reduce(
-            (total, pedido) => total + 1000,
-            0
-          )
-        ]
-      : [];
-  });
+  const printSemana1 = () => {
+    // ...
+  };
 
   return {
     estado,
@@ -66,7 +43,6 @@ export const useTesoreriaDebido = () => {
     router,
     rows1,
     rows2,
-    footer1,
-    footer2
+    printSemana1
   };
 };

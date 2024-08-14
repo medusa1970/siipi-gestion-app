@@ -96,9 +96,13 @@ export const storeEmpresa = defineStore('empresa', {
       if (refresh || !this.infoPedidos) {
         this.infoPedidos = [];
         try {
-          const pedidos = await api.buscarPedidos({
-            vendedor: [useAuthStore().getNegocio._id]
-          });
+          // jalar todos los pedidos
+          const pedidos = await api.buscarPedidos(
+            { vendedor: [useAuthStore().getNegocio._id] },
+            {
+              sort: '-_creado'
+            }
+          );
 
           for (const pedido of pedidos) {
             let encontrado = this.infoPedidos.findIndex(

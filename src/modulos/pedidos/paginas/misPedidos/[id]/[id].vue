@@ -123,11 +123,11 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
-// import { useRoute } from 'vue-router';
+<script setup>
 // import { usePedido } from '@/composables/punto/usePedido';
 // import { detallePedidoPunto } from '@/helpers/columns';
 // import realizarPedido from '../../realizarPedido.vue';
+import { useRoute } from 'vue-router';
 import { useMiPedido } from './miPedido.composable';
 
 const { params } = useRoute();
@@ -145,7 +145,7 @@ const detallePedidoPunto = [
     required: true,
     label: 'Oferta',
     align: 'left',
-    field: (row: any) => row.oferta.nombre,
+    field: row => row.oferta.nombre,
     sortable: true
   },
   // {
@@ -153,7 +153,7 @@ const detallePedidoPunto = [
   //   required: true,
   //   label: 'Precio U.',
   //   align: 'center',
-  //   field: (row: any) => row.oferta.precio,
+  //   field: (row) => row.oferta.precio,
   //   sortable: true
   // },
   {
@@ -161,7 +161,7 @@ const detallePedidoPunto = [
     required: true,
     label: 'Cantidad',
     align: 'center',
-    field: (row: any) => row.cantidad,
+    field: row => row.cantidad,
     sortable: true
   }
   // {
@@ -169,15 +169,22 @@ const detallePedidoPunto = [
   //   required: true,
   //   label: 'Precio Total',
   //   align: 'right',
-  //   field: (row: any) => row.cantidad * row.oferta.precio,
+  //   field: (row) => row.cantidad * row.oferta.precio,
   //   sortable: true
   // }
 ];
 
-definePageMeta({
-  layout: 'punto'
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'PEDIDO'
+    // camino: [{ label: 'pedido', to: 'pedido' }]
+  }
 });
+// definePageMeta({
+//   layout: 'punto'
+// });
 
+console.log(params.id);
 onMounted(() => {
   buscarPedidoID(params.id);
   // obtenerItemsEstado(params.id);

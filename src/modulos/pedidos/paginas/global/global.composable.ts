@@ -463,7 +463,7 @@ export const useGlobal = () => {
         cantidad: cantidadTotal
       };
     });
-    // console.log(estado.stocks);
+    console.log(estado.stocks);
 
     pedidoStore.pedidosSolicitado = pedidoStore.pedidosSolicitado.map(
       (pedido: any) => {

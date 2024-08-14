@@ -38,8 +38,8 @@ export const useProductoTab = () => {
           reemplazar: [
             {
               tipo: 'SIMPLE',
-              producto: estado.dataForm.producto._id,
-              marca: estado.dataForm.marca._id,
+              producto: estado.dataForm.producto,
+              marca: estado.dataForm.marca,
               cantidad: estado.dataForm.cantidad
             }
           ]

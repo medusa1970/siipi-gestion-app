@@ -246,6 +246,7 @@
 // breadcrumb
 
 const { infoPagina, update } = inject('infoPagina');
+// console.log(infoPagina, update);
 onMounted(() => {
   if (update) update();
 });

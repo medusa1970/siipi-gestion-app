@@ -2,31 +2,14 @@
   <!-- TABS -->
   <q-tabs v-model="estado.tabPuntos" inline-label no-caps dense>
     <q-tab class="[&>div>div]:font-bold" name="areaGlobal" label="Global" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="panaderia"
-      label="Panaderia"
-      @click="obtenerOfertas(estado.panaderia)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="reposteria"
-      label="Reposteria"
-      @click="obtenerOfertas(estado.reposteria)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="envasados"
-      label="Envasados"
-      @click="obtenerOfertas(estado.envasados)" />
+    <q-tab class="[&>div>div]:font-bold" name="panaderia" label="Panaderia" />
+    <q-tab class="[&>div>div]:font-bold" name="reposteria" label="Reposteria" />
+    <q-tab class="[&>div>div]:font-bold" name="envasados" label="Envasados" />
     <q-tab
       class="[&>div>div]:font-bold"
       name="embotellados"
-      label="Embotellados"
-      @click="obtenerOfertas(estado.embotellados)" />
-    <q-tab
-      class="[&>div>div]:font-bold"
-      name="siinple"
-      label="Siinple"
-      @click="obtenerOfertas(estado.siinple)" />
+      label="Embotellados" />
+    <q-tab class="[&>div>div]:font-bold" name="siinple" label="Siinple" />
   </q-tabs>
 
   <!-- PANELES -->
@@ -113,6 +96,7 @@
                       props.row.estado.some(e => e.estado === 'preparado') &&
                         '!text-gray-300 !font-bold'
                     ]"
+                    color="green-5"
                     icon="bi-check2-circle"
                     dense
                     flat
@@ -257,15 +241,57 @@
       </div>
     </q-tab-panel>
   </q-tab-panels>
+
+  <!-- MODAL -->
+  <q-dialog v-model="estado.modal.isShowPedidos" persistent>
+    <q-card class="w-[370px]" style="padding: 0.5rem !important">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-lg font-semibold">Pedidos puntos</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <!-- <h1 class="bg-gray-300 text-center my-2">puntos</h1> -->
+        <table class="w-full !my-2">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Ruta</th>
+              <th>Orden</th>
+            </tr>
+          </thead>
+          <tbody class="[&>tr]:border-b-[1px]">
+            <tr
+              v-for="punto in estado.pedidoPuntos"
+              :key="punto"
+              class="text-center">
+              <td>{{ punto.nombre }}</td>
+              <td>{{ punto.cantidad }}</td>
+              <td>{{ punto.ruta }}</td>
+              <td>{{ punto.orden }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
-<script setup lang="ts">
-import { usePedidoGlobal } from './global.composable';
-definePageMeta({
-  layout: 'cathering'
-});
+<script setup>
+import { useGlobal } from '@/modulos/pedidos/paginas/global/global.composable';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
-const { estado, pedidoStore } = usePedidoGlobal();
+const pedidoStore = storePedido();
+const {
+  estado,
+  aceptarTodosLosPedidosSolicitables,
+  aceptarTodosLosPedidosDirectos,
+  verPedidoPuntos,
+  ofertaPreparado,
+  ajustarOferta
+} = useGlobal();
+// console.log(estado.tabPuntos);
 
 const pedidoGlobal = [
   {
@@ -273,7 +299,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Nombre(s)',
     align: 'left',
-    field: (row: any) => row.oferta.nombre,
+    field: row => row.oferta.nombre,
     sortable: true
   },
   {
@@ -281,7 +307,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Pedido',
     align: 'center',
-    field: (row: any) => row.cantidad,
+    field: row => row.cantidad,
     sortable: true
   },
   {
@@ -289,7 +315,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Cantidad Pedido',
     align: 'center',
-    field: (row: any) =>
+    field: row =>
       row.cantidad * row.oferta.cantidad + `(${row.presentacionBasica})`,
     sortable: true
   },
@@ -298,7 +324,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Cantidad Stock',
     align: 'center',
-    field: (row: any) => row.stockEntidad + `(${row.presentacionBasica})`,
+    field: row => row.stockEntidad + `(${row.presentacionBasica})`,
     sortable: true
   },
   {
@@ -306,7 +332,7 @@ const pedidoGlobal = [
     required: true,
     label: 'Diferencia',
     align: 'right',
-    field: (row: any) => row.stockEntidad - row.cantidad,
+    field: row => row.stockEntidad - row.cantidad,
     sortable: true
   },
   {
@@ -315,5 +341,4 @@ const pedidoGlobal = [
     align: 'right'
   }
 ];
-console.log(pedidoGlobal);
 </script>

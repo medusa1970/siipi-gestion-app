@@ -65,6 +65,27 @@
             : null)
       " />
 
+    <h3>Producto solicitable</h3>
+    <div class="">
+      <q-checkbox v-model="estado.dataForm.solicitable">
+        Este producto se tiene que preparar produccion</q-checkbox
+      >
+    </div>
+
+    <input-select
+      label="Area"
+      info="Info #44"
+      :opciones="[
+        { label: 'Panaderia', value: 'PANADERIA' },
+        { label: 'Reposteria', value: 'REPOSTERIA' },
+        { label: 'Envasados', value: 'ENVASADOS' },
+        { label: 'Embotellados', value: 'EMBOTELLADOS' },
+        { label: 'Siinple', value: 'SIINPLE' }
+      ]"
+      :porDefecto="estado.dataForm.tags?.[0]"
+      @update="v => (estado.dataForm.tags = [v])"
+      requerido />
+
     <!-- Submit -->
     <div class="text-center">
       <q-btn label="Guardar" color="green" type="submit" />
@@ -97,6 +118,8 @@ const initForm = {
   catalogo: props.edicion?.catalogo._id,
   abreviacion: props.edicion?.abreviacion,
   descripcion: props.edicion?.descripcion,
+  solicitable: props.edicion?.solicitable,
+  tags: props.edicion?.tags ?? [],
   imagen: null
 };
 
@@ -191,6 +214,9 @@ const formSubmit = async () => {
   try {
     // Modo edicion
     if (props.edicion) {
+      estado.dataForm.tags = {
+        reemplazar: estado.dataForm.tags
+      };
       const oferta = await api.modificarOferta(
         props.edicion._id,
         estado.dataForm,

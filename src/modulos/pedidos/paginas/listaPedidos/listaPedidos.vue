@@ -20,10 +20,10 @@
         <Puntos />
       </q-tab-panel>
 
-      <!-- VER PEDIDO GLOBAL -->
-      <q-tab-panel name="global">
-        <!-- <Global /> -->
-      </q-tab-panel>
+    <!-- VER PEDIDO GLOBAL -->
+    <q-tab-panel name="global">
+      <Global />
+    </q-tab-panel>
 
       <!-- VER HISTORIAL DE PEDIDOS -->
       <q-tab-panel
@@ -37,7 +37,7 @@
 
 <script setup>
 import Puntos from '../puntos/Puntos.vue';
-// import Global from '../global/Global.vue';
+import Global from '../global/Global.vue';
 import Historial from '../historial/Historial.vue';
 
 provide('infoPagina', {

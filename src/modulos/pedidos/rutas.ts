@@ -10,6 +10,11 @@ export default [
     path: '/punto/misPedidos',
     file: '@/modulos/pedidos/paginas/misPedidos/misPedidos.vue'
   },
+  {
+    name: 'pedidoID',
+    path: '/punto/misPedidos/:id',
+    file: '@/modulos/pedidos/paginas/misPedidos/[id]/[id].vue'
+  },
   // CATHERING
   {
     name: 'listaPedidos',

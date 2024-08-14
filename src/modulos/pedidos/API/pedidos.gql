@@ -78,3 +78,99 @@ query entidadLeerMenu(
     }
   }
 }
+
+# PEDIDOS SOLICITABLES
+mutation cambiarEstadoItemsPorOfertas_aceptar(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $tipo: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItemsPorOfertas(
+    busqueda: $busqueda
+    ofertaIds: $ofertaIds
+    estado: $estado
+    tipo: $tipo
+    opciones: $opciones
+  ) {
+    _id
+    estado {
+      estado
+    }
+    comprador {
+      _id
+      nombre
+      ruta
+      orden
+    }
+    items {
+      _id
+      cantidad
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          tipo
+          producto {
+            _id
+            nombre
+          }
+          cantidad
+        }
+      }
+      estado {
+        estado
+        _creado
+      }
+    }
+  }
+}
+
+mutation cambiarEstadoItemsPorOfertas_preparar(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $tipo: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItemsPorOfertas(
+    busqueda: $busqueda
+    ofertaIds: $ofertaIds
+    estado: $estado
+    tipo: $tipo
+    opciones: $opciones
+  ) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      oferta {
+        _id
+        nombre
+      }
+      estado {
+        estado
+        _creado
+      }
+    }
+  }
+}
+
+mutation ajustarItemsPorOferta(
+  $busqueda: BuscarPedidoDto = {}
+  $ofertaId: ID!
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  ajustarItemsPorOferta(
+    busqueda: $busqueda
+    ofertaId: $ofertaId
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+  }
+}

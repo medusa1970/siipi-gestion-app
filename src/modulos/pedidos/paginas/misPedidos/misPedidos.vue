@@ -16,7 +16,7 @@
           <Item
             v-for="punto in estado.pedidosEntidad"
             :key="punto._id"
-            :href="`listaPedidos/${punto._id}`"
+            :href="`misPedidos/${punto._id}`"
             :title="punto.vendedor.nombre"
             class="w-[400px] max-sm:w-full"
             :title2="formateadorFecha(punto.estado[0]._creado)">
@@ -84,7 +84,7 @@
           <Item
             v-for="punto in estado.pedidosFiltrados"
             :key="punto._id"
-            :href="`listaPedidos/${punto._id}`"
+            :href="`misPedidos/${punto._id}`"
             :title="punto.comprador.nombre"
             class="w-[400px] max-sm:w-full"
             :title2="formateadorFecha(punto.estado[0]._creado)">

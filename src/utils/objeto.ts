@@ -13,3 +13,47 @@ export const extraerUno = function (objeto: { [key: string]: any }) {
 export const clone = function (objeto: any) {
   return JSON.parse(JSON.stringify(objeto)) as typeof objeto;
 };
+
+/**
+ * isObjectOrArray, isObject, isKey
+ */
+
+export function isKey<T extends object>(x: T, k: PropertyKey): k is keyof T {
+  return k in x;
+}
+export function isObjectOrArray(object) {
+  return object != null && typeof object === 'object';
+}
+export function isArray(object) {
+  return object != null && typeof object === 'object' && Array.isArray(object);
+}
+export function isObject(object) {
+  return object != null && typeof object === 'object' && !Array.isArray(object);
+}
+export function isEmptyObject(obj) {
+  if (!isObject(obj)) {
+    return false;
+  }
+  for (const prop in obj) {
+    if (obj.hasOwnProperty(prop)) return false;
+  }
+  return true;
+}
+
+/**
+ * softObjectAssign
+ */
+export function softObjectAssign(A, B) {
+  if (isObject(B) && isObject(A)) {
+    for (const i in B) {
+      if (i in A) {
+        A[i] = softObjectAssign(A[i], B[i]);
+      } else {
+        A[i] = B[i];
+      }
+    }
+  } else {
+    A = B;
+  }
+  return A;
+}

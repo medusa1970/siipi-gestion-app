@@ -47,7 +47,9 @@ export const useTesoreriaPagos = () => {
     async val => {
       let pedidos;
       try {
+        console.log('ok');
         pedidos = await apiEmpresa.pedidosPorPagarEntidad(val._id);
+        console.log('ok2');
       } catch (err) {
         errFailback(err);
       }
@@ -55,6 +57,7 @@ export const useTesoreriaPagos = () => {
         (total, pedido) => total + pedido.precio - pedido.pagado,
         0
       );
+      console.log(estado.porPagar);
     },
     { immediate: true }
   );

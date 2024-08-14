@@ -104,10 +104,7 @@
         <p>Pedidos</p>
         <q-list dense>
           <q-item v-for="pedido of row.pedidos">
-            {{ pedido.total }} bs el
-            {{ fechaMes(pedido.pedido._creado) }} (pedido #{{
-              pedido.pedido._id
-            }})
+            {{ pedido.total }} bs (pedido #{{ pedido.pedido._id }})
           </q-item>
         </q-list>
       </div>
@@ -151,6 +148,7 @@ import { useTesoreriaPagos } from './tesoreriaPagos';
 const {
   estado,
   router,
+  store,
   rowsTabla,
   handlePagoEfectivo,
   handlePagoGiro,

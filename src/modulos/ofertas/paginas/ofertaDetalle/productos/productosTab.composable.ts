@@ -1,5 +1,5 @@
-import type { Producto } from "#gql";
-import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
+import type { Producto } from '#gql';
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const useProductoTab = () => {
   const { store, authStore, estadoOfertas, router } = useOfertas();
@@ -8,34 +8,46 @@ export const useProductoTab = () => {
   const initForm = {
     producto: null as string,
     marca: null as string,
-    cantidad: null as number,
+    cantidad: null as number
   };
 
   const estado = reactive({
     dataForm: clone(initForm),
-    productosOpciones: [] as any[],
+    productosOpciones: [] as any[]
   });
 
   const submitForm = async () => {
+    console.log({
+      ingredientes: {
+        reemplazar: [
+          {
+            tipo: 'SIMPLE',
+            producto: estado.dataForm.producto._id,
+            marca: estado.dataForm.marca._id,
+            cantidad: estado.dataForm.cantidad
+          }
+        ]
+      }
+    });
     const ofertaModificada = await api.modificarOferta(
       {
-        _id: [store.oferta._id],
+        _id: [store.oferta._id]
       },
       {
         ingredientes: {
           reemplazar: [
             {
-              tipo: "SIMPLE",
+              tipo: 'SIMPLE',
               producto: estado.dataForm.producto._id,
               marca: estado.dataForm.marca._id,
-              cantidad: estado.dataForm.cantidad,
-            },
-          ],
-        },
-      },
+              cantidad: estado.dataForm.cantidad
+            }
+          ]
+        }
+      }
     );
     if (ofertaModificada) {
-      NotifySucessCenter("Producto modificado  correctamente");
+      NotifySucessCenter('Producto modificado  correctamente');
       store.oferta = ofertaModificada;
     }
   };
@@ -43,6 +55,6 @@ export const useProductoTab = () => {
   return {
     estado,
     submitForm,
-    store,
+    store
   };
 };

@@ -6,7 +6,8 @@ export const inputConfig = {
   clase: '',
   color: 'black',
   bgColorLleno: 'blue-grey-1',
-  bgColorVacio: 'grey-1'
+  bgColorVacio: 'grey-1',
+  checkColor: 'green'
 };
 
 export async function UrlToBase64Image(url, callback) {

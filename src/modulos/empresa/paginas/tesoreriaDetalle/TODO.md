@@ -1,10 +1,12 @@
 # TODO
 
+- checkbox cambio >> input checkbox (para error required)
+-
 - actualizacion al hacer pedido
+
 - expand detalle
 
 - glosa automatica
-- checkbox cambio >> input checkbox (para error required)
 - seleccion de semanas anteriores
 - bloquear
 - multar

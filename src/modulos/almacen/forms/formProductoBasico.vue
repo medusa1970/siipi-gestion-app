@@ -53,12 +53,12 @@
       :porDefecto="estado.dataForm.tiempoVida"
       @update="v => (estado.dataForm.tiempoVida = v)" />
 
-    <h3>Fecha de vencimiento</h3>
-    <div class="">
-      <q-checkbox v-model="estado.dataForm.puedeVencer">
-        Este producto puede vencer</q-checkbox
-      >
-    </div>
+    <input-checkbox
+      label="Fecha de vencimiento"
+      info="Info #"
+      noSlot
+      :porDefecto="estado.dataForm.puedeVencer"
+      @update="v => (estado.dataForm.puedeVencer = v)" />
 
     <div v-if="estado.dataForm.puedeVencer" class="flex">
       <input-text

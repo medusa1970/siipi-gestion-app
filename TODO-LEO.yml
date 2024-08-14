@@ -1,12 +1,25 @@
-++ TESORERIA: tesoreria basica
-++ OFERTAS: comparacion precio proveedor
+## REUNION CON WILL DEL 14/07
 
+- deberia reiniciar el formulario tras de hacer un inventario
+- pagina detalles pedidos
+- no entra a mis pedidos de punto
+- boton impresion lista pedidos
+- busqueda en pedido un poco mal
+- area no obligatoria en oferta
+- solo deben aparecer ofertas completas en pedido y en ofertas/productos
+- formulario producto bug ?
+- escapar las parenthesis en las regexes
+- volver a ofertas con el mismo boton desde ofertaDetalles
+
+
+## Meta 1 Lionel
+
+++ OFERTAS: comparacion precio proveedor
 ++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
 ++ OFERTAS: avisar lo que falta para ofertas completas
 afficher une popup sur le badge + producto
 ++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
 ++ MEDIDAS: poder agregar y borrar tipos de empaque
-
 -- PERMISOS: cerrar sesion al usuario cuando se le cambia de permisos
 -- PERMISOS: validacion telefono se porta raro al entrar un telefono ok
 -- PRODUCTOS: averiguar que se modifica/borra bien la oferta automatica de proveedor

@@ -77,7 +77,7 @@ const formSubmit = async () => {
       {
         problemas: {
           buscar: {
-            _id: props.edicion?._id
+            _id: [props.edicion?._id]
           },
           modificar: {
             resuelto: estado.dataForm.resuelto,

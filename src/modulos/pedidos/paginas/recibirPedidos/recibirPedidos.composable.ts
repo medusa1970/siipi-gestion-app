@@ -29,6 +29,10 @@ export const useRecibirPedidos = () => {
     estado.catalogo = catalogo.hijas;
     estado.catalogoSeleccionado = catalogo.hijas[0];
     estado.searchResults = [catalogo.hijas[0]];
+    pedidoStore.area = {
+      _id: '665ff70dbc13d4eedbf0ea5b',
+      nombre: 'Area Proveedor'
+    };
     // console.log(catalogo.hijas[0]);
   });
 

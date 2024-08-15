@@ -197,19 +197,28 @@ const realizarPedido = async () => {
       const pedido = await apiPedido.pedidoIniciar(
         {
           comprador: authStore.negocio._id,
-          vendedor: '65a5a9af08c1a906d83522d0',
+          vendedor: pedidoStore.area._id,
           items
         },
         {},
         authStore.token
       );
+      console.log(pedido);
       if (pedido) {
-        await apiPedido.pedidoConfirmarItems({
-          _id: pedido._id
-        });
-        await apiPedido.pedido_aceptarOfertas(pedido._id);
-        await apiPedido.pedido_prepararOfertas(pedido._id);
-        await apiPedido.pedido_recibirOfertas(pedido._id);
+        console.log('first');
+        const a = await apiPedido.pedidoConfirmarItems(
+          {
+            _id: pedido._id
+          },
+          authStore.token
+        );
+        console.log(a);
+        const b = await apiPedido.pedido_prepararOfertas(pedido._id);
+        console.log(b);
+        const c = await apiPedido.pedido_aceptarOfertas(pedido._id);
+        console.log(c);
+        const d = await apiPedido.pedido_recibirOfertas(pedido._id);
+        console.log(d);
         NotifySucessCenter('Pedido recibido con éxito');
         router.push('/cathering/pedidos/listaPedidos');
         pedidoStore.listaPedido = [];

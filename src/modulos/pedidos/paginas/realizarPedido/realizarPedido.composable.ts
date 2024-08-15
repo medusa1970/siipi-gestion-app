@@ -4,7 +4,7 @@ import { apiPedido } from '@/modulos/pedidos/API/pedidos.api'; //@ts-ignore
 import type { Catalogo } from '#gql';
 
 export const useRealizarPedido = () => {
-  const useAuth = useAuthStore();
+  const authStore = useAuthStore();
 
   const estado = reactive({
     catalogosOfertas: [] as any[],
@@ -16,8 +16,8 @@ export const useRealizarPedido = () => {
 
   const obtenerCatalogosProductos = async () => {
     const catalogoArbol = (await apiPedido.pedido_leerMenu(
-      useAuth.negocio._id,
-      useAuth.token
+      authStore.negocio._id,
+      authStore.token
     )) as Catalogo;
     console.log(catalogoArbol);
     estado.catalogosOfertas = catalogoArbol.hijas;
@@ -74,6 +74,7 @@ export const useRealizarPedido = () => {
 
   return {
     estado,
+    authStore,
     obtenerCatalogosProductos,
     searchCatalog,
     filter

@@ -287,6 +287,7 @@ import { storePedido } from '@/modulos/pedidos/pedidos.store';
 const pedidoStore = storePedido();
 const {
   estado,
+  authStore,
   aceptarTodosLosPedidosSolicitables,
   aceptarTodosLosPedidosDirectos,
   verPedidoPuntos,

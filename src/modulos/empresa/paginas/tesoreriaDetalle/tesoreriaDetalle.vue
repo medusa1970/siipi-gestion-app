@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -30,7 +31,7 @@
 
 <script setup lang="ts">
 import { useTesoreriaDetalle } from './tesoreriaDetalle';
-const { estado, store, authStore, router } = useTesoreriaDetalle();
+const { estado, store, authStore } = useTesoreriaDetalle();
 
 import DebidoTabPanel from './debido/tesoreriaDebido.vue';
 import PagosTabPanel from './pagos/tesoreriaPagos.vue';

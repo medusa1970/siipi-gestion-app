@@ -109,12 +109,6 @@ const menu = [
         label: 'Empleados',
         to: 'empleados',
         permisos: permisosEmpleados
-      },
-      {
-        icon: 'money',
-        label: 'Tesoreria',
-        to: 'tesoreria',
-        permisos: permisosTesoreria
       }
     ]
   }

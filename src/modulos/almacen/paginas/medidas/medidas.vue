@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       :rows="rowsTabla"
       :columns="columnsTabla"
@@ -54,7 +55,7 @@
 
 <script setup lang="ts">
 import { useMedidas } from './medidas.composable';
-const { estado, store, authStore, router, rowsTabla, handleMedidaCreada } =
+const { estado, authStore, router, rowsTabla, handleMedidaCreada } =
   useMedidas();
 
 import MedidaImage from '@/assets/img/noHayMedida.png';

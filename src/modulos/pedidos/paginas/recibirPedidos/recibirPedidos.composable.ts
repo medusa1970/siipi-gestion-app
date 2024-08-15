@@ -1,8 +1,10 @@
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useRecibirPedidos = () => {
   const { store } = useOfertas();
+  const authStore = useAuthStore();
   const pedidoStore = storePedido();
   const estado = reactive({
     catalogo: [],
@@ -30,5 +32,5 @@ export const useRecibirPedidos = () => {
     // console.log(catalogo.hijas[0]);
   });
 
-  return { estado, store, filter };
+  return { estado, store, filter, authStore };
 };

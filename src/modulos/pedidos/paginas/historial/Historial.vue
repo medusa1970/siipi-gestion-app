@@ -56,7 +56,7 @@ definePageMeta({
   layout: 'cathering'
 });
 
-const { estado, filtroHistorial } = useHistorial();
+const { estado, authStore, filtroHistorial } = useHistorial();
 
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 

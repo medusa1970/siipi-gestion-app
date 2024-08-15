@@ -49,10 +49,10 @@ import { useQuasar } from 'quasar';
 import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 
 const authStore = useAuthStore();
+console.log(authStore);
 const router = useRouter();
 const $q = useQuasar();
 const pedidoStore = storePedido();
-
 if (authStore.getNegocio?.tipo !== 'CATHERING') {
   goTo(router, 'inicio');
 }

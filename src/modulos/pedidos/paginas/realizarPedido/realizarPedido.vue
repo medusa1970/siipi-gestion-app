@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="punto">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <!-- <code>{{ estado.catalogosOfertas }}</code> -->
     <div class="block mx-auto w-[400px] max-sm:w-[350px]">
       <q-input
@@ -80,7 +81,7 @@ provide('infoPagina', {
   }
 });
 
-const { estado, obtenerCatalogosProductos, filter, searchCatalog } =
+const { estado, authStore, obtenerCatalogosProductos, filter, searchCatalog } =
   useRealizarPedido();
 
 const pedidoStore = storePedido();

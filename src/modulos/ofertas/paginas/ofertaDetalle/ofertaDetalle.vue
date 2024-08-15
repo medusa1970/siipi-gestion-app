@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -37,7 +38,6 @@
 <script setup>
 import { useOfertaDetalle } from './ofertaDetalle.composable';
 const { estado, store, authStore, router } = useOfertaDetalle();
-const { params } = useRoute();
 
 import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasicos/DatosBasicosTab.vue';
 import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';

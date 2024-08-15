@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <div class="flex justify-center mt-4">
       <q-list class="rounded-borders w-[350px]">
         <q-expansion-item
@@ -188,7 +189,6 @@ const {
   estado,
   store,
   authStore,
-  router,
   modalCrearCatalogoCategoria,
   crearCatalogoArbol,
   modalModificarCatalogoCategoria,

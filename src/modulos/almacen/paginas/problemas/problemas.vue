@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       :rows="rowsTabla"
       :columns="colunasTabla"
@@ -87,9 +88,7 @@ import formResolverProblema from '@/modulos/almacen/forms/formResolverProblema.v
 
 const {
   estado,
-  store,
   authStore,
-  router,
   rowsTabla,
   selectProductoFiltro,
   problemaSeleccionado,

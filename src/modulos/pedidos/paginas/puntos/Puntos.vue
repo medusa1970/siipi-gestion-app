@@ -92,7 +92,7 @@ definePageMeta({
   layout: 'cathering'
 });
 
-const { estado, buscarPedidos, pedidoStore } = usePuntos();
+const { authStore, buscarPedidos, pedidoStore } = usePuntos();
 
 onMounted(async () => {
   await buscarPedidos();

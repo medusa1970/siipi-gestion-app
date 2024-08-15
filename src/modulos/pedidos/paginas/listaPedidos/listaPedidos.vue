@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
       <q-tab name="global" icon="bi-box-seam" label="Pedido Global" />
@@ -38,8 +39,9 @@
 <script setup>
 import Puntos from '../puntos/Puntos.vue';
 import Global from '../global/Global.vue';
-
 import Historial from '../historial/Historial.vue';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+const authStore = useAuthStore();
 
 provide('infoPagina', {
   infoPagina: {

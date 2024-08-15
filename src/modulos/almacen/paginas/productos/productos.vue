@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <div>
       <q-btn
         width="auto"
@@ -164,10 +165,7 @@
         <q-btn-group>
           <btnAccion
             icono="edit black"
-            @click="
-              store.producto = row;
-              goTo(router, 'producto', { id: row._id });
-            " />
+            @click="goTo(router, 'producto', { id: row._id })" />
           <q-btn
             @click="
               e => {
@@ -285,14 +283,21 @@
 
 <script setup lang="ts">
 import { useProductos } from './productos.composable';
-const { estado, store, authStore, router, productoIncompleto } = useProductos();
+const {
+  estado,
+  store,
+  authStore,
+  router,
+  productoIncompleto,
+  handleProductoCreado,
+  handleOfertaSimpleCreada
+} = useProductos();
 
 // otros imports
 import ProductoImage from '@/assets/img/noHayProducto.png';
 import formProductoBasico from '@/modulos/almacen/forms/formProductoBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 import type { CategoriaSelectOpcion } from '../../almacen.interface';
-const { handleProductoCreado, handleOfertaSimpleCreada } = useProductos();
 
 provide('infoPagina', {
   infoPagina: {
@@ -376,8 +381,8 @@ const rowsTablaProductos = computed(() => {
 
 // mount
 onMounted(async () => {
-  await store.getCategorias();
-  await store.getProductos();
+  store.getCategorias();
+  store.getProductos();
   estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map(marca => ({
     value: marca._id,
     label: marca.nombre

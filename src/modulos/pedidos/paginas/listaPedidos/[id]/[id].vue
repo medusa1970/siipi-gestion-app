@@ -194,7 +194,6 @@ import { usePedido } from './pedido.composable';
 import { useListaPedidos } from '@/modulos/pedidos/paginas/listaPedidos/listaPedidos.composable';
 
 const { params } = useRoute();
-console.log(params);
 const { estado, buscarPedidoID, authStore } = useListaPedidos();
 // const {
 //   buscarPedidoID,

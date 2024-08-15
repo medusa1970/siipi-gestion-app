@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       :rows="rowsParaMostrar"
       :columns="[
@@ -298,7 +299,6 @@
 import { useStock } from './stock.composable';
 const {
   estado,
-  store,
   authStore,
   router,
   handleInventario,

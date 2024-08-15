@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="punto">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-tabs v-model="tab" inline-label no-caps dense>
       <q-tab name="cathering" icon="bi-cart4" label="Pedidos Cathering" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />
@@ -114,7 +115,7 @@
 import { usePuntos } from '../puntos/puntos.composable';
 import { useMisPedidos } from './misPedidos.composable';
 
-const { estado, buscarPedidos, filtroHistorial } = useMisPedidos();
+const { estado, authStore, buscarPedidos, filtroHistorial } = useMisPedidos();
 
 const tab = ref('cathering');
 

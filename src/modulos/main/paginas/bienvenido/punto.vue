@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="punto">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <div
       class="flex justify-center items-center backImage"
       style="height: 500px">
@@ -8,6 +9,9 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+const authStore = useAuthStore();
+
 provide('infoPagina', {
   infoPagina: {
     titulo: 'Bienvenido',

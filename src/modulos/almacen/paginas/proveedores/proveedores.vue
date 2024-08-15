@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -62,9 +63,7 @@
 import { useProveedores } from './proveedores.composable';
 const {
   estado,
-  store,
   authStore,
-  router,
   rowsTabla,
   handleProveedorCreado,
   handleProveedorModificado

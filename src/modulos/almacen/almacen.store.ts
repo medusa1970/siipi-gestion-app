@@ -66,7 +66,9 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
+      console.log('get');
       this.productos = (await localforage.getItem('productos')) as Producto[];
+      console.log('received');
       if (!this.productos || actualizarDB) {
         try {
           this.productos = await api.buscarProductos_basico(

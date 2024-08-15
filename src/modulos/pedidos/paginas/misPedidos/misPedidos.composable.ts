@@ -76,6 +76,7 @@ export const useMisPedidos = () => {
 
   return {
     estado,
+    authStore,
     buscarPedidos,
     filtroHistorial
   };

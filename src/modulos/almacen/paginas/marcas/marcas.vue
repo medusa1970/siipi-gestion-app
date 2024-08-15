@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -60,9 +61,7 @@
 import { useMarcas } from './marcas.composable';
 const {
   estado,
-  store,
   authStore,
-  router,
   rowsTabla,
   handleMarcaCreada,
   handleMarcaModificada

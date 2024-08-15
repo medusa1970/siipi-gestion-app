@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -42,7 +43,7 @@
 
 <script setup lang="ts">
 import { useProductoDetalle } from './productoDetalle.composable';
-const { estado, store, authStore, router } = useProductoDetalle();
+const { estado, store, authStore } = useProductoDetalle();
 
 import MarcaTabPanel from './variedades/productoVariedades.vue';
 import MedidaTabPanel from './medidas/productoMedidas.vue';

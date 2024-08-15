@@ -20,12 +20,14 @@ query CatalogoArbol(
         _id
         nombre
         ofertas {
+          _id
           nombre
         }
         hijas {
           _id
           nombre
           ofertas {
+            _id
             nombre
           }
         }

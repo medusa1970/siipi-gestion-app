@@ -25,5 +25,15 @@ export default [
     name: 'pedido',
     path: '/cathering/listaPedidos/:id',
     file: '@/modulos/pedidos/paginas/listaPedidos/[id]/[id].vue'
+  },
+  {
+    name: 'recibirPedidos',
+    path: '/cathering/recibirPedidos',
+    file: '@/modulos/pedidos/paginas/recibirPedidos/recibirPedidos.vue'
+  },
+  {
+    name: 'despacharPedidos',
+    path: '/cathering/despacharPedidos',
+    file: '@/modulos/pedidos/paginas/despacharPedidos/despacharPedidos.vue'
   }
 ];

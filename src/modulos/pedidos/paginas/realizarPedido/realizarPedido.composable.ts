@@ -21,6 +21,7 @@ export const useRealizarPedido = () => {
     )) as Catalogo;
     console.log(catalogoArbol);
     estado.catalogosOfertas = catalogoArbol.hijas;
+    console.log(estado.catalogosOfertas);
 
     estado.catalogoSeleccionado = catalogoArbol.hijas[0];
     estado.searchResults = catalogoArbol.hijas[0].hijas;

@@ -290,7 +290,7 @@ const selectSubCatalogo = computed(() => {
       options.push({
         label: cat.nombre,
         value: cat._id,
-        disable: true,
+        disable: false,
         class: 'title'
       });
     options = [...options, ...hijas];

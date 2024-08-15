@@ -104,16 +104,16 @@ export const apiPedido = {
   ) => await buscarUno(GqlLeerEstadoPedido, useGqlToken(t), b, o, o.loading),
 
   pedido_aceptarOfertas: async (
-    pedidosIDS: string[],
-    tipo: string,
-    token: any
+    pedidosID: string[],
+    tipo?: string,
+    token?: any
   ) => {
     try {
-      console.log(pedidosIDS, tipo);
+      console.log(pedidosID, tipo);
       const pedidos = extraer(
         await GqlCambiarEstadoItemsPorOfertas_aceptar(
           {
-            busqueda: { _id: pedidosIDS },
+            busqueda: { _id: pedidosID },
             estado: {
               estado: 'aceptado'
             },
@@ -131,16 +131,16 @@ export const apiPedido = {
   },
 
   pedido_prepararOfertas: async (
-    pedidosIDS: string[],
-    ofertaIds: string[],
-    token: any
+    pedidosID: string[],
+    ofertaIds?: string[],
+    token?: any
   ) => {
     try {
-      console.log(pedidosIDS, ofertaIds);
+      console.log(pedidosID, ofertaIds);
       const pedidos = extraer(
         await GqlCambiarEstadoItemsPorOfertas_preparar(
           {
-            busqueda: { _id: pedidosIDS },
+            busqueda: { _id: pedidosID },
             ofertaIds,
             estado: {
               estado: 'preparado'

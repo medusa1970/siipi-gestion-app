@@ -83,8 +83,7 @@
         { label: 'Siinple', value: 'SIINPLE' }
       ]"
       :porDefecto="estado.dataForm.tags?.[0]"
-      @update="v => (estado.dataForm.tags = [v])"
-      requerido />
+      @update="v => (estado.dataForm.tags = [v])" />
 
     <!-- Submit -->
     <div class="text-center">
@@ -169,7 +168,7 @@ const selectSubCatalogo = computed(() => {
       options.push({
         label: cat.nombre,
         value: cat._id,
-        disable: true,
+        disable: false,
         class: 'title'
       });
     options = [...options, ...hijas];
@@ -224,6 +223,8 @@ const formSubmit = async () => {
       );
       emits('modificarObjeto', oferta);
     } else {
+      delete estado.dataForm.tags;
+      console.log(estado.dataForm);
       const oferta = await api.crearOferta(estado.dataForm, { loading: true });
       emits('crearObjeto', oferta);
     }

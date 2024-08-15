@@ -81,6 +81,47 @@ const pedidoStore = storePedido();
 const selectCatalogo = catalogo => {
   estado.catalogoSeleccionado = catalogo;
   estado.searchResults = [catalogo];
+
+  switch (catalogo.nombre) {
+    case 'PROVEEDORES':
+      pedidoStore.area = {
+        _id: '665ff70dbc13d4eedbf0ea5b',
+        nombre: 'Area Proveedor'
+      };
+      break;
+    case 'PANADERIA':
+      pedidoStore.area = {
+        _id: '65a5a9af08c1a906d83522d1',
+        nombre: 'Area Panaderia'
+      };
+      break;
+    case 'REPOSTERIA':
+      pedidoStore.area = {
+        _id: '65a5a9af08c1a906d83522d3',
+        nombre: 'Area Reposteria'
+      };
+      break;
+    case 'EMBOTELLADOS':
+      pedidoStore.area = {
+        _id: '662808c349ae018b4c0c8e5b',
+        nombre: 'Area Embotellados'
+      };
+      break;
+    case 'ENVASADOS':
+      pedidoStore.area = {
+        _id: '65a5a9af08c1a906d83522d4',
+        nombre: 'Area Envasados'
+      };
+      break;
+    case 'SIINPLE':
+      pedidoStore.area = {
+        _id: '65a5a9af08c1a906d83522d2',
+        nombre: 'Area Siinple'
+      };
+      break;
+    default:
+      console.log('Area no reconocida');
+  }
 };
 
 const handleInputChange2 = (event, product) => {

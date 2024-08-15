@@ -25,6 +25,14 @@
             :porDefecto="estado.filtros.catalogoSeleccionado"
             noSlot />
 
+          <input-select
+            label="SubCatalogo"
+            labelAdentro
+            :opciones="selectSubCatalogoFiltro"
+            @update="v => (estado.filtros.subCatalogoSeleccionado = v)"
+            :porDefecto="estado.filtros.subCatalogoSeleccionado"
+            noSlot />
+
           <q-btn
             icon="add"
             label="Oferta básica"
@@ -40,6 +48,11 @@
             style="padding: 7px 15px"
             @click="() => (estado.modal.show_crearOfertaSimple = true)" />
         </div>
+        <pre
+          >{{ estado.filtros }}
+  {{ store.catalogoArbol.nombre }}
+ [ {{ foo }}]</pre
+        >
       </template>
 
       <template #cell-estado="{ row }">
@@ -218,27 +231,42 @@ provide('infoPagina', {
   }
 });
 
+const foo = ref(null);
 // opciones
 const selectCatalogoFiltro = computed(() => {
+  if (!store.catalogoArbol) return [];
   let options = [];
-  if (store.catalogoArbol) {
-    for (const cat of store.catalogoArbol.hijas) {
-      const idsHijas = [];
-      const hijas = [];
-      for (const subcat of cat.hijas) {
-        hijas.push({
-          label: subcat.nombre,
-          value: [subcat._id],
-          class: 'option'
-        });
-        idsHijas.push(subcat._id);
-      }
-      options.push({
-        label: cat.nombre,
-        value: [...idsHijas, cat._id]
+  for (const cat of store.catalogoArbol.hijas) {
+    options.push({
+      label: cat.nombre,
+      value: cat._id
+    });
+  }
+  return options;
+});
+const selectSubCatalogoFiltro = computed(() => {
+  const subCat = store.getOne(estado.catalogoSeleccionado);
+  foo.value = subCat ?? 'nope';
+  foo.value = estado.catalogoSeleccionado;
+  if (!subCat) return [];
+  return [];
+  let options = [];
+  for (const cat of subCat.hijas) {
+    const idsHijas = [];
+    const hijas = [];
+    for (const subcat of cat.hijas) {
+      hijas.push({
+        label: subcat.nombre,
+        value: [subcat._id],
+        class: 'option'
       });
-      options = [...options, ...hijas];
+      idsHijas.push(subcat._id);
     }
+    options.push({
+      label: cat.nombre,
+      value: [...idsHijas, cat._id]
+    });
+    options = [...options, ...hijas];
   }
   return options;
 });

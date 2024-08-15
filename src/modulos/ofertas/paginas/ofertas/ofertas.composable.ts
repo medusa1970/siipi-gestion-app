@@ -32,7 +32,6 @@ export const useOferta = () => {
 
     filtros: {
       catalogoSeleccionado: null,
-      subCatalogoSeleccionado: null,
       buscarFiltro: null
     }
   });

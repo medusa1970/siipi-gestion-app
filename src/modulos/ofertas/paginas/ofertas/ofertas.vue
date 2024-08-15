@@ -25,14 +25,6 @@
             :porDefecto="estado.filtros.catalogoSeleccionado"
             noSlot />
 
-          <input-select
-            label="SubCatalogo"
-            labelAdentro
-            :opciones="selectSubCatalogoFiltro"
-            @update="v => (estado.filtros.subCatalogoSeleccionado = v)"
-            :porDefecto="estado.filtros.subCatalogoSeleccionado"
-            noSlot />
-
           <q-btn
             icon="add"
             label="Oferta básica"
@@ -48,14 +40,9 @@
             style="padding: 7px 15px"
             @click="() => (estado.modal.show_crearOfertaSimple = true)" />
         </div>
-        <pre
-          >{{ estado.filtros }}
-  {{ store.catalogoArbol.nombre }}
- [ {{ foo }}]</pre
-        >
       </template>
 
-      <template #cell-estado="{ row }">
+      <template #body-cell-estado="{ row }">
         {{ fechaMes(row._modificado ?? row._creado) }}
         <br />
         <q-badge
@@ -77,7 +64,7 @@
         <q-badge v-else color="orange"> incompleto </q-badge>
       </template>
 
-      <template #cell-nombre="{ val, row }">
+      <template #body-cell-nombre="{ val, row }">
         <h1 v-if="row.nombre" class="tooltip font-semibold">
           {{
             row.nombre.length > 30
@@ -107,11 +94,11 @@
         </p>
       </template>
 
-      <!-- <template #cell-catalogo="{ val, row }">
+      <!-- <template #body-cell-catalogo="{ val, row }">
         <h1>{{ val.nombre }}</h1>
       </template> -->
 
-      <template #cell-acciones="{ val, row }">
+      <template #body-cell-acciones="{ val, row }">
         <q-btn-group push @click="e => e.stopPropagation()">
           <btnAccion
             icono="edit black"
@@ -231,42 +218,27 @@ provide('infoPagina', {
   }
 });
 
-const foo = ref(null);
 // opciones
 const selectCatalogoFiltro = computed(() => {
-  if (!store.catalogoArbol) return [];
   let options = [];
-  for (const cat of store.catalogoArbol.hijas) {
-    options.push({
-      label: cat.nombre,
-      value: cat._id
-    });
-  }
-  return options;
-});
-const selectSubCatalogoFiltro = computed(() => {
-  const subCat = store.getOne(estado.catalogoSeleccionado);
-  foo.value = subCat ?? 'nope';
-  foo.value = estado.catalogoSeleccionado;
-  if (!subCat) return [];
-  return [];
-  let options = [];
-  for (const cat of subCat.hijas) {
-    const idsHijas = [];
-    const hijas = [];
-    for (const subcat of cat.hijas) {
-      hijas.push({
-        label: subcat.nombre,
-        value: [subcat._id],
-        class: 'option'
+  if (store.catalogoArbol) {
+    for (const cat of store.catalogoArbol.hijas) {
+      const idsHijas = [];
+      const hijas = [];
+      for (const subcat of cat.hijas) {
+        hijas.push({
+          label: subcat.nombre,
+          value: [subcat._id],
+          class: 'option'
+        });
+        idsHijas.push(subcat._id);
+      }
+      options.push({
+        label: cat.nombre,
+        value: [...idsHijas, cat._id]
       });
-      idsHijas.push(subcat._id);
+      options = [...options, ...hijas];
     }
-    options.push({
-      label: cat.nombre,
-      value: [...idsHijas, cat._id]
-    });
-    options = [...options, ...hijas];
   }
   return options;
 });

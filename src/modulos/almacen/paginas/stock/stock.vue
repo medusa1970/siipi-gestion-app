@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       :rows="rowsParaMostrar"
       :columns="[
@@ -229,6 +230,7 @@
               }
             " />
           <q-btn
+            v-if="authStore.getNegocio.tipo !== 'PUNTO'"
             class="p-1"
             color="black"
             size="sm"

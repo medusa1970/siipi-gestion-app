@@ -50,11 +50,11 @@ export const storeAlmacen = defineStore('almacen', {
      * define el producto actual que se esta modificando en pagina de detalles
      */
     async useProducto(): Promise<void> {
-      if (!this.producto || this.producto._id !== this.productoId) {
+      let producto;
+      if (!producto || producto._id !== this.productoId) {
         try {
-          this.producto = await api.buscarProducto_basico(
-            this.productoId as string
-          );
+          producto = await api.buscarProducto_basico(this.productoId as string);
+          this.producto = producto;
         } catch (err) {
           errFailback(err);
         }
@@ -66,7 +66,6 @@ export const storeAlmacen = defineStore('almacen', {
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
-      console.log('get');
       let productos;
       productos = (await localforage.getItem('productos')) as Producto[];
       if (!productos || actualizarDB) {
@@ -80,7 +79,6 @@ export const storeAlmacen = defineStore('almacen', {
           errFailback(err);
           return;
         }
-        console.log('received');
       }
       this.productos = productos;
       return productos;

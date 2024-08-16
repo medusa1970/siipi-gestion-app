@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <div
       class="flex justify-center items-center backImage"
       style="height: 500px">

@@ -1,7 +1,7 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <q-btn
-      v-show="false"
       color="primary"
       label="Crear catalogo"
       dense

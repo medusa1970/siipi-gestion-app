@@ -18,11 +18,11 @@ export const useProductoDetalle = () => {
   });
 
   onMounted(async () => {
-    store.useProducto();
-    store.getProductos();
+    await store.useProducto();
     if (!store.producto) {
       goTo(router, 'productos');
     }
+    store.getProductos();
   });
 
   return {

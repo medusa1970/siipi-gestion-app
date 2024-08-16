@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <div>
       <q-btn
         width="auto"
@@ -14,7 +15,8 @@
     <Tabla
       :rows="rowsTablaProductos"
       :columns="columnsTablaProducto"
-      :defaultImage="ProductoImage">
+      :defaultImage="ProductoImage"
+      :paginacion="9">
       <template #dropdown>
         <div
           style="
@@ -159,7 +161,6 @@
           </div>
         </div>
       </template>
-
       <template #cell-acciones="{ row }">
         <q-btn-group>
           <btnAccion

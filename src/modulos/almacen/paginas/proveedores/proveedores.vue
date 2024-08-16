@@ -1,5 +1,6 @@
 <template>
-  <NuxtLayout name="cathering">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
     <Tabla
       disableExpand
       :rows="rowsTabla"

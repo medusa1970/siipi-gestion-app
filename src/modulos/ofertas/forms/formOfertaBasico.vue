@@ -223,7 +223,6 @@ const formSubmit = async () => {
       );
       emits('modificarObjeto', oferta);
     } else {
-      delete estado.dataForm.tags;
       console.log(estado.dataForm);
       const oferta = await api.crearOferta(estado.dataForm, { loading: true });
       emits('crearObjeto', oferta);

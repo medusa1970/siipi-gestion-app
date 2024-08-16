@@ -1,11 +1,11 @@
 <template>
   <div class="w-full max-w-[400px] max-sm:w-[350px] mx-auto">
-    <q-btn
+    <!-- <q-btn
       color="primary"
       label="prueba impresora"
       no-caps
       padding="2px 10px"
-      @click="pruebaImpresora" />
+      @click="pruebaImpresora" /> -->
     <div class="flex justify-between items-center mb-4">
       <h1 class="font-bold">Pedidos por Aceptar:</h1>
 

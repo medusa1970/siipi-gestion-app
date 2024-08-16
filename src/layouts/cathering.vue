@@ -145,12 +145,12 @@ const menu = [
         to: 'listaPedidos'
       },
       {
-        icon: 'shopping_cart',
+        icon: 'bi-cart-plus',
         label: 'recibir pedidos',
         to: 'recibirPedidos'
       },
       {
-        icon: 'shopping_cart',
+        icon: 'bi-cart-dash',
         label: 'despachar pedidos',
         to: 'despacharPedidos'
       }

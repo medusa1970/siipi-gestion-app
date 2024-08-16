@@ -54,6 +54,7 @@ export const storeOferta = defineStore('ofertas', {
           return;
         }
       }
+      this.ofertas = ofertas;
       return ofertas;
     },
     async refreshOfertas() {

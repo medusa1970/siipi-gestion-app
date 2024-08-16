@@ -2,33 +2,36 @@ import { apiPedido } from '~/modulos/pedidos/API/pedidos.api';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const usePedido = () => {
+  const route = useRoute();
   const estado = reactive({
     pedidoDetalle: {},
     pedidoItemsEstado: '',
     itemsEstadoAjustado: [],
-    precioGeneral: []
+    precioGeneral: [],
+
+    modal: {
+      isAjustarItem: false
+    },
+    pedido_item: {
+      id: '',
+      cantidad: '',
+      comentario: ''
+    }
   });
   const authStore = useAuthStore();
 
   const buscarPedidoID = async (pedidoID: string) => {
-    console.log('first');
-    const pedido = await apiPedido.pedido_buscar(
+    // console.log('first');
+    const pedido = await apiPedido.pedido_buscarUno(
       { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)
     );
-    console.log(pedido);
-    // const [pedido] = await pedidoService.pedidoBuscar(
-    //   { _id: [pedidoID] },
-    //   // @ts-expect-error (creado dinamicamente)
-    //   useGqlToken(useAuth.token)
-    // );
     estado.pedidoDetalle = pedido; //@ts-ignore
     estado.precioGeneral = pedido.items.reduce((total, item) => {
       //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
 
-    //@ts-ignore
     estado.pedidoItemsEstado = //@ts-ignore
       pedido.items[0].estado?.[pedido.items[0].estado?.length - 1]; //@ts-ignore
     //@ts-ignore
@@ -53,13 +56,34 @@ export const usePedido = () => {
         valor: ultimoEstadoAjustado.valor
       };
     });
-
-    // Mostrar la información
   };
 
+  const ajustarItem = async (row: any) => {
+    estado.modal.isAjustarItem = true;
+    estado.pedido_item.id = row._id;
+    estado.pedido_item.cantidad = row.cantidad;
+  };
+  const ajustarItemGuardar = async () => {
+    // route.params.id;
+    const pedidoAjustarItem = await apiPedido.pedido_ajustar(
+      //@ts-ignore
+      route.params.id,
+      estado.pedido_item.id,
+      estado.pedido_item.cantidad,
+      estado.pedido_item.comentario
+    );
+    // console.log(pedidoAjustarItem);
+    if (pedidoAjustarItem) {
+      NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
+      buscarPedidoID(route.params.id);
+    } else NotifyError('Error al ajustar cantidad');
+    estado.modal.isAjustarItem = false;
+  };
   return {
     estado,
     buscarPedidoID,
-    authStore
+    authStore,
+    ajustarItem,
+    ajustarItemGuardar
   };
 };

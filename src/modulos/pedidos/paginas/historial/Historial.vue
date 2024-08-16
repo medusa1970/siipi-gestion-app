@@ -65,7 +65,7 @@ watch(date, value => {
 });
 onMounted(async () => {
   // await buscarPedidos2();
-  // filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
+  filtroHistorial(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 });
 </script>
 

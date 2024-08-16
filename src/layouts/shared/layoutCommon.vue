@@ -245,11 +245,11 @@
 <script setup>
 // breadcrumb
 
-const { infoPagina, update } = inject('infoPagina');
-// console.log(infoPagina, update);
-onMounted(() => {
-  if (update) update();
-});
+// const { infoPagina, update } = inject('infoPagina');
+// // console.log(infoPagina, update);
+// onMounted(() => {
+//   if (update) update();
+// });
 
 // PROPS
 const props = defineProps({

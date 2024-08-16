@@ -50,7 +50,7 @@ export const useMisPedidos = () => {
       { recibidos: [], noRecibidos: [] }
     );
     // hideLoading();
-    estado.pedidosRecibidos = pedidos.recibidos;
+    pedidoStore.pedidosRecibidos = pedidos.recibidos;
     estado.pedidosEntidad = pedidos.noRecibidos;
 
     // hideLoading();

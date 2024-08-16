@@ -69,7 +69,12 @@
           <q-td :props="props">
             <q-btn
               v-if="
-                estado.pedidoItemsEstado.estado !== 'preparado' || 'aceptado'
+                ['confirmado', 'ajustado'].includes(
+                  estado.pedidoItemsEstado.estado
+                ) &&
+                !estado.pedidoDetalle.items?.[0].estado.some(
+                  item => item.estado === 'recibido'
+                )
               "
               icon="edit"
               class="p-1"
@@ -81,7 +86,6 @@
           </q-td>
         </template>
       </Table>
-
       <q-btn
         v-if="estado.pedidoItemsEstado.estado === 'preparado'"
         class="bg-[#011627] text-white block mx-auto"

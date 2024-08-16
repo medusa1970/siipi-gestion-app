@@ -90,41 +90,32 @@
             >
           </q-td>
         </template>
-      </Table>
-      <!-- <Table
-        v-else
-        :rows="estado.pedidoDetalle.items"
-        :columns="detallePedidoAlmacen"
-        dense>
-        
-        <template #cell-actions="{ props }">
+        <!-- ACTIONS -->
+        <template #body-cell-actions="{ props }">
           <q-td :props="props">
             <q-btn
               v-if="
                 estado.pedidoItemsEstado.estado == 'recibido' &&
                 plazo24hrs(estado.pedidoItemsEstado._creado)
               "
-              color="primary"
               icon="edit"
-              dense
-              flat
-              round
-              size="13px"
+              class="p-1"
+              color="black"
+              size="sm"
               @click="ajustarItem(props.row)"
               ><QTooltip>Ajustar Item</QTooltip></q-btn
             >
           </q-td>
         </template>
-      </Table> -->
+      </Table>
 
-      <!-- <div
+      <div
         v-if="estado.itemsEstadoAjustado.length > 0"
         class="flex flex-col border-t border-b border-gray-200 my-3">
         <div class="overflow-auto p-2 space-y-4" id="chatArea">
           <h1 class="text-center font-extrabold uppercase text-blue-500">
             Items Ajustados
           </h1>
-          <!-- Mensaje de ejemplo con efecto de hover -- >
           <div v-for="item in estado.itemsEstadoAjustado" :key="item">
             <div
               class="flex items-start hover:bg-gray-200 hover:text-blue-500 hover:rounded-lg transition-colors duration-200">
@@ -146,37 +137,35 @@
               </div>
             </div>
           </div>
-
-          <!-- Repite el div anterior para cada mensaje -- >
         </div>
-      </div> -->
+      </div>
     </div>
 
-    <!-- DIALOG -->
-    <!-- <Dialog
+    <!-- AJUSTAR ITEM PEDIDO -->
+    <Dialog
       v-model="estado.modal.isAjustarItem"
       title="Ajustar Item"
+      label-btn="ajustar"
       :handle-submit="ajustarItemGuardar">
       <template #inputsDialog>
         <div class="flex flex-col gap-2">
           <q-input
-            v-model.number="estado.itemPedido.cantidad"
+            v-model.number="estado.pedido_item.cantidad"
             label="Cantidad"
             type="number"
             dense
             outlined
             clearable />
           <q-input
-            v-model="estado.itemPedido.comentario"
-            label="Comentario*"
+            v-model="estado.pedido_item.comentario"
+            label="Comentario"
             type="text"
             dense
             outlined
-            clearable
-            required />
+            clearable />
         </div>
       </template>
-    </Dialog> -->
+    </Dialog>
   </NuxtLayout>
 </template>
 
@@ -198,7 +187,9 @@ provide('infoPagina', {
 });
 
 const { params } = useRoute();
-const { estado, buscarPedidoID, authStore } = useListaPedidos();
+// const { estado, buscarPedidoID, authStore } = useListaPedidos();
+const { estado, buscarPedidoID, authStore, ajustarItem, ajustarItemGuardar } =
+  usePedido();
 
 const detallePedido = [
   {
@@ -224,7 +215,7 @@ const detallePedido = [
     align: 'center',
     field: row => row.cantidad,
     sortable: true
-  }
+  },
   // {
   //   name: 'precioTotal',
   //   required: true,
@@ -233,11 +224,11 @@ const detallePedido = [
   //   field: (row: any) => row.cantidad * row.oferta.precio,
   //   sortable: true
   // },
-  // {
-  //   name: 'actions',
-  //   label: 'Acciones',
-  //   align: 'right'
-  // }
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right'
+  }
 ];
 
 onMounted(() => {

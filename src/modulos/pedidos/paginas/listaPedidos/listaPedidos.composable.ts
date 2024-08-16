@@ -222,7 +222,7 @@ export const useListaPedidos = () => {
   };
 
   const buscarPedidoID = async (pedidoID: string) => {
-    console.log('first');
+    // console.log('first');
     const pedido = await apiPedido.pedido_buscarUno(
       { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)

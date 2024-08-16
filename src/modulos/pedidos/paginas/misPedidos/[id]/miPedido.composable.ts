@@ -91,7 +91,7 @@ export const useMiPedido = () => {
       estado.passwordChofer = '';
     }
   };
-  // console.log(router.)
+
   const ajustarItem = async (row: any) => {
     estado.modal.isAjustarItem = true;
     estado.pedido_item.id = row._id;

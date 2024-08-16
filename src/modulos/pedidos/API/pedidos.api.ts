@@ -32,7 +32,7 @@ export const apiPedido = {
     return extraerUno(resultado);
   },
 
-  pedidoConfirmarItems: async (busqueda: BuscarPedidoDto, token: any) => {
+  pedidoConfirmarItems: async (busqueda: BuscarPedidoDto, token?: any) => {
     let resultado;
     try {
       await loadingAsync(async () => {

@@ -17,7 +17,7 @@ export const apiPedido = {
   ): Promise<Pedido> => {
     let resultado;
     Object.assign(datos, { conFactura: false });
-    console.log(datos);
+    //console.log(datos);
     try {
       await loadingAsync(async () => {
         resultado = await GqlIniciarPedido(
@@ -109,7 +109,7 @@ export const apiPedido = {
     token?: any
   ) => {
     try {
-      console.log(pedidosID, tipo);
+      //console.log(pedidosID, tipo);
       const pedidos = extraer(
         await GqlCambiarEstadoItemsPorOfertas_aceptar(
           {
@@ -123,7 +123,7 @@ export const apiPedido = {
           useGqlToken(token)
         )
       );
-      console.log(pedidos);
+      //console.log(pedidos);
       return pedidos;
     } catch (err) {
       throw formatApiError(err);
@@ -136,7 +136,7 @@ export const apiPedido = {
     token?: any
   ) => {
     try {
-      console.log(pedidosID, ofertaIds);
+      //console.log(pedidosID, ofertaIds);
       const pedidos = extraer(
         await GqlCambiarEstadoItemsPorOfertas_preparar(
           {
@@ -150,7 +150,7 @@ export const apiPedido = {
           useGqlToken(token)
         )
       );
-      console.log(pedidos);
+      //console.log(pedidos);
       return pedidos;
     } catch (err) {
       throw formatApiError(err);
@@ -165,7 +165,7 @@ export const apiPedido = {
     token?: any
   ) => {
     try {
-      // console.log(pedidosIDS, ofertaIds);
+      // //console.log(pedidosIDS, ofertaIds);
       const pedidos = extraer(
         await GqlAjustarItemsPorOferta(
           {
@@ -180,7 +180,7 @@ export const apiPedido = {
           useGqlToken(token)
         )
       );
-      console.log(pedidos);
+      //console.log(pedidos);
       return pedidos;
     } catch (err) {
       throw formatApiError(err);
@@ -189,7 +189,7 @@ export const apiPedido = {
 
   pedido_recibirOfertas: async (pedidoID: string, token?: any) => {
     try {
-      console.log(pedidoID, token);
+      //console.log(pedidoID, token);
       const pedidos = extraer(
         await GqlCambiarEstadoItems(
           {
@@ -199,6 +199,77 @@ export const apiPedido = {
               estado: 'recibido'
             }
           }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      //console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  // pedido rapido RECIBIR DESPACHAR
+  pedido_aceptar: async (pedidoID: string, token?: any) => {
+    try {
+      //console.log(pedidoID, token);
+      const pedidos = extraer(
+        await GqlCambiarEstadoItemsRapido(
+          {
+            busqueda: { _id: [pedidoID] },
+            estado: {
+              estado: 'aceptado'
+            }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      //console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+  pedido_preparar: async (pedidosID: string, token?: any) => {
+    try {
+      // //console.log(pedidosID);
+      const pedidos = extraer(
+        await GqlCambiarEstadoItemsRapido(
+          {
+            busqueda: { _id: [pedidosID] },
+            estado: {
+              estado: 'preparado'
+            }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      // //console.log(pedidos);
+      return pedidos;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
+  // ajustar rapido
+  pedido_ajustar: async (
+    pedidoID: string,
+    itemID: string,
+    nuevaCantidad: number,
+    comentario: string,
+    token?: any
+  ) => {
+    try {
+      // //console.log(pedidosIDS, ofertaIds);
+      const pedidos = extraer(
+        await GqlAjustarItem(
+          {
+            busqueda: { _id: [pedidoID] },
+            itemId: itemID,
+            nuevaCantidad,
+            comentario,
+            opciones: { limit: 1, errorSiVacio: true }
+          }, //@ts-expect-error
           useGqlToken(token)
         )
       );

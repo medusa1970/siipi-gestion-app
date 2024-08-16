@@ -203,46 +203,47 @@ const realizarPedido = async () => {
         {},
         authStore.token
       );
-      console.log(pedido);
+
       if (pedido) {
-        console.log('first');
-        const a = await apiPedido.pedidoConfirmarItems(
+        await apiPedido.pedidoConfirmarItems(
           {
             _id: pedido._id
           },
           authStore.token
         );
-        console.log(a);
-        const b = await apiPedido.pedido_prepararOfertas(pedido._id);
-        console.log(b);
-        const c = await apiPedido.pedido_aceptarOfertas(pedido._id);
-        console.log(c);
-        const d = await apiPedido.pedido_recibirOfertas(pedido._id);
-        console.log(d);
+        await apiPedido.pedido_aceptar(pedido._id, authStore.token);
+        await apiPedido.pedido_preparar(pedido._id, authStore.token);
+        await apiPedido.pedido_recibirOfertas(pedido._id);
         NotifySucessCenter('Pedido recibido con éxito');
-        router.push('/cathering/pedidos/listaPedidos');
+        // router.push('/cathering/pedidos/listaPedidos');
         pedidoStore.listaPedido = [];
       } else NotifyError('Error al realizar el pedido');
 
       // console.log(pedidoStore.listaPedido);
     } else {
       // SE DESPACHA PRODUCTO
-      const pedido = await pedidoService.pedidoIniciar(
-        pedidoStore.areaPedidoID,
-        storeAuth.negocioElegido._id,
-        items,
-        useGqlToken(storeAuth.token)
+      const pedido = await apiPedido.pedidoIniciar(
+        {
+          comprador: pedidoStore.area._id,
+          vendedor: authStore.negocio._id,
+          items
+        },
+        {},
+        authStore.token
       );
-      // console.log(pedido);
+
       if (pedido) {
-        await apiPedido.pedidoConfirmarItems({
-          _id: pedido._id
-        });
-        await apiPedido.pedido_aceptarOfertas(pedido._id);
-        await apiPedido.pedido_prepararOfertas(pedido._id);
+        await apiPedido.pedidoConfirmarItems(
+          {
+            _id: pedido._id
+          },
+          authStore.token
+        );
+        await apiPedido.pedido_aceptar(pedido._id, authStore.token);
+        await apiPedido.pedido_preparar(pedido._id, authStore.token);
         await apiPedido.pedido_recibirOfertas(pedido._id);
-        NotifySucessCenter('Pedido realizado con éxito');
-        router.push('/cathering/pedidos/listaPedidos');
+        NotifySucessCenter('Pedido despachado con éxito');
+        // router.push('/cathering/pedidos/listaPedidos');
         pedidoStore.listaPedido = [];
       } else NotifyError('Error al realizar el pedido');
     }

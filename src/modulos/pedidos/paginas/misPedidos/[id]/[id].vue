@@ -65,6 +65,19 @@
             <!-- <p class="font-bold text-2xl">{{ estado.precioGeneral }} Bs.</p> -->
           </span>
         </template>
+        <!-- ACTIONS -->
+        <template #body-cell-actions="{ props }">
+          <q-td :props="props">
+            <q-btn
+              icon="edit"
+              class="p-1"
+              color="black"
+              size="sm"
+              @click="ajustarItem(props.row)"
+              ><QTooltip>Ajustar Item</QTooltip></q-btn
+            >
+          </q-td>
+        </template>
       </Table>
 
       <q-btn
@@ -122,6 +135,31 @@
         dense />
     </template>
   </Dialog>
+  <!-- AJUSTAR ITEM PEDIDO -->
+  <Dialog
+    v-model="estado.modal.isAjustarItem"
+    title="Ajustar Item"
+    label-btn="ajustar"
+    :handle-submit="ajustarItemGuardar">
+    <template #inputsDialog>
+      <div class="flex flex-col gap-2">
+        <q-input
+          v-model.number="estado.pedido_item.cantidad"
+          label="Cantidad"
+          type="number"
+          dense
+          outlined
+          clearable />
+        <q-input
+          v-model="estado.pedido_item.comentario"
+          label="Comentario"
+          type="text"
+          dense
+          outlined
+          clearable />
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup>
@@ -130,14 +168,18 @@
 // import realizarPedido from '../../realizarPedido.vue';
 import { useRoute } from 'vue-router';
 import { useMiPedido } from './miPedido.composable';
+import { useAuthStore } from '@/modulos/main/useAuthStore';
 
+const authStore = useAuthStore();
 const { params } = useRoute();
 const {
   buscarPedidoID,
   estado,
   recibirPedido,
   // obtenerItemsEstado,
-  abrirModalRecibirPedido
+  abrirModalRecibirPedido,
+  ajustarItem,
+  ajustarItemGuardar
 } = useMiPedido();
 
 const detallePedidoPunto = [
@@ -164,15 +206,12 @@ const detallePedidoPunto = [
     align: 'center',
     field: row => row.cantidad,
     sortable: true
+  },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    align: 'right'
   }
-  // {
-  //   name: 'precioTotal',
-  //   required: true,
-  //   label: 'Precio Total',
-  //   align: 'right',
-  //   field: (row) => row.cantidad * row.oferta.precio,
-  //   sortable: true
-  // }
 ];
 
 provide('infoPagina', {

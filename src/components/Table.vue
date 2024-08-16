@@ -67,8 +67,8 @@
       <slot name="dropdown"></slot>
     </template>
     <!-- ACCIONES -->
-    <template v-slot:cell-actions="props">
-      <slot name="cell-actions" :props="props"></slot>
+    <template v-slot:body-cell-actions="props">
+      <slot name="body-cell-actions" :props="props"></slot>
     </template>
     <!-- IMAGES -->
     <template v-slot:cell-foto="{ value }">

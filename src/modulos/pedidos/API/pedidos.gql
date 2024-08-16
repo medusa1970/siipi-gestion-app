@@ -174,3 +174,64 @@ mutation ajustarItemsPorOferta(
     _id
   }
 }
+
+mutation cambiarEstadoItemsRapido(
+  $busqueda: BuscarPedidoDto = {}
+  $itemIds: [ID!] = []
+  $estado: CrearItemEstadoDto!
+  $opciones: BuscarOpciones = {}
+) {
+  cambiarEstadoItems(
+    busqueda: $busqueda
+    itemIds: $itemIds
+    estado: $estado
+    opciones: $opciones
+  ) {
+    _id
+    items {
+      _id
+      cantidad
+      oferta {
+        _id
+        nombre
+        ingredientes {
+          tipo
+          producto {
+            _id
+            nombre
+          }
+          cantidad
+        }
+      }
+      estado {
+        estado
+        _creado
+      }
+    }
+  }
+}
+
+mutation ajustarItem(
+  $busqueda: BuscarPedidoDto = {}
+  $itemId: ID!
+  $nuevaCantidad: Float!
+  $comentario: String = null
+  $opciones: BuscarOpciones = {}
+) {
+  ajustarItem(
+    busqueda: $busqueda
+    itemId: $itemId
+    nuevaCantidad: $nuevaCantidad
+    comentario: $comentario
+    opciones: $opciones
+  ) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      _id
+      cantidad
+    }
+  }
+}

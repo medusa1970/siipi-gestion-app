@@ -3,6 +3,7 @@ import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useMiPedido = () => {
   const router = useRouter();
+  const route = useRoute();
   const estado = reactive({
     pedidoDetalle: {},
     pedidoItemsEstado: '',
@@ -10,10 +11,16 @@ export const useMiPedido = () => {
     precioGeneral: [],
 
     modal: {
-      isShowPassword: false
+      isShowPassword: false,
+      isAjustarItem: false
     },
     pedidoID: '',
-    passwordChofer: ''
+    passwordChofer: '',
+    pedido_item: {
+      id: '',
+      cantidad: '',
+      comentario: ''
+    }
   });
   const authStore = useAuthStore();
 
@@ -84,13 +91,36 @@ export const useMiPedido = () => {
       estado.passwordChofer = '';
     }
   };
-
+  // console.log(router.)
+  const ajustarItem = async (row: any) => {
+    estado.modal.isAjustarItem = true;
+    estado.pedido_item.id = row._id;
+    estado.pedido_item.cantidad = row.cantidad;
+  };
+  const ajustarItemGuardar = async () => {
+    route.params.id;
+    const pedidoAjustarItem = await apiPedido.pedido_ajustar(
+      //@ts-ignore
+      route.params.id,
+      estado.pedido_item.id,
+      estado.pedido_item.cantidad,
+      estado.pedido_item.comentario
+    );
+    console.log(pedidoAjustarItem);
+    if (pedidoAjustarItem) {
+      NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
+      buscarPedidoID(route.params.id);
+    } else NotifyError('Error al ajustar cantidad');
+    estado.modal.isAjustarItem = false;
+  };
   return {
     estado,
     buscarPedidoID,
     authStore,
     abrirModalRecibirPedido,
-    recibirPedido
+    recibirPedido,
+    ajustarItem,
+    ajustarItemGuardar
   };
 };
 //cambio

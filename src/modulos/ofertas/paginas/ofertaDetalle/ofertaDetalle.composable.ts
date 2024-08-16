@@ -1,20 +1,20 @@
-import { useOfertas } from "~/modulos/ofertas/ofertas.composable";
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosOfertaDetalle = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
+export const permisosOfertaDetalle = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
 
 /**
  * Composable
  */
 export const useOfertaDetalle = () => {
-  const { store, authStore, estadoOfertas, router } = useOfertas();
-  if (!authStore.autorizar(permisosOfertaDetalle)) goTo(router, "noAutorizado");
+  const { store, authStore, estadoOfertas, router, route } = useOfertas();
+  if (!authStore.autorizar(permisosOfertaDetalle)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
-    tab: "datosBasicos",
+    tab: 'datosBasicos'
   });
 
-  return { estado, store, authStore, router };
+  return { estado, store, authStore, router, route };
 };

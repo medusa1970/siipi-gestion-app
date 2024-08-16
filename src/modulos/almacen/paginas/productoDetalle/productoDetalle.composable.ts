@@ -9,7 +9,7 @@ export const permisosProductoDetalle = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
  * Composable
  */
 export const useProductoDetalle = () => {
-  const { store, authStore, router } = useAlmacen();
+  const { store, authStore, route, router } = useAlmacen();
   if (!authStore.autorizar(permisosProductoDetalle))
     goTo(router, 'noAutorizado');
 
@@ -17,10 +17,10 @@ export const useProductoDetalle = () => {
     tab: 'datosBasicos'
   });
 
-  onMounted(async () => {
-    await store.useProducto();
+  onBeforeMount(async () => {
+    store.producto = await store.useProducto(route.params.id as string);
     if (!store.producto) {
-      goTo(router, 'productos');
+      goTo(router, 'ofertas');
     }
     store.getProductos();
   });

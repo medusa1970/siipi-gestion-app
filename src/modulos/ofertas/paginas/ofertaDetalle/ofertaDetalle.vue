@@ -37,7 +37,7 @@
 
 <script setup>
 import { useOfertaDetalle } from './ofertaDetalle.composable';
-const { estado, store, authStore, router } = useOfertaDetalle();
+const { estado, store, authStore, router, route } = useOfertaDetalle();
 
 import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasicos/DatosBasicosTab.vue';
 import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';
@@ -54,12 +54,12 @@ provide('infoPagina', {
   }
 });
 
-onMounted(async () => {
-  await store.getOfertas();
-  store.useEntidad();
+onBeforeMount(async () => {
+  store.oferta = await store.useOferta(route.params.id);
   if (!store.oferta) {
     goTo(router, 'ofertas');
   }
+  store.getOfertas();
 });
 </script>
 

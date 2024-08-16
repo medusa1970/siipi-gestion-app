@@ -17,22 +17,19 @@ export const storeOferta = defineStore('ofertas', {
     oferta: null
   }),
 
-  getters: {
-    ofertaId: state => useRoute()?.params.id
-  },
-
   actions: {
     /**
      * define la oferta actual que se esta modificando en pagina de detalles
      */
-    async useEntidad(): Promise<void> {
-      if (!this.oferta || this.ofertaId !== this.oferta._id) {
+    async useOferta(id: string): Promise<Oferta> {
+      if (!this.oferta || id !== this.oferta._id) {
         try {
-          this.oferta = await api.buscarOferta(this.ofertaId as string);
+          this.oferta = await api.buscarOferta(id);
         } catch (err) {
           errFailback(err);
         }
       }
+      return this.oferta;
     },
 
     /**

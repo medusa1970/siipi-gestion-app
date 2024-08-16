@@ -83,7 +83,7 @@
         { label: 'Siinple', value: 'SIINPLE' }
       ]"
       :porDefecto="estado.dataForm.tags?.[0]"
-      @update="v => (estado.dataForm.tags = v !== null ? [v] : [])" />
+      @update="v => (estado.dataForm.tags = v != null ? [v] : [])" />
 
     <!-- Submit -->
     <div class="text-center">

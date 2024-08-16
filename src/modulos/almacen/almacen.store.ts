@@ -41,24 +41,19 @@ export const storeAlmacen = defineStore('almacen', {
     problemas: null
   }),
 
-  getters: {
-    productoId: state => useRoute()?.params.id
-  },
-
   actions: {
     /**
      * define el producto actual que se esta modificando en pagina de detalles
      */
-    async useProducto(): Promise<void> {
-      let producto;
-      if (!producto || producto._id !== this.productoId) {
+    async useProducto(id: string): Promise<Producto> {
+      if (!this.producto || id !== this.producto._id) {
         try {
-          producto = await api.buscarProducto_basico(this.productoId as string);
-          this.producto = producto;
+          this.producto = await api.buscarProducto_basico(id);
         } catch (err) {
           errFailback(err);
         }
       }
+      return this.producto;
     },
 
     /**
@@ -70,10 +65,12 @@ export const storeAlmacen = defineStore('almacen', {
       productos = (await localforage.getItem('productos')) as Producto[];
       if (!productos || actualizarDB) {
         try {
+          console.log('get productos...');
           productos = await api.buscarProductos_basico(
             {},
             { sort: '-_modificado -_creado', loading: true }
           );
+          console.log('get productos OK');
           await localforage.setItem('productos', productos);
         } catch (err) {
           errFailback(err);

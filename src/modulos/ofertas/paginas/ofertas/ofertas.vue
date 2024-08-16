@@ -104,7 +104,7 @@
           <btnAccion
             icono="edit black"
             @click="
-              // store.oferta = row;
+              // store.oferta = row; // TODO PORQUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE?
               goTo(router, 'oferta', { id: row._id })
             " />
         </q-btn-group>

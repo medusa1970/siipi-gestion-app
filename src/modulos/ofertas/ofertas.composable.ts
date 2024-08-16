@@ -3,10 +3,10 @@ import { storeOferta } from './ofertas.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useOfertas = () => {
+  const route = useRoute();
   const store = storeOferta();
   const router = useRouter();
   const authStore = useAuthStore();
-
   const estadoOfertas = reactive({
     catalogoSeleccionado: null as string
   });
@@ -29,6 +29,7 @@ export const useOfertas = () => {
     store,
     authStore,
     router,
+    route,
     ofertaAbreviacion,
     ofertaIncompleta
   };

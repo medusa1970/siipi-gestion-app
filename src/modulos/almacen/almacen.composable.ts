@@ -3,6 +3,7 @@ import { storeAlmacen } from './almacen.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useAlmacen = () => {
+  const route = useRoute();
   const router = useRouter();
   const store = storeAlmacen();
   const estadoAlmacen = reactive({});
@@ -26,6 +27,7 @@ export const useAlmacen = () => {
     store,
     authStore,
     router,
+    route,
     productoIncompleto
   };
 };

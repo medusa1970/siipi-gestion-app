@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="cathering">
     <Tabla
       :rows="rowsTabla"
       :columns="columnsTabla"
@@ -45,12 +44,12 @@
         </div>
       </template>
     </Tabla>
+    <popup v-model="estado.modal.formCrearMedida" titulo="Nueva medida">
+      <template #body>
+        <formMedida @crearObjeto="handleMedidaCreada" />
+      </template>
+    </popup>
   </NuxtLayout>
-  <popup v-model="estado.modal.formCrearMedida" titulo="Nueva medida">
-    <template #body>
-      <formMedida @crearObjeto="handleMedidaCreada" />
-    </template>
-  </popup>
 </template>
 
 <script setup lang="ts">

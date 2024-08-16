@@ -79,7 +79,6 @@ const menu = [
     icon: 'shopping_cart',
     label: 'Pedidos',
     key: 'pedidos',
-    soloDev: true,
     subMenu: [
       {
         icon: 'add_shopping_cart',

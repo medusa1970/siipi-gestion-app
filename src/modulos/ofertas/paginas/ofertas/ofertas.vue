@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="cathering">
     <Tabla :rows="rowsParaMostrar" :columns="columnaOfertas">
       <!-- AGREGAR -->
 

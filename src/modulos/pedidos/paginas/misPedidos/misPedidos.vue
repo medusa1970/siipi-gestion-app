@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="punto">
     <q-tabs v-model="tab" inline-label no-caps dense>
       <q-tab name="cathering" icon="bi-cart4" label="Pedidos Cathering" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />

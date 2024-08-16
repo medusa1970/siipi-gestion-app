@@ -67,24 +67,23 @@ export const storeAlmacen = defineStore('almacen', {
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
       console.log('get');
-      this.productos = (await localforage.getItem('productos')) as Producto[];
-      console.log('received');
-      if (!this.productos || actualizarDB) {
+      let productos;
+      productos = (await localforage.getItem('productos')) as Producto[];
+      if (!productos || actualizarDB) {
         try {
-          this.productos = await api.buscarProductos_basico(
+          productos = await api.buscarProductos_basico(
             {},
-            { sort: '-_modificado -_creado' }
+            { sort: '-_modificado -_creado', loading: true }
           );
-          await localforage.setItem(
-            'productos',
-            JSON.parse(JSON.stringify(this.productos))
-          );
+          await localforage.setItem('productos', productos);
         } catch (err) {
           errFailback(err);
           return;
         }
+        console.log('received');
       }
-      return this.productos;
+      this.productos = productos;
+      return productos;
     },
     async refreshProductos(): Promise<void> {
       await this.getProductos(true);

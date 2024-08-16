@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import Logo from "@/assets/img/logo.png";
-import { useAuthStore } from "~/modulos/main/useAuthStore";
+import Logo from '@/assets/img/logo.png';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 </script>

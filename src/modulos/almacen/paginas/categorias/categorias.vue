@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="cathering">
     <!-- ARBOL -->
     <div class="flex justify-center mt-4">
       <q-list

@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="cathering">
     <q-btn
       v-show="false"
       color="primary"
@@ -11,7 +10,7 @@
       @click="estado.modal.show_agregarCatalogo = true" />
     <!-- MAPEO CATALOGOS -->
     <div class="flex flex-wrap justify-center gap-4">
-      <div v-for="catalogo in store.catalogoArbol.hijas">
+      <div v-for="catalogo in store.catalogoArbol?.hijas ?? []">
         <q-item
           clickable
           class="shadow-md w-52 p-3 flex flex-col items-center mt-4"

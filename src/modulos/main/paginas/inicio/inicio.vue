@@ -4,21 +4,19 @@
     <Transition name="fade">
       <login
         v-if="page === 'login' && !authStore.getUsuario"
-        @go="(p) => (page = p)"
-      />
+        @go="p => (page = p)" />
     </Transition>
 
     <!-- Elegir un negocio -->
     <Transition name="fade">
       <negocios
         v-if="page === 'login' && authStore.getUsuario"
-        @go="(p) => (page = p)"
-      />
+        @go="p => (page = p)" />
     </Transition>
 
     <!-- Registro nuevo usuario -->
     <Transition name="fade">
-      <registro1 v-if="page === 'registro1'" @go="(p) => (page = p)" />
+      <registro1 v-if="page === 'registro1'" @go="p => (page = p)" />
     </Transition>
     <Transition name="fade">
       <div>
@@ -31,13 +29,13 @@
 
     <!-- Rinicializacion de contraseña -->
     <Transition name="fade">
-      <rdc1 v-if="page === 'rdc1'" @go="(p) => (page = p)" />
+      <rdc1 v-if="page === 'rdc1'" @go="p => (page = p)" />
     </Transition>
     <Transition name="fade">
-      <rdc2 v-if="page === 'rdc2'" @go="(p) => (page = p)" />
+      <rdc2 v-if="page === 'rdc2'" @go="p => (page = p)" />
     </Transition>
     <Transition name="fade">
-      <rdc3 v-if="page === 'rdc3'" @go="(p) => (page = p)" />
+      <rdc3 v-if="page === 'rdc3'" @go="p => (page = p)" />
     </Transition>
     <Transition name="fade">
       <div class="w-full" v-if="page === 'rdc4'">
@@ -57,25 +55,25 @@
 
 <script setup>
 definePageMeta({
-  layout: "inicio",
+  layout: 'inicio'
   // middleware: ['auth'],
 });
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import login from "./login.vue";
-import negocios from "./negocios.vue";
-import rdc1 from "./rdc1.vue";
-import rdc2 from "./rdc2.vue";
-import rdc3 from "./rdc3.vue";
-import registro1 from "./registro1.vue";
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import login from './login.vue';
+import negocios from './negocios.vue';
+import rdc1 from './rdc1.vue';
+import rdc2 from './rdc2.vue';
+import rdc3 from './rdc3.vue';
+import registro1 from './registro1.vue';
 const authStore = useAuthStore();
 
 /**
  * refs
  */
 
-const page = ref("login");
+const page = ref('login');
 if (authStore.getRecienDesconectado()) {
-  page.value = "login"; // o 'byebye'
+  page.value = 'login'; // o 'byebye'
 }
 
 /**

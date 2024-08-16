@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="punto">
     <div class="p-2">
       <h1 class="text-lg font-bold text-orange-500 uppercase">
         Informacion del pedido {{ estado.pedidoDetalle._id }}

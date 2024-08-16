@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+  <NuxtLayout name="cathering">
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
       <q-tab name="global" icon="bi-box-seam" label="Pedido Global" />

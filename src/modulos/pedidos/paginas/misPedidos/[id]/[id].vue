@@ -68,6 +68,9 @@
         <template #body-cell-actions="{ props }">
           <q-td :props="props">
             <q-btn
+              v-if="
+                estado.pedidoItemsEstado.estado !== 'preparado' || 'aceptado'
+              "
               icon="edit"
               class="p-1"
               color="black"

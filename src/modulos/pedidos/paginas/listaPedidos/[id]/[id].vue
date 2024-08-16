@@ -60,11 +60,7 @@
       <Table
         v-if="estado.pedidoDetalle.items"
         :rows="estado.pedidoDetalle.items"
-        :columns="
-          estado.pedidoItemsEstado.estado === 'preparado'
-            ? detallePedidoAccion
-            : detallePedido
-        "
+        :columns="detallePedido"
         dense>
         <template #dropdown>
           <span class="flex gap-2 justify-center items-center">
@@ -183,7 +179,7 @@
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 // import { usePedido } from '@/composables/punto/usePedido';
@@ -193,61 +189,23 @@ import { useRoute } from 'vue-router';
 import { usePedido } from './pedido.composable';
 import { useListaPedidos } from '@/modulos/pedidos/paginas/listaPedidos/listaPedidos.composable';
 
+provide('infoPagina', {
+  infoPagina: {
+    titulo: 'Pedido'
+    // camino: [{ label: 'Pedidos', to: 'listaPedidos' }]
+  }
+});
+
 const { params } = useRoute();
 const { estado, buscarPedidoID, authStore } = useListaPedidos();
-// const {
-//   buscarPedidoID,
-//   estado,
-//   recibirPedido,
-//   obtenerItemsEstado,
-//   abrirModalRecibirPedido
-// } = usePedido();
-const detallePedidoAccion = [
-  {
-    name: 'oferta',
-    required: true,
-    label: 'Oferta',
-    align: 'left',
-    field: (row: any) => row.oferta.nombre,
-    sortable: true
-  },
-  {
-    name: 'precio',
-    required: true,
-    label: 'Precio U.',
-    align: 'center',
-    field: (row: any) => row.oferta.precio,
-    sortable: true
-  },
-  {
-    name: 'cantidad',
-    required: true,
-    label: 'Cantidad',
-    align: 'center',
-    field: (row: any) => row.cantidad,
-    sortable: true
-  },
-  {
-    name: 'precioTotal',
-    required: true,
-    label: 'Precio Total',
-    align: 'right',
-    field: (row: any) => row.cantidad * row.oferta.precio,
-    sortable: true
-  },
-  {
-    name: 'actions',
-    label: 'Acciones',
-    align: 'right'
-  }
-];
+
 const detallePedido = [
   {
     name: 'oferta',
     required: true,
     label: 'Oferta',
     align: 'left',
-    field: (row: any) => row.oferta.nombre,
+    field: row => row.oferta.nombre,
     sortable: true
   },
   // {
@@ -255,7 +213,7 @@ const detallePedido = [
   //   required: true,
   //   label: 'Precio U.',
   //   align: 'center',
-  //   field: (row: any) => row.oferta.precio,
+  //   field: (row) => row.oferta.precio,
   //   sortable: true
   // },
   {
@@ -263,9 +221,9 @@ const detallePedido = [
     required: true,
     label: 'Cantidad',
     align: 'center',
-    field: (row: any) => row.cantidad,
+    field: row => row.cantidad,
     sortable: true
-  },
+  }
   // {
   //   name: 'precioTotal',
   //   required: true,
@@ -274,11 +232,11 @@ const detallePedido = [
   //   field: (row: any) => row.cantidad * row.oferta.precio,
   //   sortable: true
   // },
-  {
-    name: 'actions',
-    label: 'Acciones',
-    align: 'right'
-  }
+  // {
+  //   name: 'actions',
+  //   label: 'Acciones',
+  //   align: 'right'
+  // }
 ];
 
 onMounted(() => {

@@ -104,6 +104,10 @@ export const storeEmpresa = defineStore('empresa', {
             }
           );
 
+          /**
+           * AQUI SOLO LOS RECIBIDOS
+           */
+
           for (const pedido of pedidos) {
             let encontrado = this.infoPedidos.findIndex(
               p => p.entidad._id === pedido.comprador._id

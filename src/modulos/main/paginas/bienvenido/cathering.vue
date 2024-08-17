@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Bienvenido"
+    :navegacion="[{ label: 'bienvenido', to: 'cathering' }]">
     <div
       class="flex justify-center items-center backImage"
       style="height: 500px">
@@ -11,11 +13,4 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Bienvenido',
-    camino: [{ label: 'bienvenido', to: 'cathering' }]
-  }
-});
 </script>

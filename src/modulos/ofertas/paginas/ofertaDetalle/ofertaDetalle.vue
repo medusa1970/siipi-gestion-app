@@ -1,6 +1,11 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="store.oferta.nombre"
+    :navegacion="[
+      { label: 'Ofertas', to: 'ofertas' },
+      { label: store.oferta.nombre, to: 'ofertaDetalles' }
+    ]">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -44,20 +49,11 @@ import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/Prod
 import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue';
 import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
 
-provide('infoPagina', {
-  infoPagina: {
-    titulo: store.oferta?.nombre + ' (edicion)',
-    camino: [
-      { label: 'Ofertas', to: 'ofertas' },
-      { label: store.oferta?.nombre, to: 'ofertaDetalles' }
-    ]
-  }
-});
-
 onBeforeMount(async () => {
   store.oferta = await store.useOferta(route.params.id);
   if (!store.oferta) {
-    goTo(router, 'ofertas');
+    console.log(111);
+    // goTo(router, 'ofertas');
   }
   store.getOfertas();
 });

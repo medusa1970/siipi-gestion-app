@@ -5,9 +5,9 @@
       elevated
       :class="[
         'text-white ',
-        punto && 'bg-[#ff9215]',
-        cathering && 'bg-green-700',
-        sede && 'colorBackground'
+        tipo === 'punto' && 'bg-[#ff9215]',
+        tipo === 'cathering' && 'bg-green-700',
+        tipo === 'sede' && 'colorBackground'
       ]"
       style="">
       <q-toolbar class="">
@@ -42,7 +42,7 @@
           icon="home"
           :to="getRoute(router, 'cathering')" />
         <q-breadcrumbs-el
-          v-for="nivel in infoPagina?.camino"
+          v-for="nivel in navegacion"
           :label="nivel.label"
           :icon="nivel.icon ?? undefined"
           :to="getRoute(router, nivel.to, nivel.params)" />
@@ -58,9 +58,9 @@
       style=""
       :class="[
         'text-white ',
-        punto && 'bg-[#ff9215]',
-        cathering && 'bg-green-700',
-        sede && 'colorBackground'
+        tipo === 'punto' && 'bg-[#ff9215]',
+        tipo === 'cathering' && 'bg-green-700',
+        tipo === 'sede' && 'colorBackground'
       ]">
       <!-- drawer content -->
       <!-- PERFIL -->
@@ -120,7 +120,7 @@
               "
               @click="
                 if (item.to) {
-                  router.push(getRoute(router, item.to));
+                  router.push(getRoute(router, item.to, item.params));
                 } else {
                   // for (const i of menuList) {
                   //   menuState[i.key] = item?.key === i?.key;
@@ -129,7 +129,7 @@
               ">
               <div v-for="subItem in item.subMenu ?? []">
                 <q-btn
-                  :to="getRoute(router, subItem.to)"
+                  :to="getRoute(router, subItem.to, subItem.params)"
                   v-if="
                     (!subItem.soloDev ||
                       $config.public.DeployStatus !== 'PROD') &&
@@ -232,7 +232,7 @@
     <q-page-container>
       <div class="text-center">
         <q-btn rounded color="black" style="margin-top: 15px">
-          {{ infoPagina?.titulo }}
+          {{ titulo }}
         </q-btn>
       </div>
       <div id="layoutContainer">
@@ -243,23 +243,13 @@
 </template>
 
 <script setup>
-// breadcrumb
-
-const { infoPagina, update } = inject('infoPagina');
-// console.log(infoPagina, update);
-onMounted(() => {
-  if (update) update();
-});
-
 // PROPS
 const props = defineProps({
   menuList: Array,
-  punto: Boolean,
-  sede: Boolean,
   portadaImg: String,
-  cathering: Boolean,
-  nav: Array,
-  tituloPagina: String
+  tipo: 'sede' | 'punto' | 'cathering',
+  titulo: String,
+  navegacion: Array
 });
 
 const { name: routeName } = useRoute();

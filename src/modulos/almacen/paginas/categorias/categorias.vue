@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de categorias"
+    :navegacion="[{ label: 'Categorias', to: 'categorias' }]">
     <!-- ARBOL -->
     <div class="flex justify-center mt-4">
       <q-list
@@ -190,13 +192,6 @@ const {
   modificarCategoriaArbol,
   borrarCategoriaArbol
 } = useCategorias();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de categorias',
-    camino: [{ label: 'Categorias', to: 'categorias' }]
-  }
-});
 
 onMounted(async () => {
   await buscarCategorias();

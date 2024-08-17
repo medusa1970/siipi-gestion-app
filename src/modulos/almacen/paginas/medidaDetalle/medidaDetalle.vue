@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="store.medida?.nombre"
+    :navegacion="[{ label: 'Medidas', to: 'medidas' }]">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -32,20 +34,6 @@ const { params } = useRoute();
 
 import BasicoTabPanel from './basico/medidaBasico.vue';
 import EmpaquesTabPanel from './empaques/medidaEmpaques.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: store.medida?.nombre + '(edición)',
-    camino: [
-      { label: 'Medidas', to: 'medidas' },
-      {
-        label: store.medida?.nombre,
-        to: 'medida',
-        params: { id: store.medida?._id }
-      }
-    ]
-  }
-});
 
 onMounted(async () => {
   await store.getMedidas();

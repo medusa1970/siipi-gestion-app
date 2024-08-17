@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de tesoreria"
+    :navegacion="[{ label: 'Tesoreria', to: 'tesoreria' }]">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -42,13 +44,6 @@
 import { useTesoreria } from './tesoreria';
 const { estado, store, authStore, router, rowsTabla } = useTesoreria();
 import EntidadImage from '@/assets/img/noHayMarca.png';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de tesoreria',
-    camino: [{ label: 'Tesoreria', to: 'tesoreria' }]
-  }
-});
 
 const columnsTabla = [
   // {

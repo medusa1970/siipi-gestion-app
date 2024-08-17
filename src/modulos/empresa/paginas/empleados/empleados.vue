@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de empleados"
+    :navegacion="[{ label: 'Empleados', to: 'empleados' }]">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -90,13 +92,6 @@ const { estado, store, authStore, router, rowsTabla, handleEmpleadoCreado } =
   useEmpleados();
 import EmpleadoImage from '@/assets/img/noHayEmpleado.png';
 import formEmpleado from '@/modulos/empresa/forms/formEmpleado.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de empleados',
-    camino: [{ label: 'Empleados', to: 'empleados' }]
-  }
-});
 
 onMounted(async () => {
   await store.getEmpleados();

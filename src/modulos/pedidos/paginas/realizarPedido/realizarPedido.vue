@@ -74,13 +74,6 @@ import { watch } from 'vue';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useRealizarPedido } from './realizarPedido.composable';
 
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Realizar pedido',
-    camino: [{ label: 'Realizar pedido', to: 'realizarPedido' }]
-  }
-});
-
 const { estado, authStore, obtenerCatalogosProductos, filter, searchCatalog } =
   useRealizarPedido();
 

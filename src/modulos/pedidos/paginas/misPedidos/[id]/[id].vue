@@ -220,16 +220,6 @@ const detallePedidoPunto = [
   }
 ];
 
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'PEDIDO'
-    // camino: [{ label: 'pedido', to: 'pedido' }]
-  }
-});
-// definePageMeta({
-//   layout: 'punto'
-// });
-
 console.log(params.id);
 onMounted(() => {
   buscarPedidoID(params.id);

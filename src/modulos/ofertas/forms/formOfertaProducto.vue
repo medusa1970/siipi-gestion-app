@@ -84,7 +84,7 @@
       info="Info #43"
       :opciones="selectCatalogo"
       :watch="estado.catalogoAncestro"
-      :porDefecto="estado.catalogoAncestro"
+      :porDefecto="estado.catalogoAncestro ?? props.catalogo"
       @update="v => (estado.catalogoAncestro = v)"
       requerido />
     <input-select
@@ -183,9 +183,12 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
+    catalogo?: string;
     config?: { productoId?: string };
   }>(),
-  {}
+  {
+    catalogo: null
+  }
 );
 
 // datos por defecto del formulario

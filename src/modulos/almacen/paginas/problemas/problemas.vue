@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de problemas"
+    :navegacion="[{ label: 'Problemas', to: 'problemas' }]">
     <Tabla
       :rows="rowsTabla"
       :columns="colunasTabla"
@@ -94,13 +96,6 @@ const {
   problemaSeleccionado,
   handleProblemaResuelto
 } = useProblemas();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de problemas',
-    camino: [{ label: 'Tesoreria', to: 'tesoreria' }]
-  }
-});
 
 const colunasTabla = [
   {

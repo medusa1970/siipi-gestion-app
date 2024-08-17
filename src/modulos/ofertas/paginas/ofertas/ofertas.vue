@@ -1,6 +1,16 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="'Catalogo ' + estado.catalogoSeleccionado?.nombre"
+    :navegacion="[
+      {
+        label: 'Ofertas ' + estado.catalogoSeleccionado?.nombre,
+        to: 'ofertas',
+        params: {
+          id: params.id
+        }
+      }
+    ]">
     <Tabla :rows="rowsParaMostrar" :columns="columnaOfertas" :paginacion="9">
       <!-- AGREGAR -->
 
@@ -105,7 +115,8 @@
             icono="edit black"
             @click="
               // store.oferta = row; // TODO PORQUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE?
-              goTo(router, 'oferta', { id: row._id })
+              console.log(getRoute(router, 'oferta', { id: row._id }));
+              goTo(router, 'oferta', { id: row._id });
             " />
         </q-btn-group>
       </template>
@@ -186,13 +197,17 @@
 
   <Popup v-model="estado.modal.show_crearOfertaBasico" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaBasico @crearObjeto="handleOfertaBasicaCreada" />
+      <formOfertaBasico
+        :catalogo="params.id"
+        @crearObjeto="handleOfertaBasicaCreada" />
     </template>
   </Popup>
 
   <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
     <template #body>
-      <formOfertaProducto @crearObjeto="handleOfertaSimpleCreada" />
+      <formOfertaProducto
+        :catalogo="params.id"
+        @crearObjeto="handleOfertaSimpleCreada" />
     </template>
   </Popup>
 </template>
@@ -211,41 +226,34 @@ const {
 import { columnaOfertas } from './columns';
 import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de ofertas',
-    camino: [{ label: 'Ofertas', to: 'ofertas' }]
-  }
-});
+const { params } = useRoute();
 
 // opciones
 const selectCatalogoFiltro = computed(() => {
+  if (!estado.catalogoSeleccionado) return [];
   let options = [];
-  if (store.catalogoArbol) {
-    for (const cat of store.catalogoArbol.hijas) {
-      const idsHijas = [];
-      const hijas = [];
-      for (const subcat of cat.hijas) {
-        hijas.push({
-          label: subcat.nombre,
-          value: [subcat._id],
-          class: 'option'
-        });
-        idsHijas.push(subcat._id);
-      }
-      options.push({
-        label: cat.nombre,
-        value: [...idsHijas, cat._id]
+  for (const cat of estado.catalogoSeleccionado.hijas) {
+    const idsHijas = [];
+    const hijas = [];
+    for (const subcat of cat.hijas) {
+      hijas.push({
+        label: subcat.nombre,
+        value: [subcat._id],
+        class: 'option'
       });
-      options = [...options, ...hijas];
+      idsHijas.push(subcat._id);
     }
+    options.push({
+      label: cat.nombre,
+      value: [...idsHijas, cat._id]
+    });
+    options = [...options, ...hijas];
   }
+
   return options;
 });
 
 const rowsParaMostrar = computed(() => {
-  console.log('first');
   let filtered = store.ofertas;
   if (!filtered) return [];
   if (
@@ -270,7 +278,10 @@ const rowsParaMostrar = computed(() => {
 
 onMounted(async () => {
   estado.ofertas = await store.getOfertas();
-  await store.getCatalogoArbol();
+  estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
+  if (!estado.catalogoSeleccionado) {
+    goTo(router, '404');
+  }
 });
 
 // sockets

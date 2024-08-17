@@ -1,12 +1,12 @@
 export default [
   {
     name: 'ofertas',
-    path: '/cathering/ofertas',
+    path: '/cathering/ofertas/:id',
     file: '@/modulos/ofertas/paginas/ofertas/ofertas.vue'
   },
   {
     name: 'oferta',
-    path: '/cathering/ofertas/:id',
+    path: '/cathering/oferta/:id',
     file: '@/modulos/ofertas/paginas/ofertaDetalle/ofertaDetalle.vue'
   },
   {

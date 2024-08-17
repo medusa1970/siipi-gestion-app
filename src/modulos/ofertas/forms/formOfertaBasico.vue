@@ -30,7 +30,7 @@
       label="Catalogo"
       info="Info #43"
       :opciones="selectCatalogo"
-      :porDefecto="estado.catalogoAncestro ?? '75a4475e446a5885b05739c4'"
+      :porDefecto="estado.catalogoAncestro ?? props.catalogo"
       :watch="estado.catalogoAncestro"
       @update="
         v => {
@@ -104,9 +104,11 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
+    catalogo?: string;
     edicion?: Oferta; // edicion si producto no es null, sino creacion
   }>(),
   {
+    catalogo: null,
     edicion: null
   }
 );

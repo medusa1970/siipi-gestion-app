@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de marcas"
+    :navegacion="[{ label: 'Marcas', to: 'marcas' }]">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -69,13 +71,6 @@ const {
 
 import MarcaImage from '@/assets/img/noHayMarca.png';
 import formMarca from '@/modulos/almacen/forms/formMarca.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de marcas',
-    camino: [{ label: 'Marcas', to: 'marcas' }]
-  }
-});
 
 const columnsTabla = [
   {

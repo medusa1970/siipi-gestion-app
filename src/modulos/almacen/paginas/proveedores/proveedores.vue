@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de proveedores"
+    :navegacion="[{ label: 'Proveedores', to: 'proveedores' }]">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -71,14 +73,6 @@ const {
 
 import ProveedorImage from '@/assets/img/noHayProveedor.png';
 import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de proveedores',
-    camino: [{ label: 'Proveedores', to: 'proveedores' }]
-  }
-});
-
 const columnsTabla = [
   {
     name: 'imagen',

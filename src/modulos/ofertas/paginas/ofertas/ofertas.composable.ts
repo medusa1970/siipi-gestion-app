@@ -1,4 +1,4 @@
-import type { Oferta } from '#gql';
+import type { Catalogo, Oferta } from '#gql';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 /**
@@ -23,7 +23,7 @@ export const useOferta = () => {
 
   const estado = reactive({
     ofertas: [] as Oferta[],
-
+    catalogoSeleccionado: null as Catalogo,
     modal: {
       show_crearOfertaBasico: false,
       show_informacionOferta: false,
@@ -32,6 +32,7 @@ export const useOferta = () => {
 
     filtros: {
       catalogoSeleccionado: null,
+      catalogoSeleccionado2: null,
       buscarFiltro: null
     }
   });

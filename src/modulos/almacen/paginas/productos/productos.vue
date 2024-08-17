@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de productos"
+    :navegacion="[{ label: 'Productos', to: 'productos' }]">
     <div>
       <q-btn
         width="auto"
@@ -165,7 +167,12 @@
         <q-btn-group>
           <btnAccion
             icono="edit black"
-            @click="goTo(router, 'producto', { id: row._id })" />
+            @click="
+              e => {
+                e.stopPropagation();
+                goTo(router, 'producto', { id: row._id });
+              }
+            " />
           <q-btn
             @click="
               e => {
@@ -298,13 +305,6 @@ import ProductoImage from '@/assets/img/noHayProducto.png';
 import formProductoBasico from '@/modulos/almacen/forms/formProductoBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 import type { CategoriaSelectOpcion } from '../../almacen.interface';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de productos',
-    camino: [{ label: 'Productos', to: 'productos' }]
-  }
-});
 
 // opciones
 const selectCategoriaFiltro = computed(() => {

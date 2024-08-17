@@ -1,6 +1,20 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="
+      store.empleado?.persona.nombre + ' ' + store.empleado?.persona.apellido
+    "
+    :navegacion="[
+      { label: 'Empleados', to: 'empleados' },
+      {
+        label:
+          store.empleado?.persona.nombre +
+          ' ' +
+          store.empleado?.persona.apellido,
+        to: 'empleado',
+        params: { id: store.empleado?._id }
+      }
+    ]">
     <q-tabs
       v-model="estado.tabActiva"
       inline-label
@@ -33,20 +47,6 @@
 import { useEmpleadoDetalle } from './empleadoDetalle';
 const { estado, store, authStore, router } = useEmpleadoDetalle();
 const { params } = useRoute();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de empleados',
-    camino: [
-      { label: 'Empleados', to: 'empleados' },
-      {
-        label: `${store.empleado?.persona.nombre} ${store.empleado?.persona.apellido}`,
-        to: 'empleado',
-        params: { id: store.empleado?._id }
-      }
-    ]
-  }
-});
 
 // otros imports
 import PersonaTabPanel from './persona/empleadoPersona.vue';

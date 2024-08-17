@@ -7,11 +7,3 @@
     </div>
   </NuxtLayout>
 </template>
-<script setup lang="ts">
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Bienvenido',
-    camino: [{ label: 'bienvenido', to: 'cliente' }]
-  }
-});
-</script>

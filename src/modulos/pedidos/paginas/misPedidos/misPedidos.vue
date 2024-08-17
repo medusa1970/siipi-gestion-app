@@ -118,13 +118,6 @@ const { estado, authStore, buscarPedidos, filtroHistorial } = useMisPedidos();
 
 const tab = ref('cathering');
 
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de pedidos',
-    camino: [{ label: 'misPedidos', to: 'misPedidos' }]
-  }
-});
-
 const date = ref(new Date().toLocaleDateString('en-CA').replace(/-/g, '/'));
 // console.log(date.value);
 const dateOption = date => {

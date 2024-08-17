@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Pedido"
+    :navegacion="[{ label: 'Pedidos', to: 'listaPedidos' }]">
     <div class="p-2" id="divParaImprimir">
       <h1 class="text-lg font-bold text-orange-500 uppercase">
         Informacion del pedido {{ estado.pedidoDetalle._id }}
@@ -178,13 +180,6 @@ import { useRoute } from 'vue-router';
 // import realizarPedido from '../../realizarPedido.vue';
 import { usePedido } from './pedido.composable';
 import { useListaPedidos } from '@/modulos/pedidos/paginas/listaPedidos/listaPedidos.composable';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Pedido'
-    // camino: [{ label: 'Pedidos', to: 'listaPedidos' }]
-  }
-});
 
 const { params } = useRoute();
 // const { estado, buscarPedidoID, authStore } = useListaPedidos();

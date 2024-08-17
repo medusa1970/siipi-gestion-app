@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de bloques"
+    :navegacion="[{ label: 'Bloques', to: 'bloques' }]">
     <Tabla
       disableExpand
       :rows="rowsTabla"
@@ -93,14 +95,6 @@ const {
   handleBloqueModificado,
   handleBloqueCreado
 } = useBloques();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de bloques',
-    camino: [{ label: 'Bloques', to: 'bloques' }]
-  }
-});
-
 import BloqueImage from '@/assets/img/noHayBloque.png';
 import formBloque from '@/modulos/almacen/forms/formBloque.vue';
 </script>

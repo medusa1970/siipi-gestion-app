@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Pedidos de los punto"
+    :navegacion="[{ label: 'Pedidos', to: 'listaPedidos' }]">
     <q-tabs v-model="tab" inline-label no-caps dense class="mb-3">
       <q-tab name="puntos" icon="bi-box-seam" label="Pedidos Puntos" />
       <q-tab name="global" icon="bi-box-seam" label="Pedido Global" />
@@ -42,15 +44,6 @@ import Global from '../global/Global.vue';
 import Historial from '../historial/Historial.vue';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Pedidos de los punto',
-    camino: [{ label: 'Pedidos', to: 'listaPedidos' }]
-  }
-});
-
-// const { estado, buscarPedidos2, obtenerOfertas } = useListaPedidos();
 
 const tab = ref('puntos');
 // const tabPuntos = ref('areaGlobal');

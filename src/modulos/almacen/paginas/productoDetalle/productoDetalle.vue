@@ -1,6 +1,11 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="store.producto?.nombre"
+    :navegacion="[
+      { label: 'productos', to: 'productos' },
+      { label: store.producto?.nombre }
+    ]">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -51,19 +56,6 @@ import ProveedorTabPanel from './proveedores/productoServicios.vue';
 import AccionesTabPanel from './acciones/productoAcciones.vue';
 import BasicoTabPanel from './basico/productoBasico.vue';
 import OfertasTabPanel from './ofertas/productoOfertas.vue';
-
-const infoPagina = ref(null);
-provide('infoPagina', {
-  infoPagina,
-  update: () =>
-    (infoPagina.value = {
-      titulo: store.producto?.nombre,
-      camino: [
-        { label: 'productos', to: 'productos' },
-        { label: store.producto?.nombre }
-      ]
-    })
-});
 </script>
 
 <style scoped>

@@ -1,5 +1,10 @@
 <template>
-  <layout-common :menuList="menu" :portada-img="PortadaCathering" punto>
+  <layout-common
+    :menuList="menu"
+    :portada-img="PortadaCathering"
+    tipo="punto"
+    :titulo
+    :navegacion="navegacion ?? []">
     <template #slot>
       <slot />
     </template>
@@ -48,6 +53,11 @@ const authStore = useAuthStore();
 if (authStore.getNegocio?.tipo !== 'PUNTO') {
   goTo(router, 'inicio');
 }
+
+const props = defineProps({
+  titulo: String,
+  navegacion: Array
+});
 
 const menu = [
   {

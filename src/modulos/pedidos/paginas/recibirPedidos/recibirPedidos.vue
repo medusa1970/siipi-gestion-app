@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Recibir pedido"
+    :navegacion="[{ label: 'Recibir pedido', to: 'recibirPedido' }]">
     <!-- <code>{{ estado.catalogo }}</code> -->
     <div class="block mx-auto w-[400px] max-sm:w-[350px]">
       <q-input
@@ -66,12 +68,6 @@
 </template>
 
 <script setup>
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Recibir pedido',
-    camino: [{ label: 'Recibir pedido', to: 'recibirPedido' }]
-  }
-});
 import { useRecibirPedidos } from './recibirPedidos.composable';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 

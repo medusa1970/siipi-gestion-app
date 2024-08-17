@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de stock"
+    :navegacion="[{ label: 'Stock', to: 'stock' }]">
     <Tabla
       :rows="rowsParaMostrar"
       :columns="[
@@ -308,13 +310,6 @@ const {
   getBloque,
   rowsParaMostrar
 } = useStock();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de stock',
-    camino: [{ label: 'Stock', to: 'stock' }]
-  }
-});
 
 import formInventario from '@/modulos/almacen/forms/formInventario.vue';
 import ProductoImage from '@/assets/img/noHayProducto.png';

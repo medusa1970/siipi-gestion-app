@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de medidas"
+    :navegacion="[{ label: 'Medidas', to: 'medidas' }]">
     <Tabla
       :rows="rowsTabla"
       :columns="columnsTabla"
@@ -60,13 +62,6 @@ const { estado, authStore, router, rowsTabla, handleMedidaCreada } =
 
 import MedidaImage from '@/assets/img/noHayMedida.png';
 import formMedida from '@/modulos/almacen/forms/formMedida.vue';
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de medidas',
-    camino: [{ label: 'Medidas', to: 'medidas' }]
-  }
-});
 
 const columnsTabla = [
   {

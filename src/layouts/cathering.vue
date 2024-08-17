@@ -1,5 +1,10 @@
 <template>
-  <layout-common :menuList="menu" :portada-img="PortadaCathering" cathering>
+  <layout-common
+    :menuList="menu"
+    :portada-img="PortadaCathering"
+    tipo="cathering"
+    :titulo
+    :navegacion="navegacion ?? []">
     <template #slot>
       <slot />
     </template>
@@ -47,6 +52,11 @@ import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
 import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
+
+const props = defineProps({
+  titulo: String,
+  navegacion: Array
+});
 
 const authStore = useAuthStore();
 console.log(authStore);
@@ -121,10 +131,19 @@ const menu = [
     subMenu: [
       {
         icon: 'menu_book',
-        label: 'Ofertas',
+        label: 'Ofertas Puntos',
         to: 'ofertas',
+        params: { id: '75a4475e446a5885b05739c4' },
         permisos: permisosOfertas,
-        activar: ['oferta']
+        activar: ['ofertas']
+      },
+      {
+        icon: 'menu_book',
+        label: 'Ofertas Cathering',
+        to: 'ofertas',
+        params: { id: '85b4475e446a5885b05739c5' },
+        permisos: permisosOfertas,
+        activar: ['ofertas']
       },
       {
         icon: 'category',

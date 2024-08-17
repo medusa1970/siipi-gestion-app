@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Gestion de catalogos"
+    :navegacion="[{ label: 'Catalogos', to: 'catalogos' }]">
     <q-btn
       color="primary"
       label="Crear catalogo"
@@ -38,13 +40,6 @@
 <script setup>
 import { useCatalogos } from './catalogos.composable';
 const { estado, store, authStore, router } = useCatalogos();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Gestion de catalogos',
-    camino: [{ label: 'Catalogos', to: 'catalogos' }]
-  }
-});
 
 onBeforeMount(async () => {
   store.catalogoArbol = await store.getCatalogoArbol();

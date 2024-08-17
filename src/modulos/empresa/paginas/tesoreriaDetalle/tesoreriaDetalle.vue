@@ -1,6 +1,15 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="store.entidad?.nombre"
+    :navegacion="[
+      { label: 'Tesoreria', to: 'tesoreria' },
+      {
+        label: store.entidad?.nombre,
+        to: 'tesoreriaDetalle',
+        params: { id: store.entidad?._id }
+      }
+    ]">
     <q-tabs
       v-model="estado.tab"
       inline-label
@@ -36,27 +45,6 @@ const { estado, store, authStore } = useTesoreriaDetalle();
 import DebidoTabPanel from './debido/tesoreriaDebido.vue';
 import PagosTabPanel from './pagos/tesoreriaPagos.vue';
 import AccionesTabPanel from './acciones/tesoreriaAcciones.vue';
-
-/**
- * provide para el layout
- */
-const infoPagina = ref(null);
-provide('infoPagina', {
-  infoPagina,
-  update: () => {
-    infoPagina.value = {
-      titulo: store.entidad?.nombre,
-      camino: [
-        { label: 'Tesoreria', to: 'tesoreria' },
-        {
-          label: store.entidad?.nombre,
-          to: 'tesoreriaDetalle',
-          params: { id: store.entidad?._id }
-        }
-      ]
-    };
-  }
-});
 
 /**
  * Recuperacion de los datos

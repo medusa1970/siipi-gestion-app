@@ -1,6 +1,14 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'">
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :titulo="'Catalogo ' + cat.value.nombre"
+    :navegacion="[
+      { label: 'Catalogos', to: 'catalogos' },
+      {
+        label: cat.value.nombre,
+        to: 'catalogos-id'
+      }
+    ]">
     <div class="flex justify-center mt-4">
       <q-list class="rounded-borders w-[350px]">
         <q-expansion-item
@@ -200,18 +208,5 @@ const { params } = useRoute();
 const cat = ref(await store.getCatalogoArbol(params.id));
 onBeforeMount(async () => {
   estado.catalogoSeleccionado = cat.value;
-});
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Catalogo ' + cat.value.nombre,
-    camino: [
-      { label: 'Catalogos', to: 'catalogos' },
-      {
-        label: cat.value.nombre,
-        to: 'catalogos-id'
-      }
-    ]
-  }
 });
 </script>

@@ -10,11 +10,4 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
-
-provide('infoPagina', {
-  infoPagina: {
-    titulo: 'Bienvenido',
-    camino: [{ label: 'bienvenido', to: 'punto' }]
-  }
-});
 </script>

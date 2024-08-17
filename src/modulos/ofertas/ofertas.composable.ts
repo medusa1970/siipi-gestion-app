@@ -35,14 +35,16 @@ export const useOfertas = () => {
 
     // cada ingrediente debe tener producto y marca
     for (const ingrediente of oferta.ingredientes) {
-      if (!ingrediente.marca) res.push('sinMarca');
-      if (!ingrediente.producto) res.push('sin producto');
+      if (!ingrediente.marca) res.push('sinMarca', ingrediente);
+      if (!ingrediente.producto) res.push('sin producto', ingrediente);
       else if (productoIncompleto(ingrediente.producto))
-        res.push('productoIncompleto');
+        res.push('productoIncompleto', ingrediente);
     }
 
     // la oferta debe tener una imagen
     // if (!oferta.imagen) res.push('imagen');
+
+    // tiene que tener precios
 
     return res.length > 0 ? res : null;
   };

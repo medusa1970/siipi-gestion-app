@@ -8,10 +8,9 @@
         <input-text
           tipo="textarea"
           label="Motivo"
-          @update="(v) => (estado.motivoEliminacion = v)"
+          @update="v => (estado.motivoEliminacion = v)"
           info="El jefe de logistica recibira una notificacion cuando elimines una oferta"
-          requerido
-        />
+          requerido />
       </div>
     </div>
     <q-btn
@@ -19,12 +18,22 @@
       label="Confirmar"
       :disable="estado.motivoEliminacion === ''"
       no-caps
-      @click="borrarOferta()"
-    />
+      @click="borrarOferta()" />
   </div>
+
+  <pre
+    >{{ store.oferta.nombre }}
+{{ foo }}
+</pre
+  >
 </template>
 
 <script setup>
-import { useAccionesTab } from "./accionesTab.composable";
+import { useAccionesTab } from './accionesTab.composable';
 const { estado, borrarOferta } = useAccionesTab();
+
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+const { store, ofertaIncompleta } = useOfertas();
+
+const foo = ofertaIncompleta(store.oferta);
 </script>

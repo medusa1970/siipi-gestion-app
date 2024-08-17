@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { useProductoDetalle } from './productoDetalle.composable';
-const { estado, store, authStore } = useProductoDetalle();
+const { estado, store, authStore, router, route } = useProductoDetalle();
 
 import MarcaTabPanel from './variedades/productoVariedades.vue';
 import MedidaTabPanel from './medidas/productoMedidas.vue';
@@ -56,6 +56,25 @@ import ProveedorTabPanel from './proveedores/productoServicios.vue';
 import AccionesTabPanel from './acciones/productoAcciones.vue';
 import BasicoTabPanel from './basico/productoBasico.vue';
 import OfertasTabPanel from './ofertas/productoOfertas.vue';
+
+onBeforeMount(async () => {
+  if (!store.producto || store.producto?._id !== route.params.id) {
+    if (store.productos) {
+      store.producto = store.productos?.find(o => o._id === route.params.id);
+    } else {
+      try {
+        store.producto = await api.buscarProducto_basico(
+          route.params.id as string
+        );
+      } catch (err) {
+        errFailback(err);
+      }
+    }
+  }
+  if (!store.producto) {
+    goTo(router, 'ofertas');
+  }
+});
 </script>
 
 <style scoped>

@@ -17,18 +17,11 @@ export const useProductoDetalle = () => {
     tab: 'datosBasicos'
   });
 
-  onBeforeMount(async () => {
-    store.producto = await store.useProducto(route.params.id as string);
-    if (!store.producto) {
-      goTo(router, 'ofertas');
-    }
-    store.getProductos();
-  });
-
   return {
     estado,
     store,
     authStore,
+    route,
     router
   };
 };

@@ -114,9 +114,11 @@
           <btnAccion
             icono="edit black"
             @click="
-              // store.oferta = row; // TODO PORQUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE?
-              console.log(getRoute(router, 'oferta', { id: row._id }));
-              goTo(router, 'oferta', { id: row._id });
+              e => {
+                e.stopPropagation();
+                store.oferta = row;
+                goTo(router, 'oferta', { id: row._id });
+              }
             " />
         </q-btn-group>
       </template>
@@ -198,7 +200,7 @@
   <Popup v-model="estado.modal.show_crearOfertaBasico" titulo="Nueva Oferta">
     <template #body>
       <formOfertaBasico
-        :catalogo="params.id"
+        :catalogo="params.id as string"
         @crearObjeto="handleOfertaBasicaCreada" />
     </template>
   </Popup>
@@ -206,7 +208,7 @@
   <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
     <template #body>
       <formOfertaProducto
-        :catalogo="params.id"
+        :catalogo="params.id as string"
         @crearObjeto="handleOfertaSimpleCreada" />
     </template>
   </Popup>
@@ -278,7 +280,9 @@ const rowsParaMostrar = computed(() => {
 
 onMounted(async () => {
   estado.ofertas = await store.getOfertas();
-  estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
+  estado.catalogoSeleccionado = await store.getCatalogoArbol(
+    params.id as string
+  );
   if (!estado.catalogoSeleccionado) {
     goTo(router, '404');
   }

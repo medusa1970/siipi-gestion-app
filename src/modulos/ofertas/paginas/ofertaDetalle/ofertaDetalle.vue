@@ -1,10 +1,10 @@
 <template>
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
-    :titulo="store.oferta.nombre"
+    :titulo="store.oferta?.nombre"
     :navegacion="[
       { label: 'Ofertas', to: 'ofertas' },
-      { label: store.oferta.nombre, to: 'ofertaDetalles' }
+      { label: store.oferta?.nombre }
     ]">
     <q-tabs
       v-model="estado.tab"
@@ -50,12 +50,20 @@ import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosT
 import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
 
 onBeforeMount(async () => {
-  store.oferta = await store.useOferta(route.params.id);
-  if (!store.oferta) {
-    console.log(111);
-    // goTo(router, 'ofertas');
+  if (!store.oferta || store.oferta?._id !== route.params.id) {
+    if (store.ofertas) {
+      store.oferta = store.ofertas?.find(o => o._id === route.params.id);
+    } else {
+      try {
+        store.oferta = await api.buscarOferta(route.params.id);
+      } catch (err) {
+        errFailback(err);
+      }
+    }
   }
-  store.getOfertas();
+  if (!store.oferta) {
+    goTo(router, 'ofertas');
+  }
 });
 </script>
 

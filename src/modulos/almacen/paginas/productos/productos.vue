@@ -170,6 +170,7 @@
             @click="
               e => {
                 e.stopPropagation();
+                store.producto = row;
                 goTo(router, 'producto', { id: row._id });
               }
             " />

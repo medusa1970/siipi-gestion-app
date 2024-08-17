@@ -1,0 +1,58 @@
+import type { Producto } from '#gql';
+import { usePedidos } from '../../pedidos.composable';
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+
+/**
+ * Permisos requeridos para esta pagina
+ */
+export const permisosProductos = ['ADMINISTRACION'];
+
+/**
+ * Composable
+ */
+export const useRealizarPedido2 = () => {
+  const { store: storePedidos } = usePedidos();
+  const {
+    authStore,
+    store: storeOfertas,
+    router,
+    ofertaIncompleta
+  } = useOfertas();
+  if (!authStore.autorizar(permisosProductos)) goTo(router, 'noAutorizado');
+
+  const estado = reactive({
+    productos: null as Producto[],
+    filtros: {
+      categoriaOpciones: [],
+      categoriaSeleccionada: '',
+      marcaOpciones: [],
+      marcaSeleccionada: '',
+      buscarFiltro: '',
+      seleccionados: false
+    }
+  });
+
+  const handleInputChange2 = (event, producto) => {
+    event.target.value = Math.max(0, event.target.value);
+    const nuevoValor = event.target.value;
+    const index = storePedidos.listaPedido.findIndex(
+      item => item._id === producto._id
+    );
+    if (index > -1) {
+      storePedidos.listaPedido[index].cantidad = nuevoValor;
+    } else {
+      storePedidos.listaPedido.push(
+        Object.assign(producto, { cantidad: nuevoValor })
+      );
+    }
+  };
+
+  return {
+    estado,
+    storePedidos,
+    authStore,
+    router,
+    ofertaIncompleta,
+    handleInputChange2
+  };
+};

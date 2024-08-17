@@ -11,12 +11,14 @@ query buscarPedidos(
       _id
       ruta
       orden
+      tipo
     }
     vendedor {
       nombre
       _id
       ruta
       orden
+      tipo
     }
     estado {
       estado
@@ -72,12 +74,14 @@ mutation crearPedidos(
       _id
       ruta
       orden
+      tipo
     }
     vendedor {
       nombre
       _id
       ruta
       orden
+      tipo
     }
     estado {
       estado
@@ -134,12 +138,14 @@ mutation modificarPedidos(
       _id
       ruta
       orden
+      tipo
     }
     vendedor {
       nombre
       _id
       ruta
       orden
+      tipo
     }
     estado {
       estado
@@ -195,12 +201,14 @@ mutation borrarPedidos(
       _id
       ruta
       orden
+      tipo
     }
     vendedor {
       nombre
       _id
       ruta
       orden
+      tipo
     }
     estado {
       estado

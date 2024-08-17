@@ -15,14 +15,15 @@ export const useRealizarPedido = () => {
   const filter = ref('');
 
   const obtenerCatalogosProductos = async () => {
+    // leemos el menu de esta entidad
     const catalogoArbol = (await apiPedido.pedido_leerMenu(
       authStore.negocio._id,
       authStore.token
     )) as Catalogo;
-    console.log(catalogoArbol);
-    estado.catalogosOfertas = catalogoArbol.hijas;
-    console.log(estado.catalogosOfertas);
 
+    estado.catalogosOfertas = catalogoArbol.hijas;
+
+    
     estado.catalogoSeleccionado = catalogoArbol.hijas[0];
     estado.searchResults = catalogoArbol.hijas[0].hijas;
     // @ts-expect-error

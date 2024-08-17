@@ -66,7 +66,7 @@ onBeforeMount(async () => {
     }
   }
   if (!store.oferta) {
-    goTo(router, 'ofertas', { id: store.catalogoRaiz });
+    goTo(router, 'ofertas', { id: store.catalogoRaiz.id });
   }
 });
 </script>

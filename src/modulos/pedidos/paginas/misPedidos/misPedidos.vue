@@ -1,5 +1,8 @@
 <template>
-  <NuxtLayout name="punto">
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Mis pedidos"
+    :navegacion="[{ label: 'Mis pedidos', to: 'misPedidos' }]">
     <q-tabs v-model="tab" inline-label no-caps dense>
       <q-tab name="cathering" icon="bi-cart4" label="Pedidos Cathering" />
       <q-tab name="historial" icon="bi-calendar-date" label="Historial" />

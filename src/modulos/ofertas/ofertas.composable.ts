@@ -21,6 +21,17 @@ export const useOfertas = () => {
   const ofertaIncompleta = (oferta: Oferta) => {
     const res = [];
     if (!oferta.imagen) res.push('imagen');
+    // row.empaques.length > 0 &&
+    // row.comentario &&
+    // row.nombre &&
+    // row.abreviacion &&
+    // row.catalogo &&
+    // row.imagen &&
+    // row.marca &&
+    // row.precioSinFactura &&
+    // row.precioConFactura &&
+    // row.ingredientes.length >
+    return res.length > 0 ? res : null;
   };
 
   // exports

@@ -56,20 +56,7 @@
       <template #cell-estado="{ row }">
         {{ fechaMes(row._modificado ?? row._creado) }}
         <br />
-        <q-badge
-          v-if="
-            // row.empaques.length > 0 &&
-            // row.comentario &&
-            row.nombre &&
-            row.abreviacion &&
-            row.catalogo &&
-            row.imagen &&
-            row.marca &&
-            row.precioSinFactura &&
-            row.precioConFactura &&
-            row.ingredientes.length > 0
-          "
-          color="green">
+        <q-badge v-if="!ofertaIncompleta(row)" color="green">
           completo
         </q-badge>
         <q-badge v-else color="orange"> incompleto </q-badge>
@@ -221,6 +208,7 @@ const {
   store,
   authStore,
   router,
+  ofertaIncompleta,
   handleOfertaBasicaCreada,
   handleOfertaSimpleCreada
 } = useOferta();

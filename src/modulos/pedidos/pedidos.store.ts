@@ -1,7 +1,7 @@
-import type { Producto } from '#gql';
+import type { Oferta, Producto } from '#gql';
 
 interface PedidoState {
-  listaPedido: Producto[];
+  listaPedido: (Oferta & { cantidad: number })[];
   pedidosSolicitado: any[];
   pedidosDirecto: any[];
   isDespachar: boolean;

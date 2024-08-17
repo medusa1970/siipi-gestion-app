@@ -16,11 +16,10 @@ export const useTesoreriaDebido = () => {
 
   const rows1 = computed(() => {
     if (!store.infoPedidos || !store.entidad) return [];
-    const filtrado = store.infoPedidos.filter(
-      // solo los de esta entidad que ya se han recibido
-      p => p.entidad._id === store.entidad._id
-      // TODO && [['recibido'].includes(p.estado)] o algo asi
-    );
+    const filtrado = store.infoPedidos;
+    // .filter(
+    //   p => p.entidad._id === store.entidad._id
+    // );
     return filtrado.length > 0 ? filtrado[0].semanaActual : [];
   });
 

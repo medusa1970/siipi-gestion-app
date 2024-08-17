@@ -94,42 +94,50 @@ export const storeEmpresa = defineStore('empresa', {
      */
     async getInfoPedidos(refresh = false): Promise<any[]> {
       if (refresh || !this.infoPedidos) {
-        this.infoPedidos = [];
+        let pedidos;
+
+        // jalar todos los pedidos que se han hecho a esta entidad
         try {
-          // jalar todos los pedidos
-          const pedidos = await api.buscarPedidos(
+          pedidos = await api.buscarPedidos(
             { vendedor: [useAuthStore().getNegocio._id] },
-            {
-              sort: '-_creado'
-            }
+            { sort: '-_creado' }
           );
-
-          /**
-           * AQUI SOLO LOS RECIBIDOS
-           */
-
-          for (const pedido of pedidos) {
-            let encontrado = this.infoPedidos.findIndex(
-              p => p.entidad._id === pedido.comprador._id
-            );
-            if (encontrado == -1) {
-              this.infoPedidos.push({
-                entidad: pedido.comprador,
-                semanaActual: [],
-                semanasAnteriores: []
-              });
-              encontrado = this.infoPedidos.length - 1;
-            }
-            const date = new Date(pedido._creado);
-            if (date >= lunes(0)) {
-              this.infoPedidos[encontrado].semanaActual.push(pedido);
-            } else {
-              this.infoPedidos[encontrado].semanasAnteriores.push(pedido);
-            }
-          }
         } catch (err) {
           errFailback(err);
           return null;
+        }
+
+        // TEMPORARIO - solo se considera tesoreria de cathering por lo momento
+        // solo los pedidos de puntos
+        pedidos = pedidos.filter(pedido => pedido.comprador.tipo === 'PUNTO');
+
+        // solo los pedidos recibidos
+        pedidos = pedidos.filter(pedido =>
+          pedido.items[0].estado
+            .map(estado => estado.estado)
+            .includes('recibido')
+        );
+
+        // los agrupamos
+        this.infoPedidos = [];
+        for (const pedido of pedidos) {
+          let indexEntidad = this.infoPedidos.findIndex(
+            p => p.entidad._id === pedido.comprador._id
+          );
+          if (indexEntidad == -1) {
+            this.infoPedidos.push({
+              entidad: pedido.comprador,
+              semanaActual: [],
+              semanasAnteriores: []
+            });
+            indexEntidad = this.infoPedidos.length - 1;
+          }
+          const date = new Date(pedido._creado);
+          if (date >= lunes(0)) {
+            this.infoPedidos[indexEntidad].semanaActual.push(pedido);
+          } else {
+            this.infoPedidos[indexEntidad].semanasAnteriores.push(pedido);
+          }
         }
       }
       return this.infoPedidos;

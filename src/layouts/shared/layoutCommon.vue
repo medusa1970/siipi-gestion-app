@@ -5,9 +5,8 @@
       elevated
       :class="[
         'text-white ',
-        tipo === 'punto' && 'bg-[#ff9215]',
-        tipo === 'cathering' && 'bg-green-700',
-        tipo === 'sede' && 'colorBackground'
+        tipo === 'punto' && 'bg-orange-600',
+        tipo === 'cathering' && 'bg-green-700'
       ]"
       style="">
       <q-toolbar class="">
@@ -36,7 +35,12 @@
           >
         </q-btn>
       </q-toolbar>
-      <q-breadcrumbs class="flex bg-orange pl-4">
+      <q-breadcrumbs
+        :class="[
+          'flex pl-4',
+          tipo === 'punto' && 'bg-green',
+          tipo === 'cathering' && 'bg-green-700'
+        ]">
         <q-breadcrumbs-el
           class="text-white"
           icon="home"
@@ -58,9 +62,8 @@
       style=""
       :class="[
         'text-white ',
-        tipo === 'punto' && 'bg-[#ff9215]',
-        tipo === 'cathering' && 'bg-green-700',
-        tipo === 'sede' && 'colorBackground'
+        tipo === 'punto' && 'bg-orange-600',
+        tipo === 'cathering' && 'bg-green-700'
       ]">
       <!-- drawer content -->
       <!-- PERFIL -->
@@ -247,7 +250,7 @@
 const props = defineProps({
   menuList: Array,
   portadaImg: String,
-  tipo: 'sede' | 'punto' | 'cathering',
+  tipo: 'punto' | 'cathering',
   titulo: String,
   navegacion: Array
 });

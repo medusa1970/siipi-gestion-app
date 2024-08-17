@@ -18,7 +18,8 @@ const init_crearOfertaBasico = {
 };
 
 export const useOferta = () => {
-  const { store, authStore, estadoOfertas, router } = useOfertas();
+  const { store, authStore, estadoOfertas, router, ofertaIncompleta } =
+    useOfertas();
   if (!authStore.autorizar(permisosOfertas)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
@@ -55,6 +56,7 @@ export const useOferta = () => {
     authStore,
     router,
     handleOfertaSimpleCreada,
-    handleOfertaBasicaCreada
+    handleOfertaBasicaCreada,
+    ofertaIncompleta
   };
 };

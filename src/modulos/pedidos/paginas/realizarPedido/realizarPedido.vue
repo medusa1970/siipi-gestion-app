@@ -1,7 +1,11 @@
 <template>
-  <NuxtLayout name="punto">
-    <!-- :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"> -->
-    <!-- <code>{{ estado.catalogosOfertas }}</code> -->
+  <NuxtLayout
+    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    titulo="Realizar pedido"
+    :navegacion="[{ label: 'Realizar pedido', to: 'realizarPedido' }]">
+    
+    
+    
     <div class="block mx-auto w-[400px] max-sm:w-[350px]">
       <q-input
         borderless
@@ -19,6 +23,9 @@
           <q-icon name="close" @click="filter = ''" class="cursor-pointer" />
         </template>
       </q-input>
+
+
+
       <!-- #F0F0F0 -->
       <div class="flex gap-2 justify-center my-2">
         <div
@@ -36,6 +43,7 @@
           </h1>
         </div>
       </div>
+      
       <!-- <code>{{ estado.catalogoSeleccionado }}</code> -->
       <q-list v-if="estado.searchResults" class="flex flex-col gap-1">
         <div v-for="item in estado.searchResults" :key="item._id">

@@ -1,7 +1,7 @@
 <template>
   <layout-common
     :menuList="menu"
-    :portada-img="PortadaCathering"
+    :portada-img="PortadaPunto"
     tipo="punto"
     :titulo
     :navegacion="navegacion ?? []">
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import PortadaCathering from '@/assets/img/cookies.png';
+import PortadaPunto from '@/assets/img/buddha.png';
 import layoutCommon from '@/layouts/shared/layoutCommon.vue';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
@@ -42,7 +42,7 @@ import { useQuasar } from 'quasar';
 import { permisosProveedores } from '~/modulos/almacen/paginas/proveedores/proveedores.composable';
 import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable';
 import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
-import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria';
+import { permisosBloques } from '~/modulos/almacen/paginas/bloques/bloques.composable';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 
@@ -72,6 +72,12 @@ const menu = [
         permisos: permisosStock
       },
       {
+        icon: 'shelves',
+        label: 'Bloques',
+        to: 'bloques',
+        permisos: permisosBloques
+      },
+      {
         icon: 'hail',
         label: 'Proveedores',
         to: 'proveedores',
@@ -94,6 +100,11 @@ const menu = [
         icon: 'add_shopping_cart',
         label: 'Realizar pedido',
         to: 'realizarPedido'
+      },
+      {
+        icon: 'add_shopping_cart',
+        label: 'Realizar pedido2',
+        to: 'realizarPedido2'
       },
       {
         icon: 'list_alt',
@@ -125,9 +136,10 @@ const menu = [
 
 const realizarPedido = async () => {
   const items = pedidoStore.listaPedido.map(p => ({
-    ofertaId: p.id,
+    ofertaId: p._id,
     cantidad: parseInt(p.cantidad)
   }));
+  console.log(99, items);
   $q.dialog({
     message: '¿Estas seguro de aceptar este pedido?',
     cancel: true,

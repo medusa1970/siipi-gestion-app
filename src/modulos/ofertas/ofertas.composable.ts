@@ -39,9 +39,6 @@ export const useOfertas = () => {
       if (!ingrediente.producto) res.push('sin producto');
       else if (productoIncompleto(ingrediente.producto))
         res.push('productoIncompleto');
-      if (oferta._id === '6201c1c8df85a46e2f0b9542')
-        console.log(productoIncompleto(ingrediente.producto));
-      if (oferta._id === '6201c1c8df85a46e2f0b9542') console.log(oferta);
     }
 
     // la oferta debe tener una imagen

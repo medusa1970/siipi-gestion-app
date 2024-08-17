@@ -38,11 +38,11 @@
             :opciones="estado.filtros.marcaOpciones"
             noSlot />
 
-          <input-checkbox
+          <!-- <input-checkbox
             label="Seleccionados ya"
             labelAdentro
             @update="v => (estado.filtros.seleccionados = v)"
-            noSlot />
+            noSlot /> -->
         </div>
       </template>
       <template #cell-acciones="{ row }">

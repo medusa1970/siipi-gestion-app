@@ -17,18 +17,6 @@ export const useProductoTab = () => {
   });
 
   const submitForm = async () => {
-    console.log({
-      ingredientes: {
-        reemplazar: [
-          {
-            tipo: 'SIMPLE',
-            producto: estado.dataForm.producto._id,
-            marca: estado.dataForm.marca._id,
-            cantidad: estado.dataForm.cantidad
-          }
-        ]
-      }
-    });
     const ofertaModificada = await api.modificarOferta(
       {
         _id: [store.oferta._id]
@@ -49,6 +37,7 @@ export const useProductoTab = () => {
     if (ofertaModificada) {
       NotifySucessCenter('Producto modificado  correctamente');
       store.oferta = ofertaModificada;
+      await store.refreshOfertas();
     }
   };
 

@@ -13,12 +13,6 @@ query buscarProductos_basico(
     tiempoVida
     vencimientoAvisoFuerte
     vencimientoAvisoSuave
-    imagen {
-      cloudinaryUrl
-    }
-    categoria {
-      _id
-    }
     variedades {
       _id
       marca {
@@ -30,9 +24,6 @@ query buscarProductos_basico(
       cantidadAvisoFuerte
       cantidadAvisoSuave
       cantidadMaxPedido
-      imagen {
-        cloudinaryUrl
-      }
     }
     medida {
       _id

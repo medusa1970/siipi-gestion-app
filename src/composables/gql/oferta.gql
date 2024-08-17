@@ -30,6 +30,15 @@ query buscarOfertas(
             nombre
           }
         }
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          _id
+        }
+        categoria {
+          _id
+        }
       }
       marca {
         _id
@@ -77,6 +86,15 @@ mutation crearOfertas(
             nombre
           }
         }
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          _id
+        }
+        categoria {
+          _id
+        }
       }
       cantidad
     }
@@ -123,6 +141,15 @@ mutation modificarOfertas(
             _id
             nombre
           }
+        }
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          _id
+        }
+        categoria {
+          _id
         }
       }
       marca {
@@ -173,6 +200,15 @@ mutation borrarOfertas(
             _id
             nombre
           }
+        }
+        imagen {
+          cloudinaryUrl
+        }
+        medida {
+          _id
+        }
+        categoria {
+          _id
         }
       }
       cantidad

@@ -1,6 +1,7 @@
 import type { Oferta } from '#gql';
 import { storeOferta } from './ofertas.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 export const useOfertas = () => {
   const route = useRoute();
@@ -10,6 +11,7 @@ export const useOfertas = () => {
   const estadoOfertas = reactive({
     catalogoSeleccionado: null as string
   });
+  const { productoIncompleto } = useAlmacen();
 
   const ofertaAbreviacion = (nombre: string): string => {
     return nombre.substring(0, 27) + '...';
@@ -20,17 +22,31 @@ export const useOfertas = () => {
    */
   const ofertaIncompleta = (oferta: Oferta) => {
     const res = [];
-    if (!oferta.imagen) res.push('imagen');
-    // row.empaques.length > 0 &&
-    // row.comentario &&
-    // row.nombre &&
-    // row.abreviacion &&
-    // row.catalogo &&
-    // row.imagen &&
-    // row.marca &&
-    // row.precioSinFactura &&
-    // row.precioConFactura &&
-    // row.ingredientes.length >
+
+    // debe tener un producto
+    if (oferta.ingredientes.length === 0) {
+      res.push('noIngrediente');
+    }
+
+    // debe haber ingredientes
+    if (oferta.ingredientes.length === 0) {
+      res.push('ingredienteIncompleto');
+    }
+
+    // cada ingrediente debe tener producto y marca
+    for (const ingrediente of oferta.ingredientes) {
+      if (!ingrediente.marca) res.push('sinMarca');
+      if (!ingrediente.producto) res.push('sin producto');
+      else if (productoIncompleto(ingrediente.producto))
+        res.push('productoIncompleto');
+      if (oferta._id === '6201c1c8df85a46e2f0b9542')
+        console.log(productoIncompleto(ingrediente.producto));
+      if (oferta._id === '6201c1c8df85a46e2f0b9542') console.log(oferta);
+    }
+
+    // la oferta debe tener una imagen
+    // if (!oferta.imagen) res.push('imagen');
+
     return res.length > 0 ? res : null;
   };
 

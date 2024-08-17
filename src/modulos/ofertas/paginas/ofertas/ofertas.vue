@@ -11,6 +11,22 @@
         }
       }
     ]">
+    <div>
+      <q-btn
+        icon="add"
+        label="Oferta básica"
+        color="green"
+        no-caps
+        @click="() => (estado.modal.show_crearOfertaBasico = true)" />
+
+      <q-btn
+        icon="add"
+        label="Oferta avanzada"
+        color="green"
+        no-caps
+        class="ml-2"
+        @click="() => (estado.modal.show_crearOfertaSimple = true)" />
+    </div>
     <Tabla :rows="rowsParaMostrar" :columns="columnaOfertas" :paginacion="9">
       <!-- AGREGAR -->
 
@@ -35,21 +51,15 @@
             @update="v => (estado.filtros.catalogoSeleccionado = v)"
             :porDefecto="estado.filtros.catalogoSeleccionado"
             noSlot />
-
-          <q-btn
-            icon="add"
-            label="Oferta básica"
-            color="green"
-            no-caps
-            padding="4px 10px"
-            @click="() => (estado.modal.show_crearOfertaBasico = true)" />
-          <q-btn
-            icon="add"
-            color="green"
-            label="Oferta avanzada"
-            no-caps
-            style="padding: 7px 15px"
-            @click="() => (estado.modal.show_crearOfertaSimple = true)" />
+          <input-select
+            label="Estado"
+            labelAdentro
+            @update="v => (estado.filtros.completud = v)"
+            :opciones="[
+              { value: 'soloCompletos', label: 'solo completas' },
+              { value: 'soloIncompletos', label: 'solo incompletas' }
+            ]"
+            noSlot />
         </div>
       </template>
 
@@ -246,26 +256,43 @@ const selectCatalogoFiltro = computed(() => {
 const rowsParaMostrar = computed(() => {
   let filtered = store.ofertas;
   if (!filtered) return [];
-  filtered = filtered.filter(o =>
-    estado.catFiltroGlobal.includes(o.catalogo._id)
-  );
-  if (
-    estado.filtros.catalogoSeleccionado != null &&
-    estado.filtros.catalogoSeleccionado !== ''
-  ) {
-    filtered = filtered.filter(oferta =>
-      estado.filtros.catalogoSeleccionado.includes(oferta.catalogo._id)
-    );
-  }
-  if (estado.filtros.buscarFiltro != null) {
-    filtered = filtered.filter(oferta => {
+
+  filtered = filtered.filter(oferta => {
+    const incompleto = ofertaIncompleta(oferta);
+    if (oferta._id === '6201c1c8df85a46e2f0b9542') console.log(incompleto);
+    // catalogo seleccionado en parametro de pagina
+    if (!estado.catFiltroGlobal.includes(oferta.catalogo._id)) return false;
+
+    // solo ofertas completas?
+    if (estado.filtros.completud === 'soloCompletos' && incompleto)
+      return false;
+
+    // solo ofertas incompletas?
+    if (estado.filtros.completud === 'soloIncompletos' && !incompleto)
+      return false;
+
+    // catalogo seleccionado
+    if (
+      estado.filtros.catalogoSeleccionado &&
+      !estado.filtros.catalogoSeleccionado.includes(oferta.catalogo._id)
+    )
+      return false;
+
+    // busqueda textual
+    if (estado.filtros.buscarFiltro) {
       const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
-      return regex.test(
-        oferta.nombre +
-          oferta.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      );
-    });
-  }
+      if (
+        !regex.test(
+          oferta.nombre +
+            oferta.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        )
+      )
+        return false;
+    }
+
+    return true;
+  });
+
   return filtered;
 });
 

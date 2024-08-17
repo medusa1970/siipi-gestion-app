@@ -1,11 +1,11 @@
 <template>
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
-    :titulo="'Catalogo ' + cat.value.nombre"
+    :titulo="'Catalogo ' + estado.catalogoSeleccionado?.nombre"
     :navegacion="[
       { label: 'Catalogos', to: 'catalogos' },
       {
-        label: cat.value.nombre,
+        label: estado.catalogoSeleccionado?.nombre,
         to: 'catalogos-id'
       }
     ]">
@@ -14,7 +14,7 @@
         <q-expansion-item
           expand-separator
           icon="category"
-          :label="estado.catalogoSeleccionado.nombre"
+          :label="estado.catalogoSeleccionado?.nombre"
           default-opened
           dense>
           <template v-slot:header>
@@ -205,8 +205,7 @@ const {
 } = useCatalogos();
 
 const { params } = useRoute();
-const cat = ref(await store.getCatalogoArbol(params.id));
 onBeforeMount(async () => {
-  estado.catalogoSeleccionado = cat.value;
+  estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
 });
 </script>

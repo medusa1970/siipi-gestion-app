@@ -30,24 +30,15 @@
       label="Catalogo"
       info="Info #43"
       :opciones="selectCatalogo"
-      :porDefecto="estado.catalogoAncestro ?? props.catalogo"
-      :watch="estado.catalogoAncestro"
-      @update="
-        v => {
-          estado.catalogoAncestro = v;
-          if (estado.catalogoAncestroHack) {
-            estado.dataForm.catalogo = null;
-          }
-        }
-      "
+      @callback="fn => (set.cat = fn)"
+      @update="v => (estado.catalogoAncestro = v)"
       requerido />
 
     <input-select
       label="Sub catalogo"
       info="Info #44"
       :opciones="selectSubCatalogo"
-      :porDefecto="estado.dataForm.catalogo"
-      :watch="estado.watchCatalogo"
+      @callback="fn => (set.subCat = fn)"
       @update="v => (estado.dataForm.catalogo = v)"
       requerido />
 
@@ -128,11 +119,16 @@ const initForm = {
 const estado = reactive({
   dataForm: clone(initForm),
   catalogoAncestro: null as string, // catalogo seleccionado (solo el subcat va en el form)
-  catalogoAncestroHack: false, // no borrar el subcatalogo si true, eso pasara solo la primera vez
   catalogoOpciones: [],
   subCatalogoOpciones: [],
   imagenPreview: null,
   watchCatalogo: props.edicion?.catalogo._id
+});
+
+// callbacks pour les inputs
+const set = reactive({
+  cat: null,
+  subCat: null
 });
 
 // opciones
@@ -180,9 +176,15 @@ const selectSubCatalogo = computed(() => {
 
 // Inicializaciones
 onMounted(async () => {
-  // recuperamos el catalogo padre del catalogo en edicion si necesario
-  if (props.edicion?.catalogo?._id) {
-    await store.getCatalogoArbol();
+  const arbol = await store.getCatalogoArbol();
+
+  // catalogo por defecto para agregar nueva oferta segun el catalogo corriente
+  if (props.catalogo) {
+    set.cat(props.catalogo);
+  }
+
+  // catalogo en edicion
+  if (props.edicion) {
     const f = (id, catalogo) => {
       return (
         catalogo._id === id ||
@@ -190,13 +192,22 @@ onMounted(async () => {
           catalogo.hijas.reduce((res, cat) => f(id, cat) || res, false))
       );
     };
-    for (const catalogo of store.catalogoArbol.hijas) {
+    for (const catalogo of arbol.hijas) {
       if (f(props.edicion?.catalogo?._id, catalogo)) {
-        estado.catalogoAncestroHack = true;
         estado.catalogoAncestro = catalogo._id;
       }
     }
+    set.cat(estado.catalogoAncestro);
+    set.subCat(props.edicion.catalogo._id);
   }
+
+  // reinicializar sub catalogo cuando catalogo cambia
+  watch(
+    () => estado.catalogoAncestro,
+    () => set.subCat(null),
+    { immediate: false }
+  );
+
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
     await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, base64Data => {

@@ -8,13 +8,15 @@ interface storeProps {
   catalogoArbol: Catalogo | null;
   // seleccionados
   oferta: Oferta | null;
+  catalogoRaiz: { id: string; nombre: string };
 }
 
 export const storeOferta = defineStore('ofertas', {
   state: (): storeProps => ({
     ofertas: null,
     catalogoArbol: null,
-    oferta: null
+    oferta: null,
+    catalogoRaiz: null
   }),
 
   actions: {

@@ -3,7 +3,11 @@
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
     :titulo="store.oferta?.nombre"
     :navegacion="[
-      { label: 'Ofertas', to: 'ofertas' },
+      {
+        label: 'Ofertas ' + store.catalogoRaiz.nombre,
+        to: 'ofertas',
+        params: { id: store.catalogoRaiz.id }
+      },
       { label: store.oferta?.nombre }
     ]">
     <q-tabs
@@ -62,7 +66,7 @@ onBeforeMount(async () => {
     }
   }
   if (!store.oferta) {
-    goTo(router, 'ofertas');
+    goTo(router, 'ofertas', { id: store.catalogoRaiz });
   }
 });
 </script>

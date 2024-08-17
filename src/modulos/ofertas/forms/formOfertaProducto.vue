@@ -78,21 +78,21 @@
       autogrow
       :porDefecto="estado.dataForm.descripcion"
       @update="v => (estado.dataForm.descripcion = v)" />
+
     <!-- Catalogo -->
     <input-select
       label="Catalogo"
       info="Info #43"
       :opciones="selectCatalogo"
-      :watch="estado.catalogoAncestro"
-      :porDefecto="estado.catalogoAncestro ?? props.catalogo"
+      @callback="fn => (set.cat = fn)"
       @update="v => (estado.catalogoAncestro = v)"
       requerido />
+
     <input-select
       label="Sub catalogo"
       info="Info #44"
       :opciones="selectSubCatalogo"
-      :porDefecto="estado.dataForm.catalogo"
-      :watch="estado.dataForm.catalogo"
+      @callback="fn => (set.subCat = fn)"
       @update="v => (estado.dataForm.catalogo = v)"
       requerido />
 
@@ -172,6 +172,7 @@
 </template>
 
 <script setup lang="ts">
+import { CatalogoArbolDocument } from '#gql/default';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 const { store, ofertaAbreviacion } = useOfertas();
@@ -228,6 +229,12 @@ const estado = reactive({
 
   // todos los catalogos
   catalogos: null
+});
+
+// callbacks pour les inputs
+const set = reactive({
+  cat: null,
+  subCat: null
 });
 
 // color de los botones calduladoras
@@ -301,13 +308,6 @@ const selectSubCatalogo = computed(() => {
   return options;
 });
 
-watch(
-  () => estado.catalogoAncestro,
-  () => {
-    estado.dataForm.catalogo = null;
-  }
-);
-
 const selectVariedad = computed(() => {
   if (!producto.value) return [];
   return producto.value.variedades.map(variedad => ({
@@ -328,14 +328,27 @@ const selectEmpaque = computed(() => {
 
 // Inicializaciones
 onMounted(async () => {
-  await storeAlmacen.getProductos();
-  estado.catalogos = await store.getCatalogoArbol();
-  estado.catalogoAncestro = '75a4475e446a5885b05739c4';
+  storeAlmacen.getProductos();
+  store.getCatalogoArbol();
+
+  // catalogo por defecto para agregar nueva oferta segun el catalogo corriente
+  if (props.catalogo) {
+    set.cat(props.catalogo);
+  }
 });
 
+// reinicializar sub catalogo cuando catalogo cambia
+watch(
+  () => estado.catalogoAncestro,
+  () => set.subCat(null)
+);
+
+// reinicializar la marca cuando el producto cambia
 watch(producto, v => {
   estado.dataForm.marca = null;
 });
+
+// generar el nombre de la oferta cuando los datos cambian
 watch(
   [producto, () => estado.dataForm.marca, () => estado.dataForm.cantidad],
   v => {

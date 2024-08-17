@@ -23,7 +23,10 @@ export const useOferta = () => {
 
   const estado = reactive({
     ofertas: [] as Oferta[],
+
     catalogoSeleccionado: null as Catalogo,
+    catFiltroGlobal: [],
+
     modal: {
       show_crearOfertaBasico: false,
       show_informacionOferta: false,

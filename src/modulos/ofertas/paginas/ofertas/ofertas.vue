@@ -258,6 +258,9 @@ const selectCatalogoFiltro = computed(() => {
 const rowsParaMostrar = computed(() => {
   let filtered = store.ofertas;
   if (!filtered) return [];
+  filtered = filtered.filter(o =>
+    estado.catFiltroGlobal.includes(o.catalogo._id)
+  );
   if (
     estado.filtros.catalogoSeleccionado != null &&
     estado.filtros.catalogoSeleccionado !== ''
@@ -279,6 +282,7 @@ const rowsParaMostrar = computed(() => {
 });
 
 onMounted(async () => {
+  // catalogo seleccionado en la url
   estado.ofertas = await store.getOfertas();
   estado.catalogoSeleccionado = await store.getCatalogoArbol(
     params.id as string
@@ -286,6 +290,19 @@ onMounted(async () => {
   if (!estado.catalogoSeleccionado) {
     goTo(router, '404');
   }
+  store.catalogoRaiz = {
+    id: params.id as string,
+    nombre: estado.catalogoSeleccionado.nombre
+  };
+
+  // filtrar segun el catalogo en param url
+  const f = cat => {
+    estado.catFiltroGlobal.push(cat._id);
+    for (const subCat of cat.hijas ?? []) {
+      f(subCat);
+    }
+  };
+  f(estado.catalogoSeleccionado);
 });
 
 // sockets

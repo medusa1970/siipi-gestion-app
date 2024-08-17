@@ -256,10 +256,15 @@ const { name: routeName } = useRoute();
 const activo = (item, route) => {
   let activar = [];
   for (const el of [item, ...(item.subMenu ?? [])]) {
-    if (el.to) activar = [...activar, el.to];
-    if (el.activar) activar = [...activar, ...el.activar];
+    if (route === el.to) return true;
+    for (const act of el.activar ?? []) {
+      if (route === act) return true;
+      // const [rt, id] = ac.split('-');
+      // if (route === rt) return true;
+      // if (rt === 'ofertas' && id === storeOferta.catalogoRaiz._id) return true;
+    }
   }
-  return activar.includes(route);
+  return false;
 };
 const menuState = reactive(
   Object.fromEntries(
@@ -274,6 +279,7 @@ import { useQuasar } from 'quasar';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { storeOferta } from '@/modulos/ofertas/ofertas.store';
 
 const router = useRouter();
 const authStore = useAuthStore();

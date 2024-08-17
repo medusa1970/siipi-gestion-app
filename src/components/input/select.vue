@@ -138,6 +138,8 @@ const emits = defineEmits<{
     objeto: any, // el objeto creado
     pariente?: any // si el objeto es un subdoc de un documento, el mismo documento
   ): void;
+
+  (event: 'callback', fn: Function): void;
 }>();
 
 /**
@@ -260,31 +262,26 @@ const listaOpciones = ref<SelectOpcion[]>(null);
 // le queremos poder agregar nuevos elementos via el boton [+]
 const opcionesSrc = ref<SelectOpcion[]>(null);
 
-/**
- * Inicializacion de las opciones
- */
-
+// inicializacion de las opciones
 onBeforeMount(async () => {
   opcionesSrc.value = props.opciones;
   listaOpciones.value = opcionesSrc.value;
 });
 
-/**
- * Activa el error con el mensaje pasado por parametro,
- * o bien lo desactiva si es null
- */
+// callback to change model value
+emits('callback', v => {
+  localModel.value = v;
+  emits('update', localModel.value);
+});
 
+// Activa (o desactiva) el error con el mensaje pasado por parametro
 function setError(mensaje: string | null) {
   errorMensaje.value = mensaje;
   errorFlag.value = mensaje != null;
   emits('error', errorFlag.value, errorMensaje.value, localModel.value);
 }
 
-/**
- * Activa la validacíon del valor actual del input
- * y si corresponde, muestra un mensaje de error
- */
-
+// Activa la validacíon del valor actual del input
 function activarValidacion() {
   for (const regla of reglasValidacion) {
     const resultado = regla(localModel.value);
@@ -296,22 +293,14 @@ function activarValidacion() {
   setError(null);
 }
 
-/**
- * Este metodo se ejecuta cada vez que cambia el valor del input
- * Si el cambio no produce error de validacion, se emite el nuevo valor
- * Nota : el valor del input es un string pero el valor emitido en el evento puede ser number
- */
-
+// cambio del input : validacion + emision
 const handleChange = (valor: string | null) => {
   if (inputRef.value) inputRef.value.resetValidation();
   activarValidacion();
   emits('update', valor);
 };
 
-/**
- * funcion de filtrar las opciones del select al buscar en el input
- */
-
+// funcion apra filtrar las opciones del select, al buscar en el input
 function filterFn(valor: string, update: Function) {
   update(() => {
     const needle = valor.toLowerCase();
@@ -325,10 +314,7 @@ function filterFn(valor: string, update: Function) {
   });
 }
 
-/**
- * metodo llamado cuando se ha creado una nueva opcion via el boton [+]
- */
-
+// metodo llamado cuando se ha creado una nueva opcion via el boton [+]
 const handleCrear = objeto => {
   listaOpciones.value = opcionesSrc.value;
   localModel.value = objeto._id;
@@ -337,69 +323,41 @@ const handleCrear = objeto => {
   emits('crearObjeto', objeto);
 };
 
-/**
- * Este metodo se ejecuta cada vez que se presiona el boton de borrar (x)
- * en caso de que clearable esta a true
- */
-
+// metodo llamado al presionar el boton de borrar (x)
 const handleClear = () => {
-  // activarValidacion();
   localModel.value = null;
   emits('update', null);
 };
 
-/**
- * Este metodo se ejecuta cada vez que el input pierde el focus
- */
-
+// metodo llamado cada vez que input pierde el focus
 const handleBlur = () => {
   // activarValidacion();
 };
 
-/**
- * Se pueden cambiar las opciones dinamicamente desde el componiente padre
- */
-
+// watch para cambiar las opciones desde el padre
 watch(
   () => props.opciones,
   () => {
     listaOpciones.value = props.opciones;
     opcionesSrc.value = props.opciones;
-    // localModel.value = null;
-    // handleClear();
   },
   { immediate: true }
 );
 
-/**
- * Se puede pasar un mensaje de error personalizado desde el componiente padre
- * sin tener que pasar por la validacion aquí, pasando ese mensaje por la prop 'error'
- */
-
+// watch para emitir un error personalizado desde el padre
 watch(
   () => props.error,
   () => setError(props.error)
 );
 
-/**
- * También se puede forzar la activacion de la validacion desde el componiente padre
- * cambiando el valor de la prop 'activarValidacion'
- */
-
+// watch para forzar la activacion de la validacion
 watch(
   () => props.activarValidacion, // si cambia la ref validate en el componiente padre,
   () => activarValidacion(), // se activa la validacion
   { immediate: false }
 );
 
-/**
- * El input puede también recibir un valor directamente del componiente padre pasandolo
- * por la prop 'watch'.
- * La prop 'forceWatch' sirve para forzar este cambio en caso de que
- * el valor de la prop tiene que ser la misma dos veces seguida (la funcion watch solo
- * detecta los cambios reales).
- */
-
+// watch para recibir un valor directamente del componiente padre
 watch(
   () => [props.watch, props.forceWatch],
   () => {

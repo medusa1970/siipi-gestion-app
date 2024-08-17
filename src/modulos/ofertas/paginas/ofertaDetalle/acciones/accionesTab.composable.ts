@@ -48,7 +48,7 @@ export const useAccionesTab = () => {
       estado.motivoEliminacion = '';
       store.ofertas = store.ofertas.filter(p => p._id !== store.oferta._id);
       store.ofertas = null;
-      goTo(router, 'ofertas');
+      goTo(router, 'ofertas', { id: store.catalogoRaiz.id });
     });
   };
 

@@ -13,7 +13,11 @@ export const useProductoTab = () => {
 
   const estado = reactive({
     dataForm: clone(initForm),
-    productosOpciones: [] as any[]
+    productosOpciones: [] as any[],
+
+    // para el empaque
+    resetEmpaque: null,
+    nombreEmpaque: null
   });
 
   const submitForm = async () => {

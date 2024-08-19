@@ -9,7 +9,7 @@
       :opciones="estado.productosOpciones"
       info="Info #53" />
 
-    {{ estado.dataForm.marca ?? 0 }}
+    <!-- {{ estado.dataForm.marca ?? 0 }} -->
     <!-- Producto marca -->
     <input-select
       label="Marca"
@@ -20,12 +20,24 @@
       :opciones="selectVariedad"
       info="Info #54" />
 
+    <!-- autcompletado tipo empaque -->
+    <input-select
+      label="Empaque preseleccionado"
+      class="flex-grow"
+      style="margin-right: 16px"
+      info="Info #48"
+      :opciones="selectEmpaque"
+      @update="v => prellenarEmpaque(v)"
+      :watch="estado.resetEmpaque"
+      color="grey-6" />
+
     <!-- cantidad -->
     <input-text
       label="Cantidad"
       tipo="number"
       @update="(v) => (estado.dataForm.cantidad = v as number)"
       :porDefecto="estado.dataForm.cantidad"
+      :watch="estado.dataForm.cantidad"
       requerido
       info="Info #55" />
     <q-btn color="primary" label="Guardar" type="submit" no-caps />
@@ -70,6 +82,31 @@ watch(
     }
   }
 );
+
+// Prellenar el empaque con seleccionar un tipo de empaque
+const prellenarEmpaque = async empaque => {
+  console.log(empaque);
+  const emp = producto.value?.empaques.find(e => e._id === empaque);
+  if (!emp) return;
+  //
+  estado.dataForm.cantidad = emp.cantidad;
+  console.log('CANTIDAD', estado.dataForm.cantidad);
+  estado.resetEmpaque = empaque;
+  estado.nombreEmpaque = emp.nombre;
+  await setTimeout(() => {
+    estado.resetEmpaque = null;
+  }, 1500);
+};
+
+const selectEmpaque = computed(() => {
+  if (!estado.dataForm.marca || !producto.value?.empaques) return [];
+  return producto.value.empaques
+    .filter(empaque => empaque.marca._id === estado.dataForm.marca)
+    .map(empaque => ({
+      value: empaque._id,
+      label: empaque.nombre
+    }));
+});
 
 onMounted(async () => {
   const productos = await almacen.store.getProductos();

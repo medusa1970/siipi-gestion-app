@@ -79,6 +79,147 @@ query entidadLeerMenu(
   }
 }
 
+query entidadLeerMenuCompleto(
+  $busqueda: BuscarEntidadDto!
+  $busquedaMenu: BuscarMenuDto!
+  $opciones: BuscarOpciones = {}
+) {
+  entidadLeerMenu(
+    busqueda: $busqueda
+    busquedaMenu: $busquedaMenu
+    opciones: $opciones
+  ) {
+    _id
+    nombre
+    ofertas {
+      _id
+      nombre
+      abreviacion
+      descripcion
+      imagen {
+        cloudinaryUrl
+      }
+      precioSinFactura
+      precioConFactura
+      preciosPorMayor {
+        _id
+        cantidadMin
+        precioConFactura
+        precioSinFactura
+      }
+      ingredientes {
+        tipo
+        producto {
+          _id
+          nombre
+          variedades {
+            _id
+          }
+          imagen {
+            cloudinaryUrl
+          }
+          medida {
+            _id
+          }
+          categoria {
+            _id
+          }
+        }
+        marca {
+          _id
+        }
+      }
+    }
+    hijas {
+      _id
+      nombre
+      ofertas {
+        _id
+        nombre
+        abreviacion
+        descripcion
+        imagen {
+          cloudinaryUrl
+        }
+        precioSinFactura
+        precioConFactura
+        preciosPorMayor {
+          _id
+          cantidadMin
+          precioConFactura
+          precioSinFactura
+        }
+        ingredientes {
+          tipo
+          producto {
+            _id
+            nombre
+            variedades {
+              _id
+            }
+            imagen {
+              cloudinaryUrl
+            }
+            medida {
+              _id
+            }
+            categoria {
+              _id
+            }
+          }
+          marca {
+            _id
+          }
+        }
+      }
+      hijas {
+        _id
+        nombre
+        ofertas {
+          _id
+          _id
+          nombre
+          abreviacion
+          descripcion
+          imagen {
+            cloudinaryUrl
+          }
+          precioSinFactura
+          precioConFactura
+          preciosPorMayor {
+            _id
+            cantidadMin
+            precioConFactura
+            precioSinFactura
+          }
+          ingredientes {
+            tipo
+            producto {
+              _id
+              nombre
+              variedades {
+                _id
+              }
+              imagen {
+                cloudinaryUrl
+              }
+              medida {
+                _id
+              }
+              categoria {
+                _id
+              }
+            }
+            marca {
+              _id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 # PEDIDOS SOLICITABLES
 mutation cambiarEstadoItemsPorOfertas_aceptar(
   $busqueda: BuscarPedidoDto = {}

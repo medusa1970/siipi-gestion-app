@@ -6,11 +6,6 @@ export default [
     file: '@/modulos/pedidos/paginas/realizarPedido/realizarPedido.vue'
   },
   {
-    name: 'realizarPedido2',
-    path: '/punto/realizarPedido2',
-    file: '@/modulos/pedidos/paginas/realizarPedido2/realizarPedido2.vue'
-  },
-  {
     name: 'misPedidos',
     path: '/punto/misPedidos',
     file: '@/modulos/pedidos/paginas/misPedidos/misPedidos.vue'

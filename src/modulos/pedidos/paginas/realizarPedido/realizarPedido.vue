@@ -8,16 +8,19 @@
       labelAdentro
       @update="(v) => (estado.filtros.buscarFiltro = v as string)"
       noSlot />
-    <q-list>
-      <q-expansion-item
+
+    <q-tabs v-model="panel" active-color="primary" indicator-color="primary">
+      <q-tab
         v-for="item in rowsParaMostrar?.hijas"
         :key="item._id"
-        class="expansion1"
-        switch-toggle-side
-        default-opened>
-        <template v-slot:header>
-          {{ item.nombre }}
-        </template>
+        :name="item._id"
+        :label="item.nombre" />
+    </q-tabs>
+    <q-tab-panels animated v-model="panel">
+      <q-tab-panel
+        v-for="item in rowsParaMostrar?.hijas"
+        :key="item._id"
+        :name="item._id">
         <q-list>
           <q-expansion-item
             v-for="item2 in item.hijas"
@@ -48,8 +51,8 @@
             </div>
           </q-expansion-item>
         </q-list>
-      </q-expansion-item>
-    </q-list>
+      </q-tab-panel>
+    </q-tab-panels>
   </NuxtLayout>
 </template>
 
@@ -58,6 +61,7 @@ import { useRealizarPedido2 } from './realizarPedido';
 
 const { estado, authStore, rowsParaMostrar, handleInputChange2 } =
   useRealizarPedido2();
+const panel = ref(null);
 
 // opciones
 const selectCatalogoFiltro = computed(() => {

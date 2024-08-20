@@ -11,7 +11,8 @@ export const usePuntos = () => {
     // pedidosSinAceptar: [],
     // pedidosRecibidos: [],
     // pedidosFiltrados: [],
-    pedidoItemsEstado: ''
+    pedidoItemsEstado: '',
+    pedidoSeleccionado: null
   });
 
   const buscarPedidos = async () => {
@@ -162,9 +163,36 @@ export const usePuntos = () => {
     //   });
   };
 
+  const imprimir = pedido => {
+    estado.pedidoSeleccionado = pedido;
+
+    const img = new Image();
+    img.src = '/logo.png';
+    img.onload = () => {
+      setTimeout(() => {
+        const divParaImprimir = document.getElementById('divParaImprimir');
+        divParaImprimir.style.display = 'block';
+        const ventanaImpresion = window.open('', '_blank');
+
+        ventanaImpresion.document.write(
+          "<style> body {  font-family: 'Nunito Sans', sans-serif; font-size: 10px; padding: 0px; } p{ padding: 0; margin: 0;}</style>"
+        );
+
+        ventanaImpresion.document.write(divParaImprimir.outerHTML);
+        // console.log(ventanaImpresion.document);
+        ventanaImpresion.document.close();
+        ventanaImpresion.print();
+        ventanaImpresion.close();
+
+        divParaImprimir.style.display = 'none';
+      }, 200);
+    };
+  };
+
   return {
     estado,
     buscarPedidos,
-    pedidoStore
+    pedidoStore,
+    imprimir
   };
 };

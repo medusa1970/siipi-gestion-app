@@ -84,6 +84,51 @@
       </template>
     </Item>
   </div>
+  <!-- IMPRESION -->
+  <div id="divParaImprimir" v-if="estado.pedidoSeleccionado" class="w-[283px]">
+    <div style="text-align: center">
+      <!-- <NuxtImg src="/logo.png" alt="logoSiipi" width="100" height="50" /> -->
+      <NuxtImg
+        id="logoParaImprimir"
+        src="/logo.png"
+        alt="logoSiipi"
+        width="100"
+        height="50" />
+      <!-- <img src="/logo.png" alt="logoSiipi" width="100" height="50" /> -->
+    </div>
+
+    <div
+      style="
+        font-family: 'Nunito Sans', sans-serif;
+        line-height: 1.2;
+        margin: 10px 0;
+        font-size: 12px;
+      ">
+      <p>Origen: {{ estado.pedidoSeleccionado.comprador.nombre }}</p>
+      <p>Destino: {{ estado.pedidoSeleccionado.vendedor.nombre }}</p>
+      <p>
+        Responsable: {{ estado.pedidoSeleccionado.estado[0].persona.nombre }}
+        {{ estado.pedidoSeleccionado.estado[0].persona.apellido }}
+      </p>
+      <p>
+        Fecha:
+        {{ formateadorFecha(estado.pedidoSeleccionado.estado[0]._creado) }}
+      </p>
+    </div>
+    <p style="text-align: center">------------------------------------------</p>
+    <table>
+      <tbody>
+        <tr
+          v-for="item in estado.pedidoSeleccionado.items"
+          :key="item._id"
+          style="font-size: 12px">
+          <td>{{ item.oferta.nombre }}</td>
+          <td>{{ item.cantidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+  </div>
 </template>
 
 <script setup>
@@ -92,9 +137,54 @@ definePageMeta({
   layout: 'cathering'
 });
 
-const { authStore, buscarPedidos, pedidoStore } = usePuntos();
+const { estado, authStore, buscarPedidos, pedidoStore, imprimir } = usePuntos();
 
 onMounted(async () => {
   await buscarPedidos();
 });
 </script>
+
+<style lang="scss" scoped>
+@media print {
+  /* Ocultar la URL del navegador en la impresión */
+  #url {
+    display: none;
+  }
+
+  @page :left {
+    margin: 0.5cm;
+  }
+
+  @page :right {
+    margin: 0.8cm;
+  }
+  .no-print {
+    display: none;
+  }
+  // body {
+  //   // width: 80mm; /* Ajusta el ancho según las especificaciones de tu impresora térmica */
+  //   // font-size: 12px; /* Ajusta el tamaño de fuente según tus necesidades */
+  //   visibility: hidden;
+  // }
+
+  // #printableArea,
+  // #printableArea * {
+  //   visibility: visible;
+  // }
+  // #printableArea {
+  //   /* Aquí puedes agregar los estilos específicos para el div que quieres imprimir */
+  //   // position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   font-size: 10px;
+  //   line-height: 1.2;
+  //   text-align: justify;
+  // }
+
+  /* Oculta todos los elementos que no quieres imprimir */
+  // .no-print,
+  // .no-print * {
+  //   display: none !important;
+  // }
+}
+</style>

@@ -204,7 +204,7 @@
                       v-model.number="producto.cantidad"
                       min="0"
                       @input="
-                        producto.cantidad = Math.max(0, producto.cantidad)
+                        producto.cantidad = Math.max(1, producto.cantidad)
                       " />
                   </div>
                   <!-- <h1 class="w-[30px] borde2">{{ producto.cantidad }}</h1> -->
@@ -216,7 +216,7 @@
                     dense
                     rounded
                     size="sm"
-                    @click="borrarProductoCarrito(producto.id)" />
+                    @click="borrarProductoCarrito(producto._id)" />
                 </div>
 
                 <div
@@ -305,7 +305,7 @@ function toggleRightDrawer() {
 
 const borrarProductoCarrito = id => {
   pedidoStore.listaPedido = pedidoStore.listaPedido.filter(
-    producto => producto.id !== id
+    oferta => oferta._id !== id
   );
 };
 </script>

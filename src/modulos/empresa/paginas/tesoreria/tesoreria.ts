@@ -34,7 +34,7 @@ export const useTesoreria = () => {
     let filtered = store.infoPedidos;
     if (!filtered) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      const regex = crearRegex(estado.filtros.buscar);
       filtered = filtered.filter(infoPedido => {
         return regex.test(sinImportarAcentos(infoPedido.entidad.nombre));
       });

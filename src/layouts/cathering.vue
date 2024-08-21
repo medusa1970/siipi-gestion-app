@@ -19,7 +19,6 @@
           padding="2px 20px"
           size="md"
           style="border-radius: 0" />
-
         <q-btn
           @click="realizarPedido"
           label="Aceptar"

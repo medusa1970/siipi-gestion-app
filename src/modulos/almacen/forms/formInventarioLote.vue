@@ -25,7 +25,8 @@
           dataForm.vencimiento = v;
         }
       "
-      :porDefecto="props.edicion?.vencimiento" />
+      :porDefecto="props.edicion?.vencimiento"
+      requerido />
 
     <!-- Bloque -->
     <input-select

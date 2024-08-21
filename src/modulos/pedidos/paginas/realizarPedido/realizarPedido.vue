@@ -1,129 +1,211 @@
 <template>
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
-    titulo="Realizar pedido"
+    :titulo="'Catalogo ' + estado.catalogo?.nombre"
     :navegacion="[{ label: 'Realizar pedido', to: 'realizarPedido' }]">
-    
-    
-    
-    <div class="block mx-auto w-[400px] max-sm:w-[350px]">
-      <q-input
-        borderless
-        dense
-        debounce="300"
-        color="secondary"
-        v-model="filter"
-        style="padding: 0 10px"
-        placeholder="Buscar"
-        class="w-search border-[1px] rounded-sm border-[#010f1a] hover:shadow-[0_0_5px_#010f1a]">
-        <template v-slot:prepend>
-          <q-icon name="search" size="22px" class="text-[#010f1a]" />
-        </template>
-        <template v-slot:append>
-          <q-icon name="close" @click="filter = ''" class="cursor-pointer" />
-        </template>
-      </q-input>
+    <input-text
+      label="Buscar"
+      labelAdentro
+      @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+      noSlot />
 
-
-
-      <!-- #F0F0F0 -->
-      <div class="flex gap-2 justify-center my-2">
-        <div
-          class="cursor-pointer"
-          v-for="catalogo in estado.catalogosOfertas"
-          :key="catalogo._id">
-          <h1
-            @click="selectCatalogo(catalogo)"
-            :class="[
-              'bg-[#F0F0F0] p-2',
-              estado.catalogoSeleccionado.nombre === catalogo.nombre &&
-                'font-bold'
-            ]">
-            {{ catalogo.nombre }}
-          </h1>
-        </div>
-      </div>
-      
-      <!-- <code>{{ estado.catalogoSeleccionado }}</code> -->
-      <q-list v-if="estado.searchResults" class="flex flex-col gap-1">
-        <div v-for="item in estado.searchResults" :key="item._id">
+    <q-tabs v-model="panel" active-color="primary" indicator-color="primary">
+      <q-tab
+        v-for="item in rowsParaMostrar?.hijas"
+        :key="item._id"
+        :name="item._id"
+        :label="item.nombre" />
+    </q-tabs>
+    <q-tab-panels animated v-model="panel">
+      <q-tab-panel
+        v-for="item in rowsParaMostrar?.hijas"
+        :key="item._id"
+        :name="item._id">
+        <q-list>
           <q-expansion-item
-            class="bg-[#F0F0F0]"
-            dense
-            dense-toggle
-            group="somegroup"
-            icon="category"
-            :label="item.nombre">
-            <q-card class="px-4">
+            v-for="item2 in item.hijas"
+            :key="item2._id"
+            class="expansion2"
+            switch-toggle-side
+            default-opened>
+            <template v-slot:header>
+              {{ item2.nombre }}
+            </template>
+            <div v-for="oferta in item2.ofertas">
               <div
-                v-for="item in item.ofertas"
-                :key="item._id"
-                class="grid grid-cols-[70px_1fr_auto] gap-2">
-                <div>
-                  <input
-                    type="number"
-                    class="w-full test border-[1px] border-gray-400 px-2 py-1 outline-none bg-transparent"
-                    @input="handleInputChange2($event, item)"
-                    min="0" />
-                </div>
-
-                <h1>{{ item.nombre }}</h1>
+                v-show="
+                  !estado.filtros.buscarFiltro ||
+                  estado.filtros.buscarFiltro === '' ||
+                  new RegExp(estado.filtros.buscarFiltro, 'i').test(
+                    sinImportarAcentos(oferta.nombre)
+                  )
+                "
+                class="oferta"
+                :key="oferta._id">
+                <q-btn
+                  flat
+                  dense
+                  @click="
+                    imagen = oferta.imagen.cloudinaryUrl;
+                    modalImagen = true;
+                  ">
+                  <q-img
+                    :src="oferta.imagen.cloudinaryUrl ?? ProductoImage"
+                    spinner-color="black"
+                    class="cell-image" />
+                </q-btn>
+                <input
+                  type="number"
+                  @input="handleInputChange2($event, oferta)"
+                  min="0" />
+                {{ oferta.nombre }}
               </div>
-            </q-card>
+            </div>
           </q-expansion-item>
-        </div>
-      </q-list>
-      <div v-if="estado.searchResults.length === 0">No hay producto..</div>
-    </div>
+        </q-list>
+      </q-tab-panel>
+    </q-tab-panels>
+    <q-dialog v-model="modalImagen">
+      <q-img
+        :src="imagen ?? ProductoImage"
+        width="300px"
+        height="300px"
+        fit="contain"
+        @click="modalImagen = false"
+        spinner-color="black" />
+    </q-dialog>
   </NuxtLayout>
 </template>
-<script setup>
-import { watch } from 'vue';
-import { storePedido } from '@/modulos/pedidos/pedidos.store';
-import { useRealizarPedido } from './realizarPedido.composable';
 
-const { estado, authStore, obtenerCatalogosProductos, filter, searchCatalog } =
-  useRealizarPedido();
+<script setup lang="ts">
+import { useRealizarPedido2 } from './realizarPedido';
+import ProductoImage from '@/assets/img/noHayProducto.png';
 
-const pedidoStore = storePedido();
+const { estado, authStore, rowsParaMostrar, handleInputChange2 } =
+  useRealizarPedido2();
+const panel = ref(rowsParaMostrar.value?.hijas[0]._id);
+watch(rowsParaMostrar, () => {
+  panel.value = rowsParaMostrar.value.hijas[0]._id;
+});
+const modalImagen = ref(false);
+const imagen = ref(null);
 
-const handleInputChange2 = (event, product) => {
-  event.target.value = Math.max(0, event.target.value);
-  const nuevoValor = event.target.value;
-
-  const producto = {
-    id: product._id,
-    nombre: product.nombre,
-    cantidad: nuevoValor
-  };
-
-  const index = pedidoStore.listaPedido.findIndex(
-    item => item.id === producto.id
-  );
-
-  if (index > -1) {
-    pedidoStore.listaPedido[index].cantidad = nuevoValor;
-  } else {
-    pedidoStore.listaPedido.push(producto);
+// opciones
+const selectCatalogoFiltro = computed(() => {
+  if (!estado.catalogo) return [];
+  let options = [];
+  for (const cat of estado.catalogo.hijas) {
+    const idsHijas = [];
+    const hijas = [];
+    for (const subcat of cat.hijas) {
+      hijas.push({
+        label: subcat.nombre,
+        value: [subcat._id],
+        class: 'option'
+      });
+      idsHijas.push(subcat._id);
+    }
+    options.push({
+      label: cat.nombre,
+      value: [...idsHijas, cat._id]
+    });
+    options = [...options, ...hijas];
   }
-};
 
-const selectCatalogo = catalogo => {
-  estado.catalogoSeleccionado = catalogo;
-  estado.searchResults = catalogo.hijas;
-};
-
-watch(filter, () => {
-  estado.searchResults = searchCatalog(filter.value);
+  return options;
 });
 
-onMounted(() => {
-  obtenerCatalogosProductos();
-});
+// configuracion de la tabla
+const columnsTabla = ref([
+  {
+    name: 'acciones',
+    label: 'Accion',
+    align: 'center',
+    slot: true
+  },
+  {
+    name: 'nombre',
+    required: true,
+    slot: true,
+    label: 'Nombre',
+    align: 'left',
+    field: (row: any) => row.nombre,
+    sortable: true
+  }
+]);
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-card {
+  border: none;
+}
+.expansion1 {
+  margin-top: 20px;
+  background-color: black;
+  padding: 0;
+  color: white;
+}
+.expansion2 {
+  background-color: gray;
+  padding: 0;
+}
+.oferta {
+  background-color: white;
+  color: black;
+  padding: 3px;
+}
+.oferta input {
+  border: 1px solid gray;
+  padding: 3px;
+  width: 80px;
+}
 
-<!-- definePageMeta({
-  layout: 'punto',
-}); -->
+/* Estilo base del checkbox */
+.weekday {
+  display: none !important;
+}
+input[type='checkbox'] + label {
+  display: inline-block;
+  border-radius: 50%;
+  background: #dddddd;
+  height: 37px;
+  width: 37px;
+  line-height: 37px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+input[type='checkbox']:checked + label {
+  background: #007bff;
+  color: #ffffff;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap; /* Prevent text from wrapping onto new lines */
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.cell-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+  margin-right: 10px;
+}
+</style>

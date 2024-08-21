@@ -3,25 +3,20 @@
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
     titulo="Gestion de problemas"
     :navegacion="[{ label: 'Problemas', to: 'problemas' }]">
-    <Tabla
-      :rows="rowsTabla"
-      :columns="colunasTabla"
-      :defaultImage="ProductoImage">
-      <template #dropdown>
-        <div
-          style="
-            display: grid;
-            grid-gap: 16px;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            width: 100%;
-          ">
-          <input-select
-            label="Producto"
-            labelAdentro
-            :opciones="selectProductoFiltro"
-            @update="v => (estado.filtros.productoSeleccionado = v)"
-            noSlot />
-          <input-select
+    <div
+      style="
+        display: grid;
+        grid-gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        width: 100%;
+      ">
+      <input-select
+        label="Producto"
+        labelAdentro
+        :opciones="selectProductoFiltro"
+        @update="v => (estado.filtros.productoSeleccionado = v)"
+        noSlot />
+      <!-- <input-select
             label="Estado"
             labelAdentro
             @update="v => (estado.filtros.estado = v)"
@@ -29,23 +24,34 @@
               { value: 'soloResueltos', label: 'resueltos' },
               { value: 'soloPendientes', label: 'pendientes' }
             ]"
-            noSlot />
-        </div>
-      </template>
+            noSlot /> -->
+    </div>
+
+    <Tabla
+      :rows="rowsTablaPendientes"
+      :columns="colunasTabla"
+      :defaultImage="ProductoImage">
       <template #body-expand="{ row }">
+        <p v-if="row.reporteResolucion">
+          <b>Resolución :</b> {{ row.reporteResolucion }}
+        </p>
+        <p><b>Problemas :</b></p>
         <div class="flex">
           <q-card
             class="mr-3 mb-3"
             v-for="dif in row.diferencias"
             :key="dif._id">
             <q-card-section>
-              <p>{{ dif.marca.nombre }}</p>
-              <p>{{ fechaMes(dif.vencimiento) }}</p>
+              <p>Marca {{ dif.marca.nombre }}</p>
+              <p>
+                Vence
+                {{ dif.vencimiento ? fechaMes(dif.vencimiento) : '(sin)' }}
+              </p>
               <p>
                 {{
                   dif.diferencia > 0
-                    ? `hay ${dif.diferencia} por demás`
-                    : `están faltando ${-dif.diferencia}`
+                    ? `Hay ${dif.diferencia} por demás`
+                    : `Faltan ${-dif.diferencia}`
                 }}
               </p>
             </q-card-section>
@@ -54,20 +60,15 @@
       </template>
       <template #cell-acciones="{ row }">
         <q-btn-group push @click="e => e.stopPropagation()">
-          <q-btn
+          <BtnAccion
             @click="
-              e => {
-                e.stopPropagation();
-                estado.problemaID = row._id;
-                estado.showModal.resolver = true;
-              }
+              estado.problemaID = row._id;
+              estado.showModal.resolver = true;
             "
-            icon="search"
-            class="p-1"
-            color="orange"
-            size="sm">
+            icono="search"
+            color="orange">
             <q-tooltip> Modificar </q-tooltip>
-          </q-btn>
+          </BtnAccion>
         </q-btn-group>
       </template>
     </Tabla>
@@ -91,7 +92,8 @@ import formResolverProblema from '@/modulos/almacen/forms/formResolverProblema.v
 const {
   estado,
   authStore,
-  rowsTabla,
+  rowsTablaPendientes,
+  rowsTablaResueltos,
   selectProductoFiltro,
   problemaSeleccionado,
   handleProblemaResuelto
@@ -117,13 +119,6 @@ const colunasTabla = [
     label: 'Fecha',
     align: 'left',
     field: (row: any) => fechaMes(row._creado),
-    sortable: true
-  },
-  {
-    name: 'estado',
-    label: 'Resuelto',
-    align: 'left',
-    field: (row: any) => (row.resuelto ? 'SI' : 'NO'),
     sortable: true
   },
   {

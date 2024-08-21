@@ -27,10 +27,21 @@
               :row="props.row" />
           </div>
           <div v-else-if="col.imagen">
-            <q-img
-              :src="col.value ?? defaultImage"
-              spinner-color="black"
-              class="cell-image" />
+            <q-btn
+              flat
+              dense
+              @click="
+                e => {
+                  e.stopPropagation();
+                  imagen = col.value;
+                  modalImagen = true;
+                }
+              ">
+              <q-img
+                :src="col.value ?? defaultImage"
+                spinner-color="black"
+                class="cell-image" />
+            </q-btn>
           </div>
           <div v-else>
             {{ col.value }}
@@ -54,11 +65,23 @@
       </q-tr>
     </template>
   </q-table>
+
+  <q-dialog v-model="modalImagen">
+    <q-img
+      :src="imagen ?? props.defaultImage"
+      width="300px"
+      height="300px"
+      fit="contain"
+      @click="modalImagen = false"
+      spinner-color="black" />
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 const filter = ref('');
+const modalImagen = ref(false);
+const imagen = ref(null);
 const props = withDefaults(
   defineProps<{
     rows: Array<any>;

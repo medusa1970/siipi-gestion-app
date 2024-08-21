@@ -164,20 +164,18 @@
         </div>
       </template>
       <template #cell-acciones="{ row }">
-        <q-btn-group>
+        <q-btn-group push @click="e => e.stopPropagation()">
           <btnAccion
             icono="edit black"
             @click="
-              e => {
-                e.stopPropagation();
+              () => {
                 store.producto = row;
                 goTo(router, 'producto', { id: row._id });
               }
             " />
           <q-btn
             @click="
-              e => {
-                e.stopPropagation();
+              () => {
                 estado.productoSeleccionado = row._id;
                 estado.productoIncompleto = productoIncompleto(row);
                 if (estado.productoIncompleto) {

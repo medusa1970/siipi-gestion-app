@@ -1,17 +1,17 @@
-import type { Bloque, Categoria, Marca, Producto, Stock } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Bloque, Categoria, Marca, Producto, Stock } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosStock = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
+export const permisosStock = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
 
 /**
  * Composable
  */
 export const useStock = () => {
   const { store, authStore, router } = useAlmacen();
-  if (!authStore.autorizar(permisosStock)) goTo(router, "noAutorizado");
+  if (!authStore.autorizar(permisosStock)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     stocks: [],
@@ -19,11 +19,11 @@ export const useStock = () => {
       alerta: null,
       categoriaSeleccionada: null,
       marcaSeleccionada: null,
-      buscarFiltro: "",
+      buscarFiltro: ''
     },
     modal: {
-      formInventario: false,
-    },
+      formInventario: false
+    }
   });
 
   /**
@@ -31,8 +31,8 @@ export const useStock = () => {
    */
   const obtenerTodoStock = async () => {
     const entidad = await api.buscarEntidad_almacen(authStore.getNegocio._id);
-
     estado.stocks = entidad.almacen.map((stock: any) => {
+      console.log(stock.lotes?.[0]._creado);
       // inicializacion res para este stock
       const res = {
         _id: stock._id,
@@ -51,28 +51,18 @@ export const useStock = () => {
         // inventario
         fechaUltimoInventario: stock.lotes?.[0]._creado,
         diasDesdeUltimoInventario: Math.floor(
-          diferenciaFechas(
-            new Date("2024-08-01"), // stock.lotes?.[0]._creado,
-            new Date(),
-            "D",
-          ),
+          diferenciaFechas(stock.lotes?.[0]._creado, new Date(), 'D')
         ),
         diasHastaProximoInventario: null,
         inventarioAviso: null,
-        alertaInventario: 0,
+        alertaInventario: 0
       };
-
-      //
-      if (stock.lotes.filter((lote) => !lote.bloque).length > 0) {
-        res.diasHastaProximoInventario = 0;
-        res.alertaInventario = 3;
-      }
 
       // Inicializacion de las marcas
       for (const lote of stock.lotes) {
         const marcaId = lote.marca._id.toString();
         const variedad = stock.producto.variedades.find(
-          (variedad: any) => variedad.marca._id === marcaId,
+          (variedad: any) => variedad.marca._id === marcaId
         );
         if (!res.marcas[marcaId]) {
           Object.assign(res.marcas, {
@@ -89,8 +79,8 @@ export const useStock = () => {
               alertaInventario: 0,
               inventarioPeriodo: variedad?.inventarioPeriodo,
               inventarioAviso: variedad?.inventarioAviso,
-              diasHastaProximoInventario: null, // dias hasta que toque el proximo inventario
-            },
+              diasHastaProximoInventario: null // dias hasta que toque el proximo inventario
+            }
           });
         }
       }
@@ -110,6 +100,13 @@ export const useStock = () => {
         if (marca.diasHastaProximoInventario <= 0) {
           marca.alertaInventario = 2;
         }
+        console.log(
+          'i',
+          res.diasDesdeUltimoInventario,
+          marca.diasHastaProximoInventario,
+          marca.inventarioAviso,
+          marca.inventarioPeriodo
+        );
 
         // alerta res
         if (res.diasHastaProximoInventario === null) {
@@ -117,7 +114,7 @@ export const useStock = () => {
         } else if (res.alertaInventario !== 3) {
           res.diasHastaProximoInventario = Math.min(
             res.diasHastaProximoInventario,
-            marca.diasHastaProximoInventario,
+            marca.diasHastaProximoInventario
           );
         }
         if (res.alertaInventario == null) {
@@ -125,7 +122,7 @@ export const useStock = () => {
         } else {
           res.alertaInventario = Math.max(
             res.alertaInventario,
-            marca.alertaInventario,
+            marca.alertaInventario
           );
         }
       }
@@ -139,11 +136,11 @@ export const useStock = () => {
         // max y min segun la configuracion de marca
         const max = Math.max(
           res.marcas[marcaId].cantidadAvisoFuerte,
-          res.marcas[marcaId].cantidadAvisoSuave,
+          res.marcas[marcaId].cantidadAvisoSuave
         );
         const min = Math.min(
           res.marcas[marcaId].cantidadAvisoFuerte,
-          res.marcas[marcaId].cantidadAvisoSuave,
+          res.marcas[marcaId].cantidadAvisoSuave
         );
         // si no hay limite configurado salimos
         if (Math.max(min, max) <= 0) {
@@ -152,7 +149,7 @@ export const useStock = () => {
         // dias hasta que toque el inventario (sale negativo si ya pasó)
         res.marcas[marcaId].diasInventario =
           Math.floor(
-            diferenciaFechas(res.fechaUltimoInventario, new Date(), "D"),
+            diferenciaFechas(res.fechaUltimoInventario, new Date(), 'D')
           ) + max;
         // alerta de marca
         lote.alertaCantidad = 0;
@@ -163,7 +160,7 @@ export const useStock = () => {
         // alerta res
         res.alertaCantidad = Math.max(
           res.alertaCantidad,
-          res.marcas[marcaId].alertaCantidad,
+          res.marcas[marcaId].alertaCantidad
         );
       }
 
@@ -172,20 +169,25 @@ export const useStock = () => {
         if (!stock.producto.puedeVencer || !lote.vencimiento) continue;
 
         // dias hasta el vencimiento (sale negativo si ya pasó)
-        lote.diasHastaVencimiento = Math.floor(
-          diferenciaFechas(new Date(), lote.vencimiento, "D"),
+        lote.diasHastaVencimiento = Math.ceil(
+          diferenciaFechas(new Date(), lote.vencimiento, 'D')
         );
 
+        console.log(
+          'p',
+          stock.producto.vencimientoAvisoFuerte,
+          stock.producto.vencimientoAvisoSuave
+        );
         lote.alertaVencimiento = 0;
         if (
-          stock.producto.vencimientoAvisoFuerte &&
-          lote.diasHastaVencimiento < stock.producto.vencimientoAvisoFuerte
+          stock.producto.vencimientoAvisoSuave &&
+          lote.diasHastaVencimiento <= stock.producto.vencimientoAvisoSuave
         ) {
           lote.alertaVencimiento = 1;
         }
         if (
-          stock.producto.vencimientoAvisoSuave &&
-          lote.diasHastaVencimiento <= stock.producto.vencimientoAvisoSuave
+          lote.diasHastaVencimiento <
+          (stock.producto.vencimientoAvisoFuerte ?? 0)
         ) {
           lote.alertaVencimiento = 2;
         }
@@ -195,12 +197,12 @@ export const useStock = () => {
         } else {
           lote.diasHastaVencimiento = Math.min(
             res.diasHastaProximoVencimiento,
-            lote.diasHastaVencimiento,
+            lote.diasHastaVencimiento
           );
         }
         res.alertaVencimiento = Math.max(
           res.alertaVencimiento,
-          lote.alertaVencimiento,
+          lote.alertaVencimiento
         );
       }
       return res;
@@ -218,13 +220,13 @@ export const useStock = () => {
           hijas.push({
             label: subcat.nombre,
             value: [subcat._id],
-            class: "option",
+            class: 'option'
           });
           idsHijas.push(subcat._id);
         }
         options.push({
           label: cat.nombre,
-          value: [...idsHijas, cat._id],
+          value: [...idsHijas, cat._id]
         });
         options = [...options, ...hijas];
       }
@@ -240,7 +242,7 @@ export const useStock = () => {
         options.push({
           label: marca.nombre,
           value: marca._id,
-          class: "option",
+          class: 'option'
         });
       }
     }
@@ -251,45 +253,40 @@ export const useStock = () => {
   const rowsParaMostrar = computed(() => {
     let filtered = estado.stocks;
     // filtro por alertas
-    if (estado.filtros.alerta === "cantidad") {
-      filtered = filtered.filter((stock) => stock.alertaCantidad > 0);
+    if (estado.filtros.alerta === 'cantidad') {
+      filtered = filtered.filter(stock => stock.alertaCantidad > 0);
     }
-    if (estado.filtros.alerta === "vencimiento") {
-      filtered = filtered.filter((stock) => stock.alertaVencimiento > 0);
+    if (estado.filtros.alerta === 'vencimiento') {
+      filtered = filtered.filter(stock => stock.alertaVencimiento > 0);
     }
-    if (estado.filtros.alerta === "inventario") {
-      filtered = filtered.filter((stock) => stock.alertaInventario != 0);
+    if (estado.filtros.alerta === 'inventario') {
+      filtered = filtered.filter(stock => stock.alertaInventario != 0);
     }
     // filtro por categoria
     if (
       estado.filtros.categoriaSeleccionada != null &&
-      estado.filtros.categoriaSeleccionada !== ""
+      estado.filtros.categoriaSeleccionada !== ''
     ) {
-      filtered = filtered.filter((stock) =>
+      filtered = filtered.filter(stock =>
         estado.filtros.categoriaSeleccionada.includes(
-          stock.producto.categoria._id,
-        ),
+          stock.producto.categoria._id
+        )
       );
     }
     // filtro por marca
     if (
       estado.filtros.marcaSeleccionada != null &&
-      estado.filtros.marcaSeleccionada !== ""
+      estado.filtros.marcaSeleccionada !== ''
     ) {
-      filtered = filtered.filter((stock) =>
-        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada),
+      filtered = filtered.filter(stock =>
+        Object.keys(stock.marcas).includes(estado.filtros.marcaSeleccionada)
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
     if (estado.filtros.buscarFiltro != null) {
-      filtered = filtered.filter((stock) => {
-        const regex = new RegExp(`${estado.filtros.buscarFiltro}`, "i");
-        return regex.test(
-          stock.producto.nombre +
-            stock.producto.nombre
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, ""),
-        );
+      filtered = filtered.filter(stock => {
+        const regex = crearRegex(estado.filtros.buscarFiltro);
+        return regex.test(sinImportarAcentos(stock.producto.nombre));
       });
     }
     return filtered;
@@ -303,14 +300,14 @@ export const useStock = () => {
   });
 
   // se hizo un inventario
-  const handleInventario = async (inventario) => {
-    NotifySucessCenter("Inventario hecho");
+  const handleInventario = async inventario => {
+    NotifySucessCenter('Inventario hecho');
     estado.modal.formInventario = false;
     obtenerTodoStock();
   };
 
   const getBloque = (id): Bloque => {
-    return store.entidad.bloques.find((b) => b._id === id);
+    return store.entidad.bloques.find(b => b._id === id);
   };
 
   return {
@@ -323,6 +320,6 @@ export const useStock = () => {
     getBloque,
     rowsParaMostrar,
     selectCategoriaFiltro,
-    selectMarcaFiltro,
+    selectMarcaFiltro
   };
 };

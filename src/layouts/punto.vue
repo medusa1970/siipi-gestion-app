@@ -102,11 +102,6 @@ const menu = [
         to: 'realizarPedido'
       },
       {
-        icon: 'add_shopping_cart',
-        label: 'Realizar pedido2',
-        to: 'realizarPedido2'
-      },
-      {
         icon: 'list_alt',
         label: 'Mis pedidos',
         to: 'misPedidos'

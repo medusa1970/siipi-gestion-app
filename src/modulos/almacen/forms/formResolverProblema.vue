@@ -7,13 +7,16 @@
         v-for="dif in edicion.diferencias"
         :key="dif._id">
         <q-card-section>
-          <p>{{ dif.marca.nombre }}</p>
-          <p>{{ fechaMes(dif.vencimiento) }}</p>
+          <p>Marca {{ dif.marca.nombre }}</p>
+          <p>
+            Vence
+            {{ dif.vencimiento ? fechaMes(dif.vencimiento) : '(sin)' }}
+          </p>
           <p>
             {{
               dif.diferencia > 0
-                ? `hay ${dif.diferencia} por demás`
-                : `están faltando ${-dif.diferencia}`
+                ? `Hay ${dif.diferencia} por demás`
+                : `Faltan ${-dif.diferencia}`
             }}
           </p>
         </q-card-section>

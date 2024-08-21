@@ -86,6 +86,24 @@ export const apiPedido = {
     }
   },
 
+  pedido_leerMenuCompleto: async (entidadID: string, token: any) => {
+    try {
+      const menu = extraerUno(
+        await GqlEntidadLeerMenuCompleto(
+          {
+            busqueda: { _id: [entidadID] },
+            busquedaMenu: {},
+            opciones: { limit: 1, errorSiVacio: true }
+          }, //@ts-ignore
+          useGqlToken(token)
+        )
+      );
+      return menu;
+    } catch (err) {
+      throw formatApiError(err);
+    }
+  },
+
   // pedido buscar
   // colocar siempre el filtro
   pedido_buscar: async (

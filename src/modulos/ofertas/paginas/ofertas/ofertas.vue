@@ -279,7 +279,8 @@ const rowsParaMostrar = computed(() => {
     // busqueda textual
     if (estado.filtros.buscarFiltro) {
       const regex = crearRegex(estado.filtros.buscarFiltro);
-      if (!regex.test(sinImportarAcentos(oferta.nombre))) return false;
+      if (!regex.test(oferta._id + sinImportarAcentos(oferta.nombre)))
+        return false;
     }
 
     return true;

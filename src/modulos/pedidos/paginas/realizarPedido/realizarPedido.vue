@@ -2,7 +2,7 @@
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
     :titulo="'Catalogo ' + estado.catalogo?.nombre"
-    :navegacion="[{ label: 'Ralizar pedido', to: 'realizarPedido' }]">
+    :navegacion="[{ label: 'Realizar pedido', to: 'realizarPedido' }]">
     <input-text
       label="Buscar"
       labelAdentro
@@ -42,6 +42,18 @@
                 "
                 class="oferta"
                 :key="oferta._id">
+                <q-btn
+                  flat
+                  dense
+                  @click="
+                    imagen = oferta.imagen.cloudinaryUrl;
+                    modalImagen = true;
+                  ">
+                  <q-img
+                    :src="oferta.imagen.cloudinaryUrl ?? ProductoImage"
+                    spinner-color="black"
+                    class="cell-image" />
+                </q-btn>
                 <input
                   type="number"
                   @input="handleInputChange2($event, oferta)"
@@ -53,15 +65,30 @@
         </q-list>
       </q-tab-panel>
     </q-tab-panels>
+    <q-dialog v-model="modalImagen">
+      <q-img
+        :src="imagen ?? ProductoImage"
+        width="300px"
+        height="300px"
+        fit="contain"
+        @click="modalImagen = false"
+        spinner-color="black" />
+    </q-dialog>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { useRealizarPedido2 } from './realizarPedido';
+import ProductoImage from '@/assets/img/noHayProducto.png';
 
 const { estado, authStore, rowsParaMostrar, handleInputChange2 } =
   useRealizarPedido2();
-const panel = ref(null);
+const panel = ref(rowsParaMostrar.value?.hijas[0]._id);
+watch(rowsParaMostrar, () => {
+  panel.value = rowsParaMostrar.value.hijas[0]._id;
+});
+const modalImagen = ref(false);
+const imagen = ref(null);
 
 // opciones
 const selectCatalogoFiltro = computed(() => {
@@ -174,5 +201,11 @@ input[type='checkbox']:checked + label {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+.cell-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+  margin-right: 10px;
 }
 </style>

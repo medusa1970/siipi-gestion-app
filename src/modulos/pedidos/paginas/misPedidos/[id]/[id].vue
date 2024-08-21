@@ -6,6 +6,7 @@
       </h1>
       <div v-if="estado.pedidoDetalle.comprador" class="grid grid-cols-2">
         <div>
+          <h1>{{ estado.pedidoDetalle.precio }}</h1>
           <p>
             <strong>Entidad origen: </strong
             >{{ estado.pedidoDetalle.comprador.nombre }}
@@ -61,7 +62,9 @@
             <h1 class="font-bold bg-orange-500 p-2 text-white">
               PRECIO TOTAL PEDIDO:
             </h1>
-            <!-- <p class="font-bold text-2xl">{{ estado.precioGeneral }} Bs.</p> -->
+            <p class="font-bold text-2xl">
+              {{ estado.pedidoDetalle.precio }} Bs.
+            </p>
           </span>
         </template>
         <!-- ACTIONS -->

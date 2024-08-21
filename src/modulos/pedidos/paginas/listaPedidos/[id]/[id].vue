@@ -70,7 +70,9 @@
             <h1 class="font-bold bg-orange-500 p-2 text-white">
               PRECIO TOTAL PEDIDO:
             </h1>
-            <p class="font-bold text-2xl">{{ estado.precioGeneral }} Bs.</p>
+            <p class="font-bold text-2xl">
+              {{ estado.pedidoDetalle.precio }} Bs.
+            </p>
           </span>
         </template>
 

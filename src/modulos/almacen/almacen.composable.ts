@@ -31,7 +31,10 @@ export const useAlmacen = () => {
     if (!ofertaStore.ofertas) return null;
     return ofertaStore.ofertas.filter(oferta => {
       for (const ingrediente of oferta.ingredientes) {
-        if (ingrediente.producto._id === productoId) {
+        if (ingrediente.producto == null) {
+          console.log('Ingrediente producto null en oferta #' + oferta._id);
+        }
+        if (ingrediente.producto?._id === productoId) {
           return true;
         }
       }

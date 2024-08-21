@@ -31,7 +31,7 @@
             <template v-slot:header>
               {{ item2.nombre }}
             </template>
-            <div v-for="oferta in item2.ofertas" class="oferta">
+            <div v-for="oferta in item2.ofertas">
               <div
                 v-show="
                   !estado.filtros.buscarFiltro ||
@@ -40,7 +40,7 @@
                     sinImportarAcentos(oferta.nombre)
                   )
                 "
-                class="card3"
+                class="oferta"
                 :key="oferta._id">
                 <input
                   type="number"

@@ -165,7 +165,7 @@
         <div>
           {{
             !row.producto.puedeVencer
-              ? 'No vence'
+              ? '-'
               : row.vencimientoAvisoSuave === 0
               ? 'Sin alerta'
               : row.diasHastaProximoVencimiento < 0
@@ -182,9 +182,10 @@
         <!-- <div v-if="row.stock.lotes.find((l) => !l.bloque)">
         <q-icon name="report" color="blue" size="sm" />
       </div> -->
+
         <div v-if="row.stock.lotes.filter(lote => !lote.bloque).length > 0">
           <q-icon name="report" color="blue" size="sm" />
-          <div>Toca hacer</div>
+          <div>Pedido recibido</div>
         </div>
         <div v-else-if="row.alertaInventario > 0">
           <q-icon
@@ -203,17 +204,11 @@
             }}
           </div>
         </div>
-        <div v-else>Sin limite de tiempo</div>
+        <div v-else>-</div>
       </template>
 
       <template #cell-actions="{ row }">
-        <q-btn-group
-          push
-          @click="
-            e => {
-              e.stopPropagation();
-            }
-          ">
+        <q-btn-group push @click="e => e.stopPropagation()">
           <q-btn
             class="p-1"
             color="orange"
@@ -243,14 +238,14 @@
 
       <template #body-expand="{ row }">
         <p>
-          Ultimo inventario:
-          <span v-if="row.fechaUltimoInventario == null">Nunca</span>
-          <span v-else-if="row.diasDesdeUltimoInventario === 0">hoy</span>
-          <span v-else
-            >hace {{ row.diasDesdeUltimoInventario }} día{{
-              row.diasInventario > 1 ? 's' : ''
-            }}</span
-          >
+          <b>Ultimo inventario :</b>
+          <span v-if="row.fechaUltimoInventario == null"> Nunca </span>
+          <span v-else-if="row.diasDesdeUltimoInventario === 0"> hoy</span>
+          <span v-else>
+            hace {{ row.diasDesdeUltimoInventario }} día{{
+              row.diasDesdeUltimoInventario > 1 ? 's' : ''
+            }}
+          </span>
         </p>
         <div class="flex">
           <!--q-card
@@ -277,13 +272,14 @@
               <p
                 v-if="row.producto.puedeVencer"
                 :class="lote.alertaVencimiento > 0 ? 'text-red-500 ' : ''">
-                Vencimiento: {{ fechaMes(lote.vencimiento) }}
+                Vencimiento:
+                {{ lote.vencimiento ? fechaMes(lote.vencimiento) : '-' }}
               </p>
               <p>Cantidad: {{ lote.cantidad }}</p>
               <p v-if="lote.bloque">
                 Bloque: {{ getBloque(lote.bloque)?.nombre }}
               </p>
-              <p v-else>Sin bloque</p>
+              <p v-else class="text-red-500">Sin bloque</p>
             </q-card-section>
           </q-card>
         </div>

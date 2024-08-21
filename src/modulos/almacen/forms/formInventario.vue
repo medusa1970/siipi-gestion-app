@@ -1,5 +1,9 @@
 <template>
-  <p>Se deben agregar TODOS los lotes de este producto.</p>
+  <p>
+    Agregue todos los lotes según su
+    <span v-if="producto.puedeVencer"> vencimiento, </span>marca y ubicacion en
+    la tienda.
+  </p>
   <br />
   <q-form @submit="formSubmit">
     <div class="text-center"></div>
@@ -52,12 +56,20 @@
 
   <Popup v-model="showModal.verificar" titulo="Error de inventario">
     <template #body>
-      Error, averigue las cantidades
-      <div class="text-center">
+      <p v-if="estado.puedeGuardar">
+        Todavía hay una diferencia, pero si está seguro, puede confirmar el
+        inventario.
+      </p>
+      <p v-else>
+        Los datos que ha entrado no corresponden con el stock en el sistema. Por
+        favor confirme las cantidades y fecha de vencimiento.
+      </p>
+
+      <div class="text-center mt-3">
         <q-btn label="Modificar" color="green" @click="sumbitReintentar" />
         <q-btn
           v-if="estado.puedeGuardar"
-          label="Mandar"
+          label="Confirmar"
           color="orange"
           @click="submitConfirmar" />
       </div>
@@ -80,19 +92,15 @@
 
 <script setup lang="ts">
 // imports
-import type {
-  Inventario,
-  InventarioLote,
-  Producto,
-  Bloque,
-  Marca,
-  Lote
-} from '#gql';
-import formInventarioLote from '@/modulos/almacen/forms/formInventarioLote.vue';
+import type { Inventario, Producto, Bloque } from '#gql';
+import formInventarioLote, {
+  type Lote
+} from '@/modulos/almacen/forms/formInventarioLote.vue';
 import { apiAlmacen } from '~/modulos/almacen/API/almacen.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Marca } from '#gql';
 const { store } = useAlmacen();
 const $q = useQuasar();
 
@@ -139,6 +147,7 @@ const mandar = async (guardar = false) => {
   // mandamos el inventario
   let inventario: Inventario = null;
   try {
+    console.log('datos', estado.lotes);
     inventario = await apiAlmacen.realizarInventario(
       authStore.negocio._id,
       props.producto._id,
@@ -157,6 +166,8 @@ const mandar = async (guardar = false) => {
     errFailback(err);
     return;
   }
+  store.refreshProblemas();
+  store.refreshEntidad();
   emits('hacerInventario', inventario);
 };
 

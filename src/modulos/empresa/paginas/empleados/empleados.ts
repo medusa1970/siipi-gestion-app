@@ -38,11 +38,9 @@ export const useEmpleados = () => {
     let rows = store.empleados;
     if (!rows) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
+      const regex = crearRegex(estado.filtros.buscar);
       rows = rows.filter(empleado => {
-        return regex.test(
-          JSON.stringify(empleado) + sinAcentos(JSON.stringify(empleado))
-        );
+        return regex.test(sinImportarAcentos(JSON.stringify(empleado)));
       });
     }
     console.log(rows);

@@ -1,14 +1,13 @@
 ## REUNION CON WILL DEL 14/07
 
-- hacer pedido : reiniciar el formulario, hacer el filtro seleccionado, se passer 
-du drawer ?, effacer quand 0, bug effacer efface tout
 - pedido: configurer bien producto et oferta completas
 - tesoreria : impression tickets et factures, 
-- inventario : bug bloques duplicados, bug hace 16 dias, sortir alertes de produits
-- escapar las parenthesis en las regexes
+- inventario : bug bloques duplicados, bug hace 16 dias, sortir alertes de produits, 
+agregar comentario al formulario
 - volver a ofertas con el mismo boton desde ofertaDetalles
 - Despacho: recargar, producto completo, categoria cathering, vaciar formulario, 
 detallar popup "E stas seguro de aceptar este pedido?" >> "estas seguro... a PANADERIA"
+- hacer pedido : reiniciar el formulario, se passer du drawer ?
 
 ## Meta 1 Lionel
 

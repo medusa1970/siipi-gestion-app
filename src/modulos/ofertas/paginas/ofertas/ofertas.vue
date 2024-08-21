@@ -111,8 +111,7 @@
           <btnAccion
             icono="edit black"
             @click="
-              e => {
-                e.stopPropagation();
+              () => {
                 store.oferta = row;
                 goTo(router, 'oferta', { id: row._id });
               }
@@ -280,14 +279,8 @@ const rowsParaMostrar = computed(() => {
 
     // busqueda textual
     if (estado.filtros.buscarFiltro) {
-      const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
-      if (
-        !regex.test(
-          oferta.nombre +
-            oferta.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        )
-      )
-        return false;
+      const regex = crearRegex(estado.filtros.buscarFiltro);
+      if (!regex.test(sinImportarAcentos(oferta.nombre))) return false;
     }
 
     return true;

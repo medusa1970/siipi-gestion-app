@@ -1,10 +1,10 @@
-import type { Bloque } from "#gql";
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
+import type { Bloque } from '#gql';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 /**
  * Permisos requeridos para esta pagina
  */
-export const permisosBloques = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
+export const permisosBloques = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
 
 /**
  * Composable
@@ -12,7 +12,7 @@ export const permisosBloques = ["ADQUISICION", "LOGISTICA", "ALMACEN"];
 export const useBloques = () => {
   const { store, authStore, router } = useAlmacen();
   console.log(authStore.autorizar(permisosBloques));
-  if (!authStore.autorizar(permisosBloques)) goTo(router, "noAutorizado");
+  if (!authStore.autorizar(permisosBloques)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
     // lista de las bloques a recuperar del store (promisa resuelta)
@@ -21,13 +21,13 @@ export const useBloques = () => {
     bloque: null,
     // config de los filtros de la tabla
     filtros: {
-      buscar: "",
+      buscar: ''
     },
     // estado de los modales
     modal: {
       formModificarBloque: false,
-      formCrearBloque: false,
-    },
+      formCrearBloque: false
+    }
   });
 
   // Inicializaciones
@@ -41,12 +41,10 @@ export const useBloques = () => {
     let rows = store.entidad.bloques;
     if (!rows) return [];
     if (estado.filtros.buscar != null) {
-      const regex = new RegExp(`${estado.filtros.buscar}`, "i");
-      rows = rows.filter((bloque) => {
-        return (
-          regex.test(bloque.nombre + sinAcentos(bloque.nombre)) ||
-          regex.test(bloque.descripcion ?? "") ||
-          regex.test(sinAcentos(bloque.descripcion ?? ""))
+      const regex = crearRegex(estado.filtros.buscar);
+      rows = rows.filter(bloque => {
+        return regex.test(
+          sinImportarAcentos(bloque.nombre + (bloque.descripcion ?? ''))
         );
       });
     }
@@ -54,15 +52,15 @@ export const useBloques = () => {
   });
 
   // se creó un bloque
-  const handleBloqueCreado = async (bloque) => {
-    NotifySucessCenter("Bloque creada correctamente");
+  const handleBloqueCreado = async bloque => {
+    NotifySucessCenter('Bloque creada correctamente');
     estado.modal.formCrearBloque = false;
     store.refreshEntidad();
   };
 
   // se modificcó un bloque
-  const handleBloqueModificado = async (bloque) => {
-    NotifySucessCenter("Bloque modificada correctamente");
+  const handleBloqueModificado = async bloque => {
+    NotifySucessCenter('Bloque modificada correctamente');
     estado.modal.formModificarBloque = false;
     store.refreshEntidad();
   };
@@ -74,6 +72,6 @@ export const useBloques = () => {
     router,
     rowsTabla,
     handleBloqueCreado,
-    handleBloqueModificado,
+    handleBloqueModificado
   };
 };

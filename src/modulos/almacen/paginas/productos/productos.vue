@@ -66,6 +66,7 @@
           completo
         </q-badge>
         <q-badge v-else color="orange"> incompleto </q-badge>
+        <p>Ofertas: {{ row.numOfertas }}</p>
       </template>
       <template #body-expand="{ row }">
         <div
@@ -296,7 +297,8 @@ const {
   router,
   productoIncompleto,
   handleProductoCreado,
-  handleOfertaSimpleCreada
+  handleOfertaSimpleCreada,
+  productoOfertas
 } = useProductos();
 
 // otros imports
@@ -381,7 +383,12 @@ const rowsTablaProductos = computed(() => {
 // mount
 onMounted(async () => {
   store.getCategorias();
-  store.getProductos();
+  store.productos = await store.getProductos();
+  for (const producto of store.productos) {
+    const ofertas = productoOfertas(producto._id);
+    // @ts-ignore
+    producto.numOfertas = ofertas ? ofertas.length : '-';
+  }
   estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map(marca => ({
     value: marca._id,
     label: marca.nombre

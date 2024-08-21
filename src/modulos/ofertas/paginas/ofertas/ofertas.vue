@@ -222,7 +222,6 @@ const {
   handleOfertaSimpleCreada
 } = useOferta();
 
-import { columnaOfertas } from './columns';
 import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
 const { params } = useRoute();
@@ -258,7 +257,7 @@ const rowsParaMostrar = computed(() => {
 
   filtered = filtered.filter(oferta => {
     const incompleto = ofertaIncompleta(oferta);
-    if (oferta._id === '6201c1c8df85a46e2f0b9542') console.log(incompleto);
+
     // catalogo seleccionado en parametro de pagina
     if (!estado.catFiltroGlobal.includes(oferta.catalogo._id)) return false;
 
@@ -323,6 +322,38 @@ onBeforeMount(() => {
 onBeforeUnmount(() => {
   $socket.off('cambiosOfertas');
 });
+
+const columnaOfertas = [
+  {
+    name: 'imagen',
+    label: 'Imagen',
+    imagen: true,
+    align: 'center',
+    field: (row: any) => row.imagen?.cloudinaryUrl
+  },
+  {
+    name: 'nombre',
+    label: 'Nombre',
+    align: 'left',
+    field: (row: any) => row.nombre,
+    sortable: true,
+    slot: true
+  },
+  {
+    name: 'estado',
+    label: 'Modif.',
+    align: 'right',
+    field: (row: any) => row._modificado,
+    slot: true,
+    sortable: true
+  },
+  {
+    name: 'acciones',
+    label: 'Accion',
+    align: 'center',
+    slot: true
+  }
+];
 </script>
 
 <style scoped>

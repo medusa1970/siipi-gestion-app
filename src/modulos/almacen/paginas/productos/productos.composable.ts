@@ -10,7 +10,8 @@ export const permisosProductos = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
  * Composable
  */
 export const useProductos = () => {
-  const { store, authStore, router, productoIncompleto } = useAlmacen();
+  const { store, authStore, router, productoIncompleto, productoOfertas } =
+    useAlmacen();
   if (!authStore.autorizar(permisosProductos)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
@@ -53,6 +54,7 @@ export const useProductos = () => {
     router,
     productoIncompleto,
     handleProductoCreado,
-    handleOfertaSimpleCreada
+    handleOfertaSimpleCreada,
+    productoOfertas
   };
 };

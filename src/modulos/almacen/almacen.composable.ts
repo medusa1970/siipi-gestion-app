@@ -1,6 +1,8 @@
 import type { Producto } from '#gql';
 import { storeAlmacen } from './almacen.store';
+import { storeOferta } from '@/modulos/ofertas/ofertas.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
+import OfertaDetalle from '../ofertas/paginas/ofertaDetalle/ofertaDetalle.vue';
 
 export const useAlmacen = () => {
   const route = useRoute();
@@ -8,6 +10,7 @@ export const useAlmacen = () => {
   const store = storeAlmacen();
   const estadoAlmacen = reactive({});
   const authStore = useAuthStore();
+  const ofertaStore = storeOferta();
 
   /**
    * Saber si un producto esta completo.
@@ -21,6 +24,20 @@ export const useAlmacen = () => {
     return res.length > 0 ? res : null;
   };
 
+  /**
+   * Recuperar las ofertas de un producto
+   */
+  const productoOfertas = productoId => {
+    if (!ofertaStore.ofertas) return null;
+    return ofertaStore.ofertas.filter(oferta => {
+      for (const ingrediente of oferta.ingredientes) {
+        if (ingrediente.producto._id === productoId) {
+          return true;
+        }
+      }
+    });
+  };
+
   // exports
   return {
     estadoAlmacen,
@@ -28,6 +45,7 @@ export const useAlmacen = () => {
     authStore,
     router,
     route,
+    productoOfertas,
     productoIncompleto
   };
 };

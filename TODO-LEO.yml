@@ -1,33 +1,20 @@
-## REUNION CON WILL DEL 14/07
+SI
 
-- pedido: configurer bien producto et oferta completas
-- tesoreria : impression tickets et factures, 
-- inventario : bug bloques duplicados, bug hace 16 dias, sortir alertes de produits, 
-agregar comentario al formulario
-- volver a ofertas con el mismo boton desde ofertaDetalles
+Hacer para entrega final
+- comparacion precio proveedor al crear una oferta
+- poder agregar y borrar tipos de empaque
+- gestion de proveedor, ver detalle con los productos que vende
+- tesoreria segun lo que vania dice
+
+PEUT ETRE
+
 - Despacho: recargar, producto completo, categoria cathering, vaciar formulario, 
-detallar popup "E stas seguro de aceptar este pedido?" >> "estas seguro... a PANADERIA"
-- hacer pedido : reiniciar el formulario, se passer du drawer ?
-
-## Meta 1 Lionel
-
-++ OFERTAS: comparacion precio proveedor
-++ PROVEEDORES: gestion de proveedor detalle con sus ofertas
-++ OFERTAS: avisar lo que falta para ofertas completas
-afficher une popup sur le badge + producto
-++ OFERTAS: recargar marcas+empaques al crear oferta (indexdb ?)
-++ MEDIDAS: poder agregar y borrar tipos de empaque
+++ OFERTAS: recargar marcas + empaques al crear oferta (indexdb ?)
 -- PERMISOS: cerrar sesion al usuario cuando se le cambia de permisos
--- PERMISOS: validacion telefono se porta raro al entrar un telefono ok
--- PRODUCTOS: averiguar que se modifica/borra bien la oferta automatica de proveedor
--- PRODUCTOS: ofertas de un producto (pestaña)
--- PRODUCTOS: producto/id ($cie) no volver a productos si id not found pero error
--- OFERTAS: precios por mayor en el expand oferta proveedores
--- CAT: pasar categorias / catalogos lista a tabla
--- GLOBAL: que se cierra un producto al abrir otro
--- GLOBAL: todos los busquedores con stringify
+-- validacion telefono se porta raro al entrar un telefono ok
+
+NON
+
 -- GLOBAL: gqltoken universel
--- GLOBAL: verifier ojo de tabla en todos los lugares
--- AVERIGUAR: bug backend image
--- PUNTOS: asignar administradores de puntos
 -- GLOBAL: Forms, failsafe si edicion._id is null, todo se iria a modificar
+-- PUNTOS: asignar administradores de puntos

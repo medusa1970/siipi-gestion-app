@@ -23,7 +23,7 @@
       class="bg-grey-7 text-white shadow-2"
       no-caps>
       <q-tab name="persona" icon="person" label="Persona" />
-      <q-tab name="cargos" icon="work" label="Cargos" />
+      <!-- <q-tab name="cargos" icon="work" label="Cargos" /> -->
       <q-tab name="permisos" icon="group" label="Permisos" />
     </q-tabs>
     <q-tab-panels
@@ -33,9 +33,9 @@
       <q-tab-panel name="persona" animated>
         <PersonaTabPanel :key="store.empleado?._id" />
       </q-tab-panel>
-      <q-tab-panel name="cargos" animated>
+      <!-- <q-tab-panel name="cargos" animated>
         <CargosTabPanel :key="store.empleado?._id" />
-      </q-tab-panel>
+      </q-tab-panel> -->
       <q-tab-panel name="permisos" animated>
         <PermisosTabPanel :key="store.empleado?._id" />
       </q-tab-panel>

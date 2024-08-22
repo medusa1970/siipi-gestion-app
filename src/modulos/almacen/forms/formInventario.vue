@@ -147,7 +147,6 @@ const mandar = async (guardar = false) => {
   // mandamos el inventario
   let inventario: Inventario = null;
   try {
-    console.log('datos', estado.lotes);
     inventario = await apiAlmacen.realizarInventario(
       authStore.negocio._id,
       props.producto._id,

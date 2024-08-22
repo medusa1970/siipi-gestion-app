@@ -1,4 +1,5 @@
 import type { Precio } from '#gql';
+import { IdCatalogoProveedores } from '~/modulos/ofertas/oferta.definicion';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const usePrecioTab = () => {
@@ -9,10 +10,43 @@ export const usePrecioTab = () => {
     precios: [] as any[],
     // precio que se esta modificando, o oferta
     configEdit: null as Precio,
+    preciosProveedor: [],
     modal: {
       formCrearPrecio: false,
       formModificarPrecio: false
     }
+  });
+
+  onMounted(async () => {
+    await store.getOfertas();
+    // busquemos precios de proveedores
+    const ofertasProveedor = store.ofertas.filter(oferta => {
+      // debe estar en el catalogo proveedor
+      if (oferta.catalogo._id !== IdCatalogoProveedores) {
+        return false;
+      }
+      // debe tener un y solo un ingrediente
+      if (oferta.ingredientes.length !== 1) {
+        return false;
+      }
+      // debe tener un producto
+      if (!store.oferta.ingredientes[0].producto) {
+        return false;
+      }
+      // el producto debe ser el mismo que la oferta actual
+      if (
+        oferta.ingredientes[0].producto?._id !==
+        store.oferta.ingredientes[0].producto?._id
+      ) {
+        return false;
+      }
+      return true;
+    });
+    console.log(ofertasProveedor);
+    estado.preciosProveedor = ofertasProveedor.map(oferta => [
+      oferta.precioSinFactura,
+      oferta.precioConFactura
+    ]);
   });
 
   const borrarOfertaPrecio = async precio => {

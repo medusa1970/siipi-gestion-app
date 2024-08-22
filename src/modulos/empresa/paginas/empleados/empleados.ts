@@ -43,7 +43,6 @@ export const useEmpleados = () => {
         return regex.test(sinImportarAcentos(JSON.stringify(empleado)));
       });
     }
-    console.log(rows);
     return rows;
   });
 

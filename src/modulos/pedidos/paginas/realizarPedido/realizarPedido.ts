@@ -26,7 +26,7 @@ export const useRealizarPedido2 = () => {
     catalogo: null as Catalogo,
     filtros: {
       catalogo: null,
-      buscarFiltro: null,
+      buscar: null,
       seleccionados: false
     }
   });
@@ -46,8 +46,8 @@ export const useRealizarPedido2 = () => {
     filtered = filtroCompleto(filtered);
 
     // // filtro segun busqueda
-    // if (estado.filtros.buscarFiltro != null) {
-    //   const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+    // if (estado.filtros.buscar != null) {
+    //   const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
     //   const filtroBuscar = catalogo => {
     //     catalogo.ofertas = catalogo.ofertas.filter(o => {
     //       return regex.test(sinImportarAcentos(o.nombre));
@@ -90,7 +90,6 @@ export const useRealizarPedido2 = () => {
   });
 
   const handleInputChange2 = (event, oferta) => {
-    console.log(event.target.value);
     event.target.value = Math.max(
       0,
       event.target.value === '' ? 0 : event.target.value

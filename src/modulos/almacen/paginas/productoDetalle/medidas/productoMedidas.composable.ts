@@ -23,7 +23,7 @@ export const useProductoMedidas = () => {
     medidaOpciones: [] as SelectOpcion[],
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: ''
+      buscar: ''
     }
   });
 

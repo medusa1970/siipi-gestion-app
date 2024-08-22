@@ -85,12 +85,10 @@ watch(
 
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async empaque => {
-  console.log(empaque);
   const emp = producto.value?.empaques.find(e => e._id === empaque);
   if (!emp) return;
   //
   estado.dataForm.cantidad = emp.cantidad;
-  console.log('CANTIDAD', estado.dataForm.cantidad);
   estado.resetEmpaque = empaque;
   estado.nombreEmpaque = emp.nombre;
   await setTimeout(() => {

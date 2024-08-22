@@ -73,7 +73,6 @@ const estado = reactive({
 
 // submision del formulario
 const formSubmit = async () => {
-  console.log(estado.dataForm);
   try {
     const entidad = await api.modificarEntidad_problemas(
       authStore.getNegocio._id,

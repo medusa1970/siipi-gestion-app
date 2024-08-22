@@ -23,7 +23,7 @@ export const useProductos = () => {
       categoriaSeleccionada: '',
       marcaOpciones: [],
       marcaSeleccionada: '',
-      buscarFiltro: '',
+      buscar: '',
       completud: 'todos'
     },
     // dialogs

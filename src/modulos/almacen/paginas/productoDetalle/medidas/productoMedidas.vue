@@ -90,7 +90,7 @@
     <template #dropdown>
       <div class="flex">
         <input-text
-          @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+          @update="(v) => (estado.filtros.buscar = v as string)"
           labelAdentro
           class="col-span-1"
           label="Buscar"
@@ -184,8 +184,8 @@ const changeMedida = v => {
 const rowsTabla = computed(() => {
   let filtered = store.producto.empaques;
   if (!filtered) return [];
-  if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+  if (estado.filtros.buscar != null) {
+    const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
     filtered = filtered.filter(empaque => {
       return regex.test(
         empaque.abreviacion +

@@ -31,7 +31,6 @@ export const useMisPedidos = () => {
           .then(res => ({ ...pedido, estadoItems: res }))
       )
     );
-    console.log(estado.pedidosEntidad);
 
     const pedidos = estado.pedidosEntidad.reduce(
       (accumulator: any, pedido: any) => {
@@ -68,7 +67,6 @@ export const useMisPedidos = () => {
         return pedidoDate.getTime() === dateObj.getTime();
       }
     );
-    console.log(estado.pedidosFiltrados);
 
     // console.log(pedidosFiltrados);
     // console.log(pedidosFiltrados.length);

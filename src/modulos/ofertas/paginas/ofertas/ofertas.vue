@@ -41,7 +41,7 @@
           <input-text
             label="Buscar"
             labelAdentro
-            @update="v => (estado.filtros.buscarFiltro = v)"
+            @update="v => (estado.filtros.buscar = v)"
             noSlot />
 
           <input-select
@@ -277,8 +277,8 @@ const rowsParaMostrar = computed(() => {
       return false;
 
     // busqueda textual
-    if (estado.filtros.buscarFiltro) {
-      const regex = crearRegex(estado.filtros.buscarFiltro);
+    if (estado.filtros.buscar) {
+      const regex = crearRegex(estado.filtros.buscar);
       if (!regex.test(oferta._id + sinImportarAcentos(oferta.nombre)))
         return false;
     }

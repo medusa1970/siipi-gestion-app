@@ -6,7 +6,7 @@
     <input-text
       label="Buscar"
       labelAdentro
-      @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+      @update="(v) => (estado.filtros.buscar = v as string)"
       noSlot />
 
     <q-tabs v-model="panel" active-color="primary" indicator-color="primary">
@@ -34,9 +34,9 @@
             <div v-for="oferta in item2.ofertas">
               <div
                 v-show="
-                  !estado.filtros.buscarFiltro ||
-                  estado.filtros.buscarFiltro === '' ||
-                  new RegExp(estado.filtros.buscarFiltro, 'i').test(
+                  !estado.filtros.buscar ||
+                  estado.filtros.buscar === '' ||
+                  new RegExp(estado.filtros.buscar, 'i').test(
                     sinImportarAcentos(oferta.nombre)
                   )
                 "

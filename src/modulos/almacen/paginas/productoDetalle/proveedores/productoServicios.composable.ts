@@ -17,7 +17,7 @@ export const useProductoServicios = () => {
     },
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: ''
+      buscar: ''
     }
   });
 

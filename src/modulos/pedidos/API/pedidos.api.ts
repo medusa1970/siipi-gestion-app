@@ -291,7 +291,6 @@ export const apiPedido = {
           useGqlToken(token)
         )
       );
-      console.log(pedidos);
       return pedidos;
     } catch (err) {
       throw formatApiError(err);

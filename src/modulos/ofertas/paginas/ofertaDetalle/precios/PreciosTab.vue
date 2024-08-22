@@ -34,10 +34,11 @@
       no-caps
       padding="4px 10px" />
   </div>
-
   <popup v-model="estado.modal.formCrearPrecio" titulo="Agregar un precio">
     <template #body>
-      <formPrecio @crearObjeto="handlePrecioCreado" />
+      <formPrecio
+        :preciosProveedor="estado.preciosProveedor"
+        @crearObjeto="handlePrecioCreado" />
     </template>
   </popup>
 
@@ -46,6 +47,7 @@
     titulo="Modificar un precio">
     <template #body>
       <formPrecio
+        :preciosProveedor="estado.preciosProveedor"
         :edicion="estado.configEdit"
         @modificarObjeto="handlePrecioModificado" />
     </template>

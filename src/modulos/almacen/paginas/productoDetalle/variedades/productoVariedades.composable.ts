@@ -1,5 +1,5 @@
-import { useAlmacen } from "~/modulos/almacen/almacen.composable";
-import { useQuasar } from "quasar";
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { useQuasar } from 'quasar';
 
 const initFormCrear = {
   marca: null,
@@ -7,7 +7,7 @@ const initFormCrear = {
   inventarioAviso: null,
   cantidadAvisoFuerte: null,
   cantidadAvisoSuave: null,
-  cantidadMaxPedido: null,
+  cantidadMaxPedido: null
 };
 
 export const useProductoVariedades = () => {
@@ -20,22 +20,22 @@ export const useProductoVariedades = () => {
     // los dialogs
     modal: {
       formVariedadCrear: false,
-      formVariedadModificar: false,
+      formVariedadModificar: false
     },
     // config de los filtros de la tabla
     filtros: {
-      buscarFiltro: "",
-    },
+      buscar: ''
+    }
   });
 
   const handleVariedadCreada = (variedad, producto) => {
-    NotifySucessCenter("Marca registrada éxitosamente");
+    NotifySucessCenter('Marca registrada éxitosamente');
     estado.modal.formVariedadCrear = false;
     store.producto = producto;
   };
 
   const handleVariedadModificada = (variedad, producto) => {
-    NotifySucessCenter("Marca modificada éxitosamente");
+    NotifySucessCenter('Marca modificada éxitosamente');
     estado.modal.formVariedadModificar = false;
     store.producto = producto;
   };
@@ -43,24 +43,24 @@ export const useProductoVariedades = () => {
   const borrarProductoMarca = (variedad: any) => {
     $q.dialog({
       title: `Eliminar ${variedad.marca.nombre}`,
-      message: "No se puede deshacer.",
+      message: 'No se puede deshacer.',
       cancel: true,
-      persistent: true,
+      persistent: true
     }).onOk(async () => {
       try {
         const productoVariedad = await api.modificarProducto_basico(
           store.producto._id,
           {
             variedades: {
-              borrar: { _id: variedad._id },
-            },
+              borrar: { _id: variedad._id }
+            }
           },
           { loading: true }
         );
         if (productoVariedad) {
-          NotifySucessCenter("Marca borrado correctamente");
+          NotifySucessCenter('Marca borrado correctamente');
           store.producto.variedades = store.producto.variedades.filter(
-            (e) => e._id !== variedad._id
+            e => e._id !== variedad._id
           );
         }
       } catch (error) {
@@ -76,6 +76,6 @@ export const useProductoVariedades = () => {
     router,
     handleVariedadCreada,
     handleVariedadModificada,
-    borrarProductoMarca,
+    borrarProductoMarca
   };
 };

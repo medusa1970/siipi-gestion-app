@@ -130,7 +130,6 @@ const dateOption = date => {
 };
 
 watch(date, value => {
-  console.log(value);
   filtroHistorial(value);
 });
 

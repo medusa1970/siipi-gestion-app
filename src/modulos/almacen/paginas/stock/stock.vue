@@ -103,7 +103,7 @@
           <input-text
             label="Buscar"
             labelAdentro
-            @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+            @update="(v) => (estado.filtros.buscar = v as string)"
             noSlot />
           <input-select
             label="Categoria"

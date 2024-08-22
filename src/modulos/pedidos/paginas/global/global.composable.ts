@@ -28,7 +28,6 @@ export const useGlobal = () => {
     const pedidosIDS = pedidoStore.pedidosSinAceptar.map(
       (pedido: any) => pedido._id
     );
-    console.log(pedidosIDS);
     // const ofertasAceptadas = await pedidoService.aceptarOfertasSolicitables(
     //   pedidosIDS
     // );
@@ -37,11 +36,9 @@ export const useGlobal = () => {
       'solicitable',
       authStore.token
     );
-    console.log(ofertasAceptadas);
 
     const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
       pedido.items.forEach((item: any) => {
-        console.log(item);
         if (item.estado.some((estado: any) => estado.estado === 'aceptado')) {
           const itemExistente = acumulador.find(
             (itemAcumulador: any) =>
@@ -93,7 +90,6 @@ export const useGlobal = () => {
       return acumulador;
     }, []);
 
-    console.log(result);
     pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
       const stock = estado.stocks.find(
         //@ts-ignore
@@ -106,7 +102,6 @@ export const useGlobal = () => {
         presentacionBasica: stock ? stock.producto.presentacionBasica : ''
       };
     });
-    console.log(pedidoStore.pedidosSolicitado);
 
     // pedidoStore.pedidosSolicitado = result.map((pedido: any) => {
     //   const stock = estado.stocks.find(
@@ -129,13 +124,11 @@ export const useGlobal = () => {
     const pedidosIDS = pedidoStore.pedidosSinAceptar.map(
       (pedido: any) => pedido._id
     );
-    console.log(pedidosIDS);
     const ofertasAceptadas = await apiPedido.pedido_aceptarOfertas(
       pedidosIDS,
       'directo',
       authStore.token
     );
-    console.log(ofertasAceptadas);
     // const res = [
     //   {
     //     _id: '66b7d1ac7a34aac0dae428f3',
@@ -284,7 +277,6 @@ export const useGlobal = () => {
         presentacionBasica: stock ? stock.producto.presentacionBasica : ''
       };
     });
-    console.log(pedidoStore.pedidosDirecto);
     NotifySucessCenter('Pedidos de directos aceptados');
     // buscarPedidos2();
   };
@@ -367,7 +359,6 @@ export const useGlobal = () => {
         estado.comentario,
         diferencia
       );
-      console.log(ofertasAjustadas);
       // console.log(pedidoStore.pedidosDirecto);
       // console.log(pedidoStore.pedidosSolicitado);
 
@@ -445,7 +436,6 @@ export const useGlobal = () => {
     const { almacen } = await api.buscarEntidad_almacen(
       authStore.getNegocio._id
     );
-    console.log(almacen);
 
     // console.log(entidadBuscar);
     estado.stocks = almacen.map((stock: any) => {
@@ -463,7 +453,6 @@ export const useGlobal = () => {
         cantidad: cantidadTotal
       };
     });
-    console.log(estado.stocks);
 
     pedidoStore.pedidosSolicitado = pedidoStore.pedidosSolicitado.map(
       (pedido: any) => {

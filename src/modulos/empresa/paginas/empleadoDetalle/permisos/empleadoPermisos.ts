@@ -41,7 +41,6 @@ export const useEmpleadoPermisos = () => {
       const permisoActual = store.empleado.permisos.find(
         p => p.permiso === nuevoPermiso.permiso
       );
-      console.log(permisoActual?.permiso, nuevoPermiso.estado);
       // modificacion o delecion
       if (permisoActual /* TODO : && detect_changes */) {
         datosPermisos.borrar.permiso.push(nuevoPermiso.permiso);

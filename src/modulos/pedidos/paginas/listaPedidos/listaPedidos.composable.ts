@@ -227,7 +227,6 @@ export const useListaPedidos = () => {
       { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)
     );
-    console.log(pedido);
 
     estado.pedidoDetalle = pedido; //@ts-expect-error
     estado.precioGeneral = pedido.items.reduce((total, item) => {

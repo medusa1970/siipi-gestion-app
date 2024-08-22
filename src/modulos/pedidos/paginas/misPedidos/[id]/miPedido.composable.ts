@@ -29,7 +29,6 @@ export const useMiPedido = () => {
       { _id: [pedidoID] }, //@ts-expect-error
       useGqlToken(authStore.token)
     );
-    console.log('PEDIDO', pedido);
 
     estado.pedidoDetalle = pedido; //@ts-ignore
     estado.precioGeneral = pedido.items.reduce((total, item) => {
@@ -74,12 +73,10 @@ export const useMiPedido = () => {
     const password = 'choferSiipi123';
 
     if (estado.passwordChofer == password) {
-      console.log(estado.pedidoID);
       const pedidoRecibido = await apiPedido.pedido_recibirOfertas(
         estado.pedidoID,
         authStore.token
       );
-      console.log(pedidoRecibido);
       if (pedidoRecibido) {
         NotifySucessCenter('Pedido recibido');
         estado.modal.isShowPassword = false;
@@ -107,7 +104,6 @@ export const useMiPedido = () => {
       estado.pedido_item.cantidad,
       estado.pedido_item.comentario
     );
-    console.log(pedidoAjustarItem);
     if (pedidoAjustarItem) {
       NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
       buscarPedidoID(route.params.id);

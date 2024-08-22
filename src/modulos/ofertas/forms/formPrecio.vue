@@ -16,8 +16,13 @@
       <input-text
         tipo="decimal"
         requerido
+        :rules="[
+          val =>
+            val >= estado.precioMinS || 'Precio inferior al precio de compra.'
+        ]"
         class="flex-grow"
-        label="Precio sin factura"
+        label="Precio sin
+      factura"
         info="Info #51"
         :porDefecto="estado.dataForm.precioSinFactura"
         @update="v => (estado.dataForm.precioSinFactura = v)"
@@ -40,6 +45,10 @@
     <div class="flex">
       <input-text
         class="flex-grow"
+        :rules="[
+          val =>
+            val >= estado.precioMinC || 'Precio inferior al precio de compra.'
+        ]"
         label="Precio con factura"
         tipo="decimal"
         :porDefecto="estado.dataForm.precioConFactura"
@@ -85,9 +94,11 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 const props = withDefaults(
   defineProps<{
     edicion?: Precio | Oferta;
+    preciosProveedor?: any;
   }>(),
   {
-    edicion: null
+    edicion: null,
+    preciosProveedor: []
   }
 );
 
@@ -105,7 +116,9 @@ const estado = reactive({
   watchSin: null as number,
   watchCon: null as number,
   forceWatchCon: false,
-  forceWatchSin: false
+  forceWatchSin: false,
+  precioMinS: 0,
+  precioMinC: 0
 });
 
 // color de los botones calduladoras
@@ -117,7 +130,20 @@ const colorCalculateCon = computed(() =>
 );
 
 // Inicializaciones
-onMounted(async () => {});
+onMounted(async () => {
+  if (props.preciosProveedor) {
+    estado.precioMinS = props.preciosProveedor.reduce(
+      (precioMin, precio) =>
+        precioMin === null ? precio[0] : Math.min(precioMin, precio[0]),
+      null
+    );
+    estado.precioMinC = props.preciosProveedor.reduce(
+      (precioMin, precio) =>
+        precioMin === null ? precio[1] : Math.min(precioMin, precio[1]),
+      null
+    );
+  }
+});
 
 // submision del formulario
 const formSubmit = async () => {

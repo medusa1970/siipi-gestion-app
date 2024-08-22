@@ -31,7 +31,7 @@
           <input-text
             label="Buscar"
             labelAdentro
-            @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+            @update="(v) => (estado.filtros.buscar = v as string)"
             noSlot />
 
           <input-select
@@ -367,8 +367,8 @@ const rowsTablaProductos = computed(() => {
   }
   // filtro por buscar que no discrimine maiusculas de minusculas y acentos
 
-  if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+  if (estado.filtros.buscar != null) {
+    const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
     filtered = filtered.filter(producto => {
       return regex.test(
         producto.nombre +
@@ -399,9 +399,7 @@ onMounted(async () => {
 // sockets
 const { $socket } = useNuxtApp();
 onBeforeMount(() => {
-  $socket.on('cambiosProductos', async (data: any) => {
-    console.log('socket productos triggered');
-  });
+  $socket.on('cambiosProductos', async (data: any) => {});
   $socket.on('cambiosOfertas', async (data: any) => {
     await store.refreshProductos();
   });

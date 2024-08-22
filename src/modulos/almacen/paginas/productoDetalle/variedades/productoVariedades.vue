@@ -34,7 +34,7 @@
         <input-text
           label="Buscar"
           labelAdentro
-          @update="(v) => (estado.filtros.buscarFiltro = v as string)"
+          @update="(v) => (estado.filtros.buscar = v as string)"
           class="col-span-1"
           noSlot />
         <q-btn
@@ -124,8 +124,8 @@ const {
 const rowsTabla = computed(() => {
   let filtered = store.producto?.variedades;
   if (!filtered) return [];
-  if (estado.filtros.buscarFiltro != null) {
-    const regex = new RegExp(`${estado.filtros.buscarFiltro}`, 'i');
+  if (estado.filtros.buscar != null) {
+    const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
     filtered = filtered.filter(variedad => {
       return regex.test(
         variedad.marca.nombre +

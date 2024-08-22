@@ -19,7 +19,7 @@ export const useStock = () => {
       alerta: null,
       categoriaSeleccionada: null,
       marcaSeleccionada: null,
-      buscarFiltro: ''
+      buscar: ''
     },
     modal: {
       formInventario: false
@@ -32,7 +32,6 @@ export const useStock = () => {
   const obtenerTodoStock = async () => {
     const entidad = await api.buscarEntidad_almacen(authStore.getNegocio._id);
     estado.stocks = entidad.almacen.map((stock: any) => {
-      console.log(stock.lotes?.[0]._creado);
       // inicializacion res para este stock
       const res = {
         _id: stock._id,
@@ -100,13 +99,6 @@ export const useStock = () => {
         if (marca.diasHastaProximoInventario <= 0) {
           marca.alertaInventario = 2;
         }
-        console.log(
-          'i',
-          res.diasDesdeUltimoInventario,
-          marca.diasHastaProximoInventario,
-          marca.inventarioAviso,
-          marca.inventarioPeriodo
-        );
 
         // alerta res
         if (res.diasHastaProximoInventario === null) {
@@ -173,11 +165,6 @@ export const useStock = () => {
           diferenciaFechas(new Date(), lote.vencimiento, 'D')
         );
 
-        console.log(
-          'p',
-          stock.producto.vencimientoAvisoFuerte,
-          stock.producto.vencimientoAvisoSuave
-        );
         lote.alertaVencimiento = 0;
         if (
           stock.producto.vencimientoAvisoSuave &&
@@ -283,9 +270,9 @@ export const useStock = () => {
       );
     }
     // filtro por buscar que no discrimine maiusculas de minusculas y acentos
-    if (estado.filtros.buscarFiltro != null) {
+    if (estado.filtros.buscar != null) {
       filtered = filtered.filter(stock => {
-        const regex = crearRegex(estado.filtros.buscarFiltro);
+        const regex = crearRegex(estado.filtros.buscar);
         return regex.test(sinImportarAcentos(stock.producto.nombre));
       });
     }

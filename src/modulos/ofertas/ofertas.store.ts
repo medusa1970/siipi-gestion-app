@@ -44,7 +44,6 @@ export const storeOferta = defineStore('ofertas', {
       // }
       let ofertas = (await localforage.getItem('ofertas')) as Oferta[];
       if (actualizarDB !== false && (!ofertas || actualizarDB)) {
-        console.log('actualizando');
         try {
           ofertas = await api.buscarOfertas(
             {},

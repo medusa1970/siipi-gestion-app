@@ -11,7 +11,6 @@ export const permisosBloques = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
  */
 export const useBloques = () => {
   const { store, authStore, router } = useAlmacen();
-  console.log(authStore.autorizar(permisosBloques));
   if (!authStore.autorizar(permisosBloques)) goTo(router, 'noAutorizado');
 
   const estado = reactive({

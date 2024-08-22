@@ -65,12 +65,10 @@ export const storeAlmacen = defineStore('almacen', {
       productos = (await localforage.getItem('productos')) as Producto[];
       if (!productos || actualizarDB) {
         try {
-          console.log('get productos...');
           productos = await api.buscarProductos_basico(
             {},
             { sort: '-_modificado -_creado', loading: true }
           );
-          console.log('get productos OK');
           await localforage.setItem('productos', productos);
         } catch (err) {
           errFailback(err);

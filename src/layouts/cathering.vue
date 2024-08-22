@@ -58,7 +58,6 @@ const props = defineProps({
 });
 
 const authStore = useAuthStore();
-console.log(authStore);
 const router = useRouter();
 const $q = useQuasar();
 const pedidoStore = storePedido();

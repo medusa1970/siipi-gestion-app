@@ -52,6 +52,7 @@ import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasico
 import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';
 import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue';
 import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
+import { IdCatalogoProveedores } from '@/modulos/ofertas/oferta.definicion';
 
 onBeforeMount(async () => {
   if (!store.oferta || store.oferta?._id !== route.params.id) {

@@ -223,7 +223,6 @@ const detallePedidoPunto = [
   }
 ];
 
-console.log(params.id);
 onMounted(() => {
   buscarPedidoID(params.id);
   // obtenerItemsEstado(params.id);

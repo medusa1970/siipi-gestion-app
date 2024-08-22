@@ -5,7 +5,6 @@ export const validacion = {
         return true;
       }
       const [day, month, year] = val.split('/');
-      console.log(`${month}/${day}/${year}`);
       if (val !== null && isNaN(Date.parse(`${month}/${day}/${year}`))) {
         return mensaje;
       } else {
@@ -41,7 +40,6 @@ export const validacion = {
 
   requeridoCheck(mensaje: any): Function {
     const requeridoCheck = (val: string): String | true => {
-      console.log({ val });
       if (val == 'true') {
         return true;
       } else {

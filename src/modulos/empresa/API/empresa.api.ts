@@ -68,13 +68,12 @@ export const apiEmpresa = {
   ) => {
     let resultado;
     try {
-      console.log(1);
+      1;
       resultado = await GqlPedidosPorPagarEntidad(
         { entidadId, opciones },
         // @ts-expect-error
         useGqlToken(token)
       );
-      console.log(2);
       if (!resultado) {
         throw 'error resultado null';
       }

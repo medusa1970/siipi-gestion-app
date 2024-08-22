@@ -26,8 +26,7 @@
             v-for="item2 in item.hijas"
             :key="item2._id"
             class="expansion2"
-            switch-toggle-side
-            default-opened>
+            switch-toggle-side>
             <template v-slot:header>
               {{ item2.nombre }}
             </template>

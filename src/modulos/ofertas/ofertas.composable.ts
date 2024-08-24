@@ -8,6 +8,7 @@ export const useOfertas = () => {
   const store = storeOferta();
   const router = useRouter();
   const authStore = useAuthStore();
+
   const estadoOfertas = reactive({
     catalogoSeleccionado: null as string
   });
@@ -24,21 +25,18 @@ export const useOfertas = () => {
     const res = [];
 
     // debe tener un producto
-    if (oferta.ingredientes.length === 0) {
-      res.push('noIngrediente');
-    }
-
-    // debe haber ingredientes
-    if (oferta.ingredientes.length === 0) {
+    if (!oferta.ingredientes || oferta.ingredientes.length === 0) {
       res.push('ingredienteIncompleto');
     }
 
-    // cada ingrediente debe tener producto y marca
-    for (const ingrediente of oferta.ingredientes) {
-      if (!ingrediente.marca) res.push('sinMarca', ingrediente);
-      if (!ingrediente.producto) res.push('sin producto', ingrediente);
-      else if (productoIncompleto(ingrediente.producto))
-        res.push('productoIncompleto', ingrediente);
+    // debe tener marca al producto
+    else {
+      for (const ingrediente of oferta.ingredientes) {
+        if (!ingrediente.marca) res.push('sinMarca', ingrediente);
+        if (!ingrediente.producto) res.push('sin producto', ingrediente);
+        else if (productoIncompleto(ingrediente.producto))
+          res.push('productoIncompleto', ingrediente);
+      }
     }
 
     // la oferta debe tener una imagen

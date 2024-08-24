@@ -17,7 +17,7 @@ export const useAccionesTab = () => {
     }).onOk(async () => {
       // borramos el producto
       try {
-        await api.borrarOferta(store.oferta._id);
+        await borrarUno(GqlBorrarOfertas, { busqueda: store.oferta._id });
       } catch (err) {
         errFailback(err);
         return;
@@ -26,18 +26,16 @@ export const useAccionesTab = () => {
 
       // creamos la accion
       try {
-        await api.crearAccion(
-          {
+        await crearUno(GqlCrearAcciones, {
+          datos: {
             comentario: estado.motivoEliminacion,
             producto: store.oferta._id,
             accion: 'borrado'
-            // la persona va con el token
           },
-          {
+          opciones: {
             aceptarInexistentes: true
-          },
-          useGqlToken(authStore.token)
-        );
+          }
+        });
       } catch (err) {
         errFailback(err);
         return;
@@ -48,7 +46,7 @@ export const useAccionesTab = () => {
       estado.motivoEliminacion = '';
       store.ofertas = store.ofertas.filter(p => p._id !== store.oferta._id);
       store.ofertas = null;
-      goTo(router, 'ofertas', { id: store.catalogoRaiz.id });
+      goTo(router, 'ofertas', { id: '75a4475e446a5885b05739c4' });
     });
   };
 

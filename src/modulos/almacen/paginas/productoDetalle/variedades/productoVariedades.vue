@@ -108,7 +108,6 @@
 <script setup lang="ts">
 import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
 import { useProductoVariedades } from './productoVariedades.composable';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { $socket } = useNuxtApp();
 const {
   estado,

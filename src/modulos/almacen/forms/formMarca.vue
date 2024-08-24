@@ -90,14 +90,13 @@ const formSubmit = async () => {
   }
   try {
     if (props.edicion) {
-      const marca = await api.modificarMarca(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true }
-      );
+      const marca = await modificarUno(GqlModificarMarcas, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', marca);
     } else {
-      const marca = await api.crearMarca(estado.dataForm, { loading: true });
+      const marca = await crearUno(GqlCrearMarcas, { datos: estado.dataForm });
       emits('crearObjeto', marca);
     }
   } catch (err) {

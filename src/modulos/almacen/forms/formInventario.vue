@@ -96,7 +96,6 @@ import type { Inventario, Producto, Bloque } from '#gql';
 import formInventarioLote, {
   type Lote
 } from '@/modulos/almacen/forms/formInventarioLote.vue';
-import { apiAlmacen } from '~/modulos/almacen/API/almacen.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
@@ -147,16 +146,18 @@ const mandar = async (guardar = false) => {
   // mandamos el inventario
   let inventario: Inventario = null;
   try {
-    inventario = await apiAlmacen.realizarInventario(
-      authStore.negocio._id,
-      props.producto._id,
-      estado.lotes.map(lote => {
-        delete lote.id;
-        return lote;
-      }),
+    inventario = await buscarUno(GqlHacerInventario, {
+      busqueda: authStore.negocio._id,
       guardar,
-      'se hizo'
-    );
+      datos: {
+        producto: props.producto._id,
+        lotes: estado.lotes.map(lote => {
+          delete lote.id;
+          return lote;
+        }),
+        reporte: 'se hizo'
+      }
+    });
     if (!guardar && inventario.diferencias.length > 0) {
       showModal.verificar = true;
       return;

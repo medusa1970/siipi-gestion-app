@@ -1,4 +1,3 @@
-import { apiPedido } from '~/modulos/pedidos/API/pedidos.api';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const usePedido = () => {
@@ -21,20 +20,21 @@ export const usePedido = () => {
   const authStore = useAuthStore();
 
   const buscarPedidoID = async (pedidoID: string) => {
-    // console.log('first');
-    const pedido = await apiPedido.pedido_buscarUno(
-      { _id: [pedidoID] }, //@ts-expect-error
-      useGqlToken(authStore.token)
-    );
-    estado.pedidoDetalle = pedido; //@ts-ignore
+    let pedido;
+    try {
+      const pedido = await buscarUno(GqlBuscarPedidos, {
+        busqueda: pedidoID
+      });
+    } catch (err) {
+      errFailback(err);
+    }
+    estado.pedidoDetalle = pedido;
     estado.precioGeneral = pedido.items.reduce((total, item) => {
-      //@ts-ignore
       return total + item.oferta.precio * item.cantidad;
     }, 0);
 
-    estado.pedidoItemsEstado = //@ts-ignore
-      pedido.items[0].estado?.[pedido.items[0].estado?.length - 1]; //@ts-ignore
-    //@ts-ignore
+    estado.pedidoItemsEstado =
+      pedido.items[0].estado?.[pedido.items[0].estado?.length - 1];
     const itemsConEstadoAjustado = pedido.items.filter((item: any) => {
       const estadosAjustados = item.estado.filter(
         (estado: any) => estado.estado === 'ajustado'
@@ -64,19 +64,20 @@ export const usePedido = () => {
     estado.pedido_item.cantidad = row.cantidad;
   };
   const ajustarItemGuardar = async () => {
-    // route.params.id;
-    const pedidoAjustarItem = await apiPedido.pedido_ajustar(
-      //@ts-ignore
-      route.params.id,
-      estado.pedido_item.id,
-      estado.pedido_item.cantidad,
-      estado.pedido_item.comentario
-    );
-    // console.log(pedidoAjustarItem);
-    if (pedidoAjustarItem) {
-      NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
-      buscarPedidoID(route.params.id);
-    } else NotifyError('Error al ajustar cantidad');
+    try {
+      const pedidoAjustarItem = await buscarUno(GqlAjustarItem, {
+        busqueda: route.params.id,
+        itemId: estado.pedido_item.id,
+        nuevaCantidad: estado.pedido_item.cantidad,
+        comentario: estado.pedido_item.comentario
+      });
+    } catch (err) {
+      NotifyError('Error al ajustar cantidad');
+      errFailback(err);
+      return;
+    }
+    NotifySucessCenter('Cantidad ajustada');
+    buscarPedidoID(route.params.id as string);
     estado.modal.isAjustarItem = false;
   };
   return {

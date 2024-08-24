@@ -167,7 +167,11 @@ const {
 //inicializaciones
 onMounted(async () => {
   // llenamos las opciones de medidas
-  estado.medidas = await api.buscarMedidas({});
+  try {
+    estado.medidas = await buscarVarios(GqlBuscarMedidas);
+  } catch (err) {
+    errFailback(err);
+  }
   estado.medidaOpciones = estado.medidas.map(medida => ({
     value: medida._id,
     label: `${medida.nombre} (${medida.abreviacion})`

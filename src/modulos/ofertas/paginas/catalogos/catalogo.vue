@@ -35,7 +35,7 @@
             </q-item-section>
           </template>
           <q-list
-            v-for="(item, index) in estado.catalogoSeleccionado.hijas"
+            v-for="(item, index) in estado.catalogoSeleccionado?.hijas ?? []"
             :key="index"
             class="border-b-[1px] border-gray-300">
             <q-expansion-item
@@ -64,7 +64,7 @@
                       class="transition-all duration-300 ease-in-out transform hover:scale-125 hover:opacity-100 opacity-75"
                       @click.stop="modalModificarCatalogoCategoria(item)" />
                     <q-icon
-                      v-if="item.hijas.length == 0"
+                      v-if="item.hijas?.length == 0"
                       name="delete"
                       color="red"
                       size="17px"
@@ -73,7 +73,7 @@
                   </div>
                 </q-item-section>
               </template>
-              <q-list v-for="(item2, index) in item.hijas" :key="index">
+              <q-list v-for="(item2, index) in item.hijas ?? []" :key="index">
                 <q-expansion-item
                   switch-toggle-side
                   dense-toggle
@@ -207,5 +207,6 @@ const {
 const { params } = useRoute();
 onBeforeMount(async () => {
   estado.catalogoSeleccionado = await store.getCatalogoArbol(params.id);
+  console.log(estado.catalogoSeleccionado);
 });
 </script>

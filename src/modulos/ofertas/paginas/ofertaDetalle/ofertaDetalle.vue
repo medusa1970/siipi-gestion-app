@@ -4,9 +4,9 @@
     :titulo="store.oferta?.nombre"
     :navegacion="[
       {
-        label: 'Ofertas ' + store.catalogoRaiz.nombre,
+        label: 'Ofertas',
         to: 'ofertas',
-        params: { id: store.catalogoRaiz.id }
+        params: { id: '75a4475e446a5885b05739c4' }
       },
       { label: store.oferta?.nombre }
     ]">
@@ -52,7 +52,6 @@ import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasico
 import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';
 import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue';
 import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
-import { IdCatalogoProveedores } from '@/modulos/ofertas/oferta.definicion';
 
 onBeforeMount(async () => {
   if (!store.oferta || store.oferta?._id !== route.params.id) {
@@ -60,14 +59,16 @@ onBeforeMount(async () => {
       store.oferta = store.ofertas?.find(o => o._id === route.params.id);
     } else {
       try {
-        store.oferta = await api.buscarOferta(route.params.id);
+        store.oferta = await buscarUno(GqlBuscarOfertas, {
+          busqueda: route.params.id
+        });
       } catch (err) {
         errFailback(err);
       }
     }
   }
   if (!store.oferta) {
-    goTo(router, 'ofertas', { id: store.catalogoRaiz.id });
+    goTo(router, 'ofertas', { id: '75a4475e446a5885b05739c4' });
   }
 });
 </script>

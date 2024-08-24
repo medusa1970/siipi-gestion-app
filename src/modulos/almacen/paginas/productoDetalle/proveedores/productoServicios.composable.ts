@@ -2,7 +2,7 @@ import type { Entidad, Servicio } from '#gql';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 
 export const useProductoServicios = () => {
-  const { store, authStore, estadoAlmacen, router } = useAlmacen();
+  const { store, authStore, router } = useAlmacen();
 
   const estado = reactive({
     // los servicios de este producto, cada uno con su proveedor
@@ -25,20 +25,19 @@ export const useProductoServicios = () => {
   const getServiciosProducto = async () => {
     let proveedores;
     try {
-      proveedores = await api.buscarEntidades_servicios(
-        {
+      proveedores = await buscarVarios(GqlBuscarEntidades_servicios, {
+        busqueda: {
           tipo: ['PROVEEDOR'],
           servicios: {
             producto: store.producto._id
           }
         },
-        {},
-        {
+        filtro: {
           servicios: {
             producto: store.producto._id
           }
         }
-      );
+      });
     } catch (err) {
       errFailback(err);
       return;

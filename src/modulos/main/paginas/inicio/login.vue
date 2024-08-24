@@ -59,7 +59,12 @@ const password = reactiveInput();
 // funcion llamada al hacer submit
 const formSubmit = async datos => {
   try {
-    await authStore.login(usuario.value, password.value);
+    await buscarVarios(GqlAuthConectar, {
+      datos: {
+        usuario: usuario.value,
+        password: password.value
+      }
+    });
   } catch (err) {
     if (isApiNotFound(err, 'usuario')) {
       usuario.error = 'Usuario inexistente';

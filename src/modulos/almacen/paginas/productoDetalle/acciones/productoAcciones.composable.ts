@@ -21,7 +21,9 @@ export const useProductoAcciones = () => {
     }).onOk(async () => {
       // borramos el producto
       try {
-        await api.borrarProducto_basico(store.producto._id);
+        await borrarUno(GqlBorrarProductos_basico, {
+          busqueda: store.producto._id
+        });
       } catch (err) {
         errFailback(err);
         return;
@@ -30,18 +32,17 @@ export const useProductoAcciones = () => {
 
       // creamos la accion
       try {
-        await api.crearAccion(
-          {
+        await crearUno(GqlCrearAcciones, {
+          datos: {
             comentario: estado.motivoEliminacion,
             producto: store.producto._id,
             accion: 'borrado'
             // la persona va con el token
           },
-          {
+          opciones: {
             aceptarInexistentes: true
-          },
-          useGqlToken(authStore.token)
-        );
+          }
+        });
       } catch (err) {
         errFailback(err);
         return;

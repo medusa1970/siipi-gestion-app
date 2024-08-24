@@ -74,9 +74,9 @@ const estado = reactive({
 // submision del formulario
 const formSubmit = async () => {
   try {
-    const entidad = await api.modificarEntidad_problemas(
-      authStore.getNegocio._id,
-      {
+    const entidad = await modificarUno(GqlModificarEntidades_problemas, {
+      busqueda: authStore.getNegocio._id,
+      datos: {
         problemas: {
           buscar: {
             _id: [props.edicion?._id]
@@ -87,7 +87,7 @@ const formSubmit = async () => {
           }
         }
       }
-    );
+    });
     emits(
       'modificarObjeto',
       entidad.problemas.find(v => v._id === props.edicion?._id),

@@ -1,5 +1,4 @@
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { apiPedido } from '../../API/pedidos.api';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 
 export const useMisPedidos = () => {
@@ -12,23 +11,21 @@ export const useMisPedidos = () => {
   });
 
   const buscarPedidos = async () => {
-    // showLoading();
-    const listaPedidos = await api.buscarPedidos(
-      { comprador: [authStore.negocio._id] },
-      {},
-      {},
-      useGqlToken(authStore.token)
-    );
-    //@ts-ignore
+    let listaPedidos;
+    try {
+      listaPedidos = await buscarVarios(GqlBuscarPedidos, {
+        busqueda: {
+          comprador: [authStore.negocio._id]
+        }
+      });
+    } catch (err) {
+      errFailback(err);
+    }
     estado.pedidosEntidad = await Promise.all(
       listaPedidos.map(pedido =>
-        apiPedido
-          .pedido_leerEstadoItems(
-            { _id: [pedido._id] },
-            { loading: true },
-            authStore.token
-          )
-          .then(res => ({ ...pedido, estadoItems: res }))
+        buscarUno(GqlLeerEstadoPedido, {
+          busqueda: pedido._id
+        }).then(res => ({ ...pedido, estadoItems: res }))
       )
     );
 
@@ -48,11 +45,8 @@ export const useMisPedidos = () => {
       },
       { recibidos: [], noRecibidos: [] }
     );
-    // hideLoading();
     pedidoStore.pedidosRecibidos = pedidos.recibidos;
     estado.pedidosEntidad = pedidos.noRecibidos;
-
-    // hideLoading();
   };
 
   const filtroHistorial = (date: any) => {

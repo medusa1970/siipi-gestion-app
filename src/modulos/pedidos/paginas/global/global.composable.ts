@@ -1,5 +1,4 @@
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
-import { apiPedido } from '../../API/pedidos.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import { useQuasar } from 'quasar';
 
@@ -28,14 +27,21 @@ export const useGlobal = () => {
     const pedidosIDS = pedidoStore.pedidosSinAceptar.map(
       (pedido: any) => pedido._id
     );
-    // const ofertasAceptadas = await pedidoService.aceptarOfertasSolicitables(
-    //   pedidosIDS
-    // );
-    const ofertasAceptadas = await apiPedido.pedido_aceptarOfertas(
-      pedidosIDS,
-      'solicitable',
-      authStore.token
-    );
+    let ofertasAceptadas;
+    try {
+      ofertasAceptadas = await modificarVarios(
+        GqlCambiarEstadoItemsPorOfertas_aceptar,
+        {
+          busqueda: { _id: pedidosIDS },
+          estado: {
+            estado: 'aceptado'
+          },
+          tipo: 'solicitable'
+        }
+      );
+    } catch (err) {
+      errFailback(err);
+    }
 
     const result = ofertasAceptadas.reduce((acumulador: any, pedido: any) => {
       pedido.items.forEach((item: any) => {
@@ -124,11 +130,22 @@ export const useGlobal = () => {
     const pedidosIDS = pedidoStore.pedidosSinAceptar.map(
       (pedido: any) => pedido._id
     );
-    const ofertasAceptadas = await apiPedido.pedido_aceptarOfertas(
-      pedidosIDS,
-      'directo',
-      authStore.token
-    );
+    let ofertasAceptadas;
+    try {
+      ofertasAceptadas = await modificarVarios(
+        GqlCambiarEstadoItemsPorOfertas_aceptar,
+        {
+          busqueda: { _id: pedidosIDS },
+          estado: {
+            estado: 'aceptado'
+          },
+          tipo: 'directo'
+        }
+      );
+    } catch (err) {
+      errFailback(err);
+    }
+
     // const res = [
     //   {
     //     _id: '66b7d1ac7a34aac0dae428f3',
@@ -307,12 +324,21 @@ export const useGlobal = () => {
   };
 
   const ofertaPreparado = async (fila: any) => {
-    const ofertasPreparadas = await apiPedido.pedido_prepararOfertas(
-      fila.pedidoIDS,
-      [fila.oferta._id],
-      authStore.token
-    );
-
+    let ofertasPreparadas;
+    try {
+      ofertasPreparadas = await modificarVarios(
+        GqlCambiarEstadoItemsPorOfertas_preparar,
+        {
+          busqueda: { _id: fila.pedidoIDS },
+          ofertaIds: [fila.oferta._id],
+          estado: {
+            estado: 'preparado'
+          }
+        }
+      );
+    } catch (err) {
+      errFailback(err);
+    }
     if (ofertasPreparadas) NotifySucessCenter('Oferta preparada exitosamente');
 
     let ofertaP = ofertasPreparadas
@@ -353,12 +379,21 @@ export const useGlobal = () => {
         dense: true
       }
     }).onOk(async () => {
-      const ofertasAjustadas = await apiPedido.pedido_ajustarOfertas(
-        fila.pedidoIDS,
-        fila.oferta._id,
-        estado.comentario,
-        diferencia
-      );
+      let ofertasAjustadas;
+      try {
+        ofertasAjustadas = await modificarVarios(GqlAjustarItemsPorOferta, {
+          busqueda: { _id: fila.pedidoIDS },
+          ofertaId: fila.oferta._id,
+          estado: {
+            estado: 'ajustado',
+            valor: [diferencia],
+            comentario: estado.comentario
+          }
+        });
+      } catch (err) {
+        errFailback(err);
+      }
+
       // console.log(pedidoStore.pedidosDirecto);
       // console.log(pedidoStore.pedidosSolicitado);
 
@@ -430,12 +465,15 @@ export const useGlobal = () => {
   };
 
   onMounted(async () => {
-    // const almacen = await stockService.obtenerTodoStock(
-    //   useAuth.negocioElegido._id
-    // );
-    const { almacen } = await api.buscarEntidad_almacen(
-      authStore.getNegocio._id
-    );
+    let almacen;
+    try {
+      const entidad = await buscarUno(GqlBuscarEntidades_almacen, {
+        busqueda: authStore.getNegocio._id
+      });
+      almacen = entidad.almacen;
+    } catch (err) {
+      errFailback(err);
+    }
 
     // console.log(entidadBuscar);
     estado.stocks = almacen.map((stock: any) => {

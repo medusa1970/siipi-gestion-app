@@ -2,7 +2,6 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { useAuthStore } from '@/modulos/main/useAuthStore';
-import { apiPedido } from '../../API/pedidos.api';
 
 /**
  * LOGICA
@@ -77,10 +76,9 @@ export const useListaPedidos = () => {
   // };
 
   const buscarPedidos2 = async () => {
-    const { buscarPedidos: listaPedidos } = await GqlBuscarPedidos(
-      { busqueda: { vendedor: [authStore.negocio._id] } }, // @ts-expect-error
-      useGqlToken(authStore.token)
-    );
+    const { buscarPedidos: listaPedidos } = await GqlBuscarPedidos({
+      busqueda: { vendedor: [authStore.negocio._id] }
+    });
     // console.log(listaPedidos);
 
     const pedidos = listaPedidos.reduce(
@@ -222,13 +220,16 @@ export const useListaPedidos = () => {
   };
 
   const buscarPedidoID = async (pedidoID: string) => {
-    // console.log('first');
-    const pedido = await apiPedido.pedido_buscarUno(
-      { _id: [pedidoID] }, //@ts-expect-error
-      useGqlToken(authStore.token)
-    );
+    let pedido;
+    try {
+      pedido = await buscarUno(GqlBuscarPedidos, {
+        busqueda: pedidoID
+      });
+    } catch (err) {
+      errFailback(err);
+    }
 
-    estado.pedidoDetalle = pedido; //@ts-expect-error
+    estado.pedidoDetalle = pedido;
     estado.precioGeneral = pedido.items.reduce((total, item) => {
       //@ts-ignore
       return total + item.oferta.precio * item.cantidad;

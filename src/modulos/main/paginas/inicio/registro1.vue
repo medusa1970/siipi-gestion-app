@@ -67,7 +67,6 @@
 <script setup>
 const emits = defineEmits(['go']);
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { apiAuth } from '~/modulos/main/API/auth.api';
 const authStore = useAuthStore();
 
 const nombre = reactiveInput();
@@ -85,13 +84,15 @@ const password2Rule = p =>
  */
 const submit = async () => {
   try {
-    const persona = await apiAuth.registrar({
-      nombre: nombre.value,
-      apellido: apellido.value,
-      usuario: usuario.value,
-      correo: correo.value,
-      telefono: telefono.value,
-      contrasena: password.value
+    const persona = await buscarUno(GqlAuthCrearPersonas, {
+      datos: {
+        nombre: nombre.value,
+        apellido: apellido.value,
+        usuario: usuario.value,
+        correo: correo.value,
+        telefono: telefono.value,
+        contrasena: password.value
+      }
     });
     authStore.cookie.registrado = persona;
   } catch (err) {

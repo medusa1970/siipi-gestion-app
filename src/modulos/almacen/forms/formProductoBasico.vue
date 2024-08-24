@@ -174,15 +174,14 @@ const formSubmit = async () => {
   }
   try {
     if (props.edicion) {
-      const producto = await api.modificarProducto_basico(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true }
-      );
+      const producto = await modificarUno(GqlModificarProductos_basico, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', producto);
     } else {
-      const producto = await api.crearProducto_basico(estado.dataForm, {
-        loading: true
+      const producto = await crearUno(GqlCrearProductos_basico, {
+        datos: estado.dataForm
       });
       emits('crearObjeto', producto);
     }

@@ -255,16 +255,19 @@ const props = defineProps({
   navegacion: Array
 });
 
-const { name: routeName } = useRoute();
+const { name: routeName, params: routeParams } = useRoute();
 const activo = (item, route) => {
-  let activar = [];
   for (const el of [item, ...(item.subMenu ?? [])]) {
-    if (route === el.to) return true;
-    for (const act of el.activar ?? []) {
-      if (route === act) return true;
-      // const [rt, id] = ac.split('-');
-      // if (route === rt) return true;
-      // if (rt === 'ofertas' && id === storeOferta.catalogoRaiz._id) return true;
+    if (route === el.to) {
+      if (!el.params) return true;
+      for (const key in el.params) {
+        if (routeParams[key] === el.params[key]) return true;
+      }
+    }
+    for (const otraRuta of el.activar ?? []) {
+      if (route === otraRuta) {
+        return true;
+      }
     }
   }
   return false;

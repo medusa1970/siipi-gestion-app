@@ -78,13 +78,15 @@ onMounted(async () => {
 const formSubmit = async () => {
   try {
     if (props.edicion) {
-      const categoria = await api.modificarCategoria(
-        props.edicion._id,
-        estado.dataForm
-      );
+      const categoria = modificarUno(GqlModificarCategorias, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', categoria);
     } else {
-      const categoria = await api.crearCategoria(estado.dataForm);
+      const categoria = await crearUno(GqlCrearCategorias, {
+        datos: estado.dataForm
+      });
       emits('crearObjeto', categoria);
     }
   } catch (err) {

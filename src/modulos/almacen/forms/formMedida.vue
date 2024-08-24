@@ -93,16 +93,17 @@ const formSubmit = async () => {
   }
   try {
     if (props.edicion) {
-      const medida = await api.modificarMedida(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true }
-      );
+      const medida = await modificarUno(GqlModificarMedidas, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', medida);
     }
     // Modo creacion
     else {
-      const medida = await api.crearMedida(estado.dataForm, { loading: true });
+      const medida = await await crearUno(GqlCrearMedidas, {
+        datos: estado.dataForm
+      });
       emits('crearObjeto', medida);
     }
   } catch (err) {

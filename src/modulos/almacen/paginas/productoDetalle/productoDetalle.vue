@@ -63,9 +63,9 @@ onBeforeMount(async () => {
       store.producto = store.productos?.find(o => o._id === route.params.id);
     } else {
       try {
-        store.producto = await api.buscarProducto_basico(
-          route.params.id as string
-        );
+        store.producto = await buscarUno(GqlBuscarProductos_basico, {
+          busqueda: route.params.id as string
+        });
       } catch (err) {
         errFailback(err);
       }

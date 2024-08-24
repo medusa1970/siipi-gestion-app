@@ -2,7 +2,6 @@ import type { Producto } from '#gql';
 import { storeAlmacen } from './almacen.store';
 import { storeOferta } from '@/modulos/ofertas/ofertas.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
-import OfertaDetalle from '../ofertas/paginas/ofertaDetalle/ofertaDetalle.vue';
 
 export const useAlmacen = () => {
   const route = useRoute();
@@ -48,6 +47,7 @@ export const useAlmacen = () => {
     authStore,
     router,
     route,
+
     productoOfertas,
     productoIncompleto
   };

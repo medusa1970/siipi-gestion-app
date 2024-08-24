@@ -13,4 +13,12 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
+
+onMounted(async () => {
+  try {
+    const foo = await buscarUno(GqlCategoriaArbol, { busqueda: {} });
+  } catch (err) {
+    errFailback(err);
+  }
+});
 </script>

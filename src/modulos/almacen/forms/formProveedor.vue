@@ -65,6 +65,7 @@ const initForm = {
 // definicion del estado
 const estado = reactive({
   dataForm: clone(initForm),
+  nombreOriginal: props.edicion?.nombre,
   errorNombre: '',
   imagenPreview: null
 });
@@ -89,17 +90,16 @@ const formSubmit = async () => {
   try {
     // Modo edicion
     if (props.edicion) {
-      const proveedor = await api.modificarEntidad_basico(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true }
-      );
+      const proveedor = await modificarUno(GqlModificarEntidades_basico, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', proveedor);
     }
     // Modo creacion
     else {
-      const proveedor = await api.crearEntidad_basico(estado.dataForm, {
-        loading: true
+      const proveedor = await crearUno(GqlCrearEntidades_basico, {
+        datos: estado.dataForm
       });
       emits('crearObjeto', proveedor);
     }

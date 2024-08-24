@@ -1,7 +1,6 @@
 import type { Catalogo, Oferta } from '#gql';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 import { usePedidos } from '../../pedidos.composable';
-import { apiPedido } from '../../API/pedidos.api';
 
 /**
  * Permisos requeridos para esta pagina
@@ -83,10 +82,13 @@ export const useRealizarPedido2 = () => {
   });
 
   onMounted(async () => {
-    estado.catalogo = (await apiPedido.pedido_leerMenuCompleto(
-      authStore.negocio._id,
-      authStore.token
-    )) as Catalogo;
+    try {
+      estado.catalogo = await buscarUno(GqlEntidadLeerMenuCompleto, {
+        busqueda: authStore.negocio._id
+      });
+    } catch (err) {
+      errFailback(err);
+    }
   });
 
   const handleInputChange2 = (event, oferta) => {

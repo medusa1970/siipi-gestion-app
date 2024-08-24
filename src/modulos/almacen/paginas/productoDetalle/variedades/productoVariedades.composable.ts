@@ -48,14 +48,16 @@ export const useProductoVariedades = () => {
       persistent: true
     }).onOk(async () => {
       try {
-        const productoVariedad = await api.modificarProducto_basico(
-          store.producto._id,
+        const productoVariedad = await modificarUno(
+          GqlModificarProductos_basico,
           {
-            variedades: {
-              borrar: { _id: variedad._id }
+            busqueda: store.producto._id,
+            datos: {
+              variedades: {
+                borrar: { _id: variedad._id }
+              }
             }
-          },
-          { loading: true }
+          }
         );
         if (productoVariedad) {
           NotifySucessCenter('Marca borrado correctamente');

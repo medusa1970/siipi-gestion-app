@@ -18,5 +18,20 @@ export default [
     name: 'catalogo',
     path: '/cathering/catalogos/:id',
     file: '@/modulos/ofertas/paginas/catalogos/catalogo.vue'
+  },
+  {
+    name: 'hacerPedido',
+    path: '/pedido',
+    file: '@/modulos/ofertas/paginas/pedido/pedido.vue'
+  },
+  {
+    name: 'pedidoRecibir',
+    path: '/pedidoRecibir/:area',
+    file: '@/modulos/ofertas/paginas/pedidoRecibir/pedidoRecibir.vue'
+  },
+  {
+    name: 'pedidoDespachar',
+    path: '/pedidoDespachar/:area',
+    file: '@/modulos/ofertas/paginas/pedidoDespachar/pedidoDespachar.vue'
   }
 ];

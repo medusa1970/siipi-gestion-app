@@ -55,9 +55,9 @@ export const useEmpleadoPermisos = () => {
     }
 
     try {
-      const empleado = await api.modificarEntidad_empleados(
-        authStore.getNegocio._id,
-        {
+      const empleado = await modificarUno(GqlModificarEntidades_empleados, {
+        busqueda: authStore.getNegocio._id,
+        datos: {
           empleados: {
             buscar: {
               _id: [store.empleado._id]
@@ -69,12 +69,8 @@ export const useEmpleadoPermisos = () => {
               }
             }
           }
-        },
-        {
-          loading: true
-          // aceptarInexistentes: true,
         }
-      );
+      });
     } catch (err) {
       errFailback(err);
       return;

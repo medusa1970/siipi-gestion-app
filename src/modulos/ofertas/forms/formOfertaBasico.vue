@@ -33,7 +33,6 @@
       @callback="fn => (set.cat = fn)"
       @update="v => (estado.catalogoAncestro = v)"
       requerido />
-
     <input-select
       label="Sub catalogo"
       info="Info #44"
@@ -87,7 +86,8 @@
 import type { Oferta } from '#gql';
 import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
 import { UrlToBase64Image } from '~/components/input/input.service';
-const { store, ofertaAbreviacion } = useOfertas();
+import { catalogoIds } from '../oferta.definicion';
+const { store } = useOfertas();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -162,11 +162,11 @@ const selectSubCatalogo = computed(() => {
       });
       idsHijas.push(subcat._id);
     }
-    if (cat.nombre !== 'CATALOGO PROVEEDORES')
+    if (cat._id !== catalogoIds['proveedores'])
       options.push({
         label: cat.nombre,
         value: cat._id,
-        disable: false,
+        disable: true,
         class: 'title'
       });
     options = [...options, ...hijas];
@@ -229,14 +229,15 @@ const formSubmit = async () => {
       estado.dataForm.tags = {
         reemplazar: estado.dataForm.tags
       };
-      const oferta = await api.modificarOferta(
-        props.edicion._id,
-        estado.dataForm,
-        { loading: true }
-      );
+      const oferta = await buscarVarios(GqlBuscarOfertas, {
+        busqueda: props.edicion._id,
+        datos: estado.dataForm
+      });
       emits('modificarObjeto', oferta);
     } else {
-      const oferta = await api.crearOferta(estado.dataForm, { loading: true });
+      const oferta = await buscarVarios(GqlBuscarOfertas, {
+        datos: estado.dataForm
+      });
       emits('crearObjeto', oferta);
     }
   } catch (err) {

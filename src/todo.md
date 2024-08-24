@@ -1,0 +1,4 @@
+- recepcion de productos en proveedores
+- area en ofertas en vez de id parametro
+- ofertas completas para proveedores
+- subir al main y averiguar los catalogos, tratar la base de datos actual

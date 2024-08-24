@@ -2,7 +2,7 @@ import type { Producto } from '#gql';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const useProductoTab = () => {
-  const { store, authStore, estadoOfertas, router } = useOfertas();
+  const { store } = useOfertas();
 
   // datos por defecto del formulario
   const initForm = {
@@ -21,28 +21,33 @@ export const useProductoTab = () => {
   });
 
   const submitForm = async () => {
-    const ofertaModificada = await api.modificarOferta(
-      {
-        _id: [store.oferta._id]
-      },
-      {
-        ingredientes: {
-          reemplazar: [
-            {
-              tipo: 'SIMPLE',
-              producto: estado.dataForm.producto,
-              marca: estado.dataForm.marca,
-              cantidad: estado.dataForm.cantidad
-            }
-          ]
+    let ofertaModificada;
+    try {
+      ofertaModificada = await modificarUno(GqlModificarOfertas, {
+        busqueda: {
+          _id: [store.oferta._id]
+        },
+        datos: {
+          ingredientes: {
+            reemplazar: [
+              {
+                tipo: 'SIMPLE',
+                producto: estado.dataForm.producto,
+                marca: estado.dataForm.marca,
+                cantidad: estado.dataForm.cantidad
+              }
+            ]
+          }
         }
-      }
-    );
-    if (ofertaModificada) {
-      NotifySucessCenter('Producto modificado  correctamente');
-      store.oferta = ofertaModificada;
-      await store.refreshOfertas();
+      });
+    } catch (err) {
+      NotifyError('Se produjo un error');
+      errFailback(err);
+      return false;
     }
+    NotifySucessCenter('Producto modificado correctamente');
+    store.oferta = ofertaModificada;
+    await store.refreshOfertas();
   };
 
   return {

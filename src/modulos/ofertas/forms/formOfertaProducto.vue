@@ -416,8 +416,13 @@ const formSubmit = async () => {
       preciosPorMayor: estado.dataForm.preciosPorMayor
     };
 
-    const oferta = await api.crearOferta(estado.oferta, { loading: true });
-    emits('crearObjeto', oferta);
+    try {
+      const oferta = await crearUno(GqlCrearOfertas, { datos: estado.oferta });
+      emits('crearObjeto', oferta);
+    } catch (err) {
+      errFailback(err);
+      return;
+    }
   } catch (err) {
     errFailback(err);
     return;

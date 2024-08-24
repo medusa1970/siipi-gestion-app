@@ -28,7 +28,6 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 const router = useRouter();
@@ -41,7 +40,7 @@ const codigo = reactiveInput();
 const formSubmit = async datos => {
   let codigoOk = null;
   try {
-    codigoOk = await apiAuth.actuarRDC(codigo.value);
+    await buscarVarios(GqlAuthActuarRDC, { token: codigo.value });
   } catch (err) {
     errFailback(err);
     return;

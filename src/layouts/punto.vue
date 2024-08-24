@@ -44,7 +44,6 @@ import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable'
 import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
 import { permisosBloques } from '~/modulos/almacen/paginas/bloques/bloques.composable';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
-import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 
 const $q = useQuasar();
 const pedidoStore = storePedido();
@@ -98,8 +97,13 @@ const menu = [
     subMenu: [
       {
         icon: 'add_shopping_cart',
-        label: 'Realizar pedido',
+        label: 'Pedido',
         to: 'realizarPedido'
+      },
+      {
+        icon: 'add_shopping_cart',
+        label: 'Pedido',
+        to: 'hacerPedido'
       },
       {
         icon: 'list_alt',
@@ -141,23 +145,19 @@ const realizarPedido = async () => {
     persistent: true
   }).onOk(async () => {
     try {
-      const pedido = await apiPedido.pedidoIniciar(
-        {
+      const pedido = await crearUno(GqlIniciarPedido, {
+        datos: {
           comprador: authStore.negocio._id,
           vendedor: '65a5a9af08c1a906d83522d0',
           items
-        },
-        {},
-        authStore.token
-      );
+        }
+      });
+
       // console.log(pedido);
       if (pedido) {
-        const pedidoEstado = await apiPedido.pedidoConfirmarItems(
-          {
-            _id: pedido._id
-          },
-          authStore.token
-        );
+        const pedidoEstado = await apiPedido.pedidoConfirmarItems({
+          _id: pedido._id
+        });
         // console.log(pedidoEstado);
         NotifySucessCenter('Pedido realizado con éxito');
         pedidoStore.listaPedido = [];

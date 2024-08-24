@@ -1,12 +1,11 @@
 <template>
   <q-btn color="green px-5" dense rounded>
-    {{ authStore.getUsuario?.nombre || "USUARIO" }}
+    {{ authStore.getUsuario?.nombre || 'USUARIO' }}
     <q-menu
       transition-show="rotate"
       transition-hide="rotate"
       anchor="bottom end"
-      self="top end"
-    >
+      self="top end">
       <q-list style="min-width: 100px">
         <!-- perfil -->
         <q-item clickable @click="showPerfil = true">
@@ -18,8 +17,7 @@
                 :src="
                   authStore.getUsuario?.cloudinaryUrl ??
                   'https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg'
-                "
-              />
+                " />
             </q-avatar>
           </q-item-section>
           <q-item-section>
@@ -43,8 +41,7 @@
             <q-item
               clickable
               v-for="(negocio, index) in authStore.getUsuario?.negocios"
-              :key="negocio.nombre"
-            >
+              :key="negocio.nombre">
               <q-item-section @click="elegirNegocio(index, negocio.nombre)">{{
                 negocio.nombre
               }}</q-item-section>
@@ -74,8 +71,7 @@
             round
             dense
             v-close-popup
-            class="border-2 border-red-500"
-          />
+            class="border-2 border-red-500" />
         </div>
       </q-card-section>
 
@@ -85,26 +81,22 @@
             label="Nombre"
             @update="(v) => (perfil.nombre = v as string)"
             :porDefecto="perfil.nombre"
-            requerido
-          />
+            requerido />
           <input-text
             label="Apellido"
             @update="(v) => (perfil.apellido = v as string)"
             :porDefecto="perfil.apellido"
-            requerido
-          />
+            requerido />
           <input-text
             label="telefono"
             @update="(v) => (perfil.telefono = v as string)"
             :porDefecto="perfil.telefono"
-            requerido
-          />
+            requerido />
           <input-text
             label="email"
             @update="(v) => (perfil.correo = v as string)"
             :porDefecto="perfil.correo"
-            requerido
-          />
+            requerido />
           <input-image
             label="inagen"
             @update="
@@ -113,8 +105,7 @@
                   ? { data: base64Data, mimetype: mimetype }
                   : null)
             "
-            :dataPreview="previewImagenPerfil"
-          />
+            :dataPreview="previewImagenPerfil" />
           <div class="flex justify-center">
             <q-btn
               class="mt-2 mb-1"
@@ -123,8 +114,7 @@
               padding="4px 10px"
               label="Guardar"
               color="secondary"
-              type="submit"
-            ></q-btn>
+              type="submit"></q-btn>
           </div>
         </q-card-section>
       </q-form>
@@ -134,10 +124,8 @@
 
 <script setup lang="ts">
 // import { ModificarPersonaDto } from '#gql';
-import { useAuthStore } from "~/modulos/main/useAuthStore";
-import { UrlToBase64Image } from "~/components/input/input.service";
-import { apiAuth } from "~/modulos/main/API/auth.api";
-
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import { UrlToBase64Image } from '~/components/input/input.service';
 const authStore = useAuthStore();
 const router = useRouter();
 const $q = useQuasar();
@@ -145,8 +133,8 @@ const $q = useQuasar();
 const props = defineProps({
   disable: {
     type: Boolean,
-    porDefecto: true,
-  },
+    porDefecto: true
+  }
 });
 
 // MODAL editarPerfil
@@ -157,13 +145,13 @@ const perfil = reactive({
   apellido: authStore.getUsuario?.apellido,
   telefono: authStore.getUsuario?.telefono,
   correo: authStore.getUsuario?.correo,
-  imagen: null as { data: string; mimetype: string },
+  imagen: null as { data: string; mimetype: string }
 });
 const previewImagenPerfil = ref(null);
 //@ts-ignore
 await UrlToBase64Image(
   authStore.getUsuario?.cloudinaryUrl,
-  (base64Data) => (previewImagenPerfil.value = null)
+  base64Data => (previewImagenPerfil.value = null)
 );
 const editarPerfilSubmit = async () => {
   // preparacion de los datos
@@ -171,25 +159,25 @@ const editarPerfilSubmit = async () => {
     nombre: perfil.nombre,
     apellido: perfil.apellido,
     correo: perfil.correo,
-    telefono: perfil.telefono,
+    telefono: perfil.telefono
   };
   if (perfil.imagen) Object.assign(datos, { imagen: perfil.imagen });
 
   // modificacion en API
   let persona = ref(null);
   try {
-    loadingAsync(async () => {
-      persona.value = await apiAuth.editarPerfil(authStore.getUsuarioId, datos);
-      previewImagenPerfil.value = perfil.imagen?.data;
-    }).then(() => {
-      if (persona.value !== null) {
-        authStore.editarPerfil(persona.value);
-        showPerfil.value = false;
-        NotifySucessCenter("Usuario editado correctamente");
-      } else {
-        NotifyError("Hubo un error, intente de nuevo");
-      }
+    persona.value = await modificarUno(GqlModificarPersonas, {
+      busqueda: authStore.getUsuarioId,
+      datos
     });
+    previewImagenPerfil.value = perfil.imagen?.data;
+    if (persona.value !== null) {
+      authStore.editarPerfil(persona.value);
+      showPerfil.value = false;
+      NotifySucessCenter('Usuario editado correctamente');
+    } else {
+      NotifyError('Hubo un error, intente de nuevo');
+    }
   } catch (e) {
     throw e;
   }
@@ -197,55 +185,57 @@ const editarPerfilSubmit = async () => {
 
 // ELEGIR NEGOCIO
 
-const password = ref("");
+const password = ref('');
 const elegirNegocio = (index: number, nombre: string) => {
   $q.dialog({
     title: `<strong>Entrar a ${nombre}</strong>`,
-    message: "¿Está seguro de cambiar de negocio?",
+    message: '¿Está seguro de cambiar de negocio?',
     cancel: true,
     persistent: true,
     html: true,
     prompt: {
       //@ts-ignore
       model: password,
-      type: "password",
+      type: 'password',
       clearable: true,
       required: true,
       // native attributes:
       min: 0,
       max: 10,
       step: 2,
-      label: "Ingrese tu contrasena",
+      label: 'Ingrese tu contrasena',
       outlined: true,
-      dense: true,
-    },
+      dense: true
+    }
   }).onOk(async () => {
     // averiguamos la contraseña
 
     let loginResponse;
     try {
-      loginResponse = await apiAuth.login(
-        authStore.getUsuario?.usuario as string,
-        password.value
-      );
+      loginResponse = await buscarVarios(GqlAuthConectar, {
+        datos: {
+          usuario: authStore.getUsuario?.usuario as string,
+          password: password.value
+        }
+      });
       if (!loginResponse) {
       } else {
         await authStore.elegirNegocio(index);
 
-        password.value = "";
+        password.value = '';
         NotifySucess(`Negocio elegido: ${nombre}`);
         showPerfil.value = false;
         switch (authStore.getNegocio?.tipo) {
-          case "PUNTO":
-            goTo(router, "punto");
+          case 'PUNTO':
+            goTo(router, 'punto');
             break;
-          case "CATHERING":
-            goTo(router, "cathering");
+          case 'CATHERING':
+            goTo(router, 'cathering');
             break;
         }
       }
     } catch (e: any) {
-      if (e === "B104") {
+      if (e === 'B104') {
         NotifyError(`Contraseña incorrecta`); // notificacion en caso de error desconocido
       } else {
         NotifyError(`Error no tratado: ${e}`); // notificacion en caso de error desconocido
@@ -262,7 +252,7 @@ const logout = () => {
   const username = authStore.getUsuario?.nombre;
   authStore.logout();
   NotifySucess(`Hasta pronto ${username}!`);
-  goTo(router, "inicio");
+  goTo(router, 'inicio');
 };
 </script>
 

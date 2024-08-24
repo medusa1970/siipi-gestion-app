@@ -7,7 +7,6 @@ import type {
   Problema
 } from '#gql';
 import localforage from 'localforage';
-import { apiAlmacen } from '@/modulos/almacen/API/almacen.api';
 import { useAuthStore } from '../main/useAuthStore';
 
 interface storeProps {
@@ -48,7 +47,9 @@ export const storeAlmacen = defineStore('almacen', {
     async useProducto(id: string): Promise<Producto> {
       if (!this.producto || id !== this.producto._id) {
         try {
-          this.producto = await api.buscarProducto_basico(id);
+          this.producto = await buscarUno(GqlBuscarProductos_basico, {
+            busqueda: id
+          });
         } catch (err) {
           errFailback(err);
         }
@@ -65,10 +66,9 @@ export const storeAlmacen = defineStore('almacen', {
       productos = (await localforage.getItem('productos')) as Producto[];
       if (!productos || actualizarDB) {
         try {
-          productos = await api.buscarProductos_basico(
-            {},
-            { sort: '-_modificado -_creado', loading: true }
-          );
+          productos = await buscarVarios(GqlBuscarProductos_basico, {
+            opciones: { sort: '-_modificado -_creado' }
+          });
           await localforage.setItem('productos', productos);
         } catch (err) {
           errFailback(err);
@@ -88,7 +88,10 @@ export const storeAlmacen = defineStore('almacen', {
     async getCategorias(id: string = null): Promise<Categoria> {
       if (this.categoriaArbol === null) {
         try {
-          this.categoriaArbol = await apiAlmacen.buscarArbolCategoriasRaiz();
+          this.categoriaArbol = await buscarUno(GqlCategoriaArbol, {
+            busqueda: { nombre: 'CATEGORIA RAIZ' },
+            opciones: { limit: 0 }
+          });
         } catch (err) {
           errFailback(err);
           return null;
@@ -123,7 +126,9 @@ export const storeAlmacen = defineStore('almacen', {
     async getMarcas(): Promise<Marca[]> {
       if (this.marcas == null) {
         try {
-          this.marcas = await api.buscarMarcas({}, { sort: 'nombre' });
+          this.marcas = await buscarVarios(GqlBuscarMarcas, {
+            opciones: { sort: 'nombre' }
+          });
           return this.marcas;
         } catch (err) {
           errFailback(err);
@@ -143,10 +148,10 @@ export const storeAlmacen = defineStore('almacen', {
     async getProveedores(): Promise<Entidad[]> {
       if (this.proveedores == null) {
         try {
-          this.proveedores = await api.buscarEntidades_basico(
-            { tipo: ['PROVEEDOR'] },
-            { sort: 'nombre' }
-          );
+          this.proveedores = await buscarVarios(GqlBuscarEntidades_basico, {
+            busqueda: { tipo: ['PROVEEDOR'] },
+            opciones: { sort: 'nombre' }
+          });
           return this.proveedores;
         } catch (err) {
           errFailback(err);
@@ -166,7 +171,7 @@ export const storeAlmacen = defineStore('almacen', {
     async getMedidas(): Promise<Medida[]> {
       if (this.medidas == null) {
         try {
-          this.medidas = await api.buscarMedidas({});
+          this.medidas = await buscarVarios(GqlBuscarMedidas);
           return this.medidas;
         } catch (err) {
           errFailback(err);
@@ -186,9 +191,9 @@ export const storeAlmacen = defineStore('almacen', {
     async getEntidad(): Promise<Entidad> {
       if (this.entidad == null) {
         try {
-          this.entidad = await api.buscarEntidad_bloques(
-            useAuthStore().negocio._id
-          );
+          this.entidad = await buscarUno(GqlBuscarEntidades_bloques, {
+            busqueda: useAuthStore().negocio._id
+          });
           return this.entidad;
         } catch (err) {
           errFailback(err);
@@ -208,9 +213,9 @@ export const storeAlmacen = defineStore('almacen', {
     async getProblemas(): Promise<Problema[]> {
       if (!this.problemas) {
         try {
-          const entidad = await api.buscarEntidad_problemas(
-            useAuthStore().getNegocio._id
-          );
+          const entidad = await buscarUno(GqlBuscarEntidades_problemas, {
+            busqueda: useAuthStore().getNegocio._id
+          });
           this.problemas = entidad.problemas;
           // this.problemas = entidad.problemas.sort((p1, p2) =>
           //   p1._modificado > p2._modificado ? -1 : 1,

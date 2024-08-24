@@ -115,7 +115,7 @@
 
 <script setup lang="ts">
 import { useEmpresa } from '~/modulos/empresa/empresa.composable';
-const { store, authStore, apiEmpresa } = useEmpresa();
+const { store, authStore } = useEmpresa();
 const $q = useQuasar();
 
 const props = withDefaults(
@@ -166,11 +166,11 @@ const formSubmit = async () => {
     persistent: true
   }).onOk(async () => {
     try {
-      const transaccion = await apiEmpresa.crearTransaccionConLimite(
-        estado.dataForm
-      );
-      const validado = await apiEmpresa.validarTransaccion({
-        _id: transaccion._id
+      const transaccion = await crearUno(GqlCrearTransaccionConLimite, {
+        datos: estado.dataForm
+      });
+      await modificarUno(GqlValidarTransaccion, {
+        busqueda: transaccion._id
       });
       emits('pagoRecibido', transaccion);
     } catch (err) {

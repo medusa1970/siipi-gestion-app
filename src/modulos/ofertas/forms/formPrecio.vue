@@ -150,21 +150,27 @@ const formSubmit = async () => {
   try {
     // si es una oferta
     if (props.edicion && props.edicion.hasOwnProperty('_esOferta')) {
-      const oferta = await api.modificarOferta(store.oferta._id, {
-        precioConFactura: estado.dataForm.precioConFactura,
-        precioSinFactura: estado.dataForm.precioSinFactura
+      const oferta = await modificarUno(GqlModificarOfertas, {
+        busqueda: store.oferta._id,
+        datos: {
+          precioConFactura: estado.dataForm.precioConFactura,
+          precioSinFactura: estado.dataForm.precioSinFactura
+        }
       });
       emits('modificarObjeto', null, oferta);
     }
 
     // si edicion de precio por mayor
     else if (props.edicion) {
-      const oferta = await api.modificarOferta(store.oferta._id, {
-        preciosPorMayor: {
-          buscar: {
-            _id: [props.edicion._id]
-          },
-          modificar: estado.dataForm
+      const oferta = await modificarUno(GqlModificarOfertas, {
+        busqueda: store.oferta._id,
+        datos: {
+          preciosPorMayor: {
+            buscar: {
+              _id: [props.edicion._id]
+            },
+            modificar: estado.dataForm
+          }
         }
       });
       emits(
@@ -176,9 +182,12 @@ const formSubmit = async () => {
 
     // es creacion de precio por mayor
     else {
-      const oferta = await api.modificarOferta(store.oferta._id, {
-        preciosPorMayor: {
-          agregar: estado.dataForm
+      const oferta = await modificarUno(GqlModificarOfertas, {
+        busqueda: store.oferta._id,
+        datos: {
+          preciosPorMayor: {
+            agregar: estado.dataForm
+          }
         }
       });
       emits('crearObjeto', ultimo(oferta.preciosPorMayor), oferta);

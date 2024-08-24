@@ -31,6 +31,7 @@
     "@nuxt/config": "^2.17.3",
     "@pinia/nuxt": "^0.5.1",
     "@quasar/extras": "^1.16.8",
+    "decimal.js": "^10.4.3",
     "localforage": "^1.10.0",
     "nuxt-graphql-client": "^0.2.31",
     "pinia": "^2.1.7",

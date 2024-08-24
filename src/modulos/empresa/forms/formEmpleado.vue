@@ -65,7 +65,7 @@ const selectPersona = computed(() =>
 );
 onMounted(async () => {
   try {
-    personas.value = await api.buscarPersonas({});
+    personas.value = await buscarVarios(GqlBuscarPersonas);
   } catch (err) {
     errFailback(err);
     return;
@@ -75,14 +75,14 @@ onMounted(async () => {
 // submision del formulario
 const formSubmit = async () => {
   try {
-    const entidad = await api.modificarEntidad_empleados(
-      authStore.getNegocio._id,
-      {
+    const entidad = await modificarUno(GqlModificarEntidades_empleados, {
+      busqueda: authStore.getNegocio._id,
+      datos: {
         empleados: {
           agregar: estado.dataForm
         }
       }
-    );
+    });
     emits('crearObjeto', ultimo(entidad.empleados), entidad);
   } catch (err) {
     if (isApiBadRequest(err, 'duplicado')) {

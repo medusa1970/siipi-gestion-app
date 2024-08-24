@@ -70,12 +70,15 @@ const formSubmit = async () => {
   try {
     // Modo edicion
     if (props.edicion) {
-      const medida = await api.modificarMedida(store.producto.medida._id, {
-        tipoEmpaques: {
-          buscar: {
-            _id: [props.edicion?._id]
-          },
-          modificar: estado.dataForm
+      const medida = await modificarUno(GqlModificarMedidas, {
+        busqueda: store.producto.medida._id,
+        datos: {
+          tipoEmpaques: {
+            buscar: {
+              _id: [props.edicion?._id]
+            },
+            modificar: estado.dataForm
+          }
         }
       });
       emits(
@@ -88,9 +91,12 @@ const formSubmit = async () => {
     // Modo creacion
     else {
       // lanzamos la consulta
-      const medida = await api.modificarMedida(store.producto.medida._id, {
-        tipoEmpaques: {
-          agregar: [estado.dataForm]
+      const medida = await modificarUno(GqlModificarMedidas, {
+        busqueda: store.producto.medida._id,
+        datos: {
+          tipoEmpaques: {
+            agregar: [estado.dataForm]
+          }
         }
       });
       emits('crearObjeto', ultimo(medida.tipoEmpaques), medida);

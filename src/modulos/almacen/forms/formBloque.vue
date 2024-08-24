@@ -39,9 +39,7 @@
 import type { Bloque } from '#gql';
 import { UrlToBase64Image } from '~/components/input/input.service';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
-const { store } = useAlmacen();
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-const authStore = useAuthStore();
+const { store, authStore } = useAlmacen();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -99,9 +97,9 @@ const formSubmit = async () => {
   }
   try {
     if (props.edicion) {
-      const entidad = await api.modificarEntidad_bloques(
-        authStore.negocio._id,
-        {
+      const entidad = await modificarUno(GqlModificarEntidades_bloques, {
+        busqueda: authStore.negocio._id,
+        datos: {
           bloques: {
             buscar: {
               _id: [props.edicion._id]
@@ -109,21 +107,22 @@ const formSubmit = async () => {
             modificar: estado.dataForm
           }
         }
-      );
+      });
+
       emits(
         'modificarObjeto',
         entidad.bloques.find(v => v._id === props.edicion?._id),
         entidad
       );
     } else {
-      const entidad = await api.modificarEntidad_bloques(
-        authStore.negocio._id,
-        {
+      const entidad = await modificarUno(GqlModificarEntidades_bloques, {
+        busqueda: authStore.negocio._id,
+        datos: {
           bloques: {
             agregar: [estado.dataForm]
           }
         }
-      );
+      });
       emits('crearObjeto', ultimo(entidad.bloques), entidad);
     }
   } catch (err) {

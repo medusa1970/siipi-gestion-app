@@ -45,12 +45,10 @@ import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable'
 import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
 import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { permisosCatalogos } from '~/modulos/ofertas/paginas/catalogos/catalogos.composable';
-import { permisosOfertas } from '~/modulos/ofertas/paginas/ofertas/ofertas.composable';
+import { catalogoIds } from '~/modulos/ofertas/oferta.definicion';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
-import { apiPedido } from '@/modulos/pedidos/API/pedidos.api';
 
 const props = defineProps({
   titulo: String,
@@ -108,12 +106,7 @@ const menu = [
         permisos: permisosMedidas,
         activar: ['medida']
       },
-      {
-        icon: 'hail',
-        label: 'Proveedores',
-        to: 'proveedores',
-        permisos: permisosProveedores
-      },
+
       {
         icon: 'warning',
         label: 'Problemas de inventario',
@@ -124,52 +117,87 @@ const menu = [
   },
   {
     icon: 'menu_book',
-    label: 'Ofertas',
+    label: 'Puntos',
     key: 'ofertas',
     subMenu: [
       {
-        icon: 'menu_book',
-        label: 'Ofertas Puntos',
-        to: 'ofertas',
-        params: { id: '75a4475e446a5885b05739c4' },
-        permisos: permisosOfertas,
-        activar: ['ofertas']
+        icon: 'shopping_cart',
+        label: 'Pedidos',
+        to: 'listaPedidos'
       },
       {
         icon: 'menu_book',
-        label: 'Ofertas Cathering',
+        label: 'Ofertas',
         to: 'ofertas',
-        params: { id: '85b4475e446a5885b05739c5' },
-        permisos: permisosOfertas,
-        activar: ['ofertas']
+        params: { id: catalogoIds['puntos'] }
       },
       {
-        icon: 'category',
-        label: 'Catalogos',
-        to: 'catalogos',
-        permisos: permisosCatalogos
+        icon: 'bi-cart-plus',
+        label: 'Catalogo',
+        to: 'catalogo',
+        params: { id: catalogoIds['puntos'] }
       }
     ]
   },
   {
     icon: 'shopping_cart',
-    label: 'Pedidos',
-    key: 'pedidos',
+    label: 'Proveedores',
+    key: 'AreaProveedores',
     subMenu: [
       {
-        icon: 'shopping_cart',
-        label: 'lista Pedidos',
-        to: 'listaPedidos'
+        icon: 'bi-cart-plus',
+        label: 'Recepcion',
+        to: 'pedidoRecibir',
+        params: { area: 'proveedores' }
+      },
+      {
+        icon: 'menu_book',
+        label: 'Ofertas',
+        to: 'ofertas',
+        params: { id: catalogoIds['proveedores'] }
       },
       {
         icon: 'bi-cart-plus',
-        label: 'recibir pedidos',
-        to: 'recibirPedidos'
+        label: 'Catalogo',
+        to: 'catalogo',
+        params: { id: catalogoIds['proveedores'] }
       },
       {
-        icon: 'bi-cart-dash',
-        label: 'despachar pedidos',
-        to: 'despacharPedidos'
+        icon: 'hail',
+        label: 'Proveedores',
+        to: 'proveedores',
+        permisos: permisosProveedores
+      }
+    ]
+  },
+  {
+    icon: 'shopping_cart',
+    label: 'Area Panaderia',
+    key: 'AreaPanaderia',
+    subMenu: [
+      {
+        icon: 'bi-cart-plus',
+        label: 'Recepcion',
+        to: 'pedidoRecibir',
+        params: { area: 'panaderia' }
+      },
+      {
+        icon: 'bi-cart-plus',
+        label: 'Despacho',
+        to: 'pedidoDespachar',
+        params: { area: 'panaderia' }
+      },
+      {
+        icon: 'menu_book',
+        label: 'Ofertas',
+        to: 'ofertas',
+        params: { id: catalogoIds['panaderia'] }
+      },
+      {
+        icon: 'bi-cart-plus',
+        label: 'Catalogo',
+        to: 'catalogo',
+        params: { id: catalogoIds['panaderia'] }
       }
     ]
   },
@@ -195,7 +223,7 @@ const menu = [
     ]
   }
 ];
-
+/* 
 const realizarPedido = async () => {
   const items = pedidoStore.listaPedido.map(p => ({
     ofertaId: p.id,
@@ -210,25 +238,18 @@ const realizarPedido = async () => {
   }).onOk(async () => {
     if (pedidoStore.isDespachar == false) {
       // RECIBE PEDIDO
-      const pedido = await apiPedido.pedidoIniciar(
-        {
+      const pedido = await crearUno(GqlIniciarPedido, {
+        datos: {
           comprador: authStore.negocio._id,
           vendedor: pedidoStore.area._id,
           items
-        },
-        {},
-        authStore.token
-      );
+        }
+      });
 
       if (pedido) {
-        await apiPedido.pedidoConfirmarItems(
-          {
-            _id: pedido._id
-          },
-          authStore.token
-        );
-        await apiPedido.pedido_aceptar(pedido._id, authStore.token);
-        await apiPedido.pedido_preparar(pedido._id, authStore.token);
+        await apiPedido.pedidoConfirmarItems({ _id: pedido._id });
+        await apiPedido.pedido_aceptar(pedido._id);
+        await apiPedido.pedido_preparar(pedido._id);
         await apiPedido.pedido_recibirOfertas(pedido._id);
         NotifySucessCenter('Pedido recibido con éxito');
         // router.push('/cathering/pedidos/listaPedidos');
@@ -238,25 +259,18 @@ const realizarPedido = async () => {
       // console.log(pedidoStore.listaPedido);
     } else {
       // SE DESPACHA PRODUCTO
-      const pedido = await apiPedido.pedidoIniciar(
-        {
+      const pedido = await crearUno(GqlIniciarPedido, {
+        datos: {
           comprador: pedidoStore.area._id,
           vendedor: authStore.negocio._id,
           items
-        },
-        {},
-        authStore.token
-      );
+        }
+      });
 
       if (pedido) {
-        await apiPedido.pedidoConfirmarItems(
-          {
-            _id: pedido._id
-          },
-          authStore.token
-        );
-        await apiPedido.pedido_aceptar(pedido._id, authStore.token);
-        await apiPedido.pedido_preparar(pedido._id, authStore.token);
+        await apiPedido.pedidoConfirmarItems({ _id: pedido._id });
+        await apiPedido.pedido_aceptar(pedido._id);
+        await apiPedido.pedido_preparar(pedido._id);
         await apiPedido.pedido_recibirOfertas(pedido._id);
         NotifySucessCenter('Pedido despachado con éxito');
         // router.push('/cathering/pedidos/listaPedidos');
@@ -264,5 +278,5 @@ const realizarPedido = async () => {
       } else NotifyError('Error al realizar el pedido');
     }
   });
-};
+}; */
 </script>

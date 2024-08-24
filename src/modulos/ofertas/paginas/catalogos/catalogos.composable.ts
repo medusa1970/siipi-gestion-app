@@ -17,7 +17,7 @@ const init_catalogoCategoria = {
 
 export const useCatalogos = () => {
   const $q = useQuasar();
-  const { store, authStore, estadoOfertas, router } = useOfertas();
+  const { store, authStore, router } = useOfertas();
   if (!authStore.autorizar(permisosCatalogos)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
@@ -39,16 +39,20 @@ export const useCatalogos = () => {
   const crearCatalogoArbol = async (catalogoID: string) => {
     let catalogoCreado;
     try {
-      catalogoCreado = await api.crearCatalogo({
-        nombre: estado.datos_catalogoCategoria.nombre,
-        pariente: estado.datos_catalogoCategoria._id
+      catalogoCreado = await crearUno(GqlCrearCatalogos, {
+        datos: {
+          nombre: estado.datos_catalogoCategoria.nombre,
+          pariente: estado.datos_catalogoCategoria._id
+        }
       });
       if (!catalogoCreado) throw 'No se pudo crear el catalogo';
     } catch (err) {
       errFailback(err);
     }
-    estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
-    NotifySucessCenter('Categoria creada correctamente');
+    NotifySucessCenter('Catalogo creado correctamente');
+    estado.catalogoSeleccionado = await store.getCatalogoArbol(
+      estado.catalogoSeleccionado._id
+    );
     estado.datos_catalogoCategoria = clone(init_catalogoCategoria);
     estado.modal.show_agregarCategoriaCatalogo = false;
   };
@@ -62,16 +66,16 @@ export const useCatalogos = () => {
   const modificarCatalogoArbol = async (catalogoID: string) => {
     let catalogoModificado;
     try {
-      catalogoModificado = await api.modificarCatalogo(
-        { _id: [estado.datos_catalogoCategoria._id] },
-        { nombre: estado.datos_catalogoCategoria.nombre }
-      );
+      catalogoModificado = await modificarUno(GqlModificarCatalogos, {
+        busqueda: { _id: [estado.datos_catalogoCategoria._id] },
+        datos: { nombre: estado.datos_catalogoCategoria.nombre }
+      });
       if (!catalogoModificado) throw 'No se pudo modificar el catalogo';
     } catch (err) {
       errFailback(err);
     }
     NotifySucessCenter('Catalogo modificado correctamente');
-    estado.catalogoSeleccionado = await store.refreshCatalogoArbol(catalogoID);
+    estado.catalogoSeleccionado = await store.getCatalogoArbol(catalogoID);
     estado.modal.show_modificarCategoriaCatalogo = false;
   };
 
@@ -87,16 +91,12 @@ export const useCatalogos = () => {
       persistent: true
     }).onOk(async () => {
       try {
-        await api.borrarCatalogo({
-          _id: [row._id]
-        });
+        await borrarVarios(GqlBorrarCatalogos, { busqueda: row._id });
       } catch (err) {
         errFailback(err);
       }
       NotifySucessCenter('Catalogo eliminada correctamente');
-      estado.catalogoSeleccionado = await store.refreshCatalogoArbol(
-        catalogoID
-      );
+      estado.catalogoSeleccionado = await store.getCatalogoArbol(catalogoID);
     });
   };
 

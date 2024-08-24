@@ -30,7 +30,14 @@ export const useStock = () => {
    * obtenerTodoStock
    */
   const obtenerTodoStock = async () => {
-    const entidad = await api.buscarEntidad_almacen(authStore.getNegocio._id);
+    let entidad;
+    try {
+      entidad = await buscarUno(GqlBuscarEntidades_almacen, {
+        busqueda: authStore.getNegocio._id
+      });
+    } catch (err) {
+      errFailback(err);
+    }
     estado.stocks = entidad.almacen.map((stock: any) => {
       // inicializacion res para este stock
       const res = {

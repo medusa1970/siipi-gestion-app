@@ -1,6 +1,5 @@
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
-import { apiPedido } from '../../API/pedidos.api';
 
 export const usePuntos = () => {
   const authStore = useAuthStore();
@@ -16,13 +15,16 @@ export const usePuntos = () => {
   });
 
   const buscarPedidos = async () => {
-    const listaPedidos = await api.buscarPedidos(
-      { vendedor: [authStore.negocio._id] },
-      { loading: true },
-      {},
-      authStore.token
-    );
-
+    let listaPedidos;
+    try {
+      listaPedidos = await buscarVarios(GqlBuscarPedidos, {
+        busqueda: {
+          vendedor: [authStore.negocio._id]
+        }
+      });
+    } catch (err) {
+      errFailback(err);
+    }
     const pedidos = listaPedidos.reduce(
       (accumulator: any, pedido: any) => {
         const allAccepted = pedido.items.every((item: any) =>
@@ -53,8 +55,6 @@ export const usePuntos = () => {
     pedidoStore.pedidosSinAceptar = pedidos.noAceptados;
     pedidoStore.pedidosAceptados = pedidos.aceptados;
     pedidoStore.pedidosRecibidos = pedidos.recibidos;
-
-    // hideLoading();
 
     const diaDeLaSemana = new Date().getDay();
     const indice = diaDeLaSemana === 0 ? 6 : diaDeLaSemana - 1;

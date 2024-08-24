@@ -10,7 +10,7 @@ export const permisosTesoreria = ['ADMINISTRACION'];
  * Composable
  */
 export const useTesoreriaPagos = () => {
-  const { store, authStore, apiEmpresa, router, useEntidad2 } = useEmpresa();
+  const { store, authStore, router, useEntidad2 } = useEmpresa();
   if (!authStore.autorizar(permisosTesoreria)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
@@ -31,12 +31,12 @@ export const useTesoreriaPagos = () => {
 
   const refreshTransacciones = async () => {
     try {
-      estado.transacciones = await api.buscarTransacciones(
-        {
+      estado.transacciones = await buscarVarios(GqlBuscarTransacciones, {
+        busqueda: {
           comprador: [store.entidad._id]
         },
-        { sort: '-_creado' }
-      );
+        opciones: { sort: '-_creado' }
+      });
     } catch (err) {
       errFailback(err);
     }
@@ -47,7 +47,9 @@ export const useTesoreriaPagos = () => {
     async val => {
       let pedidos;
       try {
-        pedidos = await apiEmpresa.pedidosPorPagarEntidad(val._id);
+        pedidos = await buscarVarios(GqlPedidosPorPagarEntidad, {
+          entidadId: val._id
+        });
       } catch (err) {
         errFailback(err);
       }

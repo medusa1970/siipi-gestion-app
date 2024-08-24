@@ -4,7 +4,7 @@ import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import { useQuasar } from 'quasar';
 
 export const useProductoMedidas = () => {
-  const { store, authStore, estadoAlmacen, router } = useAlmacen();
+  const { store, authStore, router } = useAlmacen();
   const $q = useQuasar();
 
   const estado = reactive({
@@ -31,8 +31,11 @@ export const useProductoMedidas = () => {
   const formSubmit = async () => {
     let producto;
     try {
-      producto = await api.modificarProducto_basico(store.producto._id, {
-        medida: estado.medidaId
+      producto = await modificarUno(GqlModificarProductos_basico, {
+        busqueda: store.producto._id,
+        datos: {
+          medida: estado.medidaId
+        }
       });
     } catch (err) {
       errFailback(err);
@@ -62,14 +65,16 @@ export const useProductoMedidas = () => {
       persistent: true
     }).onOk(async () => {
       try {
-        const productoEmpaque = await api.modificarProducto_basico(
-          store.producto._id,
+        const productoEmpaque = await modificarUno(
+          GqlModificarProductos_basico,
           {
-            empaques: {
-              borrar: { _id: empaque._id }
+            busqueda: store.producto._id,
+            datos: {
+              empaques: {
+                borrar: { _id: empaque._id }
+              }
             }
-          },
-          { loading: true }
+          }
         );
         if (productoEmpaque) {
           NotifySucessCenter('Empaque borrado correctamente');

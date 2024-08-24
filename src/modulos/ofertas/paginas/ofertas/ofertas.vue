@@ -295,13 +295,6 @@ onMounted(async () => {
   estado.catalogoSeleccionado = await store.getCatalogoArbol(
     params.id as string
   );
-  if (!estado.catalogoSeleccionado) {
-    goTo(router, '404');
-  }
-  store.catalogoRaiz = {
-    id: params.id as string,
-    nombre: estado.catalogoSeleccionado.nombre
-  };
 
   // filtrar segun el catalogo en param url
   const f = cat => {

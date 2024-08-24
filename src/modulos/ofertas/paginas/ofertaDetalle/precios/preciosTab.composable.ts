@@ -1,10 +1,10 @@
 import type { Precio } from '#gql';
-import { IdCatalogoProveedores } from '~/modulos/ofertas/oferta.definicion';
+import { catalogoIds } from '~/modulos/ofertas/oferta.definicion';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const usePrecioTab = () => {
   const $q = useQuasar();
-  const { store, authStore, estadoOfertas, router } = useOfertas();
+  const { store } = useOfertas();
 
   const estado = reactive({
     precios: [] as any[],
@@ -22,7 +22,7 @@ export const usePrecioTab = () => {
     // busquemos precios de proveedores
     const ofertasProveedor = store.ofertas.filter(oferta => {
       // debe estar en el catalogo proveedor
-      if (oferta.catalogo._id !== IdCatalogoProveedores) {
+      if (oferta.catalogo._id !== catalogoIds.proveedores) {
         return false;
       }
       // debe tener un y solo un ingrediente
@@ -58,15 +58,14 @@ export const usePrecioTab = () => {
     }).onOk(async () => {
       let oferta;
       try {
-        oferta = await api.modificarOferta(
-          store.oferta._id,
-          {
+        oferta = await modificarUno(GqlModificarOfertas, {
+          busqueda: store.oferta._id,
+          datos: {
             preciosPorMayor: {
               borrar: { _id: precio._id }
             }
-          },
-          { loading: true }
-        );
+          }
+        });
       } catch (err) {
         errFailback(err);
         return;

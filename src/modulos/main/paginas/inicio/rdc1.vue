@@ -29,8 +29,6 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
-
 const correo = reactiveInput();
 
 /**
@@ -38,7 +36,7 @@ const correo = reactiveInput();
  */
 const formSubmit = async datos => {
   try {
-    const res = await apiAuth.pedirRDC(correo.value);
+    await buscarUno(GqlAuthPedirRDC, { correo: correo.value });
   } catch (err) {
     if (isApiNotFound(err, 'correo')) {
       correo.error = 'Email desconocido';

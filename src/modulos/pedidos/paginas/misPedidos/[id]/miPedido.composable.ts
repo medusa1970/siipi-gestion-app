@@ -1,4 +1,3 @@
-import { apiPedido } from '~/modulos/pedidos/API/pedidos.api';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
 
 export const useMiPedido = () => {
@@ -25,11 +24,14 @@ export const useMiPedido = () => {
   const authStore = useAuthStore();
 
   const buscarPedidoID = async (pedidoID: string) => {
-    const pedido = await apiPedido.pedido_buscarUno(
-      { _id: [pedidoID] }, //@ts-expect-error
-      useGqlToken(authStore.token)
-    );
-
+    let pedido;
+    try {
+      pedido = await buscarUno(GqlBuscarPedidos, {
+        busqueda: pedidoID
+      });
+    } catch (err) {
+      errFailback(err);
+    }
     estado.pedidoDetalle = pedido; //@ts-ignore
     estado.precioGeneral = pedido.items.reduce((total, item) => {
       //@ts-ignore
@@ -71,23 +73,30 @@ export const useMiPedido = () => {
   const recibirPedido = async () => {
     // INPUT PASSWORD CHOFER
     const password = 'choferSiipi123';
-
-    if (estado.passwordChofer == password) {
-      const pedidoRecibido = await apiPedido.pedido_recibirOfertas(
-        estado.pedidoID,
-        authStore.token
-      );
-      if (pedidoRecibido) {
-        NotifySucessCenter('Pedido recibido');
-        estado.modal.isShowPassword = false;
-        estado.passwordChofer = '';
-        router.push('/punto/misPedidos');
-      } else NotifyError('Error al recibir pedido');
-    } else {
+    if (estado.passwordChofer !== password) {
       NotifyError('Contraseña incorrecta');
       estado.modal.isShowPassword = false;
       estado.passwordChofer = '';
+      return false;
     }
+
+    try {
+      const pedidoRecibido = await modificarUno(GqlCambiarEstadoItems, {
+        busqueda: estado.pedidoID,
+        estado: {
+          estado: 'recibido'
+        }
+      });
+    } catch (err) {
+      NotifyError('Error al recibir pedido');
+      errFailback(err);
+      return false;
+    }
+
+    NotifySucessCenter('Pedido recibido');
+    estado.modal.isShowPassword = false;
+    estado.passwordChofer = '';
+    router.push('/punto/misPedidos');
   };
 
   const ajustarItem = async (row: any) => {
@@ -96,18 +105,20 @@ export const useMiPedido = () => {
     estado.pedido_item.cantidad = row.cantidad;
   };
   const ajustarItemGuardar = async () => {
-    route.params.id;
-    const pedidoAjustarItem = await apiPedido.pedido_ajustar(
-      //@ts-ignore
-      route.params.id,
-      estado.pedido_item.id,
-      estado.pedido_item.cantidad,
-      estado.pedido_item.comentario
-    );
-    if (pedidoAjustarItem) {
-      NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
-      buscarPedidoID(route.params.id);
-    } else NotifyError('Error al ajustar cantidad');
+    try {
+      await buscarUno(GqlAjustarItem, {
+        busqueda: route.params.id,
+        itemId: estado.pedido_item.id,
+        nuevaCantidad: estado.pedido_item.cantidad,
+        comentario: estado.pedido_item.comentario
+      });
+    } catch (err) {
+      NotifyError('Error al ajustar cantidad');
+      errFailback(err);
+      return;
+    }
+    NotifySucessCenter('Cantidad ajustada'); //@ts-ignore
+    buscarPedidoID(route.params.id);
     estado.modal.isAjustarItem = false;
   };
   return {

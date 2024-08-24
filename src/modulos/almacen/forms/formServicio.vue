@@ -240,12 +240,15 @@ const formSubmit = async () => {
     // Modo edicion
     if (props.edicion != null) {
       data.preciosPorMayor = { reemplazar: data.preciosPorMayor };
-      const proveedor = await api.modificarEntidad_servicios(proveedorId, {
-        servicios: {
-          buscar: {
-            _id: [props.edicion._id]
-          },
-          modificar: data
+      const proveedor = await modificarUno(GqlModificarEntidades_servicios, {
+        busqueda: proveedorId,
+        datos: {
+          servicios: {
+            buscar: {
+              _id: [props.edicion._id]
+            },
+            modificar: data
+          }
         }
       });
       emits(
@@ -256,9 +259,12 @@ const formSubmit = async () => {
     }
     // Modo creacion
     else {
-      const proveedor = await api.modificarEntidad_servicios(proveedorId, {
-        servicios: {
-          agregar: data
+      const proveedor = await modificarUno(GqlModificarEntidades_servicios, {
+        busqueda: proveedorId,
+        datos: {
+          servicios: {
+            agregar: data
+          }
         }
       });
       emits('crearObjeto', ultimo(proveedor.servicios), proveedor);

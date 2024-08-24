@@ -122,12 +122,15 @@ onMounted(async () => {
 const formSubmit = async () => {
   try {
     if (props.edicion) {
-      const producto = await api.modificarProducto_basico(store.producto._id, {
-        variedades: {
-          buscar: {
-            _id: [props.edicion._id]
-          },
-          modificar: estado.dataForm
+      const producto = await modificarUno(GqlModificarProductos_basico, {
+        busqueda: store.producto._id,
+        datos: {
+          variedades: {
+            buscar: {
+              _id: [props.edicion._id]
+            },
+            modificar: estado.dataForm
+          }
         }
       });
       emits(
@@ -136,9 +139,12 @@ const formSubmit = async () => {
         producto
       );
     } else {
-      const producto = await api.modificarProducto_basico(store.producto._id, {
-        variedades: {
-          agregar: [estado.dataForm]
+      const producto = await modificarUno(GqlModificarProductos_basico, {
+        busqueda: store.producto._id,
+        datos: {
+          variedades: {
+            agregar: [estado.dataForm]
+          }
         }
       });
       emits('crearObjeto', ultimo(producto.variedades), producto);

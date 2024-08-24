@@ -389,10 +389,16 @@ onMounted(async () => {
     // @ts-ignore
     producto.numOfertas = ofertas ? ofertas.length : '-';
   }
-  estado.filtros.marcaOpciones = (await api.buscarMarcas({})).map(marca => ({
-    value: marca._id,
-    label: marca.nombre
-  }));
+  try {
+    estado.filtros.marcaOpciones = (await buscarVarios(GqlBuscarMarcas)).map(
+      marca => ({
+        value: marca._id,
+        label: marca.nombre
+      })
+    );
+  } catch (err) {
+    errFailback(err);
+  }
   store.producto = null;
 });
 

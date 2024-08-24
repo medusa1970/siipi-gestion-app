@@ -1,7 +1,6 @@
 import type { Entidad } from '#gql';
 import { storeEmpresa } from './empresa.store';
 import { useAuthStore } from '@/modulos/main/useAuthStore';
-import { apiEmpresa } from '@/modulos/empresa/API/empresa.api';
 
 export const useEmpresa = () => {
   const router = useRouter();
@@ -12,7 +11,9 @@ export const useEmpresa = () => {
   const useEntidad2 = async (id): Promise<Entidad> => {
     if (!store.entidad || store.entidad._id !== id) {
       try {
-        store.entidad = await api.buscarEntidad_basico(id);
+        store.entidad = await buscarUno(GqlBuscarEntidades_basico, {
+          busqueda: id
+        });
       } catch (err) {
         errFailback(err);
       }
@@ -23,7 +24,6 @@ export const useEmpresa = () => {
   // exports
   return {
     estadoEmpresa,
-    apiEmpresa,
     store,
     authStore,
     router,

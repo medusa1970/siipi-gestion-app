@@ -1,4 +1,3 @@
-import { apiAuth } from '~/modulos/main/API/auth.api';
 import type { ConexionResponse, Empleado, Entidad, Persona } from '#gql';
 import localforage from 'localforage';
 
@@ -83,10 +82,18 @@ export const useAuthStore = defineStore('auth', {
     async login(usuario: string, contrasena: string) {
       let entidades: Entidad[];
       let loginResponse: ConexionResponse;
-
       try {
-        loginResponse = await apiAuth.login(usuario, contrasena);
-        entidades = await apiAuth.buscarEntidadesDeUsuario(loginResponse.token);
+        loginResponse = await buscarVarios(GqlAuthConectar, {
+          datos: {
+            usuario,
+            contrasena
+          }
+        });
+        entidades = await buscarVarios(
+          GqlAuthEntidadesUsuarioConectado,
+          {},
+          loginResponse.token
+        );
       } catch (err) {
         throw err;
       }
@@ -148,7 +155,11 @@ export const useAuthStore = defineStore('auth', {
       }
       try {
         const negocio = this.usuario.negocios[index];
-        const { token } = await apiAuth.cambiarEntidad(negocio._id, this.token);
+        const { token } = await buscarVarios(
+          GqlAuthCambiarEntidad,
+          { datos: { entidad: negocio._id } },
+          this.token
+        );
         this.$patch({
           token,
           negocio

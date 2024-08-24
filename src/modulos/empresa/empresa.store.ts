@@ -46,9 +46,9 @@ export const storeEmpresa = defineStore('empresa', {
     async useEntidad(): Promise<void> {
       if (!this.entidad || this.entidadId !== this.entidad._id) {
         try {
-          this.entidad = await api.buscarEntidad_basico(
-            this.entidadId as string
-          );
+          this.entidad = await buscarUno(GqlBuscarEntidades_basico, {
+            busqueda: this.entidadId as string
+          });
         } catch (err) {
           errFailback(err);
         }
@@ -70,9 +70,9 @@ export const storeEmpresa = defineStore('empresa', {
     async getEmpleados(): Promise<Empleado[]> {
       if (!this.empleados) {
         try {
-          const entidad = await api.buscarEntidad_empleados(
-            useAuthStore().getNegocio._id
-          );
+          const entidad = await buscarUno(GqlBuscarEntidades_empleados, {
+            busqueda: useAuthStore().getNegocio._id
+          });
           this.empleados = entidad.empleados;
         } catch (err) {
           errFailback(err);
@@ -98,10 +98,10 @@ export const storeEmpresa = defineStore('empresa', {
 
         // jalar todos los pedidos que se han hecho a esta entidad
         try {
-          pedidos = await api.buscarPedidos(
-            { vendedor: [useAuthStore().getNegocio._id] },
-            { sort: '-_creado' }
-          );
+          pedidos = await buscarVarios(GqlBuscarPedidos, {
+            busqueda: { vendedor: [useAuthStore().getNegocio._id] },
+            opciones: { sort: '-_creado' }
+          });
         } catch (err) {
           errFailback(err);
           return null;

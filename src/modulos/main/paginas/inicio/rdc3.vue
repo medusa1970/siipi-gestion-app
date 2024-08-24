@@ -35,7 +35,6 @@
 
 <script setup>
 const emits = defineEmits(['go']);
-import { apiAuth } from '~/modulos/main/API/auth.api';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
 

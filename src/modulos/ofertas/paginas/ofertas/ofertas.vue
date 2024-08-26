@@ -85,10 +85,12 @@
           >
         </h1>
         <div class="flex" v-if="row.ingredientes?.length > 0">
-          <div v-for="ingrediente in row.ingredientes" :key="ingrediente._id">
+          <div v-for="ingrediente in row.ingredientes" :key="ingrediente?._id">
             <q-badge color="darkblue" class="mr-1 mb-1 lowercase">
-              {{ ingrediente.producto.nombre }} /
-              {{ ingrediente.marca ? ingrediente.marca?.nombre : 'Sin marca' }}
+              {{ ingrediente?.producto?.nombre }} /
+              {{
+                ingrediente?.marca ? ingrediente?.marca?.nombre : 'Sin marca'
+              }}
             </q-badge>
           </div>
         </div>
@@ -280,7 +282,13 @@ const rowsParaMostrar = computed(() => {
     // busqueda textual
     if (estado.filtros.buscar) {
       const regex = crearRegex(estado.filtros.buscar);
-      if (!regex.test(oferta._id + sinImportarAcentos(oferta.nombre)))
+      if (
+        !regex.test(
+          oferta._id +
+            oferta.ingredientes[0]?.producto?._id +
+            sinImportarAcentos(oferta.nombre)
+        )
+      )
         return false;
     }
 

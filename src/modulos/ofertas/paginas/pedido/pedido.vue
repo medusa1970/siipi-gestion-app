@@ -21,7 +21,7 @@ const catalogo = ref(null);
 onMounted(async () => {
   try {
     loadingAsync(async () => {
-      catalogo.value = await buscarUno(GqlEntidadLeerMenu, {
+      catalogo.value = await buscarUno(GqlEntidadLeerMenuCompleto, {
         busqueda: authStore.negocio._id,
         busquedaMenu: {}
       });

@@ -258,8 +258,7 @@ const formSubmit = async () => {
       });
       emits(
         'modificarObjeto',
-        proveedor.servicios.find(s => s._id === props.edicion._id),
-        proveedor
+        proveedor.servicios.find(s => s._id === props.edicion._id)
       );
     }
     // Modo creacion

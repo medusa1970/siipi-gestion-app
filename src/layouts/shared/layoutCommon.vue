@@ -5,11 +5,11 @@
       elevated
       :class="[
         'text-white ',
-        tipo === 'punto' && 'bg-orange-600',
-        tipo === 'cathering' && 'bg-green-700'
+        tipo === 'punto' && 'bg-green',
+        tipo === 'cathering' && 'bg-orange'
       ]"
       style="">
-      <q-toolbar class="">
+      <q-toolbar>
         <q-toolbar-title
           class="flex items-center justify-start"
           style="margin: 0 !important">
@@ -29,8 +29,8 @@
       <q-breadcrumbs
         :class="[
           'flex pl-4',
-          tipo === 'punto' && 'bg-green',
-          tipo === 'cathering' && 'bg-green-700'
+          tipo === 'punto' && 'bg-orange',
+          tipo === 'cathering' && 'bg-green'
         ]">
         <q-breadcrumbs-el
           class="text-white"
@@ -53,8 +53,8 @@
       style=""
       :class="[
         'text-white ',
-        tipo === 'punto' && 'bg-orange-600',
-        tipo === 'cathering' && 'bg-green-700'
+        tipo === 'punto' && 'bg-orange',
+        tipo === 'cathering' && 'bg-green'
       ]">
       <!-- drawer content -->
       <!-- PERFIL -->
@@ -276,8 +276,6 @@ import { useQuasar } from 'quasar';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
-import { storeOferta } from '@/modulos/ofertas/ofertas.store';
-import localforage from 'localforage';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -326,8 +324,4 @@ const borrarProductoCarrito = id => {
 .q-breadcrumbs a {
   color: white;
 }
-
-// .q-drawer.q-drawer--right {
-//   width: 340px !important;
-// }
 </style>

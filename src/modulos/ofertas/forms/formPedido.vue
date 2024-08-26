@@ -52,7 +52,7 @@
                     flat
                     dense
                     @click="
-                      imagen = oferta.imagen.cloudinaryUrl;
+                      imagen = oferta.imagen?.cloudinaryUrl;
                       modalImagen = true;
                     ">
                     <q-img

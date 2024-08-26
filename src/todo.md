@@ -1,7 +1,3 @@
-PRIORITAIRE AUJ
-
-- subir al main y averiguar los catalogos, tratar la base de datos actual
-
 SI YA LE TEMPS
 
 - averiguar fecha venc a la recepcion

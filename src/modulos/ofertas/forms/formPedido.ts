@@ -97,6 +97,7 @@ export const formPedido = () => {
     const precio = conFactura
       ? precioSeleccionado.precioConFactura
       : precioSeleccionado.precioSinFactura;
+    console.log(precioSeleccionado);
     return new Decimal(precio).mul(cantidad);
   };
   const showTree = computed(() => {

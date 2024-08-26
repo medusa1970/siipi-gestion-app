@@ -98,11 +98,6 @@ const menu = [
       {
         icon: 'add_shopping_cart',
         label: 'Pedido',
-        to: 'realizarPedido'
-      },
-      {
-        icon: 'add_shopping_cart',
-        label: 'Pedido',
         to: 'hacerPedido'
       },
       {
@@ -132,52 +127,4 @@ const menu = [
     ]
   }
 ];
-
-// const realizarPedido = async () => {
-//   const items = pedidoStore.listaPedido.map(p => ({
-//     ofertaId: p._id,
-//     cantidad: parseInt(p.cantidad)
-//   }));
-//   console.log(99, items);
-//   $q.dialog({
-//     message: '¿Estas seguro de aceptar este pedido?',
-//     cancel: true,
-//     persistent: true
-//   }).onOk(async () => {
-//     try {
-//       const pedido = await crearUno(GqlIniciarPedido, {
-//         datos: {
-//           comprador: authStore.negocio._id,
-//           vendedor: '65a5a9af08c1a906d83522d0',
-//           items
-//         }
-//       });
-
-//       // console.log(pedido);
-//       if (pedido) {
-//         const pedidoEstado = await apiPedido.pedidoConfirmarItems({
-//           _id: pedido._id
-//         });
-//         // console.log(pedidoEstado);
-//         NotifySucessCenter('Pedido realizado con éxito');
-//         pedidoStore.listaPedido = [];
-//       } else NotifyError('Error al realizar el pedido');
-//     } catch (err) {
-//       console.log(err);
-//       return;
-//     }
-//     // const pedido = await pedidoService.pedidoIniciar(
-//     //   storeAuth.negocioElegido._id,
-//     //   '65a5a9af08c1a906d83522d0',
-//     //   items,
-//     //   useGqlToken(storeAuth.token),
-//     // );
-//     // if (pedido) {
-//     //   await pedidoService.pedidoConfirmarItems(pedido._id);
-//     //   NotifySucessCenter('Pedido realizado con éxito');
-//     //   // router.push('/punto/pedidos/listaPedidos');
-//     //   pedidoStore.listaPedido = [];
-//     // } else NotifyError('Error al realizar el pedido');
-//   });
-// };
 </script>

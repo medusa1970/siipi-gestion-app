@@ -7,7 +7,7 @@ export const areaInfo = {
   },
   proveedores: {
     nombre: 'Proveedores',
-    catalogo: '19d7ce11ce1b515075092db1'
+    catalogo: '85a4475e446a5885b05739c4'
   },
   cathering: {
     id: '65a5a9af08c1a906d83522d0',

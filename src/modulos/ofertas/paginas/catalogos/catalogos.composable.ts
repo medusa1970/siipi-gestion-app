@@ -92,7 +92,9 @@ export const useCatalogos = () => {
       persistent: true
     }).onOk(async () => {
       try {
-        await borrarVarios(GqlBorrarCatalogos, { busqueda: row._id });
+        await borrarVarios(GqlBorrarCatalogos, {
+          busqueda: { _id: [row._id] }
+        });
       } catch (err) {
         errFailback(err);
       }

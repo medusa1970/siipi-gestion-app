@@ -63,40 +63,40 @@ if (authStore.getNegocio?.tipo !== 'CATHERING') {
 }
 
 const menuArea = [
-  'panaderia',
-  'reposteria',
-  'embotellados',
-  'envasados',
-  'siinple'
+  ['panaderia', 'bakery_dining'],
+  ['reposteria', 'cake'],
+  ['embotellados', 'liquor'],
+  ['envasados', 'takeout_dining'],
+  ['siinple', 'eco']
 ].map(area => {
   return {
-    icon: 'shopping_cart',
-    label: 'Area ' + area,
-    key: 'Area' + area,
+    icon: area[1],
+    label: 'Area ' + area[0],
+    key: 'Area' + area[0],
     subMenu: [
       {
-        icon: 'bi-cart-plus',
+        icon: 'input',
         label: 'Recepcion',
         to: 'pedidoRecibir',
-        params: { area }
+        params: { area: area[0] }
       },
       {
-        icon: 'bi-cart-plus',
+        icon: 'output',
         label: 'Despacho',
         to: 'pedidoDespachar',
-        params: { area }
+        params: { area: area[0] }
       },
       {
         icon: 'menu_book',
         label: 'Ofertas',
         to: 'ofertas',
-        params: { area }
+        params: { area: area[0] }
       },
       {
-        icon: 'bi-cart-plus',
+        icon: 'category',
         label: 'Catalogo',
         to: 'catalogos',
-        params: { area }
+        params: { area: area[0] }
       }
     ]
   };
@@ -179,12 +179,12 @@ const menu = [
     ]
   },
   {
-    icon: 'shopping_cart',
+    icon: 'hail',
     label: 'Proveedores',
     key: 'AreaProveedores',
     subMenu: [
       {
-        icon: 'bi-cart-plus',
+        icon: 'input',
         label: 'Recepcion',
         to: 'pedidoRecibir',
         params: { area: 'proveedores' }
@@ -232,60 +232,4 @@ const menu = [
     ]
   }
 ];
-/*
-const realizarPedido = async () => {
-  const items = pedidoStore.listaPedido.map(p => ({
-    ofertaId: p.id,
-    cantidad: parseInt(p.cantidad)
-  }));
-
-  $q.dialog({
-    // title: `Eliminar ${row.nombre}`,
-    message: '¿Estas seguro de aceptar este pedido?',
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    if (pedidoStore.isDespachar == false) {
-      // RECIBE PEDIDO
-      const pedido = await crearUno(GqlIniciarPedido, {
-        datos: {
-          comprador: authStore.negocio._id,
-          vendedor: pedidoStore.area._id,
-          items
-        }
-      });
-
-      if (pedido) {
-        await apiPedido.pedidoConfirmarItems({ _id: pedido._id });
-        await apiPedido.pedido_aceptar(pedido._id);
-        await apiPedido.pedido_preparar(pedido._id);
-        await apiPedido.pedido_recibirOfertas(pedido._id);
-        NotifySucessCenter('Pedido recibido con éxito');
-        // router.push('/cathering/pedidos/listaPedidos');
-        pedidoStore.listaPedido = [];
-      } else NotifyError('Error al realizar el pedido');
-
-      // console.log(pedidoStore.listaPedido);
-    } else {
-      // SE DESPACHA PRODUCTO
-      const pedido = await crearUno(GqlIniciarPedido, {
-        datos: {
-          comprador: pedidoStore.area._id,
-          vendedor: authStore.negocio._id,
-          items
-        }
-      });
-
-      if (pedido) {
-        await apiPedido.pedidoConfirmarItems({ _id: pedido._id });
-        await apiPedido.pedido_aceptar(pedido._id);
-        await apiPedido.pedido_preparar(pedido._id);
-        await apiPedido.pedido_recibirOfertas(pedido._id);
-        NotifySucessCenter('Pedido despachado con éxito');
-        // router.push('/cathering/pedidos/listaPedidos');
-        pedidoStore.listaPedido = [];
-      } else NotifyError('Error al realizar el pedido');
-    }
-  });
-}; */
 </script>

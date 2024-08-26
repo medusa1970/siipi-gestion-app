@@ -8,6 +8,7 @@ const hacerConsulta = async (
   tokenAlternativo: any = null
 ) => {
   const token = tokenAlternativo ?? useAuthStore().token;
+
   if (!params.opciones) {
     params.opciones = {};
   }
@@ -57,7 +58,7 @@ const hacerConsulta = async (
   }
   let resultado;
   try {
-    resultado = await consulta(params, token);
+    resultado = await consulta(params, useGqlToken(token));
     if (!resultado) {
       throw 'error resultado null';
     }

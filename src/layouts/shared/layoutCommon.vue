@@ -230,8 +230,7 @@
         </q-btn>
       </div>
       <div id="layoutContainer">
-        Modificaciones en curso
-        <!-- <slot name="slot" /> -->
+        <slot name="slot" />
       </div>
     </q-page-container>
   </q-layout>

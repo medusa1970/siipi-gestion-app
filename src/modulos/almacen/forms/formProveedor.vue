@@ -8,12 +8,12 @@
       @update="v => (estado.dataForm.nombre = v)"
       requerido
       :error="estado.errorNombre" />
-    <input-select
+    <!--<input-select
       label="Catalogo"
       info="Info #44"
       :opciones="selectCatalogo"
       @update="v => (estado.dataForm.catalogoId = v)" />
-
+  -->
     <!-- descripcion -->
     <input-text
       label="Descripcion"

@@ -1,9 +1,4 @@
 <template>
-  <pre>
-
-{{ props }}
-</pre
-  >
   <q-form @submit="formSubmit">
     <!-- Marca -->
     <input-select

@@ -15,14 +15,15 @@
 <script setup lang="ts">
 import formPedido from '@/modulos/ofertas/forms/formPedido.vue';
 import { pedido } from './pedido';
-const { authStore, handlePedidoOk, handlePedidoError } = pedido();
+const { authStore } = pedido();
 
 const catalogo = ref(null);
 onMounted(async () => {
   try {
     loadingAsync(async () => {
       catalogo.value = await buscarUno(GqlEntidadLeerMenu, {
-        busqueda: authStore.negocio._id
+        busqueda: authStore.negocio._id,
+        busquedaMenu: {}
       });
     });
   } catch (err) {

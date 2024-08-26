@@ -215,7 +215,7 @@ const elegirNegocio = (index: number, nombre: string) => {
       loginResponse = await buscarVarios(GqlAuthConectar, {
         datos: {
           usuario: authStore.getUsuario?.usuario as string,
-          password: password.value
+          contrasena: password.value
         }
       });
       if (!loginResponse) {

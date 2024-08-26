@@ -9,20 +9,20 @@
       En este caso el input se desabilita
       asi que el boton guardar (menos si todavia no hay empaques)
   -->
-  <div v-if="!store.producto.medida">
+  <div v-if="!estado.producto.medida">
     <p>Para poder agregar empaques, primero debes definir la medida basica.</p>
   </div>
   <input-select
-    :disable="store.producto.empaques.length > 0"
+    :disable="estado.producto.empaques.length > 0"
     label="Medida basica"
     :opciones="estado.medidaOpciones"
     @update="changeMedida"
-    :porDefecto="store.producto.medida?._id"
+    :porDefecto="estado.producto.medida?._id"
     requerido
     :dialog="formMedida" />
   <div
     class="!flex justify-center"
-    v-if="!store.producto.empaques || store.producto.empaques.length === 0">
+    v-if="!estado.producto.empaques || estado.producto.empaques.length === 0">
     <q-btn
       class="display-block mx-auto mt-1"
       color="primary"
@@ -37,13 +37,13 @@
       Solo se muestra la tabla si hay una medida seleccionada
   -->
 
-  <p v-if="store.producto.medida">
+  <p v-if="estado.producto.medida">
     Los empaques son la formas que llegan en producto en el almacén, por ejemplo
     en tira o paquete de tal o tal marca.
   </p>
 
   <Tabla
-    v-if="store.producto.medida"
+    v-if="estado.producto.medida"
     :rows="rowsTabla"
     :columns="
     [
@@ -77,7 +77,7 @@
     label: 'Cantidad',
     align: 'left',
     field: (row: any) => row.cantidad,
-    format: (v) => `${v} ${store.producto.medida.abreviacion}`,
+    format: (v) => `${v} ${estado.producto.medida.abreviacion}`,
     sortable: true,
   },
   {
@@ -136,7 +136,8 @@
     titulo="Modificar el empaque">
     <template #body>
       <formEmpaque
-        :edicion="estado.empaque"
+        :config="{ producto: estado.producto }"
+        :empaque="estado.empaque"
         @modificarObjeto="handleEmpaqueModificado" />
     </template>
   </Popup>
@@ -145,24 +146,104 @@
     v-model="estado.modal.formEmpaqueCrear"
     titulo="Registrar nuevo empaque">
     <template #body>
-      <formEmpaque @crearObjeto="handleEmpaqueCreado" />
+      <formEmpaque
+        :config="{ producto: estado.producto }"
+        @crearObjeto="handleEmpaqueCreado" />
     </template>
   </Popup>
 </template>
 
 <script setup lang="ts">
-import formMedida from '@/modulos/almacen/forms/formMedida.vue';
-import formEmpaque from '@/modulos/almacen/forms/formEmpaque.vue';
-import { useProductoMedidas } from './productoMedidas.composable';
-const { $socket } = useNuxtApp();
-const {
-  estado,
-  store,
-  formSubmit,
-  handleEmpaqueModificado,
-  handleEmpaqueCreado,
-  borrarProductoEmpaque
-} = useProductoMedidas();
+import type { Medida } from '#gql';
+import formMedida from '~/modulos/almacen/forms/formMedida.vue';
+import type { SelectOpcion } from '~/components/input/select.interface';
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+const $q = useQuasar();
+const props = defineProps({
+  productoCorriente: null
+});
+
+const estado = reactive({
+  // el producto corriente
+  producto: props.productoCorriente,
+
+  // la variedad que se esta modificando
+  empaque: null,
+  // lista de todas las medidas
+  medidas: [] as Medida[],
+  // medida seleccionada
+  medidaId: null,
+  // los dialogs
+  modal: {
+    formEmpaqueCrear: false,
+    formEmpaqueModificar: false
+  },
+  // opciones del select de medidas
+  medidaOpciones: [] as SelectOpcion[],
+  // config de los filtros de la tabla
+  filtros: {
+    buscar: ''
+  }
+});
+
+// guardar la medida basica tras hacer click en el boton guardar
+const formSubmit = async () => {
+  let producto;
+  try {
+    producto = await modificarUno(GqlModificarProductos_basico, {
+      busqueda: estado.producto._id,
+      datos: {
+        medida: estado.medidaId
+      }
+    });
+  } catch (err) {
+    errFailback(err);
+    return;
+  }
+  NotifySucess('Medida guardada correctamente');
+  estado.producto.medida = producto.medida;
+};
+
+const handleEmpaqueCreado = (empaque, producto) => {
+  NotifySucessCenter('Empaque creado éxitosamente');
+  estado.modal.formEmpaqueCrear = false;
+  estado.producto = producto;
+};
+
+const handleEmpaqueModificado = (empaque, producto) => {
+  NotifySucessCenter('Empaque modificade éxitosamente');
+  estado.modal.formEmpaqueModificar = false;
+  estado.producto = producto;
+};
+
+const borrarProductoEmpaque = (empaque: any) => {
+  $q.dialog({
+    title: `Eliminar ${empaque.nombre}`,
+    message: 'No se puede deshacer.',
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      const productoEmpaque = await modificarUno(GqlModificarProductos_basico, {
+        busqueda: estado.producto._id,
+        datos: {
+          empaques: {
+            borrar: { _id: empaque._id }
+          }
+        }
+      });
+      if (productoEmpaque) {
+        NotifySucessCenter('Empaque borrado correctamente');
+
+        estado.producto.empaques = estado.producto.empaques.filter(
+          e => e._id !== empaque._id
+        );
+      }
+    } catch (err) {
+      errFailback(err);
+    }
+  });
+};
 
 //inicializaciones
 onMounted(async () => {
@@ -186,7 +267,7 @@ const changeMedida = v => {
  * Rows para la tabla
  */
 const rowsTabla = computed(() => {
-  let filtered = store.producto.empaques;
+  let filtered = estado.producto.empaques;
   if (!filtered) return [];
   if (estado.filtros.buscar != null) {
     const regex = new RegExp(`${estado.filtros.buscar}`, 'i');

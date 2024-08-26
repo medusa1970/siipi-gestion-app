@@ -10,6 +10,7 @@
       requerido
       :disable="edicion != null"
       :dialog="formVariedad"
+      :dialogConfig="{ producto: props.config.producto }"
       @crearObjeto="handleVariedadCreada" />
 
     <input-select
@@ -19,7 +20,7 @@
       @update="v => prellenarEmpaque(v)"
       :watch="estado.resetEmpaque"
       :dialog="formTipoEmpaque"
-      :dialogConfig="store.producto.medida._id"
+      :dialogConfig="{ medidaId: props.config.producto.medida._id }"
       @crearObjeto="handleCrearTipoEmpaque"
       color="grey-5" />
 
@@ -44,7 +45,7 @@
       info="Cantidad de producto que contiene el empaque en unidades basicas: Ejemplo la caja lleva 1000 unid, entonces colocar 1000"
       :tipo="
         // por unidad
-        store.producto.medida._id === '665f746dd6b07c8d26ef9b6d'
+        props.config.producto.medida._id === '665f746dd6b07c8d26ef9b6d'
           ? 'number'
           : 'decimal'
       "
@@ -61,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Empaque } from '#gql';
+import type { Empaque, Producto } from '#gql';
 import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 import formTipoEmpaque from '@/modulos/almacen/forms/formTipoEmpaque.vue';
@@ -74,6 +75,9 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
+    config: {
+      producto: Producto;
+    };
     edicion?: Empaque;
   }>(),
   {
@@ -99,15 +103,15 @@ const estado = reactive({
 
 // opciones
 const selectTipoEmpaques = computed(() => {
-  if (!store.producto.medida.tipoEmpaques) return [];
-  return store.producto.medida.tipoEmpaques.map(tipo => ({
+  if (!props.config.producto.medida.tipoEmpaques) return [];
+  return props.config.producto.medida.tipoEmpaques.map(tipo => ({
     value: tipo._id,
     label: tipo.nombre
   }));
 });
 const selectMarca = computed(() => {
-  if (!store.producto.variedades) return [];
-  return store.producto.variedades.map(variedad => ({
+  if (!props.config.producto.variedades) return [];
+  return props.config.producto.variedades.map(variedad => ({
     value: variedad.marca._id,
     label: variedad.marca.nombre
   }));
@@ -121,7 +125,7 @@ const formSubmit = async () => {
   try {
     if (props.edicion) {
       const producto = await modificarUno(GqlModificarProductos_basico, {
-        busqueda: store.producto._id,
+        busqueda: props.config.producto._id,
         datos: {
           empaques: {
             buscar: {
@@ -138,7 +142,7 @@ const formSubmit = async () => {
       );
     } else {
       const producto = await modificarUno(GqlModificarProductos_basico, {
-        busqueda: store.producto._id,
+        busqueda: props.config.producto._id,
         datos: {
           empaques: {
             agregar: [estado.dataForm]
@@ -169,7 +173,7 @@ const formSubmit = async () => {
 
 // Prellenar el empaque con seleccionar un tipo de empaque
 const prellenarEmpaque = async empaqueId => {
-  const empaque = store.producto.medida.tipoEmpaques.find(
+  const empaque = props.config.producto.medida.tipoEmpaques.find(
     tipoE => tipoE._id === empaqueId
   );
   if (!empaque) {
@@ -186,12 +190,12 @@ const prellenarEmpaque = async empaqueId => {
 
 // se ha creado un empaque
 const handleCrearTipoEmpaque = tipoEmpaque => {
-  store.producto.medida.tipoEmpaques.push(tipoEmpaque);
+  props.config.producto.medida.tipoEmpaques.push(tipoEmpaque);
   prellenarEmpaque(tipoEmpaque._id);
 };
 
 // se ha creado una variedad
 const handleVariedadCreada = variedad => {
-  store.producto.variedades.push(variedad);
+  props.config.producto.variedades.push(variedad);
 };
 </script>

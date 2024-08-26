@@ -8,6 +8,10 @@ const hacerConsulta = async (
   tokenAlternativo: any = null
 ) => {
   const token = tokenAlternativo ?? useAuthStore().token;
+  if (!params.opciones) {
+    params.opciones = {};
+  }
+
   if (
     !multiple &&
     ['buscar', 'modificar', 'borrar'].includes(tipo) &&
@@ -20,42 +24,37 @@ const hacerConsulta = async (
   if (
     !multiple &&
     ['buscar', 'modificar', 'borrar'].includes(tipo) &&
-    params.opciones &&
-    params.opciones.limit === undefined
+    params.opciones?.limit === undefined
   ) {
-    params.opciones.limit = 1;
+    Object.assign(params.opciones, { limit: 1 });
   }
 
   if (
     !multiple &&
     ['buscar', 'modificar', 'borrar'].includes(tipo) &&
-    params.opciones &&
-    params.opciones.errorSiVacio === undefined
+    params.opciones?.errorSiVacio === undefined
   ) {
-    params.opciones.errorSiVacio = true;
+    Object.assign(params.opciones, { errorSiVacio: true });
   }
 
   if (
     !multiple &&
     ['buscar', 'modificar', 'borrar'].includes(tipo) &&
-    params.opciones &&
-    params.opciones.errorSiVacio === undefined
+    params.opciones?.errorSiVacio === undefined
   ) {
-    params.opciones.errorSiVacio = true;
+    Object.assign(params.opciones, { errorSiVacio: true });
   }
 
-  if (!multiple && tipo === 'crear' && params.datos) {
-    params.datos = [params.datos];
-  }
+  // if (!multiple && tipo === 'crear' && params.datos) {
+  //   params.datos = [params.datos];
+  // }
 
   if (
     ['crear', 'modificar'].includes(tipo) &&
-    params.opciones &&
-    params.opciones.populate === undefined
+    params.opciones?.populate === undefined
   ) {
-    params.opciones.populate = true;
+    Object.assign(params.opciones, { populate: true });
   }
-
   let resultado;
   try {
     resultado = await consulta(params, token);

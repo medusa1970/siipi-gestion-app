@@ -8,6 +8,12 @@
       @update="v => (estado.dataForm.nombre = v)"
       requerido
       :error="estado.errorNombre" />
+    <input-select
+      label="Catalogo"
+      info="Info #44"
+      :opciones="selectCatalogo"
+      @update="v => (estado.dataForm.catalogoId = v)" />
+
     <!-- descripcion -->
     <input-text
       label="Descripcion"
@@ -36,10 +42,15 @@
 </template>
 
 <script setup lang="ts">
+import type { Catalogo } from '#gql';
 import type { Entidad } from '#gql';
 import { UrlToBase64Image } from '~/components/input/input.service';
+import type { SelectOpcion } from '~/components/input/select.interface';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import { areaInfo } from '~/modulos/ofertas/oferta.definicion';
 const { store } = useAlmacen();
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+const { store: storeOferta } = useOfertas();
 
 // definicion de los emits
 const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
@@ -59,7 +70,8 @@ const initForm = {
   tipo: 'PROVEEDOR',
   nombre: props.edicion?.nombre,
   descripcion: props.edicion?.descripcion,
-  imagen: null
+  imagen: null,
+  catalogoId: null
 };
 
 // definicion del estado
@@ -72,6 +84,10 @@ const estado = reactive({
 
 // Inicializaciones
 onMounted(async () => {
+  cata.value = await buscarUno(GqlCatalogoArbol, {
+    busqueda: areaInfo.proveedores.catalogo,
+    opciones: { limit: 0 }
+  });
   // recuperamos la imagen desde la url
   if (props.edicion?.imagen?.cloudinaryUrl) {
     await UrlToBase64Image(props.edicion.imagen.cloudinaryUrl, base64Data => {
@@ -80,6 +96,26 @@ onMounted(async () => {
   } else {
     estado.imagenPreview = null;
   }
+});
+
+const cata = ref<Catalogo>(null);
+const selectCatalogo = computed(() => {
+  if (!cata.value) return [];
+  let options = [];
+  for (const cat of cata.value.hijas) {
+    options.push({
+      label: cat.nombre,
+      value: cat._id,
+      disable: true
+    } as SelectOpcion);
+    for (const cat2 of cat.hijas ?? []) {
+      options.push({
+        label: '__ ' + cat2.nombre,
+        value: cat2._id
+      } as SelectOpcion);
+    }
+  }
+  return options;
 });
 
 // submision del formulario

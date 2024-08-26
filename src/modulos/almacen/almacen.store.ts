@@ -63,7 +63,9 @@ export const storeAlmacen = defineStore('almacen', {
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
       let productos;
+      console.log(1);
       productos = (await localforage.getItem('productos')) as Producto[];
+      console.log(2);
       if (!productos || actualizarDB) {
         try {
           productos = await buscarVarios(GqlBuscarProductos_basico, {
@@ -75,6 +77,7 @@ export const storeAlmacen = defineStore('almacen', {
           return;
         }
       }
+      console.log(3);
       this.productos = productos;
       return productos;
     },

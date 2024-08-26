@@ -13,12 +13,7 @@ export const useProductoDetalle = () => {
   if (!authStore.autorizar(permisosProductoDetalle))
     goTo(router, 'noAutorizado');
 
-  const estado = reactive({
-    tab: 'datosBasicos'
-  });
-
   return {
-    estado,
     store,
     authStore,
     route,

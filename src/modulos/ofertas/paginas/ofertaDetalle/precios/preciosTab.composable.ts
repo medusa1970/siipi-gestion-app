@@ -1,5 +1,5 @@
 import type { Precio } from '#gql';
-import { catalogoIds } from '~/modulos/ofertas/oferta.definicion';
+import { areaInfo } from '~/modulos/ofertas/oferta.definicion';
 import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
 
 export const usePrecioTab = () => {
@@ -22,7 +22,7 @@ export const usePrecioTab = () => {
     // busquemos precios de proveedores
     const ofertasProveedor = store.ofertas.filter(oferta => {
       // debe estar en el catalogo proveedor
-      if (oferta.catalogo._id !== catalogoIds.proveedores) {
+      if (oferta.catalogo._id !== areaInfo.proveedores.catalogo) {
         return false;
       }
       // debe tener un y solo un ingrediente
@@ -42,7 +42,6 @@ export const usePrecioTab = () => {
       }
       return true;
     });
-    console.log(ofertasProveedor);
     estado.preciosProveedor = ofertasProveedor.map(oferta => [
       oferta.precioSinFactura,
       oferta.precioConFactura

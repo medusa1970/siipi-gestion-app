@@ -69,7 +69,6 @@ export const formPedido = () => {
   const precioTotal = computed(() => {
     let precio = new Decimal(0);
     for (const ofertaId in estado.formData) {
-      console.log(estado.formData[ofertaId].precio + 0);
       if (estado.formData[ofertaId].cantidad != 0) {
         precio = precio.add(estado.formData[ofertaId].precio);
       }
@@ -83,7 +82,6 @@ export const formPedido = () => {
       precioConFactura: oferta.precioConFactura,
       precioSinFactura: oferta.precioSinFactura
     };
-    console.log(oferta);
 
     // precio por mayor ?
     if (oferta.preciosPorMayor) {
@@ -171,8 +169,9 @@ export const formPedido = () => {
   });
 
   const mandarPedido = async () => {
+    let pedido;
     try {
-      const pedido = await crearUno(GqlIniciarPedido, {
+      pedido = await crearUno(GqlIniciarPedido, {
         datos: {
           comprador: estado.comprador,
           vendedor: estado.vendedor,
@@ -183,10 +182,6 @@ export const formPedido = () => {
       if (!pedido) {
         throw 'Error al realizar el pedido';
       }
-      // cambiamos el estado a confirmado
-      await modificarUno(GqlCambiarEstadoItemsPorOfertas_aceptar, {
-        busqueda: pedido._id
-      });
     } catch (err) {
       NotifyError('Hubo un error al hacer el pedido, reintente');
       errFailback(err);
@@ -195,6 +190,7 @@ export const formPedido = () => {
     NotifySucessCenter('Pedido realizado');
     reiniciarForm();
     estado.validar = false;
+    return pedido;
   };
 
   return {

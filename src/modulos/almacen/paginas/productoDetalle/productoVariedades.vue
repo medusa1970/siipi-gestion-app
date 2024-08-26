@@ -58,7 +58,7 @@
           {{ row.inventarioAviso }} dias antes
         </h1>
         <h1 v-if="row.cantidadMaxPedido">
-          <b>cantidad max:</b> El punto no puede perid mas de
+          <b>cantidad max:</b> El punto no puede pedir mas de
           {{ row.cantidadMaxPedido }} a la vez
         </h1>
       </div>
@@ -66,7 +66,10 @@
     <template #cell-actions="{ row }">
       <q-btn-group push @click="e => e.stopPropagation()">
         <q-btn
-          @click="modalEditarMarca(row)"
+          @click="
+            estado.variedad = row;
+            estado.modal.formVariedadModificar = true;
+          "
           class="p-1"
           color="black"
           size="sm"
@@ -77,7 +80,6 @@
           color="red"
           size="sm"
           @click="borrarProductoMarca(row)">
-          <q-tooltip> Eliminar marca </q-tooltip>
         </q-btn>
       </q-btn-group>
     </template>
@@ -91,6 +93,7 @@
     titulo="Modificar la marca">
     <template #body>
       <formVariedad
+        :config="{ producto: estado.producto }"
         :edicion="estado.variedad"
         @modificarObjeto="handleVariedadModificada" />
     </template>
@@ -100,28 +103,85 @@
     v-model="estado.modal.formVariedadCrear"
     titulo="Registrar nueva marca">
     <template #body>
-      <formVariedad @crearObjeto="handleVariedadCreada" />
+      <formVariedad
+        :config="{ producto: estado.producto }"
+        @crearObjeto="handleVariedadCreada" />
     </template>
   </Popup>
 </template>
 
 <script setup lang="ts">
 import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
-import { useProductoVariedades } from './productoVariedades.composable';
-const { $socket } = useNuxtApp();
-const {
-  estado,
-  store,
-  handleVariedadCreada,
-  handleVariedadModificada,
-  borrarProductoMarca
-} = useProductoVariedades();
+const $q = useQuasar();
+const props = defineProps({
+  productoCorriente: null
+});
+
+const estado = reactive({
+  // el producto corriente
+  producto: props.productoCorriente,
+
+  // la variedad que se esta modificando
+  variedad: null,
+  // los dialogs
+  modal: {
+    formVariedadCrear: false,
+    formVariedadModificar: false
+  },
+  // config de los filtros de la tabla
+  filtros: {
+    buscar: ''
+  }
+});
+
+const handleVariedadCreada = (variedad, producto) => {
+  NotifySucessCenter('Marca registrada éxitosamente');
+  estado.modal.formVariedadCrear = false;
+  estado.producto = producto;
+};
+
+const handleVariedadModificada = (variedad, producto) => {
+  NotifySucessCenter('Marca modificada éxitosamente');
+  estado.modal.formVariedadModificar = false;
+  estado.producto = producto;
+};
+
+const borrarProductoMarca = (variedad: any) => {
+  $q.dialog({
+    title: `Eliminar ${variedad.marca.nombre}`,
+    message: 'No se puede deshacer.',
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      const productoVariedad = await modificarUno(
+        GqlModificarProductos_basico,
+        {
+          busqueda: estado.producto._id,
+          datos: {
+            variedades: {
+              borrar: { _id: variedad._id }
+            }
+          }
+        }
+      );
+      if (productoVariedad) {
+        NotifySucessCenter('Marca borrado correctamente');
+        estado.producto.variedades = estado.producto.variedades.filter(
+          e => e._id !== variedad._id
+        );
+      }
+    } catch (err) {
+      errFailback(err);
+    }
+  });
+};
 
 /**
  * Rows para la tabla
  */
 const rowsTabla = computed(() => {
-  let filtered = store.producto?.variedades;
+  let filtered = estado.producto?.variedades;
   if (!filtered) return [];
   if (estado.filtros.buscar != null) {
     const regex = new RegExp(`${estado.filtros.buscar}`, 'i');
@@ -134,11 +194,6 @@ const rowsTabla = computed(() => {
   }
   return filtered;
 });
-
-const modalEditarMarca = (row: any) => {
-  estado.variedad = row;
-  estado.modal.formVariedadModificar = true;
-};
 </script>
 
 <style lang="scss" scoped></style>

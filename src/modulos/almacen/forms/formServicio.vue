@@ -9,6 +9,7 @@
       @update="v => (estado.dataForm.marca = v)"
       requerido
       :dialog="formVariedad"
+      :dialogConfig="{ producto: props.config.producto }"
       :disable="edicion != null"
       @CrearObjeto="handleVariedadCreada"
       :watch="estado.dataForm.marca" />
@@ -168,6 +169,7 @@ import type { Servicio } from '#gql';
 import formVariedad from '@/modulos/almacen/forms/formVariedad.vue';
 import formProveedor from '@/modulos/almacen/forms/formProveedor.vue';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+import type { Producto } from '#gql';
 const { store } = useAlmacen();
 
 // definicion de los emits
@@ -176,7 +178,10 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
-    config?: { proveedorId?: string };
+    config?: {
+      producto: Producto;
+      proveedorId?: string;
+    };
     edicion?: Servicio;
   }>(),
   {
@@ -186,7 +191,7 @@ const props = withDefaults(
 
 // datos por defecto del formulario
 const initForm = {
-  producto: store.producto._id,
+  producto: props.config.producto._id,
   proveedor: props.config?.proveedorId,
   marca: props.edicion?.marca._id,
   identificativo: props.edicion?.identificativo,
@@ -209,8 +214,8 @@ const estado = reactive({
 
 // opciones
 const selectMarca = computed(() => {
-  if (!store.producto.variedades) return [];
-  return store.producto.variedades.map(variedad => ({
+  if (!props.config.producto.variedades) return [];
+  return props.config.producto.variedades.map(variedad => ({
     value: variedad.marca._id,
     label: variedad.marca.nombre
   }));
@@ -280,7 +285,7 @@ const formSubmit = async () => {
 const ppmIndexEdit = ref(null);
 const addPpmSubmit = () => {
   estado.showFormPorMayor = false;
-  if (ppmIndexEdit.value) {
+  if (ppmIndexEdit.value !== null) {
     estado.dataForm.preciosPorMayor[ppmIndexEdit.value] = clone(
       estado.dataFormPorMayor
     );
@@ -292,7 +297,7 @@ const addPpmSubmit = () => {
 };
 
 const handleVariedadCreada = variedad => {
-  store.producto.variedades.push(variedad);
+  props.config.producto.variedades.push(variedad);
   estado.dataForm.marca = variedad.marca._id;
 };
 </script>

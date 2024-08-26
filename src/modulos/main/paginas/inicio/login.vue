@@ -52,19 +52,13 @@
 const emits = defineEmits(['go']);
 import { useAuthStore } from '~/modulos/main/useAuthStore';
 const authStore = useAuthStore();
-
 const usuario = reactiveInput();
 const password = reactiveInput();
 
 // funcion llamada al hacer submit
 const formSubmit = async datos => {
   try {
-    await buscarVarios(GqlAuthConectar, {
-      datos: {
-        usuario: usuario.value,
-        password: password.value
-      }
-    });
+    await authStore.login(usuario.value, password.value);
   } catch (err) {
     if (isApiNotFound(err, 'usuario')) {
       usuario.error = 'Usuario inexistente';

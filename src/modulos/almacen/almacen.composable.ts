@@ -16,7 +16,7 @@ export const useAlmacen = () => {
    */
   const productoIncompleto = (producto: Producto) => {
     const res = [];
-    if (!producto.imagen) res.push('imagen');
+    // if (!producto.imagen) res.push('imagen');
     if (producto.variedades.length === 0) res.push('variedad');
     if (!producto.medida) res.push('medida');
     if (!producto.categoria) res.push('categoria');

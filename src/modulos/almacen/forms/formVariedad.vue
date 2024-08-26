@@ -1,4 +1,9 @@
 <template>
+  <pre>
+
+{{ props }}
+</pre
+  >
   <q-form @submit="formSubmit">
     <!-- Marca -->
     <input-select
@@ -70,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Producto } from '#gql';
 import type { Variedad } from '#gql';
 import formMarca from '@/modulos/almacen/forms/formMarca.vue';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
@@ -81,6 +87,9 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
+    config: {
+      producto: Producto;
+    };
     edicion?: Variedad;
   }>(),
   {
@@ -123,7 +132,7 @@ const formSubmit = async () => {
   try {
     if (props.edicion) {
       const producto = await modificarUno(GqlModificarProductos_basico, {
-        busqueda: store.producto._id,
+        busqueda: props.config.producto._id,
         datos: {
           variedades: {
             buscar: {
@@ -140,7 +149,7 @@ const formSubmit = async () => {
       );
     } else {
       const producto = await modificarUno(GqlModificarProductos_basico, {
-        busqueda: store.producto._id,
+        busqueda: props.config.producto._id,
         datos: {
           variedades: {
             agregar: [estado.dataForm]

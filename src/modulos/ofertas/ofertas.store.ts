@@ -1,5 +1,6 @@
 import type { Catalogo, Oferta } from '#gql';
 import localforage from 'localforage';
+import { idCatalogoRaiz } from './oferta.definicion';
 
 interface storeProps {
   // colecciones
@@ -70,7 +71,8 @@ export const storeOferta = defineStore('ofertas', {
           ? GqlCatalogoArbolCompleto
           : GqlCatalogoArbol;
         this.catalogoArbol = await buscarUno(gql, {
-          busqueda: id ?? '65a447574b237c900167c41c'
+          busqueda: id ?? idCatalogoRaiz,
+          opciones: { limit: 0 }
         });
       } catch (err) {
         errFailback(err);

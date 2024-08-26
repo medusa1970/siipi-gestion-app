@@ -45,7 +45,6 @@ import { permisosStock } from '~/modulos/almacen/paginas/stock/stock.composable'
 import { permisosEmpleados } from '~/modulos/empresa/paginas/empleados/empleados';
 import { permisosTesoreria } from '~/modulos/empresa/paginas/tesoreria/tesoreria';
 import { useAuthStore } from '~/modulos/main/useAuthStore';
-import { catalogoIds } from '~/modulos/ofertas/oferta.definicion';
 import { permisosProblemas } from '~/modulos/almacen/paginas/problemas/problemas.composable';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { useQuasar } from 'quasar';
@@ -62,6 +61,46 @@ const pedidoStore = storePedido();
 if (authStore.getNegocio?.tipo !== 'CATHERING') {
   goTo(router, 'inicio');
 }
+
+const menuArea = [
+  'panaderia',
+  'reposteria',
+  'embotellados',
+  'envasados',
+  'siinple'
+].map(area => {
+  return {
+    icon: 'shopping_cart',
+    label: 'Area ' + area,
+    key: 'Area' + area,
+    subMenu: [
+      {
+        icon: 'bi-cart-plus',
+        label: 'Recepcion',
+        to: 'pedidoRecibir',
+        params: { area }
+      },
+      {
+        icon: 'bi-cart-plus',
+        label: 'Despacho',
+        to: 'pedidoDespachar',
+        params: { area }
+      },
+      {
+        icon: 'menu_book',
+        label: 'Ofertas',
+        to: 'ofertas',
+        params: { area }
+      },
+      {
+        icon: 'bi-cart-plus',
+        label: 'Catalogo',
+        to: 'catalogos',
+        params: { area }
+      }
+    ]
+  };
+});
 const menu = [
   {
     icon: 'warehouse',
@@ -129,13 +168,13 @@ const menu = [
         icon: 'menu_book',
         label: 'Ofertas',
         to: 'ofertas',
-        params: { id: catalogoIds['puntos'] }
+        params: { area: 'puntos' }
       },
       {
         icon: 'bi-cart-plus',
         label: 'Catalogo',
-        to: 'catalogo',
-        params: { id: catalogoIds['puntos'] }
+        to: 'catalogos',
+        params: { area: 'puntos' }
       }
     ]
   },
@@ -150,18 +189,18 @@ const menu = [
         to: 'pedidoRecibir',
         params: { area: 'proveedores' }
       },
-      {
-        icon: 'menu_book',
-        label: 'Ofertas',
-        to: 'ofertas',
-        params: { id: catalogoIds['proveedores'] }
-      },
-      {
-        icon: 'bi-cart-plus',
-        label: 'Catalogo',
-        to: 'catalogo',
-        params: { id: catalogoIds['proveedores'] }
-      },
+      // {
+      //   icon: 'menu_book',
+      //   label: 'Ofertas',
+      //   to: 'ofertas',
+      //   params: { area: 'proveedores' }
+      // },
+      // {
+      //   icon: 'bi-cart-plus',
+      //   label: 'Catalogo',
+      //   to: 'catalogos',
+      //   params: { area: 'proveedores' }
+      // },
       {
         icon: 'hail',
         label: 'Proveedores',
@@ -170,37 +209,7 @@ const menu = [
       }
     ]
   },
-  {
-    icon: 'shopping_cart',
-    label: 'Area Panaderia',
-    key: 'AreaPanaderia',
-    subMenu: [
-      {
-        icon: 'bi-cart-plus',
-        label: 'Recepcion',
-        to: 'pedidoRecibir',
-        params: { area: 'panaderia' }
-      },
-      {
-        icon: 'bi-cart-plus',
-        label: 'Despacho',
-        to: 'pedidoDespachar',
-        params: { area: 'panaderia' }
-      },
-      {
-        icon: 'menu_book',
-        label: 'Ofertas',
-        to: 'ofertas',
-        params: { id: catalogoIds['panaderia'] }
-      },
-      {
-        icon: 'bi-cart-plus',
-        label: 'Catalogo',
-        to: 'catalogo',
-        params: { id: catalogoIds['panaderia'] }
-      }
-    ]
-  },
+  ...menuArea,
   {
     icon: 'storefront',
     label: 'Empresa',
@@ -223,7 +232,7 @@ const menu = [
     ]
   }
 ];
-/* 
+/*
 const realizarPedido = async () => {
   const items = pedidoStore.listaPedido.map(p => ({
     ofertaId: p.id,

@@ -7,7 +7,7 @@
         label: 'Ofertas ' + estado.catalogoSeleccionado?.nombre,
         to: 'ofertas',
         params: {
-          id: params.id
+          area: route.params.area
         }
       }
     ]">
@@ -196,7 +196,7 @@
   <Popup v-model="estado.modal.show_crearOfertaBasico" titulo="Nueva Oferta">
     <template #body>
       <formOfertaBasico
-        :catalogo="params.id as string"
+        :catalogo="estado.catalogoId"
         @crearObjeto="handleOfertaBasicaCreada" />
     </template>
   </Popup>
@@ -204,7 +204,7 @@
   <Popup v-model="estado.modal.show_crearOfertaSimple" titulo="Nueva Oferta">
     <template #body>
       <formOfertaProducto
-        :catalogo="params.id as string"
+        :catalogo="estado.catalogoId"
         @crearObjeto="handleOfertaSimpleCreada" />
     </template>
   </Popup>
@@ -217,6 +217,7 @@ const {
   store,
   authStore,
   router,
+  route,
   ofertaIncompleta,
   handleOfertaBasicaCreada,
   handleOfertaSimpleCreada
@@ -224,7 +225,7 @@ const {
 
 import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 import formOfertaProducto from '@/modulos/ofertas/forms/formOfertaProducto.vue';
-const { params } = useRoute();
+import { areaInfo } from '../../oferta.definicion';
 
 // opciones
 const selectCatalogoFiltro = computed(() => {
@@ -290,11 +291,14 @@ const rowsParaMostrar = computed(() => {
 });
 
 onMounted(async () => {
+  estado.catalogoId = areaInfo[route.params.area as string]?.catalogo;
+  if (!estado.catalogoId) {
+    goTo(router, '404');
+  }
+
   // catalogo seleccionado en la url
   estado.ofertas = await store.getOfertas();
-  estado.catalogoSeleccionado = await store.getCatalogoArbol(
-    params.id as string
-  );
+  estado.catalogoSeleccionado = await store.getCatalogoArbol(estado.catalogoId);
 
   // filtrar segun el catalogo en param url
   const f = cat => {

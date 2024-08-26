@@ -73,7 +73,7 @@
           icono="edit black"
           @click="
             () => {
-              ofertaStore.oferta = row;
+              storeOferta.oferta = row;
               goTo(router, 'oferta', { id: row._id });
             }
           " />
@@ -153,11 +153,51 @@
 </template>
 
 <script setup lang="ts">
-import { storeOferta } from '~/modulos/ofertas/ofertas.store';
-import { useProductoOfertas } from './productoOfertas.composable';
-const { estado, router, ofertaIncompleta, rowsParaMostrar } =
-  useProductoOfertas();
-const ofertaStore = storeOferta();
+import { useAlmacen } from '~/modulos/almacen/almacen.composable';
+const { store, router, route, productoOfertas } = useAlmacen();
+import { useOfertas } from '~/modulos/ofertas/ofertas.composable';
+const { store: storeOferta, ofertaIncompleta } = useOfertas();
+const props = defineProps({
+  productoCorriente: null
+});
+
+const estado = reactive({
+  ofertas: [],
+  filtros: {
+    buscar: null,
+    completud: null
+  }
+});
+
+onMounted(async () => {
+  estado.ofertas = await productoOfertas(props.productoCorriente._id);
+});
+
+const rowsParaMostrar = computed(() => {
+  let filtered = estado.ofertas;
+  if (!filtered) return [];
+
+  filtered = filtered.filter(oferta => {
+    // solo ofertas completas?
+    const incompleto = ofertaIncompleta(oferta);
+    if (
+      (estado.filtros.completud === 'soloCompletos' && incompleto) ||
+      (estado.filtros.completud === 'soloIncompletos' && !incompleto)
+    ) {
+      return false;
+    }
+    // busqueda textual
+    if (estado.filtros.buscar) {
+      const regex = crearRegex(estado.filtros.buscar);
+      if (!regex.test(sinImportarAcentos(oferta.nombre))) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return filtered;
+});
 
 const columnaOfertas = [
   {

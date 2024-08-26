@@ -86,7 +86,7 @@
 import type { Oferta } from '#gql';
 import { useOfertas } from '@/modulos/ofertas/ofertas.composable';
 import { UrlToBase64Image } from '~/components/input/input.service';
-import { catalogoIds } from '../oferta.definicion';
+import { areaInfo } from '../oferta.definicion';
 const { store } = useOfertas();
 
 // definicion de los emits
@@ -162,7 +162,7 @@ const selectSubCatalogo = computed(() => {
       });
       idsHijas.push(subcat._id);
     }
-    if (cat._id !== catalogoIds['proveedores'])
+    if (cat._id !== areaInfo.proveedores.catalogo)
       options.push({
         label: cat.nombre,
         value: cat._id,

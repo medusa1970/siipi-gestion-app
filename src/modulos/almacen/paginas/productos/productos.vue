@@ -170,7 +170,6 @@
             icono="edit black"
             @click="
               () => {
-                store.producto = row;
                 goTo(router, 'producto', { id: row._id });
               }
             " />
@@ -399,7 +398,6 @@ onMounted(async () => {
   } catch (err) {
     errFailback(err);
   }
-  store.producto = null;
 });
 
 // sockets

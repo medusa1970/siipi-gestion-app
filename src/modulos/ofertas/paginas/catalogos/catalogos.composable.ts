@@ -17,10 +17,11 @@ const init_catalogoCategoria = {
 
 export const useCatalogos = () => {
   const $q = useQuasar();
-  const { store, authStore, router } = useOfertas();
+  const { store, authStore, router, route } = useOfertas();
   if (!authStore.autorizar(permisosCatalogos)) goTo(router, 'noAutorizado');
 
   const estado = reactive({
+    catalogoId: null as string,
     catalogoSeleccionado: null as Catalogo,
     modal: {
       show_agregarCatalogo: false,
@@ -105,6 +106,7 @@ export const useCatalogos = () => {
     store,
     authStore,
     router,
+    route,
     crearCatalogoArbol,
     modalCrearCatalogoCategoria,
     modalModificarCatalogoCategoria,

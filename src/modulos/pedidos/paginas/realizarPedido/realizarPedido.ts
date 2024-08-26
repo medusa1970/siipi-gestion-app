@@ -84,7 +84,8 @@ export const useRealizarPedido2 = () => {
   onMounted(async () => {
     try {
       estado.catalogo = await buscarUno(GqlEntidadLeerMenuCompleto, {
-        busqueda: authStore.negocio._id
+        busqueda: authStore.negocio._id,
+        busquedaMenu: {}
       });
     } catch (err) {
       errFailback(err);

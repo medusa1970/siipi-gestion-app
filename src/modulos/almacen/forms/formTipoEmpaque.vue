@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import type { TipoEmpaque } from '#gql';
-import type { SelectOpcion } from '~/components/input/select.interface';
 import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const { store } = useAlmacen();
 
@@ -41,6 +40,9 @@ const emits = defineEmits(['crearObjeto', 'modificarObjeto']);
 // definicion de los props
 const props = withDefaults(
   defineProps<{
+    config: {
+      medidaId: string;
+    };
     edicion?: TipoEmpaque;
   }>(),
   {
@@ -71,7 +73,7 @@ const formSubmit = async () => {
     // Modo edicion
     if (props.edicion) {
       const medida = await modificarUno(GqlModificarMedidas, {
-        busqueda: store.producto.medida._id,
+        busqueda: props.config.medidaId,
         datos: {
           tipoEmpaques: {
             buscar: {
@@ -92,7 +94,7 @@ const formSubmit = async () => {
     else {
       // lanzamos la consulta
       const medida = await modificarUno(GqlModificarMedidas, {
-        busqueda: store.producto.medida._id,
+        busqueda: props.config.medidaId,
         datos: {
           tipoEmpaques: {
             agregar: [estado.dataForm]

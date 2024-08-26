@@ -19,21 +19,12 @@
           </div>
         </q-toolbar-title>
         <usuarioMenu />
-        <q-btn
+        <!-- <q-btn
           flat
           round
           color="white"
           icon="shopping_cart"
-          @click="toggleRightDrawer">
-          <q-badge
-            v-if="pedidoStore.listaPedido.length > 0"
-            class="rounded-full"
-            rounded
-            color="orange"
-            floating
-            >{{ pedidoStore.listaPedido.length }}</q-badge
-          >
-        </q-btn>
+          @click="storageClear" /> -->
       </q-toolbar>
       <q-breadcrumbs
         :class="[
@@ -239,7 +230,8 @@
         </q-btn>
       </div>
       <div id="layoutContainer">
-        <slot name="slot" />
+        Modificaciones en curso
+        <!-- <slot name="slot" /> -->
       </div>
     </q-page-container>
   </q-layout>
@@ -286,11 +278,17 @@ import { useAuthStore } from '~/modulos/main/useAuthStore';
 import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
 import { storePedido } from '@/modulos/pedidos/pedidos.store';
 import { storeOferta } from '@/modulos/ofertas/ofertas.store';
+import localforage from 'localforage';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const pedidoStore = storePedido();
 
+// const storageClear = () => {
+//   localStorage.clear();
+//   localforage.clear();
+//   console.log('STORAGE CLEARED');
+// };
 if (!authStore.getUsuario) {
   goTo(router, 'inicio');
 }

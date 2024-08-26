@@ -1,7 +1,7 @@
 export default [
   {
     name: 'ofertas',
-    path: '/cathering/ofertas/:id',
+    path: '/cathering/ofertas/:area',
     file: '@/modulos/ofertas/paginas/ofertas/ofertas.vue'
   },
   {
@@ -11,13 +11,8 @@ export default [
   },
   {
     name: 'catalogos',
-    path: '/cathering/catalogos',
+    path: '/cathering/catalogos/:area',
     file: '@/modulos/ofertas/paginas/catalogos/catalogos.vue'
-  },
-  {
-    name: 'catalogo',
-    path: '/cathering/catalogos/:id',
-    file: '@/modulos/ofertas/paginas/catalogos/catalogo.vue'
   },
   {
     name: 'hacerPedido',
@@ -26,12 +21,12 @@ export default [
   },
   {
     name: 'pedidoRecibir',
-    path: '/pedidoRecibir/:area',
-    file: '@/modulos/ofertas/paginas/pedidoRecibir/pedidoRecibir.vue'
+    path: '/recibir/:area',
+    file: '@/modulos/ofertas/paginas/pedidoArea/pedidoRecibir.vue'
   },
   {
     name: 'pedidoDespachar',
-    path: '/pedidoDespachar/:area',
-    file: '@/modulos/ofertas/paginas/pedidoDespachar/pedidoDespachar.vue'
+    path: '/despachar/:area',
+    file: '@/modulos/ofertas/paginas/pedidoArea/pedidoDespachar.vue'
   }
 ];

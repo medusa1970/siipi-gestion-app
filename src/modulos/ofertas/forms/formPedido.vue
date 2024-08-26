@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-// const emits = defineEmits(['ok', 'error']);
+const emits = defineEmits(['pedidoHecho']);
 import type { Catalogo } from '#gql';
 import { formPedido } from './formPedido';
 import ProductoImage from '@/assets/img/noHayProducto.png';
@@ -170,7 +170,8 @@ const confirmarPedido = () => {
     cancel: true,
     persistent: true
   }).onOk(async () => {
-    mandarPedido();
+    const pedido = await mandarPedido();
+    if (pedido) emits('pedidoHecho', pedido);
   });
 };
 </script>

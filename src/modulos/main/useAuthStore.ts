@@ -99,11 +99,13 @@ export const useAuthStore = defineStore('auth', {
       }
 
       // negocios del usuario filtrando los empleados de las entidad
-      const negocios = entidades.map(entidad => {
-        const empleado = entidad.empleados.find(
-          empleado => empleado.persona.usuario === loginResponse.usuario
-        ) as Empleado;
-        return {
+      const negocios = [];
+      for (const entidad of entidades) {
+        const empleado = entidad.empleados.find(empleado => {
+          return empleado.persona.usuario === loginResponse.usuario;
+        }) as Empleado;
+        if (!empleado) continue;
+        negocios.push({
           _id: entidad._id,
           nombre: entidad.nombre,
           tipo: entidad.tipo,
@@ -113,8 +115,8 @@ export const useAuthStore = defineStore('auth', {
           permisos: empleado.permisos.map(permiso => {
             return permiso.permiso;
           })
-        } as NegocioUsuario;
-      });
+        } as NegocioUsuario);
+      }
 
       // agregamos el negocio 'cliente'
       negocios.push({

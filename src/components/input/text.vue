@@ -383,7 +383,7 @@ watch(
 watch(
   () => props.watch,
   () => {
-    emits('update', valorParaEmitir(localModel.value));
+    // emits('update', valorParaEmitir(localModel.value));
   },
   { once: true, immediate: true }
 );

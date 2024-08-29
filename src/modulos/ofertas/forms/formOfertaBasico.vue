@@ -220,23 +220,24 @@ onMounted(async () => {
 
 // submision del formulario
 const formSubmit = async () => {
-  if (!estado.dataForm.imagen) {
-    delete estado.dataForm.imagen;
+  const dataForm = clone(estado.dataForm);
+  if (!dataForm.imagen) {
+    delete dataForm.imagen;
   }
   try {
     // Modo edicion
     if (props.edicion) {
-      estado.dataForm.tags = {
-        reemplazar: estado.dataForm.tags
+      dataForm.tags = {
+        reemplazar: dataForm.tags
       };
-      const oferta = await buscarVarios(GqlBuscarOfertas, {
+      const oferta = await modificarVarios(GqlModificarOfertas, {
         busqueda: props.edicion._id,
-        datos: estado.dataForm
+        datos: dataForm
       });
       emits('modificarObjeto', oferta);
     } else {
-      const oferta = await buscarVarios(GqlBuscarOfertas, {
-        datos: estado.dataForm
+      const oferta = await modificarVarios(GqlModificarOfertas, {
+        datos: dataForm
       });
       emits('crearObjeto', oferta);
     }

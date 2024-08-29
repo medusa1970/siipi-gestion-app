@@ -47,18 +47,57 @@
 <script setup lang="ts">
 import { useAlmacen } from '@/modulos/almacen/almacen.composable';
 const almacen = useAlmacen();
-import { useProductoTab } from './productosTab.composable';
-const { estado, store, submitForm } = useProductoTab();
+import { useOfertaDetalle } from './ofertaDetalle';
+const { store } = useOfertaDetalle();
 
-if (store.oferta) {
-  estado.dataForm = {
-    producto: store.oferta?.ingredientes[0]?.producto?._id,
-    marca: store.oferta?.ingredientes[0]?.marca?._id,
-    cantidad: store.oferta?.ingredientes[0]?.cantidad
-  };
-  // const { producto, marca, cantidad } = store.oferta.ingredientes[0];
-  // Object.assign(estado.dataForm, { producto, marca, cantidad });
-}
+const props = defineProps({
+  ofertaCorriente: null
+});
+
+// datos por defecto del formulario
+const initForm = {
+  producto: props.ofertaCorriente.ingredientes[0]?.producto?._id,
+  marca: props.ofertaCorriente.ingredientes[0]?.marca?._id,
+  cantidad: props.ofertaCorriente.ingredientes[0]?.cantidad
+};
+
+const estado = reactive({
+  dataForm: clone(initForm),
+  productosOpciones: [] as any[],
+
+  // para el empaque
+  resetEmpaque: null,
+  nombreEmpaque: null
+});
+
+const submitForm = async () => {
+  let ofertaModificada;
+  try {
+    ofertaModificada = await modificarUno(GqlModificarOfertas, {
+      busqueda: {
+        _id: [props.ofertaCorriente._id]
+      },
+      datos: {
+        ingredientes: {
+          reemplazar: [
+            {
+              tipo: 'SIMPLE',
+              producto: estado.dataForm.producto,
+              marca: estado.dataForm.marca,
+              cantidad: estado.dataForm.cantidad
+            }
+          ]
+        }
+      }
+    });
+  } catch (err) {
+    NotifyError('Se produjo un error');
+    errFailback(err);
+    return false;
+  }
+  NotifySucessCenter('Producto modificado correctamente');
+  await store.refreshOfertas();
+};
 
 const producto = computed(() => {
   if (!almacen.store.productos) return null;
@@ -77,9 +116,7 @@ const selectVariedad = computed(() => {
 watch(
   () => estado.dataForm.producto,
   () => {
-    if (!estado.dataForm.producto) {
-      estado.dataForm.marca = null;
-    }
+    estado.dataForm.marca = null;
   }
 );
 

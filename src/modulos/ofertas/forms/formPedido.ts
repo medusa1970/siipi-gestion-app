@@ -108,6 +108,7 @@ export const formPedido = () => {
     for (const cat of catRows.value ?? []) {
       for (const subCat of cat.hijas ?? []) {
         let has = false;
+        subCat;
         for (const oferta of subCat.ofertas ?? []) {
           if (
             !estado.filtros.buscar ||

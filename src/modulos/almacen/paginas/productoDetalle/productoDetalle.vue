@@ -1,10 +1,10 @@
 <template>
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
-    :titulo="prod.nombre"
+    :titulo="producto?.nombre"
     :navegacion="[
       { label: 'productos', to: 'productos' },
-      { label: prod.value?.nombre }
+      { label: producto?.nombre }
     ]">
     <q-tabs
       v-model="tabActiva"
@@ -27,22 +27,22 @@
       animated
       style="height: calc(100vh - 115px)">
       <q-tab-panel name="datosBasicos" animated>
-        <BasicoTabPanel :productoCorriente="prod" />
+        <BasicoTabPanel :productoCorriente="producto" />
       </q-tab-panel>
       <q-tab-panel name="marcas" animated>
-        <MarcaTabPanel :productoCorriente="prod" />
+        <MarcaTabPanel :productoCorriente="producto" />
       </q-tab-panel>
       <q-tab-panel name="medidas" animated>
-        <MedidaTabPanel :productoCorriente="prod" />
+        <MedidaTabPanel :productoCorriente="producto" />
       </q-tab-panel>
       <q-tab-panel name="proveedores" animated>
-        <ProveedorTabPanel :productoCorriente="prod" />
+        <ProveedorTabPanel :productoCorriente="producto" />
       </q-tab-panel>
       <q-tab-panel name="ofertas" animated>
-        <OfertasTabPanel :productoCorriente="prod" />
+        <OfertasTabPanel :productoCorriente="producto" />
       </q-tab-panel>
       <q-tab-panel name="acciones" animated>
-        <AccionesTabPanel :productoCorriente="prod" />
+        <AccionesTabPanel :productoCorriente="producto" />
       </q-tab-panel>
     </q-tab-panels>
   </NuxtLayout>
@@ -61,13 +61,13 @@ import AccionesTabPanel from './productoAcciones.vue';
 import BasicoTabPanel from './productoBasico.vue';
 import OfertasTabPanel from './productoOfertas.vue';
 
-const prod = ref(null);
+const producto = ref(null);
 onBeforeMount(async () => {
   // recuperamos el producto
   if (!store.productos) store.productos = await store.getProductos();
-  prod.value = store.productos?.find(prod => prod._id === route.params.id);
-  if (!prod.value) {
-    goTo(router, 'ofertas');
+  producto.value = store.productos?.find(p => p._id === route.params.id);
+  if (!producto.value) {
+    goTo(router, '404');
   }
 });
 </script>

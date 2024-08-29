@@ -42,30 +42,12 @@ export const storeAlmacen = defineStore('almacen', {
 
   actions: {
     /**
-     * define el producto actual que se esta modificando en pagina de detalles
-     */
-    async useProducto(id: string): Promise<Producto> {
-      if (!this.producto || id !== this.producto._id) {
-        try {
-          this.producto = await buscarUno(GqlBuscarProductos_basico, {
-            busqueda: id
-          });
-        } catch (err) {
-          errFailback(err);
-        }
-      }
-      return this.producto;
-    },
-
-    /**
      * Retorna la lista de los productos desde el indexedDb o desde la base
      * de datos si todavia no existe en el indexedDb
      */
     async getProductos(actualizarDB = false): Promise<Producto[]> {
       let productos;
-      console.log(1);
       productos = (await localforage.getItem('productos')) as Producto[];
-      console.log(2);
       if (!productos || actualizarDB) {
         try {
           productos = await buscarVarios(GqlBuscarProductos_basico, {
@@ -77,7 +59,6 @@ export const storeAlmacen = defineStore('almacen', {
           return;
         }
       }
-      console.log(3);
       this.productos = productos;
       return productos;
     },

@@ -9,7 +9,6 @@
       :vendedor="estado.area.id"
       @pedidoHecho="handlePedido"
       :key="estado.catalogo" />
-    [ {{ estado.area }}]
   </NuxtLayout>
 </template>
 

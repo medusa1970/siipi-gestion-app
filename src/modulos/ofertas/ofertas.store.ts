@@ -8,6 +8,7 @@ interface storeProps {
   catalogoArbol: Catalogo | null;
   // seleccionados
   oferta: Oferta | null;
+  catalogoParaVolver?: string;
 }
 
 export const storeOferta = defineStore('ofertas', {
@@ -19,29 +20,12 @@ export const storeOferta = defineStore('ofertas', {
 
   actions: {
     /**
-     * define la oferta actual que se esta modificando en pagina de detalles
-     */
-    async useOferta(id: string): Promise<Oferta> {
-      if (!this.oferta || id !== this.oferta._id) {
-        try {
-          this.oferta = await buscarVarios(GqlBuscarOfertas, { busqueda: id });
-        } catch (err) {
-          errFailback(err);
-        }
-      }
-      return this.oferta;
-    },
-
-    /**
      * Retorna la lista de los productos desde el indexedDb o desde la base
      * de datos si todavia no existe en el indexedDb
      */
     async getOfertas(actualizarDB: boolean = null): Promise<Oferta[]> {
-      // if (actualizarDB === false && !store.ofertas) {
-      //   return [];
-      // }
       let ofertas = (await localforage.getItem('ofertas')) as Oferta[];
-      if (actualizarDB !== false && (!ofertas || actualizarDB)) {
+      if (!ofertas || actualizarDB) {
         try {
           ofertas = await buscarVarios(GqlBuscarOfertas, {
             opciones: { sort: '-_modificado -_creado' }
@@ -55,7 +39,7 @@ export const storeOferta = defineStore('ofertas', {
       this.ofertas = ofertas;
       return ofertas;
     },
-    async refreshOfertas() {
+    async refreshOfertas(): Promise<void> {
       this.getOfertas(true);
     },
 

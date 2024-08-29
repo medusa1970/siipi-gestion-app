@@ -1,17 +1,17 @@
 <template>
   <NuxtLayout
     :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
-    :titulo="store.oferta?.nombre"
+    :titulo="oferta?.nombre"
     :navegacion="[
       {
         label: 'Ofertas',
         to: 'ofertas',
         params: { id: '75a4475e446a5885b05739c4' }
       },
-      { label: store.oferta?.nombre }
+      { label: oferta?.nombre }
     ]">
     <q-tabs
-      v-model="estado.tab"
+      v-model="tabActiva"
       inline-label
       outside-arrows
       mobile-arrows
@@ -25,50 +25,44 @@
     </q-tabs>
 
     <q-tab-panels
-      v-model="estado.tab"
+      v-if="oferta"
+      v-model="tabActiva"
       animated
       style="height: calc(100vh - 115px)">
       <q-tab-panel name="datosBasicos" animated>
-        <DatosBasicosTab />
+        <DatosBasicosTab :ofertaCorriente="oferta" />
       </q-tab-panel>
       <q-tab-panel name="productos" animated>
-        <ProductosTab />
+        <ProductosTab :ofertaCorriente="oferta" />
       </q-tab-panel>
       <q-tab-panel name="precios" animated>
-        <PreciosTab />
+        <PreciosTab :ofertaCorriente="oferta" />
       </q-tab-panel>
       <q-tab-panel name="acciones" animated>
-        <AccionesTab />
+        <AccionesTab :ofertaCorriente="oferta" />
       </q-tab-panel>
     </q-tab-panels>
   </NuxtLayout>
 </template>
 
 <script setup>
-import { useOfertaDetalle } from './ofertaDetalle.composable';
+import { useOfertaDetalle } from './ofertaDetalle';
 const { estado, store, authStore, router, route } = useOfertaDetalle();
 
-import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/datosBasicos/DatosBasicosTab.vue';
-import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/productos/ProductosTab.vue';
-import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/precios/PreciosTab.vue';
-import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/acciones/AccionesTab.vue';
+const tabActiva = ref('datosBasicos');
 
+import DatosBasicosTab from '@/modulos/ofertas/paginas/ofertaDetalle/ofertaBasico.vue';
+import ProductosTab from '@/modulos/ofertas/paginas/ofertaDetalle/ofertaProductos.vue';
+import PreciosTab from '@/modulos/ofertas/paginas/ofertaDetalle/ofertaPrecios.vue';
+import AccionesTab from '@/modulos/ofertas/paginas/ofertaDetalle/ofertaAcciones.vue';
+
+const oferta = ref(null);
 onBeforeMount(async () => {
-  if (!store.oferta || store.oferta?._id !== route.params.id) {
-    if (store.ofertas) {
-      store.oferta = store.ofertas?.find(o => o._id === route.params.id);
-    } else {
-      try {
-        store.oferta = await buscarUno(GqlBuscarOfertas, {
-          busqueda: route.params.id
-        });
-      } catch (err) {
-        errFailback(err);
-      }
-    }
-  }
-  if (!store.oferta) {
-    goTo(router, 'ofertas', { id: '75a4475e446a5885b05739c4' });
+  // recuperamos el producto
+  if (!store.ofertas) store.ofertas = await store.getOfertas();
+  oferta.value = store.ofertas?.find(o => o._id === route.params.id);
+  if (!oferta.value) {
+    goTo(router, '404');
   }
 });
 </script>

@@ -46,6 +46,10 @@ const hacerConsulta = async (
     Object.assign(params.opciones, { errorSiVacio: true });
   }
 
+  if (params.busqueda && typeof params.busqueda === 'string') {
+    params.busqueda = { _id: params.busqueda };
+  }
+
   // if (!multiple && tipo === 'crear' && params.datos) {
   //   params.datos = [params.datos];
   // }

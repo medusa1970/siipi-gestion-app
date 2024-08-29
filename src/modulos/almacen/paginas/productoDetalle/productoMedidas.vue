@@ -158,7 +158,6 @@ import type { Medida } from '#gql';
 import formEmpaque from '~/modulos/almacen/forms/formEmpaque.vue';
 import formMedida from '~/modulos/almacen/forms/formMedida.vue';
 import type { SelectOpcion } from '~/components/input/select.interface';
-import { useAlmacen } from '~/modulos/almacen/almacen.composable';
 const $q = useQuasar();
 const props = defineProps({
   productoCorriente: null

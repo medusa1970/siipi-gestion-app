@@ -300,6 +300,7 @@ const rowsParaMostrar = computed(() => {
 
 onMounted(async () => {
   estado.catalogoId = areaInfo[route.params.area as string]?.catalogo;
+  store.catalogoParaVolver = route.params.area;
   if (!estado.catalogoId) {
     goTo(router, '404');
   }

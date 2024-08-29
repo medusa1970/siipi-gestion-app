@@ -13,6 +13,7 @@ const props = defineProps({
 });
 const handleProductoModificado = producto => {
   NotifySucessCenter('Producto modificado correctamente');
+  // store.productos.producot = producto ?
 };
 </script>
 

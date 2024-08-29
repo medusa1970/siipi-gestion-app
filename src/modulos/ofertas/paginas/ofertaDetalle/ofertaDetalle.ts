@@ -9,12 +9,13 @@ export const permisosOfertaDetalle = ['ADQUISICION', 'LOGISTICA', 'ALMACEN'];
  * Composable
  */
 export const useOfertaDetalle = () => {
-  const { store, authStore, estadoOfertas, router, route } = useOfertas();
+  const { store, authStore, router, route } = useOfertas();
   if (!authStore.autorizar(permisosOfertaDetalle)) goTo(router, 'noAutorizado');
 
-  const estado = reactive({
-    tab: 'datosBasicos'
-  });
-
-  return { estado, store, authStore, router, route };
+  return {
+    store,
+    authStore,
+    router,
+    route
+  };
 };

@@ -1,9 +1,9 @@
 <template>
   <!-- @vue-ignore -->
   <formOfertaBasico
-    v-show="ofertaCorriente"
-    :edicion="ofertaCorriente"
-    :key="ofertaCorriente"
+    v-show="ofertaParaMostrar"
+    :edicion="ofertaParaMostrar"
+    :key="ofertaParaMostrar"
     @modificarObjeto="handleOfertaModificada" />
 </template>
 
@@ -12,8 +12,9 @@ import formOfertaBasico from '@/modulos/ofertas/forms/formOfertaBasico.vue';
 const props = defineProps({
   ofertaCorriente: null
 });
+const ofertaParaMostrar = ref(props.ofertaCorriente);
 const handleOfertaModificada = oferta => {
   NotifySucessCenter('Oferta modificada correctamente');
-  // store.ofertas.oferta = oferta ?
+  ofertaParaMostrar.value = oferta;
 };
 </script>

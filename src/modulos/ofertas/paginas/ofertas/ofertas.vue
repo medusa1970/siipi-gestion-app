@@ -120,6 +120,9 @@
             " />
         </q-btn-group>
       </template>
+      <template #cell-solicitable="{ val, row }">
+        <q-icon v-if="val" name="check" />
+      </template>
 
       <template #body-expand="{ row }">
         <div
@@ -300,7 +303,7 @@ const rowsParaMostrar = computed(() => {
 
 onMounted(async () => {
   estado.catalogoId = areaInfo[route.params.area as string]?.catalogo;
-  store.catalogoParaVolver = route.params.area;
+  store.catalogoParaVolver = route.params.area as string;
   if (!estado.catalogoId) {
     goTo(router, '404');
   }
@@ -345,6 +348,21 @@ const columnaOfertas = [
     field: (row: any) => row.nombre,
     sortable: true,
     slot: true
+  },
+  {
+    name: 'solicitable',
+    label: 'Solicitable.',
+    align: 'right',
+    field: (row: any) => row?.solicitable,
+    slot: true,
+    sortable: true
+  },
+  {
+    name: 'tags',
+    label: 'Area',
+    align: 'right',
+    field: (row: any) => row?.tags?.[0] ?? '-',
+    sortable: true
   },
   {
     name: 'estado',

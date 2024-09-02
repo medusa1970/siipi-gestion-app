@@ -230,13 +230,13 @@ const formSubmit = async () => {
       dataForm.tags = {
         reemplazar: dataForm.tags
       };
-      const oferta = await modificarVarios(GqlModificarOfertas, {
+      const oferta = await modificarUno(GqlModificarOfertas, {
         busqueda: props.edicion._id,
         datos: dataForm
       });
       emits('modificarObjeto', oferta);
     } else {
-      const oferta = await modificarVarios(GqlModificarOfertas, {
+      const oferta = await crearUno(GqlModificarOfertas, {
         datos: dataForm
       });
       emits('crearObjeto', oferta);

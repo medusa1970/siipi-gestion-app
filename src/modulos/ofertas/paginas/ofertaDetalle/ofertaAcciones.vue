@@ -8,7 +8,7 @@
         <input-text
           tipo="textarea"
           label="Motivo"
-          @update="v => (estado.motivoEliminacion = v)"
+          @update="v => (estado.motivoEliminacion = v as string)"
           info="El jefe de logistica recibira una notificacion cuando elimines una oferta"
           requerido />
       </div>

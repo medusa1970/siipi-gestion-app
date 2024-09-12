@@ -6,10 +6,11 @@
       {
         label: 'Ofertas',
         to: 'ofertas',
-        params: { id: '75a4475e446a5885b05739c4' }
+        params: { area: store.catalogoParaVolver }
       },
       { label: oferta?.nombre }
     ]">
+    {{ store.catalogoParaVolver }}
     <q-tabs
       v-model="tabActiva"
       inline-label

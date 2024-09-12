@@ -234,9 +234,24 @@
       </div>
     </q-page-container>
   </q-layout>
+  {{ ofertaStore.catalogoParaVolver ?? 'not' }}
 </template>
 
 <script setup>
+// IMPORTS
+import { ref, watch, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from '~/modulos/main/useAuthStore';
+import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
+import { storePedido } from '@/modulos/pedidos/pedidos.store';
+import { storeOferta } from '@/modulos/ofertas/ofertas.store';
+
+const router = useRouter();
+const authStore = useAuthStore();
+const pedidoStore = storePedido();
+const ofertaStore = storeOferta();
+
 // PROPS
 const props = defineProps({
   menuList: Array,
@@ -249,8 +264,17 @@ const props = defineProps({
 const { name: routeName, params: routeParams } = useRoute();
 const activo = (item, route) => {
   for (const el of [item, ...(item.subMenu ?? [])]) {
+    if (
+      el.to === 'ofertas' &&
+      el.params &&
+      el.params.area === ofertaStore.catalogoParaVolver
+    ) {
+      return true;
+    }
     if (route === el.to) {
-      if (!el.params) return true;
+      if (!el.params) {
+        return true;
+      }
       for (const key in el.params) {
         if (routeParams[key] === el.params[key]) return true;
       }
@@ -268,18 +292,6 @@ const menuState = reactive(
     props.menuList.map(item => [item.key, activo(item, routeName)])
   )
 );
-
-// IMPORTS
-import { ref, watch, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-import { useQuasar } from 'quasar';
-import { useAuthStore } from '~/modulos/main/useAuthStore';
-import usuarioMenu from '~/modulos/main/componientes/usuarioMenu.vue';
-import { storePedido } from '@/modulos/pedidos/pedidos.store';
-
-const router = useRouter();
-const authStore = useAuthStore();
-const pedidoStore = storePedido();
 
 // const storageClear = () => {
 //   localStorage.clear();

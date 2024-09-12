@@ -39,6 +39,21 @@ export const areaInfo = {
     id: '65a5a9af08c1a906d83522d2',
     nombre: 'Siinple',
     catalogo: '24d7ce11ce1b515075092db1'
+  },
+  almacenSiinple: {
+    id: '66e2d74508da53031321a30f',
+    nombre: 'Almacen Siinple',
+    catalogo: '66e2d7378c11bd65e4387fa8'
+  },
+  oficinas: {
+    id: '66e2d747d55d4cf24069b7cb',
+    nombre: 'Oficinas',
+    catalogo: '66e2dff8458f2b7f206d5c7a'
+  },
+  limpieza: {
+    id: '66e2d749207f34c4324f55de',
+    nombre: 'Limpieza',
+    catalogo: '66e2dffa7becd3d0c7189082'
   }
 };
 

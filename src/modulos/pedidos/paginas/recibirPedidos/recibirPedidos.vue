@@ -115,6 +115,24 @@ const selectCatalogo = catalogo => {
         nombre: 'Area Siinple'
       };
       break;
+    case 'ALMACEN_SIINPLE':
+      pedidoStore.area = {
+        _id: '66e2d7378c11bd65e4387fa8',
+        nombre: 'Area almacen Siinple'
+      };
+      break;
+    case 'OFICINAS':
+      pedidoStore.area = {
+        _id: '66e2dff8458f2b7f206d5c7a',
+        nombre: 'Area oficinas'
+      };
+      break;
+    case 'LIMPIEZA':
+      pedidoStore.area = {
+        _id: '66e2dffa7becd3d0c7189082',
+        nombre: 'Area limpieza'
+      };
+      break;
     default:
       console.log('Area no reconocida');
   }

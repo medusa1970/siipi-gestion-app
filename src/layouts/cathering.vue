@@ -63,16 +63,19 @@ if (authStore.getNegocio?.tipo !== 'CATHERING') {
 }
 
 const menuArea = [
-  ['panaderia', 'bakery_dining'],
-  ['reposteria', 'cake'],
-  ['embotellados', 'liquor'],
-  ['envasados', 'takeout_dining'],
-  ['siinple', 'eco']
+  ['panaderia', 'bakery_dining', 'panaderia'],
+  ['reposteria', 'cake', 'reposteria'],
+  ['embotellados', 'liquor', 'embotellados'],
+  ['envasados', 'takeout_dining', 'envasados'],
+  ['siinple', 'eco', 'siinple'],
+  ['almacenSiinple', 'shelves', 'almacen siinple'],
+  ['oficinas', 'print', 'oficinas'],
+  ['limpieza', 'cleaning_services', 'limpieza']
 ].map(area => {
   return {
     icon: area[1],
-    label: 'Area ' + area[0],
-    key: 'Area' + area[0],
+    label: 'Area ' + area[2],
+    key: 'area-' + area[0],
     subMenu: [
       {
         icon: 'input',

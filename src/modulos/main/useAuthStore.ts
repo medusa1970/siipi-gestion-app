@@ -143,7 +143,7 @@ export const useAuthStore = defineStore('auth', {
       });
 
       // TODO VACIAR INDEXDB
-      console.log('cleared everything');
+      console.log('(cleared everything at login)');
       localStorage.clear();
       localforage.clear();
     },
@@ -175,9 +175,6 @@ export const useAuthStore = defineStore('auth', {
      * Logout
      */
     logout() {
-      console.log('cleared everything');
-      localStorage.clear();
-      localforage.clear();
       this.$patch({
         token: null,
         usuario: null,

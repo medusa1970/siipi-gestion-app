@@ -17,6 +17,27 @@ mutation iniciarPedido($datos: CrearPedidoDto!, $opciones: CrearOpciones = {}) {
   }
 }
 
+mutation iniciarPedidoRecibir(
+  $datos: CrearPedidoDto!
+  $opciones: CrearOpciones = {}
+) {
+  iniciarPedidoRecibir(datos: $datos, opciones: $opciones) {
+    _id
+    estado {
+      estado
+    }
+    items {
+      oferta {
+        nombre
+      }
+      cantidad
+      estado {
+        estado
+      }
+    }
+  }
+}
+
 # cambia de estado los items de un pedido
 mutation cambiarEstadoItems(
   $busqueda: BuscarPedidoDto = {}

@@ -8,7 +8,8 @@
       :comprador="authStore.negocio._id"
       :vendedor="estado.area.id"
       @pedidoHecho="handlePedido"
-      :key="estado.catalogo" />
+      :key="estado.catalogo"
+      :recibirDirectamente="true" />
   </NuxtLayout>
 </template>
 
@@ -56,28 +57,30 @@ onBeforeMount(async () => {
  * Logica
  */
 const handlePedido = async pedido => {
-  try {
-    pedido = await modificarUno(GqlCambiarEstadoItems, {
-      busqueda: pedido._id,
-      estado: { estado: 'confirmado' }
-    }); //.then(() =>
-    pedido = await modificarUno(GqlCambiarEstadoItems, {
-      busqueda: pedido._id,
-      estado: { estado: 'aceptado' }
-    }); //.then(() =>
-    pedido = await modificarUno(GqlCambiarEstadoItems, {
-      busqueda: pedido._id,
-      estado: { estado: 'preparado' }
-    }); //.then(() =>
-    pedido = await modificarUno(GqlCambiarEstadoItems, {
-      busqueda: pedido._id,
-      estado: { estado: 'recibido' }
-    });
-    console.log(5, { pedido });
-  } catch (err) {
-    errFailback(err);
-    return;
-  }
-  NotifySucessCenter('Pedido recibido con éxito');
+  // console.log('handlePedido');
+  // try {
+  //   loadingAsync(async () => {
+  //     pedido = await modificarUno(GqlCambiarEstadoItems, {
+  //       busqueda: pedido._id,
+  //       estado: { estado: 'confirmado' }
+  //     }); //.then(() =>
+  //     pedido = await modificarUno(GqlCambiarEstadoItems, {
+  //       busqueda: pedido._id,
+  //       estado: { estado: 'aceptado' }
+  //     }); //.then(() =>
+  //     pedido = await modificarUno(GqlCambiarEstadoItems, {
+  //       busqueda: pedido._id,
+  //       estado: { estado: 'preparado' }
+  //     }); //.then(() =>
+  //     pedido = await modificarUno(GqlCambiarEstadoItems, {
+  //       busqueda: pedido._id,
+  //       estado: { estado: 'recibido' }
+  //     });
+  //   });
+  // } catch (err) {
+  //   errFailback(err);
+  //   return;
+  // }
+  // NotifySucessCenter('Pedido recibido con éxito');
 };
 </script>

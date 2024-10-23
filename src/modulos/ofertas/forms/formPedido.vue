@@ -153,8 +153,9 @@ const props = withDefaults(
     comprador: string;
     vendedor: string;
     catalogo: Catalogo;
+    recibirDirectamente: boolean;
   }>(),
-  {}
+  { recibirDirectamente: false }
 );
 onBeforeMount(() => {
   estado.comprador = props.comprador;
@@ -170,7 +171,7 @@ const confirmarPedido = () => {
     cancel: true,
     persistent: true
   }).onOk(async () => {
-    const pedido = await mandarPedido();
+    const pedido = await mandarPedido(props.recibirDirectamente);
     if (pedido) emits('pedidoHecho', pedido);
   });
 };

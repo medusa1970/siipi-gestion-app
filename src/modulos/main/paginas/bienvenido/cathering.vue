@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout
-    :name="authStore.getNegocio.tipo === 'PUNTO' ? 'punto' : 'cathering'"
+    :name="authStore.getNegocio?.tipo === 'PUNTO' ? 'punto' : 'cathering'"
     titulo="Bienvenido"
     :navegacion="[{ label: 'bienvenido', to: 'cathering' }]">
     <div

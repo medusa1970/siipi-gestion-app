@@ -97,7 +97,6 @@ export const formPedido = () => {
     const precio = conFactura
       ? precioSeleccionado.precioConFactura
       : precioSeleccionado.precioSinFactura;
-    console.log(precioSeleccionado);
     return new Decimal(precio).mul(cantidad);
   };
   const showTree = computed(() => {
@@ -170,10 +169,14 @@ export const formPedido = () => {
     return filtered.hijas ?? [];
   });
 
-  const mandarPedido = async () => {
+  const mandarPedido = async (recibirDirectamente = false) => {
     let pedido;
+    console.log('mandarPedido', { recibirDirectamente });
     try {
-      pedido = await crearUno(GqlIniciarPedido, {
+      const consulta = recibirDirectamente
+        ? GqlIniciarPedidoRecibir
+        : GqlIniciarPedido;
+      pedido = await crearUno(consulta, {
         datos: {
           comprador: estado.comprador,
           vendedor: estado.vendedor,
